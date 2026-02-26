@@ -52,6 +52,8 @@ const AgentChat = () => {
   const [recording, setRecording] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
   const [playingAudio, setPlayingAudio] = useState(null);
+  const [generatingFile, setGeneratingFile] = useState(null);
+  const [generatedFiles, setGeneratedFiles] = useState({});
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const mediaRecorderRef = useRef(null);
