@@ -31,6 +31,30 @@ JWT_EXPIRATION_HOURS = 24 * 7  # 7 days
 # LLM Settings
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
 
+# Direct API Keys (can be overridden from admin panel via DB)
+DIRECT_API_KEYS = {
+    "openai": os.environ.get('OPENAI_API_KEY', ''),
+    "anthropic": os.environ.get('ANTHROPIC_API_KEY', ''),
+    "gemini": os.environ.get('GOOGLE_API_KEY', ''),
+}
+
+async def get_api_keys():
+    """Get API keys - prioritize DB-stored keys, then env vars, then Emergent key"""
+    config = await db.platform_config.find_one({"config_type": "api_keys"}, {"_id": 0})
+    keys = {
+        "openai": "",
+        "anthropic": "",
+        "gemini": "",
+        "emergent": EMERGENT_LLM_KEY,
+        "active_provider": "emergent"  # which key source to use
+    }
+    if config:
+        keys["openai"] = config.get("openai_key", "") or DIRECT_API_KEYS.get("openai", "")
+        keys["anthropic"] = config.get("anthropic_key", "") or DIRECT_API_KEYS.get("anthropic", "")
+        keys["gemini"] = config.get("gemini_key", "") or DIRECT_API_KEYS.get("gemini", "")
+        keys["active_provider"] = config.get("active_provider", "emergent")
+    return keys
+
 # Stripe Settings
 STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY', '')
 
