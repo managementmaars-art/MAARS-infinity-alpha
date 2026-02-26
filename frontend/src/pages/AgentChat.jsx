@@ -530,24 +530,28 @@ const AgentChat = () => {
           )}
           
           {/* Model Selector */}
-          <div className="max-w-3xl mx-auto mb-3 flex items-center gap-3">
+          <div className="max-w-3xl mx-auto mb-3 flex items-center gap-3 flex-wrap">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-indigo-400" />
               <span className="text-xs text-zinc-400">Model:</span>
             </div>
             <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger className="w-[200px] h-8 text-xs bg-zinc-900/50 border-white/10" data-testid="model-selector">
+              <SelectTrigger className="w-[220px] h-8 text-xs bg-zinc-900/50 border-white/10" data-testid="model-selector">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {AVAILABLE_MODELS.map((m) => (
                   <SelectItem key={`${m.provider}/${m.model}`} value={`${m.provider}/${m.model}`}>
-                    {m.name}
+                    {m.provider === "auto" ? "🧠 " : ""}{m.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <span className="text-xs text-zinc-500">No limits • Switch anytime</span>
+            {selectedModel === "auto/auto" ? (
+              <span className="text-xs text-indigo-400">AI picks the best model for each task</span>
+            ) : (
+              <span className="text-xs text-zinc-500">No limits • Switch anytime</span>
+            )}
           </div>
 
           <form onSubmit={sendMessage} className="max-w-3xl mx-auto flex gap-3">
