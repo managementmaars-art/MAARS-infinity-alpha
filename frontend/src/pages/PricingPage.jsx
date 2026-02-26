@@ -19,11 +19,14 @@ const PricingPage = () => {
   const [currentPlan, setCurrentPlan] = useState("free");
   const [credits, setCredits] = useState(0);
   const [processingPlan, setProcessingPlan] = useState(null);
-  const [currency, setCurrency] = useState("usd"); // "usd" or "bdt"
+  const [currency, setCurrency] = useState("usd");
+  const [dynamicPlans, setDynamicPlans] = useState(null);
 
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-  const plans = [
+  const icons = { free: <Sparkles className="w-6 h-6" />, starter: <Zap className="w-6 h-6" />, pro: <Crown className="w-6 h-6" />, business: <Building className="w-6 h-6" /> };
+
+  const defaultPlans = [
     {
       id: "free",
       name: "Free",
