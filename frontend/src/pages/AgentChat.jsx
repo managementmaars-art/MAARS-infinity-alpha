@@ -39,7 +39,7 @@ const AgentChat = () => {
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState("openai/gpt-5.2");
+  const [selectedModel, setSelectedModel] = useState("auto/auto");
   const [attachments, setAttachments] = useState([]);
   const [uploading, setUploading] = useState(false);
   const messagesEndRef = useRef(null);
