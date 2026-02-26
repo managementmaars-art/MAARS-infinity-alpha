@@ -401,7 +401,9 @@ const LandingPage = () => {
             <span className="text-zinc-400">Martian AI by MAARS Global Corporation © 2026</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-zinc-500">
-            <span>Powered by OpenAI, Anthropic & Google</span>
+            <a href="#models" className="hover:text-zinc-300 transition-colors">10 AI Models</a>
+            <a href="#agents" className="hover:text-zinc-300 transition-colors">20 AI Agents</a>
+            <Link to="/pricing" className="hover:text-zinc-300 transition-colors">Pricing</Link>
           </div>
         </div>
       </footer>
