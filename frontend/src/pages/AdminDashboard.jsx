@@ -680,7 +680,7 @@ const AdminDashboard = () => {
             {Object.entries(costs).map(([providerId, data]) => (
               <div key={providerId} className="rounded-lg border border-white/10 overflow-hidden">
                 <div className="px-3 py-2 bg-white/5 border-b border-white/10">
-                  <span className="text-sm font-semibold text-white capitalize">{providerId === "elevenlabs" ? "ElevenLabs" : providerId}</span>
+                  <span className="text-sm font-semibold text-white capitalize">{providerId}</span>
                   <span className="text-[10px] text-zinc-500 ml-2">{data.unit}</span>
                 </div>
                 <div className="divide-y divide-white/5">
