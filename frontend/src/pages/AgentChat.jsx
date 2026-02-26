@@ -270,6 +270,99 @@ const AgentChat = () => {
     setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+      
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunksRef.current.push(e.data);
+      };
+      
+      mediaRecorder.onstop = async () => {
+        stream.getTracks().forEach(t => t.stop());
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        await transcribeAudio(audioBlob);
+      };
+      
+      mediaRecorder.start();
+      setRecording(true);
+    } catch {
+      toast.error("Microphone access denied. Please allow microphone access.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && recording) {
+      mediaRecorderRef.current.stop();
+      setRecording(false);
+    }
+  };
+
+  const transcribeAudio = async (audioBlob) => {
+    setTranscribing(true);
+    try {
+      const formData = new FormData();
+      formData.append("audio_file", audioBlob, "recording.webm");
+      
+      const response = await fetch(`${API}/audio/speech-to-text`, {
+        method: "POST",
+        headers: { ...headers },
+        credentials: "include",
+        body: formData
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.text) {
+          setInput(prev => prev ? `${prev} ${data.text}` : data.text);
+          toast.success("Voice transcribed!");
+        } else {
+          toast.error("No speech detected");
+        }
+      } else {
+        toast.error("Transcription failed");
+      }
+    } catch {
+      toast.error("Transcription failed");
+    } finally {
+      setTranscribing(false);
+    }
+  };
+
+  const playTTS = async (text, msgId) => {
+    if (playingAudio === msgId) {
+      setPlayingAudio(null);
+      return;
+    }
+    setPlayingAudio(msgId);
+    try {
+      const response = await fetch(`${API}/audio/text-to-speech`, {
+        method: "POST",
+        headers: { ...headers, "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ text: text.slice(0, 5000) })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const audio = new Audio(data.audio_url);
+        audio.onended = () => setPlayingAudio(null);
+        audio.onerror = () => { setPlayingAudio(null); toast.error("Audio playback failed"); };
+        audio.play();
+      } else {
+        const err = await response.json().catch(() => ({}));
+        toast.error(err.detail || "Text-to-speech failed");
+        setPlayingAudio(null);
+      }
+    } catch {
+      toast.error("Text-to-speech failed");
+      setPlayingAudio(null);
+    }
+  };
+
   const deleteChat = async (chatId) => {
     try {
       const response = await fetch(`${API}/chats/${chatId}`, {
