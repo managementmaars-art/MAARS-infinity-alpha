@@ -1673,8 +1673,10 @@ async def get_stats(current_user: User = Depends(get_current_user)):
 
 @api_router.get("/plans")
 async def get_plans():
-    """Get all subscription plans"""
-    return {"plans": SUBSCRIPTION_PLANS, "credit_packages": CREDIT_PACKAGES}
+    """Get all subscription plans + custom package config"""
+    custom_config = await get_custom_package_config()
+    custom_config.pop("config_type", None)
+    return {"plans": SUBSCRIPTION_PLANS, "credit_packages": CREDIT_PACKAGES, "custom_package": custom_config}
 
 @api_router.get("/subscription")
 async def get_subscription(current_user: User = Depends(get_current_user)):
