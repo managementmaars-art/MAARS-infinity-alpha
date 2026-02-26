@@ -9,22 +9,22 @@ const LandingPage = () => {
 
   const agents = [
     {
-      name: "Marketing Maven",
-      role: "Marketing Specialist",
+      name: "Victoria Sterling",
+      role: "Chief Executive Officer",
       avatar: "https://images.unsplash.com/photo-1677212004257-103cfa6b59d0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwxfHwzZCUyMHJvYm90JTIwYXZhdGFyJTIwZnV0dXJpc3RpYyUyMGljb24lMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzIwNjg5OTF8MA&ixlib=rb-4.1.0&q=85",
-      capabilities: ["Content Strategy", "SEO", "Social Media"]
+      capabilities: ["Strategic Planning", "Leadership", "M&A Advisory"]
     },
     {
-      name: "Sales Strategist",
-      role: "Sales Expert",
-      avatar: "https://images.pexels.com/photos/8294598/pexels-photo-8294598.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-      capabilities: ["Lead Generation", "CRM", "Negotiation"]
+      name: "Marcus Chen",
+      role: "Chief Financial Officer",
+      avatar: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?crop=entropy&cs=srgb&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YWklMjByb2JvdHxlbnwwfHwwfHx8MA%3D%3D&ixlib=rb-4.1.0&q=85",
+      capabilities: ["Financial Analysis", "Budgeting", "Investment Strategy"]
     },
     {
-      name: "Code Architect",
-      role: "Senior Developer",
+      name: "Dr. Aiden Nakamura",
+      role: "Chief Technology Officer",
       avatar: "https://images.unsplash.com/photo-1760931969401-9bd6ee902798?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHw0fHwzZCUyMHJvYm90JTIwYXZhdGFyJTIwZnV0dXJpc3RpYyUyMGljb24lMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzIwNjg5OTF8MA&ixlib=rb-4.1.0&q=85",
-      capabilities: ["Full-Stack", "System Design", "DevOps"]
+      capabilities: ["Software Architecture", "AI/ML Strategy", "Cloud Infrastructure"]
     }
   ];
 
