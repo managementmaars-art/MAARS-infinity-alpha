@@ -149,6 +149,20 @@ class MessageCreate(BaseModel):
     model_name: Optional[str] = None  # Override agent's default
     attachments: Optional[List[str]] = None  # File URLs or base64 data
 
+# ============== SUBSCRIPTION MODELS ==============
+
+class SubscriptionCreate(BaseModel):
+    plan_id: str
+
+class CreditPurchase(BaseModel):
+    package_id: str
+
+class CheckoutRequest(BaseModel):
+    type: str  # "subscription" or "credits"
+    plan_id: Optional[str] = None
+    package_id: Optional[str] = None
+    origin_url: str
+
 class Task(BaseModel):
     model_config = ConfigDict(extra="ignore")
     task_id: str
