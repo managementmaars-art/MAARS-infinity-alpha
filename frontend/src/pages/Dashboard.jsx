@@ -279,18 +279,18 @@ const Dashboard = () => {
                   onClick={() => navigate(`/chat/${agent.agent_id}`)}
                   data-testid={`agent-card-${agent.agent_id}`}
                 >
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-4">
+                  <CardContent className="p-3">
+                    <div className="flex items-center gap-3">
                       <img
                         src={agent.avatar}
                         alt={agent.name}
-                        className="w-12 h-12 rounded-lg object-cover"
+                        className="w-10 h-10 rounded-lg object-cover shrink-0"
                       />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-white group-hover:text-indigo-400 transition-colors truncate">
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-sm text-white group-hover:text-indigo-400 transition-colors truncate">
                           {agent.name}
                         </h3>
-                        <p className="text-sm text-zinc-400 truncate">{agent.role}</p>
+                        <p className="text-xs text-zinc-400 truncate">{agent.role}</p>
                       </div>
                     </div>
                   </CardContent>
