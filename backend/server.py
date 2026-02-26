@@ -2156,8 +2156,9 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
     }
 
 @api_router.put("/admin/api-keys")
-async def admin_update_api_keys(key_data: dict, admin: User = Depends(require_admin)):
+async def admin_update_api_keys(request: Request, admin: User = Depends(require_admin)):
     """Admin can update API keys and switch between Emergent and direct provider keys"""
+    key_data = await request.json()
     update_doc = {
         "config_type": "api_keys",
         "active_provider": key_data.get("active_provider", "emergent"),
