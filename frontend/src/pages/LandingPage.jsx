@@ -204,10 +204,10 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto">
           <div className="mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 font-['Outfit']">
-              Meet Your Executive AI Team
+              Meet Your AI Team
             </h2>
             <p className="text-lg text-zinc-400 max-w-2xl">
-              A complete C-suite of AI executives ready to drive your business forward, or create your own custom specialists.
+              20 specialized AI employees ready to work for you - from secretaries to developers, marketers to analysts.
             </p>
           </div>
 
