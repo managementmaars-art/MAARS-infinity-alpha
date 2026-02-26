@@ -2202,7 +2202,7 @@ async def admin_test_api_key(request: Request, admin: User = Depends(require_adm
         raise HTTPException(status_code=400, detail="Provider and api_key required")
     
     try:
-        test_models = {"openai": "gpt-4o-mini", "anthropic": "claude-haiku-4-5-20250929", "gemini": "gemini-3-flash-preview", "elevenlabs": None}
+        test_models = {"openai": "gpt-4o-mini", "anthropic": "claude-haiku-4-5-20250929", "gemini": "gemini-2.0-flash", "elevenlabs": None}
         
         if provider == "elevenlabs":
             # Test ElevenLabs by fetching voices
