@@ -385,7 +385,6 @@ const LandingPage = () => {
                   { name: "GPT Image 1", tag: "Image Gen", desc: "Generate stunning images from text descriptions", color: "rose" },
                   { name: "DALL-E 3", tag: "Image Gen", desc: "Creative and artistic image generation", color: "rose" },
                   { name: "Sora 2", tag: "Video Gen", desc: "Generate AI videos from text prompts (4-12 sec)", color: "rose" },
-                  { name: "ElevenLabs v2", tag: "Voice AI", desc: "Multilingual text-to-speech in 28+ languages", color: "rose" },
                 ].map((m, i) => (
                   <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                     <div className="mt-0.5 w-2 h-2 rounded-full bg-rose-400 shrink-0" />
