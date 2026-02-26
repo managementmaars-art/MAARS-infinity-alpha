@@ -500,7 +500,76 @@ const AgentChat = () => {
 
         {/* Input */}
         <div className="p-4 border-t border-white/10">
+          {/* Attachments Preview */}
+          {attachments.length > 0 && (
+            <div className="max-w-3xl mx-auto mb-3 flex flex-wrap gap-2">
+              {attachments.map((att, idx) => (
+                <div key={idx} className="relative group">
+                  {att.type?.startsWith("image/") ? (
+                    <img src={att.preview} alt={att.filename} className="w-16 h-16 object-cover rounded-lg" />
+                  ) : (
+                    <div className="w-16 h-16 bg-zinc-800 rounded-lg flex items-center justify-center">
+                      <FileText className="w-6 h-6 text-zinc-400" />
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => removeAttachment(idx)}
+                    className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="w-3 h-3 text-white" />
+                  </button>
+                  <p className="text-xs text-zinc-500 truncate w-16 mt-1">{att.filename}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {/* Model Selector */}
+          <div className="max-w-3xl mx-auto mb-3 flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-indigo-400" />
+              <span className="text-xs text-zinc-400">Model:</span>
+            </div>
+            <Select value={selectedModel} onValueChange={setSelectedModel}>
+              <SelectTrigger className="w-[200px] h-8 text-xs bg-zinc-900/50 border-white/10" data-testid="model-selector">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {AVAILABLE_MODELS.map((m) => (
+                  <SelectItem key={`${m.provider}/${m.model}`} value={`${m.provider}/${m.model}`}>
+                    {m.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <span className="text-xs text-zinc-500">No limits • Switch anytime</span>
+          </div>
+
           <form onSubmit={sendMessage} className="max-w-3xl mx-auto flex gap-3">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+              multiple
+              className="hidden"
+              accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="border-white/10 hover:bg-white/5"
+              data-testid="attach-file-btn"
+            >
+              {uploading ? (
+                <div className="w-4 h-4 border-2 border-zinc-400 border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Paperclip className="w-4 h-4" />
+              )}
+            </Button>
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
