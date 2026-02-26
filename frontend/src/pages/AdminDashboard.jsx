@@ -683,8 +683,60 @@ const AdminDashboard = () => {
 
   const ApiKeysTab = () => {
     const costs = apiKeysConfig?.cost_reference || {};
+    const usage = apiUsage || {};
     return (
     <div className="space-y-6">
+      {/* Provider Status & Usage */}
+      {(usage.providers || usage.tracked_usage) && (
+        <Card className="bg-zinc-900/50 border-white/10" data-testid="api-usage-card">
+          <CardHeader>
+            <CardTitle className="text-white font-['Outfit'] flex items-center gap-2 text-base">
+              <Activity className="w-5 h-5 text-emerald-400" />
+              API Key Status & Usage
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {["openai", "anthropic", "gemini"].map(provider => {
+                const status = usage.providers?.[provider];
+                const tracked = usage.tracked_usage?.[provider];
+                if (!status && !tracked) return null;
+                return (
+                  <div key={provider} className="p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-white font-medium capitalize">{provider}</span>
+                      <Badge className={status?.status === 'active' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}>
+                        {status?.status || 'no key'}
+                      </Badge>
+                    </div>
+                    {status?.models_available > 0 && (
+                      <p className="text-xs text-zinc-400">{status.models_available} models available</p>
+                    )}
+                    {tracked && (
+                      <div className="mt-2 pt-2 border-t border-white/5 space-y-1">
+                        <div className="flex justify-between text-xs">
+                          <span className="text-zinc-500">API Calls</span>
+                          <span className="text-white">{tracked.total_calls}</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-zinc-500">Tokens Used</span>
+                          <span className="text-white">{(tracked.total_tokens / 1000).toFixed(1)}K</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-zinc-500">Est. Cost</span>
+                          <span className="text-red-400 font-mono">${tracked.total_cost.toFixed(4)}</span>
+                        </div>
+                      </div>
+                    )}
+                    {status?.note && <p className="text-[10px] text-zinc-600 mt-2">{status.note}</p>}
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Provider Selection */}
       <Card className="bg-zinc-900/50 border-white/10">
         <CardHeader>
