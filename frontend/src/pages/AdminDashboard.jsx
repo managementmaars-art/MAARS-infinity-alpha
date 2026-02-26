@@ -48,12 +48,13 @@ const AdminDashboard = () => {
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const [statsRes, usersRes, agentsRes, txRes, pricingRes] = await Promise.all([
+      const [statsRes, usersRes, agentsRes, txRes, pricingRes, keysRes] = await Promise.all([
         fetch(`${API}/admin/stats`, { credentials: "include", headers: authHeaders }),
         fetch(`${API}/admin/users`, { credentials: "include", headers: authHeaders }),
         fetch(`${API}/admin/agents`, { credentials: "include", headers: authHeaders }),
         fetch(`${API}/admin/transactions`, { credentials: "include", headers: authHeaders }),
-        fetch(`${API}/admin/pricing`, { credentials: "include", headers: authHeaders })
+        fetch(`${API}/admin/pricing`, { credentials: "include", headers: authHeaders }),
+        fetch(`${API}/admin/api-keys`, { credentials: "include", headers: authHeaders })
       ]);
 
       if (statsRes.ok) setStats(await statsRes.json());
@@ -69,6 +70,11 @@ const AdminDashboard = () => {
           target_profit_margin: p.target_profit_margin || 200,
           bdt_exchange_rate: p.bdt_exchange_rate || 107
         });
+      }
+      if (keysRes.ok) {
+        const k = await keysRes.json();
+        setApiKeysConfig(k);
+        setApiKeyInputs(prev => ({...prev, active_provider: k.active_provider || "emergent"}));
       }
     } catch (error) {
       toast.error("Failed to load admin data");
