@@ -1096,13 +1096,19 @@ async def get_available_models(current_user: User = Depends(get_current_user)):
     """Get all available AI models for switching"""
     return {
         "models": [
-            {"provider": "openai", "model": "gpt-5.2", "name": "GPT-5.2 (Best)", "recommended": True},
-            {"provider": "openai", "model": "gpt-4o", "name": "GPT-4o"},
-            {"provider": "openai", "model": "o3", "name": "O3 (Reasoning)"},
-            {"provider": "anthropic", "model": "claude-sonnet-4-5-20250929", "name": "Claude Sonnet 4.5"},
-            {"provider": "anthropic", "model": "claude-opus-4-5-20251101", "name": "Claude Opus 4.5"},
-            {"provider": "gemini", "model": "gemini-3-flash-preview", "name": "Gemini 3 Flash"},
-            {"provider": "gemini", "model": "gemini-3-pro-preview", "name": "Gemini 3 Pro"},
+            # OpenAI
+            {"provider": "openai", "model": "gpt-5.2", "name": "GPT-5.2", "category": "flagship", "cost_per_credit": 0.006, "best_for": "Coding, analysis, general tasks"},
+            {"provider": "openai", "model": "gpt-4o", "name": "GPT-4o", "category": "fast", "cost_per_credit": 0.003, "best_for": "Balanced speed and quality"},
+            {"provider": "openai", "model": "gpt-4o-mini", "name": "GPT-4o Mini", "category": "economy", "cost_per_credit": 0.001, "best_for": "Simple tasks, quick answers"},
+            {"provider": "openai", "model": "o3", "name": "O3", "category": "reasoning", "cost_per_credit": 0.012, "best_for": "Complex reasoning, math, logic"},
+            {"provider": "openai", "model": "o3-mini", "name": "O3 Mini", "category": "reasoning", "cost_per_credit": 0.005, "best_for": "Light reasoning tasks"},
+            # Anthropic
+            {"provider": "anthropic", "model": "claude-sonnet-4-5-20250929", "name": "Claude Sonnet 4.5", "category": "flagship", "cost_per_credit": 0.005, "best_for": "Creative writing, analysis"},
+            {"provider": "anthropic", "model": "claude-opus-4-5-20251101", "name": "Claude Opus 4.5", "category": "premium", "cost_per_credit": 0.025, "best_for": "Long-form, deep research"},
+            {"provider": "anthropic", "model": "claude-haiku-4-5-20250929", "name": "Claude Haiku 4.5", "category": "economy", "cost_per_credit": 0.001, "best_for": "Quick responses, summaries"},
+            # Google
+            {"provider": "gemini", "model": "gemini-3-flash-preview", "name": "Gemini 3 Flash", "category": "fast", "cost_per_credit": 0.002, "best_for": "Fast responses, simple tasks"},
+            {"provider": "gemini", "model": "gemini-3-pro-preview", "name": "Gemini 3 Pro", "category": "flagship", "cost_per_credit": 0.005, "best_for": "Multimodal, research"},
         ],
         "default": {"provider": "openai", "model": "gpt-5.2"}
     }
