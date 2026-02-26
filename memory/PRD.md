@@ -9,10 +9,11 @@ Build a full-stack AI team platform inspired by Sintra and Emergent, named "MAAR
 3. **Free Users** - Limited access with 50 credits/month and 1 agent
 
 ## Core Requirements
-- 20 specialized AI agents (Secretary, Marketing, Sales, Developer, etc.)
+- 20 specialized AI agents with unique futuristic robot avatars
 - Auto model selection + manual model switching (7 LLMs)
 - Subscription tiers: Free, Starter ($29), Pro ($79), Business ($199)
 - Credit-based usage system with 200% profit margin
+- Custom agent creation costs 20 credits + plan-based limits
 - Stripe payments with USD and BDT currency support
 - Private admin dashboard for platform owner
 - File uploads up to 50MB
@@ -34,7 +35,7 @@ Build a full-stack AI team platform inspired by Sintra and Emergent, named "MAAR
 - Stripe integration for subscriptions and credit purchases
 - 4 subscription tiers (Free/Starter/Pro/Business)
 - Credit system with per-message deduction
-- Pricing page with USD/BDT currency toggle
+- Pricing page with USD/BDT currency toggle (prices now match backend)
 - Credit packages for on-demand purchases
 - Webhook handling for payment events
 
@@ -45,10 +46,25 @@ Build a full-stack AI team platform inspired by Sintra and Emergent, named "MAAR
 - Users tab: All registered users with subscription info
 - Agents tab: Full CRUD for agents (create default agents visible to all)
 - Transactions tab: All payment history
-- Admin sidebar link visible only to admin users
 - Admin bypass for credit limits (unlimited usage)
-- Non-admin redirect protection on /admin route
-- Backend `require_admin` dependency for API security
+
+### Phase 4 - Robot Avatars & Custom Agent Charging (Feb 26, 2026)
+- Generated 20 unique futuristic/sci-fi robot avatars using AI image generation
+- Each agent has a distinct robot design matching their role/personality
+- Custom agent creation now costs 20 credits
+- Plan-based limits: Free=0, Starter=2, Pro=5, Business=unlimited
+- Admin bypasses all creation limits
+- Create Agent page shows cost info card (credits, slots, plan)
+- Blocked users see upgrade prompts with disabled form
+- Pricing page updated to match backend prices and show custom agent features
+
+## Subscription Plans (200% Profit Margin)
+| Plan | USD | BDT | Credits | Agents | Custom Agents |
+|------|-----|-----|---------|--------|---------------|
+| Free | $0 | ৳0 | 50 | 1 | 0 |
+| Starter | $29 | ৳3,100 | 500 | 5 | 2 |
+| Pro | $79 | ৳8,400 | 2,000 | 10 | 5 |
+| Business | $199 | ৳21,100 | 6,000 | 20 | Unlimited |
 
 ## Tech Stack
 - **Frontend:** React 19, Tailwind CSS, Shadcn UI
@@ -59,9 +75,6 @@ Build a full-stack AI team platform inspired by Sintra and Emergent, named "MAAR
 - **AI:** OpenAI GPT-5.2, Claude Sonnet/Opus 4.5, Gemini 3 Flash/Pro via Emergent LLM Key
 
 ## Prioritized Backlog
-
-### P0 - Critical
-- None currently
 
 ### P1 - High Priority
 - Test and fix subscription/credit deduction flow end-to-end
@@ -81,10 +94,10 @@ Build a full-stack AI team platform inspired by Sintra and Emergent, named "MAAR
 
 ## Key Endpoints
 - Auth: `/api/auth/register`, `/api/auth/login`, `/api/auth/me`, `/api/auth/session`
-- Agents: `/api/agents` (GET/POST), `/api/agents/{id}` (GET/DELETE)
+- Agents: `/api/agents` (GET/POST), `/api/agents/{id}` (GET/DELETE), `/api/agents/create/info` (GET)
 - Chat: `/api/chats` (GET/POST), `/api/chats/{id}/messages` (POST)
 - Billing: `/api/checkout`, `/api/checkout/status/{id}`, `/api/subscription`, `/api/credits`, `/api/plans`
-- Admin: `/api/admin/stats`, `/api/admin/users`, `/api/admin/agents` (GET/POST), `/api/admin/agents/{id}` (DELETE), `/api/admin/transactions`
+- Admin: `/api/admin/stats`, `/api/admin/users`, `/api/admin/agents` (GET/POST/DELETE), `/api/admin/transactions`
 
 ## Test Credentials
 - **Admin:** management.maars@marsgc.net / MaarsAdmin2024! (also has Google OAuth)
