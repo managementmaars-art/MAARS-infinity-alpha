@@ -677,6 +677,91 @@ async def get_chat(chat_id: str, current_user: User = Depends(get_current_user))
     
     return chat
 
+# ============== AUTO MODEL SELECTION ==============
+
+def auto_select_model(content: str, agent_role: str) -> tuple:
+    """
+    Automatically select the best AI model based on task content and agent role.
+    Returns (provider, model_name, reason)
+    """
+    content_lower = content.lower()
+    
+    # Keywords for different task types
+    coding_keywords = ['code', 'programming', 'function', 'api', 'debug', 'error', 'python', 'javascript', 
+                       'react', 'database', 'sql', 'algorithm', 'deploy', 'github', 'bug', 'script',
+                       'html', 'css', 'backend', 'frontend', 'app', 'software', 'developer']
+    
+    reasoning_keywords = ['analyze', 'compare', 'evaluate', 'why', 'how does', 'explain', 'reasoning',
+                          'logic', 'problem', 'solve', 'calculate', 'math', 'strategy', 'decision',
+                          'pros and cons', 'trade-off', 'complex', 'think through']
+    
+    creative_keywords = ['write', 'story', 'creative', 'blog', 'article', 'content', 'copy', 
+                         'headline', 'tagline', 'slogan', 'narrative', 'engaging', 'compelling',
+                         'persuasive', 'emotional', 'brand voice', 'tone']
+    
+    quick_keywords = ['quick', 'simple', 'brief', 'short', 'summarize', 'list', 'bullet points',
+                      'yes or no', 'define', 'what is', 'translate']
+    
+    long_form_keywords = ['detailed', 'comprehensive', 'in-depth', 'thorough', 'research', 
+                          'report', 'whitepaper', 'documentation', 'guide', 'tutorial', 'essay']
+    
+    data_keywords = ['data', 'analytics', 'metrics', 'dashboard', 'visualization', 'chart',
+                     'statistics', 'trends', 'forecast', 'numbers', 'spreadsheet', 'excel']
+    
+    # Role-based preferences
+    coding_roles = ['app developer', 'web designer', 'developer', 'engineer', 'technical']
+    creative_roles = ['copywriter', 'content writer', 'marketing', 'social media', 'video', 'graphic']
+    analytical_roles = ['strategist', 'analyst', 'research', 'financial', 'data']
+    
+    # Count keyword matches
+    coding_score = sum(1 for kw in coding_keywords if kw in content_lower)
+    reasoning_score = sum(1 for kw in reasoning_keywords if kw in content_lower)
+    creative_score = sum(1 for kw in creative_keywords if kw in content_lower)
+    quick_score = sum(1 for kw in quick_keywords if kw in content_lower)
+    long_form_score = sum(1 for kw in long_form_keywords if kw in content_lower)
+    data_score = sum(1 for kw in data_keywords if kw in content_lower)
+    
+    # Boost scores based on agent role
+    agent_role_lower = agent_role.lower()
+    if any(r in agent_role_lower for r in coding_roles):
+        coding_score += 3
+    if any(r in agent_role_lower for r in creative_roles):
+        creative_score += 3
+    if any(r in agent_role_lower for r in analytical_roles):
+        reasoning_score += 2
+        data_score += 2
+    
+    # Determine best model
+    scores = {
+        'coding': coding_score,
+        'reasoning': reasoning_score,
+        'creative': creative_score,
+        'quick': quick_score,
+        'long_form': long_form_score,
+        'data': data_score
+    }
+    
+    best_task = max(scores, key=scores.get)
+    best_score = scores[best_task]
+    
+    # Select model based on task type
+    if best_score >= 2:
+        if best_task == 'coding':
+            return ('openai', 'gpt-5.2', 'Best for coding & technical tasks')
+        elif best_task == 'reasoning':
+            return ('openai', 'o3', 'Best for complex reasoning & analysis')
+        elif best_task == 'creative':
+            return ('anthropic', 'claude-sonnet-4-5-20250929', 'Best for creative writing')
+        elif best_task == 'quick':
+            return ('gemini', 'gemini-3-flash-preview', 'Fast responses for simple tasks')
+        elif best_task == 'long_form':
+            return ('anthropic', 'claude-opus-4-5-20251101', 'Best for detailed long-form content')
+        elif best_task == 'data':
+            return ('openai', 'gpt-5.2', 'Best for data analysis')
+    
+    # Default to GPT-5.2 for general tasks
+    return ('openai', 'gpt-5.2', 'Best all-around model')
+
 @api_router.post("/chats/{chat_id}/messages")
 async def send_message(chat_id: str, message_data: MessageCreate, current_user: User = Depends(get_current_user)):
     chat = await db.chats.find_one({"chat_id": chat_id, "user_id": current_user.user_id}, {"_id": 0})
