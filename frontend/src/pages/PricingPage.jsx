@@ -31,46 +31,46 @@ const PricingPage = () => {
       price_bdt: 0,
       credits: 50,
       icon: <Sparkles className="w-6 h-6" />,
-      features: ["50 credits/month", "All 20 AI employees", "Basic support"],
+      features: ["50 credits/month", "1 AI employee", "Basic support", "No custom agents"],
       popular: false
     },
     {
       id: "starter",
       name: "Starter",
-      price_usd: 19,
-      price_bdt: 2000,
+      price_usd: 29,
+      price_bdt: 3100,
       credits: 500,
       icon: <Zap className="w-6 h-6" />,
-      features: ["500 credits/month", "All 20 AI employees", "Priority support", "File uploads"],
+      features: ["500 credits/month", "5 AI employees", "2 custom agents (20 credits each)", "Priority support", "File uploads"],
       popular: false
     },
     {
       id: "pro",
       name: "Pro",
-      price_usd: 49,
-      price_bdt: 5200,
+      price_usd: 79,
+      price_bdt: 8400,
       credits: 2000,
       icon: <Crown className="w-6 h-6" />,
-      features: ["2,000 credits/month", "All 20 AI employees", "Priority support", "Unlimited uploads", "Custom agents"],
+      features: ["2,000 credits/month", "10 AI employees", "5 custom agents (20 credits each)", "Priority support", "Unlimited uploads"],
       popular: true
     },
     {
       id: "business",
       name: "Business",
-      price_usd: 129,
-      price_bdt: 13700,
+      price_usd: 199,
+      price_bdt: 21100,
       credits: 6000,
       icon: <Building className="w-6 h-6" />,
-      features: ["6,000 credits/month", "All 20 AI employees", "Dedicated support", "Unlimited everything", "API access"],
+      features: ["6,000 credits/month", "All 20 AI employees", "Unlimited custom agents", "Dedicated support", "Unlimited everything", "API access"],
       popular: false
     }
   ];
 
   const creditPackages = [
-    { id: "credits_100", credits: 100, price_usd: 4, price_bdt: 420 },
-    { id: "credits_300", credits: 300, price_usd: 12, price_bdt: 1270 },
-    { id: "credits_700", credits: 700, price_usd: 28, price_bdt: 2970 },
-    { id: "credits_1500", credits: 1500, price_usd: 60, price_bdt: 6360 }
+    { id: "credits_100", credits: 100, price_usd: 6, price_bdt: 640 },
+    { id: "credits_300", credits: 300, price_usd: 18, price_bdt: 1910 },
+    { id: "credits_700", credits: 700, price_usd: 42, price_bdt: 4450 },
+    { id: "credits_1500", credits: 1500, price_usd: 90, price_bdt: 9540 }
   ];
 
   const formatPrice = (plan) => {
