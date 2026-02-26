@@ -166,6 +166,7 @@ class CheckoutRequest(BaseModel):
     plan_id: Optional[str] = None
     package_id: Optional[str] = None
     origin_url: str
+    currency: str = "usd"  # "usd" or "bdt"
 
 class Task(BaseModel):
     model_config = ConfigDict(extra="ignore")
