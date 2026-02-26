@@ -13,14 +13,20 @@ import { useAuth, API } from "../App";
 import { toast } from "sonner";
 
 const AVAILABLE_MODELS = [
-  { provider: "auto", model: "auto", name: "Auto (Smart Selection)" },
-  { provider: "openai", model: "gpt-5.2", name: "GPT-5.2 (Best)" },
-  { provider: "openai", model: "gpt-4o", name: "GPT-4o" },
-  { provider: "openai", model: "o3", name: "O3 (Reasoning)" },
-  { provider: "anthropic", model: "claude-sonnet-4-5-20250929", name: "Claude Sonnet 4.5" },
-  { provider: "anthropic", model: "claude-opus-4-5-20251101", name: "Claude Opus 4.5" },
-  { provider: "gemini", model: "gemini-3-flash-preview", name: "Gemini 3 Flash" },
-  { provider: "gemini", model: "gemini-3-pro-preview", name: "Gemini 3 Pro" },
+  { provider: "auto", model: "auto", name: "Auto (Smart Selection)", category: "auto" },
+  // OpenAI
+  { provider: "openai", model: "gpt-5.2", name: "GPT-5.2", category: "flagship" },
+  { provider: "openai", model: "gpt-4o", name: "GPT-4o", category: "fast" },
+  { provider: "openai", model: "gpt-4o-mini", name: "GPT-4o Mini", category: "economy" },
+  { provider: "openai", model: "o3", name: "O3 (Reasoning)", category: "reasoning" },
+  { provider: "openai", model: "o3-mini", name: "O3 Mini", category: "reasoning" },
+  // Anthropic
+  { provider: "anthropic", model: "claude-sonnet-4-5-20250929", name: "Claude Sonnet 4.5", category: "flagship" },
+  { provider: "anthropic", model: "claude-opus-4-5-20251101", name: "Claude Opus 4.5", category: "premium" },
+  { provider: "anthropic", model: "claude-haiku-4-5-20250929", name: "Claude Haiku 4.5", category: "economy" },
+  // Google
+  { provider: "gemini", model: "gemini-3-flash-preview", name: "Gemini 3 Flash", category: "fast" },
+  { provider: "gemini", model: "gemini-3-pro-preview", name: "Gemini 3 Pro", category: "flagship" },
 ];
 
 const AgentChat = () => {
