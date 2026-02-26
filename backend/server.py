@@ -2351,7 +2351,7 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
     """Get current API key configuration (masked)"""
     config = await db.platform_config.find_one({"config_type": "api_keys"}, {"_id": 0})
     if not config:
-        config = {"active_provider": "emergent", "openai_key": "", "anthropic_key": "", "gemini_key": "", "elevenlabs_key": ""}
+        config = {"active_provider": "emergent", "openai_key": "", "anthropic_key": "", "gemini_key": ""}
     
     # Mask keys for display
     def mask(key):
