@@ -2572,6 +2572,22 @@ async def admin_update_pricing(request: Request, admin: User = Depends(require_a
     
     return {"message": "Pricing updated successfully", "pricing": config_doc}
 
+@api_router.get("/admin/avg-cost")
+async def admin_avg_cost(admin: User = Depends(require_admin)):
+    """Get the real average cost per API call from usage_logs"""
+    cost_pipeline = [
+        {"$group": {
+            "_id": None,
+            "total_cost": {"$sum": "$estimated_cost_usd"},
+            "total_calls": {"$sum": 1}
+        }}
+    ]
+    cost_result = await db.usage_logs.aggregate(cost_pipeline).to_list(1)
+    if cost_result and cost_result[0]["total_calls"] > 0:
+        avg = cost_result[0]["total_cost"] / cost_result[0]["total_calls"]
+        return {"avg_cost_per_credit": round(avg, 6), "total_calls": cost_result[0]["total_calls"], "source": "real_usage"}
+    return {"avg_cost_per_credit": 0.003, "total_calls": 0, "source": "default"}
+
 @api_router.post("/admin/pricing/calculate")
 async def admin_calculate_pricing(calc_data: dict, admin: User = Depends(require_admin)):
     """Calculate recommended prices based on AI costs and target profit margin"""
