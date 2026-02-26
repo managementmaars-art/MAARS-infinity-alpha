@@ -3,12 +3,24 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { ScrollArea } from "../components/ui/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { 
   Bot, Send, Plus, ArrowLeft, MessageSquare, Trash2,
-  LayoutDashboard, Users, ListTodo, Settings, LogOut, Menu, X
+  LayoutDashboard, Users, ListTodo, Settings, LogOut, Menu, X,
+  Paperclip, Image, FileText, Sparkles
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+
+const AVAILABLE_MODELS = [
+  { provider: "openai", model: "gpt-5.2", name: "GPT-5.2 (Best)" },
+  { provider: "openai", model: "gpt-4o", name: "GPT-4o" },
+  { provider: "openai", model: "o3", name: "O3 (Reasoning)" },
+  { provider: "anthropic", model: "claude-sonnet-4-5-20250929", name: "Claude Sonnet 4.5" },
+  { provider: "anthropic", model: "claude-opus-4-5-20251101", name: "Claude Opus 4.5" },
+  { provider: "gemini", model: "gemini-3-flash-preview", name: "Gemini 3 Flash" },
+  { provider: "gemini", model: "gemini-3-pro-preview", name: "Gemini 3 Pro" },
+];
 
 const AgentChat = () => {
   const navigate = useNavigate();
@@ -26,7 +38,11 @@ const AgentChat = () => {
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedModel, setSelectedModel] = useState("openai/gpt-5.2");
+  const [attachments, setAttachments] = useState([]);
+  const [uploading, setUploading] = useState(false);
   const messagesEndRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
