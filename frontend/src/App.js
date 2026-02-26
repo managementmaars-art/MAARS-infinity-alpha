@@ -10,6 +10,8 @@ import Agents from "./pages/Agents";
 import CreateAgent from "./pages/CreateAgent";
 import Tasks from "./pages/Tasks";
 import Settings from "./pages/Settings";
+import PricingPage from "./pages/PricingPage";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import { Toaster } from "./components/ui/sonner";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
