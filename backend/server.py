@@ -1225,6 +1225,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         "model_used": f"{model_provider}/{model_name}",
         "created_at": datetime.now(timezone.utc).isoformat()
     }
+    if delegation_data:
+        assistant_msg["delegation_data"] = delegation_data
     
     # Update chat
     await db.chats.update_one(
