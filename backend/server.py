@@ -34,6 +34,9 @@ EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
 # Stripe Settings
 STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY', '')
 
+# Admin Settings
+ADMIN_EMAIL = "management.maars@marsgc.net"
+
 # ============== SUBSCRIPTION PLANS (200% profit margin) ==============
 SUBSCRIPTION_PLANS = {
     "free": {
