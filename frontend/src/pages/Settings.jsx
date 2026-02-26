@@ -9,7 +9,8 @@ import { Badge } from "../components/ui/badge";
 import { Progress } from "../components/ui/progress";
 import { 
   Bot, User, Mail, Shield, LogOut, CreditCard, Sparkles, Crown, Zap,
-  LayoutDashboard, Users, MessageSquare, ListTodo, Settings, Menu, X
+  LayoutDashboard, Users, MessageSquare, ListTodo, Settings, Menu, X,
+  Check, Save, Loader2
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -19,6 +20,10 @@ const SettingsPage = () => {
   const { user, logout, token } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [subscription, setSubscription] = useState(null);
+  const [allAgents, setAllAgents] = useState([]);
+  const [selectedAgents, setSelectedAgents] = useState([]);
+  const [agentConfig, setAgentConfig] = useState(null);
+  const [savingAgents, setSavingAgents] = useState(false);
 
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
