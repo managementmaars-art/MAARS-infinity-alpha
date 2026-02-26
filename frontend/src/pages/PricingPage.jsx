@@ -431,6 +431,184 @@ const PricingPage = () => {
           ))}
         </div>
 
+        {/* ====== BUILD YOUR OWN PACKAGE ====== */}
+        {customConfig && (
+          <div className="mb-16" data-testid="custom-package-section">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-sm mb-4">
+                <Package className="w-4 h-4" /> New
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 font-['Outfit']">
+                Build Your Own Package
+              </h2>
+              <p className="text-zinc-400 max-w-xl mx-auto">
+                Pick exactly the agents you need and the credits you want. Pay only for what you use.
+              </p>
+            </div>
+
+            <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left: Agent Picker */}
+              <div className="lg:col-span-2 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-white">Select Your Agents</h3>
+                  <span className="text-sm text-zinc-400">
+                    {selectedAgents.length} selected &middot; {currSymbol}{(selectedAgents.length * (customConfig[agentPriceKey] || 0)).toLocaleString()}/mo
+                  </span>
+                </div>
+                
+                {!user && (
+                  <p className="text-sm text-amber-400/80 bg-amber-500/10 rounded-lg px-3 py-2">
+                    <Link to="/login" className="underline">Log in</Link> to see and select agents
+                  </p>
+                )}
+
+                {agents.length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    {agents.map((agent) => {
+                      const isSelected = selectedAgents.includes(agent.agent_id);
+                      return (
+                        <button
+                          key={agent.agent_id}
+                          onClick={() => toggleAgent(agent.agent_id)}
+                          className={`relative flex flex-col items-center gap-2 p-3 rounded-xl border transition-all text-left ${
+                            isSelected
+                              ? "border-indigo-500 bg-indigo-500/15 ring-1 ring-indigo-500/40"
+                              : "border-white/10 bg-zinc-900/50 hover:border-white/20 hover:bg-zinc-800/50"
+                          }`}
+                          data-testid={`pick-agent-${agent.agent_id}`}
+                        >
+                          {isSelected && (
+                            <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center">
+                              <Check className="w-3 h-3 text-white" />
+                            </div>
+                          )}
+                          <img
+                            src={agent.avatar}
+                            alt={agent.name}
+                            className="w-10 h-10 rounded-lg object-cover"
+                          />
+                          <div className="text-center">
+                            <p className="text-xs font-medium text-white truncate max-w-[90px]">{agent.name}</p>
+                            <p className="text-[10px] text-zinc-500 truncate max-w-[90px]">{agent.role}</p>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Commander Add-on */}
+                <button
+                  onClick={() => setIncludeCommander(!includeCommander)}
+                  className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all ${
+                    includeCommander
+                      ? "border-amber-500 bg-amber-500/10 ring-1 ring-amber-500/30"
+                      : "border-white/10 bg-zinc-900/50 hover:border-white/20"
+                  }`}
+                  data-testid="commander-addon-toggle"
+                >
+                  <div className="w-12 h-12 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+                    <Shield className="w-6 h-6 text-amber-400" />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <p className="text-sm font-semibold text-white">Commander Orion (Add-on)</p>
+                    <p className="text-xs text-zinc-400">Delegates tasks across your team. Breaks down complex goals automatically.</p>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-sm font-bold text-amber-400">+{currSymbol}{(customConfig[commanderPriceKey] || 0).toLocaleString()}</p>
+                    <p className="text-[10px] text-zinc-500">/month</p>
+                  </div>
+                  {includeCommander && (
+                    <div className="w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-3 h-3 text-black" />
+                    </div>
+                  )}
+                </button>
+              </div>
+
+              {/* Right: Summary & Credit Picker */}
+              <div className="space-y-4">
+                <Card className="bg-zinc-900/70 border-white/10 sticky top-6">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-white text-lg font-['Outfit']">Your Package</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {/* Credit Presets */}
+                    <div>
+                      <p className="text-sm text-zinc-400 mb-2">Choose credits</p>
+                      <div className="space-y-2">
+                        {(customConfig.credit_presets || []).map((preset) => (
+                          <button
+                            key={preset.id}
+                            onClick={() => setSelectedCredit(preset.id)}
+                            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all text-sm ${
+                              selectedCredit === preset.id
+                                ? "border-indigo-500 bg-indigo-500/15 text-white"
+                                : "border-white/10 bg-zinc-800/50 text-zinc-300 hover:border-white/20"
+                            }`}
+                            data-testid={`credit-preset-${preset.id}`}
+                          >
+                            <span className="font-medium">{preset.credits.toLocaleString()} credits</span>
+                            <span className={selectedCredit === preset.id ? "text-indigo-400 font-semibold" : "text-zinc-500"}>
+                              {currSymbol}{preset[priceKey].toLocaleString()}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Price Breakdown */}
+                    <div className="border-t border-white/10 pt-3 space-y-2">
+                      <div className="flex justify-between text-sm text-zinc-400">
+                        <span>{selectedAgents.length} agent{selectedAgents.length !== 1 ? "s" : ""}</span>
+                        <span>{currSymbol}{(selectedAgents.length * (customConfig[agentPriceKey] || 0)).toLocaleString()}</span>
+                      </div>
+                      {selectedCredit && (
+                        <div className="flex justify-between text-sm text-zinc-400">
+                          <span>{customConfig.credit_presets?.find(p => p.id === selectedCredit)?.credits.toLocaleString()} credits</span>
+                          <span>{currSymbol}{(customConfig.credit_presets?.find(p => p.id === selectedCredit)?.[priceKey] || 0).toLocaleString()}</span>
+                        </div>
+                      )}
+                      {includeCommander && (
+                        <div className="flex justify-between text-sm text-amber-400">
+                          <span>Commander AI</span>
+                          <span>+{currSymbol}{(customConfig[commanderPriceKey] || 0).toLocaleString()}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between text-lg font-bold text-white pt-2 border-t border-white/10">
+                        <span>Total</span>
+                        <span>{currSymbol}{customTotal.toLocaleString()}/mo</span>
+                      </div>
+                    </div>
+
+                    <Button
+                      onClick={handleCustomCheckout}
+                      disabled={customLoading || selectedAgents.length === 0 || !selectedCredit}
+                      className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-black font-semibold"
+                      data-testid="custom-checkout-btn"
+                    >
+                      {customLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Package className="w-4 h-4 mr-2" />
+                          Build Package
+                        </>
+                      )}
+                    </Button>
+
+                    {!user && (
+                      <p className="text-xs text-center text-zinc-500">
+                        <Link to="/register" className="text-indigo-400 underline">Sign up</Link> to build your package
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Credit Top-ups */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold text-white mb-6 text-center font-['Outfit']">
