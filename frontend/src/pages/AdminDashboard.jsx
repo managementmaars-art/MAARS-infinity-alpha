@@ -45,17 +45,28 @@ const AdminDashboard = () => {
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const [statsRes, usersRes, agentsRes, txRes] = await Promise.all([
+      const [statsRes, usersRes, agentsRes, txRes, pricingRes] = await Promise.all([
         fetch(`${API}/admin/stats`, { credentials: "include", headers: authHeaders }),
         fetch(`${API}/admin/users`, { credentials: "include", headers: authHeaders }),
         fetch(`${API}/admin/agents`, { credentials: "include", headers: authHeaders }),
-        fetch(`${API}/admin/transactions`, { credentials: "include", headers: authHeaders })
+        fetch(`${API}/admin/transactions`, { credentials: "include", headers: authHeaders }),
+        fetch(`${API}/admin/pricing`, { credentials: "include", headers: authHeaders })
       ]);
 
       if (statsRes.ok) setStats(await statsRes.json());
       if (usersRes.ok) setUsers(await usersRes.json());
       if (agentsRes.ok) setAgents(await agentsRes.json());
       if (txRes.ok) setTransactions(await txRes.json());
+      if (pricingRes.ok) {
+        const p = await pricingRes.json();
+        setPricingConfig(p);
+        setPricingEdit(JSON.parse(JSON.stringify(p)));
+        setCalcInputs({
+          ai_cost_per_credit: p.ai_cost_per_credit || 0.003,
+          target_profit_margin: p.target_profit_margin || 200,
+          bdt_exchange_rate: p.bdt_exchange_rate || 107
+        });
+      }
     } catch (error) {
       toast.error("Failed to load admin data");
     } finally {
