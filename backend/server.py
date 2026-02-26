@@ -858,7 +858,9 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     return {
         "user_message": user_msg,
         "assistant_message": assistant_msg,
-        "model_used": f"{model_provider}/{model_name}"
+        "model_used": f"{model_provider}/{model_name}",
+        "auto_selected": auto_selected,
+        "model_reason": model_reason if auto_selected else None
     }
 
 # ============== FILE UPLOAD ENDPOINT ==============
