@@ -7,22 +7,24 @@ Full-stack AI team platform with 20+ agents, Commander AI with auto-task delegat
 
 ### Core Platform
 - React + FastAPI + MongoDB, JWT + Google OAuth
-- 20 AI agents with unique sci-fi robot avatars
+- 21 AI agents with unique sci-fi robot avatars
 - Chat with 10+ LLMs (GPT-5.2, Claude, Gemini, etc.)
 - Smart auto-selection across 7 task types
 
-### Commander AI (Phase 7-9)
-- Commander Orion: breaks goals → sub-tasks → delegates to specialists
+### Commander AI (Phase 7-9 + Group Chat)
+- Commander Orion: breaks goals -> sub-tasks -> delegates to specialists
 - Auto-creates tasks in DB with priority, assigned agent, results
 - Tasks page shows Commander-created tasks with badge
+- **NEW: Group Chat UI** - Commander delegation renders as individual agent chat bubbles with avatars, roles, priority badges, and structured responses
+- Backend returns structured `delegation_data` with agent details for rich rendering
 
 ### Audio (Phase 7)
-- STT via OpenAI Whisper, TTS via ElevenLabs
-- Mic button in chat, play button on messages
-- ElevenLabs API key in admin panel
+- STT via OpenAI Whisper
+- Mic button in chat
+- ElevenLabs removed per user request
 
 ### File Generation (Phase 10)
-- **Documents**: PDF (reportlab), Excel (openpyxl), Word (python-docx), CSV, TXT
+- **Documents**: PDF (fpdf), Excel (openpyxl), Word (python-docx), CSV, TXT
 - **Images**: GPT Image 1, DALL-E 3 via emergent integrations
 - **Videos**: Sora 2 via emergent integrations
 - Download/serve via `/api/files/{filename}`
@@ -41,6 +43,8 @@ Full-stack AI team platform with 20+ agents, Commander AI with auto-task delegat
 ### Admin Dashboard (8 tabs)
 - Overview, Users, Agents, Transactions, Pricing Manager
 - Custom Packages, API Keys (with cost reference), Payment Setup
+- **Pricing Manager now uses REAL cost data** from usage_logs (avg $0.018/credit from 24 API calls)
+- `/api/admin/avg-cost` endpoint provides real average cost per credit
 - Direct provider costs for all 13+ models including generation
 
 ### Landing Page
@@ -52,16 +56,19 @@ Full-stack AI team platform with 20+ agents, Commander AI with auto-task delegat
 - Agents: /api/agents, /api/agents/public
 - Chat: /api/chats, /api/chats/{id}/messages
 - Tasks: /api/tasks, /api/tasks/{id}/execute
-- Audio: /api/audio/speech-to-text, /api/audio/text-to-speech
+- Audio: /api/audio/speech-to-text
 - Generate: /api/generate/document, /api/generate/image, /api/generate/video
 - Files: /api/files/{filename}
 - Plans: /api/plans, /api/custom-package/config, /api/custom-package/checkout
 - Subscription: /api/subscription, /api/subscription/agents
 - Admin: /api/admin/stats, /api/admin/api-keys, /api/admin/pricing, /api/admin/custom-package
+- **NEW: /api/admin/avg-cost** - Real average cost per credit from usage_logs
 
 ## Backlog
-- P1: E2E subscription/credit testing, Commander paid add-on flow
-- P2: Backend refactoring, custom domain UI
+- P1: E2E subscription/credit testing (full lifecycle test)
+- P1: Commander AI as purchasable add-on for Build Your Own
+- P2: Backend refactoring (break server.py into modules)
+- P2: Custom domain UI
 - P3: Chat export, mobile optimization
 
 ## Credentials
