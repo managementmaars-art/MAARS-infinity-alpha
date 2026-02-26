@@ -2402,8 +2402,6 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
         "anthropic_key_set": bool(config.get("anthropic_key", "")),
         "gemini_key": mask(config.get("gemini_key", "")),
         "gemini_key_set": bool(config.get("gemini_key", "")),
-        "elevenlabs_key": mask(config.get("elevenlabs_key", "")),
-        "elevenlabs_key_set": bool(config.get("elevenlabs_key", "")),
         "cost_reference": cost_reference,
     }
 
