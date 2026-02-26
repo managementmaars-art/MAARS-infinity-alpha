@@ -512,7 +512,7 @@ const AdminDashboard = () => {
         const data = await res.json();
         toast.success(`API keys saved! Using: ${data.active_provider === 'direct' ? 'Direct Provider Keys' : 'Emergent Universal Key'}`);
         fetchAdminData();
-        setApiKeyInputs(prev => ({...prev, openai_key: "", anthropic_key: "", gemini_key: ""}));
+        setApiKeyInputs(prev => ({...prev, openai_key: "", anthropic_key: "", gemini_key: "", elevenlabs_key: ""}));
       } else {
         toast.error("Failed to save API keys");
       }
