@@ -687,6 +687,10 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
     
+    # Use override model if provided, otherwise use best model (gpt-5.2)
+    model_provider = message_data.model_provider or "openai"
+    model_name = message_data.model_name or "gpt-5.2"
+    
     # Create user message
     now = datetime.now(timezone.utc)
     user_msg = {
@@ -694,6 +698,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         "chat_id": chat_id,
         "role": "user",
         "content": message_data.content,
+        "attachments": message_data.attachments,
+        "model_used": f"{model_provider}/{model_name}",
         "created_at": now.isoformat()
     }
     
@@ -705,12 +711,25 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
             api_key=EMERGENT_LLM_KEY,
             session_id=chat_id,
             system_message=agent["system_prompt"]
-        ).with_model(agent["model_provider"], agent["model_name"])
+        ).with_model(model_provider, model_name)
         
-        # Build conversation history for context
-        messages_for_context = chat.get("messages", [])[-10:]  # Last 10 messages
+        # Build message with attachments if present
+        message_content = message_data.content
+        if message_data.attachments:
+            message_content += f"\n\n[User attached {len(message_data.attachments)} file(s)]"
         
-        user_message = UserMessage(text=message_data.content)
+        user_message = UserMessage(text=message_content)
+        
+        # Add image attachments if any
+        if message_data.attachments:
+            for attachment in message_data.attachments:
+                if attachment.startswith("data:image"):
+                    # Base64 image
+                    user_message = user_message.add_image(attachment)
+                elif attachment.startswith("http"):
+                    # URL image
+                    user_message = user_message.add_image(attachment)
+        
         response_text = await llm_chat.send_message(user_message)
         
     except Exception as e:
@@ -723,6 +742,7 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         "chat_id": chat_id,
         "role": "assistant",
         "content": response_text,
+        "model_used": f"{model_provider}/{model_name}",
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     
@@ -742,7 +762,60 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     
     return {
         "user_message": user_msg,
-        "assistant_message": assistant_msg
+        "assistant_message": assistant_msg,
+        "model_used": f"{model_provider}/{model_name}"
+    }
+
+# ============== FILE UPLOAD ENDPOINT ==============
+
+@api_router.post("/upload")
+async def upload_file(file: UploadFile = File(...), current_user: User = Depends(get_current_user)):
+    """Upload any file and return base64 encoded data for use in chat"""
+    try:
+        contents = await file.read()
+        
+        # Check file size (max 50MB)
+        if len(contents) > 50 * 1024 * 1024:
+            raise HTTPException(status_code=400, detail="File too large. Max 50MB.")
+        
+        # Encode to base64
+        b64_content = base64.b64encode(contents).decode('utf-8')
+        
+        # Determine content type
+        content_type = file.content_type or "application/octet-stream"
+        
+        # Create data URL for images
+        if content_type.startswith("image/"):
+            data_url = f"data:{content_type};base64,{b64_content}"
+        else:
+            data_url = f"data:{content_type};base64,{b64_content}"
+        
+        return {
+            "filename": file.filename,
+            "content_type": content_type,
+            "size": len(contents),
+            "data_url": data_url
+        }
+    except Exception as e:
+        logger.error(f"Upload error: {e}")
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
+# ============== AVAILABLE MODELS ENDPOINT ==============
+
+@api_router.get("/models")
+async def get_available_models(current_user: User = Depends(get_current_user)):
+    """Get all available AI models for switching"""
+    return {
+        "models": [
+            {"provider": "openai", "model": "gpt-5.2", "name": "GPT-5.2 (Best)", "recommended": True},
+            {"provider": "openai", "model": "gpt-4o", "name": "GPT-4o"},
+            {"provider": "openai", "model": "o3", "name": "O3 (Reasoning)"},
+            {"provider": "anthropic", "model": "claude-sonnet-4-5-20250929", "name": "Claude Sonnet 4.5"},
+            {"provider": "anthropic", "model": "claude-opus-4-5-20251101", "name": "Claude Opus 4.5"},
+            {"provider": "gemini", "model": "gemini-3-flash-preview", "name": "Gemini 3 Flash"},
+            {"provider": "gemini", "model": "gemini-3-pro-preview", "name": "Gemini 3 Pro"},
+        ],
+        "default": {"provider": "openai", "model": "gpt-5.2"}
     }
 
 @api_router.delete("/chats/{chat_id}")
