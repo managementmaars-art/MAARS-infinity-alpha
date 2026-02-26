@@ -757,6 +757,31 @@ async def delete_agent(agent_id: str, current_user: User = Depends(get_current_u
     await db.agents.delete_one({"agent_id": agent_id})
     return {"message": "Agent deleted"}
 
+@api_router.get("/agents/create/info")
+async def get_create_agent_info(current_user: User = Depends(get_current_user)):
+    """Get info about custom agent creation limits and cost for current user"""
+    is_admin = current_user.email == ADMIN_EMAIL
+    
+    user_sub = await db.subscriptions.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    plan_id = user_sub.get("plan_id", "free") if user_sub else "free"
+    plan = SUBSCRIPTION_PLANS.get(plan_id, SUBSCRIPTION_PLANS["free"])
+    max_custom = plan.get("max_custom_agents", 0)
+    credits = user_sub.get("credits", 0) if user_sub else 0
+    
+    current_custom_count = await db.agents.count_documents({"creator_id": current_user.user_id, "is_custom": True})
+    
+    return {
+        "credit_cost": CUSTOM_AGENT_CREDIT_COST,
+        "credits_remaining": credits,
+        "can_afford": credits >= CUSTOM_AGENT_CREDIT_COST or is_admin,
+        "max_custom_agents": max_custom if not is_admin else -1,
+        "current_custom_count": current_custom_count,
+        "can_create": is_admin or (max_custom == -1 or current_custom_count < max_custom) and credits >= CUSTOM_AGENT_CREDIT_COST,
+        "plan_name": plan["name"],
+        "is_admin": is_admin
+    }
+
+
 # ============== CHAT ENDPOINTS ==============
 
 @api_router.get("/chats", response_model=List[Chat])
