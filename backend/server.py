@@ -2142,6 +2142,41 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
             return "***"
         return key[:8] + "..." + key[-4:]
     
+    # Direct provider cost reference (per 1M tokens unless noted)
+    cost_reference = {
+        "openai": {
+            "models": [
+                {"name": "GPT-5.2", "input": "$2.50", "output": "$10.00"},
+                {"name": "GPT-4o", "input": "$2.50", "output": "$10.00"},
+                {"name": "GPT-4o Mini", "input": "$0.15", "output": "$0.60"},
+                {"name": "O3", "input": "$10.00", "output": "$40.00"},
+                {"name": "O3 Mini", "input": "$1.10", "output": "$4.40"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "anthropic": {
+            "models": [
+                {"name": "Claude Sonnet 4.5", "input": "$3.00", "output": "$15.00"},
+                {"name": "Claude Opus 4.5", "input": "$15.00", "output": "$75.00"},
+                {"name": "Claude Haiku 4.5", "input": "$0.80", "output": "$4.00"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "gemini": {
+            "models": [
+                {"name": "Gemini 3 Flash", "input": "$0.075", "output": "$0.30"},
+                {"name": "Gemini 3 Pro", "input": "$1.25", "output": "$5.00"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "elevenlabs": {
+            "models": [
+                {"name": "Multilingual v2", "input": "~$0.30", "output": "per 1K chars"},
+            ],
+            "unit": "per 1K characters"
+        }
+    }
+    
     return {
         "active_provider": config.get("active_provider", "emergent"),
         "emergent_key_set": bool(EMERGENT_LLM_KEY),
@@ -2153,6 +2188,7 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
         "gemini_key_set": bool(config.get("gemini_key", "")),
         "elevenlabs_key": mask(config.get("elevenlabs_key", "")),
         "elevenlabs_key_set": bool(config.get("elevenlabs_key", "")),
+        "cost_reference": cost_reference,
     }
 
 @api_router.put("/admin/api-keys")
