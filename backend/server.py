@@ -2390,12 +2390,6 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
                 {"name": "Gemini 3 Pro", "input": "$1.25", "output": "$5.00"},
             ],
             "unit": "per 1M tokens"
-        },
-        "elevenlabs": {
-            "models": [
-                {"name": "Multilingual v2", "input": "~$0.30", "output": "per 1K chars"},
-            ],
-            "unit": "per 1K characters"
         }
     }
     
