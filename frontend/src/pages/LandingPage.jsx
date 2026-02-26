@@ -71,7 +71,7 @@ const LandingPage = () => {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
                 <Bot className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white font-['Outfit']">Nexus AI</span>
+              <span className="text-xl font-bold text-white font-['Outfit']">MAARS Global</span>
             </Link>
 
             {/* Desktop Menu */}
