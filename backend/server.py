@@ -718,7 +718,7 @@ async def get_stats(current_user: User = Depends(get_current_user)):
 @app.on_event("startup")
 async def startup():
     await seed_default_agents()
-    logger.info("Nexus AI Backend started")
+    logger.info("MAARS Global AI Team Backend started")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
