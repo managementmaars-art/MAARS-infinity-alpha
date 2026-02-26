@@ -1029,32 +1029,47 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     
     # Get AI response
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        api_keys = await get_api_keys()
         
-        llm_chat = LlmChat(
-            api_key=EMERGENT_LLM_KEY,
-            session_id=chat_id,
-            system_message=agent["system_prompt"]
-        ).with_model(model_provider, model_name)
-        
-        # Build message with attachments if present
-        message_content = message_data.content
-        if message_data.attachments:
-            message_content += f"\n\n[User attached {len(message_data.attachments)} file(s)]"
-        
-        user_message = UserMessage(text=message_content)
-        
-        # Add image attachments if any
-        if message_data.attachments:
-            for attachment in message_data.attachments:
-                if attachment.startswith("data:image"):
-                    # Base64 image
-                    user_message = user_message.add_image(attachment)
-                elif attachment.startswith("http"):
-                    # URL image
-                    user_message = user_message.add_image(attachment)
-        
-        response_text = await llm_chat.send_message(user_message)
+        if api_keys["active_provider"] == "direct":
+            # Use direct API keys
+            direct_key = api_keys.get(model_provider, "")
+            if direct_key:
+                response_text = await call_direct_llm(model_provider, model_name, agent["system_prompt"], message_data.content, message_data.attachments, direct_key)
+            else:
+                # Fall back to Emergent key for this provider
+                from emergentintegrations.llm.chat import LlmChat, UserMessage
+                llm_chat = LlmChat(
+                    api_key=api_keys["emergent"],
+                    session_id=chat_id,
+                    system_message=agent["system_prompt"]
+                ).with_model(model_provider, model_name)
+                message_content = message_data.content
+                if message_data.attachments:
+                    message_content += f"\n\n[User attached {len(message_data.attachments)} file(s)]"
+                user_message = UserMessage(text=message_content)
+                if message_data.attachments:
+                    for attachment in message_data.attachments:
+                        if attachment.startswith("data:image") or attachment.startswith("http"):
+                            user_message = user_message.add_image(attachment)
+                response_text = await llm_chat.send_message(user_message)
+        else:
+            # Use Emergent key (default)
+            from emergentintegrations.llm.chat import LlmChat, UserMessage
+            llm_chat = LlmChat(
+                api_key=api_keys["emergent"],
+                session_id=chat_id,
+                system_message=agent["system_prompt"]
+            ).with_model(model_provider, model_name)
+            message_content = message_data.content
+            if message_data.attachments:
+                message_content += f"\n\n[User attached {len(message_data.attachments)} file(s)]"
+            user_message = UserMessage(text=message_content)
+            if message_data.attachments:
+                for attachment in message_data.attachments:
+                    if attachment.startswith("data:image") or attachment.startswith("http"):
+                        user_message = user_message.add_image(attachment)
+            response_text = await llm_chat.send_message(user_message)
         
     except Exception as e:
         logger.error(f"LLM error: {e}")
