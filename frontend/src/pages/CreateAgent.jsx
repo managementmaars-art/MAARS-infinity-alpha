@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -6,7 +6,8 @@ import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Badge } from "../components/ui/badge";
-import { Bot, ArrowLeft, Plus, X, Sparkles } from "lucide-react";
+import { Card, CardContent } from "../components/ui/card";
+import { Bot, ArrowLeft, Plus, X, Sparkles, CreditCard, Lock, AlertTriangle } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
 
@@ -15,6 +16,8 @@ const CreateAgent = () => {
   const { token } = useAuth();
   const [loading, setLoading] = useState(false);
   const [capability, setCapability] = useState("");
+  const [createInfo, setCreateInfo] = useState(null);
+  const [infoLoading, setInfoLoading] = useState(true);
   
   const [formData, setFormData] = useState({
     name: "",
@@ -29,61 +32,65 @@ const CreateAgent = () => {
 
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
+  useEffect(() => {
+    fetchCreateInfo();
+  }, []);
+
+  const fetchCreateInfo = async () => {
+    try {
+      const res = await fetch(`${API}/agents/create/info`, { credentials: "include", headers });
+      if (res.ok) setCreateInfo(await res.json());
+    } catch {
+      // Silently fail
+    } finally {
+      setInfoLoading(false);
+    }
+  };
+
   const modelOptions = {
     openai: [
       { value: "gpt-5.2", label: "GPT-5.2 (Latest)" },
-      { value: "gpt-5.1", label: "GPT-5.1" },
       { value: "gpt-4o", label: "GPT-4o" },
       { value: "o3", label: "O3 (Reasoning)" }
     ],
     anthropic: [
       { value: "claude-sonnet-4-5-20250929", label: "Claude Sonnet 4.5" },
-      { value: "claude-opus-4-5-20251101", label: "Claude Opus 4.5" },
-      { value: "claude-haiku-4-5-20251001", label: "Claude Haiku 4.5" }
+      { value: "claude-opus-4-5-20251101", label: "Claude Opus 4.5" }
     ],
     gemini: [
       { value: "gemini-3-flash-preview", label: "Gemini 3 Flash" },
-      { value: "gemini-3-pro-preview", label: "Gemini 3 Pro" },
-      { value: "gemini-2.5-pro", label: "Gemini 2.5 Pro" }
+      { value: "gemini-3-pro-preview", label: "Gemini 3 Pro" }
     ]
   };
 
-  const avatarOptions = [
-    "https://images.unsplash.com/photo-1677212004257-103cfa6b59d0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwxfHwzZCUyMHJvYm90JTIwYXZhdGFyJTIwZnV0dXJpc3RpYyUyMGljb24lMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzIwNjg5OTF8MA&ixlib=rb-4.1.0&q=85",
-    "https://images.unsplash.com/photo-1760931969401-9bd6ee902798?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHw0fHwzZCUyMHJvYm90JTIwYXZhdGFyJTIwZnV0dXJpc3RpYyUyMGljb24lMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzIwNjg5OTF8MA&ixlib=rb-4.1.0&q=85",
-    "https://images.pexels.com/photos/8294598/pexels-photo-8294598.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    "https://images.unsplash.com/photo-1535378917042-10a22c95931a?crop=entropy&cs=srgb&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YWklMjByb2JvdHxlbnwwfHwwfHx8MA%3D%3D&ixlib=rb-4.1.0&q=85",
-    "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?crop=entropy&cs=srgb&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cm9ib3R8ZW58MHx8MHx8fDA%3D&ixlib=rb-4.1.0&q=85",
-    "https://images.unsplash.com/photo-1546776310-eef45dd6d63c?crop=entropy&cs=srgb&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YWklMjBhc3Npc3RhbnR8ZW58MHx8MHx8fDA%3D&ixlib=rb-4.1.0&q=85"
+  const robotAvatars = [
+    "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/43ae7e2a837703cb3a5da4fdd616bc12c825f9f0f15b7e9304e61a3dab0bd257.png",
+    "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/c4305af2c26cea8648db361e275c2f1ef2db69815efff20a57aa4e0807abfcce.png",
+    "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/48310a3af62b331e8f13d73aa7ac03cdfd9565c00fc03fd7dade81f63edfe3a7.png",
+    "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/c608195e54230fb30922f73d04dd840a095e7d6ee759b4b9cfe368511284876d.png",
+    "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/2ceaf34f302e1bf7d622058c516b8e86782c142d9a32dee38b13da10b8f0514c.png",
+    "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/96d5c274e3657d527a5a8c4bf869dcfdb08530445029e0df555139dba990b2cc.png"
   ];
 
   const addCapability = () => {
     if (capability.trim() && !formData.capabilities.includes(capability.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        capabilities: [...prev.capabilities, capability.trim()]
-      }));
+      setFormData(prev => ({ ...prev, capabilities: [...prev.capabilities, capability.trim()] }));
       setCapability("");
     }
   };
 
   const removeCapability = (cap) => {
-    setFormData(prev => ({
-      ...prev,
-      capabilities: prev.capabilities.filter(c => c !== cap)
-    }));
+    setFormData(prev => ({ ...prev, capabilities: prev.capabilities.filter(c => c !== cap) }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!formData.name || !formData.role || !formData.system_prompt) {
       toast.error("Please fill in all required fields");
       return;
     }
 
     setLoading(true);
-
     try {
       const response = await fetch(`${API}/agents`, {
         method: "POST",
@@ -100,18 +107,21 @@ const CreateAgent = () => {
         const data = await response.json();
         toast.error(data.detail || "Failed to create agent");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to create agent");
     } finally {
       setLoading(false);
     }
   };
 
+  const canCreate = createInfo?.can_create;
+  const isBlocked = createInfo && !canCreate && !createInfo.is_admin;
+
   return (
     <div className="min-h-screen bg-background" data-testid="create-agent-page">
       <div className="max-w-3xl mx-auto p-6 lg:p-8">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <Link
             to="/agents"
             className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-4 transition-colors"
@@ -126,12 +136,78 @@ const CreateAgent = () => {
           <p className="text-zinc-400">Build a personalized AI agent tailored to your needs</p>
         </div>
 
+        {/* Cost & Limits Info Card */}
+        {!infoLoading && createInfo && (
+          <Card className={`mb-6 border ${isBlocked ? 'bg-red-950/20 border-red-500/30' : 'bg-zinc-900/50 border-white/10'}`} data-testid="create-agent-info-card">
+            <CardContent className="p-4">
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <CreditCard className={`w-4 h-4 ${isBlocked ? 'text-red-400' : 'text-indigo-400'}`} />
+                  <span className="text-sm text-zinc-300">
+                    Cost: <span className="font-semibold text-white">{createInfo.credit_cost} credits</span>
+                  </span>
+                </div>
+                <div className="w-px h-4 bg-white/10" />
+                <div className="flex items-center gap-2">
+                  <Bot className="w-4 h-4 text-zinc-400" />
+                  <span className="text-sm text-zinc-300">
+                    {createInfo.max_custom_agents === -1 ? (
+                      "Unlimited custom agents"
+                    ) : (
+                      <>Used: <span className="font-semibold text-white">{createInfo.current_custom_count}/{createInfo.max_custom_agents}</span> slots</>
+                    )}
+                  </span>
+                </div>
+                <div className="w-px h-4 bg-white/10" />
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-zinc-400" />
+                  <span className="text-sm text-zinc-300">
+                    Balance: <span className="font-semibold text-white">{createInfo.credits_remaining} credits</span>
+                  </span>
+                </div>
+                <Badge className={`ml-auto text-xs ${
+                  createInfo.plan_name === 'Business' ? 'bg-amber-500/20 text-amber-400' :
+                  createInfo.plan_name === 'Pro' ? 'bg-violet-500/20 text-violet-400' :
+                  createInfo.plan_name === 'Starter' ? 'bg-indigo-500/20 text-indigo-400' :
+                  'bg-zinc-500/20 text-zinc-400'
+                }`}>
+                  {createInfo.plan_name} Plan
+                </Badge>
+              </div>
+
+              {isBlocked && (
+                <div className="mt-3 flex items-start gap-2 p-3 rounded-lg bg-red-500/10">
+                  <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
+                  <div className="text-sm">
+                    {createInfo.max_custom_agents === 0 ? (
+                      <p className="text-red-300">
+                        Custom agent creation is not available on the Free plan. 
+                        <button onClick={() => navigate("/pricing")} className="text-red-400 underline ml-1 hover:text-red-300">Upgrade now</button>
+                      </p>
+                    ) : !createInfo.can_afford ? (
+                      <p className="text-red-300">
+                        Not enough credits ({createInfo.credits_remaining}/{createInfo.credit_cost} needed). 
+                        <button onClick={() => navigate("/pricing")} className="text-red-400 underline ml-1 hover:text-red-300">Buy credits</button>
+                      </p>
+                    ) : (
+                      <p className="text-red-300">
+                        Custom agent limit reached ({createInfo.current_custom_count}/{createInfo.max_custom_agents}). 
+                        <button onClick={() => navigate("/pricing")} className="text-red-400 underline ml-1 hover:text-red-300">Upgrade plan</button>
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Avatar Selection */}
           <div>
             <Label className="text-zinc-300 mb-3 block">Avatar</Label>
             <div className="flex flex-wrap gap-3">
-              {avatarOptions.map((url, i) => (
+              {robotAvatars.map((url, i) => (
                 <button
                   key={i}
                   type="button"
@@ -160,6 +236,7 @@ const CreateAgent = () => {
                 placeholder="e.g., Project Manager AI"
                 className="bg-zinc-900/50 border-white/10 focus:border-indigo-500"
                 required
+                disabled={isBlocked}
                 data-testid="agent-name-input"
               />
             </div>
@@ -172,6 +249,7 @@ const CreateAgent = () => {
                 placeholder="e.g., Project Manager"
                 className="bg-zinc-900/50 border-white/10 focus:border-indigo-500"
                 required
+                disabled={isBlocked}
                 data-testid="agent-role-input"
               />
             </div>
@@ -186,6 +264,7 @@ const CreateAgent = () => {
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
               placeholder="Describe what this agent does..."
               className="bg-zinc-900/50 border-white/10 focus:border-indigo-500 min-h-[80px]"
+              disabled={isBlocked}
               data-testid="agent-description-input"
             />
           </div>
@@ -200,6 +279,7 @@ const CreateAgent = () => {
               placeholder="You are an expert AI assistant that..."
               className="bg-zinc-900/50 border-white/10 focus:border-indigo-500 min-h-[150px] font-mono text-sm"
               required
+              disabled={isBlocked}
               data-testid="agent-prompt-input"
             />
             <p className="text-xs text-zinc-500">This defines your agent's personality and expertise</p>
@@ -218,6 +298,7 @@ const CreateAgent = () => {
                     model_name: modelOptions[value][0].value
                   }));
                 }}
+                disabled={isBlocked}
               >
                 <SelectTrigger className="bg-zinc-900/50 border-white/10" data-testid="provider-select">
                   <SelectValue />
@@ -234,6 +315,7 @@ const CreateAgent = () => {
               <Select
                 value={formData.model_name}
                 onValueChange={(value) => setFormData(prev => ({ ...prev, model_name: value }))}
+                disabled={isBlocked}
               >
                 <SelectTrigger className="bg-zinc-900/50 border-white/10" data-testid="model-select">
                   <SelectValue />
@@ -259,33 +341,19 @@ const CreateAgent = () => {
                 placeholder="Add a capability..."
                 className="bg-zinc-900/50 border-white/10 focus:border-indigo-500"
                 onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addCapability())}
+                disabled={isBlocked}
                 data-testid="capability-input"
               />
-              <Button
-                type="button"
-                onClick={addCapability}
-                variant="outline"
-                className="border-white/10 hover:bg-white/5"
-                data-testid="add-capability-btn"
-              >
+              <Button type="button" onClick={addCapability} variant="outline" className="border-white/10 hover:bg-white/5" disabled={isBlocked} data-testid="add-capability-btn">
                 <Plus className="w-4 h-4" />
               </Button>
             </div>
             {formData.capabilities.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-3">
                 {formData.capabilities.map((cap, i) => (
-                  <Badge
-                    key={i}
-                    variant="secondary"
-                    className="bg-indigo-500/20 text-indigo-300 border-0 pr-1"
-                  >
+                  <Badge key={i} variant="secondary" className="bg-indigo-500/20 text-indigo-300 border-0 pr-1">
                     {cap}
-                    <button
-                      type="button"
-                      onClick={() => removeCapability(cap)}
-                      className="ml-2 hover:text-white"
-                      data-testid={`remove-cap-${i}`}
-                    >
+                    <button type="button" onClick={() => removeCapability(cap)} className="ml-2 hover:text-white" data-testid={`remove-cap-${i}`}>
                       <X className="w-3 h-3" />
                     </button>
                   </Badge>
@@ -296,28 +364,19 @@ const CreateAgent = () => {
 
           {/* Submit */}
           <div className="flex gap-4 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-1 border-white/10 hover:bg-white/5"
-              onClick={() => navigate("/agents")}
-              data-testid="cancel-btn"
-            >
+            <Button type="button" variant="outline" className="flex-1 border-white/10 hover:bg-white/5" onClick={() => navigate("/agents")} data-testid="cancel-btn">
               Cancel
             </Button>
             <Button
               type="submit"
               className="flex-1 bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 glow-primary"
-              disabled={loading}
+              disabled={loading || isBlocked}
               data-testid="create-agent-submit-btn"
             >
-              {loading ? (
-                "Creating..."
+              {loading ? "Creating..." : isBlocked ? (
+                <><Lock className="w-4 h-4 mr-2" />Upgrade to Create</>
               ) : (
-                <>
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Create Agent
-                </>
+                <><Sparkles className="w-4 h-4 mr-2" />Create Agent ({createInfo?.credit_cost || 20} credits)</>
               )}
             </Button>
           </div>
