@@ -2968,6 +2968,96 @@ async def admin_update_subscription(user_id: str, plan_id: str, credits: int = 0
 
 # ============== STARTUP ==============
 
+# ============== USAGE LOG BACKFILL ==============
+
+MODEL_COSTS_MAP = {
+    "gpt-5.2": {"input": 2.50, "output": 10.00, "provider": "openai"},
+    "gpt-4o": {"input": 2.50, "output": 10.00, "provider": "openai"},
+    "gpt-4o-mini": {"input": 0.15, "output": 0.60, "provider": "openai"},
+    "o3": {"input": 10.00, "output": 40.00, "provider": "openai"},
+    "o3-mini": {"input": 1.10, "output": 4.40, "provider": "openai"},
+    "claude-sonnet-4-5-20250929": {"input": 3.00, "output": 15.00, "provider": "anthropic"},
+    "claude-opus-4-5-20251101": {"input": 15.00, "output": 75.00, "provider": "anthropic"},
+    "claude-haiku-4-5-20250929": {"input": 0.80, "output": 4.00, "provider": "anthropic"},
+    "gemini-3-flash-preview": {"input": 0.075, "output": 0.30, "provider": "gemini"},
+    "gemini-3-pro-preview": {"input": 1.25, "output": 5.00, "provider": "gemini"},
+}
+
+async def backfill_usage_logs():
+    """Backfill usage logs from historical chat messages (runs once)"""
+    already_done = await db.platform_config.find_one({"config_type": "usage_backfill_done"})
+    if already_done:
+        return
+    
+    logger.info("Backfilling usage logs from historical chats...")
+    count = 0
+    
+    chats = await db.chats.find({}, {"_id": 0}).to_list(5000)
+    
+    for chat in chats:
+        agent_id = chat.get("agent_id", "")
+        user_id = chat.get("user_id", "")
+        agent = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0})
+        
+        default_model = agent.get("model_name", "gpt-5.2") if agent else "gpt-5.2"
+        default_provider = agent.get("model_provider", "openai") if agent else "openai"
+        
+        messages = chat.get("messages", [])
+        # Pair user messages with assistant responses
+        for i, msg in enumerate(messages):
+            if msg.get("role") != "assistant":
+                continue
+            
+            content = msg.get("content", "")
+            model_used = msg.get("model_used", default_model)
+            
+            # Find the preceding user message for input estimation
+            user_content = ""
+            if i > 0 and messages[i-1].get("role") == "user":
+                user_content = messages[i-1].get("content", "")
+            
+            # Estimate tokens
+            system_prompt = agent.get("system_prompt", "") if agent else ""
+            input_text = user_content + system_prompt
+            est_input_tokens = max(len(input_text) // 4, 50)
+            est_output_tokens = max(len(content) // 4, 50)
+            
+            # Clean model name for cost lookup
+            model_clean = model_used.split("/")[-1] if "/" in model_used else model_used
+            costs = MODEL_COSTS_MAP.get(model_clean, {"input": 2.50, "output": 10.00, "provider": default_provider})
+            est_cost = (est_input_tokens * costs["input"] / 1_000_000) + (est_output_tokens * costs["output"] / 1_000_000)
+            
+            created_at = msg.get("timestamp") or chat.get("created_at") or datetime.now(timezone.utc).isoformat()
+            
+            usage_log = {
+                "log_id": f"backfill_{uuid.uuid4().hex[:10]}",
+                "user_id": user_id,
+                "chat_id": chat.get("chat_id", ""),
+                "agent_id": agent_id,
+                "model": model_used,
+                "provider": costs.get("provider", default_provider),
+                "input_tokens": est_input_tokens,
+                "output_tokens": est_output_tokens,
+                "estimated_cost_usd": round(est_cost, 6),
+                "key_source": "emergent",
+                "created_at": created_at,
+                "backfilled": True
+            }
+            await db.usage_logs.insert_one(usage_log)
+            count += 1
+    
+    await db.platform_config.insert_one({"config_type": "usage_backfill_done", "count": count, "done_at": datetime.now(timezone.utc).isoformat()})
+    logger.info(f"Backfilled {count} usage log entries from historical chats")
+
+@api_router.post("/admin/backfill-usage")
+async def admin_backfill_usage(admin: User = Depends(require_admin)):
+    """Force re-backfill usage logs from all chat history"""
+    await db.usage_logs.delete_many({"backfilled": True})
+    await db.platform_config.delete_one({"config_type": "usage_backfill_done"})
+    await backfill_usage_logs()
+    count = await db.usage_logs.count_documents({"backfilled": True})
+    return {"message": f"Backfilled {count} usage log entries from chat history"}
+
 @app.on_event("startup")
 async def startup():
     await seed_default_agents()
