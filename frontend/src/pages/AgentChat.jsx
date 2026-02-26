@@ -159,16 +159,29 @@ const AgentChat = () => {
     }
 
     setSending(true);
-    const userMessage = { role: "user", content: input, message_id: `temp_${Date.now()}` };
+    const [provider, model] = selectedModel.split("/");
+    const userMessage = { 
+      role: "user", 
+      content: input, 
+      message_id: `temp_${Date.now()}`,
+      attachments: attachments.map(a => a.preview),
+      model_used: selectedModel
+    };
     setMessages(prev => [...prev, userMessage]);
     setInput("");
+    setAttachments([]);
 
     try {
       const response = await fetch(`${API}/chats/${chatId}/messages`, {
         method: "POST",
         headers: { ...headers, "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ content: userMessage.content })
+        body: JSON.stringify({ 
+          content: userMessage.content,
+          model_provider: provider,
+          model_name: model,
+          attachments: userMessage.attachments
+        })
       });
 
       if (response.ok) {
@@ -194,6 +207,49 @@ const AgentChat = () => {
     } finally {
       setSending(false);
     }
+  };
+
+  const handleFileUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setUploading(true);
+    
+    for (const file of files) {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch(`${API}/upload`, {
+          method: "POST",
+          headers: headers,
+          credentials: "include",
+          body: formData
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setAttachments(prev => [...prev, {
+            filename: data.filename,
+            type: data.content_type,
+            size: data.size,
+            preview: data.data_url
+          }]);
+          toast.success(`${file.name} uploaded`);
+        } else {
+          toast.error(`Failed to upload ${file.name}`);
+        }
+      } catch (error) {
+        toast.error(`Failed to upload ${file.name}`);
+      }
+    }
+    
+    setUploading(false);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const removeAttachment = (index) => {
+    setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
   const deleteChat = async (chatId) => {
