@@ -1247,21 +1247,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         model_used = assistant_msg.get("model_used", "gpt-5.2")
         provider_used = agent.get("model_provider", "openai")
         
-        # Per-million token costs
-        MODEL_COSTS = {
-            "gpt-5.2": {"input": 2.50, "output": 10.00},
-            "gpt-4o": {"input": 2.50, "output": 10.00},
-            "gpt-4o-mini": {"input": 0.15, "output": 0.60},
-            "o3": {"input": 10.00, "output": 40.00},
-            "o3-mini": {"input": 1.10, "output": 4.40},
-            "claude-sonnet-4-5-20250929": {"input": 3.00, "output": 15.00},
-            "claude-opus-4-5-20251101": {"input": 15.00, "output": 75.00},
-            "claude-haiku-4-5-20250929": {"input": 0.80, "output": 4.00},
-            "gemini-3-flash-preview": {"input": 0.075, "output": 0.30},
-            "gemini-3-pro-preview": {"input": 1.25, "output": 5.00},
-        }
-        
-        costs = MODEL_COSTS.get(model_used, {"input": 2.50, "output": 10.00})
+        model_clean = model_used.split("/")[-1] if "/" in model_used else model_used
+        costs = MODEL_COSTS_MAP.get(model_clean, {"input": 2.50, "output": 10.00, "provider": provider_used})
         est_cost = (est_input_tokens * costs["input"] / 1_000_000) + (est_output_tokens * costs["output"] / 1_000_000)
         
         usage_log = {
