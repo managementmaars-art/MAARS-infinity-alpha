@@ -1868,7 +1868,7 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
     """Get current API key configuration (masked)"""
     config = await db.platform_config.find_one({"config_type": "api_keys"}, {"_id": 0})
     if not config:
-        config = {"active_provider": "emergent", "openai_key": "", "anthropic_key": "", "gemini_key": ""}
+        config = {"active_provider": "emergent", "openai_key": "", "anthropic_key": "", "gemini_key": "", "elevenlabs_key": ""}
     
     # Mask keys for display
     def mask(key):
@@ -1887,6 +1887,8 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
         "anthropic_key_set": bool(config.get("anthropic_key", "")),
         "gemini_key": mask(config.get("gemini_key", "")),
         "gemini_key_set": bool(config.get("gemini_key", "")),
+        "elevenlabs_key": mask(config.get("elevenlabs_key", "")),
+        "elevenlabs_key_set": bool(config.get("elevenlabs_key", "")),
     }
 
 @api_router.put("/admin/api-keys")
