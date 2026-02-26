@@ -371,6 +371,40 @@ const LandingPage = () => {
                 <p className="text-xs text-zinc-400">Each agent automatically picks the best model for the task — coding, creative writing, research, data analysis, and more.</p>
               </div>
             </div>
+
+            {/* Generation Models */}
+            <div className="p-6 rounded-xl glass animate-slide-up" style={{ animationDelay: '0.3s', opacity: 0 }} data-testid="models-generation">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-lg bg-rose-500/20 flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-rose-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white font-['Outfit']">AI Generation</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { name: "GPT Image 1", tag: "Image Gen", desc: "Generate stunning images from text descriptions", color: "rose" },
+                  { name: "DALL-E 3", tag: "Image Gen", desc: "Creative and artistic image generation", color: "rose" },
+                  { name: "Sora 2", tag: "Video Gen", desc: "Generate AI videos from text prompts (4-12 sec)", color: "rose" },
+                  { name: "ElevenLabs v2", tag: "Voice AI", desc: "Multilingual text-to-speech in 28+ languages", color: "rose" },
+                ].map((m, i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                    <div className="mt-0.5 w-2 h-2 rounded-full bg-rose-400 shrink-0" />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-white font-medium text-sm">{m.name}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-rose-500/20 text-rose-400">{m.tag}</span>
+                      </div>
+                      <p className="text-xs text-zinc-500 mt-0.5">{m.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 p-3 rounded-lg bg-white/5 border border-white/10">
+                <p className="text-xs text-zinc-400 text-center">
+                  Also generates <span className="text-white font-medium">PDF, Excel, Word, CSV</span> documents on demand
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
