@@ -30,6 +30,94 @@ const AVAILABLE_MODELS = [
   { provider: "gemini", model: "gemini-3-pro-preview", name: "Gemini 3 Pro", category: "flagship" },
 ];
 
+// Commander Group Chat Component - renders delegation as individual agent chat bubbles
+const CommanderGroupChat = ({ msg, msgIndex, generatedFiles, generateFile, generatingFile, currentAgent }) => {
+  const data = msg.delegation_data;
+  const priorityColors = {
+    high: "bg-red-500/20 text-red-400 border-red-500/30",
+    medium: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+    low: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  };
+
+  return (
+    <div className="space-y-3" data-testid={`commander-group-${msgIndex}`}>
+      {/* Commander header card */}
+      <div className="flex gap-3" data-testid={`message-${msgIndex}`}>
+        <img
+          src={currentAgent?.avatar}
+          alt="Commander"
+          className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
+        />
+        <div className="flex-1 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-semibold text-amber-400 text-sm">Commander Orion</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">MISSION BRIEFING</span>
+          </div>
+          <p className="text-zinc-200 text-sm font-medium mb-1">Goal: {data.goal}</p>
+          <p className="text-zinc-400 text-xs">{data.task_count} specialists deployed &middot; {data.task_count} tasks created</p>
+          
+          {/* Agent avatars row */}
+          <div className="flex items-center gap-1 mt-3">
+            {data.agents.map((a, idx) => (
+              <div key={idx} className="relative group">
+                <img
+                  src={a.agent_avatar}
+                  alt={a.agent_name}
+                  className="w-7 h-7 rounded-full object-cover ring-2 ring-zinc-800 -ml-1 first:ml-0 hover:ring-indigo-500 transition-all hover:z-10 hover:scale-110"
+                  title={a.agent_name}
+                />
+              </div>
+            ))}
+            <span className="text-xs text-zinc-500 ml-2">{data.agents.length} active</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Individual agent responses */}
+      {data.agents.map((agent, idx) => (
+        <div key={idx} className="flex gap-3 ml-6 animate-in fade-in slide-in-from-left-2" style={{ animationDelay: `${idx * 100}ms` }} data-testid={`delegation-agent-${idx}`}>
+          <div className="relative flex-shrink-0">
+            <img
+              src={agent.agent_avatar}
+              alt={agent.agent_name}
+              className="w-8 h-8 rounded-lg object-cover"
+            />
+            <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-zinc-900 ${agent.status === "completed" ? "bg-emerald-500" : "bg-red-500"}`} />
+          </div>
+          <div className="flex-1 rounded-xl bg-zinc-800/60 border border-white/5 p-4 hover:border-white/10 transition-colors">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-white text-sm">{agent.agent_name}</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-zinc-400">{agent.agent_role}</span>
+              </div>
+              <span className={`text-[10px] px-1.5 py-0.5 rounded-full border ${priorityColors[agent.priority]}`}>
+                {agent.priority.toUpperCase()}
+              </span>
+            </div>
+            <div className="text-xs text-indigo-300/80 mb-2 flex items-center gap-1">
+              <ListTodo className="w-3 h-3" />
+              {agent.task_title || agent.task}
+            </div>
+            <p className="text-zinc-200 text-sm whitespace-pre-wrap leading-relaxed">{agent.response}</p>
+          </div>
+        </div>
+      ))}
+
+      {/* Commander summary footer */}
+      <div className="flex gap-3 ml-6">
+        <div className="w-8 flex-shrink-0 flex justify-center">
+          <div className="w-px h-full bg-amber-500/20" />
+        </div>
+        <div className="flex-1 rounded-lg bg-zinc-900/50 border border-white/5 p-3">
+          <p className="text-xs text-zinc-400">
+            All specialists have reported. <span className="text-amber-400 font-medium">{data.task_count} tasks</span> auto-created on your Tasks page.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AgentChat = () => {
   const navigate = useNavigate();
   const { agentId } = useParams();
