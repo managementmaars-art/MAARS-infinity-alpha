@@ -620,9 +620,16 @@ async def exchange_session(request: Request, response: Response):
     
     return {"user_id": user_id, "email": user["email"], "name": user["name"], "picture": user.get("picture")}
 
-@api_router.get("/auth/me", response_model=User)
+@api_router.get("/auth/me")
 async def get_me(current_user: User = Depends(get_current_user)):
-    return current_user
+    return {
+        "user_id": current_user.user_id,
+        "email": current_user.email,
+        "name": current_user.name,
+        "picture": current_user.picture,
+        "is_admin": current_user.is_admin,
+        "created_at": current_user.created_at.isoformat() if isinstance(current_user.created_at, datetime) else current_user.created_at
+    }
 
 @api_router.post("/auth/logout")
 async def logout(request: Request, response: Response):
