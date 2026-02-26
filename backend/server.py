@@ -1226,6 +1226,225 @@ async def upload_file(file: UploadFile = File(...), current_user: User = Depends
         logger.error(f"Upload error: {e}")
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
+# ============== COMMANDER AI DELEGATION ==============
+
+AGENT_ROLE_MAP = {
+    "marketing": "agent_marketing",
+    "strategy": "agent_strategist",
+    "business": "agent_strategist",
+    "web design": "agent_webdesigner",
+    "ui/ux": "agent_webdesigner",
+    "development": "agent_appdev",
+    "coding": "agent_appdev",
+    "copywriting": "agent_copywriter",
+    "copy": "agent_copywriter",
+    "seo": "agent_seo",
+    "sales": "agent_sales",
+    "social media": "agent_socialmedia",
+    "data": "agent_analyst",
+    "analytics": "agent_analyst",
+    "content": "agent_contentwriter",
+    "blog": "agent_contentwriter",
+    "customer service": "agent_customerservice",
+    "support": "agent_customerservice",
+    "project management": "agent_projectmanager",
+    "planning": "agent_projectmanager",
+    "research": "agent_researcher",
+    "finance": "agent_finance",
+    "budget": "agent_finance",
+    "hr": "agent_hr",
+    "hiring": "agent_hr",
+    "graphic design": "agent_graphics",
+    "design": "agent_graphics",
+    "legal": "agent_legal",
+    "contract": "agent_legal",
+    "email": "agent_email",
+    "newsletter": "agent_email",
+    "video": "agent_video",
+    "youtube": "agent_video",
+    "secretary": "agent_secretary",
+    "schedule": "agent_secretary",
+}
+
+async def commander_delegate(goal: str, chat_id: str, api_keys: dict) -> str:
+    """Commander AI breaks down a goal and delegates to specialists"""
+    # Step 1: Use LLM to analyze the goal and create a delegation plan
+    plan_prompt = f"""You are Commander Orion. A user has given you this goal:
+
+"{goal}"
+
+Analyze this goal and create a delegation plan. Return ONLY a JSON array of sub-tasks in this exact format:
+[
+  {{"task": "Brief task description", "agent_role": "one of: marketing, strategy, web design, development, copywriting, seo, sales, social media, data, content, customer service, project management, research, finance, hr, graphic design, legal, email, video, secretary", "priority": 1}},
+  ...
+]
+
+Choose 2-4 most relevant specialists. Be specific about what each should do. Return ONLY the JSON array, no other text."""
+
+    try:
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        
+        planner = LlmChat(
+            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
+            session_id=f"{chat_id}_commander_plan",
+            system_message="You are a task planning AI. Output only valid JSON arrays."
+        ).with_model("openai", "gpt-5.2")
+        
+        plan_text = await planner.send_message(UserMessage(text=plan_prompt))
+        
+        # Parse the plan
+        import json
+        # Clean up the response - remove markdown code blocks if present
+        plan_text_clean = plan_text.strip()
+        if plan_text_clean.startswith("```"):
+            plan_text_clean = plan_text_clean.split("\n", 1)[1] if "\n" in plan_text_clean else plan_text_clean[3:]
+        if plan_text_clean.endswith("```"):
+            plan_text_clean = plan_text_clean[:-3]
+        plan_text_clean = plan_text_clean.strip()
+        
+        tasks = json.loads(plan_text_clean)
+        
+    except Exception as e:
+        logger.error(f"Commander planning error: {e}")
+        return f"I analyzed your goal: \"{goal}\"\n\nI encountered an issue breaking this down automatically. Let me provide my strategic assessment instead:\n\nThis goal would benefit from a multi-disciplinary approach. I recommend starting with research and strategy, then moving to execution. Would you like me to try again, or shall I connect you with a specific specialist?"
+    
+    # Step 2: Execute each sub-task with the appropriate agent
+    results = []
+    results.append(f"## Commander Orion's Mission Report\n\n**Goal:** {goal}\n\n**Delegation Plan:** {len(tasks)} specialists deployed\n\n---\n")
+    
+    for i, task_item in enumerate(tasks):
+        task_desc = task_item.get("task", "")
+        agent_role = task_item.get("agent_role", "").lower()
+        agent_id = AGENT_ROLE_MAP.get(agent_role, "agent_strategist")
+        
+        agent = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0})
+        if not agent:
+            continue
+        
+        try:
+            specialist = LlmChat(
+                api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
+                session_id=f"{chat_id}_commander_{agent_id}",
+                system_message=agent["system_prompt"]
+            ).with_model(agent.get("model_provider", "openai"), agent.get("model_name", "gpt-5.2"))
+            
+            specialist_prompt = f"The Commander has assigned you this task as part of a larger project.\n\nOverall Goal: {goal}\n\nYour specific task: {task_desc}\n\nProvide a concise but actionable response. Focus on deliverables and next steps."
+            
+            response = await specialist.send_message(UserMessage(text=specialist_prompt))
+            results.append(f"### {i+1}. {agent['name']} ({agent['role']})\n**Task:** {task_desc}\n\n{response}\n\n---\n")
+            
+        except Exception as e:
+            logger.error(f"Commander delegation error for {agent_id}: {e}")
+            results.append(f"### {i+1}. {agent.get('name', 'Agent')} ({agent.get('role', 'Specialist')})\n**Task:** {task_desc}\n\n*Unable to complete - will retry on next attempt.*\n\n---\n")
+    
+    results.append("\n## Commander's Summary\nAll specialists have reported. Review the outputs above and let me know if you'd like any section expanded or revised. I can also delegate additional tasks or adjust the strategy.")
+    
+    return "\n".join(results)
+
+# ============== AUDIO ENDPOINTS (TTS/STT) ==============
+
+@api_router.post("/audio/speech-to-text")
+async def speech_to_text(audio_file: UploadFile = File(...), language: Optional[str] = Form(None), current_user: User = Depends(get_current_user)):
+    """Transcribe audio to text using OpenAI Whisper"""
+    try:
+        contents = await audio_file.read()
+        if len(contents) > 25 * 1024 * 1024:
+            raise HTTPException(status_code=400, detail="Audio file too large. Max 25MB.")
+        
+        from emergentintegrations.llm.openai import OpenAISpeechToText
+        
+        api_keys = await get_api_keys()
+        stt_key = api_keys.get("emergent", EMERGENT_LLM_KEY)
+        
+        stt = OpenAISpeechToText(api_key=stt_key)
+        
+        audio_io = io.BytesIO(contents)
+        audio_io.name = audio_file.filename or "audio.webm"
+        
+        kwargs = {"file": audio_io, "model": "whisper-1", "response_format": "json"}
+        if language:
+            kwargs["language"] = language
+        
+        response = await stt.transcribe(**kwargs)
+        
+        return {"text": response.text, "language": language}
+    except Exception as e:
+        logger.error(f"STT error: {e}")
+        raise HTTPException(status_code=500, detail=f"Speech-to-text failed: {str(e)}")
+
+@api_router.post("/audio/text-to-speech")
+async def text_to_speech(request: Request, current_user: User = Depends(get_current_user)):
+    """Convert text to speech using ElevenLabs"""
+    body = await request.json()
+    text = body.get("text", "")
+    voice_id = body.get("voice_id", "21m00Tcm4TlvDq8ikWAM")  # Default: Rachel
+    language_code = body.get("language_code")
+    
+    if not text:
+        raise HTTPException(status_code=400, detail="Text is required")
+    
+    if len(text) > 5000:
+        raise HTTPException(status_code=400, detail="Text too long. Max 5000 characters.")
+    
+    try:
+        api_keys = await get_api_keys()
+        elevenlabs_key = api_keys.get("elevenlabs", "")
+        
+        if not elevenlabs_key:
+            raise HTTPException(status_code=400, detail="ElevenLabs API key not configured. Please add it in the admin panel under API Keys.")
+        
+        from elevenlabs import ElevenLabs as ElevenLabsClient
+        from elevenlabs import VoiceSettings
+        
+        eleven_client = ElevenLabsClient(api_key=elevenlabs_key)
+        
+        audio_generator = eleven_client.text_to_speech.convert(
+            text=text,
+            voice_id=voice_id,
+            model_id="eleven_multilingual_v2",
+            voice_settings=VoiceSettings(
+                stability=0.5,
+                similarity_boost=0.75,
+                style=0.0,
+                use_speaker_boost=True
+            )
+        )
+        
+        audio_data = b""
+        for chunk in audio_generator:
+            audio_data += chunk
+        
+        audio_b64 = base64.b64encode(audio_data).decode()
+        
+        return {"audio_url": f"data:audio/mpeg;base64,{audio_b64}", "text": text}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"TTS error: {e}")
+        raise HTTPException(status_code=500, detail=f"Text-to-speech failed: {str(e)}")
+
+@api_router.get("/audio/voices")
+async def get_voices(current_user: User = Depends(get_current_user)):
+    """Get available ElevenLabs voices"""
+    try:
+        api_keys = await get_api_keys()
+        elevenlabs_key = api_keys.get("elevenlabs", "")
+        
+        if not elevenlabs_key:
+            return {"voices": [], "message": "ElevenLabs API key not configured"}
+        
+        from elevenlabs import ElevenLabs as ElevenLabsClient
+        
+        eleven_client = ElevenLabsClient(api_key=elevenlabs_key)
+        voices_response = eleven_client.voices.get_all()
+        
+        voices = [{"voice_id": v.voice_id, "name": v.name, "category": getattr(v, "category", "premade")} for v in voices_response.voices[:20]]
+        
+        return {"voices": voices}
+    except Exception as e:
+        logger.error(f"Voices fetch error: {e}")
+        return {"voices": [], "message": str(e)}
+
 # ============== AVAILABLE MODELS ENDPOINT ==============
 
 @api_router.get("/models")
