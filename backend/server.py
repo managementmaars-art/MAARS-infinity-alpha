@@ -1100,6 +1100,26 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         }
         await db.subscriptions.insert_one(user_sub)
     
+    # Enforce agent access based on subscription
+    if not is_admin:
+        agent_id = chat["agent_id"]
+        is_commander = agent_id == "agent_commander"
+        plan_id = user_sub.get("plan_id", "free")
+        selected_agents = user_sub.get("selected_agents", [])
+        
+        if plan_id == "custom":
+            has_commander = user_sub.get("has_commander", False)
+            if is_commander and not has_commander:
+                raise HTTPException(status_code=403, detail="Commander AI is not included in your custom package. Please upgrade or add Commander to your package.")
+            if not is_commander and selected_agents and agent_id not in selected_agents:
+                raise HTTPException(status_code=403, detail="This agent is not in your custom package. Please update your package to include this agent.")
+        else:
+            plan = SUBSCRIPTION_PLANS.get(plan_id, SUBSCRIPTION_PLANS.get("free"))
+            if is_commander and not plan.get("includes_commander", False):
+                raise HTTPException(status_code=403, detail="Commander AI is only available on Pro and Business plans. Please upgrade your plan.")
+            if selected_agents and not is_commander and agent_id not in selected_agents:
+                raise HTTPException(status_code=403, detail="This agent is not in your selected agents. Go to Settings to update your agent selection.")
+    
     credits_remaining = user_sub.get("credits", 0)
     if credits_remaining <= 0 and not is_admin:
         raise HTTPException(status_code=402, detail="Insufficient credits. Please upgrade your plan or purchase more credits.")
