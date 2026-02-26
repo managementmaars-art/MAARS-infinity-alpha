@@ -618,7 +618,7 @@ async def exchange_session(request: Request, response: Response):
         max_age=7 * 24 * 60 * 60
     )
     
-    return {"user_id": user_id, "email": user["email"], "name": user["name"], "picture": user.get("picture")}
+    return {"user_id": user_id, "email": user["email"], "name": user["name"], "picture": user.get("picture"), "is_admin": user["email"] == ADMIN_EMAIL}
 
 @api_router.get("/auth/me")
 async def get_me(current_user: User = Depends(get_current_user)):
