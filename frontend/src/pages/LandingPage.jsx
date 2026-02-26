@@ -215,28 +215,29 @@ const LandingPage = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {agents.map((agent, index) => (
               <div
                 key={index}
-                className="relative overflow-hidden rounded-xl glass glass-hover group animate-slide-up"
-                style={{ animationDelay: `${index * 0.15}s`, opacity: 0 }}
+                className="relative overflow-hidden rounded-xl glass glass-hover group animate-slide-up cursor-pointer"
+                style={{ animationDelay: `${(index % 10) * 0.05}s`, opacity: 0 }}
                 data-testid={`agent-preview-${index}`}
+                onClick={() => navigate("/register")}
               >
                 <div className="aspect-square relative overflow-hidden">
                   <img
                     src={agent.avatar}
                     alt={agent.name}
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent" />
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <p className="text-indigo-400 text-sm mb-1">{agent.role}</p>
-                  <h3 className="text-xl font-bold text-white mb-3 font-['Outfit']">{agent.name}</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {agent.capabilities.map((cap, i) => (
-                      <span key={i} className="px-2 py-1 text-xs rounded-full bg-white/10 text-zinc-300">
+                <div className="absolute bottom-0 left-0 right-0 p-3">
+                  <p className="text-indigo-400 text-[10px] sm:text-xs">{agent.role}</p>
+                  <h3 className="text-sm sm:text-base font-bold text-white font-['Outfit'] truncate">{agent.name}</h3>
+                  <div className="hidden sm:flex flex-wrap gap-1 mt-1.5">
+                    {agent.capabilities.slice(0, 2).map((cap, i) => (
+                      <span key={i} className="px-1.5 py-0.5 text-[10px] rounded-full bg-white/10 text-zinc-300">
                         {cap}
                       </span>
                     ))}
