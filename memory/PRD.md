@@ -1,79 +1,72 @@
 # Martian AI by MAARS Global Corporation - PRD
 
 ## Original Problem Statement
-Build a full-stack AI team platform named "Martian AI by MAARS Global Corporation". 20+ specialized AI agents with unique robot avatars, powered by 10+ AI models with smart auto-selection. Commander AI bot for task delegation. Multi-language audio support (Bengali text/audio). Subscription SaaS with Stripe, dynamic pricing with profit margin calculator, multi-currency (USD/BDT). Private admin dashboard. Support for both Emergent Universal Key and direct provider API keys (OpenAI, Anthropic, Google, ElevenLabs).
+Build a full-stack AI team platform named "Martian AI by MAARS Global Corporation". 20+ specialized AI agents with unique robot avatars, powered by 10+ AI models with smart auto-selection. Commander AI bot for task delegation. Multi-language audio support (Bengali text/audio). Subscription SaaS with Stripe, dynamic pricing with profit margin calculator, multi-currency (USD/BDT). Private admin dashboard. Support for both Emergent Universal Key and direct provider API keys (OpenAI, Anthropic, Google, ElevenLabs). Custom "Build Your Own" packages where users pick specific agents and credit amounts.
 
 ## What's Been Implemented
 
-### Phase 1 - Foundation
-- React + FastAPI + MongoDB, 20 AI agents, chat with LLMs, JWT + Google OAuth
+### Phase 1-6 (Previous Sessions)
+- React + FastAPI + MongoDB full-stack
+- JWT + Google OAuth authentication
+- 20 AI agents with unique sci-fi robot avatars
+- Chat with 10+ LLMs (GPT-5.2, Claude, Gemini, etc.)
+- Stripe subscription system (Free/Starter/Pro/Business)
+- Credit system with usage tracking
+- Dynamic pricing with profit margin calculator
+- Admin dashboard (7 tabs)
+- API key management (Emergent + direct provider keys)
+- White-labeled "Martian AI" branding
+- Custom agent creation (20 credits)
 
-### Phase 2 - Monetization
-- Stripe subscriptions, credit system, pricing page (USD/BDT), custom agent charging
+### Phase 7 - Commander AI & Audio (Feb 2026)
+- Commander Orion: AI Commander that delegates goals to specialist agents
+- Speech-to-Text via OpenAI Whisper (mic button in chat)
+- Text-to-Speech via ElevenLabs (play button on messages)
+- ElevenLabs API key in admin panel alongside other providers
 
-### Phase 3 - Admin Section
-- Private admin dashboard (7 tabs: Overview, Users, Agents, Transactions, Pricing Manager, API Keys, Payment Setup)
-
-### Phase 4 - Robot Avatars & Custom Agents
-- 20 unique sci-fi robot avatars, custom agent creation (20 credits + plan limits)
-
-### Phase 5 - Rebrand & Dynamic Pricing & Models
-- "Martian AI by MAARS Global Corporation" branding, removed Emergent badge
-- Dynamic Pricing Manager with profit margin calculator (auto + manual)
-- 10 AI models: GPT-5.2, GPT-4o, GPT-4o Mini, O3, O3 Mini, Claude Sonnet/Opus/Haiku 4.5, Gemini 3 Flash/Pro
-- Smarter auto-selection across 7 task types
-
-### Phase 6 - Direct API Keys Support
-- Admin can choose between Emergent Universal Key or Direct Provider Keys
-- Per-provider key management (OpenAI, Anthropic, Google) with test functionality
-- Fallback system: direct keys -> Emergent key
-
-### Phase 7 - Commander AI & Audio Support (Feb 2026)
-- **Commander Orion**: New AI Commander agent that breaks down goals, delegates to 20 specialist agents, and compiles comprehensive results
-- Commander appears first in all agent lists with special golden badge on landing page
-- **Speech-to-Text (STT)**: Voice input via OpenAI Whisper (uses Emergent Universal Key)
-- **Text-to-Speech (TTS)**: Audio playback via ElevenLabs (requires admin-configured API key)
-- **ElevenLabs in Admin Panel**: Added alongside OpenAI/Anthropic/Google in API Keys tab with test functionality
-- Microphone button in chat input for voice recording
-- Listen/play button on all assistant messages
+### Phase 8 - Custom Packages & Agent Selection (Feb 2026)
+- **"Build Your Own" Package**: Users pick specific agents by name + credit preset
+- Agent picker grid on Pricing page (20 agents, click to select)
+- 5 credit presets (100/500/1000/2000/5000 credits)
+- Commander AI as separate paid add-on ($15/mo)
+- Real-time price calculator (agents + credits + commander = total)
+- Stripe checkout integration for custom packages
+- **Agent Selection for Fixed Plans**: Settings page allows users to choose which agents (up to plan limit)
+- **Agent Access Enforcement**: Chat blocks access to non-selected agents
+- Commander AI restricted to Pro/Business plans only
+- **Admin Custom Packages Tab**: Configure per-agent price, commander price, credit presets
+- Multi-currency support (USD/BDT) for all custom package pricing
 
 ## Prioritized Backlog
 
 ### P1
-- Test subscription/credit flow end-to-end
-- Implement agent selection for plans (users choose which agents)
-- Commander AI as a paid add-on (purchase flow)
+- End-to-end subscription/credit flow testing (full lifecycle)
+- Commander AI as purchasable add-on purchase flow finalization
 
 ### P2
-- Backend refactoring (split server.py into modular routers)
+- Backend refactoring (split monolithic server.py into modular routers)
 - Custom domain setup UI
 
 ### P3
 - Chat history search/export
 - Mobile optimization
 
-## Test Credentials
-- Admin: management.maars@marsgc.net / MaarsAdmin2024!
-- Test: admin@test.com / Admin1234!
-
 ## Architecture
 ```
 /app/
   backend/
-    server.py          # Monolithic backend (auth, chat, billing, admin, agents, audio)
+    server.py          # All backend logic
     .env               # MONGO_URL, DB_NAME, EMERGENT_LLM_KEY, JWT_SECRET, STRIPE_API_KEY
   frontend/
     src/
-      App.js           # Router, auth context
+      App.js
       pages/
-        AdminDashboard.jsx  # 7-tab admin panel
-        AgentChat.jsx       # Chat with mic/TTS buttons
+        AdminDashboard.jsx  # 8-tab admin panel (incl. Custom Packages)
+        AgentChat.jsx       # Chat with mic/TTS
         LandingPage.jsx     # Landing with Commander badge
-        Dashboard.jsx
-        Agents.jsx
-        Settings.jsx
-        PricingPage.jsx
-        ...
+        PricingPage.jsx     # 4 plans + Build Your Own
+        Settings.jsx        # Agent selection
+        Dashboard.jsx, Agents.jsx, Tasks.jsx
 ```
 
 ## Key API Endpoints
@@ -81,5 +74,11 @@ Build a full-stack AI team platform named "Martian AI by MAARS Global Corporatio
 - Agents: /api/agents, /api/agents/{id}
 - Chat: /api/chats, /api/chats/{id}/messages
 - Audio: /api/audio/speech-to-text, /api/audio/text-to-speech, /api/audio/voices
-- Admin: /api/admin/stats, /api/admin/api-keys, /api/admin/pricing
-- Billing: /api/plans, /api/checkout, /api/subscription, /api/credits
+- Plans: /api/plans (returns plans + custom_package config)
+- Custom Package: /api/custom-package/config, /api/custom-package/checkout
+- Subscription: /api/subscription, /api/subscription/agents (GET/PUT)
+- Admin: /api/admin/stats, /api/admin/api-keys, /api/admin/pricing, /api/admin/custom-package
+
+## Test Credentials
+- Admin: management.maars@marsgc.net / MaarsAdmin2024!
+- Test: admin@test.com / Admin1234!
