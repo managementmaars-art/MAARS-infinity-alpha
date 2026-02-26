@@ -74,6 +74,7 @@ SUBSCRIPTION_PLANS = {
         "credits": 50,
         "max_agents": 1,
         "max_custom_agents": 0,
+        "includes_commander": False,
         "features": ["1 AI employee", "50 credits/month", "Basic support"]
     },
     "starter": {
@@ -83,6 +84,7 @@ SUBSCRIPTION_PLANS = {
         "credits": 500,
         "max_agents": 5,
         "max_custom_agents": 2,
+        "includes_commander": False,
         "features": ["5 AI employees", "500 credits/month", "2 custom agents", "Priority support", "File uploads"]
     },
     "pro": {
@@ -92,7 +94,8 @@ SUBSCRIPTION_PLANS = {
         "credits": 2000,
         "max_agents": 10,
         "max_custom_agents": 5,
-        "features": ["10 AI employees", "2,000 credits/month", "5 custom agents", "Priority support", "Unlimited uploads"]
+        "includes_commander": True,
+        "features": ["10 AI employees + Commander AI", "2,000 credits/month", "5 custom agents", "Priority support", "Unlimited uploads"]
     },
     "business": {
         "name": "Business",
@@ -101,12 +104,34 @@ SUBSCRIPTION_PLANS = {
         "credits": 6000,
         "max_agents": 20,
         "max_custom_agents": -1,
-        "features": ["All 20 AI employees", "6,000 credits/month", "Unlimited custom agents", "Dedicated support", "Unlimited everything", "API access"]
+        "includes_commander": True,
+        "features": ["All 20 AI employees + Commander AI", "6,000 credits/month", "Unlimited custom agents", "Dedicated support", "Unlimited everything", "API access"]
     }
 }
 
 # Custom agent creation cost
 CUSTOM_AGENT_CREDIT_COST = 20
+
+# Default custom package pricing (admin can override via DB)
+DEFAULT_CUSTOM_PACKAGE_CONFIG = {
+    "per_agent_price_usd": 5.0,
+    "per_agent_price_bdt": 535.0,
+    "commander_addon_price_usd": 15.0,
+    "commander_addon_price_bdt": 1605.0,
+    "credit_presets": [
+        {"id": "cp_100", "credits": 100, "price_usd": 6.0, "price_bdt": 640.0},
+        {"id": "cp_500", "credits": 500, "price_usd": 25.0, "price_bdt": 2675.0},
+        {"id": "cp_1000", "credits": 1000, "price_usd": 45.0, "price_bdt": 4815.0},
+        {"id": "cp_2000", "credits": 2000, "price_usd": 80.0, "price_bdt": 8560.0},
+        {"id": "cp_5000", "credits": 5000, "price_usd": 180.0, "price_bdt": 19260.0},
+    ]
+}
+
+async def get_custom_package_config():
+    config = await db.platform_config.find_one({"config_type": "custom_packages"}, {"_id": 0})
+    if config:
+        return config
+    return DEFAULT_CUSTOM_PACKAGE_CONFIG
 
 CREDIT_PACKAGES = {
     "credits_100": {"credits": 100, "price_usd": 6.0, "price_bdt": 640.0, "name": "100 Credits"},
