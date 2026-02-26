@@ -247,6 +247,8 @@ class Task(BaseModel):
     priority: str = "medium"  # low, medium, high
     assigned_agents: List[str] = []
     result: Optional[str] = None
+    source: str = "manual"  # manual, commander
+    source_goal: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 
