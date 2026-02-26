@@ -545,7 +545,9 @@ const AdminDashboard = () => {
     }
   };
 
-  const ApiKeysTab = () => (
+  const ApiKeysTab = () => {
+    const costs = apiKeysConfig?.cost_reference || {};
+    return (
     <div className="space-y-6">
       {/* Provider Selection */}
       <Card className="bg-zinc-900/50 border-white/10">
@@ -664,8 +666,44 @@ const AdminDashboard = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Direct Cost Reference */}
+      <Card className="bg-zinc-900/50 border-white/10" data-testid="cost-reference-card">
+        <CardHeader>
+          <CardTitle className="text-white font-['Outfit'] flex items-center gap-3 text-base">
+            <DollarSign className="w-5 h-5 text-emerald-400" />
+            Direct Provider Costs
+          </CardTitle>
+          <p className="text-zinc-500 text-xs mt-1">Reference pricing when using your own API keys. Prices are from provider websites and may change.</p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Object.entries(costs).map(([providerId, data]) => (
+              <div key={providerId} className="rounded-lg border border-white/10 overflow-hidden">
+                <div className="px-3 py-2 bg-white/5 border-b border-white/10">
+                  <span className="text-sm font-semibold text-white capitalize">{providerId === "elevenlabs" ? "ElevenLabs" : providerId}</span>
+                  <span className="text-[10px] text-zinc-500 ml-2">{data.unit}</span>
+                </div>
+                <div className="divide-y divide-white/5">
+                  {(data.models || []).map((model, i) => (
+                    <div key={i} className="flex items-center justify-between px-3 py-2 text-xs">
+                      <span className="text-zinc-300">{model.name}</span>
+                      <div className="flex gap-3 text-right">
+                        <span className="text-zinc-500">In: <span className="text-emerald-400">{model.input}</span></span>
+                        <span className="text-zinc-500">Out: <span className="text-amber-400">{model.output}</span></span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-[10px] text-zinc-600 mt-3">* Emergent Universal Key includes a small markup over direct pricing for convenience and unified billing.</p>
+        </CardContent>
+      </Card>
     </div>
-  );
+    );
+  };
 
 
   const handleCalculate = async () => {
