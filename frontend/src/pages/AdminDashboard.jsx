@@ -78,6 +78,14 @@ const AdminDashboard = () => {
         setApiKeysConfig(k);
         setApiKeyInputs(prev => ({...prev, active_provider: k.active_provider || "emergent"}));
       }
+      
+      // Fetch profit data and API usage
+      const [profitRes, usageRes] = await Promise.all([
+        fetch(`${API}/admin/profit`, { credentials: "include", headers: authHeaders }),
+        fetch(`${API}/admin/api-usage`, { credentials: "include", headers: authHeaders }),
+      ]);
+      if (profitRes.ok) setProfitData(await profitRes.json());
+      if (usageRes.ok) setApiUsage(await usageRes.json());
     } catch (error) {
       toast.error("Failed to load admin data");
     } finally {
