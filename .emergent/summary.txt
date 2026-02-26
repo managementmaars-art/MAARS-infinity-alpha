@@ -1,110 +1,112 @@
 <analysis>**original_problem_statement:**
-The user wants to build a full-stack AI team platform, inspired by Sintra and Emergent. The project, named MAARS Global Corporation, should feature a team of specialized AI agents. Key requirements evolved during the conversation and include:
+The user wants to build a full-stack AI team platform, originally named MAARS Global Corporation and now rebranded to Martian AI by MAARS Global Corporation.
 
 PRODUCT REQUIREMENTS:
-1.  **AI Team:** A fully loaded team of 20 specialized AI employees (e.g., Personal Secretary, Marketing Specialist, Web Designer).
+1.  **AI Team:** A team of 20 specialized AI agents (e.g., Marketing Specialist), each with a unique animated robot picture. A special Commander AI bot should be added to receive orders and delegate tasks to other bots, available as a paid add-on.
 2.  **AI Model Functionality:**
-    *   Agents must be able to use the best available AI models (e.g., GPT-5.2, Claude 4.5, Gemini 3).
+    *   Agents must be able to use a wide range of AI models (e.g., GPT-4o, Claude 3 Opus, Gemini 1.5 Pro).
     *   An Auto mode that intelligently selects the best model for a given task.
     *   Manual model switching for users.
-    *   Unlimited file uploads (up to 50MB).
+    *   Support for direct API keys from providers (OpenAI, Anthropic, Google) as an alternative to the default Emergent Universal Key.
+    .
 3.  **Monetization & Subscription:**
-    *   The platform should be sold as a service to other users.
     *   A multi-tiered subscription model (Free, Starter, Pro, Business) integrated with Stripe.
-    *   Plans are gated by the number of agents a user can access.
-    *   A credit system where usage deducts credits from the user's balance.
-    *   Pricing should have a **200% profit margin** over AI costs.
+    *   A credit system for usage.
     *   Support for payments in both **USD** and **Bangladeshi Taka (BDT)**.
+    *   Users can create custom agents, with costs deducted from their credit balance and limits based on their subscription plan.
 4.  **Admin Section:**
-    *   A private admin section accessible only to the user ().
-    *   The admin should have full access to all platform features, including using the AI team and creating new agents.
+    *   A private admin section for .
+    *   The admin must have full access to all platform features.
+    *   A dynamic pricing manager to change plan prices and calculate profit margins against cost prices.
+    *   A section to manage API keys (switch between Emergent key and direct provider keys).
+5.  **Branding & Customization:**
+    *   The platform must be fully white-labeled, with no Emergent branding visible to end-users.
+    *   The user wants to integrate their own custom domain.
+6.  **Multi-language Support:** The application should be compatible with all languages, especially **Bengali**, including text and audio input/output.
 
 **User's preferred language**: English
 
 **what currently exists?**
-A full-stack application (React frontend, FastAPI backend) named MAARS Global Corporation has been built. The backend includes MongoDB models and FastAPI endpoints for user authentication (JWT & Google), a pre-defined list of 20 AI agents, chat functionality with file uploads, and an auto model selection logic. A complete Stripe-integrated subscription and credit system is in place, with a pricing page that supports toggling between USD and BDT currencies. The frontend consists of a landing page, auth pages, dashboard, chat interface, agent list, task manager, and settings page that shows subscription status and remaining credits.
+A full-stack application Martian AI (React/FastAPI/MongoDB) is running. It features JWT & Google authentication, a team of 20 AI agents with unique robot avatars, and a chat interface supporting 10+ LLMs. Users can switch between the Emergent Universal Key and their own direct provider API keys. The app includes a complete Stripe-integrated subscription and credit system with a currency toggle. A comprehensive admin dashboard allows for user management, viewing platform stats, dynamically managing subscription pricing with a profit margin calculator, and configuring API keys. All visible Emergent branding has been removed from the application's UI.
 
 **Last working item**:
--   **Last item agent was working:** The agent was about to begin implementation of a private admin section for the user, granting full access and control over the platform.
--   **Status:** NOT STARTED
+-   **Last item agent was working:** The agent was starting the implementation of two new features requested by the user: a Commander AI bot and multi-language support (specifically Bengali text and audio). The agent has gathered the requirements and used the  tool to get playbooks for elevenlabs text to speech and openai whisper speech to text.
+-   **Status:** IN PROGRESS
 -   **Agent Testing Done:** N
 -   **Which testing method agent to use?** both
-    -   **Reasoning:** Implementing an admin role requires backend changes to the authentication/authorization logic to identify and grant permissions to the admin user. It also requires frontend changes to create a dedicated admin UI or conditionally render admin-only controls. Both of these need to be tested to ensure the feature works correctly and is secure.
 -   **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
--   Issue 1: Implement agent selection mechanism for subscription plans (Priority: P1)
--   Issue 2: The entire subscription and credit deduction system is untested. (Priority: P1)
+-   **Issue 1: The entire subscription and credit deduction system is untested end-to-end. (Priority: P1)**
+-   **Issue 2: Implement agent selection mechanism for subscription plans. (Priority: P1)**
 
 Issues Detail:
--   **Issue 1: Implement agent selection mechanism for subscription plans**
-    -   **Attempted fixes:** None. The current implementation only gates plans by the *number* of agents, not allowing users to *choose* specific agents as requested.
-    -   **Next debug checklist:**
-        -   **Backend ():**
-            1.  Modify the  model to include a list of .
-            2.  Create a new endpoint (e.g., ) to allow users to update their list of selected agents, validating against their subscription plan limits.
-            3.  Update the chat and agent-related endpoints to enforce access based on the user's .
-        -   **Frontend:**
-            1.  Create a new UI component, likely in  or a new dedicated page, where users can browse all available agents and select the ones for their plan.
-            2.  Update  and other agent-listing components to only display agents present in the user's  list.
-    -   **Why fix this issue and what will be achieved with the fix?** This directly addresses a core user requirement for the subscription plans, making the monetization model function as intended.
-    -   **Status:** NOT STARTED
-    -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** both
-    -   **Blocked on other issue:** None
-
--   **Issue 2: The entire subscription and credit deduction system is untested.**
-    -   **Attempted fixes:** None. The agent implemented the feature but did not call the testing agent to verify it.
+-   **Issue 1: The entire subscription and credit deduction system is untested end-to-end.**
+    -   **Attempted fixes:** None. The agent has implemented the features and performed isolated tests (e.g., admin bypass), but a full user lifecycle test has never been conducted.
     -   **Next debug checklist:**
         1.  Call the .
-        2.  Instruct the testing agent to perform a full end-to-end test of the subscription flow:
-            -   Register a new user.
-            -   Verify the user is on the Free plan with 50 credits.
-            -   Send messages and confirm credits are deducted.
-            -   Attempt to send a message after credits run out and confirm it fails.
-            -   Use the pricing page to subscribe to a paid plan via the Stripe checkout.
-            -   Verify the user's plan and credit balance are updated correctly in the database and on the settings page.
-    -   **Why fix this issue and what will be achieved with the fix?** This is a critical monetization feature. Without testing, it is likely broken and will prevent the user from selling the service.
+        2.  Instruct the agent to test the complete user flow: register a new user, verify they are on the Free plan with initial credits, send messages to confirm credit deduction, upgrade to a paid plan via Stripe, and verify the plan/credits are updated. Test the credit depletion scenario.
+    -   **Why fix this issue and what will be achieved with the fix?** This is the core monetization flow of the application. It is critical to ensure it works flawlessly before launch.
     -   **Status:** TESTING PENDING
+    -   **Is recurring issue?** N
+    -   **Should Test frontend/backend/both after fix?** both
+    -   **Blocked on other issue:** none
+
+-   **Issue 2: Implement agent selection mechanism for subscription plans**
+    -   **Attempted fixes:** None. This was part of the original problem statement but was overlooked. The current plans are gated by the *number* of agents, not by user *selection*.
+    -   **Next debug checklist:**
+        -   **Backend ():** Modify the  model to store a list of selected agent IDs. Create an endpoint for users to update their selection, validating against their plan's agent limit. Update chat endpoints to enforce access based on the user's selected agents.
+        -   **Frontend:** Create a UI (e.g., in ) for users to select agents for their plan. Update agent list components to only show selected agents.
+    -   **Why fix this issue and what will be achieved with the fix?** This addresses a key user requirement for subscription customization, making the plans more flexible and valuable.
+    -   **Status:** NOT STARTED
     -   **Is recurring issue?** N
     -   **Should Test frontend/backend/both after fix?** both
     -   **Blocked on other issue:** None
 
 **In progress Task List**:
--   **Task 1: Implement the Private Admin Section (Priority: P0)**
+-   **Task 1: Implement Commander AI Bot (Priority: P0)**
     -   **Where to resume:**
-        -   **Backend ():** Add an  flag to the User model and JWT token. Create a dependency or middleware that checks for admin privileges. Hardcode the email  to always have admin rights upon login.
-        -   **Frontend:** Create an  route and page in . This page will house admin-specific functionality. Alternatively, conditionally render an Admin link in the main navigation and admin components on existing pages if the user is an admin.
-    -   **What will be achieved with this?** The user will have a secure, private section to manage the application and use all its features without restriction, fulfilling their direct request.
-    -   **Status:** NOT STARTED
+        -   **Backend ():** Create the Commander AI as a new default agent. Implement the logic for it to receive a user's goal, break it down, and delegate sub-tasks to the appropriate specialist agents.
+        -   **Frontend ():** Design a UI for interacting with the Commander AI.
+        -   **Monetization:** Implement the logic for this to be a separate, purchasable add-on as requested.
+    -   **What will be achieved with this?** A powerful new feature that acts as a project manager, simplifying the user's workflow.
+    -   **Status:** IN PROGRESS
+    -   **Should Test frontend/backend/both after fix?** both
+    -   **Blocked on something:** None
+
+-   **Task 2: Implement Multi-language Audio and Text (Priority: P0)**
+    -   **Where to resume:**
+        -   The agent has the integration playbooks for ElevenLabs (TTS) and OpenAI Whisper (STT).
+        -   **Backend ():** Add new endpoints to handle audio uploads (STT) and generate audio from text (TTS).
+        -   **Frontend ():** Integrate microphone input for recording audio and a play button to listen to agent responses in the chat interface.
+    -   **What will be achieved with this?** Makes the application accessible to a global audience, particularly Bengali speakers, through voice interaction.
+    -   **Status:** IN PROGRESS
     -   **Should Test frontend/backend/both after fix?** both
     -   **Blocked on something:** None
 
 **Upcoming and Future Tasks**
 - **Upcoming Tasks:**
-  - **Task 1 (P1): Verify and correct the pricing to match the 200% profit margin.** The pricing was changed multiple times. A review of the Stripe product setup and the pricing displayed on the frontend () is needed to ensure it reflects the final 200% margin request.
-  - **Task 2 (P2): Add a usage/cost tracker for the admin.** The agent previously suggested this, and it would be a valuable feature for the admin to monitor platform costs. This would involve a new backend endpoint to aggregate usage data and a new UI component in the admin dashboard.
+  - **Task 1 (P1):** Finalize Commander AI as a purchasable add-on by building the purchase flow.
+  - **Task 2 (P2):** Provide a UI for the user to set up their own custom domain.
 
 **Completed work in this session**
-- **Platform Scaffolding:** Built the initial full-stack React/FastAPI/MongoDB application.
-- **Branding:** Established the MAARS Global Corporation brand across the app.
-- **AI Agent Implementation:** Created a team of 20 distinct AI agents, each with a specific role.
-- **Advanced Chat Features:**
-    - Implemented Auto Model Selection to pick the best LLM for a task.
-    - Enabled manual model switching between 7 different LLMs.
-    - Added file upload functionality (up to 50MB).
-- **Monetization System:**
-    - Integrated Stripe to handle subscriptions.
-    - Created tiered subscription plans (Free, Starter, Pro, Business).
-    - Implemented a credit-based usage system.
-    - Built a pricing page with a currency toggle for USD and BDT.
-- **UI/UX:** Designed a dark-theme UI with all necessary pages for a complete user flow.
+- **Admin Panel:** Created a private, feature-rich admin section.
+- **Dynamic Pricing:** Implemented a pricing manager in the admin panel to update plan prices and calculate profit margins live.
+- **Direct API Key Support:** Added functionality for the admin to use their own API keys from OpenAI, Anthropic, and Google, bypassing the Emergent Universal Key.
+- **Branding & White-Labeling:** Rebranded the app to Martian AI by MAARS Global Corporation and removed all user-facing Emergent branding, including the watermark in .
+- **Expanded AI Models:** Increased the number of available LLMs to over 10 and improved the Auto-Select logic.
+- **UI Enhancements:**
+    - Displayed all 20 agents on the landing page and dashboard.
+    - Added a professional section on the landing page detailing the available AI models.
+    - Generated and integrated 20 unique, futuristic robot avatars for the agents.
+- **Custom Agent Creation:** Implemented a system for users to create custom agents, with costs and limits tied to their subscription plan.
+- **Bug Fix:** Resolved a critical bug that prevented users from sending chat messages.
 
 **Earlier issues found/mentioned but not fixed**
-- No issues were explicitly identified and ignored by the agent. However, the agent did not implement the user's request for subscribers to *choose* individual agents and instead implemented a plan based on the *number* of agents, which is listed in the Pending Issues section.
+-   The two primary pending issues (end-to-end subscription testing and agent selection for plans) were carried over from the initial handoff and have not yet been addressed.
 
 **Known issue recurrence from previous fork**
-- None.
+-   None.
 
 **Code Architecture**
 
@@ -112,75 +114,115 @@ Issues Detail:
 **Key Technical Concepts**
 -   **Backend:** FastAPI, Pydantic, MongoDB, JWT Authentication, Stripe API
 -   **Frontend:** React, Tailwind CSS, Shadcn UI
--   **AI Integration:** Multi-LLM access (OpenAI, Anthropic, Google) via the Emergent LLM Key.
--   **Architecture:** A monolithic backend service () serving a React single-page application.
+-   **AI Integration:** Multi-LLM access via Emergent Universal Key & direct SDKs (OpenAI, Anthropic, Google). Planning to add ElevenLabs (TTS) and OpenAI Whisper (STT).
+-   **Architecture:** Monolithic backend () with a React SPA frontend.
 
 **key DB schema**
 -   **Users:** 
 -   **Agents:** 
--   **Subscriptions:** 
--   **Chats:** 
+-   **Config:** 
 
 **changes in tech stack**
--   None.
+-   Added  for LLM access.
+-   Planning to add  and usage: openai [-h] [-v] [-b API_BASE] [-k API_KEY] [-p PROXY [PROXY ...]]
+              [-o ORGANIZATION] [-t {openai,azure}]
+              [--api-version API_VERSION] [--azure-endpoint AZURE_ENDPOINT]
+              [--azure-ad-token AZURE_AD_TOKEN] [-V]
+              {api,tools,migrate,grit} ...
+
+positional arguments:
+  {api,tools,migrate,grit}
+    api                 Direct API calls
+    tools               Client side tools for convenience
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Set verbosity.
+  -b API_BASE, --api-base API_BASE
+                        What API base url to use.
+  -k API_KEY, --api-key API_KEY
+                        What API key to use.
+  -p PROXY [PROXY ...], --proxy PROXY [PROXY ...]
+                        What proxy to use.
+  -o ORGANIZATION, --organization ORGANIZATION
+                        Which organization to run as (will use your default
+                        organization if not specified)
+  -t {openai,azure}, --api-type {openai,azure}
+                        The backend API to call, must be `openai` or `azure`
+  --api-version API_VERSION
+                        The Azure API version, e.g.
+                        'https://learn.microsoft.com/en-us/azure/ai-
+                        services/openai/reference#rest-api-versioning'
+  --azure-endpoint AZURE_ENDPOINT
+                        The Azure endpoint, e.g.
+                        'https://endpoint.openai.azure.com'
+  --azure-ad-token AZURE_AD_TOKEN
+                        A token from Azure Active Directory,
+                        https://www.microsoft.com/en-
+                        us/security/business/identity-access/microsoft-entra-
+                        id
+  -V, --version         show program's version number and exit SDKs for audio features.
 
 **All files of reference**
--   : Contains the entire backend application logic. **Critical file.**
--   : Implements the subscription plan display and currency switching.
--   : The main chat interface with model selection and file upload.
--   : Displays user's subscription status and credit balance.
--   : Defines all frontend routes.
--   : Contains , , and .
+-   : The entire backend logic. **Critical file.**
+-   : Contains the UI for all admin functions, including the new API Key and Pricing Manager tabs.
+-   : Main landing page, now shows all 20 agents and a dedicated AI models section.
+-   : Main user dashboard, now shows all 20 agents.
+-   : Dynamically fetches pricing from the backend.
+-   : Modified to remove the Made with Emergent badge.
+-   : The main chat interface. Target for audio integration.
 
 **Areas that need refactoring**:
--    has grown into a large monolith containing models, routes, and business logic for auth, chat, billing, and agents. It urgently needs to be broken down into smaller, manageable modules using FastAPI's  (e.g., , , ).
+-    is now extremely large and complex. It is critical to refactor it into smaller, modular routers (e.g., , , , ) to ensure maintainability.
 
 **key api endpoints**
--   , 
--   
--    (Handles message sending and credit deduction)
--    (Initiates Stripe payment)
--    (Listens for Stripe events)
+-   , , 
+-    (GET, POST)
+-    (GET, POST)
+-    (Public endpoint for dynamic pricing)
 -   
 
 **Critical Info for New Agent**
--   The immediate next task is to **implement the admin section** for the user .
--   The monetization features, especially the subscription flow and credit deduction, were **never tested** after implementation. This is a critical risk and should be tested thoroughly using the testing agent as a top priority after the admin feature.
--   The user's latest request for subscription plans involves **gating access by specific agents chosen by the user**, not just a number of agents. This has not been implemented yet.
--   The required profit margin is **200%**. Double-check the pricing in the code to ensure this is correctly implemented.
--   Refactoring  is highly recommended to improve maintainability before adding more features.
+-   **User's Goal:** The user wants a fully white-labeled, customizable AI platform they can sell. Removing all ties to Emergent is a top priority. The branding on the Google OAuth login page is a known platform limitation that cannot be changed by the agent.
+-   **Immediate Tasks:** The highest priority is to implement the **Commander AI** and **multi-language/audio support** as requested by the user.
+-   **Technical Debt:** The monolithic  is a major liability. Refactoring it should be proposed to the user soon.
+-   **Untested Core Feature:** The entire subscription/payment flow has **never been tested end-to-end**. This is a massive risk and must be addressed with the testing agent.
 
 **documents and test reports created in this job**
--   
--   
+-   /app/test_reports/iteration_2.json
+-   /app/test_reports/iteration_3.json
+-   /app/test_reports/iteration_4.json
+-   /app/memory/PRD.md
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User:** I want my profit margin to be 100% after AI cost and just to be clear I want to be able to sell this to bangladesh as well - **Status:** Completed.
-2.  **User:** I also want the subscribers to be able to choose agents individually depending on what their goal is when subscribing I want 200% profit margin - **Status:** Partially completed. Profit margin updated, but agent selection is not implemented.
-3.  **User:** that will be all, and I want a different section for me only and thats all - **Status:** Pending. This is the request for the admin section.
-4.  **Agent:** Ill create a private admin section just for you. What email will you use to login as admin?" - **Status:** Awaiting user response.
-5.  **User:** "1. management.maars@marsgc.net 2. All the above as well as using the AI team, creating agents etc" - **Status:** Pending. User provided admin details.
-6.  **Agent:** "Ill create your private admin section with full access to everything. - **Status:** Pending. Agent is about to start this task.
-7.  **No further messages.**
+1.  **User:** Asks why they cannot send messages. **Status:** Resolved. Agent found and fixed a bug in  where a function was misplaced.
+2.  **User:** Requests a Commander AI Bot to delegate tasks and be a purchasable add-on. **Status:** In Progress.
+3.  **User:** Requests multi-language support, especially Bengali, for both text and audio. **Status:** In Progress.
+4.  **User:** Selects D (Implement both features simultaneously). **Status:** Acknowledged. Agent is starting implementation.
 
 **Project Health Check:**
--   **Broken:** The monetization flow is likely broken or has bugs as it's a complex feature that was never tested. The credit deduction logic in  is a critical point of failure.
+-   **Broken:** The subscription and monetization flow is **unverified and likely has bugs**. This is the highest-risk part of the application.
 -   **Mocked:** None.
 
 **3rd Party Integrations**
--   **Stripe (Payments):** Uses a test API key from the environment for creating subscriptions and processing payments.
--   **OpenAI, Anthropic, Google (LLMs):** All accessed via the **Emergent LLM Key**. Models include GPT-5.2, GPT-4o, Claude Sonnet/Opus 4.5, and Gemini 3 Flash/Pro.
+-   **Stripe (Payments):** Uses User API Key.
+-   **OpenAI, Anthropic, Google (LLMs):** Supports both **Emergent LLM Key** and direct user-provided keys.
+-   **ElevenLabs (TTS):** Planned for integration, requires User API Key.
+-   **OpenAI Whisper (STT):** Planned for integration, uses the same OpenAI key.
 
 **Testing status**
--   **Testing agent used after significant changes:** NO. The agent was used early on but not after implementing the entire monetization, subscription, and credit system.
+-   **Testing agent used after significant changes:** YES. The testing agent was used successfully to validate the Admin Panel, custom agent creation, and branding changes.
 -   **Troubleshoot agent used after agent stuck in loop:** NO
--   **Test files created:** []
--   **Known regressions:** High probability of regressions. The addition of the billing system to  could have broken existing auth or chat functionalities.
+-   **Test files created:**
+    -   
+    -   
+    -   
+-   **Known regressions:** None identified in the tested features.
 
 **Credentials to test flow:**
--   **Admin User:**  (The password handling for this admin user needs to be implemented).
--   **Regular User:** A new user can be registered through the UI for testing the standard user flow.
+-   **Admin User:**  (password was set during testing).
+-   **Regular User:** Can be registered via the UI.
 
 **What agent forgot to execute**
--   **Run Testing Agent:** The agent forgot to run the testing agent after implementing the entire subscription and monetization feature set, which is a critical oversight for a core business feature.
--   **Implement Agent Selection:** The agent did not fully implement the user's request for subscribers to *choose* individual agents. It only implemented plans based on the *number* of agents.</analysis>
+-   **End-to-End Subscription Test:** The agent has repeatedly added monetization features without ever running a full test of the subscription and credit lifecycle.
+-   **Agent Selection for Plans:** This feature, requested early on, has been consistently overlooked in favor of new feature requests.</analysis>
