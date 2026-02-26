@@ -488,6 +488,271 @@ const AdminDashboard = () => {
     </div>
   );
 
+
+  const handleCalculate = async () => {
+    try {
+      const res = await fetch(`${API}/admin/pricing/calculate`, {
+        method: "POST",
+        credentials: "include",
+        headers,
+        body: JSON.stringify(calcInputs)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setCalcResult(data);
+      }
+    } catch {
+      toast.error("Calculation failed");
+    }
+  };
+
+  const applyCalculatedPrices = () => {
+    if (!calcResult || !pricingEdit) return;
+    const updated = { ...pricingEdit };
+    for (const [planId, calc] of Object.entries(calcResult.plan_calculations)) {
+      if (updated.plans[planId]) {
+        updated.plans[planId].price_usd = calc.recommended_price_usd;
+        updated.plans[planId].price_bdt = calc.recommended_price_bdt;
+      }
+    }
+    updated.ai_cost_per_credit = calcInputs.ai_cost_per_credit;
+    updated.target_profit_margin = calcInputs.target_profit_margin;
+    updated.bdt_exchange_rate = calcInputs.bdt_exchange_rate;
+    setPricingEdit(updated);
+    toast.success("Calculated prices applied! Click 'Publish Pricing' to save.");
+  };
+
+  const handlePublishPricing = async () => {
+    if (!pricingEdit) return;
+    try {
+      const res = await fetch(`${API}/admin/pricing`, {
+        method: "PUT",
+        credentials: "include",
+        headers,
+        body: JSON.stringify(pricingEdit)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setPricingConfig(data.pricing);
+        toast.success("Pricing published! Changes are now live.");
+      } else {
+        const err = await res.json();
+        toast.error(err.detail || "Failed to publish pricing");
+      }
+    } catch {
+      toast.error("Failed to publish pricing");
+    }
+  };
+
+  const updatePlanField = (planId, field, value) => {
+    setPricingEdit(prev => ({
+      ...prev,
+      plans: {
+        ...prev.plans,
+        [planId]: {
+          ...prev.plans[planId],
+          [field]: typeof prev.plans[planId][field] === 'number' ? parseFloat(value) || 0 : value
+        }
+      }
+    }));
+  };
+
+  const PricingManagerTab = () => (
+    <div className="space-y-6">
+      {/* Profit Margin Calculator */}
+      <Card className="bg-zinc-900/50 border-white/10">
+        <CardHeader>
+          <CardTitle className="text-white font-['Outfit'] flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+              <TrendingUp className="w-5 h-5 text-amber-400" />
+            </div>
+            Profit Margin Calculator
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-zinc-400 text-sm">Set your AI cost basis and desired margin to auto-calculate prices, or manually edit below.</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label className="text-zinc-300 text-sm">AI Cost per Credit (USD)</Label>
+              <Input
+                type="number"
+                step="0.001"
+                value={calcInputs.ai_cost_per_credit}
+                onChange={(e) => setCalcInputs(p => ({...p, ai_cost_per_credit: parseFloat(e.target.value) || 0}))}
+                className="bg-zinc-800/50 border-white/10"
+                data-testid="calc-cost-input"
+              />
+              <p className="text-[10px] text-zinc-500">Average cost across all models (~$0.003)</p>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-zinc-300 text-sm">Target Profit Margin (%)</Label>
+              <Input
+                type="number"
+                value={calcInputs.target_profit_margin}
+                onChange={(e) => setCalcInputs(p => ({...p, target_profit_margin: parseInt(e.target.value) || 0}))}
+                className="bg-zinc-800/50 border-white/10"
+                data-testid="calc-margin-input"
+              />
+              <p className="text-[10px] text-zinc-500">200% means 3x the cost</p>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-zinc-300 text-sm">BDT Exchange Rate</Label>
+              <Input
+                type="number"
+                value={calcInputs.bdt_exchange_rate}
+                onChange={(e) => setCalcInputs(p => ({...p, bdt_exchange_rate: parseFloat(e.target.value) || 0}))}
+                className="bg-zinc-800/50 border-white/10"
+                data-testid="calc-bdt-input"
+              />
+              <p className="text-[10px] text-zinc-500">1 USD = X BDT</p>
+            </div>
+          </div>
+
+          <Button
+            onClick={handleCalculate}
+            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
+            data-testid="calculate-prices-btn"
+          >
+            Calculate Recommended Prices
+          </Button>
+
+          {calcResult && (
+            <div className="mt-4 space-y-3">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-white/10">
+                      <th className="text-left py-2 text-zinc-400">Plan</th>
+                      <th className="text-right py-2 text-zinc-400">Credits</th>
+                      <th className="text-right py-2 text-zinc-400">AI Cost</th>
+                      <th className="text-right py-2 text-zinc-400">Rec. USD</th>
+                      <th className="text-right py-2 text-zinc-400">Rec. BDT</th>
+                      <th className="text-right py-2 text-zinc-400">Profit/User</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-zinc-300">
+                    {Object.entries(calcResult.plan_calculations).map(([id, calc]) => (
+                      <tr key={id} className="border-b border-white/5">
+                        <td className="py-2 capitalize font-medium">{id}</td>
+                        <td className="text-right">{calc.credits}</td>
+                        <td className="text-right text-red-400">${calc.base_ai_cost_usd}</td>
+                        <td className="text-right text-emerald-400">${calc.recommended_price_usd}</td>
+                        <td className="text-right text-emerald-400">{calc.recommended_price_bdt}</td>
+                        <td className="text-right text-amber-400">${calc.profit_per_user_usd}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <Button
+                onClick={applyCalculatedPrices}
+                variant="outline"
+                className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                data-testid="apply-calc-btn"
+              >
+                Apply Calculated Prices Below
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Manual Price Editor */}
+      {pricingEdit && (
+        <Card className="bg-zinc-900/50 border-white/10">
+          <CardHeader>
+            <CardTitle className="text-white font-['Outfit'] text-base">Edit Plan Pricing</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {Object.entries(pricingEdit.plans).filter(([id]) => id !== 'free').map(([planId, plan]) => (
+              <div key={planId} className="p-4 rounded-lg bg-white/5 space-y-3">
+                <h4 className="text-white font-semibold capitalize">{plan.name} Plan</h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="space-y-1">
+                    <Label className="text-zinc-400 text-xs">Price USD</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={plan.price_usd}
+                      onChange={(e) => updatePlanField(planId, 'price_usd', e.target.value)}
+                      className="bg-zinc-800/50 border-white/10 h-9 text-sm"
+                      data-testid={`edit-${planId}-usd`}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-zinc-400 text-xs">Price BDT</Label>
+                    <Input
+                      type="number"
+                      value={plan.price_bdt}
+                      onChange={(e) => updatePlanField(planId, 'price_bdt', e.target.value)}
+                      className="bg-zinc-800/50 border-white/10 h-9 text-sm"
+                      data-testid={`edit-${planId}-bdt`}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-zinc-400 text-xs">Credits</Label>
+                    <Input
+                      type="number"
+                      value={plan.credits}
+                      onChange={(e) => updatePlanField(planId, 'credits', e.target.value)}
+                      className="bg-zinc-800/50 border-white/10 h-9 text-sm"
+                      data-testid={`edit-${planId}-credits`}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-zinc-400 text-xs">Custom Agents</Label>
+                    <Input
+                      type="number"
+                      value={plan.max_custom_agents}
+                      onChange={(e) => updatePlanField(planId, 'max_custom_agents', e.target.value)}
+                      className="bg-zinc-800/50 border-white/10 h-9 text-sm"
+                      data-testid={`edit-${planId}-custom`}
+                    />
+                    <p className="text-[10px] text-zinc-500">-1 = unlimited</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <div className="p-4 rounded-lg bg-white/5 space-y-3">
+              <h4 className="text-white font-semibold">Custom Agent Creation Cost</h4>
+              <div className="w-48">
+                <Input
+                  type="number"
+                  value={pricingEdit.custom_agent_credit_cost}
+                  onChange={(e) => setPricingEdit(p => ({...p, custom_agent_credit_cost: parseInt(e.target.value) || 0}))}
+                  className="bg-zinc-800/50 border-white/10 h-9 text-sm"
+                  data-testid="edit-agent-cost"
+                />
+                <p className="text-[10px] text-zinc-500 mt-1">Credits charged per custom agent</p>
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <Button
+                onClick={handlePublishPricing}
+                className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600"
+                data-testid="publish-pricing-btn"
+              >
+                Publish Pricing Changes
+              </Button>
+              <Button
+                variant="outline"
+                className="border-white/10"
+                onClick={() => setPricingEdit(JSON.parse(JSON.stringify(pricingConfig)))}
+                data-testid="reset-pricing-btn"
+              >
+                Reset to Current
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+
+
   const PaymentSetupTab = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
