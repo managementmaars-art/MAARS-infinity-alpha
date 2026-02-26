@@ -13,6 +13,7 @@ import { useAuth, API } from "../App";
 import { toast } from "sonner";
 
 const AVAILABLE_MODELS = [
+  { provider: "auto", model: "auto", name: "Auto (Smart Selection)" },
   { provider: "openai", model: "gpt-5.2", name: "GPT-5.2 (Best)" },
   { provider: "openai", model: "gpt-4o", name: "GPT-4o" },
   { provider: "openai", model: "o3", name: "O3 (Reasoning)" },
