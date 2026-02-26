@@ -215,6 +215,75 @@ const SettingsPage = () => {
             </CardContent>
           </Card>
 
+          {/* Subscription & Credits Section */}
+          <Card className="bg-zinc-900/50 border-white/10 mb-6">
+            <CardHeader>
+              <CardTitle className="text-white font-['Outfit'] flex items-center gap-2">
+                <CreditCard className="w-5 h-5 text-indigo-400" />
+                Subscription & Credits
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Current Plan */}
+              <div className="p-4 rounded-lg bg-zinc-800/30">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${getPlanColor(subscription?.plan_id || "free")}`}>
+                      {getPlanIcon(subscription?.plan_id || "free")}
+                    </div>
+                    <div>
+                      <p className="font-medium text-white">
+                        {subscription?.plan_info?.name || "Free"} Plan
+                      </p>
+                      <p className="text-sm text-zinc-400">
+                        ${subscription?.plan_info?.price || 0}/month
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => navigate("/pricing")}
+                    className="bg-gradient-to-r from-indigo-500 to-violet-500"
+                    data-testid="upgrade-plan-btn"
+                  >
+                    {subscription?.plan_id === "business" ? "Manage Plan" : "Upgrade"}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Credits */}
+              <div className="p-4 rounded-lg bg-zinc-800/30">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="font-medium text-white">Credits Remaining</p>
+                  <Badge className={getPlanColor(subscription?.plan_id || "free")}>
+                    {subscription?.credits || 0} credits
+                  </Badge>
+                </div>
+                <Progress 
+                  value={subscription?.plan_info?.credits ? 
+                    ((subscription?.credits || 0) / subscription.plan_info.credits) * 100 : 
+                    ((subscription?.credits || 0) / 50) * 100
+                  } 
+                  className="h-2 bg-zinc-700"
+                />
+                <div className="flex justify-between mt-2 text-xs text-zinc-500">
+                  <span>Used: {subscription?.credits_used || 0}</span>
+                  <span>Monthly: {subscription?.plan_info?.credits || 50}</span>
+                </div>
+              </div>
+
+              {/* Buy More Credits */}
+              <Button
+                onClick={() => navigate("/pricing")}
+                variant="outline"
+                className="w-full border-white/10 hover:bg-white/5"
+                data-testid="buy-credits-btn"
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Buy More Credits
+              </Button>
+            </CardContent>
+          </Card>
+
           {/* Account Section */}
           <Card className="bg-zinc-900/50 border-white/10 mb-6">
             <CardHeader>
