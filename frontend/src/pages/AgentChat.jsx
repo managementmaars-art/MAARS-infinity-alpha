@@ -572,15 +572,35 @@ const AgentChat = () => {
                       </div>
                     )}
                     <p className="whitespace-pre-wrap">{msg.content}</p>
-                    {msg.model_used && (
-                      <div className="text-xs text-zinc-500 mt-2 flex items-center gap-1">
-                        <Sparkles className="w-3 h-3" />
-                        <span>{msg.model_used}</span>
-                        {msg.auto_selected && msg.model_reason && (
-                          <span className="text-indigo-400 ml-1">• {msg.model_reason}</span>
-                        )}
-                      </div>
-                    )}
+                    <div className="flex items-center gap-2 mt-2">
+                      {msg.model_used && (
+                        <div className="text-xs text-zinc-500 flex items-center gap-1">
+                          <Sparkles className="w-3 h-3" />
+                          <span>{msg.model_used}</span>
+                          {msg.auto_selected && msg.model_reason && (
+                            <span className="text-indigo-400 ml-1">• {msg.model_reason}</span>
+                          )}
+                        </div>
+                      )}
+                      {msg.role === "assistant" && (
+                        <button
+                          onClick={() => playTTS(msg.content, msg.message_id || i)}
+                          className={`text-xs flex items-center gap-1 px-2 py-0.5 rounded-full transition-colors ${
+                            playingAudio === (msg.message_id || i) 
+                              ? "bg-indigo-500/30 text-indigo-300" 
+                              : "text-zinc-500 hover:text-zinc-300 hover:bg-white/10"
+                          }`}
+                          data-testid={`tts-btn-${i}`}
+                          title="Listen"
+                        >
+                          {playingAudio === (msg.message_id || i) ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <Volume2 className="w-3 h-3" />
+                          )}
+                        </button>
+                      )}
+                    </div>
                   </div>
                   {msg.role === "user" && (
                     <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center flex-shrink-0">
