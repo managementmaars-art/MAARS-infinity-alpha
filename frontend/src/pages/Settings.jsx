@@ -341,6 +341,92 @@ const SettingsPage = () => {
             </CardContent>
           </Card>
 
+          {/* Agent Selection */}
+          {agentConfig && agentConfig.plan_id !== "custom" && (
+            <Card className="bg-zinc-900/50 border-white/10 mb-6" data-testid="agent-selection-card">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-white font-['Outfit'] flex items-center gap-2">
+                    <Users className="w-5 h-5 text-indigo-400" />
+                    Your Agents
+                  </CardTitle>
+                  <Badge className="bg-indigo-500/20 text-indigo-400 border-0">
+                    {selectedAgents.filter(a => a !== "agent_commander").length} / {agentConfig.max_agents} slots
+                  </Badge>
+                </div>
+                <p className="text-sm text-zinc-400 mt-1">
+                  Select which agents you want access to. Your {(subscription?.plan_info?.name || "Free")} plan allows up to {agentConfig.max_agents} agents.
+                  {agentConfig.includes_commander && " Commander AI is included with your plan."}
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-4">
+                  {allAgents.filter(a => a.agent_id !== "agent_commander").map((agent) => {
+                    const isSelected = selectedAgents.includes(agent.agent_id);
+                    const atLimit = !isSelected && selectedAgents.filter(a => a !== "agent_commander").length >= agentConfig.max_agents;
+                    return (
+                      <button
+                        key={agent.agent_id}
+                        onClick={() => !atLimit && toggleAgentSelection(agent.agent_id)}
+                        disabled={atLimit && !isSelected}
+                        className={`relative flex flex-col items-center gap-1.5 p-2.5 rounded-lg border transition-all ${
+                          isSelected
+                            ? "border-indigo-500 bg-indigo-500/15"
+                            : atLimit
+                            ? "border-white/5 bg-zinc-900/30 opacity-40 cursor-not-allowed"
+                            : "border-white/10 bg-zinc-800/30 hover:border-white/20"
+                        }`}
+                        data-testid={`select-agent-${agent.agent_id}`}
+                      >
+                        {isSelected && (
+                          <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-indigo-500 flex items-center justify-center">
+                            <Check className="w-2.5 h-2.5 text-white" />
+                          </div>
+                        )}
+                        <img src={agent.avatar} alt="" className="w-8 h-8 rounded-md object-cover" />
+                        <p className="text-[10px] text-white font-medium truncate max-w-[80px]">{agent.name}</p>
+                        <p className="text-[8px] text-zinc-500 truncate max-w-[80px]">{agent.role}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+                <Button
+                  onClick={saveAgentSelection}
+                  disabled={savingAgents}
+                  className="w-full bg-gradient-to-r from-indigo-500 to-violet-500"
+                  data-testid="save-agents-btn"
+                >
+                  {savingAgents ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                  Save Selection
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {agentConfig?.plan_id === "custom" && (
+            <Card className="bg-zinc-900/50 border-amber-500/20 mb-6" data-testid="custom-agents-info">
+              <CardHeader>
+                <CardTitle className="text-white font-['Outfit'] flex items-center gap-2">
+                  <Users className="w-5 h-5 text-amber-400" />
+                  Your Custom Package Agents
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-3">
+                  {allAgents.filter(a => selectedAgents.includes(a.agent_id)).map((agent) => (
+                    <div key={agent.agent_id} className="flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-amber-500/20 bg-amber-500/5">
+                      <img src={agent.avatar} alt="" className="w-8 h-8 rounded-md object-cover" />
+                      <p className="text-[10px] text-white font-medium truncate max-w-[80px]">{agent.name}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-zinc-500 text-center">
+                  Custom package agents are set at purchase. <Link to="/pricing" className="text-amber-400 underline">Build a new package</Link> to change.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Account Section */}
           <Card className="bg-zinc-900/50 border-white/10 mb-6">
             <CardHeader>
