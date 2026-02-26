@@ -34,39 +34,43 @@ EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
 # Stripe Settings
 STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY', '')
 
-# ============== SUBSCRIPTION PLANS (500% markup) ==============
+# ============== SUBSCRIPTION PLANS (100% profit margin) ==============
 SUBSCRIPTION_PLANS = {
     "free": {
         "name": "Free",
-        "price": 0.0,
+        "price_usd": 0.0,
+        "price_bdt": 0.0,
         "credits": 50,
         "features": ["50 credits/month", "All 20 AI employees", "Basic support"]
     },
     "starter": {
         "name": "Starter",
-        "price": 29.0,
+        "price_usd": 19.0,
+        "price_bdt": 2000.0,
         "credits": 500,
         "features": ["500 credits/month", "All 20 AI employees", "Priority support", "File uploads"]
     },
     "pro": {
         "name": "Pro",
-        "price": 79.0,
+        "price_usd": 49.0,
+        "price_bdt": 5200.0,
         "credits": 2000,
         "features": ["2,000 credits/month", "All 20 AI employees", "Priority support", "Unlimited uploads", "Custom agents"]
     },
     "business": {
         "name": "Business",
-        "price": 199.0,
+        "price_usd": 129.0,
+        "price_bdt": 13700.0,
         "credits": 6000,
         "features": ["6,000 credits/month", "All 20 AI employees", "Dedicated support", "Unlimited everything", "API access"]
     }
 }
 
 CREDIT_PACKAGES = {
-    "credits_100": {"credits": 100, "price": 10.0, "name": "100 Credits"},
-    "credits_300": {"credits": 300, "price": 25.0, "name": "300 Credits"},
-    "credits_700": {"credits": 700, "price": 50.0, "name": "700 Credits"},
-    "credits_1500": {"credits": 1500, "price": 100.0, "name": "1,500 Credits"}
+    "credits_100": {"credits": 100, "price_usd": 4.0, "price_bdt": 420.0, "name": "100 Credits"},
+    "credits_300": {"credits": 300, "price_usd": 12.0, "price_bdt": 1270.0, "name": "300 Credits"},
+    "credits_700": {"credits": 700, "price_usd": 28.0, "price_bdt": 2970.0, "name": "700 Credits"},
+    "credits_1500": {"credits": 1500, "price_usd": 60.0, "price_bdt": 6360.0, "name": "1,500 Credits"}
 }
 
 app = FastAPI()
