@@ -8,24 +8,26 @@ const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const agents = [
-    {
-      name: "Nadia Kessler",
-      role: "Personal Secretary",
-      avatar: "https://images.unsplash.com/photo-1677212004257-103cfa6b59d0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwxfHwzZCUyMHJvYm90JTIwYXZhdGFyJTIwZnV0dXJpc3RpYyUyMGljb24lMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzIwNjg5OTF8MA&ixlib=rb-4.1.0&q=85",
-      capabilities: ["Scheduling", "To-Do Lists", "Email Drafting"]
-    },
-    {
-      name: "Kai Nakamoto",
-      role: "App Developer",
-      avatar: "https://images.unsplash.com/photo-1760931969401-9bd6ee902798?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHw0fHwzZCUyMHJvYm90JTIwYXZhdGFyJTIwZnV0dXJpc3RpYyUyMGljb24lMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzIwNjg5OTF8MA&ixlib=rb-4.1.0&q=85",
-      capabilities: ["Web Apps", "Mobile Apps", "Full-Stack"]
-    },
-    {
-      name: "Luna Bergström",
-      role: "Web Designer",
-      avatar: "https://images.unsplash.com/photo-1546776310-eef45dd6d63c?crop=entropy&cs=srgb&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YWklMjBhc3Npc3RhbnR8ZW58MHx8MHx8fDA%3D&ixlib=rb-4.1.0&q=85",
-      capabilities: ["UI/UX", "Landing Pages", "Brand Identity"]
-    }
+    { name: "Nadia Kessler", role: "Personal Secretary", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/43ae7e2a837703cb3a5da4fdd616bc12c825f9f0f15b7e9304e61a3dab0bd257.png", capabilities: ["Scheduling", "To-Do Lists", "Email Drafting"] },
+    { name: "Zara Mitchell", role: "Marketing Specialist", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/c4305af2c26cea8648db361e275c2f1ef2db69815efff20a57aa4e0807abfcce.png", capabilities: ["Social Media", "Ad Copy", "Campaigns"] },
+    { name: "Victor Ashford", role: "Business Strategist", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/48310a3af62b331e8f13d73aa7ac03cdfd9565c00fc03fd7dade81f63edfe3a7.png", capabilities: ["Strategy", "Market Research", "Analysis"] },
+    { name: "Luna Bergström", role: "Web Designer", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/c608195e54230fb30922f73d04dd840a095e7d6ee759b4b9cfe368511284876d.png", capabilities: ["UI/UX", "Landing Pages", "Branding"] },
+    { name: "Kai Nakamoto", role: "App Developer", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/2ceaf34f302e1bf7d622058c516b8e86782c142d9a32dee38b13da10b8f0514c.png", capabilities: ["Web Apps", "Mobile Apps", "Full-Stack"] },
+    { name: "Scarlett Monroe", role: "Copywriter", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/364a8796cacf09680e368da7737c0d32f0d34938f50d178f486f16f83c2e1ce8.png", capabilities: ["Blog Posts", "Ad Copy", "Scripts"] },
+    { name: "Derek Huang", role: "SEO Specialist", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/575d3fa6dfe02ec1dde1be4b46bc425f0647b8dc1f7959861024495b0c991eb2.png", capabilities: ["Keywords", "Technical SEO", "Analytics"] },
+    { name: "Marcus Drake", role: "Sales Representative", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/c183841a001848d4235ef461c6c731daaf15852f71079333c626183e3cfaa67b.png", capabilities: ["Outreach", "Proposals", "CRM"] },
+    { name: "Isla Fernandez", role: "Social Media Manager", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/11308bd62064960ead4e2c6adb4934fcdf47ed8b1357075c86b86f1c974502db.png", capabilities: ["Content Strategy", "Engagement", "Analytics"] },
+    { name: "Ethan Yates", role: "Data Analyst", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/41cc382a93f5b9105d6252da9c6b9754cc71e5f2438307cd4676a5df0feb077d.png", capabilities: ["Data Viz", "Reports", "SQL"] },
+    { name: "Olivia Sinclair", role: "Content Writer", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/be456d87bf888f7ffc615e88032ea91c8816865cda575c8fdec6ada768e9a8b6.png", capabilities: ["Articles", "Stories", "Editing"] },
+    { name: "Maya Thompson", role: "Customer Service Rep", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/601d2cc63be741316b3042b97fc364bb288b747f3490b760d142235111bbed8c.png", capabilities: ["Support", "FAQ", "Tickets"] },
+    { name: "Nathan Cross", role: "Project Manager", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/0419179a9ce4a57469625597d87d30675989fd8bbd9b2f017e6fb0622a28a325.png", capabilities: ["Agile", "Planning", "Timelines"] },
+    { name: "Dr. Clara Voss", role: "Research Specialist", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/cf9a66c94564c9aa42c5847e1313438dc6d5effe45cb2e3d7b22adafef90cb9f.png", capabilities: ["Papers", "Analysis", "Citations"] },
+    { name: "Benjamin Cole", role: "Financial Analyst", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/25cf7622e2dfbda1f6cd5969206619ac8c6a05480e705b84a5aac0046fe64cff.png", capabilities: ["Forecasting", "Budgets", "Reports"] },
+    { name: "Amara Johnson", role: "HR Specialist", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/ba854821cc88befbefce7c5afd73b5ad0dc7299629c8c5cbc86710a4f7518cd3.png", capabilities: ["Recruiting", "Policies", "Onboarding"] },
+    { name: "Felix Romano", role: "Graphic Designer", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/96d5c274e3657d527a5a8c4bf869dcfdb08530445029e0df555139dba990b2cc.png", capabilities: ["Logos", "Illustrations", "Branding"] },
+    { name: "Alexandra Reid", role: "Legal Assistant", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/5173ff78c8d19fc7d2e4cea3f7068c8f31edb314bbb9211a14a7196dc3465f9a.png", capabilities: ["Contracts", "Compliance", "Legal Docs"] },
+    { name: "Jasper Wells", role: "Email Marketing", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/4227fcd5613d5f75952dc16c7342647a701d8e9b29d70a0a99fd16932db94a85.png", capabilities: ["Campaigns", "Newsletters", "A/B Testing"] },
+    { name: "Riley Chen", role: "Video Content", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/0a2a672b36a390684ba6cf87b46621f3169e140edd6a7a8cff09df93200e921b.png", capabilities: ["Scripts", "Storyboards", "Editing"] }
   ];
 
   const features = [
