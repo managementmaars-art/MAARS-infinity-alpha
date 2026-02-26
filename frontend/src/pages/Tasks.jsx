@@ -414,8 +414,17 @@ const Tasks = () => {
                           <Badge className="bg-zinc-700 text-zinc-300 border-0 text-xs">
                             {task.status.replace("_", " ")}
                           </Badge>
+                          {task.source === "commander" && (
+                            <Badge className="bg-amber-500/20 text-amber-400 border-0 text-xs flex items-center gap-1" data-testid="commander-badge">
+                              <Shield className="w-3 h-3" />
+                              Commander
+                            </Badge>
+                          )}
                         </div>
                         <p className="text-sm text-zinc-400 mb-3">{task.description}</p>
+                        {task.source === "commander" && task.source_goal && (
+                          <p className="text-xs text-zinc-500 mb-2 italic">Goal: "{task.source_goal}"</p>
+                        )}
                         
                         {task.assigned_agents?.length > 0 && (
                           <div className="flex items-center gap-2 mb-3">
