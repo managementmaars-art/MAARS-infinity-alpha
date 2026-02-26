@@ -1029,6 +1029,7 @@ async def call_direct_llm(provider: str, model_name: str, system_prompt: str, co
     raise ValueError(f"Unsupported provider: {provider}")
 
 
+@api_router.post("/chats/{chat_id}/messages")
 async def send_message(chat_id: str, message_data: MessageCreate, current_user: User = Depends(get_current_user)):
     chat = await db.chats.find_one({"chat_id": chat_id, "user_id": current_user.user_id}, {"_id": 0})
     if not chat:
