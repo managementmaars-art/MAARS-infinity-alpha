@@ -106,6 +106,7 @@ const LandingPage = () => {
             <div className="px-4 py-4 space-y-4">
               <a href="#features" className="block text-zinc-400 hover:text-white">Features</a>
               <a href="#agents" className="block text-zinc-400 hover:text-white">Agents</a>
+              <Link to="/pricing" className="block text-zinc-400 hover:text-white">Pricing</Link>
               <Link to="/login" className="block text-zinc-400 hover:text-white">Login</Link>
               <Button 
                 onClick={() => navigate("/register")} 
