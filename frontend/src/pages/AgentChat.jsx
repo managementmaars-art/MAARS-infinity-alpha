@@ -161,12 +161,14 @@ const AgentChat = () => {
 
     setSending(true);
     const [provider, model] = selectedModel.split("/");
+    const isAuto = provider === "auto";
     const userMessage = { 
       role: "user", 
       content: input, 
       message_id: `temp_${Date.now()}`,
       attachments: attachments.map(a => a.preview),
-      model_used: selectedModel
+      model_used: isAuto ? "Auto-selecting..." : selectedModel,
+      auto_selected: isAuto
     };
     setMessages(prev => [...prev, userMessage]);
     setInput("");
@@ -179,8 +181,8 @@ const AgentChat = () => {
         credentials: "include",
         body: JSON.stringify({ 
           content: userMessage.content,
-          model_provider: provider,
-          model_name: model,
+          model_provider: isAuto ? "auto" : provider,
+          model_name: isAuto ? "auto" : model,
           attachments: userMessage.attachments
         })
       });
@@ -192,6 +194,10 @@ const AgentChat = () => {
           data.user_message,
           data.assistant_message
         ]);
+        // Show toast if auto-selected
+        if (data.auto_selected && data.model_reason) {
+          toast.success(`Smart Selection: ${data.model_used} - ${data.model_reason}`);
+        }
         // Update chat title in list if it changed
         setChats(prev => prev.map(c => 
           c.chat_id === chatId 
