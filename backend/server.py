@@ -2681,6 +2681,166 @@ async def admin_stats(admin: User = Depends(require_admin)):
         "total_credits_remaining": total_credits_remaining
     }
 
+@api_router.get("/admin/profit")
+async def admin_profit(admin: User = Depends(require_admin)):
+    """Get profit analytics - revenue vs API costs"""
+    
+    # Total revenue
+    rev_pipeline = [
+        {"$match": {"payment_status": "paid"}},
+        {"$group": {"_id": None, "total": {"$sum": "$amount"}, "count": {"$sum": 1}}}
+    ]
+    rev_result = await db.payment_transactions.aggregate(rev_pipeline).to_list(1)
+    total_revenue = rev_result[0]["total"] if rev_result else 0
+    
+    # Total API cost from usage logs
+    cost_pipeline = [
+        {"$group": {
+            "_id": None,
+            "total_cost": {"$sum": "$estimated_cost_usd"},
+            "total_input_tokens": {"$sum": "$input_tokens"},
+            "total_output_tokens": {"$sum": "$output_tokens"},
+            "total_calls": {"$sum": 1}
+        }}
+    ]
+    cost_result = await db.usage_logs.aggregate(cost_pipeline).to_list(1)
+    total_cost = cost_result[0]["total_cost"] if cost_result else 0
+    total_input_tokens = cost_result[0]["total_input_tokens"] if cost_result else 0
+    total_output_tokens = cost_result[0]["total_output_tokens"] if cost_result else 0
+    total_api_calls = cost_result[0]["total_calls"] if cost_result else 0
+    
+    # Per-provider breakdown
+    provider_pipeline = [
+        {"$group": {
+            "_id": "$provider",
+            "cost": {"$sum": "$estimated_cost_usd"},
+            "calls": {"$sum": 1},
+            "input_tokens": {"$sum": "$input_tokens"},
+            "output_tokens": {"$sum": "$output_tokens"}
+        }}
+    ]
+    provider_result = await db.usage_logs.aggregate(provider_pipeline).to_list(10)
+    provider_costs = {item["_id"]: {
+        "cost": round(item["cost"], 4),
+        "calls": item["calls"],
+        "input_tokens": item["input_tokens"],
+        "output_tokens": item["output_tokens"]
+    } for item in provider_result if item["_id"]}
+    
+    # Per-model breakdown
+    model_pipeline = [
+        {"$group": {
+            "_id": "$model",
+            "cost": {"$sum": "$estimated_cost_usd"},
+            "calls": {"$sum": 1},
+        }},
+        {"$sort": {"cost": -1}}
+    ]
+    model_result = await db.usage_logs.aggregate(model_pipeline).to_list(20)
+    model_costs = [{"model": item["_id"], "cost": round(item["cost"], 4), "calls": item["calls"]} for item in model_result if item["_id"]]
+    
+    # Per-plan estimated cost (based on credits used * avg cost per credit)
+    avg_cost_per_call = total_cost / max(total_api_calls, 1)
+    
+    plan_profits = {}
+    for plan_id, plan in SUBSCRIPTION_PLANS.items():
+        if plan_id == "free":
+            plan_profits[plan_id] = {"revenue": 0, "est_max_cost": round(plan["credits"] * avg_cost_per_call, 2), "profit": 0}
+        else:
+            plan_profits[plan_id] = {
+                "revenue": plan["price_usd"],
+                "est_max_cost": round(plan["credits"] * avg_cost_per_call, 2),
+                "profit": round(plan["price_usd"] - (plan["credits"] * avg_cost_per_call), 2),
+                "margin_pct": round(((plan["price_usd"] - (plan["credits"] * avg_cost_per_call)) / max(plan["price_usd"], 0.01)) * 100, 1)
+            }
+    
+    net_profit = total_revenue - total_cost
+    
+    return {
+        "revenue": round(total_revenue, 2),
+        "total_api_cost": round(total_cost, 4),
+        "net_profit": round(net_profit, 2),
+        "profit_margin_pct": round((net_profit / max(total_revenue, 0.01)) * 100, 1),
+        "total_api_calls": total_api_calls,
+        "total_input_tokens": total_input_tokens,
+        "total_output_tokens": total_output_tokens,
+        "avg_cost_per_call": round(avg_cost_per_call, 5),
+        "provider_costs": provider_costs,
+        "model_costs": model_costs,
+        "plan_profits": plan_profits,
+    }
+
+@api_router.get("/admin/api-usage")
+async def admin_api_usage(admin: User = Depends(require_admin)):
+    """Check balance/usage for saved API keys"""
+    api_keys_config = await get_api_keys()
+    result = {}
+    
+    async with httpx.AsyncClient(timeout=10) as client:
+        # OpenAI usage
+        openai_key = api_keys_config.get("openai", "")
+        if openai_key:
+            try:
+                resp = await client.get(
+                    "https://api.openai.com/v1/models",
+                    headers={"Authorization": f"Bearer {openai_key}"}
+                )
+                result["openai"] = {
+                    "status": "active" if resp.status_code == 200 else "error",
+                    "models_available": len(resp.json().get("data", [])) if resp.status_code == 200 else 0,
+                    "note": "OpenAI uses pay-as-you-go billing. Check dashboard.openai.com for balance."
+                }
+            except Exception as e:
+                result["openai"] = {"status": "error", "note": str(e)[:100]}
+        
+        # Anthropic usage
+        anthropic_key = api_keys_config.get("anthropic", "")
+        if anthropic_key:
+            try:
+                resp = await client.get(
+                    "https://api.anthropic.com/v1/models",
+                    headers={"x-api-key": anthropic_key, "anthropic-version": "2023-06-01"}
+                )
+                result["anthropic"] = {
+                    "status": "active" if resp.status_code in (200, 403) else "error",
+                    "note": "Anthropic uses pay-as-you-go billing. Check console.anthropic.com for balance."
+                }
+            except Exception as e:
+                result["anthropic"] = {"status": "error", "note": str(e)[:100]}
+        
+        # Gemini usage
+        gemini_key = api_keys_config.get("gemini", "")
+        if gemini_key:
+            try:
+                resp = await client.get(
+                    f"https://generativelanguage.googleapis.com/v1beta/models?key={gemini_key}"
+                )
+                result["gemini"] = {
+                    "status": "active" if resp.status_code == 200 else "error",
+                    "models_available": len(resp.json().get("models", [])) if resp.status_code == 200 else 0,
+                    "note": "Gemini has free tier with rate limits. Paid tier via Google Cloud billing."
+                }
+            except Exception as e:
+                result["gemini"] = {"status": "error", "note": str(e)[:100]}
+    
+    # Our tracked usage per provider
+    provider_pipeline = [
+        {"$group": {
+            "_id": "$provider",
+            "total_cost": {"$sum": "$estimated_cost_usd"},
+            "total_calls": {"$sum": 1},
+            "total_tokens": {"$sum": {"$add": ["$input_tokens", "$output_tokens"]}}
+        }}
+    ]
+    usage = await db.usage_logs.aggregate(provider_pipeline).to_list(10)
+    tracked_usage = {item["_id"]: {
+        "total_cost": round(item["total_cost"], 4),
+        "total_calls": item["total_calls"],
+        "total_tokens": item["total_tokens"]
+    } for item in usage if item["_id"]}
+    
+    return {"providers": result, "tracked_usage": tracked_usage}
+
 @api_router.get("/admin/users")
 async def admin_get_users(admin: User = Depends(require_admin)):
     """Get all users with their subscription info"""
