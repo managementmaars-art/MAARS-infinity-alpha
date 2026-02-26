@@ -2193,7 +2193,7 @@ async def admin_update_api_keys(request: Request, admin: User = Depends(require_
 
 @api_router.post("/admin/api-keys/test")
 async def admin_test_api_key(request: Request, admin: User = Depends(require_admin)):
-    """Test an API key by making a simple completion call"""
+    """Test an API key using lightweight validation (list models, not completions)"""
     test_data = await request.json()
     provider = test_data.get("provider")
     api_key = test_data.get("api_key")
@@ -2202,23 +2202,48 @@ async def admin_test_api_key(request: Request, admin: User = Depends(require_adm
         raise HTTPException(status_code=400, detail="Provider and api_key required")
     
     try:
-        test_models = {"openai": "gpt-4o-mini", "anthropic": "claude-haiku-4-5-20250929", "gemini": "gemini-2.0-flash", "elevenlabs": None}
-        
-        if provider == "elevenlabs":
-            # Test ElevenLabs by fetching voices
-            from elevenlabs import ElevenLabs as ElevenLabsClient
-            eleven_client = ElevenLabsClient(api_key=api_key)
-            voices = eleven_client.voices.get_all()
-            return {"success": True, "message": f"Key verified! Found {len(voices.voices)} voices."}
-        
-        model = test_models.get(provider)
-        if not model:
-            raise HTTPException(status_code=400, detail="Invalid provider")
-        
-        result = await call_direct_llm(provider, model, "You are a test bot.", "Say 'Key works!' in exactly 2 words.", [], api_key)
-        return {"success": True, "message": f"Key verified! Response: {result[:50]}"}
+        async with httpx.AsyncClient(timeout=15) as client:
+            if provider == "openai":
+                resp = await client.get(
+                    "https://api.openai.com/v1/models",
+                    headers={"Authorization": f"Bearer {api_key}"}
+                )
+                resp.raise_for_status()
+                models = resp.json().get("data", [])
+                return {"success": True, "message": f"Key verified! Access to {len(models)} models."}
+            
+            elif provider == "anthropic":
+                resp = await client.get(
+                    "https://api.anthropic.com/v1/models",
+                    headers={"x-api-key": api_key, "anthropic-version": "2023-06-01"}
+                )
+                if resp.status_code == 200:
+                    return {"success": True, "message": "Key verified! Anthropic API access confirmed."}
+                elif resp.status_code == 401:
+                    return {"success": False, "message": "Invalid API key. Check your Anthropic key."}
+                else:
+                    return {"success": True, "message": f"Key accepted (status {resp.status_code})."}
+            
+            elif provider == "gemini":
+                resp = await client.get(
+                    f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}"
+                )
+                resp.raise_for_status()
+                models = resp.json().get("models", [])
+                return {"success": True, "message": f"Key verified! Access to {len(models)} Gemini models."}
+            
+            elif provider == "elevenlabs":
+                from elevenlabs import ElevenLabs as ElevenLabsClient
+                eleven_client = ElevenLabsClient(api_key=api_key)
+                voices = eleven_client.voices.get_all()
+                return {"success": True, "message": f"Key verified! Found {len(voices.voices)} voices."}
+            
+            else:
+                raise HTTPException(status_code=400, detail="Invalid provider")
+    except httpx.HTTPStatusError as e:
+        return {"success": False, "message": f"Key test failed: {e.response.status_code} {e.response.reason_phrase}"}
     except Exception as e:
-        return {"success": False, "message": f"Key test failed: {str(e)[:100]}"}
+        return {"success": False, "message": f"Key test failed: {str(e)[:120]}"}
 
 
 @api_router.get("/admin/pricing")
