@@ -1410,6 +1410,150 @@ async def get_credits(current_user: User = Depends(get_current_user)):
         return {"credits": 50, "plan": "free"}
     return {"credits": sub.get("credits", 0), "plan": sub.get("plan_id", "free")}
 
+
+# ============== ADMIN ENDPOINTS ==============
+
+@api_router.get("/admin/stats")
+async def admin_stats(admin: User = Depends(require_admin)):
+    """Get platform-wide statistics for admin"""
+    total_users = await db.users.count_documents({})
+    total_chats = await db.chats.count_documents({})
+    total_tasks = await db.tasks.count_documents({})
+    total_agents = await db.agents.count_documents({})
+    custom_agents = await db.agents.count_documents({"is_custom": True})
+    active_subs = await db.subscriptions.count_documents({"status": "active"})
+    
+    # Count messages across all chats
+    msg_pipeline = [
+        {"$project": {"message_count": {"$size": "$messages"}}},
+        {"$group": {"_id": None, "total": {"$sum": "$message_count"}}}
+    ]
+    msg_result = await db.chats.aggregate(msg_pipeline).to_list(1)
+    total_messages = msg_result[0]["total"] if msg_result else 0
+    
+    # Plan distribution
+    plan_pipeline = [
+        {"$group": {"_id": "$plan_id", "count": {"$sum": 1}}}
+    ]
+    plan_dist = await db.subscriptions.aggregate(plan_pipeline).to_list(10)
+    plan_distribution = {item["_id"]: item["count"] for item in plan_dist if item["_id"]}
+    
+    # Revenue from transactions
+    rev_pipeline = [
+        {"$match": {"payment_status": "paid"}},
+        {"$group": {"_id": None, "total": {"$sum": "$amount"}, "count": {"$sum": 1}}}
+    ]
+    rev_result = await db.payment_transactions.aggregate(rev_pipeline).to_list(1)
+    total_revenue = rev_result[0]["total"] if rev_result else 0
+    total_transactions = rev_result[0]["count"] if rev_result else 0
+    
+    # Total credits used
+    credits_pipeline = [
+        {"$group": {"_id": None, "total_used": {"$sum": "$credits_used"}, "total_remaining": {"$sum": "$credits"}}}
+    ]
+    credits_result = await db.subscriptions.aggregate(credits_pipeline).to_list(1)
+    total_credits_used = credits_result[0]["total_used"] if credits_result else 0
+    total_credits_remaining = credits_result[0]["total_remaining"] if credits_result else 0
+    
+    return {
+        "total_users": total_users,
+        "total_chats": total_chats,
+        "total_tasks": total_tasks,
+        "total_agents": total_agents,
+        "custom_agents": custom_agents,
+        "total_messages": total_messages,
+        "active_subscriptions": active_subs,
+        "plan_distribution": plan_distribution,
+        "total_revenue": total_revenue,
+        "total_transactions": total_transactions,
+        "total_credits_used": total_credits_used,
+        "total_credits_remaining": total_credits_remaining
+    }
+
+@api_router.get("/admin/users")
+async def admin_get_users(admin: User = Depends(require_admin)):
+    """Get all users with their subscription info"""
+    users = await db.users.find({}, {"_id": 0, "password_hash": 0}).sort("created_at", -1).to_list(500)
+    
+    # Enrich with subscription data
+    for u in users:
+        sub = await db.subscriptions.find_one({"user_id": u["user_id"]}, {"_id": 0})
+        u["subscription"] = sub or {"plan_id": "free", "credits": 0, "credits_used": 0}
+        u["is_admin"] = u.get("email") == ADMIN_EMAIL
+    
+    return users
+
+@api_router.get("/admin/agents")
+async def admin_get_all_agents(admin: User = Depends(require_admin)):
+    """Get all agents including custom ones"""
+    agents = await db.agents.find({}, {"_id": 0}).to_list(200)
+    for agent in agents:
+        if isinstance(agent.get('created_at'), str):
+            agent['created_at'] = datetime.fromisoformat(agent['created_at'])
+    return agents
+
+@api_router.post("/admin/agents")
+async def admin_create_agent(agent_data: AgentCreate, admin: User = Depends(require_admin)):
+    """Admin can create agents visible to all users"""
+    agent_id = f"agent_{uuid.uuid4().hex[:12]}"
+    agent_doc = {
+        "agent_id": agent_id,
+        "name": agent_data.name,
+        "description": agent_data.description,
+        "avatar": agent_data.avatar or "https://images.unsplash.com/photo-1677212004257-103cfa6b59d0?crop=entropy&cs=srgb&fm=jpg",
+        "role": agent_data.role,
+        "system_prompt": agent_data.system_prompt,
+        "model_provider": agent_data.model_provider,
+        "model_name": agent_data.model_name,
+        "is_custom": False,
+        "creator_id": None,
+        "capabilities": agent_data.capabilities,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.agents.insert_one(agent_doc)
+    agent_doc.pop("_id", None)
+    agent_doc['created_at'] = datetime.fromisoformat(agent_doc['created_at'])
+    return Agent(**agent_doc)
+
+@api_router.delete("/admin/agents/{agent_id}")
+async def admin_delete_agent(agent_id: str, admin: User = Depends(require_admin)):
+    """Admin can delete any agent"""
+    result = await db.agents.delete_one({"agent_id": agent_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    return {"message": "Agent deleted"}
+
+@api_router.get("/admin/transactions")
+async def admin_get_transactions(admin: User = Depends(require_admin)):
+    """Get all payment transactions"""
+    transactions = await db.payment_transactions.find({}, {"_id": 0}).sort("created_at", -1).to_list(200)
+    return transactions
+
+@api_router.patch("/admin/users/{user_id}/subscription")
+async def admin_update_subscription(user_id: str, plan_id: str, credits: int = 0, admin: User = Depends(require_admin)):
+    """Admin can update user subscription"""
+    user = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if plan_id not in SUBSCRIPTION_PLANS:
+        raise HTTPException(status_code=400, detail="Invalid plan")
+    
+    plan = SUBSCRIPTION_PLANS[plan_id]
+    await db.subscriptions.update_one(
+        {"user_id": user_id},
+        {"$set": {
+            "plan_id": plan_id,
+            "credits": credits if credits > 0 else plan["credits"],
+            "credits_used": 0,
+            "status": "active",
+            "renewed_at": datetime.now(timezone.utc).isoformat()
+        }},
+        upsert=True
+    )
+    return {"message": f"User updated to {plan['name']} plan"}
+
+
 # ============== STARTUP ==============
 
 @app.on_event("startup")
