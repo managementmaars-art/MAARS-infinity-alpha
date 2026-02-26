@@ -2480,12 +2480,6 @@ async def admin_test_api_key(request: Request, admin: User = Depends(require_adm
                 models = resp.json().get("models", [])
                 return {"success": True, "message": f"Key verified! Access to {len(models)} Gemini models."}
             
-            elif provider == "elevenlabs":
-                from elevenlabs import ElevenLabs as ElevenLabsClient
-                eleven_client = ElevenLabsClient(api_key=api_key)
-                voices = eleven_client.voices.get_all()
-                return {"success": True, "message": f"Key verified! Found {len(voices.voices)} voices."}
-            
             else:
                 raise HTTPException(status_code=400, detail="Invalid provider")
     except httpx.HTTPStatusError as e:
