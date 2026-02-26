@@ -512,6 +512,13 @@ async def seed_default_agents():
         if not existing:
             agent_data["created_at"] = datetime.now(timezone.utc).isoformat()
             await db.agents.insert_one(agent_data)
+        else:
+            # Update avatar if changed
+            if existing.get("avatar") != agent_data["avatar"]:
+                await db.agents.update_one(
+                    {"agent_id": agent_data["agent_id"]},
+                    {"$set": {"avatar": agent_data["avatar"]}}
+                )
     logger.info("Default agents seeded")
 
 # ============== AUTH ENDPOINTS ==============
