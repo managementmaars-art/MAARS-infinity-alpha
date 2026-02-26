@@ -47,6 +47,7 @@ async def get_api_keys():
         "openai": "",
         "anthropic": "",
         "gemini": "",
+        "elevenlabs": "",
         "emergent": EMERGENT_LLM_KEY,
         "active_provider": "emergent"  # which key source to use
     }
@@ -54,6 +55,7 @@ async def get_api_keys():
         keys["openai"] = config.get("openai_key", "") or DIRECT_API_KEYS.get("openai", "")
         keys["anthropic"] = config.get("anthropic_key", "") or DIRECT_API_KEYS.get("anthropic", "")
         keys["gemini"] = config.get("gemini_key", "") or DIRECT_API_KEYS.get("gemini", "")
+        keys["elevenlabs"] = config.get("elevenlabs_key", "")
         keys["active_provider"] = config.get("active_provider", "emergent")
     return keys
 
