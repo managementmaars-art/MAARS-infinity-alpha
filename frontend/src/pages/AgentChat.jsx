@@ -449,7 +449,24 @@ const AgentChat = () => {
                         : "bg-zinc-800/50 text-zinc-100"
                     }`}
                   >
+                    {msg.attachments?.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {msg.attachments.map((att, idx) => (
+                          att?.startsWith("data:image") ? (
+                            <img key={idx} src={att} alt="attachment" className="max-w-[200px] rounded-lg" />
+                          ) : (
+                            <div key={idx} className="px-2 py-1 bg-white/10 rounded text-xs">File attached</div>
+                          )
+                        ))}
+                      </div>
+                    )}
                     <p className="whitespace-pre-wrap">{msg.content}</p>
+                    {msg.model_used && (
+                      <p className="text-xs text-zinc-500 mt-2 flex items-center gap-1">
+                        <Sparkles className="w-3 h-3" />
+                        {msg.model_used}
+                      </p>
+                    )}
                   </div>
                   {msg.role === "user" && (
                     <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center flex-shrink-0">
