@@ -8,6 +8,7 @@ const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const agents = [
+    { name: "Commander Orion", role: "AI Commander", avatar: "https://static.prod-images.emergentagent.com/jobs/f339b0b8-5eaf-45b0-8c04-0efb16af4bdd/images/77f99f67e5b8cde95d04a3ea56cf1321f7f64cbc04dd85513e1028ca8f39742d.png", capabilities: ["Task Delegation", "Strategy", "Orchestration"], isCommander: true },
     { name: "Nadia Kessler", role: "Personal Secretary", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/43ae7e2a837703cb3a5da4fdd616bc12c825f9f0f15b7e9304e61a3dab0bd257.png", capabilities: ["Scheduling", "To-Do Lists", "Email Drafting"] },
     { name: "Zara Mitchell", role: "Marketing Specialist", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/c4305af2c26cea8648db361e275c2f1ef2db69815efff20a57aa4e0807abfcce.png", capabilities: ["Social Media", "Ad Copy", "Campaigns"] },
     { name: "Victor Ashford", role: "Business Strategist", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/48310a3af62b331e8f13d73aa7ac03cdfd9565c00fc03fd7dade81f63edfe3a7.png", capabilities: ["Strategy", "Market Research", "Analysis"] },
