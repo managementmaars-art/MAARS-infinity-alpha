@@ -772,9 +772,17 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
     
-    # Use override model if provided, otherwise use best model (gpt-5.2)
-    model_provider = message_data.model_provider or "openai"
-    model_name = message_data.model_name or "gpt-5.2"
+    # Auto-select model if set to "auto" or not specified
+    auto_selected = False
+    model_reason = ""
+    
+    if message_data.model_provider == "auto" or (not message_data.model_provider and not message_data.model_name):
+        # Auto-select based on content and agent role
+        model_provider, model_name, model_reason = auto_select_model(message_data.content, agent.get("role", ""))
+        auto_selected = True
+    else:
+        model_provider = message_data.model_provider or "openai"
+        model_name = message_data.model_name or "gpt-5.2"
     
     # Create user message
     now = datetime.now(timezone.utc)
@@ -785,6 +793,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         "content": message_data.content,
         "attachments": message_data.attachments,
         "model_used": f"{model_provider}/{model_name}",
+        "auto_selected": auto_selected,
+        "model_reason": model_reason if auto_selected else None,
         "created_at": now.isoformat()
     }
     
