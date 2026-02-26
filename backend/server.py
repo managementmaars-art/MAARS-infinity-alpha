@@ -2971,6 +2971,7 @@ async def admin_update_subscription(user_id: str, plan_id: str, credits: int = 0
 @app.on_event("startup")
 async def startup():
     await seed_default_agents()
+    await backfill_usage_logs()
     logger.info("MAARS Global AI Team Backend started")
 
 @app.on_event("shutdown")
