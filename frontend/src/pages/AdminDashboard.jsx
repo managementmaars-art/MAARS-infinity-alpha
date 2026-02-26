@@ -499,6 +499,173 @@ const AdminDashboard = () => {
   );
 
 
+
+  const handleSaveApiKeys = async () => {
+    try {
+      const res = await fetch(`${API}/admin/api-keys`, {
+        method: "PUT",
+        credentials: "include",
+        headers,
+        body: JSON.stringify(apiKeyInputs)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(`API keys saved! Using: ${data.active_provider === 'direct' ? 'Direct Provider Keys' : 'Emergent Universal Key'}`);
+        fetchAdminData();
+        setApiKeyInputs(prev => ({...prev, openai_key: "", anthropic_key: "", gemini_key: ""}));
+      } else {
+        toast.error("Failed to save API keys");
+      }
+    } catch {
+      toast.error("Failed to save API keys");
+    }
+  };
+
+  const handleTestKey = async (provider, key) => {
+    if (!key) { toast.error("Enter a key to test"); return; }
+    setTestingKey(provider);
+    try {
+      const res = await fetch(`${API}/admin/api-keys/test`, {
+        method: "POST",
+        credentials: "include",
+        headers,
+        body: JSON.stringify({ provider, api_key: key })
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch {
+      toast.error("Test failed");
+    } finally {
+      setTestingKey(null);
+    }
+  };
+
+  const ApiKeysTab = () => (
+    <div className="space-y-6">
+      {/* Provider Selection */}
+      <Card className="bg-zinc-900/50 border-white/10">
+        <CardHeader>
+          <CardTitle className="text-white font-['Outfit'] flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+              <Key className="w-5 h-5 text-indigo-400" />
+            </div>
+            AI Provider Configuration
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-zinc-400 text-sm">Choose how to power your AI agents. Use the Emergent Universal Key for convenience, or plug in your own API keys to pay providers directly.</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button
+              onClick={() => setApiKeyInputs(p => ({...p, active_provider: "emergent"}))}
+              className={`p-4 rounded-lg border text-left transition-all ${
+                apiKeyInputs.active_provider === "emergent"
+                  ? "border-indigo-500 bg-indigo-500/10"
+                  : "border-white/10 bg-white/5 hover:bg-white/10"
+              }`}
+              data-testid="provider-emergent-btn"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div className={`w-3 h-3 rounded-full ${apiKeyInputs.active_provider === "emergent" ? "bg-indigo-400" : "bg-zinc-600"}`} />
+                <span className="text-white font-semibold">Emergent Universal Key</span>
+              </div>
+              <p className="text-xs text-zinc-400">One key for all models. Billed through Emergent.</p>
+              {apiKeysConfig?.emergent_key_set && (
+                <Badge className="mt-2 bg-emerald-500/20 text-emerald-400 text-[10px]">Active</Badge>
+              )}
+            </button>
+
+            <button
+              onClick={() => setApiKeyInputs(p => ({...p, active_provider: "direct"}))}
+              className={`p-4 rounded-lg border text-left transition-all ${
+                apiKeyInputs.active_provider === "direct"
+                  ? "border-amber-500 bg-amber-500/10"
+                  : "border-white/10 bg-white/5 hover:bg-white/10"
+              }`}
+              data-testid="provider-direct-btn"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div className={`w-3 h-3 rounded-full ${apiKeyInputs.active_provider === "direct" ? "bg-amber-400" : "bg-zinc-600"}`} />
+                <span className="text-white font-semibold">Direct Provider Keys</span>
+              </div>
+              <p className="text-xs text-zinc-400">Your own API keys. Pay OpenAI, Anthropic & Google directly.</p>
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Direct API Keys Input */}
+      <Card className="bg-zinc-900/50 border-white/10">
+        <CardHeader>
+          <CardTitle className="text-white font-['Outfit'] text-base">
+            {apiKeyInputs.active_provider === "direct" ? "Enter Your API Keys" : "Direct API Keys (Optional Backup)"}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {[
+            { id: "openai", name: "OpenAI", url: "https://platform.openai.com/api-keys", color: "emerald", set: apiKeysConfig?.openai_key_set, masked: apiKeysConfig?.openai_key },
+            { id: "anthropic", name: "Anthropic", url: "https://console.anthropic.com/settings/keys", color: "orange", set: apiKeysConfig?.anthropic_key_set, masked: apiKeysConfig?.anthropic_key },
+            { id: "gemini", name: "Google Gemini", url: "https://aistudio.google.com/apikey", color: "blue", set: apiKeysConfig?.gemini_key_set, masked: apiKeysConfig?.gemini_key },
+          ].map((provider) => (
+            <div key={provider.id} className="p-4 rounded-lg bg-white/5 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full bg-${provider.color}-400`} />
+                  <span className="text-white font-medium">{provider.name}</span>
+                  {provider.set && <Badge className="bg-emerald-500/20 text-emerald-400 text-[10px]">Saved: {provider.masked}</Badge>}
+                </div>
+                <a href={provider.url} target="_blank" rel="noopener noreferrer" className="text-xs text-indigo-400 hover:underline">Get key</a>
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  type="password"
+                  value={apiKeyInputs[`${provider.id}_key`]}
+                  onChange={(e) => setApiKeyInputs(p => ({...p, [`${provider.id}_key`]: e.target.value}))}
+                  placeholder={provider.set ? "Enter new key to replace..." : `sk-... or your ${provider.name} API key`}
+                  className="bg-zinc-800/50 border-white/10 text-sm font-mono"
+                  data-testid={`apikey-${provider.id}-input`}
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-white/10 shrink-0"
+                  onClick={() => handleTestKey(provider.id, apiKeyInputs[`${provider.id}_key`])}
+                  disabled={!apiKeyInputs[`${provider.id}_key`] || testingKey === provider.id}
+                  data-testid={`test-${provider.id}-btn`}
+                >
+                  {testingKey === provider.id ? "Testing..." : "Test"}
+                </Button>
+              </div>
+            </div>
+          ))}
+
+          <div className="flex gap-3 pt-2">
+            <Button
+              onClick={handleSaveApiKeys}
+              className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
+              data-testid="save-apikeys-btn"
+            >
+              Save Configuration
+            </Button>
+          </div>
+
+          {apiKeyInputs.active_provider === "direct" && (
+            <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+              <p className="text-amber-300 text-sm">
+                <strong>Direct mode:</strong> AI calls will use your provider keys. If a key is missing for a provider, it falls back to Emergent key. Make sure at least one key is set per provider you use.
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+
   const handleCalculate = async () => {
     try {
       const res = await fetch(`${API}/admin/pricing/calculate`, {
