@@ -78,6 +78,7 @@ const LandingPage = () => {
             <div className="hidden md:flex items-center gap-8">
               <a href="#features" className="text-zinc-400 hover:text-white transition-colors">Features</a>
               <a href="#agents" className="text-zinc-400 hover:text-white transition-colors">Agents</a>
+              <Link to="/pricing" className="text-zinc-400 hover:text-white transition-colors" data-testid="pricing-link">Pricing</Link>
               <Link to="/login" className="text-zinc-400 hover:text-white transition-colors" data-testid="login-link">Login</Link>
               <Button 
                 onClick={() => navigate("/register")} 
