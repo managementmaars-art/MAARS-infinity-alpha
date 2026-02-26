@@ -2238,9 +2238,11 @@ async def admin_get_pricing(admin: User = Depends(require_admin)):
     return pricing
 
 @api_router.put("/admin/pricing")
-async def admin_update_pricing(pricing_data: dict, admin: User = Depends(require_admin)):
+async def admin_update_pricing(request: Request, admin: User = Depends(require_admin)):
     """Admin can update platform pricing. Changes take effect immediately."""
     global SUBSCRIPTION_PLANS, CUSTOM_AGENT_CREDIT_COST
+    
+    pricing_data = await request.json()
     
     plans = pricing_data.get("plans")
     if plans:
