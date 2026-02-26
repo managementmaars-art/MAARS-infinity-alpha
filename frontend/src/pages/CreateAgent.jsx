@@ -49,17 +49,20 @@ const CreateAgent = () => {
 
   const modelOptions = {
     openai: [
-      { value: "gpt-5.2", label: "GPT-5.2 (Latest)" },
-      { value: "gpt-4o", label: "GPT-4o" },
-      { value: "o3", label: "O3 (Reasoning)" }
+      { value: "gpt-5.2", label: "GPT-5.2 (Flagship)" },
+      { value: "gpt-4o", label: "GPT-4o (Fast)" },
+      { value: "gpt-4o-mini", label: "GPT-4o Mini (Economy)" },
+      { value: "o3", label: "O3 (Reasoning)" },
+      { value: "o3-mini", label: "O3 Mini (Light Reasoning)" }
     ],
     anthropic: [
-      { value: "claude-sonnet-4-5-20250929", label: "Claude Sonnet 4.5" },
-      { value: "claude-opus-4-5-20251101", label: "Claude Opus 4.5" }
+      { value: "claude-sonnet-4-5-20250929", label: "Claude Sonnet 4.5 (Flagship)" },
+      { value: "claude-opus-4-5-20251101", label: "Claude Opus 4.5 (Premium)" },
+      { value: "claude-haiku-4-5-20250929", label: "Claude Haiku 4.5 (Economy)" }
     ],
     gemini: [
-      { value: "gemini-3-flash-preview", label: "Gemini 3 Flash" },
-      { value: "gemini-3-pro-preview", label: "Gemini 3 Pro" }
+      { value: "gemini-3-flash-preview", label: "Gemini 3 Flash (Fast)" },
+      { value: "gemini-3-pro-preview", label: "Gemini 3 Pro (Flagship)" }
     ]
   };
 
