@@ -154,6 +154,7 @@ class Agent(BaseModel):
     model_provider: str = "openai"
     model_name: str = "gpt-5.2"
     is_custom: bool = False
+    is_commander: bool = False
     creator_id: Optional[str] = None
     capabilities: List[str] = []
     created_at: datetime
