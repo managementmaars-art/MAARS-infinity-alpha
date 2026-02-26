@@ -1383,7 +1383,6 @@ async def text_to_speech(request: Request, current_user: User = Depends(get_curr
     body = await request.json()
     text = body.get("text", "")
     voice_id = body.get("voice_id", "21m00Tcm4TlvDq8ikWAM")  # Default: Rachel
-    language_code = body.get("language_code")
     
     if not text:
         raise HTTPException(status_code=400, detail="Text is required")
