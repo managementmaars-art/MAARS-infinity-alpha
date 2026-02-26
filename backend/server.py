@@ -1238,6 +1238,49 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         {"$inc": {"credits": -1, "credits_used": 1}}
     )
     
+    # Log API usage for cost tracking
+    try:
+        input_text = message_data.content + (agent.get("system_prompt", "") or "")
+        est_input_tokens = max(len(input_text) // 4, 50)
+        est_output_tokens = max(len(response_text) // 4, 50)
+        
+        model_used = assistant_msg.get("model_used", "gpt-5.2")
+        provider_used = agent.get("model_provider", "openai")
+        
+        # Per-million token costs
+        MODEL_COSTS = {
+            "gpt-5.2": {"input": 2.50, "output": 10.00},
+            "gpt-4o": {"input": 2.50, "output": 10.00},
+            "gpt-4o-mini": {"input": 0.15, "output": 0.60},
+            "o3": {"input": 10.00, "output": 40.00},
+            "o3-mini": {"input": 1.10, "output": 4.40},
+            "claude-sonnet-4-5-20250929": {"input": 3.00, "output": 15.00},
+            "claude-opus-4-5-20251101": {"input": 15.00, "output": 75.00},
+            "claude-haiku-4-5-20250929": {"input": 0.80, "output": 4.00},
+            "gemini-3-flash-preview": {"input": 0.075, "output": 0.30},
+            "gemini-3-pro-preview": {"input": 1.25, "output": 5.00},
+        }
+        
+        costs = MODEL_COSTS.get(model_used, {"input": 2.50, "output": 10.00})
+        est_cost = (est_input_tokens * costs["input"] / 1_000_000) + (est_output_tokens * costs["output"] / 1_000_000)
+        
+        usage_log = {
+            "log_id": f"usage_{uuid.uuid4().hex[:10]}",
+            "user_id": current_user.user_id,
+            "chat_id": chat_id,
+            "agent_id": chat["agent_id"],
+            "model": model_used,
+            "provider": provider_used,
+            "input_tokens": est_input_tokens,
+            "output_tokens": est_output_tokens,
+            "estimated_cost_usd": round(est_cost, 6),
+            "key_source": api_keys.get("active_provider", "emergent"),
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.usage_logs.insert_one(usage_log)
+    except Exception as log_err:
+        logger.error(f"Usage logging error: {log_err}")
+    
     # Update title if first message
     if len(chat.get("messages", [])) == 0:
         title = message_data.content[:50] + "..." if len(message_data.content) > 50 else message_data.content
