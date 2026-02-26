@@ -973,6 +973,64 @@ def auto_select_model(content: str, agent_role: str) -> tuple:
     return ('openai', 'gpt-5.2', 'GPT-5.2 selected - best all-around model')
 
 @api_router.post("/chats/{chat_id}/messages")
+
+async def call_direct_llm(provider: str, model_name: str, system_prompt: str, content: str, attachments: list, api_key: str) -> str:
+    """Call LLM directly using provider SDKs"""
+    import json as json_lib
+    
+    if provider == "openai":
+        async with httpx.AsyncClient(timeout=120) as client:
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": content}
+            ]
+            resp = await client.post(
+                "https://api.openai.com/v1/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+                json={"model": model_name, "messages": messages, "max_tokens": 4096}
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            return data["choices"][0]["message"]["content"]
+    
+    elif provider == "anthropic":
+        async with httpx.AsyncClient(timeout=120) as client:
+            resp = await client.post(
+                "https://api.anthropic.com/v1/messages",
+                headers={
+                    "x-api-key": api_key,
+                    "anthropic-version": "2023-06-01",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": model_name,
+                    "max_tokens": 4096,
+                    "system": system_prompt,
+                    "messages": [{"role": "user", "content": content}]
+                }
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            return data["content"][0]["text"]
+    
+    elif provider == "gemini":
+        async with httpx.AsyncClient(timeout=120) as client:
+            resp = await client.post(
+                f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}",
+                headers={"Content-Type": "application/json"},
+                json={
+                    "systemInstruction": {"parts": [{"text": system_prompt}]},
+                    "contents": [{"parts": [{"text": content}]}],
+                    "generationConfig": {"maxOutputTokens": 4096}
+                }
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            return data["candidates"][0]["content"]["parts"][0]["text"]
+    
+    raise ValueError(f"Unsupported provider: {provider}")
+
+
 async def send_message(chat_id: str, message_data: MessageCreate, current_user: User = Depends(get_current_user)):
     chat = await db.chats.find_one({"chat_id": chat_id, "user_id": current_user.user_id}, {"_id": 0})
     if not chat:
