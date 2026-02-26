@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
+import { Switch } from "../components/ui/switch";
+import { Label } from "../components/ui/label";
 import { 
   Bot, Check, Sparkles, Zap, Crown, Building, CreditCard,
-  ArrowLeft, Loader2
+  ArrowLeft, Loader2, Globe
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -17,6 +19,7 @@ const PricingPage = () => {
   const [currentPlan, setCurrentPlan] = useState("free");
   const [credits, setCredits] = useState(0);
   const [processingPlan, setProcessingPlan] = useState(null);
+  const [currency, setCurrency] = useState("usd"); // "usd" or "bdt"
 
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
@@ -24,7 +27,8 @@ const PricingPage = () => {
     {
       id: "free",
       name: "Free",
-      price: 0,
+      price_usd: 0,
+      price_bdt: 0,
       credits: 50,
       icon: <Sparkles className="w-6 h-6" />,
       features: ["50 credits/month", "All 20 AI employees", "Basic support"],
@@ -33,7 +37,8 @@ const PricingPage = () => {
     {
       id: "starter",
       name: "Starter",
-      price: 29,
+      price_usd: 19,
+      price_bdt: 2000,
       credits: 500,
       icon: <Zap className="w-6 h-6" />,
       features: ["500 credits/month", "All 20 AI employees", "Priority support", "File uploads"],
@@ -42,7 +47,8 @@ const PricingPage = () => {
     {
       id: "pro",
       name: "Pro",
-      price: 79,
+      price_usd: 49,
+      price_bdt: 5200,
       credits: 2000,
       icon: <Crown className="w-6 h-6" />,
       features: ["2,000 credits/month", "All 20 AI employees", "Priority support", "Unlimited uploads", "Custom agents"],
@@ -51,7 +57,8 @@ const PricingPage = () => {
     {
       id: "business",
       name: "Business",
-      price: 199,
+      price_usd: 129,
+      price_bdt: 13700,
       credits: 6000,
       icon: <Building className="w-6 h-6" />,
       features: ["6,000 credits/month", "All 20 AI employees", "Dedicated support", "Unlimited everything", "API access"],
@@ -60,15 +67,34 @@ const PricingPage = () => {
   ];
 
   const creditPackages = [
-    { id: "credits_100", credits: 100, price: 10 },
-    { id: "credits_300", credits: 300, price: 25 },
-    { id: "credits_700", credits: 700, price: 50 },
-    { id: "credits_1500", credits: 1500, price: 100 }
+    { id: "credits_100", credits: 100, price_usd: 4, price_bdt: 420 },
+    { id: "credits_300", credits: 300, price_usd: 12, price_bdt: 1270 },
+    { id: "credits_700", credits: 700, price_usd: 28, price_bdt: 2970 },
+    { id: "credits_1500", credits: 1500, price_usd: 60, price_bdt: 6360 }
   ];
+
+  const formatPrice = (plan) => {
+    if (currency === "bdt") {
+      return `৳${plan.price_bdt.toLocaleString()}`;
+    }
+    return `$${plan.price_usd}`;
+  };
+
+  const formatCreditPrice = (pkg) => {
+    if (currency === "bdt") {
+      return `৳${pkg.price_bdt.toLocaleString()}`;
+    }
+    return `$${pkg.price_usd}`;
+  };
 
   useEffect(() => {
     if (user) {
       fetchSubscription();
+    }
+    // Detect if user might be from Bangladesh (basic detection)
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (timezone === "Asia/Dhaka") {
+      setCurrency("bdt");
     }
   }, [user]);
 
@@ -110,7 +136,8 @@ const PricingPage = () => {
         body: JSON.stringify({
           type: "subscription",
           plan_id: planId,
-          origin_url: window.location.origin
+          origin_url: window.location.origin,
+          currency: currency
         })
       });
 
@@ -146,7 +173,8 @@ const PricingPage = () => {
         body: JSON.stringify({
           type: "credits",
           package_id: packageId,
-          origin_url: window.location.origin
+          origin_url: window.location.origin,
+          currency: currency
         })
       });
 
@@ -206,9 +234,27 @@ const PricingPage = () => {
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4 font-['Outfit']">
             Choose Your Plan
           </h1>
-          <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+          <p className="text-lg text-zinc-400 max-w-2xl mx-auto mb-6">
             Get access to your AI team with flexible pricing. Start free, upgrade anytime.
           </p>
+          
+          {/* Currency Toggle */}
+          <div className="inline-flex items-center gap-4 px-4 py-3 rounded-lg bg-zinc-900/50 border border-white/10">
+            <Globe className="w-4 h-4 text-zinc-400" />
+            <div className="flex items-center gap-2">
+              <span className={`text-sm ${currency === "usd" ? "text-white" : "text-zinc-500"}`}>USD ($)</span>
+              <Switch
+                checked={currency === "bdt"}
+                onCheckedChange={(checked) => setCurrency(checked ? "bdt" : "usd")}
+                data-testid="currency-toggle"
+              />
+              <span className={`text-sm ${currency === "bdt" ? "text-white" : "text-zinc-500"}`}>BDT (৳)</span>
+            </div>
+            {currency === "bdt" && (
+              <Badge className="bg-emerald-500/20 text-emerald-400 border-0">Bangladesh</Badge>
+            )}
+          </div>
+
           {user && (
             <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/20 text-indigo-300">
               <CreditCard className="w-4 h-4" />
@@ -245,7 +291,7 @@ const PricingPage = () => {
                 </div>
                 <CardTitle className="text-white font-['Outfit']">{plan.name}</CardTitle>
                 <div className="mt-2">
-                  <span className="text-4xl font-bold text-white">${plan.price}</span>
+                  <span className="text-4xl font-bold text-white">{formatPrice(plan)}</span>
                   <span className="text-zinc-400">/month</span>
                 </div>
                 <p className="text-sm text-indigo-400 mt-1">{plan.credits} credits/month</p>
@@ -273,7 +319,7 @@ const PricingPage = () => {
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : currentPlan === plan.id ? (
                     "Current Plan"
-                  ) : plan.price === 0 ? (
+                  ) : plan.price_usd === 0 ? (
                     "Get Started"
                   ) : (
                     "Subscribe"
@@ -312,7 +358,7 @@ const PricingPage = () => {
                     {processingPlan === pkg.id ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
-                      `$${pkg.price}`
+                      formatCreditPrice(pkg)
                     )}
                   </Button>
                 </CardContent>
@@ -320,6 +366,15 @@ const PricingPage = () => {
             ))}
           </div>
         </div>
+
+        {/* Regional Note */}
+        {currency === "bdt" && (
+          <div className="text-center p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20 mb-8">
+            <p className="text-emerald-400">
+              Prices shown in Bangladeshi Taka (BDT). Payment processed via Stripe.
+            </p>
+          </div>
+        )}
 
         {/* FAQ or Note */}
         <div className="text-center text-zinc-500 text-sm">
