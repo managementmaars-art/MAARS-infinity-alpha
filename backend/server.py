@@ -1936,7 +1936,15 @@ async def admin_test_api_key(test_data: dict, admin: User = Depends(require_admi
         raise HTTPException(status_code=400, detail="Provider and api_key required")
     
     try:
-        test_models = {"openai": "gpt-4o-mini", "anthropic": "claude-haiku-4-5-20250929", "gemini": "gemini-3-flash-preview"}
+        test_models = {"openai": "gpt-4o-mini", "anthropic": "claude-haiku-4-5-20250929", "gemini": "gemini-3-flash-preview", "elevenlabs": None}
+        
+        if provider == "elevenlabs":
+            # Test ElevenLabs by fetching voices
+            from elevenlabs import ElevenLabs as ElevenLabsClient
+            eleven_client = ElevenLabsClient(api_key=api_key)
+            voices = eleven_client.voices.get_all()
+            return {"success": True, "message": f"Key verified! Found {len(voices.voices)} voices."}
+        
         model = test_models.get(provider)
         if not model:
             raise HTTPException(status_code=400, detail="Invalid provider")
