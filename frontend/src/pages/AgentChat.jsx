@@ -645,24 +645,6 @@ const AgentChat = () => {
                           )}
                         </div>
                       )}
-                      {msg.role === "assistant" && (
-                        <button
-                          onClick={() => playTTS(msg.content, msg.message_id || i)}
-                          className={`text-xs flex items-center gap-1 px-2 py-0.5 rounded-full transition-colors ${
-                            playingAudio === (msg.message_id || i) 
-                              ? "bg-indigo-500/30 text-indigo-300" 
-                              : "text-zinc-500 hover:text-zinc-300 hover:bg-white/10"
-                          }`}
-                          data-testid={`tts-btn-${i}`}
-                          title="Listen"
-                        >
-                          {playingAudio === (msg.message_id || i) ? (
-                            <Loader2 className="w-3 h-3 animate-spin" />
-                          ) : (
-                            <Volume2 className="w-3 h-3" />
-                          )}
-                        </button>
-                      )}
                     </div>
                     {/* Generated file preview */}
                     {msg.role === "assistant" && (() => {
