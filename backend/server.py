@@ -45,6 +45,7 @@ SUBSCRIPTION_PLANS = {
         "price_bdt": 0.0,
         "credits": 50,
         "max_agents": 1,
+        "max_custom_agents": 0,
         "features": ["1 AI employee", "50 credits/month", "Basic support"]
     },
     "starter": {
@@ -53,7 +54,8 @@ SUBSCRIPTION_PLANS = {
         "price_bdt": 3100.0,
         "credits": 500,
         "max_agents": 5,
-        "features": ["5 AI employees", "500 credits/month", "Priority support", "File uploads"]
+        "max_custom_agents": 2,
+        "features": ["5 AI employees", "500 credits/month", "2 custom agents", "Priority support", "File uploads"]
     },
     "pro": {
         "name": "Pro",
@@ -61,7 +63,8 @@ SUBSCRIPTION_PLANS = {
         "price_bdt": 8400.0,
         "credits": 2000,
         "max_agents": 10,
-        "features": ["10 AI employees", "2,000 credits/month", "Priority support", "Unlimited uploads", "Custom agents"]
+        "max_custom_agents": 5,
+        "features": ["10 AI employees", "2,000 credits/month", "5 custom agents", "Priority support", "Unlimited uploads"]
     },
     "business": {
         "name": "Business",
@@ -69,9 +72,13 @@ SUBSCRIPTION_PLANS = {
         "price_bdt": 21100.0,
         "credits": 6000,
         "max_agents": 20,
-        "features": ["All 20 AI employees", "6,000 credits/month", "Dedicated support", "Unlimited everything", "API access"]
+        "max_custom_agents": -1,
+        "features": ["All 20 AI employees", "6,000 credits/month", "Unlimited custom agents", "Dedicated support", "Unlimited everything", "API access"]
     }
 }
+
+# Custom agent creation cost
+CUSTOM_AGENT_CREDIT_COST = 20
 
 CREDIT_PACKAGES = {
     "credits_100": {"credits": 100, "price_usd": 6.0, "price_bdt": 640.0, "name": "100 Credits"},
