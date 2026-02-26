@@ -708,6 +708,9 @@ async def get_agents(current_user: User = Depends(get_current_user)):
         if isinstance(agent.get('created_at'), str):
             agent['created_at'] = datetime.fromisoformat(agent['created_at'])
     
+    # Sort: Commander first, then others
+    agents.sort(key=lambda a: (0 if a.get("agent_id") == "agent_commander" else 1, a.get("name", "")))
+    
     return agents
 
 @api_router.get("/agents/{agent_id}", response_model=Agent)
