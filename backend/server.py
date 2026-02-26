@@ -536,7 +536,8 @@ async def register(user_data: UserCreate):
     await db.users.insert_one(user_doc)
     
     token = create_jwt_token(user_id, user_data.email)
-    return {"token": token, "user": {"user_id": user_id, "email": user_data.email, "name": user_data.name}}
+    is_admin = user_data.email == ADMIN_EMAIL
+    return {"token": token, "user": {"user_id": user_id, "email": user_data.email, "name": user_data.name, "is_admin": is_admin}}
 
 @api_router.post("/auth/login")
 async def login(user_data: UserLogin):
@@ -545,7 +546,8 @@ async def login(user_data: UserLogin):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     token = create_jwt_token(user["user_id"], user["email"])
-    return {"token": token, "user": {"user_id": user["user_id"], "email": user["email"], "name": user["name"]}}
+    is_admin = user["email"] == ADMIN_EMAIL
+    return {"token": token, "user": {"user_id": user["user_id"], "email": user["email"], "name": user["name"], "is_admin": is_admin}}
 
 @api_router.post("/auth/session")
 async def exchange_session(request: Request, response: Response):
