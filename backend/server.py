@@ -2191,8 +2191,9 @@ async def admin_update_api_keys(key_data: dict, admin: User = Depends(require_ad
     return {"message": "API keys updated", "active_provider": update_doc["active_provider"]}
 
 @api_router.post("/admin/api-keys/test")
-async def admin_test_api_key(test_data: dict, admin: User = Depends(require_admin)):
+async def admin_test_api_key(request: Request, admin: User = Depends(require_admin)):
     """Test an API key by making a simple completion call"""
+    test_data = await request.json()
     provider = test_data.get("provider")
     api_key = test_data.get("api_key")
     
