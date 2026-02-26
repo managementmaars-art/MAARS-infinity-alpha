@@ -657,7 +657,7 @@ const PricingPage = () => {
 
         {/* FAQ or Note */}
         <div className="text-center text-zinc-500 text-sm">
-          <p>All plans include access to all 20 AI employees and auto model selection.</p>
+          <p>Fixed plans include agent selection up to plan limits. Commander AI included in Pro and Business only.</p>
           <p className="mt-2">Questions? Contact support@maarsglobal.com</p>
         </div>
       </div>
