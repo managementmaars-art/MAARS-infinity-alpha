@@ -62,7 +62,7 @@ const PricingPage = () => {
       price_bdt: 8400,
       credits: 2000,
       icon: <Crown className="w-6 h-6" />,
-      features: ["2,000 credits/month", "10 AI employees", "5 custom agents (20 credits each)", "Priority support", "Unlimited uploads"],
+      features: ["2,000 credits/month", "10 AI employees + Commander AI", "5 custom agents (20 credits each)", "Priority support", "Unlimited uploads"],
       popular: true
     },
     {
