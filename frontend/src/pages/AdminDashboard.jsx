@@ -658,62 +658,106 @@ const AdminDashboard = () => {
         </CardContent>
       </Card>
 
-      {/* Manual Price Editor */}
+      {/* Manual Price Editor with Cost & Margin */}
       {pricingEdit && (
         <Card className="bg-zinc-900/50 border-white/10">
           <CardHeader>
             <CardTitle className="text-white font-['Outfit'] text-base">Edit Plan Pricing</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {Object.entries(pricingEdit.plans).filter(([id]) => id !== 'free').map(([planId, plan]) => (
-              <div key={planId} className="p-4 rounded-lg bg-white/5 space-y-3">
-                <h4 className="text-white font-semibold capitalize">{plan.name} Plan</h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <div className="space-y-1">
-                    <Label className="text-zinc-400 text-xs">Price USD</Label>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      value={plan.price_usd}
-                      onChange={(e) => updatePlanField(planId, 'price_usd', e.target.value)}
-                      className="bg-zinc-800/50 border-white/10 h-9 text-sm"
-                      data-testid={`edit-${planId}-usd`}
+            {Object.entries(pricingEdit.plans).filter(([id]) => id !== 'free').map(([planId, plan]) => {
+              const costUsd = (plan.credits || 0) * (calcInputs.ai_cost_per_credit || 0.003);
+              const profitUsd = (plan.price_usd || 0) - costUsd;
+              const marginPct = costUsd > 0 ? ((profitUsd / costUsd) * 100).toFixed(0) : 0;
+              const isLoss = profitUsd < 0;
+              const isLowMargin = marginPct < 100 && !isLoss;
+
+              return (
+                <div key={planId} className="p-4 rounded-lg bg-white/5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-white font-semibold capitalize">{plan.name} Plan</h4>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-zinc-500">Cost: <span className="text-red-400 font-mono">${costUsd.toFixed(2)}</span></span>
+                      <span className="text-xs text-zinc-500">Profit: <span className={`font-mono ${isLoss ? 'text-red-400' : 'text-emerald-400'}`}>${profitUsd.toFixed(2)}</span></span>
+                      <Badge className={`text-[10px] ${
+                        isLoss ? 'bg-red-500/20 text-red-400' :
+                        isLowMargin ? 'bg-amber-500/20 text-amber-400' :
+                        'bg-emerald-500/20 text-emerald-400'
+                      }`} data-testid={`margin-${planId}`}>
+                        {isLoss ? 'LOSS' : `${marginPct}% margin`}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    <div className="space-y-1">
+                      <Label className="text-zinc-400 text-xs">Sell Price USD</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={plan.price_usd}
+                        onChange={(e) => updatePlanField(planId, 'price_usd', e.target.value)}
+                        className="bg-zinc-800/50 border-white/10 h-9 text-sm"
+                        data-testid={`edit-${planId}-usd`}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-zinc-400 text-xs">Sell Price BDT</Label>
+                      <Input
+                        type="number"
+                        value={plan.price_bdt}
+                        onChange={(e) => updatePlanField(planId, 'price_bdt', e.target.value)}
+                        className="bg-zinc-800/50 border-white/10 h-9 text-sm"
+                        data-testid={`edit-${planId}-bdt`}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-zinc-400 text-xs">Credits</Label>
+                      <Input
+                        type="number"
+                        value={plan.credits}
+                        onChange={(e) => updatePlanField(planId, 'credits', e.target.value)}
+                        className="bg-zinc-800/50 border-white/10 h-9 text-sm"
+                        data-testid={`edit-${planId}-credits`}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-zinc-400 text-xs">Max Agents</Label>
+                      <Input
+                        type="number"
+                        value={plan.max_agents}
+                        onChange={(e) => updatePlanField(planId, 'max_agents', e.target.value)}
+                        className="bg-zinc-800/50 border-white/10 h-9 text-sm"
+                        data-testid={`edit-${planId}-agents`}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-zinc-400 text-xs">Custom Agents</Label>
+                      <Input
+                        type="number"
+                        value={plan.max_custom_agents}
+                        onChange={(e) => updatePlanField(planId, 'max_custom_agents', e.target.value)}
+                        className="bg-zinc-800/50 border-white/10 h-9 text-sm"
+                        data-testid={`edit-${planId}-custom`}
+                      />
+                      <p className="text-[10px] text-zinc-500">-1 = unlimited</p>
+                    </div>
+                  </div>
+
+                  {/* Cost breakdown bar */}
+                  <div className="h-2 rounded-full bg-zinc-800 overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${isLoss ? 'bg-red-500' : 'bg-gradient-to-r from-red-500 via-amber-500 to-emerald-500'}`}
+                      style={{ width: `${Math.min(100, plan.price_usd > 0 ? (costUsd / plan.price_usd * 100) : 100)}%` }}
                     />
                   </div>
-                  <div className="space-y-1">
-                    <Label className="text-zinc-400 text-xs">Price BDT</Label>
-                    <Input
-                      type="number"
-                      value={plan.price_bdt}
-                      onChange={(e) => updatePlanField(planId, 'price_bdt', e.target.value)}
-                      className="bg-zinc-800/50 border-white/10 h-9 text-sm"
-                      data-testid={`edit-${planId}-bdt`}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-zinc-400 text-xs">Credits</Label>
-                    <Input
-                      type="number"
-                      value={plan.credits}
-                      onChange={(e) => updatePlanField(planId, 'credits', e.target.value)}
-                      className="bg-zinc-800/50 border-white/10 h-9 text-sm"
-                      data-testid={`edit-${planId}-credits`}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-zinc-400 text-xs">Custom Agents</Label>
-                    <Input
-                      type="number"
-                      value={plan.max_custom_agents}
-                      onChange={(e) => updatePlanField(planId, 'max_custom_agents', e.target.value)}
-                      className="bg-zinc-800/50 border-white/10 h-9 text-sm"
-                      data-testid={`edit-${planId}-custom`}
-                    />
-                    <p className="text-[10px] text-zinc-500">-1 = unlimited</p>
+                  <div className="flex justify-between text-[10px] text-zinc-500">
+                    <span>AI Cost: ${costUsd.toFixed(2)}</span>
+                    <span>Your Price: ${plan.price_usd}</span>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             <div className="p-4 rounded-lg bg-white/5 space-y-3">
               <h4 className="text-white font-semibold">Custom Agent Creation Cost</h4>
