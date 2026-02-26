@@ -2444,8 +2444,11 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
                 {"name": "GPT-4o Mini", "input": "$0.15", "output": "$0.60"},
                 {"name": "O3", "input": "$10.00", "output": "$40.00"},
                 {"name": "O3 Mini", "input": "$1.10", "output": "$4.40"},
+                {"name": "GPT Image 1", "input": "$0.02/img", "output": "1024x1024"},
+                {"name": "DALL-E 3", "input": "$0.04/img", "output": "1024x1024"},
+                {"name": "Sora 2", "input": "$0.10/sec", "output": "4-12 sec video"},
             ],
-            "unit": "per 1M tokens"
+            "unit": "per 1M tokens (text) / per image or second (gen)"
         },
         "anthropic": {
             "models": [
