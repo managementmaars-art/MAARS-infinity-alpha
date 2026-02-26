@@ -994,7 +994,7 @@ const AdminDashboard = () => {
                 className="bg-zinc-800/50 border-white/10"
                 data-testid="calc-cost-input"
               />
-              <p className="text-[10px] text-zinc-500">Average cost across all models (~$0.003)</p>
+              <p className="text-[10px] text-zinc-500">Auto-populated from real usage data</p>
             </div>
             <div className="space-y-2">
               <Label className="text-zinc-300 text-sm">Target Profit Margin (%)</Label>
