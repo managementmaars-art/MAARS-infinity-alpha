@@ -1167,8 +1167,11 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         # Check if this is Commander AI - use delegation
         is_commander = agent.get("is_commander", False) or agent.get("agent_id") == "agent_commander"
         
+        delegation_data = None
         if is_commander:
-            response_text = await commander_delegate(message_data.content, chat_id, api_keys, current_user.user_id)
+            commander_result = await commander_delegate(message_data.content, chat_id, api_keys, current_user.user_id)
+            response_text = commander_result["content"]
+            delegation_data = commander_result.get("delegation_data")
         elif api_keys["active_provider"] == "direct":
             # Use direct API keys
             direct_key = api_keys.get(model_provider, "")
