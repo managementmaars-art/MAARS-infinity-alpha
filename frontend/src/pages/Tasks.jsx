@@ -11,7 +11,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { ScrollArea } from "../components/ui/scroll-area";
 import { 
   Bot, Plus, Play, Trash2, CheckCircle, Clock, AlertCircle,
-  LayoutDashboard, Users, MessageSquare, ListTodo, Settings, LogOut, Menu, X
+  LayoutDashboard, Users, MessageSquare, ListTodo, Settings, LogOut, Menu, X,
+  Shield
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
