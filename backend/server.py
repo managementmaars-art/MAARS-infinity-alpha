@@ -920,17 +920,28 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         }
     )
     
+    # Deduct 1 credit for the message
+    await db.subscriptions.update_one(
+        {"user_id": current_user.user_id},
+        {"$inc": {"credits": -1, "credits_used": 1}}
+    )
+    
     # Update title if first message
     if len(chat.get("messages", [])) == 0:
         title = message_data.content[:50] + "..." if len(message_data.content) > 50 else message_data.content
         await db.chats.update_one({"chat_id": chat_id}, {"$set": {"title": title}})
+    
+    # Get updated credits
+    updated_sub = await db.subscriptions.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    credits_remaining = updated_sub.get("credits", 0) if updated_sub else 0
     
     return {
         "user_message": user_msg,
         "assistant_message": assistant_msg,
         "model_used": f"{model_provider}/{model_name}",
         "auto_selected": auto_selected,
-        "model_reason": model_reason if auto_selected else None
+        "model_reason": model_reason if auto_selected else None,
+        "credits_remaining": credits_remaining
     }
 
 # ============== FILE UPLOAD ENDPOINT ==============
