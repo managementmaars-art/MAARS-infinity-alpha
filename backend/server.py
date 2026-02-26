@@ -2388,6 +2388,47 @@ async def admin_delete_agent(agent_id: str, admin: User = Depends(require_admin)
         raise HTTPException(status_code=404, detail="Agent not found")
     return {"message": "Agent deleted"}
 
+@api_router.get("/admin/custom-package")
+async def admin_get_custom_package(admin: User = Depends(require_admin)):
+    """Get custom package pricing config"""
+    config = await get_custom_package_config()
+    config.pop("config_type", None)
+    return config
+
+@api_router.post("/admin/custom-package")
+async def admin_update_custom_package(request: Request, admin: User = Depends(require_admin)):
+    """Update custom package pricing config"""
+    body = await request.json()
+    
+    update_doc = {
+        "config_type": "custom_packages",
+        "per_agent_price_usd": float(body.get("per_agent_price_usd", 5.0)),
+        "per_agent_price_bdt": float(body.get("per_agent_price_bdt", 535.0)),
+        "commander_addon_price_usd": float(body.get("commander_addon_price_usd", 15.0)),
+        "commander_addon_price_bdt": float(body.get("commander_addon_price_bdt", 1605.0)),
+    }
+    
+    # Validate and save credit presets
+    presets = body.get("credit_presets", [])
+    if presets:
+        validated_presets = []
+        for p in presets:
+            validated_presets.append({
+                "id": p.get("id", f"cp_{p.get('credits', 0)}"),
+                "credits": int(p.get("credits", 0)),
+                "price_usd": float(p.get("price_usd", 0)),
+                "price_bdt": float(p.get("price_bdt", 0)),
+            })
+        update_doc["credit_presets"] = validated_presets
+    
+    await db.platform_config.update_one(
+        {"config_type": "custom_packages"},
+        {"$set": update_doc},
+        upsert=True
+    )
+    
+    return {"message": "Custom package config updated", "config": update_doc}
+
 @api_router.get("/admin/transactions")
 async def admin_get_transactions(admin: User = Depends(require_admin)):
     """Get all payment transactions"""
