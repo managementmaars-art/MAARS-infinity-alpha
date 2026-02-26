@@ -1886,6 +1886,173 @@ async def get_credits(current_user: User = Depends(get_current_user)):
         return {"credits": 50, "plan": "free"}
     return {"credits": sub.get("credits", 0), "plan": sub.get("plan_id", "free")}
 
+# ============== CUSTOM PACKAGE ENDPOINTS ==============
+
+@api_router.get("/custom-package/config")
+async def get_custom_package_config_endpoint():
+    """Get custom package pricing config (public)"""
+    config = await get_custom_package_config()
+    config.pop("config_type", None)
+    return config
+
+@api_router.post("/custom-package/checkout")
+async def custom_package_checkout(request: Request, current_user: User = Depends(get_current_user)):
+    """Create a Stripe checkout for a custom package"""
+    from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionRequest
+    
+    body = await request.json()
+    selected_agents = body.get("selected_agents", [])
+    credit_preset_id = body.get("credit_preset_id", "")
+    include_commander = body.get("include_commander", False)
+    origin_url = body.get("origin_url", "")
+    currency = body.get("currency", "usd").lower()
+    
+    if not selected_agents:
+        raise HTTPException(status_code=400, detail="Select at least one agent")
+    if not credit_preset_id:
+        raise HTTPException(status_code=400, detail="Select a credit package")
+    
+    config = await get_custom_package_config()
+    
+    # Find the credit preset
+    credit_preset = None
+    for preset in config.get("credit_presets", []):
+        if preset["id"] == credit_preset_id:
+            credit_preset = preset
+            break
+    if not credit_preset:
+        raise HTTPException(status_code=400, detail="Invalid credit preset")
+    
+    price_key = "price_bdt" if currency == "bdt" else "price_usd"
+    agent_price_key = f"per_agent_{price_key}"
+    commander_price_key = f"commander_addon_{price_key}"
+    
+    # Calculate total
+    num_agents = len(selected_agents)
+    agent_cost = num_agents * config.get(agent_price_key, config.get("per_agent_price_usd", 5.0))
+    credit_cost = credit_preset[price_key]
+    commander_cost = config.get(commander_price_key, 0) if include_commander else 0
+    total = agent_cost + credit_cost + commander_cost
+    
+    if total <= 0:
+        raise HTTPException(status_code=400, detail="Invalid package total")
+    
+    metadata = {
+        "type": "custom_package",
+        "user_id": current_user.user_id,
+        "email": current_user.email,
+        "selected_agents": ",".join(selected_agents),
+        "credit_preset_id": credit_preset_id,
+        "credits": str(credit_preset["credits"]),
+        "include_commander": str(include_commander),
+        "currency": currency
+    }
+    
+    webhook_url = f"{str(request.base_url).rstrip('/')}/api/webhook/stripe"
+    stripe_checkout = StripeCheckout(api_key=STRIPE_API_KEY, webhook_url=webhook_url)
+    
+    success_url = f"{origin_url}/payment/success?session_id={{CHECKOUT_SESSION_ID}}"
+    cancel_url = f"{origin_url}/pricing"
+    
+    checkout_request = CheckoutSessionRequest(
+        amount=float(total),
+        currency=currency,
+        success_url=success_url,
+        cancel_url=cancel_url,
+        metadata=metadata
+    )
+    
+    session = await stripe_checkout.create_checkout_session(checkout_request)
+    
+    transaction = {
+        "transaction_id": f"txn_{uuid.uuid4().hex[:12]}",
+        "session_id": session.session_id,
+        "user_id": current_user.user_id,
+        "email": current_user.email,
+        "type": "custom_package",
+        "amount": total,
+        "currency": currency,
+        "metadata": metadata,
+        "status": "pending",
+        "payment_status": "pending",
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.payment_transactions.insert_one(transaction)
+    
+    return {
+        "checkout_url": session.url,
+        "session_id": session.session_id,
+        "breakdown": {
+            "agents": num_agents,
+            "agent_cost": agent_cost,
+            "credits": credit_preset["credits"],
+            "credit_cost": credit_cost,
+            "commander": include_commander,
+            "commander_cost": commander_cost,
+            "total": total
+        }
+    }
+
+@api_router.get("/subscription/agents")
+async def get_selected_agents(current_user: User = Depends(get_current_user)):
+    """Get user's selected agents"""
+    sub = await db.subscriptions.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    if not sub:
+        return {"selected_agents": [], "plan_id": "free", "max_agents": 1, "includes_commander": False}
+    
+    plan_id = sub.get("plan_id", "free")
+    plan = SUBSCRIPTION_PLANS.get(plan_id, SUBSCRIPTION_PLANS.get("free"))
+    
+    is_custom = plan_id == "custom"
+    selected = sub.get("selected_agents", [])
+    has_commander = sub.get("has_commander", False)
+    
+    if not is_custom and plan:
+        includes_commander = plan.get("includes_commander", False)
+    else:
+        includes_commander = has_commander
+    
+    return {
+        "selected_agents": selected,
+        "plan_id": plan_id,
+        "max_agents": plan.get("max_agents", 1) if plan else 0,
+        "includes_commander": includes_commander,
+        "is_custom": is_custom
+    }
+
+@api_router.put("/subscription/agents")
+async def update_selected_agents(request: Request, current_user: User = Depends(get_current_user)):
+    """Update user's selected agents (for fixed plans)"""
+    body = await request.json()
+    selected_agents = body.get("selected_agents", [])
+    
+    is_admin = current_user.email == ADMIN_EMAIL
+    
+    sub = await db.subscriptions.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    if not sub:
+        raise HTTPException(status_code=400, detail="No subscription found")
+    
+    plan_id = sub.get("plan_id", "free")
+    
+    if plan_id == "custom":
+        raise HTTPException(status_code=400, detail="Custom package agents are set at purchase time")
+    
+    plan = SUBSCRIPTION_PLANS.get(plan_id, SUBSCRIPTION_PLANS.get("free"))
+    max_agents = plan.get("max_agents", 1)
+    
+    # Filter out commander from count (it's controlled by plan)
+    non_commander = [a for a in selected_agents if a != "agent_commander"]
+    
+    if not is_admin and len(non_commander) > max_agents:
+        raise HTTPException(status_code=400, detail=f"Your {plan['name']} plan allows up to {max_agents} agents. You selected {len(non_commander)}.")
+    
+    await db.subscriptions.update_one(
+        {"user_id": current_user.user_id},
+        {"$set": {"selected_agents": selected_agents}}
+    )
+    
+    return {"selected_agents": selected_agents, "message": "Agents updated"}
+
 
 # ============== ADMIN ENDPOINTS ==============
 
