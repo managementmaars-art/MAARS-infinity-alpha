@@ -105,6 +105,7 @@ class User(BaseModel):
     email: str
     name: str
     picture: Optional[str] = None
+    is_admin: bool = False
     created_at: datetime
 
 class Agent(BaseModel):
