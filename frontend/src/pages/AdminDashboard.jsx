@@ -506,7 +506,7 @@ const AdminDashboard = () => {
       const res = await fetch(`${API}/admin/api-keys`, {
         method: "PUT",
         credentials: "include",
-        headers,
+        headers: { ...headers, "Content-Type": "application/json" },
         body: JSON.stringify(apiKeyInputs)
       });
       if (res.ok) {
