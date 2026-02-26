@@ -9,22 +9,22 @@ const LandingPage = () => {
 
   const agents = [
     {
-      name: "Victoria Sterling",
-      role: "Chief Executive Officer",
+      name: "Nadia Kessler",
+      role: "Personal Secretary",
       avatar: "https://images.unsplash.com/photo-1677212004257-103cfa6b59d0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwxfHwzZCUyMHJvYm90JTIwYXZhdGFyJTIwZnV0dXJpc3RpYyUyMGljb24lMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzIwNjg5OTF8MA&ixlib=rb-4.1.0&q=85",
-      capabilities: ["Strategic Planning", "Leadership", "M&A Advisory"]
+      capabilities: ["Scheduling", "To-Do Lists", "Email Drafting"]
     },
     {
-      name: "Marcus Chen",
-      role: "Chief Financial Officer",
-      avatar: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?crop=entropy&cs=srgb&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YWklMjByb2JvdHxlbnwwfHwwfHx8MA%3D%3D&ixlib=rb-4.1.0&q=85",
-      capabilities: ["Financial Analysis", "Budgeting", "Investment Strategy"]
-    },
-    {
-      name: "Dr. Aiden Nakamura",
-      role: "Chief Technology Officer",
+      name: "Kai Nakamoto",
+      role: "App Developer",
       avatar: "https://images.unsplash.com/photo-1760931969401-9bd6ee902798?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHw0fHwzZCUyMHJvYm90JTIwYXZhdGFyJTIwZnV0dXJpc3RpYyUyMGljb24lMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzIwNjg5OTF8MA&ixlib=rb-4.1.0&q=85",
-      capabilities: ["Software Architecture", "AI/ML Strategy", "Cloud Infrastructure"]
+      capabilities: ["Web Apps", "Mobile Apps", "Full-Stack"]
+    },
+    {
+      name: "Luna Bergström",
+      role: "Web Designer",
+      avatar: "https://images.unsplash.com/photo-1546776310-eef45dd6d63c?crop=entropy&cs=srgb&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YWklMjBhc3Npc3RhbnR8ZW58MHx8MHx8fDA%3D&ixlib=rb-4.1.0&q=85",
+      capabilities: ["UI/UX", "Landing Pages", "Brand Identity"]
     }
   ];
 
