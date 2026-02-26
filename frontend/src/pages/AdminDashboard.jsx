@@ -529,7 +529,7 @@ const AdminDashboard = () => {
       const res = await fetch(`${API}/admin/api-keys/test`, {
         method: "POST",
         credentials: "include",
-        headers,
+        headers: { ...headers, "Content-Type": "application/json" },
         body: JSON.stringify({ provider, api_key: key })
       });
       const data = await res.json();
