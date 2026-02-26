@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { 
   Bot, Send, Plus, ArrowLeft, MessageSquare, Trash2,
   LayoutDashboard, Users, ListTodo, Settings, LogOut, Menu, X,
-  Paperclip, Image, FileText, Sparkles
+  Paperclip, Image, FileText, Sparkles, Mic, MicOff, Volume2, Loader2
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
