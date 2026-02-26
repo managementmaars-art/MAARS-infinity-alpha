@@ -1,26 +1,67 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Separator } from "../components/ui/separator";
+import { Badge } from "../components/ui/badge";
+import { Progress } from "../components/ui/progress";
 import { 
-  Bot, User, Mail, Shield, LogOut, 
+  Bot, User, Mail, Shield, LogOut, CreditCard, Sparkles, Crown, Zap,
   LayoutDashboard, Users, MessageSquare, ListTodo, Settings, Menu, X
 } from "lucide-react";
-import { useAuth } from "../App";
+import { useAuth, API } from "../App";
 import { toast } from "sonner";
 
 const SettingsPage = () => {
   const navigate = useNavigate();
   const { user, logout, token } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [subscription, setSubscription] = useState(null);
+
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+  useEffect(() => {
+    fetchSubscription();
+  }, []);
+
+  const fetchSubscription = async () => {
+    try {
+      const response = await fetch(`${API}/subscription`, {
+        credentials: "include",
+        headers
+      });
+      if (response.ok) {
+        setSubscription(await response.json());
+      }
+    } catch (error) {
+      console.error("Failed to fetch subscription");
+    }
+  };
 
   const handleLogout = async () => {
     await logout();
     toast.success("Logged out successfully");
     navigate("/");
+  };
+
+  const getPlanIcon = (plan) => {
+    switch (plan) {
+      case "business": return <Crown className="w-5 h-5" />;
+      case "pro": return <Sparkles className="w-5 h-5" />;
+      case "starter": return <Zap className="w-5 h-5" />;
+      default: return <CreditCard className="w-5 h-5" />;
+    }
+  };
+
+  const getPlanColor = (plan) => {
+    switch (plan) {
+      case "business": return "text-amber-400 bg-amber-500/20";
+      case "pro": return "text-violet-400 bg-violet-500/20";
+      case "starter": return "text-indigo-400 bg-indigo-500/20";
+      default: return "text-zinc-400 bg-zinc-500/20";
+    }
   };
 
   const NavItem = ({ icon: Icon, label, to, active }) => (
