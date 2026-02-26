@@ -610,6 +610,7 @@ const AdminDashboard = () => {
             { id: "openai", name: "OpenAI", url: "https://platform.openai.com/api-keys", color: "emerald", set: apiKeysConfig?.openai_key_set, masked: apiKeysConfig?.openai_key },
             { id: "anthropic", name: "Anthropic", url: "https://console.anthropic.com/settings/keys", color: "orange", set: apiKeysConfig?.anthropic_key_set, masked: apiKeysConfig?.anthropic_key },
             { id: "gemini", name: "Google Gemini", url: "https://aistudio.google.com/apikey", color: "blue", set: apiKeysConfig?.gemini_key_set, masked: apiKeysConfig?.gemini_key },
+            { id: "elevenlabs", name: "ElevenLabs (Voice AI)", url: "https://elevenlabs.io/app/settings/api-keys", color: "violet", set: apiKeysConfig?.elevenlabs_key_set, masked: apiKeysConfig?.elevenlabs_key },
           ].map((provider) => (
             <div key={provider.id} className="p-4 rounded-lg bg-white/5 space-y-3">
               <div className="flex items-center justify-between">
