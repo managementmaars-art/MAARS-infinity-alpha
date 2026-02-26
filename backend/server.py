@@ -31,6 +31,44 @@ JWT_EXPIRATION_HOURS = 24 * 7  # 7 days
 # LLM Settings
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
 
+# Stripe Settings
+STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY', '')
+
+# ============== SUBSCRIPTION PLANS (500% markup) ==============
+SUBSCRIPTION_PLANS = {
+    "free": {
+        "name": "Free",
+        "price": 0.0,
+        "credits": 50,
+        "features": ["50 credits/month", "All 20 AI employees", "Basic support"]
+    },
+    "starter": {
+        "name": "Starter",
+        "price": 29.0,
+        "credits": 500,
+        "features": ["500 credits/month", "All 20 AI employees", "Priority support", "File uploads"]
+    },
+    "pro": {
+        "name": "Pro",
+        "price": 79.0,
+        "credits": 2000,
+        "features": ["2,000 credits/month", "All 20 AI employees", "Priority support", "Unlimited uploads", "Custom agents"]
+    },
+    "business": {
+        "name": "Business",
+        "price": 199.0,
+        "credits": 6000,
+        "features": ["6,000 credits/month", "All 20 AI employees", "Dedicated support", "Unlimited everything", "API access"]
+    }
+}
+
+CREDIT_PACKAGES = {
+    "credits_100": {"credits": 100, "price": 10.0, "name": "100 Credits"},
+    "credits_300": {"credits": 300, "price": 25.0, "name": "300 Credits"},
+    "credits_700": {"credits": 700, "price": 50.0, "name": "700 Credits"},
+    "credits_1500": {"credits": 1500, "price": 100.0, "name": "1,500 Credits"}
+}
+
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer(auto_error=False)
