@@ -853,14 +853,15 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
     
-    # Check user credits
+    # Check user credits (admin bypasses credit check)
+    is_admin = current_user.email == ADMIN_EMAIL
     user_sub = await db.subscriptions.find_one({"user_id": current_user.user_id}, {"_id": 0})
     if not user_sub:
         # Create default free subscription
         user_sub = {
             "user_id": current_user.user_id,
-            "plan_id": "free",
-            "credits": 50,
+            "plan_id": "free" if not is_admin else "business",
+            "credits": 50 if not is_admin else 999999,
             "credits_used": 0,
             "status": "active",
             "created_at": datetime.now(timezone.utc).isoformat()
@@ -868,7 +869,7 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         await db.subscriptions.insert_one(user_sub)
     
     credits_remaining = user_sub.get("credits", 0)
-    if credits_remaining <= 0:
+    if credits_remaining <= 0 and not is_admin:
         raise HTTPException(status_code=402, detail="Insufficient credits. Please upgrade your plan or purchase more credits.")
     
     # Auto-select model if set to "auto" or not specified
