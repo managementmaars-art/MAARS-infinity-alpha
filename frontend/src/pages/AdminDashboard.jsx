@@ -26,6 +26,10 @@ const AdminDashboard = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateAgent, setShowCreateAgent] = useState(false);
+  const [pricingConfig, setPricingConfig] = useState(null);
+  const [pricingEdit, setPricingEdit] = useState(null);
+  const [calcResult, setCalcResult] = useState(null);
+  const [calcInputs, setCalcInputs] = useState({ ai_cost_per_credit: 0.003, target_profit_margin: 200, bdt_exchange_rate: 107 });
   const [newAgent, setNewAgent] = useState({
     name: "", description: "", role: "", system_prompt: "",
     model_provider: "openai", model_name: "gpt-5.2", capabilities: ""
