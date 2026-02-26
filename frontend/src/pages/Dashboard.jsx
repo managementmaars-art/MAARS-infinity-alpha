@@ -4,7 +4,7 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { 
   Bot, MessageSquare, ListTodo, Sparkles, Plus, ChevronRight,
-  LayoutDashboard, Users, Settings, LogOut, Menu, X
+  LayoutDashboard, Users, Settings, LogOut, Menu, X, Shield
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
