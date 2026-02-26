@@ -708,6 +708,24 @@ const AgentChat = () => {
                 <Paperclip className="w-4 h-4" />
               )}
             </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={recording ? stopRecording : startRecording}
+              disabled={transcribing}
+              className={`border-white/10 ${recording ? "bg-red-500/20 border-red-500/50 text-red-400 animate-pulse" : "hover:bg-white/5"}`}
+              data-testid="mic-btn"
+              title={recording ? "Stop recording" : transcribing ? "Transcribing..." : "Voice input"}
+            >
+              {transcribing ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : recording ? (
+                <MicOff className="w-4 h-4" />
+              ) : (
+                <Mic className="w-4 h-4" />
+              )}
+            </Button>
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
