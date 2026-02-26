@@ -260,6 +260,115 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* AI Models Section */}
+      <section id="models" className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 font-['Outfit']">
+              Powered by World-Class AI Models
+            </h2>
+            <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+              Every agent intelligently selects the best model for each task, or you can choose manually from 10 frontier models.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* OpenAI */}
+            <div className="p-6 rounded-xl glass animate-slide-up" style={{ animationDelay: '0s', opacity: 0 }} data-testid="models-openai">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-emerald-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white font-['Outfit']">OpenAI</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { name: "GPT-5.2", tag: "Flagship", desc: "Most capable model for coding, analysis & complex tasks", color: "emerald" },
+                  { name: "GPT-4o", tag: "Fast", desc: "Balanced speed and quality for everyday tasks", color: "emerald" },
+                  { name: "GPT-4o Mini", tag: "Economy", desc: "Cost-efficient for simple questions & quick answers", color: "zinc" },
+                  { name: "O3", tag: "Reasoning", desc: "Advanced reasoning for math, logic & problem-solving", color: "amber" },
+                  { name: "O3 Mini", tag: "Reasoning", desc: "Lightweight reasoning for everyday analytical tasks", color: "zinc" },
+                ].map((m, i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                    <div className="mt-0.5 w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-white font-medium text-sm">{m.name}</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full bg-${m.color}-500/20 text-${m.color}-400`}>{m.tag}</span>
+                      </div>
+                      <p className="text-xs text-zinc-500 mt-0.5">{m.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Anthropic */}
+            <div className="p-6 rounded-xl glass animate-slide-up" style={{ animationDelay: '0.1s', opacity: 0 }} data-testid="models-anthropic">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-orange-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white font-['Outfit']">Anthropic</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { name: "Claude Sonnet 4.5", tag: "Flagship", desc: "Best for creative writing, analysis & nuanced tasks", color: "orange" },
+                  { name: "Claude Opus 4.5", tag: "Premium", desc: "Deep research, long-form content & complex analysis", color: "amber" },
+                  { name: "Claude Haiku 4.5", tag: "Economy", desc: "Fast responses, summaries & lightweight tasks", color: "zinc" },
+                ].map((m, i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                    <div className="mt-0.5 w-2 h-2 rounded-full bg-orange-400 shrink-0" />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-white font-medium text-sm">{m.name}</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full bg-${m.color}-500/20 text-${m.color}-400`}>{m.tag}</span>
+                      </div>
+                      <p className="text-xs text-zinc-500 mt-0.5">{m.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Google */}
+            <div className="p-6 rounded-xl glass animate-slide-up" style={{ animationDelay: '0.2s', opacity: 0 }} data-testid="models-google">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-blue-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white font-['Outfit']">Google</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { name: "Gemini 3 Flash", tag: "Fast", desc: "Lightning-fast responses for simple tasks & conversations", color: "blue" },
+                  { name: "Gemini 3 Pro", tag: "Flagship", desc: "Multimodal capabilities for research & complex analysis", color: "blue" },
+                ].map((m, i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                    <div className="mt-0.5 w-2 h-2 rounded-full bg-blue-400 shrink-0" />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-white font-medium text-sm">{m.name}</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full bg-${m.color}-500/20 text-${m.color}-400`}>{m.tag}</span>
+                      </div>
+                      <p className="text-xs text-zinc-500 mt-0.5">{m.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 p-4 rounded-lg bg-gradient-to-r from-indigo-500/10 to-violet-500/10 border border-indigo-500/20">
+                <div className="flex items-center gap-2 mb-2">
+                  <Zap className="w-4 h-4 text-indigo-400" />
+                  <span className="text-sm font-semibold text-white">Smart Auto-Selection</span>
+                </div>
+                <p className="text-xs text-zinc-400">Each agent automatically picks the best model for the task — coding, creative writing, research, data analysis, and more.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
