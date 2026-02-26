@@ -700,7 +700,8 @@ const AgentChat = () => {
                     </div>
                   )}
                 </div>
-              ))}
+                );
+              })}
               {sending && (
                 <div className="flex gap-3">
                   <img
