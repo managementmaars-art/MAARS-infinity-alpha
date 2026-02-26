@@ -236,6 +236,7 @@ async def get_current_user(request: Request, credentials: HTTPAuthorizationCrede
                 if user:
                     if isinstance(user.get('created_at'), str):
                         user['created_at'] = datetime.fromisoformat(user['created_at'])
+                    user['is_admin'] = user.get('email') == ADMIN_EMAIL
                     return User(**user)
     
     # Try JWT token from header
@@ -246,6 +247,7 @@ async def get_current_user(request: Request, credentials: HTTPAuthorizationCrede
             if user:
                 if isinstance(user.get('created_at'), str):
                     user['created_at'] = datetime.fromisoformat(user['created_at'])
+                user['is_admin'] = user.get('email') == ADMIN_EMAIL
                 return User(**user)
         except jwt.ExpiredSignatureError:
             raise HTTPException(status_code=401, detail="Token expired")
@@ -253,6 +255,11 @@ async def get_current_user(request: Request, credentials: HTTPAuthorizationCrede
             pass
     
     raise HTTPException(status_code=401, detail="Not authenticated")
+
+async def require_admin(current_user: User = Depends(get_current_user)) -> User:
+    if not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return current_user
 
 # ============== DEFAULT AGENTS ==============
 
