@@ -1622,6 +1622,87 @@ async def get_credits(current_user: User = Depends(get_current_user)):
 # ============== ADMIN ENDPOINTS ==============
 
 
+
+@api_router.get("/admin/api-keys")
+async def admin_get_api_keys(admin: User = Depends(require_admin)):
+    """Get current API key configuration (masked)"""
+    config = await db.platform_config.find_one({"config_type": "api_keys"}, {"_id": 0})
+    if not config:
+        config = {"active_provider": "emergent", "openai_key": "", "anthropic_key": "", "gemini_key": ""}
+    
+    # Mask keys for display
+    def mask(key):
+        if not key:
+            return ""
+        if len(key) < 10:
+            return "***"
+        return key[:8] + "..." + key[-4:]
+    
+    return {
+        "active_provider": config.get("active_provider", "emergent"),
+        "emergent_key_set": bool(EMERGENT_LLM_KEY),
+        "openai_key": mask(config.get("openai_key", "")),
+        "openai_key_set": bool(config.get("openai_key", "")),
+        "anthropic_key": mask(config.get("anthropic_key", "")),
+        "anthropic_key_set": bool(config.get("anthropic_key", "")),
+        "gemini_key": mask(config.get("gemini_key", "")),
+        "gemini_key_set": bool(config.get("gemini_key", "")),
+    }
+
+@api_router.put("/admin/api-keys")
+async def admin_update_api_keys(key_data: dict, admin: User = Depends(require_admin)):
+    """Admin can update API keys and switch between Emergent and direct provider keys"""
+    update_doc = {
+        "config_type": "api_keys",
+        "active_provider": key_data.get("active_provider", "emergent"),
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "updated_by": admin.email
+    }
+    
+    # Only update keys that are provided (non-empty)
+    if key_data.get("openai_key"):
+        update_doc["openai_key"] = key_data["openai_key"]
+    if key_data.get("anthropic_key"):
+        update_doc["anthropic_key"] = key_data["anthropic_key"]
+    if key_data.get("gemini_key"):
+        update_doc["gemini_key"] = key_data["gemini_key"]
+    
+    # Merge with existing (preserve keys not being updated)
+    existing = await db.platform_config.find_one({"config_type": "api_keys"})
+    if existing:
+        for field in ["openai_key", "anthropic_key", "gemini_key"]:
+            if field not in update_doc and field in existing:
+                update_doc[field] = existing[field]
+    
+    await db.platform_config.update_one(
+        {"config_type": "api_keys"},
+        {"$set": update_doc},
+        upsert=True
+    )
+    
+    return {"message": "API keys updated", "active_provider": update_doc["active_provider"]}
+
+@api_router.post("/admin/api-keys/test")
+async def admin_test_api_key(test_data: dict, admin: User = Depends(require_admin)):
+    """Test an API key by making a simple completion call"""
+    provider = test_data.get("provider")
+    api_key = test_data.get("api_key")
+    
+    if not provider or not api_key:
+        raise HTTPException(status_code=400, detail="Provider and api_key required")
+    
+    try:
+        test_models = {"openai": "gpt-4o-mini", "anthropic": "claude-haiku-4-5-20250929", "gemini": "gemini-3-flash-preview"}
+        model = test_models.get(provider)
+        if not model:
+            raise HTTPException(status_code=400, detail="Invalid provider")
+        
+        result = await call_direct_llm(provider, model, "You are a test bot.", "Say 'Key works!' in exactly 2 words.", [], api_key)
+        return {"success": True, "message": f"Key verified! Response: {result[:50]}"}
+    except Exception as e:
+        return {"success": False, "message": f"Key test failed: {str(e)[:100]}"}
+
+
 @api_router.get("/admin/pricing")
 async def admin_get_pricing(admin: User = Depends(require_admin)):
     """Get current pricing configuration from DB or default"""
