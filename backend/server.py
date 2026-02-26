@@ -972,8 +972,6 @@ def auto_select_model(content: str, agent_role: str) -> tuple:
     # Default to GPT-5.2 for general tasks
     return ('openai', 'gpt-5.2', 'GPT-5.2 selected - best all-around model')
 
-@api_router.post("/chats/{chat_id}/messages")
-
 async def call_direct_llm(provider: str, model_name: str, system_prompt: str, content: str, attachments: list, api_key: str) -> str:
     """Call LLM directly using provider SDKs"""
     import json as json_lib
