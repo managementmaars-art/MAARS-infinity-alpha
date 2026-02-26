@@ -94,12 +94,33 @@ const PricingPage = () => {
     if (user) {
       fetchSubscription();
     }
-    // Detect if user might be from Bangladesh (basic detection)
+    fetchPlans();
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (timezone === "Asia/Dhaka") {
       setCurrency("bdt");
     }
   }, [user]);
+
+  const fetchPlans = async () => {
+    try {
+      const res = await fetch(`${API}/plans`);
+      if (res.ok) {
+        const data = await res.json();
+        setDynamicPlans(data.plans);
+      }
+    } catch {}
+  };
+
+  const plans = dynamicPlans ? Object.entries(dynamicPlans).map(([id, p]) => ({
+    id,
+    name: p.name,
+    price_usd: p.price_usd,
+    price_bdt: p.price_bdt,
+    credits: p.credits,
+    icon: icons[id] || <Sparkles className="w-6 h-6" />,
+    features: p.features || [],
+    popular: id === "pro"
+  })) : defaultPlans;
 
   const fetchSubscription = async () => {
     try {
