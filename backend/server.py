@@ -1892,6 +1892,23 @@ async def stripe_webhook(request: Request):
                             {"$inc": {"credits": credits_to_add}},
                             upsert=True
                         )
+                    elif metadata.get("type") == "custom_package":
+                        credits_to_add = int(metadata.get("credits", 0))
+                        selected_agents = [a for a in metadata.get("selected_agents", "").split(",") if a]
+                        include_commander = metadata.get("include_commander", "False") == "True"
+                        await db.subscriptions.update_one(
+                            {"user_id": user_id},
+                            {"$set": {
+                                "plan_id": "custom",
+                                "credits": credits_to_add,
+                                "credits_used": 0,
+                                "selected_agents": selected_agents,
+                                "has_commander": include_commander,
+                                "status": "active",
+                                "renewed_at": datetime.now(timezone.utc).isoformat()
+                            }},
+                            upsert=True
+                        )
         
         return {"status": "ok"}
     except Exception as e:
