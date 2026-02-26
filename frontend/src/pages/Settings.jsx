@@ -29,6 +29,8 @@ const SettingsPage = () => {
 
   useEffect(() => {
     fetchSubscription();
+    fetchAgents();
+    fetchSelectedAgents();
   }, []);
 
   const fetchSubscription = async () => {
@@ -43,6 +45,50 @@ const SettingsPage = () => {
     } catch (error) {
       console.error("Failed to fetch subscription");
     }
+  };
+
+  const fetchAgents = async () => {
+    try {
+      const res = await fetch(`${API}/agents`, { headers, credentials: "include" });
+      if (res.ok) setAllAgents(await res.json());
+    } catch {}
+  };
+
+  const fetchSelectedAgents = async () => {
+    try {
+      const res = await fetch(`${API}/subscription/agents`, { headers, credentials: "include" });
+      if (res.ok) {
+        const data = await res.json();
+        setAgentConfig(data);
+        setSelectedAgents(data.selected_agents || []);
+      }
+    } catch {}
+  };
+
+  const toggleAgentSelection = (agentId) => {
+    setSelectedAgents(prev =>
+      prev.includes(agentId) ? prev.filter(id => id !== agentId) : [...prev, agentId]
+    );
+  };
+
+  const saveAgentSelection = async () => {
+    setSavingAgents(true);
+    try {
+      const res = await fetch(`${API}/subscription/agents`, {
+        method: "PUT",
+        headers: { ...headers, "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ selected_agents: selectedAgents })
+      });
+      if (res.ok) {
+        toast.success("Agent selection saved!");
+        fetchSelectedAgents();
+      } else {
+        const err = await res.json();
+        toast.error(err.detail || "Failed to save");
+      }
+    } catch { toast.error("Failed to save"); }
+    finally { setSavingAgents(false); }
   };
 
   const handleLogout = async () => {
