@@ -79,6 +79,9 @@ const Dashboard = () => {
         <NavItem icon={Users} label="Agents" to="/agents" />
         <NavItem icon={ListTodo} label="Tasks" to="/tasks" />
         <NavItem icon={Settings} label="Settings" to="/settings" />
+        {user?.is_admin && (
+          <NavItem icon={Shield} label="Admin Panel" to="/admin" />
+        )}
       </nav>
 
       <div className="p-4 border-t border-white/10">
