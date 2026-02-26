@@ -123,21 +123,12 @@ const PricingPage = () => {
 
   const fetchAgents = async () => {
     try {
-      const res = await fetch(`${API}/plans`);
-      if (!res.ok) return;
-      // We need agent names - use the plans endpoint which is public
-      // For agents we need auth, so use a static list
+      const res = await fetch(`${API}/agents/public`);
+      if (res.ok) {
+        const data = await res.json();
+        setAgents(data.filter(a => !a.is_commander));
+      }
     } catch {}
-    // Fetch agent list (if logged in) or use defaults
-    if (token) {
-      try {
-        const res = await fetch(`${API}/agents`, { headers: { Authorization: `Bearer ${token}` }, credentials: "include" });
-        if (res.ok) {
-          const data = await res.json();
-          setAgents(data.filter(a => !a.is_custom && a.agent_id !== "agent_commander"));
-        }
-      } catch {}
-    }
   };
 
   const plans = dynamicPlans ? Object.entries(dynamicPlans).map(([id, p]) => ({
