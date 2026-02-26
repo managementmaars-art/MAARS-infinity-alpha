@@ -682,13 +682,46 @@ async def get_agent(agent_id: str, current_user: User = Depends(get_current_user
 
 @api_router.post("/agents", response_model=Agent)
 async def create_agent(agent_data: AgentCreate, current_user: User = Depends(get_current_user)):
+    is_admin = current_user.email == ADMIN_EMAIL
+    
+    # Get user subscription
+    user_sub = await db.subscriptions.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    if not user_sub:
+        user_sub = {
+            "user_id": current_user.user_id,
+            "plan_id": "free",
+            "credits": 50,
+            "credits_used": 0,
+            "status": "active",
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.subscriptions.insert_one(user_sub)
+    
+    plan_id = user_sub.get("plan_id", "free")
+    plan = SUBSCRIPTION_PLANS.get(plan_id, SUBSCRIPTION_PLANS["free"])
+    max_custom = plan.get("max_custom_agents", 0)
+    
+    if not is_admin:
+        # Check plan limit (-1 means unlimited)
+        if max_custom != -1:
+            current_custom_count = await db.agents.count_documents({"creator_id": current_user.user_id, "is_custom": True})
+            if current_custom_count >= max_custom:
+                if max_custom == 0:
+                    raise HTTPException(status_code=403, detail="Custom agent creation is not available on the Free plan. Please upgrade to Starter or higher.")
+                raise HTTPException(status_code=403, detail=f"You've reached the custom agent limit ({max_custom}) for your {plan['name']} plan. Upgrade to create more.")
+        
+        # Check credits
+        credits_remaining = user_sub.get("credits", 0)
+        if credits_remaining < CUSTOM_AGENT_CREDIT_COST:
+            raise HTTPException(status_code=402, detail=f"Creating a custom agent costs {CUSTOM_AGENT_CREDIT_COST} credits. You have {credits_remaining} credits remaining.")
+    
     agent_id = f"agent_{uuid.uuid4().hex[:12]}"
     
     agent_doc = {
         "agent_id": agent_id,
         "name": agent_data.name,
         "description": agent_data.description,
-        "avatar": agent_data.avatar or "https://images.unsplash.com/photo-1677212004257-103cfa6b59d0?crop=entropy&cs=srgb&fm=jpg",
+        "avatar": agent_data.avatar or "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/43ae7e2a837703cb3a5da4fdd616bc12c825f9f0f15b7e9304e61a3dab0bd257.png",
         "role": agent_data.role,
         "system_prompt": agent_data.system_prompt,
         "model_provider": agent_data.model_provider,
@@ -700,6 +733,15 @@ async def create_agent(agent_data: AgentCreate, current_user: User = Depends(get
     }
     
     await db.agents.insert_one(agent_doc)
+    
+    # Deduct credits for non-admin users
+    if not is_admin:
+        await db.subscriptions.update_one(
+            {"user_id": current_user.user_id},
+            {"$inc": {"credits": -CUSTOM_AGENT_CREDIT_COST, "credits_used": CUSTOM_AGENT_CREDIT_COST}}
+        )
+    
+    agent_doc.pop("_id", None)
     agent_doc['created_at'] = datetime.fromisoformat(agent_doc['created_at'])
     return Agent(**agent_doc)
 
