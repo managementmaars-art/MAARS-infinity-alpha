@@ -2423,13 +2423,11 @@ async def admin_update_api_keys(request: Request, admin: User = Depends(require_
         update_doc["anthropic_key"] = key_data["anthropic_key"]
     if key_data.get("gemini_key"):
         update_doc["gemini_key"] = key_data["gemini_key"]
-    if key_data.get("elevenlabs_key"):
-        update_doc["elevenlabs_key"] = key_data["elevenlabs_key"]
     
     # Merge with existing (preserve keys not being updated)
     existing = await db.platform_config.find_one({"config_type": "api_keys"})
     if existing:
-        for field in ["openai_key", "anthropic_key", "gemini_key", "elevenlabs_key"]:
+        for field in ["openai_key", "anthropic_key", "gemini_key"]:
             if field not in update_doc and field in existing:
                 update_doc[field] = existing[field]
     
