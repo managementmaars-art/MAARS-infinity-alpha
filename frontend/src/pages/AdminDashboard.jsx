@@ -117,6 +117,7 @@ const AdminDashboard = () => {
     { id: "users", label: "Users", icon: Users },
     { id: "agents", label: "Agents", icon: Bot },
     { id: "transactions", label: "Transactions", icon: DollarSign },
+    { id: "payments", label: "Payment Setup", icon: CreditCard },
   ];
 
   const NavItem = ({ icon: Icon, label, to, active }) => (
