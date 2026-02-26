@@ -1182,6 +1182,7 @@ async def create_checkout(checkout_data: CheckoutRequest, request: Request, curr
     
     host_url = checkout_data.origin_url
     webhook_url = f"{str(request.base_url).rstrip('/')}/api/webhook/stripe"
+    currency = checkout_data.currency.lower()
     
     stripe_checkout = StripeCheckout(api_key=STRIPE_API_KEY, webhook_url=webhook_url)
     
@@ -1190,28 +1191,32 @@ async def create_checkout(checkout_data: CheckoutRequest, request: Request, curr
             raise HTTPException(status_code=400, detail="Invalid plan")
         
         plan = SUBSCRIPTION_PLANS[checkout_data.plan_id]
-        if plan["price"] == 0:
+        price_key = "price_bdt" if currency == "bdt" else "price_usd"
+        if plan[price_key] == 0:
             raise HTTPException(status_code=400, detail="Free plan doesn't require payment")
         
-        amount = plan["price"]
+        amount = plan[price_key]
         metadata = {
             "type": "subscription",
             "plan_id": checkout_data.plan_id,
             "user_id": current_user.user_id,
-            "email": current_user.email
+            "email": current_user.email,
+            "currency": currency
         }
     elif checkout_data.type == "credits":
         if checkout_data.package_id not in CREDIT_PACKAGES:
             raise HTTPException(status_code=400, detail="Invalid credit package")
         
         package = CREDIT_PACKAGES[checkout_data.package_id]
-        amount = package["price"]
+        price_key = "price_bdt" if currency == "bdt" else "price_usd"
+        amount = package[price_key]
         metadata = {
             "type": "credits",
             "package_id": checkout_data.package_id,
             "credits": str(package["credits"]),
             "user_id": current_user.user_id,
-            "email": current_user.email
+            "email": current_user.email,
+            "currency": currency
         }
     else:
         raise HTTPException(status_code=400, detail="Invalid checkout type")
@@ -1221,7 +1226,7 @@ async def create_checkout(checkout_data: CheckoutRequest, request: Request, curr
     
     checkout_request = CheckoutSessionRequest(
         amount=float(amount),
-        currency="usd",
+        currency=currency,
         success_url=success_url,
         cancel_url=cancel_url,
         metadata=metadata
