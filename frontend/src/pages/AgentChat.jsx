@@ -48,8 +48,13 @@ const AgentChat = () => {
   const [selectedModel, setSelectedModel] = useState("auto/auto");
   const [attachments, setAttachments] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
+  const [playingAudio, setPlayingAudio] = useState(null);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
 
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
