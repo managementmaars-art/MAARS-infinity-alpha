@@ -140,7 +140,7 @@ const AdminDashboard = () => {
             <Shield className="w-5 h-5 text-white" />
           </div>
           <div>
-            <span className="text-lg font-bold text-white font-['Outfit']">AI Legends Admin</span>
+            <span className="text-lg font-bold text-white font-['Outfit']">Martian AI Admin</span>
             <p className="text-[10px] text-red-400 -mt-1">Control Panel</p>
           </div>
         </Link>

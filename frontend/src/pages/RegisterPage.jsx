@@ -66,7 +66,7 @@ const RegisterPage = () => {
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
               <Bot className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-white font-['Outfit']">AI Legends</span>
+            <span className="text-2xl font-bold text-white font-['Outfit']">Martian AI</span>
           </Link>
           <h2 className="text-3xl font-bold text-white mb-4 font-['Outfit']">
             Build Your AI Team
@@ -92,7 +92,7 @@ const RegisterPage = () => {
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
             <Bot className="w-5 h-5 text-white" />
           </div>
-          <span className="text-lg font-bold text-white font-['Outfit']">AI Legends</span>
+          <span className="text-lg font-bold text-white font-['Outfit']">Martian AI</span>
         </div>
 
         <div className="max-w-sm w-full">

@@ -73,7 +73,7 @@ const LandingPage = () => {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
                 <Bot className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white font-['Outfit']">AI Legends</span>
+              <span className="text-xl font-bold text-white font-['Outfit']">Martian AI</span>
             </Link>
 
             {/* Desktop Menu */}
@@ -289,7 +289,7 @@ const LandingPage = () => {
             <div className="w-6 h-6 rounded bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
               <Bot className="w-4 h-4 text-white" />
             </div>
-            <span className="text-zinc-400">AI Legends by MAARS Global Corporation © 2026</span>
+            <span className="text-zinc-400">Martian AI by MAARS Global Corporation © 2026</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-zinc-500">
             <span>Powered by OpenAI, Anthropic & Google</span>

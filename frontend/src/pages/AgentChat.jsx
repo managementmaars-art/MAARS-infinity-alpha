@@ -341,7 +341,7 @@ const AgentChat = () => {
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
                   <Bot className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-lg font-bold text-white font-['Outfit']">AI Legends</span>
+                <span className="text-lg font-bold text-white font-['Outfit']">Martian AI</span>
               </Link>
               <button onClick={() => setSidebarOpen(false)} className="p-2 text-zinc-400">
                 <X className="w-5 h-5" />
@@ -369,7 +369,7 @@ const AgentChat = () => {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
               <Bot className="w-5 h-5 text-white" />
             </div>
-            <span className="text-lg font-bold text-white font-['Outfit']">AI Legends</span>
+            <span className="text-lg font-bold text-white font-['Outfit']">Martian AI</span>
           </Link>
           <Button
             onClick={startNewChat}
