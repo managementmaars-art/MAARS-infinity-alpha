@@ -220,11 +220,16 @@ const LandingPage = () => {
             {agents.map((agent, index) => (
               <div
                 key={index}
-                className="relative overflow-hidden rounded-xl glass glass-hover group animate-slide-up cursor-pointer"
+                className={`relative overflow-hidden rounded-xl glass glass-hover group animate-slide-up cursor-pointer ${agent.isCommander ? "ring-2 ring-amber-500/60 col-span-2 sm:col-span-1" : ""}`}
                 style={{ animationDelay: `${(index % 10) * 0.05}s`, opacity: 0 }}
                 data-testid={`agent-preview-${index}`}
                 onClick={() => navigate("/register")}
               >
+                {agent.isCommander && (
+                  <div className="absolute top-2 right-2 z-10 px-2 py-0.5 text-[10px] font-bold bg-amber-500/90 text-black rounded-full">
+                    COMMANDER
+                  </div>
+                )}
                 <div className="aspect-square relative overflow-hidden">
                   <img
                     src={agent.avatar}
