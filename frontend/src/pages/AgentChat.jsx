@@ -603,7 +603,23 @@ const AgentChat = () => {
             </div>
           ) : (
             <div className="space-y-4 max-w-3xl mx-auto">
-              {messages.map((msg, i) => (
+              {messages.map((msg, i) => {
+                // Commander delegation group chat rendering
+                if (msg.role === "assistant" && msg.delegation_data?.type === "commander_delegation") {
+                  return (
+                    <CommanderGroupChat 
+                      key={msg.message_id || i} 
+                      msg={msg} 
+                      msgIndex={i}
+                      generatedFiles={generatedFiles}
+                      generateFile={generateFile}
+                      generatingFile={generatingFile}
+                      currentAgent={selectedAgent}
+                    />
+                  );
+                }
+
+                return (
                 <div
                   key={msg.message_id || i}
                   className={`flex gap-3 ${msg.role === "user" ? "justify-end" : ""}`}
