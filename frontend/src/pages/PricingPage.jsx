@@ -7,7 +7,7 @@ import { Switch } from "../components/ui/switch";
 import { Label } from "../components/ui/label";
 import { 
   Bot, Check, Sparkles, Zap, Crown, Building, CreditCard,
-  ArrowLeft, Loader2, Globe
+  ArrowLeft, Loader2, Globe, Package, Plus, X, Shield
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -21,6 +21,14 @@ const PricingPage = () => {
   const [processingPlan, setProcessingPlan] = useState(null);
   const [currency, setCurrency] = useState("usd");
   const [dynamicPlans, setDynamicPlans] = useState(null);
+
+  // Custom package state
+  const [agents, setAgents] = useState([]);
+  const [customConfig, setCustomConfig] = useState(null);
+  const [selectedAgents, setSelectedAgents] = useState([]);
+  const [selectedCredit, setSelectedCredit] = useState(null);
+  const [includeCommander, setIncludeCommander] = useState(false);
+  const [customLoading, setCustomLoading] = useState(false);
 
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
