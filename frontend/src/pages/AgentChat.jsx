@@ -463,10 +463,13 @@ const AgentChat = () => {
                     )}
                     <p className="whitespace-pre-wrap">{msg.content}</p>
                     {msg.model_used && (
-                      <p className="text-xs text-zinc-500 mt-2 flex items-center gap-1">
+                      <div className="text-xs text-zinc-500 mt-2 flex items-center gap-1">
                         <Sparkles className="w-3 h-3" />
-                        {msg.model_used}
-                      </p>
+                        <span>{msg.model_used}</span>
+                        {msg.auto_selected && msg.model_reason && (
+                          <span className="text-indigo-400 ml-1">• {msg.model_reason}</span>
+                        )}
+                      </div>
                     )}
                   </div>
                   {msg.role === "user" && (
