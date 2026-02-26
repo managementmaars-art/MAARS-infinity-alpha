@@ -334,37 +334,6 @@ const AgentChat = () => {
     }
   };
 
-  const playTTS = async (text, msgId) => {
-    if (playingAudio === msgId) {
-      setPlayingAudio(null);
-      return;
-    }
-    setPlayingAudio(msgId);
-    try {
-      const response = await fetch(`${API}/audio/text-to-speech`, {
-        method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ text: text.slice(0, 5000) })
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        const audio = new Audio(data.audio_url);
-        audio.onended = () => setPlayingAudio(null);
-        audio.onerror = () => { setPlayingAudio(null); toast.error("Audio playback failed"); };
-        audio.play();
-      } else {
-        const err = await response.json().catch(() => ({}));
-        toast.error(err.detail || "Text-to-speech failed");
-        setPlayingAudio(null);
-      }
-    } catch {
-      toast.error("Text-to-speech failed");
-      setPlayingAudio(null);
-    }
-  };
-
   const generateFile = async (type, content, msgId, title) => {
     const key = `${msgId}_${type}`;
     setGeneratingFile(key);
