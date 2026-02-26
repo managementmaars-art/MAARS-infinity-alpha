@@ -366,6 +366,98 @@ const AgentChat = () => {
     }
   };
 
+  const generateFile = async (type, content, msgId, title) => {
+    const key = `${msgId}_${type}`;
+    setGeneratingFile(key);
+    try {
+      let endpoint = `${API}/generate/document`;
+      let body = { type, title: title || "Generated File", content };
+      
+      if (type === "image") {
+        endpoint = `${API}/generate/image`;
+        body = { prompt: content, model: "gpt-image-1" };
+      } else if (type === "video") {
+        endpoint = `${API}/generate/video`;
+        body = { prompt: content, model: "sora-2", duration: 4 };
+      } else if (type === "xlsx") {
+        // Try to parse content as table data
+        const lines = content.split("\n").filter(l => l.trim());
+        const rows = lines.map(l => l.split(/[,\t|]/).map(c => c.trim()));
+        body = { type: "xlsx", title: title || "Spreadsheet", content, rows };
+      }
+      
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { ...headers, "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(body)
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setGeneratedFiles(prev => ({ ...prev, [key]: data }));
+        toast.success(`${type.toUpperCase()} file generated!`);
+      } else {
+        const err = await response.json().catch(() => ({}));
+        toast.error(err.detail || `${type} generation failed`);
+      }
+    } catch {
+      toast.error(`${type} generation failed`);
+    } finally {
+      setGeneratingFile(null);
+    }
+  };
+
+  const FileGenButtons = ({ content, msgId }) => {
+    const truncated = content?.slice(0, 500) || "";
+    return (
+      <div className="flex flex-wrap gap-1.5 mt-2">
+        {[
+          { type: "pdf", icon: FileText, label: "PDF", color: "text-red-400 bg-red-500/10 hover:bg-red-500/20" },
+          { type: "docx", icon: File, label: "Word", color: "text-blue-400 bg-blue-500/10 hover:bg-blue-500/20" },
+          { type: "xlsx", icon: FileSpreadsheet, label: "Excel", color: "text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20" },
+          { type: "txt", icon: FileText, label: "Text", color: "text-zinc-400 bg-zinc-500/10 hover:bg-zinc-500/20" },
+          { type: "image", icon: Image, label: "Image", color: "text-rose-400 bg-rose-500/10 hover:bg-rose-500/20" },
+          { type: "video", icon: Film, label: "Video", color: "text-violet-400 bg-violet-500/10 hover:bg-violet-500/20" },
+        ].map(({ type, icon: Icon, label, color }) => {
+          const key = `${msgId}_${type}`;
+          const file = generatedFiles[key];
+          const isGenerating = generatingFile === key;
+          
+          if (file) {
+            return (
+              <a
+                key={type}
+                href={file.preview || `${API}${file.url}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                download={file.filename}
+                className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium ${color} border border-white/5`}
+                data-testid={`download-${type}-${msgId}`}
+              >
+                <Download className="w-3 h-3" />
+                {label}
+              </a>
+            );
+          }
+          
+          return (
+            <button
+              key={type}
+              onClick={() => generateFile(type, truncated, msgId, `${currentAgent?.name || "Agent"} Output`)}
+              disabled={isGenerating}
+              className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium transition-colors ${color} border border-white/5`}
+              data-testid={`gen-${type}-${msgId}`}
+            >
+              {isGenerating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Icon className="w-3 h-3" />}
+              {isGenerating ? "..." : label}
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
+
   const deleteChat = async (chatId) => {
     try {
       const response = await fetch(`${API}/chats/${chatId}`, {
