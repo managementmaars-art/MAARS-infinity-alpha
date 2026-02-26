@@ -446,14 +446,8 @@ const PricingPage = () => {
                     {selectedAgents.length} selected &middot; {currSymbol}{(selectedAgents.length * (customConfig[agentPriceKey] || 0)).toLocaleString()}/mo
                   </span>
                 </div>
-                
-                {!user && (
-                  <p className="text-sm text-amber-400/80 bg-amber-500/10 rounded-lg px-3 py-2">
-                    <Link to="/login" className="underline">Log in</Link> to see and select agents
-                  </p>
-                )}
 
-                {agents.length > 0 && (
+                <div className="max-h-[340px] overflow-y-auto pr-1 rounded-xl border border-white/5 p-3 bg-zinc-950/40 custom-scrollbar">
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                     {agents.map((agent) => {
                       const isSelected = selectedAgents.includes(agent.agent_id);
@@ -486,7 +480,7 @@ const PricingPage = () => {
                       );
                     })}
                   </div>
-                )}
+                </div>
 
                 {/* Commander Add-on */}
                 <button
