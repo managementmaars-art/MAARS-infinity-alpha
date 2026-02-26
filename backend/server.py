@@ -851,29 +851,40 @@ def auto_select_model(content: str, agent_role: str) -> tuple:
     # Keywords for different task types
     coding_keywords = ['code', 'programming', 'function', 'api', 'debug', 'error', 'python', 'javascript', 
                        'react', 'database', 'sql', 'algorithm', 'deploy', 'github', 'bug', 'script',
-                       'html', 'css', 'backend', 'frontend', 'app', 'software', 'developer']
+                       'html', 'css', 'backend', 'frontend', 'app', 'software', 'developer', 'build',
+                       'implement', 'refactor', 'regex', 'json', 'xml', 'yaml', 'docker', 'server']
     
     reasoning_keywords = ['analyze', 'compare', 'evaluate', 'why', 'how does', 'explain', 'reasoning',
                           'logic', 'problem', 'solve', 'calculate', 'math', 'strategy', 'decision',
-                          'pros and cons', 'trade-off', 'complex', 'think through']
+                          'pros and cons', 'trade-off', 'complex', 'think through', 'proof', 'theorem',
+                          'equation', 'formula', 'deduce', 'infer', 'hypothesis']
     
     creative_keywords = ['write', 'story', 'creative', 'blog', 'article', 'content', 'copy', 
                          'headline', 'tagline', 'slogan', 'narrative', 'engaging', 'compelling',
-                         'persuasive', 'emotional', 'brand voice', 'tone']
+                         'persuasive', 'emotional', 'brand voice', 'tone', 'poem', 'script',
+                         'dialogue', 'marketing', 'campaign', 'ad']
     
     quick_keywords = ['quick', 'simple', 'brief', 'short', 'summarize', 'list', 'bullet points',
-                      'yes or no', 'define', 'what is', 'translate']
+                      'yes or no', 'define', 'what is', 'translate', 'convert', 'format',
+                      'hello', 'hi', 'thanks', 'how are you']
     
     long_form_keywords = ['detailed', 'comprehensive', 'in-depth', 'thorough', 'research', 
-                          'report', 'whitepaper', 'documentation', 'guide', 'tutorial', 'essay']
+                          'report', 'whitepaper', 'documentation', 'guide', 'tutorial', 'essay',
+                          'paper', 'thesis', 'literature review', 'case study']
     
     data_keywords = ['data', 'analytics', 'metrics', 'dashboard', 'visualization', 'chart',
-                     'statistics', 'trends', 'forecast', 'numbers', 'spreadsheet', 'excel']
+                     'statistics', 'trends', 'forecast', 'numbers', 'spreadsheet', 'excel',
+                     'csv', 'graph', 'table', 'pivot', 'regression']
+    
+    legal_keywords = ['contract', 'legal', 'compliance', 'regulation', 'law', 'clause',
+                      'terms', 'policy', 'agreement', 'liability', 'jurisdiction']
     
     # Role-based preferences
     coding_roles = ['app developer', 'web designer', 'developer', 'engineer', 'technical']
-    creative_roles = ['copywriter', 'content writer', 'marketing', 'social media', 'video', 'graphic']
+    creative_roles = ['copywriter', 'content writer', 'marketing', 'social media', 'video', 'graphic', 'email marketing']
     analytical_roles = ['strategist', 'analyst', 'research', 'financial', 'data']
+    support_roles = ['customer service', 'secretary', 'hr', 'project manager']
+    legal_roles = ['legal']
     
     # Count keyword matches
     coding_score = sum(1 for kw in coding_keywords if kw in content_lower)
@@ -882,6 +893,7 @@ def auto_select_model(content: str, agent_role: str) -> tuple:
     quick_score = sum(1 for kw in quick_keywords if kw in content_lower)
     long_form_score = sum(1 for kw in long_form_keywords if kw in content_lower)
     data_score = sum(1 for kw in data_keywords if kw in content_lower)
+    legal_score = sum(1 for kw in legal_keywords if kw in content_lower)
     
     # Boost scores based on agent role
     agent_role_lower = agent_role.lower()
@@ -892,6 +904,11 @@ def auto_select_model(content: str, agent_role: str) -> tuple:
     if any(r in agent_role_lower for r in analytical_roles):
         reasoning_score += 2
         data_score += 2
+    if any(r in agent_role_lower for r in support_roles):
+        quick_score += 2
+    if any(r in agent_role_lower for r in legal_roles):
+        legal_score += 3
+        reasoning_score += 1
     
     # Determine best model
     scores = {
@@ -900,7 +917,8 @@ def auto_select_model(content: str, agent_role: str) -> tuple:
         'creative': creative_score,
         'quick': quick_score,
         'long_form': long_form_score,
-        'data': data_score
+        'data': data_score,
+        'legal': legal_score
     }
     
     best_task = max(scores, key=scores.get)
@@ -909,20 +927,26 @@ def auto_select_model(content: str, agent_role: str) -> tuple:
     # Select model based on task type
     if best_score >= 2:
         if best_task == 'coding':
-            return ('openai', 'gpt-5.2', 'Best for coding & technical tasks')
+            return ('openai', 'gpt-5.2', 'GPT-5.2 selected - best for coding & technical tasks')
         elif best_task == 'reasoning':
-            return ('openai', 'o3', 'Best for complex reasoning & analysis')
+            return ('openai', 'o3', 'O3 selected - best for complex reasoning & analysis')
         elif best_task == 'creative':
-            return ('anthropic', 'claude-sonnet-4-5-20250929', 'Best for creative writing')
+            return ('anthropic', 'claude-sonnet-4-5-20250929', 'Claude Sonnet 4.5 selected - best for creative writing')
         elif best_task == 'quick':
-            return ('gemini', 'gemini-3-flash-preview', 'Fast responses for simple tasks')
+            return ('gemini', 'gemini-3-flash-preview', 'Gemini 3 Flash selected - fastest for simple tasks')
         elif best_task == 'long_form':
-            return ('anthropic', 'claude-opus-4-5-20251101', 'Best for detailed long-form content')
+            return ('anthropic', 'claude-opus-4-5-20251101', 'Claude Opus 4.5 selected - best for detailed long-form content')
         elif best_task == 'data':
-            return ('openai', 'gpt-5.2', 'Best for data analysis')
+            return ('gemini', 'gemini-3-pro-preview', 'Gemini 3 Pro selected - best for data analysis & multimodal')
+        elif best_task == 'legal':
+            return ('anthropic', 'claude-sonnet-4-5-20250929', 'Claude Sonnet 4.5 selected - precise for legal analysis')
+    
+    # For very short messages or greetings, use fast model
+    if len(content) < 50:
+        return ('openai', 'gpt-4o-mini', 'GPT-4o Mini selected - efficient for short messages')
     
     # Default to GPT-5.2 for general tasks
-    return ('openai', 'gpt-5.2', 'Best all-around model')
+    return ('openai', 'gpt-5.2', 'GPT-5.2 selected - best all-around model')
 
 @api_router.post("/chats/{chat_id}/messages")
 async def send_message(chat_id: str, message_data: MessageCreate, current_user: User = Depends(get_current_user)):
