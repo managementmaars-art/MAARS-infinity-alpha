@@ -1332,8 +1332,8 @@ AGENT_ROLE_MAP = {
     "schedule": "agent_secretary",
 }
 
-async def commander_delegate(goal: str, chat_id: str, api_keys: dict) -> str:
-    """Commander AI breaks down a goal and delegates to specialists"""
+async def commander_delegate(goal: str, chat_id: str, api_keys: dict, user_id: str) -> str:
+    """Commander AI breaks down a goal, delegates to specialists, and auto-creates tasks"""
     # Step 1: Use LLM to analyze the goal and create a delegation plan
     plan_prompt = f"""You are Commander Orion. A user has given you this goal:
 
@@ -1341,11 +1341,11 @@ async def commander_delegate(goal: str, chat_id: str, api_keys: dict) -> str:
 
 Analyze this goal and create a delegation plan. Return ONLY a JSON array of sub-tasks in this exact format:
 [
-  {{"task": "Brief task description", "agent_role": "one of: marketing, strategy, web design, development, copywriting, seo, sales, social media, data, content, customer service, project management, research, finance, hr, graphic design, legal, email, video, secretary", "priority": 1}},
+  {{"task": "Brief task description", "agent_role": "one of: marketing, strategy, web design, development, copywriting, seo, sales, social media, data, content, customer service, project management, research, finance, hr, graphic design, legal, email, video, secretary", "priority": "high or medium or low", "title": "Short task title for tracking"}},
   ...
 ]
 
-Choose 2-4 most relevant specialists. Be specific about what each should do. Return ONLY the JSON array, no other text."""
+Choose 2-4 most relevant specialists. Be specific about what each should do. Assign priority based on urgency and importance. Return ONLY the JSON array, no other text."""
 
     try:
         from emergentintegrations.llm.chat import LlmChat, UserMessage
@@ -1374,36 +1374,72 @@ Choose 2-4 most relevant specialists. Be specific about what each should do. Ret
         logger.error(f"Commander planning error: {e}")
         return f"I analyzed your goal: \"{goal}\"\n\nI encountered an issue breaking this down automatically. Let me provide my strategic assessment instead:\n\nThis goal would benefit from a multi-disciplinary approach. I recommend starting with research and strategy, then moving to execution. Would you like me to try again, or shall I connect you with a specific specialist?"
     
-    # Step 2: Execute each sub-task with the appropriate agent
-    results = []
-    results.append(f"## Commander Orion's Mission Report\n\n**Goal:** {goal}\n\n**Delegation Plan:** {len(tasks)} specialists deployed\n\n---\n")
+    # Step 2: Auto-create tasks in the database
+    created_tasks = []
+    now = datetime.now(timezone.utc).isoformat()
     
     for i, task_item in enumerate(tasks):
         task_desc = task_item.get("task", "")
         agent_role = task_item.get("agent_role", "").lower()
         agent_id = AGENT_ROLE_MAP.get(agent_role, "agent_strategist")
+        priority = task_item.get("priority", "medium").lower()
+        if priority not in ("high", "medium", "low"):
+            priority = "medium"
+        title = task_item.get("title", task_desc[:60])
         
-        agent = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0})
+        task_doc = {
+            "task_id": f"task_{uuid.uuid4().hex[:12]}",
+            "user_id": user_id,
+            "title": title,
+            "description": task_desc,
+            "status": "pending",
+            "priority": priority,
+            "assigned_agents": [agent_id],
+            "result": None,
+            "source": "commander",
+            "source_goal": goal[:200],
+            "created_at": now,
+            "updated_at": now,
+        }
+        await db.tasks.insert_one(task_doc)
+        created_tasks.append({"task_id": task_doc["task_id"], "title": title, "agent_id": agent_id, "priority": priority, "desc": task_desc})
+    
+    # Step 3: Execute each sub-task with the appropriate agent
+    results = []
+    results.append(f"## Commander Orion's Mission Report\n\n**Goal:** {goal}\n\n**Delegation Plan:** {len(tasks)} specialists deployed | **{len(created_tasks)} tasks created**\n\n---\n")
+    
+    for i, ct in enumerate(created_tasks):
+        agent = await db.agents.find_one({"agent_id": ct["agent_id"]}, {"_id": 0})
         if not agent:
             continue
         
+        priority_icon = {"high": "!!!", "medium": "!!", "low": "!"}.get(ct["priority"], "!!")
+        
         try:
+            from emergentintegrations.llm.chat import LlmChat, UserMessage
             specialist = LlmChat(
                 api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-                session_id=f"{chat_id}_commander_{agent_id}",
+                session_id=f"{chat_id}_commander_{ct['agent_id']}",
                 system_message=agent["system_prompt"]
             ).with_model(agent.get("model_provider", "openai"), agent.get("model_name", "gpt-5.2"))
             
-            specialist_prompt = f"The Commander has assigned you this task as part of a larger project.\n\nOverall Goal: {goal}\n\nYour specific task: {task_desc}\n\nProvide a concise but actionable response. Focus on deliverables and next steps."
+            specialist_prompt = f"The Commander has assigned you this task as part of a larger project.\n\nOverall Goal: {goal}\n\nYour specific task: {ct['desc']}\n\nProvide a concise but actionable response. Focus on deliverables and next steps."
             
             response = await specialist.send_message(UserMessage(text=specialist_prompt))
-            results.append(f"### {i+1}. {agent['name']} ({agent['role']})\n**Task:** {task_desc}\n\n{response}\n\n---\n")
+            
+            # Save result to the task
+            await db.tasks.update_one(
+                {"task_id": ct["task_id"]},
+                {"$set": {"status": "completed", "result": response[:2000], "updated_at": datetime.now(timezone.utc).isoformat()}}
+            )
+            
+            results.append(f"### {i+1}. {agent['name']} ({agent['role']}) [{priority_icon} {ct['priority'].upper()}]\n**Task:** {ct['desc']}\n\n{response}\n\n---\n")
             
         except Exception as e:
-            logger.error(f"Commander delegation error for {agent_id}: {e}")
-            results.append(f"### {i+1}. {agent.get('name', 'Agent')} ({agent.get('role', 'Specialist')})\n**Task:** {task_desc}\n\n*Unable to complete - will retry on next attempt.*\n\n---\n")
+            logger.error(f"Commander delegation error for {ct['agent_id']}: {e}")
+            results.append(f"### {i+1}. {agent.get('name', 'Agent')} ({agent.get('role', 'Specialist')}) [{priority_icon} {ct['priority'].upper()}]\n**Task:** {ct['desc']}\n\n*Unable to complete - task saved for manual execution.*\n\n---\n")
     
-    results.append("\n## Commander's Summary\nAll specialists have reported. Review the outputs above and let me know if you'd like any section expanded or revised. I can also delegate additional tasks or adjust the strategy.")
+    results.append(f"\n## Commander's Summary\nAll specialists have reported. **{len(created_tasks)} tasks** have been auto-created and can be found on your **Tasks** page. Review the outputs above and let me know if you'd like any section expanded or revised.")
     
     return "\n".join(results)
 
