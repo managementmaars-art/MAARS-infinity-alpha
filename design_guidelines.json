@@ -1,0 +1,148 @@
+{
+  "brand_identity": {
+    "name": "Nexus AI",
+    "tone": "Futuristic, Empowering, Professional, Efficient",
+    "metaphor": "Digital Command Bridge",
+    "visual_style": "Dark Mode Cyber-Professional"
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Outfit, sans-serif",
+      "body": "Inter, sans-serif",
+      "code": "JetBrains Mono, monospace"
+    },
+    "installation_command": "yarn add @fontsource/outfit @fontsource/inter @fontsource/jetbrains-mono",
+    "rules": {
+      "headings": "font-bold tracking-tight text-white",
+      "subheadings": "font-medium text-zinc-400 tracking-wide",
+      "body": "text-zinc-300 leading-relaxed",
+      "code": "font-mono text-sm bg-zinc-900/50 p-1 rounded text-emerald-400"
+    }
+  },
+  "colors": {
+    "palette": {
+      "background": "#09090b",
+      "foreground": "#fafafa",
+      "card": "#18181b",
+      "card_foreground": "#fafafa",
+      "popover": "#09090b",
+      "popover_foreground": "#fafafa",
+      "primary": "#6366f1",
+      "primary_foreground": "#ffffff",
+      "secondary": "#27272a",
+      "secondary_foreground": "#fafafa",
+      "muted": "#27272a",
+      "muted_foreground": "#a1a1aa",
+      "accent": "#27272a",
+      "accent_foreground": "#fafafa",
+      "destructive": "#ef4444",
+      "destructive_foreground": "#fafafa",
+      "border": "#27272a",
+      "input": "#27272a",
+      "ring": "#6366f1"
+    },
+    "gradients": {
+      "primary_action": "bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600",
+      "glow_text": "bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400",
+      "glass_surface": "bg-zinc-900/60 backdrop-blur-xl border border-white/10"
+    }
+  },
+  "layout_strategies": {
+    "spacing": {
+      "container_padding": "p-6 md:p-8 lg:p-12",
+      "section_gap": "gap-8 md:gap-12",
+      "internal_gap": "gap-4"
+    },
+    "grid_system": {
+      "marketing": "grid grid-cols-1 md:grid-cols-12 gap-8 (Tetris Grid Mode A)",
+      "dashboard": "grid grid-cols-1 md:grid-cols-4 gap-4 (High Density Mode B)",
+      "bento_rules": "Use col-span-2 or col-span-full for hero elements. Use row-span-2 for vertical lists."
+    }
+  },
+  "component_styles": {
+    "buttons": {
+      "primary": "h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 shadow-[0_0_20px_rgba(99,102,241,0.3)]",
+      "secondary": "h-10 px-4 py-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+      "ghost": "hover:bg-accent hover:text-accent-foreground"
+    },
+    "cards": {
+      "glass": "rounded-xl border border-white/10 bg-zinc-900/40 backdrop-blur-md shadow-sm transition-all hover:border-white/20 hover:bg-zinc-900/60",
+      "solid": "rounded-xl border border-zinc-800 bg-zinc-900/80 shadow-sm"
+    },
+    "inputs": {
+      "default": "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    }
+  },
+  "assets": {
+    "hero_images": [
+      {
+        "url": "https://images.unsplash.com/photo-1710957987034-cea509422852?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzF8MHwxfHNlYXJjaHwzfHxhYnN0cmFjdCUyMGZ1dHVyaXN0aWMlMjBkaWdpdGFsJTIwbmV0d29yayUyMGNvbm5lY3Rpb24lMjBkYXJrJTIwYmx1ZSUyMHB1cnBsZXxlbnwwfHx8fDE3NzIwNjg5ODl8MA&ixlib=rb-4.1.0&q=85",
+        "category": "Hero Background",
+        "description": "Abstract Blue/Purple Network Lines - Use for Landing Page Hero Background with overlay"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1764258057604-94e8e6ca092f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzF8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGZ1dHVyaXN0aWMlMjBkaWdpdGFsJTIwbmV0d29yayUyMGNvbm5lY3Rpb24lMjBkYXJrJTIwYmx1ZSUyMHB1cnBsZXxlbnwwfHx8fDE3NzIwNjg5ODl8MA&ixlib=rb-4.1.0&q=85",
+        "category": "Section Background",
+        "description": "Subtle Blue/Purple Wavy Lines - Use for Feature Section Background"
+      }
+    ],
+    "avatars": [
+      {
+        "url": "https://images.unsplash.com/photo-1677212004257-103cfa6b59d0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwxfHwzZCUyMHJvYm90JTIwYXZhdGFyJTIwZnV0dXJpc3RpYyUyMGljb24lMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzIwNjg5OTF8MA&ixlib=rb-4.1.0&q=85",
+        "category": "AI Agent Avatar",
+        "description": "Glowing Man Head - Use for 'Creative Director AI' agent"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1760931969401-9bd6ee902798?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHw0fHwzZCUyMHJvYm90JTIwYXZhdGFyJTIwZnV0dXJpc3RpYyUyMGljb24lMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzIwNjg5OTF8MA&ixlib=rb-4.1.0&q=85",
+        "category": "AI Agent Avatar",
+        "description": "Robot Head with Red Glow - Use for 'Security Analyst AI' agent"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8294598/pexels-photo-8294598.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "category": "AI Agent Avatar",
+        "description": "Sleek White Robot - Use for 'Sales Assistant AI' agent"
+      }
+    ],
+    "team_photos": [
+      {
+        "url": "https://images.pexels.com/photos/1181608/pexels-photo-1181608.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "category": "User Testimonial",
+        "description": "Professional Team Meeting"
+      },
+      {
+        "url": "https://images.pexels.com/photos/9489396/pexels-photo-9489396.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "category": "User Testimonial",
+        "description": "Smiling Professionals"
+      }
+    ]
+  },
+  "iconography": {
+    "library": "lucide-react",
+    "style": "Stroke width 1.5px, size 20px (sm) or 24px (md)",
+    "recommendations": {
+      "chat": "MessageSquare, Bot, Sparkles",
+      "dashboard": "LayoutDashboard, Activity, BarChart3",
+      "settings": "Settings, User, Shield"
+    }
+  },
+  "universal_guidelines": [
+    "You tend to converge toward generic, 'on distribution' outputs. Avoid this: make creative, distinctive frontends.",
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients.",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy.",
+    "Use glass-morphism effects with backdrop filters (12-24px blur).",
+    "You MUST NOT apply universal transition. Eg: 'transition: all'. This results in breaking transforms.",
+    "You MUST NOT center align the app container. This disrupts the human natural reading flow of text.",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations.",
+    "NEVER use AI assistant Emoji characters like 🤖 etc for icons.",
+    "Every interaction needs micro-animations - hover states, transitions.",
+    "Use 2-3x more spacing than feels comfortable.",
+    "All interactive and key informational elements MUST include a 'data-testid' attribute."
+  ],
+  "implementation_instructions": {
+    "tailwind_config_update": "Update tailwind.config.js to include the custom colors and font families defined above.",
+    "css_variables": "Update index.css with the CSS variables for the color palette.",
+    "component_creation": "When creating Shadcn components, override default borders with 'border-white/10' for glass effect.",
+    "layout_structure": "Ensure all pages are wrapped in a 'min-h-screen bg-background text-foreground' container."
+  }
+}
