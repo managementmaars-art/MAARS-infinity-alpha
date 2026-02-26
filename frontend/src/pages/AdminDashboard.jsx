@@ -142,6 +142,7 @@ const AdminDashboard = () => {
     { id: "agents", label: "Agents", icon: Bot },
     { id: "transactions", label: "Transactions", icon: DollarSign },
     { id: "pricing", label: "Pricing Manager", icon: TrendingUp },
+    { id: "apikeys", label: "API Keys", icon: Key },
     { id: "payments", label: "Payment Setup", icon: CreditCard },
   ];
 
