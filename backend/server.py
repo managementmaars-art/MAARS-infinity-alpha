@@ -722,6 +722,16 @@ async def logout(request: Request, response: Response):
 
 # ============== AGENT ENDPOINTS ==============
 
+@api_router.get("/agents/public")
+async def get_agents_public():
+    """Public endpoint: return default agents (no auth required)"""
+    agents = await db.agents.find(
+        {"is_custom": False},
+        {"_id": 0, "agent_id": 1, "name": 1, "avatar": 1, "role": 1, "description": 1, "capabilities": 1, "is_commander": 1}
+    ).to_list(50)
+    agents.sort(key=lambda a: (0 if a.get("agent_id") == "agent_commander" else 1, a.get("name", "")))
+    return agents
+
 @api_router.get("/agents", response_model=List[Agent])
 async def get_agents(current_user: User = Depends(get_current_user)):
     # Get default agents and user's custom agents
