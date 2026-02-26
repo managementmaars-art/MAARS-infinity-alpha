@@ -24,6 +24,8 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [agents, setAgents] = useState([]);
   const [transactions, setTransactions] = useState([]);
+  const [profitData, setProfitData] = useState(null);
+  const [apiUsage, setApiUsage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showCreateAgent, setShowCreateAgent] = useState(false);
   const [pricingConfig, setPricingConfig] = useState(null);
