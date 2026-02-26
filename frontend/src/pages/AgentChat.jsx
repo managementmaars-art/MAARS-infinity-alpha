@@ -696,6 +696,35 @@ const AgentChat = () => {
                         </button>
                       )}
                     </div>
+                    {/* Generated file preview */}
+                    {msg.role === "assistant" && (() => {
+                      const imgKey = `${msg.message_id || i}_image`;
+                      const vidKey = `${msg.message_id || i}_video`;
+                      const imgFile = generatedFiles[imgKey];
+                      const vidFile = generatedFiles[vidKey];
+                      return (
+                        <>
+                          {imgFile?.preview && (
+                            <div className="mt-3 rounded-lg overflow-hidden border border-white/10 max-w-sm">
+                              <img src={imgFile.preview} alt="Generated" className="w-full" />
+                              <a href={`${API}${imgFile.url}`} download className="block text-center text-xs text-indigo-400 py-2 hover:bg-white/5">
+                                <Download className="w-3 h-3 inline mr-1" />Download PNG
+                              </a>
+                            </div>
+                          )}
+                          {vidFile?.url && (
+                            <div className="mt-3 rounded-lg overflow-hidden border border-white/10 max-w-sm">
+                              <video controls className="w-full" src={`${API}${vidFile.url}`} />
+                              <a href={`${API}${vidFile.url}`} download className="block text-center text-xs text-violet-400 py-2 hover:bg-white/5">
+                                <Download className="w-3 h-3 inline mr-1" />Download MP4
+                              </a>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                    {/* File generation buttons */}
+                    {msg.role === "assistant" && <FileGenButtons content={msg.content} msgId={msg.message_id || i} />}
                   </div>
                   {msg.role === "user" && (
                     <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center flex-shrink-0">
