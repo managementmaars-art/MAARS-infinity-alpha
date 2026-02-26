@@ -30,6 +30,9 @@ const AdminDashboard = () => {
   const [pricingEdit, setPricingEdit] = useState(null);
   const [calcResult, setCalcResult] = useState(null);
   const [calcInputs, setCalcInputs] = useState({ ai_cost_per_credit: 0.003, target_profit_margin: 200, bdt_exchange_rate: 107 });
+  const [apiKeysConfig, setApiKeysConfig] = useState(null);
+  const [apiKeyInputs, setApiKeyInputs] = useState({ openai_key: "", anthropic_key: "", gemini_key: "", active_provider: "emergent" });
+  const [testingKey, setTestingKey] = useState(null);
   const [newAgent, setNewAgent] = useState({
     name: "", description: "", role: "", system_prompt: "",
     model_provider: "openai", model_name: "gpt-5.2", capabilities: ""
