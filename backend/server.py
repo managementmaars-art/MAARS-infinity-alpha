@@ -1524,6 +1524,98 @@ async def get_credits(current_user: User = Depends(get_current_user)):
 
 # ============== ADMIN ENDPOINTS ==============
 
+
+@api_router.get("/admin/pricing")
+async def admin_get_pricing(admin: User = Depends(require_admin)):
+    """Get current pricing configuration from DB or default"""
+    pricing = await db.platform_config.find_one({"config_type": "pricing"}, {"_id": 0})
+    if not pricing:
+        # Return default pricing
+        pricing = {
+            "config_type": "pricing",
+            "plans": SUBSCRIPTION_PLANS,
+            "custom_agent_credit_cost": CUSTOM_AGENT_CREDIT_COST,
+            "ai_cost_per_credit": 0.003,
+            "target_profit_margin": 200,
+            "bdt_exchange_rate": 107
+        }
+    return pricing
+
+@api_router.put("/admin/pricing")
+async def admin_update_pricing(pricing_data: dict, admin: User = Depends(require_admin)):
+    """Admin can update platform pricing. Changes take effect immediately."""
+    global SUBSCRIPTION_PLANS, CUSTOM_AGENT_CREDIT_COST
+    
+    plans = pricing_data.get("plans")
+    if plans:
+        # Validate plan structure
+        for plan_id, plan in plans.items():
+            if not all(k in plan for k in ["name", "price_usd", "price_bdt", "credits", "max_agents", "max_custom_agents"]):
+                raise HTTPException(status_code=400, detail=f"Invalid plan structure for {plan_id}")
+        SUBSCRIPTION_PLANS.update(plans)
+    
+    if "custom_agent_credit_cost" in pricing_data:
+        CUSTOM_AGENT_CREDIT_COST = pricing_data["custom_agent_credit_cost"]
+    
+    # Save to DB
+    config_doc = {
+        "config_type": "pricing",
+        "plans": SUBSCRIPTION_PLANS,
+        "custom_agent_credit_cost": CUSTOM_AGENT_CREDIT_COST,
+        "ai_cost_per_credit": pricing_data.get("ai_cost_per_credit", 0.003),
+        "target_profit_margin": pricing_data.get("target_profit_margin", 200),
+        "bdt_exchange_rate": pricing_data.get("bdt_exchange_rate", 107),
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "updated_by": admin.email
+    }
+    
+    await db.platform_config.update_one(
+        {"config_type": "pricing"},
+        {"$set": config_doc},
+        upsert=True
+    )
+    
+    return {"message": "Pricing updated successfully", "pricing": config_doc}
+
+@api_router.post("/admin/pricing/calculate")
+async def admin_calculate_pricing(calc_data: dict, admin: User = Depends(require_admin)):
+    """Calculate recommended prices based on AI costs and target profit margin"""
+    ai_cost_per_credit = calc_data.get("ai_cost_per_credit", 0.003)
+    target_margin_pct = calc_data.get("target_profit_margin", 200)
+    bdt_rate = calc_data.get("bdt_exchange_rate", 107)
+    
+    # Calculate recommended prices for each plan
+    plans = {}
+    plan_configs = {
+        "free": {"credits": 50, "max_agents": 1, "max_custom_agents": 0},
+        "starter": {"credits": 500, "max_agents": 5, "max_custom_agents": 2},
+        "pro": {"credits": 2000, "max_agents": 10, "max_custom_agents": 5},
+        "business": {"credits": 6000, "max_agents": 20, "max_custom_agents": -1},
+    }
+    
+    for plan_id, config in plan_configs.items():
+        base_cost_usd = config["credits"] * ai_cost_per_credit
+        margin_multiplier = 1 + (target_margin_pct / 100)
+        recommended_usd = round(base_cost_usd * margin_multiplier, 2)
+        recommended_bdt = round(recommended_usd * bdt_rate)
+        
+        plans[plan_id] = {
+            "credits": config["credits"],
+            "base_ai_cost_usd": round(base_cost_usd, 2),
+            "recommended_price_usd": recommended_usd if plan_id != "free" else 0,
+            "recommended_price_bdt": recommended_bdt if plan_id != "free" else 0,
+            "profit_per_user_usd": round(recommended_usd - base_cost_usd, 2) if plan_id != "free" else 0,
+            "actual_margin_pct": target_margin_pct if plan_id != "free" else 0
+        }
+    
+    return {
+        "ai_cost_per_credit": ai_cost_per_credit,
+        "target_profit_margin": target_margin_pct,
+        "bdt_exchange_rate": bdt_rate,
+        "plan_calculations": plans
+    }
+
+
 @api_router.get("/admin/stats")
 async def admin_stats(admin: User = Depends(require_admin)):
     """Get platform-wide statistics for admin"""
