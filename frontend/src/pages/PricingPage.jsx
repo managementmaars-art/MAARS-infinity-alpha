@@ -246,6 +246,54 @@ const PricingPage = () => {
     }
   };
 
+  // Custom package helpers
+  const toggleAgent = (agentId) => {
+    setSelectedAgents(prev => 
+      prev.includes(agentId) ? prev.filter(id => id !== agentId) : [...prev, agentId]
+    );
+  };
+
+  const priceKey = currency === "bdt" ? "price_bdt" : "price_usd";
+  const agentPriceKey = currency === "bdt" ? "per_agent_price_bdt" : "per_agent_price_usd";
+  const commanderPriceKey = currency === "bdt" ? "commander_addon_price_bdt" : "commander_addon_price_usd";
+  const currSymbol = currency === "bdt" ? "৳" : "$";
+
+  const customTotal = customConfig ? (
+    (selectedAgents.length * (customConfig[agentPriceKey] || 0)) +
+    (selectedCredit ? (customConfig.credit_presets?.find(p => p.id === selectedCredit)?.[priceKey] || 0) : 0) +
+    (includeCommander ? (customConfig[commanderPriceKey] || 0) : 0)
+  ) : 0;
+
+  const handleCustomCheckout = async () => {
+    if (!user) { navigate("/register"); return; }
+    if (selectedAgents.length === 0) { toast.error("Select at least one agent"); return; }
+    if (!selectedCredit) { toast.error("Select a credit package"); return; }
+
+    setCustomLoading(true);
+    try {
+      const response = await fetch(`${API}/custom-package/checkout`, {
+        method: "POST",
+        headers: { ...headers, "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          selected_agents: selectedAgents,
+          credit_preset_id: selectedCredit,
+          include_commander: includeCommander,
+          origin_url: window.location.origin,
+          currency
+        })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        window.location.href = data.checkout_url;
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || "Checkout failed");
+      }
+    } catch { toast.error("Checkout failed"); }
+    finally { setCustomLoading(false); }
+  };
+
   return (
     <div className="min-h-screen bg-background" data-testid="pricing-page">
       {/* Header */}
