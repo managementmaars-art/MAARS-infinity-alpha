@@ -170,6 +170,32 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+// Admin Protected Route
+const AdminRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!user.is_admin) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+};
+
 // App Router with session_id detection
 const AppRouter = () => {
   const location = useLocation();
