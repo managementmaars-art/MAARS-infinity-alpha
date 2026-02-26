@@ -80,12 +80,19 @@ const AdminDashboard = () => {
       }
       
       // Fetch profit data and API usage
-      const [profitRes, usageRes] = await Promise.all([
+      const [profitRes, usageRes, avgCostRes] = await Promise.all([
         fetch(`${API}/admin/profit`, { credentials: "include", headers: authHeaders }),
         fetch(`${API}/admin/api-usage`, { credentials: "include", headers: authHeaders }),
+        fetch(`${API}/admin/avg-cost`, { credentials: "include", headers: authHeaders }),
       ]);
       if (profitRes.ok) setProfitData(await profitRes.json());
       if (usageRes.ok) setApiUsage(await usageRes.json());
+      if (avgCostRes.ok) {
+        const avgCost = await avgCostRes.json();
+        if (avgCost.source === "real_usage" && avgCost.avg_cost_per_credit > 0) {
+          setCalcInputs(prev => ({...prev, ai_cost_per_credit: avgCost.avg_cost_per_credit}));
+        }
+      }
     } catch (error) {
       toast.error("Failed to load admin data");
     } finally {
