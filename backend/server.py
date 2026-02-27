@@ -2717,17 +2717,16 @@ async def admin_update_api_keys(request: Request, admin: User = Depends(require_
     }
     
     # Only update keys that are provided (non-empty)
-    if key_data.get("openai_key"):
-        update_doc["openai_key"] = key_data["openai_key"]
-    if key_data.get("anthropic_key"):
-        update_doc["anthropic_key"] = key_data["anthropic_key"]
-    if key_data.get("gemini_key"):
-        update_doc["gemini_key"] = key_data["gemini_key"]
+    all_providers = ["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs"]
+    for p in all_providers:
+        if key_data.get(f"{p}_key"):
+            update_doc[f"{p}_key"] = key_data[f"{p}_key"]
     
     # Merge with existing (preserve keys not being updated)
     existing = await db.platform_config.find_one({"config_type": "api_keys"})
     if existing:
-        for field in ["openai_key", "anthropic_key", "gemini_key"]:
+        for p in all_providers:
+            field = f"{p}_key"
             if field not in update_doc and field in existing:
                 update_doc[field] = existing[field]
     
