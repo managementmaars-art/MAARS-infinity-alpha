@@ -1488,6 +1488,8 @@ const CustomPackagesTab = () => {
   const { token } = useAuth();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const [config, setConfig] = useState(null);
+  const [extraPacks, setExtraPacks] = useState(null);
+  const [avgCost, setAvgCost] = useState(0.003);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -1496,26 +1498,34 @@ const CustomPackagesTab = () => {
 
   const fetchConfig = async () => {
     try {
-      const res = await fetch(`${API}/admin/custom-package`, { headers, credentials: "include" });
-      if (res.ok) setConfig(await res.json());
+      const [res1, res2, res3] = await Promise.all([
+        fetch(`${API}/admin/custom-package`, { headers, credentials: "include" }),
+        fetch(`${API}/admin/credit-packages`, { headers, credentials: "include" }),
+        fetch(`${API}/admin/avg-cost`, { headers, credentials: "include" }),
+      ]);
+      if (res1.ok) setConfig(await res1.json());
+      if (res2.ok) { const d = await res2.json(); setExtraPacks(d.packages || []); }
+      if (res3.ok) { const d = await res3.json(); if (d.avg_cost_per_credit > 0) setAvgCost(d.avg_cost_per_credit); }
     } catch {}
   };
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch(`${API}/admin/custom-package`, {
-        method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(config)
-      });
-      if (res.ok) {
-        toast.success("Custom package config saved!");
+      const [r1, r2] = await Promise.all([
+        fetch(`${API}/admin/custom-package`, {
+          method: "POST", headers: { ...headers, "Content-Type": "application/json" },
+          credentials: "include", body: JSON.stringify(config)
+        }),
+        fetch(`${API}/admin/credit-packages`, {
+          method: "POST", headers: { ...headers, "Content-Type": "application/json" },
+          credentials: "include", body: JSON.stringify({ packages: extraPacks })
+        }),
+      ]);
+      if (r1.ok && r2.ok) {
+        toast.success("All pricing saved!");
         fetchConfig();
-      } else {
-        toast.error("Failed to save");
-      }
+      } else toast.error("Failed to save");
     } catch { toast.error("Failed to save"); }
     finally { setSaving(false); }
   };
@@ -1528,108 +1538,146 @@ const CustomPackagesTab = () => {
     });
   };
 
-  if (!config) return <div className="text-zinc-400 p-8">Loading...</div>;
+  const updateExtraPack = (index, field, value) => {
+    setExtraPacks(prev => {
+      const packs = [...prev];
+      packs[index] = { ...packs[index], [field]: field === "name" ? value : (parseFloat(value) || 0) };
+      return packs;
+    });
+  };
+
+  const profitBadge = (credits, priceUsd) => {
+    const cost = credits * avgCost;
+    const profit = priceUsd - cost;
+    const margin = cost > 0 ? ((profit / cost) * 100).toFixed(0) : 0;
+    return (
+      <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${profit > 0 ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}`}>
+        {profit > 0 ? "+" : ""}{margin}% (${profit.toFixed(2)})
+      </span>
+    );
+  };
+
+  if (!config || !extraPacks) return <div className="text-zinc-400 p-8">Loading...</div>;
 
   return (
     <div className="space-y-6" data-testid="custom-packages-tab">
-      <div>
-        <h2 className="text-xl font-bold text-white font-['Outfit']">Custom Package Pricing</h2>
-        <p className="text-zinc-400 text-sm mt-1">Set the per-agent rate and credit preset prices for the "Build Your Own" package.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-white font-['Outfit']">Pricing Control Center</h2>
+          <p className="text-zinc-400 text-sm mt-1">Set prices for agents, credits, and extra credit packs. Profit margins auto-calculated from real API cost (${avgCost.toFixed(4)}/credit).</p>
+        </div>
+        <Badge className="bg-emerald-500/20 text-emerald-400 text-[10px]">Avg cost: ${avgCost.toFixed(4)}</Badge>
       </div>
 
+      {/* Agent & Commander Pricing */}
       <Card className="bg-zinc-900/50 border-white/10">
         <CardHeader>
-          <CardTitle className="text-white text-base">Agent & Commander Pricing</CardTitle>
+          <CardTitle className="text-white text-base flex items-center gap-2">Agent & Commander Pricing <span className="text-xs text-zinc-500">(Build Your Own)</span></CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-4">
+        <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="space-y-1">
             <label className="text-xs text-zinc-400">Per Agent (USD)</label>
-            <input
-              type="number" step="0.5" value={config.per_agent_price_usd || 0}
+            <input type="number" step="0.5" value={config.per_agent_price_usd || 0}
               onChange={e => setConfig(p => ({...p, per_agent_price_usd: parseFloat(e.target.value) || 0}))}
               className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-              data-testid="per-agent-usd"
-            />
+              data-testid="per-agent-usd" />
           </div>
           <div className="space-y-1">
             <label className="text-xs text-zinc-400">Per Agent (BDT)</label>
-            <input
-              type="number" step="1" value={config.per_agent_price_bdt || 0}
+            <input type="number" step="1" value={config.per_agent_price_bdt || 0}
               onChange={e => setConfig(p => ({...p, per_agent_price_bdt: parseFloat(e.target.value) || 0}))}
               className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-              data-testid="per-agent-bdt"
-            />
+              data-testid="per-agent-bdt" />
           </div>
           <div className="space-y-1">
             <label className="text-xs text-zinc-400">Commander Add-on (USD)</label>
-            <input
-              type="number" step="0.5" value={config.commander_addon_price_usd || 0}
+            <input type="number" step="0.5" value={config.commander_addon_price_usd || 0}
               onChange={e => setConfig(p => ({...p, commander_addon_price_usd: parseFloat(e.target.value) || 0}))}
               className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-              data-testid="commander-price-usd"
-            />
+              data-testid="commander-price-usd" />
           </div>
           <div className="space-y-1">
             <label className="text-xs text-zinc-400">Commander Add-on (BDT)</label>
-            <input
-              type="number" step="1" value={config.commander_addon_price_bdt || 0}
+            <input type="number" step="1" value={config.commander_addon_price_bdt || 0}
               onChange={e => setConfig(p => ({...p, commander_addon_price_bdt: parseFloat(e.target.value) || 0}))}
               className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-              data-testid="commander-price-bdt"
-            />
+              data-testid="commander-price-bdt" />
           </div>
         </CardContent>
       </Card>
 
+      {/* Credit Presets (Build Your Own) */}
       <Card className="bg-zinc-900/50 border-white/10">
         <CardHeader>
-          <CardTitle className="text-white text-base">Credit Presets</CardTitle>
+          <CardTitle className="text-white text-base flex items-center gap-2">Credit Presets <span className="text-xs text-zinc-500">(Build Your Own package)</span></CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="grid grid-cols-4 gap-2 text-xs text-zinc-500 font-medium px-1">
-              <span>Credits</span><span>USD</span><span>BDT</span><span></span>
+            <div className="grid grid-cols-5 gap-2 text-xs text-zinc-500 font-medium px-1">
+              <span>Credits</span><span>USD Price</span><span>BDT Price</span><span>Margin</span><span></span>
             </div>
             {(config.credit_presets || []).map((preset, i) => (
-              <div key={preset.id || i} className="grid grid-cols-4 gap-2 items-center">
-                <input
-                  type="number" value={preset.credits}
+              <div key={preset.id || i} className="grid grid-cols-5 gap-2 items-center">
+                <input type="number" value={preset.credits}
                   onChange={e => updatePreset(i, "credits", e.target.value)}
-                  className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-                />
-                <input
-                  type="number" step="0.5" value={preset.price_usd}
+                  className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                <input type="number" step="0.5" value={preset.price_usd}
                   onChange={e => updatePreset(i, "price_usd", e.target.value)}
-                  className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-                />
-                <input
-                  type="number" step="1" value={preset.price_bdt}
+                  className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                <input type="number" step="1" value={preset.price_bdt}
                   onChange={e => updatePreset(i, "price_bdt", e.target.value)}
-                  className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
-                />
-                <button
-                  onClick={() => setConfig(p => ({...p, credit_presets: p.credit_presets.filter((_, idx) => idx !== i)}))}
-                  className="text-red-400 hover:text-red-300 text-xs"
-                >Remove</button>
+                  className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                <div>{profitBadge(preset.credits, preset.price_usd)}</div>
+                <button onClick={() => setConfig(p => ({...p, credit_presets: p.credit_presets.filter((_, idx) => idx !== i)}))}
+                  className="text-red-400 hover:text-red-300 text-xs">Remove</button>
               </div>
             ))}
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-white/10 text-zinc-400"
-              onClick={() => setConfig(p => ({...p, credit_presets: [...(p.credit_presets||[]), {id:`cp_new_${Date.now()}`, credits:0, price_usd:0, price_bdt:0}]}))}
-            >+ Add Preset</Button>
+            <Button variant="outline" size="sm" className="border-white/10 text-zinc-400"
+              onClick={() => setConfig(p => ({...p, credit_presets: [...(p.credit_presets||[]), {id:`cp_new_${Date.now()}`, credits:0, price_usd:0, price_bdt:0}]}))}>
+              + Add Preset
+            </Button>
           </div>
         </CardContent>
       </Card>
 
-      <Button
-        onClick={handleSave}
-        disabled={saving}
-        className="bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600"
-        data-testid="save-custom-config-btn"
-      >
-        {saving ? "Saving..." : "Save Custom Package Config"}
+      {/* Extra Credit Packs (Need More Credits?) */}
+      <Card className="bg-zinc-900/50 border-white/10">
+        <CardHeader>
+          <CardTitle className="text-white text-base flex items-center gap-2">Extra Credit Packs <span className="text-xs text-zinc-500">("Need More Credits?" section)</span></CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div className="grid grid-cols-5 gap-2 text-xs text-zinc-500 font-medium px-1">
+              <span>Credits</span><span>USD Price</span><span>BDT Price</span><span>Margin</span><span></span>
+            </div>
+            {extraPacks.map((pack, i) => (
+              <div key={pack.id || i} className="grid grid-cols-5 gap-2 items-center" data-testid={`extra-pack-${i}`}>
+                <input type="number" value={pack.credits}
+                  onChange={e => updateExtraPack(i, "credits", e.target.value)}
+                  className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                <input type="number" step="0.5" value={pack.price_usd}
+                  onChange={e => updateExtraPack(i, "price_usd", e.target.value)}
+                  className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                <input type="number" step="1" value={pack.price_bdt}
+                  onChange={e => updateExtraPack(i, "price_bdt", e.target.value)}
+                  className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                <div>{profitBadge(pack.credits, pack.price_usd)}</div>
+                <button onClick={() => setExtraPacks(prev => prev.filter((_, idx) => idx !== i))}
+                  className="text-red-400 hover:text-red-300 text-xs">Remove</button>
+              </div>
+            ))}
+            <Button variant="outline" size="sm" className="border-white/10 text-zinc-400"
+              onClick={() => setExtraPacks(prev => [...prev, {id:`credits_new_${Date.now()}`, credits:0, price_usd:0, price_bdt:0, name:"New Pack"}])}>
+              + Add Pack
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Button onClick={handleSave} disabled={saving}
+        className="bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 w-full"
+        data-testid="save-custom-config-btn">
+        {saving ? "Saving..." : "Save All Pricing"}
       </Button>
     </div>
   );
