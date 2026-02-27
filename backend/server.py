@@ -906,6 +906,12 @@ async def agent_execute_with_tools(
         import re
         tool_match = re.search(r'\[TOOL_CALL\]\s*(\w+)\s*\|\s*(\{.*?\})', llm_response, re.DOTALL)
         
+        # Also try alternative formats the LLM might use
+        if not tool_match:
+            tool_match = re.search(r'TOOL_CALL:\s*(\w+)\s*\|\s*(\{.*?\})', llm_response, re.DOTALL)
+        if not tool_match:
+            tool_match = re.search(r'\[TOOL\]\s*(\w+)\s*\|\s*(\{.*?\})', llm_response, re.DOTALL)
+        
         if tool_match:
             tool_name = tool_match.group(1).strip()
             tool_input_str = tool_match.group(2).strip()
