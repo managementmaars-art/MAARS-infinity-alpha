@@ -29,8 +29,15 @@ Full-stack AI team platform with 20+ agents, Commander AI with auto-task delegat
 
 ### Admin Dashboard (8 tabs)
 - Overview, Users, Agents, Transactions, Pricing Manager, Custom Packages, API Keys, Payment Setup
-- **Pricing Manager with LIVE SYNC**: Real-time auto-calculation of plan prices when cost/margin/BDT inputs change. Uses real cost data from usage_logs. No separate "Calculate" or "Apply" buttons needed — prices sync instantly.
-- `/api/admin/avg-cost` provides real average cost per credit
+- **Pricing Manager**: LIVE SYNC calculator with real cost data
+- **Pricing Control Center** (Custom Packages tab): Full control over ALL pricing:
+  - Agent & Commander per-unit pricing (USD/BDT)
+  - Credit Presets for Build Your Own (add/remove/edit with margin badges)
+  - Extra Credit Packs for "Need More Credits?" section (add/remove/edit with margin badges)
+  - Profit margins auto-calculated from real API cost
+  - Single "Save All Pricing" button saves everything
+  - `/api/admin/credit-packages` GET/POST for extra credit packs
+  - All pricing stored in DB, no hardcoded values
 
 ### Brand Footer
 - "Martian AI by MAARS Global Corporation © 2026" on ALL pages
@@ -40,6 +47,7 @@ Full-stack AI team platform with 20+ agents, Commander AI with auto-task delegat
 - Chat: /api/chats, /api/chats/{id}/messages
 - Tasks: /api/tasks
 - Admin: /api/admin/stats, /api/admin/pricing, /api/admin/avg-cost
+- Admin Pricing: /api/admin/custom-package, /api/admin/credit-packages
 
 ## Backlog
 - P1: E2E subscription/credit testing
