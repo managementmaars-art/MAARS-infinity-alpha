@@ -4,57 +4,58 @@ The user wants to build a full-stack AI team platform, Martian AI by MAARS Globa
 PRODUCT REQUIREMENTS:
 1.  **AI Team & Commander AI:** A team of specialized AI agents. A Commander AI bot to receive orders and delegate tasks to other bots, which should automatically create tasks in a task management system.
 2.  **AI Model Functionality:**
-    *   Support for a wide range of AI models (GPT-4o, Claude 3 Opus, Gemini 1.5 Pro, etc.).
-    *   Support for direct API keys from providers (OpenAI, Anthropic, Google) as an alternative to the Emergent Universal Key.
+    *   Support for a wide range of AI models (GPT-4o, Claude 3 Opus, Gemini 1.5 Pro, Grok, DeepSeek, Mistral, etc.).
+    *   Support for direct API keys from providers (OpenAI, Anthropic, Google, etc.) as an alternative to the Emergent Universal Key.
     *   AI agents should be able to generate various file types, including documents (PDF, Excel), images (DALL-E 3), and videos (Sora 2).
+    *   The application should support multi-language audio input (Speech-to-Text) and output (Text-to-Speech).
 3.  **Monetization & Subscription:**
     *   A multi-tiered subscription model (Free, Starter, Pro, Business) integrated with Stripe.
     *   A Build Your Own package where users can select specific agents and a credit amount.
     *   A credit system for usage.
 4.  **Admin Section:**
     *   A private admin section for .
-    *   A dynamic pricing manager to set plan prices and calculate profit margins.
-    *   A section to manage API keys.
+    *   A dynamic pricing manager to set plan prices and calculate profit margins based on real cost data and live exchange rates.
+    *   A section to manage API keys for all integrated providers.
     *   A profit dashboard showing revenue, actual API costs, and net profit, including historical data.
-5.  **Multi-language Support:** The application should support audio input (Speech-to-Text).
 
 **User's preferred language**: English
 
 **what currently exists?**
-A full-stack application Martian AI (React/FastAPI/MongoDB) is running. It features JWT & Google authentication, a team of 21 AI agents (including the Commander AI), and a chat interface supporting 10+ LLMs, image generation (DALL-E 3), and video generation (Sora 2). Users can switch between the Emergent Universal Key and their own direct provider API keys.
+A full-stack application Martian AI (React/FastAPI/MongoDB) is running. It features JWT & Google authentication, a team of AI agents, and a chat interface supporting 9 LLM providers (OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Perplexity, Cohere), image generation (DALL-E 3), video generation (Sora 2), speech-to-text (Whisper), and text-to-speech (ElevenLabs). Users can switch between the Emergent Universal Key and their own direct provider API keys.
 
-The app includes a complete Stripe-integrated subscription system with four fixed plans and a Build Your Own custom package option. A comprehensive admin dashboard allows for user management, viewing platform stats, dynamically managing subscription pricing, managing API keys, and viewing a detailed profit dashboard that tracks revenue vs. actual API costs based on historical usage. The Commander AI can automatically create and delegate tasks which appear in a dedicated Tasks section.
+The app includes a complete Stripe-integrated subscription system with fixed plans and a Build Your Own option. The admin dashboard allows for user management, viewing platform stats, dynamically managing subscription pricing with live profit/cost calculations and exchange rate sync, managing API keys for all 9 providers, and viewing a detailed profit dashboard. The Commander AI can automatically create and delegate tasks, which appear in a dedicated Tasks section with a group-chat-like UI.
 
 **Last working item**:
--   **Last item agent was working:** The user pointed out that the admin Pricing Manager was using a hardcoded cost to calculate profit margins, which is inaccurate now that real, per-model cost tracking has been implemented. The agent was tasked with updating the Pricing Manager to use the actual average cost data from the profit analytics system to provide accurate profit calculations.
+-   **Last item agent was working:** The user reported that while the backend was updated to support 9 different API providers, the frontend admin panel was still showing a hardcoded list of only 3 providers in the API Key Status and Direct Provider Costs sections. The agent identified that  needed to be refactored to dynamically render these sections based on the data received from the backend API.
 -   **Status:** IN PROGRESS
 -   **Agent Testing Done:** N
 -   **Which testing method agent to use?** both
 -   **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
--   **Issue 1: Admin Pricing Manager uses hardcoded cost data (Priority: P0)**
+-   **Issue 1: Admin UI is not synced with backend for API providers (Priority: P0)**
 -   **Issue 2: The entire subscription and credit deduction system is untested end-to-end. (Priority: P1)**
 
 Issues Detail:
--   **Issue 1: Admin Pricing Manager uses hardcoded cost data**
-    -   **Attempted fixes:** None. The agent has only identified the problem.
+-   **Issue 1: Admin UI is not synced with backend for API providers**
+    -   **Attempted fixes:** None. The agent only identified the problem and located the relevant file ().
     -   **Next debug checklist:**
-        1.  **Backend ():** Modify the  endpoint or create a new one that provides the average cost per API call or per 1k tokens.
-        2.  **Frontend ():** Update the  component to fetch this new average cost data.
-        3.  Replace the hardcoded  cost per credit with a dynamic calculation based on the fetched average cost, so the profit margin reflects reality.
-    -   **Why fix this issue and what will be achieved with the fix?** To provide the admin with accurate, real-time profit margin calculations when setting prices, which was a direct user request.
+        1.  **Frontend ():**
+        2.  Locate the  component and the Direct Provider Costs table.
+        3.  Modify both sections to iterate over the  and  data fetched from the backend API, instead of using a hardcoded list of providers.
+        4.  Ensure the UI correctly displays all 9 providers (OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Perplexity, Cohere, ElevenLabs).
+    -   **Why fix this issue and what will be achieved with the fix?** The admin cannot currently manage API keys or view costs for the 6 newly added providers, making the feature incomplete and unusable.
     -   **Status:** IN PROGRESS
     -   **Is recurring issue?** N
     -   **Should Test frontend/backend/both after fix?** both
     -   **Blocked on other issue:** none
 
 -   **Issue 2: The entire subscription and credit deduction system is untested end-to-end.**
-    -   **Attempted fixes:** None. The agent has implemented the features and performed isolated tests, but a full user lifecycle test has never been conducted.
+    -   **Attempted fixes:** None. This has been a known gap for several sessions.
     -   **Next debug checklist:**
         1.  Call the .
-        2.  Instruct the agent to test the complete user flow: register a new user, verify they are on the Free plan with initial credits, send messages to confirm credit deduction, upgrade to a paid plan via Stripe, and verify the plan/credits are updated. Test the Build Your Own package flow. Test credit depletion and top-up scenarios.
-    -   **Why fix this issue and what will be achieved with the fix?** This is the core monetization flow of the application. It is critical to ensure it works flawlessly.
+        2.  Instruct the agent to test the complete user flow: register a new user, verify they are on the Free plan, send messages to confirm credit deduction, upgrade to a paid plan via Stripe (both fixed and custom), and verify the plan/credits are updated. Test credit depletion and top-up scenarios.
+    -   **Why fix this issue and what will be achieved with the fix?** This is the core monetization flow of the application. It is critical to ensure it works flawlessly before launch.
     -   **Status:** NOT STARTED
     -   **Is recurring issue?** N
     -   **Should Test frontend/backend/both after fix?** both
@@ -70,17 +71,20 @@ Issues Detail:
   - **Task 2 (P2):** Provide a UI for the user to set up their own custom domain.
 
 **Completed work in this session**
-- **Profit & Cost Dashboard:** Implemented a full-featured admin dashboard showing Revenue, actual API Costs, Net Profit, and margin. Created a backfill script to process historical messages and provide accurate data from day one.
-- **Custom Subscription Packages:** Built a Build Your Own plan allowing users to select specific agents and a credit tier, with prices calculated dynamically.
-- **File Generation:** Integrated capabilities for agents to generate and download PDF, Excel, and Word documents, as well as images (DALL-E 3) and videos (Sora 2).
-- **Commander AI Automation:** Enhanced Commander AI to automatically create tasks with priority levels when it delegates, visible in a dedicated Tasks UI.
-- **API Key Management:** Fixed a 429 Rate Limit bug by using lightweight model-listing for API key validation. Added a reference section for direct provider model costs.
-- **Multi-language Audio Input:** Added microphone support in the chat for Speech-to-Text (STT) via OpenAI Whisper.
-- **UI/UX Fixes:** Made the agent selection grid on the pricing page public and scrollable.
-- **Code Removal:** Completely removed the ElevenLabs integration (TTS) from the entire stack per user request.
+- **Major Provider Expansion & TTS:** Integrated 5 new LLM providers (xAI Grok, DeepSeek, Mistral, Perplexity, Cohere) and re-integrated ElevenLabs for multilingual Text-to-Speech, complete with backend logic, API key management, and cost tracking.
+- **Live Exchange Rate Sync:** Integrated HexaRate API to fetch the live USD/BDT exchange rate daily, auto-syncing all BDT prices in the admin panel.
+- **Advanced Pricing Controls:**
+    - Upgraded the Build Your Own package manager to allow admin control over agent costs, credit preset prices, and extra credit packs, all while displaying real-time profit margins.
+    - Refactored the main Pricing Manager to be a LIVE SYNC tool, where changes to target profit margins instantly update all plan prices.
+- **Authentication Bug Fix:** Resolved a critical race-condition bug that caused users to be redirected to the login page after successfully logging in.
+- **Global Branding:** Created a reusable  component and added it to every page of the application for consistent branding.
+- **UI/UX Enhancements:**
+    - Implemented a Group Chat view for Commander AI delegations.
+    - Updated the pricing manager to use real-time average cost data from the profit analytics system, replacing hardcoded values.
+- **PRD Update:** Updated PRD with all the completed tasks.
 
 **Earlier issues found/mentioned but not fixed**
-- The primary pending issue (end-to-end subscription testing) was carried over from the initial handoff and has not yet been addressed.
+- The primary pending issue (end-to-end subscription testing) was carried over and has not yet been addressed.
 
 **Known issue recurrence from previous fork**
 -   None.
@@ -89,81 +93,80 @@ Issues Detail:
 
 
 **Key Technical Concepts**
--   **Backend:** FastAPI, Pydantic, MongoDB, JWT Authentication, Stripe API
+-   **Backend:** FastAPI, Pydantic, MongoDB, JWT Authentication, Stripe API,  (for external API calls)
 -   **Frontend:** React, Tailwind CSS, Shadcn UI
--   **AI Integration:** Multi-LLM access (OpenAI, Anthropic, Google), Image Gen (DALL-E 3), Video Gen (Sora 2), STT (Whisper).
--   **File Generation:** fpdf, openpyxl, python-docx
+-   **AI Integration:** Multi-LLM access (9 providers), Image Gen (DALL-E 3), Video Gen (Sora 2), STT (Whisper), TTS (ElevenLabs).
 -   **Architecture:** Monolithic backend () with a React SPA frontend.
 
 **key DB schema**
 -   **Users:** 
--   **Agents:** 
 -   **Config:** 
--   **Tasks:** 
--   **UsageLogs:**  (New collection for profit tracking)
 
 **changes in tech stack**
--   Added: , ,  for file generation.
--   Removed:  SDK.
+-   Added:  SDK was re-installed.
+-    is now used in the backend for the exchange rate API call.
 
 **All files of reference**
 -   : The entire backend logic. **Critical file.**
--   : Contains the UI for all admin functions, including Profit Dashboard, API Keys, and Pricing Manager.
--   : Contains the UI for the fixed plans and the Build Your Own package builder.
--   : Main chat interface, with STT and file generation/rendering capabilities.
--   : UI for displaying tasks, including those auto-generated by Commander AI.
--   : Main landing page, shows all agents and generation models.
--   : Allows users on fixed plans to select their agents.
+-   : Contains the UI for all admin functions. **Needs immediate modification.**
+-   : Main chat interface, now includes TTS button.
+-   : Main landing page, updated to show all 9 providers.
+-   : New reusable component for the site-wide footer.
+-   All page components in  were modified to include the .
 
 **Areas that need refactoring**:
--    is critically oversized and handles all application logic. It urgently needs to be broken down into modular routers (e.g., , , , ) to improve maintainability and prevent future development from slowing down.
+-    is critically oversized. Proposing a refactor into modular routers (e.g., , , ) is highly recommended.
+-    is now extremely large (over 1500 lines) and complex. It should be broken down into smaller, more manageable sub-components for each tab (, , , ).
 
 **key api endpoints**
--    (GET)
--    (GET)
--    (GET, POST)
--    (POST)
--    (GET)
--    (POST)
--    (POST)
--    &  (POST)
--    (POST)
+-    (GET, POST) - Now handles 9 providers.
+-    (GET) - Now returns costs for 9 providers.
+-    (GET, POST) - New endpoints.
+-    (GET) - New endpoint.
+-    (POST) - New endpoint.
 
 **Critical Info for New Agent**
--   **User Focus:** The user is highly focused on profitability and cost management. Any features related to pricing, cost tracking, and profit margins should be treated with high priority and precision.
--   **Technical Debt:** The monolithic  is the biggest technical risk. Proposing a refactor is highly recommended.
--   **Testing Blind Spot:** The end-to-end subscription and payment flow remains the largest untested part of the application. This is a major business risk.
--   **Immediate Task:** The immediate priority is fixing the Pricing Manager in the admin panel to use real cost data instead of hardcoded values.
+-   **Immediate Task:** The immediate priority is fixing the Admin Dashboard UI () to correctly display the API key management and cost reference sections for all 9 integrated providers. The backend is ready; this is a frontend-only task.
+-   **Technical Debt:** The monolithic  and the massive  are significant technical risks. Proposing a refactor for one or both should be a high priority after the immediate fix.
+-   **Testing Blind Spot:** The end-to-end subscription and payment flow remains the largest untested part of the application. This is a major business risk that must be addressed soon.
 
 **documents and test reports created in this job**
--   /app/test_reports/iteration_5.json
--   /app/test_reports/iteration_6.json
+-   /app/test_reports/iteration_7.json
+-   /app/test_reports/iteration_8.json
+-   /app/test_reports/iteration_9.json
+-   /app/test_reports/iteration_10.json
 -   /app/memory/PRD.md
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User:** Asks if the API key validation showing Access to 100 models is correct. **Status:** Completed. Agent confirmed this is the expected behavior for a valid OpenAI key.
-2.  **User:** great, I want you to remove eleven labs completely. **Status:** Completed. Agent removed all traces of ElevenLabs from the frontend and backend.
-3.  **User:** Asks for profit/cost tracking, including remaining tokens and profit margins on the overview page. **Status:** Completed. Agent built a comprehensive profit dashboard with historical data backfill.
-4.  **User:** I want the profit cost etc dashboard to record all the data from the past. **Status:** Completed. Agent created and ran a one-time backfill script.
-5.  **User:** Points out the pricing manager is not using real cost data for its calculations. **Status:** In Progress. This is the current active task.
+1.  **User:** Reports a login bug where they are constantly redirected back to the login page. **Status:** Completed. Agent identified and fixed a frontend race condition using .
+2.  **User:** are you sure all of these are included in my system? please check and test accordingly. **Status:** Completed. Agent confirmed the list from the image was not fully integrated.
+3.  **User:** Requests adding ElevenLabs for TTS (for languages like Bangla) and expanding the LLM roster to include Grok, DeepSeek, and others. Wants direct key support and accurate cost pricing for all. **Status:** Completed. Agent integrated 5 new LLM providers and ElevenLabs TTS.
+4.  **User:** they are not here, make sure they are also included in the cost price which updates automatically so I can calculate and see my profit margin. **Status:** In Progress. User points out that the frontend admin UI for API Keys and Costs does not show the newly added providers. This is the current task.
 
 **Project Health Check:**
--   **Broken:** The Admin Pricing Manager's profit calculations are inaccurate as they rely on hardcoded costs, not the newly implemented real cost tracking.
+-   **Broken:** The Admin Dashboard's API Key Management and Direct Provider Costs sections are not showing the 6 newly integrated providers (Grok, DeepSeek, etc.), making it impossible for the admin to manage them.
 -   **Mocked:** None.
 
 **3rd Party Integrations**
 -   **Stripe (Payments):** Uses User API Key.
--   **OpenAI, Anthropic, Google (LLMs):** Supports both **Emergent LLM Key** and direct user-provided keys.
--   **OpenAI DALL-E 3 (Image Generation):** Integrated.
--   **OpenAI Sora 2 (Video Generation):** Integrated.
--   **OpenAI Whisper (STT):** Integrated.
+-   **Emergent LLM Key:** Supported.
+-   **Direct User Keys Supported for:**
+    -   OpenAI (GPT models, DALL-E 3, Sora 2, Whisper)
+    -   Anthropic (Claude models)
+    -   Google (Gemini models)
+    -   xAI (Grok models)
+    -   DeepSeek (DeepSeek models)
+    -   Mistral AI (Mistral models)
+    -   Perplexity (Perplexity models)
+    -   Cohere (Cohere models)
+    -   ElevenLabs (TTS)
+-   **HexaRate API (Exchange Rates):** Free, no key required.
 
 **Testing status**
--   **Testing agent used after significant changes:** YES. The testing agent was used multiple times to validate major features like Custom Packages and File Generation, with 100% success rates.
+-   **Testing agent used after significant changes:** YES. The testing agent was used successfully after every major feature implementation in this session.
 -   **Troubleshoot agent used after agent stuck in loop:** NO
 -   **Test files created:**
-    -   
-    -   
+    -    to 
 -   **Known regressions:** None.
 
 **Credentials to test flow:**
@@ -171,5 +174,5 @@ Issues Detail:
 -   **Regular User:** Can be registered via the UI.
 
 **What agent forgot to execute**
--   **End-to-End Subscription Test:** The agent has repeatedly added monetization features without ever running a full test of the subscription and credit lifecycle. This is a critical gap.
--   **Commander AI as a Purchasable Add-On:** While included in Pro/Business plans, the logic to purchase Commander AI as a separate add-on (especially for custom plans) has not been implemented.</analysis>
+-   **End-to-End Subscription Test:** This critical task has been pending for multiple sessions.
+-   **Commander AI as a Purchasable Add-On:** The logic to purchase Commander AI as a separate add-on for custom plans has not been implemented.</analysis>
