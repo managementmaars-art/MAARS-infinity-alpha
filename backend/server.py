@@ -4082,6 +4082,118 @@ async def admin_backfill_usage(admin: User = Depends(require_admin)):
     count = await db.usage_logs.count_documents({"backfilled": True})
     return {"message": f"Backfilled {count} usage log entries from chat history"}
 
+# ============== ADMIN INTEGRATION MANAGEMENT ==============
+
+@api_router.get("/admin/integrations")
+async def admin_get_integrations(admin: User = Depends(require_admin)):
+    """Get all integration configs and their status"""
+    config = await get_integration_keys()
+    result = {}
+    for svc_id, svc_def in INTEGRATION_SERVICES.items():
+        svc_config = config.get(svc_id, {})
+        has_key = any(svc_config.get(f) for f in svc_def.get("key_fields", []))
+        result[svc_id] = {
+            "name": svc_def["name"],
+            "description": svc_def["description"],
+            "key_fields": svc_def["key_fields"],
+            "configured": has_key,
+            "keys_set": {f: bool(svc_config.get(f)) for f in svc_def["key_fields"]}
+        }
+    return result
+
+@api_router.post("/admin/integrations")
+async def admin_update_integrations(request: Request, admin: User = Depends(require_admin)):
+    """Update integration keys"""
+    data = await request.json()
+    config = await get_integration_keys()
+    
+    for svc_id, svc_data in data.items():
+        if svc_id in INTEGRATION_SERVICES and isinstance(svc_data, dict):
+            if svc_id not in config:
+                config[svc_id] = {}
+            for field in INTEGRATION_SERVICES[svc_id]["key_fields"]:
+                if field in svc_data and svc_data[field]:
+                    config[svc_id][field] = svc_data[field]
+    
+    config["config_type"] = "integration_keys"
+    await db.platform_config.update_one(
+        {"config_type": "integration_keys"},
+        {"$set": config},
+        upsert=True
+    )
+    return {"message": "Integration keys updated successfully"}
+
+@api_router.get("/admin/integrations/test/{service_id}")
+async def admin_test_integration(service_id: str, admin: User = Depends(require_admin)):
+    """Test if an integration is working"""
+    if service_id not in INTEGRATION_SERVICES:
+        raise HTTPException(404, "Unknown service")
+    
+    config = await get_integration_keys()
+    svc_config = config.get(service_id, {})
+    svc_def = INTEGRATION_SERVICES[service_id]
+    has_key = any(svc_config.get(f) for f in svc_def.get("key_fields", []))
+    
+    if not has_key:
+        return {"status": "not_configured", "message": "No API key configured"}
+    
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            if service_id == "slack":
+                resp = await client.post(
+                    "https://slack.com/api/auth.test",
+                    headers={"Authorization": f"Bearer {svc_config.get('bot_token', '')}"}
+                )
+                data = resp.json()
+                return {"status": "active" if data.get("ok") else "error", "message": data.get("team", data.get("error", ""))}
+            elif service_id == "github":
+                resp = await client.get(
+                    "https://api.github.com/user",
+                    headers={"Authorization": f"Bearer {svc_config.get('personal_access_token', '')}"}
+                )
+                if resp.status_code == 200:
+                    return {"status": "active", "message": f"Authenticated as {resp.json().get('login', '')}"}
+                return {"status": "error", "message": f"Auth failed: {resp.status_code}"}
+            elif service_id == "sendgrid":
+                resp = await client.get(
+                    "https://api.sendgrid.com/v3/user/profile",
+                    headers={"Authorization": f"Bearer {svc_config.get('api_key', '')}"}
+                )
+                return {"status": "active" if resp.status_code == 200 else "error", "message": "Connected" if resp.status_code == 200 else f"Error: {resp.status_code}"}
+            elif service_id == "resend":
+                resp = await client.get(
+                    "https://api.resend.com/api-keys",
+                    headers={"Authorization": f"Bearer {svc_config.get('api_key', '')}"}
+                )
+                return {"status": "active" if resp.status_code == 200 else "error", "message": "Connected" if resp.status_code == 200 else f"Error: {resp.status_code}"}
+            elif service_id == "giphy":
+                resp = await client.get(
+                    "https://api.giphy.com/v1/gifs/trending",
+                    params={"api_key": svc_config.get("api_key", ""), "limit": 1}
+                )
+                return {"status": "active" if resp.status_code == 200 else "error", "message": "Connected" if resp.status_code == 200 else f"Error: {resp.status_code}"}
+            elif service_id == "airtable":
+                resp = await client.get(
+                    "https://api.airtable.com/v0/meta/whoami",
+                    headers={"Authorization": f"Bearer {svc_config.get('api_key', '')}"}
+                )
+                return {"status": "active" if resp.status_code == 200 else "error", "message": "Connected" if resp.status_code == 200 else f"Error: {resp.status_code}"}
+            elif service_id == "calendly":
+                resp = await client.get(
+                    "https://api.calendly.com/users/me",
+                    headers={"Authorization": f"Bearer {svc_config.get('api_key', '')}"}
+                )
+                return {"status": "active" if resp.status_code == 200 else "error", "message": "Connected" if resp.status_code == 200 else f"Error: {resp.status_code}"}
+            elif service_id == "twilio":
+                sid = svc_config.get("account_sid", "")
+                auth = svc_config.get("auth_token", "")
+                resp = await client.get(f"https://api.twilio.com/2010-04-01/Accounts/{sid}.json", auth=(sid, auth))
+                return {"status": "active" if resp.status_code == 200 else "error", "message": "Connected" if resp.status_code == 200 else f"Error: {resp.status_code}"}
+            else:
+                return {"status": "unknown", "message": "Test not available for this service"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)[:200]}
+
 @app.on_event("startup")
 async def startup():
     await seed_default_agents()
