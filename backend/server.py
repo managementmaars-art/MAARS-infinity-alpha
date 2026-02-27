@@ -62,6 +62,38 @@ async def get_api_keys():
         keys["active_provider"] = config.get("active_provider", "emergent")
     return keys
 
+# Integration keys for 3rd party services (Slack, GitHub, SendGrid, etc.)
+INTEGRATION_SERVICES = {
+    "slack": {"name": "Slack", "key_fields": ["bot_token"], "description": "Send messages to Slack channels and workspaces"},
+    "github": {"name": "GitHub", "key_fields": ["personal_access_token"], "description": "Create issues, PRs, read/write repos"},
+    "sendgrid": {"name": "SendGrid", "key_fields": ["api_key"], "description": "Send transactional and marketing emails"},
+    "resend": {"name": "Resend", "key_fields": ["api_key"], "description": "Modern email sending API"},
+    "twilio": {"name": "Twilio", "key_fields": ["account_sid", "auth_token", "phone_number"], "description": "Send SMS and voice calls"},
+    "airtable": {"name": "Airtable", "key_fields": ["api_key"], "description": "Read/write Airtable bases and records"},
+    "calendly": {"name": "Calendly", "key_fields": ["api_key"], "description": "Schedule meetings and manage events"},
+    "giphy": {"name": "Giphy", "key_fields": ["api_key"], "description": "Search and send GIFs"},
+    "google_suite": {"name": "Google Suite", "key_fields": ["service_account_json"], "description": "Gmail, Google Calendar, Google Drive"},
+}
+
+async def get_integration_keys():
+    """Get integration keys from DB"""
+    config = await db.platform_config.find_one({"config_type": "integration_keys"}, {"_id": 0})
+    return config or {"config_type": "integration_keys"}
+
+async def get_integration_key(service: str, field: str = None):
+    """Get a specific integration key"""
+    config = await get_integration_keys()
+    service_config = config.get(service, {})
+    if field:
+        return service_config.get(field, "")
+    # Return first key field value
+    service_def = INTEGRATION_SERVICES.get(service, {})
+    for f in service_def.get("key_fields", []):
+        val = service_config.get(f, "")
+        if val:
+            return val
+    return ""
+
 # Stripe Settings
 STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY', '')
 
