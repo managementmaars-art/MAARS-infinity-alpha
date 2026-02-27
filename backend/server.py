@@ -224,6 +224,7 @@ class Agent(BaseModel):
     is_commander: bool = False
     creator_id: Optional[str] = None
     capabilities: List[str] = []
+    tools: List[str] = []
     created_at: datetime
 
 class AgentCreate(BaseModel):
