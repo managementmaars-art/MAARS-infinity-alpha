@@ -2661,6 +2661,12 @@ async def admin_avg_cost(admin: User = Depends(require_admin)):
         return {"avg_cost_per_credit": round(avg, 6), "total_calls": cost_result[0]["total_calls"], "source": "real_usage"}
     return {"avg_cost_per_credit": 0.003, "total_calls": 0, "source": "default"}
 
+@api_router.get("/exchange-rate")
+async def get_exchange_rate():
+    """Get live USD/BDT exchange rate (public, no auth required)"""
+    rate = await get_live_bdt_rate()
+    return {"usd_bdt": rate, "source": "hexarate" if _exchange_rate_cache.get("rate") else "fallback"}
+
 @api_router.post("/admin/pricing/calculate")
 async def admin_calculate_pricing(calc_data: dict, admin: User = Depends(require_admin)):
     """Calculate recommended prices based on AI costs and target profit margin"""
