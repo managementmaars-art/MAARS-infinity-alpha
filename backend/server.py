@@ -1107,6 +1107,9 @@ async def get_agents_public():
         {"is_custom": False},
         {"_id": 0, "agent_id": 1, "name": 1, "avatar": 1, "role": 1, "description": 1, "capabilities": 1, "is_commander": 1}
     ).to_list(50)
+    # Inject tools info
+    for agent in agents:
+        agent["tools"] = AGENT_TOOL_MAP.get(agent.get("agent_id", ""), [])
     agents.sort(key=lambda a: (0 if a.get("agent_id") == "agent_commander" else 1, a.get("name", "")))
     return agents
 
@@ -1121,6 +1124,9 @@ async def get_agents(current_user: User = Depends(get_current_user)):
     for agent in agents:
         if isinstance(agent.get('created_at'), str):
             agent['created_at'] = datetime.fromisoformat(agent['created_at'])
+        # Inject tools info from AGENT_TOOL_MAP
+        if not agent.get("tools"):
+            agent["tools"] = AGENT_TOOL_MAP.get(agent.get("agent_id", ""), [])
     
     # Sort: Commander first, then others
     agents.sort(key=lambda a: (0 if a.get("agent_id") == "agent_commander" else 1, a.get("name", "")))
