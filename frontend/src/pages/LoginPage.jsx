@@ -177,6 +177,7 @@ const LoginPage = () => {
           </p>
         </div>
       </div>
+      </div>
       <BrandFooter />
     </div>
   );
