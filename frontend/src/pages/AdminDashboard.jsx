@@ -10,7 +10,8 @@ import { Textarea } from "../components/ui/textarea";
 import {
   Bot, Users, MessageSquare, CreditCard, TrendingUp, Shield,
   LayoutDashboard, ListTodo, Settings, LogOut, Menu, X,
-  DollarSign, Activity, UserCheck, Plus, Trash2, ChevronDown, ChevronUp, Key
+  DollarSign, Activity, UserCheck, Plus, Trash2, ChevronDown, ChevronUp, Key,
+  Plug, CheckCircle, XCircle, Loader2, ExternalLink, TestTube
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
