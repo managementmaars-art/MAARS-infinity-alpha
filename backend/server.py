@@ -1121,6 +1121,21 @@ async def call_direct_llm(provider: str, model_name: str, system_prompt: str, co
             data = resp.json()
             return data["candidates"][0]["content"]["parts"][0]["text"]
     
+    elif provider == "xai":
+        return await call_direct_xai(model_name, system_prompt, content, api_key)
+    
+    elif provider == "deepseek":
+        return await call_direct_deepseek(model_name, system_prompt, content, api_key)
+    
+    elif provider == "mistral":
+        return await call_direct_mistral(model_name, system_prompt, content, api_key)
+    
+    elif provider == "perplexity":
+        return await call_direct_perplexity(model_name, system_prompt, content, api_key)
+    
+    elif provider == "cohere":
+        return await call_direct_cohere(model_name, system_prompt, content, api_key)
+    
     raise ValueError(f"Unsupported provider: {provider}")
 
 
