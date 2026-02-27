@@ -1905,14 +1905,14 @@ const IntegrationsTab = () => {
         setSaving(false);
         return;
       }
-      const resp = await fetch(`${API}/api/admin/integrations`, {
+      const resp = await fetch(`${API}/admin/integrations`, {
         method: "POST", headers: { ...headers, "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
       if (resp.ok) {
         toast.success("Integration keys saved!");
         setInputs({});
-        const data = await fetch(`${API}/api/admin/integrations`, { headers }).then(r => r.json());
+        const data = await fetch(`${API}/admin/integrations`, { headers }).then(r => r.json());
         setIntegrations(data);
       } else toast.error("Failed to save");
     } catch { toast.error("Save failed"); }
