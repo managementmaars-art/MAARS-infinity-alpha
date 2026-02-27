@@ -1,13 +1,21 @@
 # Martian AI by MAARS Global Corporation - PRD
 
 ## Original Problem Statement
-Full-stack AI team platform with 20+ agents, Commander AI delegation, file generation, subscriptions, admin dashboard. Must include ALL major AI providers.
+Full-stack AI team platform with 20+ agents, Commander AI delegation, file generation, subscriptions, admin dashboard. Must include ALL major AI providers. Agents should be autonomous systems that can plan tasks, use tools, make decisions, and complete multi-step work.
 
 ## Implemented Features
 
 ### Core Platform
 - React + FastAPI + MongoDB, JWT + Google OAuth
 - 21 AI agents with unique sci-fi robot avatars
+
+### Autonomous Agent Architecture (NEW)
+- **Tool System**: ReAct-pattern execution engine supporting multi-step reasoning
+- **Available Tools**: web_search (DuckDuckGo), calculate (safe math eval), create_task (task management), analyze_data (data analysis)
+- **Agent-Tool Mapping**: Each agent has specific tools based on their role (e.g., finance agent has calculate + analyze_data + web_search)
+- **Execution Steps**: Frontend displays reasoning steps (thinking, tool calls, tool results) in collapsible UI
+- **Feedback Loop**: Agents review tool results and incorporate them into final responses
+- **Self-correction**: Multi-iteration loop (up to 4 iterations) for complex tool chains
 
 ### AI Models (25+ models across 9 providers)
 - **OpenAI**: GPT-5.2, GPT-4o, GPT-4o Mini, O3, O3 Mini, GPT Image 1, DALL-E 3, Sora 2
@@ -33,9 +41,11 @@ Full-stack AI team platform with 20+ agents, Commander AI delegation, file gener
 ### Admin Dashboard (8 tabs)
 - Pricing Manager with LIVE SYNC (real cost data)
 - Pricing Control Center with profit margin calculator
-- API Keys management for all 9 providers with cost reference
+- API Keys management for all 9 providers with cost reference (FIXED - now shows all 9)
+- API Usage tracking for all 9 providers (FIXED - backend now checks all 9)
 - Live BDT exchange rate from HexaRate API
 - Full profit/cost analytics
+- Create Agent form supports all 8 LLM providers
 
 ### Subscriptions & Billing
 - 4 plans + "Build Your Own" + Extra Credit Packs
@@ -46,7 +56,7 @@ Full-stack AI team platform with 20+ agents, Commander AI delegation, file gener
 - Delegation renders as individual agent chat bubbles
 
 ### Brand Footer
-- "Martian AI by MAARS Global Corporation © 2026" on ALL pages
+- "Martian AI by MAARS Global Corporation (c) 2026" on ALL pages
 
 ## Backlog
 - P1: E2E subscription/credit testing
