@@ -1500,14 +1500,16 @@ const CustomPackagesTab = () => {
 
   const fetchConfig = async () => {
     try {
-      const [res1, res2, res3] = await Promise.all([
+      const [res1, res2, res3, res4] = await Promise.all([
         fetch(`${API}/admin/custom-package`, { headers, credentials: "include" }),
         fetch(`${API}/admin/credit-packages`, { headers, credentials: "include" }),
         fetch(`${API}/admin/avg-cost`, { headers, credentials: "include" }),
+        fetch(`${API}/exchange-rate`),
       ]);
       if (res1.ok) setConfig(await res1.json());
       if (res2.ok) { const d = await res2.json(); setExtraPacks(d.packages || []); }
       if (res3.ok) { const d = await res3.json(); if (d.avg_cost_per_credit > 0) setAvgCost(d.avg_cost_per_credit); }
+      if (res4.ok) { const d = await res4.json(); if (d.usd_bdt > 0) setBdtRate(d.usd_bdt); }
     } catch {}
   };
 
