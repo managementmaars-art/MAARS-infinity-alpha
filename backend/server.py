@@ -2645,20 +2645,65 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
                 {"name": "Gemini 3 Pro", "input": "$1.25", "output": "$5.00"},
             ],
             "unit": "per 1M tokens"
-        }
+        },
+        "xai": {
+            "models": [
+                {"name": "Grok 3", "input": "$3.00", "output": "$15.00"},
+                {"name": "Grok 3 Mini", "input": "$0.30", "output": "$0.50"},
+                {"name": "Grok 2", "input": "$2.00", "output": "$10.00"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "deepseek": {
+            "models": [
+                {"name": "DeepSeek Chat", "input": "$0.14", "output": "$0.28"},
+                {"name": "DeepSeek Reasoner", "input": "$0.55", "output": "$2.19"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "mistral": {
+            "models": [
+                {"name": "Mistral Large", "input": "$2.00", "output": "$6.00"},
+                {"name": "Mistral Medium", "input": "$0.40", "output": "$2.00"},
+                {"name": "Mistral Small", "input": "$0.10", "output": "$0.30"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "perplexity": {
+            "models": [
+                {"name": "Sonar", "input": "$1.00", "output": "$1.00"},
+                {"name": "Sonar Pro", "input": "$3.00", "output": "$15.00"},
+            ],
+            "unit": "per 1M tokens + $5/1K search"
+        },
+        "cohere": {
+            "models": [
+                {"name": "Command R+", "input": "$2.50", "output": "$10.00"},
+                {"name": "Command R", "input": "$0.15", "output": "$0.60"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "elevenlabs": {
+            "models": [
+                {"name": "Multilingual v2", "input": "$0.30/1K chars", "output": "TTS audio"},
+                {"name": "Turbo v2.5", "input": "$0.18/1K chars", "output": "Fast TTS"},
+            ],
+            "unit": "per 1K characters"
+        },
     }
     
-    return {
+    all_providers = ["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs"]
+    result = {
         "active_provider": config.get("active_provider", "emergent"),
         "emergent_key_set": bool(EMERGENT_LLM_KEY),
-        "openai_key": mask(config.get("openai_key", "")),
-        "openai_key_set": bool(config.get("openai_key", "")),
-        "anthropic_key": mask(config.get("anthropic_key", "")),
-        "anthropic_key_set": bool(config.get("anthropic_key", "")),
-        "gemini_key": mask(config.get("gemini_key", "")),
-        "gemini_key_set": bool(config.get("gemini_key", "")),
         "cost_reference": cost_reference,
     }
+    for p in all_providers:
+        key_val = config.get(f"{p}_key", "")
+        result[f"{p}_key"] = mask(key_val)
+        result[f"{p}_key_set"] = bool(key_val)
+    
+    return result
 
 @api_router.put("/admin/api-keys")
 async def admin_update_api_keys(request: Request, admin: User = Depends(require_admin)):
