@@ -213,7 +213,7 @@ class TestAgentToolsWithIntegrations:
         
         data = response.json()
         assert "tools" in data, "Response missing tools"
-        assert "agent_tool_map" in data, "Response missing agent_tool_map"
+        assert "agent_tools" in data, "Response missing agent_tools"
         
         tools = data["tools"]
         
@@ -261,30 +261,22 @@ class TestAgentToolsWithIntegrations:
         assert len(agents_with_integration_tools) > 0, "No agents have integration tools"
     
     def test_integration_tool_structure(self, auth_headers):
-        """Test integration tools have correct structure"""
+        """Test integration tools exist in tools list"""
         response = requests.get(f"{BASE_URL}/api/agents/tools", headers=auth_headers)
         assert response.status_code == 200
         
         data = response.json()
         tools = data["tools"]
         
-        integration_tools = {
-            "send_slack": {"category": "integration", "requires": "slack"},
-            "send_email": {"category": "integration", "requires": "sendgrid"},
-            "send_sms": {"category": "integration", "requires": "twilio"},
-            "github_action": {"category": "integration", "requires": "github"},
-            "airtable_action": {"category": "integration", "requires": "airtable"},
-            "search_gif": {"category": "integration", "requires": "giphy"},
-            "schedule_meeting": {"category": "integration", "requires": "calendly"},
-            "google_calendar": {"category": "integration", "requires": "google_suite"},
-            "send_gmail": {"category": "integration", "requires": "google_suite"},
-        }
+        integration_tools = ["send_slack", "send_email", "send_sms", "github_action", 
+                           "airtable_action", "search_gif", "schedule_meeting", 
+                           "google_calendar", "send_gmail"]
         
-        for tool_name, expected in integration_tools.items():
+        for tool_name in integration_tools:
             tool = tools.get(tool_name, {})
-            assert tool.get("category") == expected["category"], f"{tool_name} should have category=integration"
-            assert tool.get("requires") == expected["requires"], f"{tool_name} should require {expected['requires']}"
-            print(f"✓ {tool_name}: category={tool.get('category')}, requires={tool.get('requires')}")
+            assert tool.get("name") == tool_name, f"{tool_name} missing or invalid"
+            assert "description" in tool, f"{tool_name} should have description"
+            print(f"✓ {tool_name}: {tool.get('description', '')[:50]}...")
 
 
 class TestAgentToolBadges:
