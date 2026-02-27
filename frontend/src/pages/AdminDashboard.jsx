@@ -1558,17 +1558,43 @@ const CustomPackagesTab = () => {
         ...prev,
         credit_presets: prev.credit_presets.map(p => {
           const cost = p.credits * avgCost;
-          return { ...p, price_usd: Math.round(cost * mult * 100) / 100, price_bdt: Math.round(cost * mult * bdtRate) };
+          const usd = Math.round(cost * mult * 100) / 100;
+          return { ...p, price_usd: usd, price_bdt: Math.round(usd * bdtRate) };
         })
       }));
     }
     if (extraPacks) {
       setExtraPacks(prev => prev.map(p => {
         const cost = p.credits * avgCost;
-        return { ...p, price_usd: Math.round(cost * mult * 100) / 100, price_bdt: Math.round(cost * mult * bdtRate) };
+        const usd = Math.round(cost * mult * 100) / 100;
+        return { ...p, price_usd: usd, price_bdt: Math.round(usd * bdtRate) };
       }));
     }
-    toast.success(`Applied ${targetMargin}% margin to all credit pricing`);
+    // Also sync agent/commander BDT
+    if (config) {
+      setConfig(prev => ({
+        ...prev,
+        per_agent_price_bdt: Math.round(prev.per_agent_price_usd * bdtRate),
+        commander_addon_price_bdt: Math.round(prev.commander_addon_price_usd * bdtRate),
+      }));
+    }
+    toast.success(`Applied ${targetMargin}% margin & synced BDT at rate ${bdtRate}`);
+  };
+
+  // Sync all BDT prices when rate changes
+  const syncAllBdt = (newRate) => {
+    setBdtRate(newRate);
+    if (config) {
+      setConfig(prev => ({
+        ...prev,
+        per_agent_price_bdt: Math.round(prev.per_agent_price_usd * newRate),
+        commander_addon_price_bdt: Math.round(prev.commander_addon_price_usd * newRate),
+        credit_presets: (prev.credit_presets || []).map(p => ({ ...p, price_bdt: Math.round(p.price_usd * newRate) })),
+      }));
+    }
+    if (extraPacks) {
+      setExtraPacks(prev => prev.map(p => ({ ...p, price_bdt: Math.round(p.price_usd * newRate) })));
+    }
   };
 
   if (!config || !extraPacks) return <div className="text-zinc-400 p-8">Loading...</div>;
