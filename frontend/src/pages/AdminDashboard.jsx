@@ -1538,6 +1538,10 @@ const CustomPackagesTab = () => {
     setConfig(prev => {
       const presets = [...(prev.credit_presets || [])];
       presets[index] = { ...presets[index], [field]: parseFloat(value) || 0 };
+      // Auto-sync BDT when USD changes
+      if (field === "price_usd") {
+        presets[index].price_bdt = Math.round((parseFloat(value) || 0) * bdtRate);
+      }
       return { ...prev, credit_presets: presets };
     });
   };
@@ -1546,6 +1550,10 @@ const CustomPackagesTab = () => {
     setExtraPacks(prev => {
       const packs = [...prev];
       packs[index] = { ...packs[index], [field]: field === "name" ? value : (parseFloat(value) || 0) };
+      // Auto-sync BDT when USD changes
+      if (field === "price_usd") {
+        packs[index].price_bdt = Math.round((parseFloat(value) || 0) * bdtRate);
+      }
       return packs;
     });
   };
