@@ -197,6 +197,7 @@ const RegisterPage = () => {
           </p>
         </div>
       </div>
+      </div>
       <BrandFooter />
     </div>
   );
