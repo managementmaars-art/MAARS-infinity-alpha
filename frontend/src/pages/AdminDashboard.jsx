@@ -1229,6 +1229,7 @@ const AdminDashboard = () => {
       )}
     </div>
   );
+  };
 
 
   const PaymentSetupTab = () => (
