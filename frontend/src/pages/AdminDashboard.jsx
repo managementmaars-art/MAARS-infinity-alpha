@@ -1639,10 +1639,22 @@ const CustomPackagesTab = () => {
             </div>
             <div className="space-y-1">
               <Label className="text-zinc-300 text-sm">BDT Exchange Rate</Label>
-              <Input type="number" value={bdtRate}
-                onChange={e => setBdtRate(parseFloat(e.target.value) || 0)}
-                className="bg-zinc-800/50 border-white/10" data-testid="pkg-calc-bdt" />
-              <p className="text-[10px] text-zinc-500">1 USD = {bdtRate} BDT</p>
+              <div className="flex gap-2">
+                <Input type="number" value={bdtRate}
+                  onChange={e => syncAllBdt(parseFloat(e.target.value) || 0)}
+                  className="bg-zinc-800/50 border-white/10 flex-1" data-testid="pkg-calc-bdt" />
+                <Button variant="outline" size="sm" className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 text-xs whitespace-nowrap"
+                  data-testid="refresh-rate-btn"
+                  onClick={async () => {
+                    try {
+                      const res = await fetch(`${API}/exchange-rate`);
+                      if (res.ok) { const d = await res.json(); syncAllBdt(d.usd_bdt); toast.success(`Rate updated: 1 USD = ${d.usd_bdt} BDT`); }
+                    } catch { toast.error("Failed to fetch rate"); }
+                  }}>
+                  Refresh Live
+                </Button>
+              </div>
+              <p className="text-[10px] text-emerald-500/70">Live rate: 1 USD = {bdtRate} BDT (auto-syncs all BDT prices)</p>
             </div>
           </div>
           <Button onClick={applyMarginToAll}
