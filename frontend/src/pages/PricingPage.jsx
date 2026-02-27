@@ -78,12 +78,12 @@ const PricingPage = () => {
     }
   ];
 
-  const creditPackages = [
+  const [creditPackages, setCreditPackages] = useState([
     { id: "credits_100", credits: 100, price_usd: 6, price_bdt: 640 },
     { id: "credits_300", credits: 300, price_usd: 18, price_bdt: 1910 },
     { id: "credits_700", credits: 700, price_usd: 42, price_bdt: 4450 },
     { id: "credits_1500", credits: 1500, price_usd: 90, price_bdt: 9540 }
-  ];
+  ]);
 
   const formatPrice = (plan) => {
     if (currency === "bdt") {
