@@ -631,13 +631,346 @@ async def seed_default_agents():
             agent_data["created_at"] = datetime.now(timezone.utc).isoformat()
             await db.agents.insert_one(agent_data)
         else:
-            # Update avatar if changed
+            # Update avatar and tools if changed
+            update_fields = {}
             if existing.get("avatar") != agent_data["avatar"]:
+                update_fields["avatar"] = agent_data["avatar"]
+            if "tools" in agent_data and existing.get("tools") != agent_data.get("tools"):
+                update_fields["tools"] = agent_data["tools"]
+            if update_fields:
                 await db.agents.update_one(
                     {"agent_id": agent_data["agent_id"]},
-                    {"$set": {"avatar": agent_data["avatar"]}}
+                    {"$set": update_fields}
                 )
     logger.info("Default agents seeded")
+
+# ============== AGENT TOOL SYSTEM ==============
+
+AGENT_TOOLS = {
+    "web_search": {
+        "name": "web_search",
+        "description": "Search the web for current information, news, facts, or data. Use when you need up-to-date information beyond your training data.",
+        "parameters": "query (string): The search query"
+    },
+    "calculate": {
+        "name": "calculate",
+        "description": "Perform mathematical calculations. Supports arithmetic, percentages, conversions, and complex expressions.",
+        "parameters": "expression (string): The math expression to evaluate"
+    },
+    "create_task": {
+        "name": "create_task",
+        "description": "Create a task in the user's task management system. Use when the user asks you to set up, schedule, or track work items.",
+        "parameters": "title (string): Task title, description (string): Task details, priority (string): low/medium/high"
+    },
+    "analyze_data": {
+        "name": "analyze_data",
+        "description": "Analyze structured data like CSV, tables, or numbers. Summarize patterns, trends, and insights.",
+        "parameters": "data (string): The data to analyze, question (string): What to analyze about the data"
+    },
+}
+
+# Map agents to their available tools
+AGENT_TOOL_MAP = {
+    "agent_commander": ["web_search", "create_task", "calculate", "analyze_data"],
+    "agent_secretary": ["create_task", "calculate"],
+    "agent_marketing": ["web_search", "analyze_data"],
+    "agent_strategist": ["web_search", "calculate", "analyze_data"],
+    "agent_webdesigner": ["web_search"],
+    "agent_appdev": ["web_search", "calculate"],
+    "agent_copywriter": ["web_search"],
+    "agent_seo": ["web_search", "analyze_data"],
+    "agent_sales": ["web_search", "calculate"],
+    "agent_socialmedia": ["web_search", "analyze_data"],
+    "agent_analyst": ["web_search", "calculate", "analyze_data"],
+    "agent_contentwriter": ["web_search"],
+    "agent_customerservice": ["web_search", "create_task"],
+    "agent_projectmanager": ["create_task", "calculate", "analyze_data"],
+    "agent_researcher": ["web_search", "analyze_data", "calculate"],
+    "agent_finance": ["calculate", "analyze_data", "web_search"],
+    "agent_hr": ["web_search", "create_task"],
+    "agent_graphics": ["web_search"],
+    "agent_legal": ["web_search"],
+    "agent_email": ["web_search"],
+    "agent_video": ["web_search"],
+}
+
+
+async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
+    """Execute a tool and return the result as a string."""
+    try:
+        if tool_name == "web_search":
+            query = tool_input.get("query", "")
+            if not query:
+                return "Error: No search query provided."
+            async with httpx.AsyncClient(timeout=15) as client:
+                # Use DuckDuckGo Instant Answer API (free, no key)
+                resp = await client.get(
+                    "https://api.duckduckgo.com/",
+                    params={"q": query, "format": "json", "no_html": 1, "skip_disambig": 1}
+                )
+                data = resp.json()
+                results = []
+                if data.get("AbstractText"):
+                    results.append(f"Summary: {data['AbstractText']}")
+                    if data.get("AbstractSource"):
+                        results.append(f"Source: {data['AbstractSource']}")
+                for topic in (data.get("RelatedTopics", []))[:5]:
+                    if isinstance(topic, dict) and topic.get("Text"):
+                        results.append(f"- {topic['Text']}")
+                if not results:
+                    results.append(f"Web search for '{query}' returned no instant results. Based on general knowledge, I'll provide what I know.")
+                return "\n".join(results)
+
+        elif tool_name == "calculate":
+            expression = tool_input.get("expression", "")
+            if not expression:
+                return "Error: No expression provided."
+            # Safe math evaluation
+            import ast
+            import operator
+            allowed_ops = {
+                ast.Add: operator.add, ast.Sub: operator.sub,
+                ast.Mult: operator.mul, ast.Div: operator.truediv,
+                ast.Pow: operator.pow, ast.Mod: operator.mod,
+                ast.USub: operator.neg, ast.UAdd: operator.pos,
+            }
+            def safe_eval(node):
+                if isinstance(node, ast.Expression):
+                    return safe_eval(node.body)
+                elif isinstance(node, ast.Constant):
+                    if isinstance(node.value, (int, float)):
+                        return node.value
+                    raise ValueError("Only numbers allowed")
+                elif isinstance(node, ast.BinOp):
+                    op = allowed_ops.get(type(node.op))
+                    if not op:
+                        raise ValueError(f"Unsupported operator: {type(node.op).__name__}")
+                    return op(safe_eval(node.left), safe_eval(node.right))
+                elif isinstance(node, ast.UnaryOp):
+                    op = allowed_ops.get(type(node.op))
+                    if not op:
+                        raise ValueError(f"Unsupported operator: {type(node.op).__name__}")
+                    return op(safe_eval(node.operand))
+                raise ValueError(f"Unsupported expression: {ast.dump(node)}")
+            try:
+                tree = ast.parse(expression, mode='eval')
+                result = safe_eval(tree)
+                return f"Result: {result}"
+            except Exception as e:
+                return f"Calculation error: {e}. Expression: {expression}"
+
+        elif tool_name == "create_task":
+            title = tool_input.get("title", "Untitled Task")
+            description = tool_input.get("description", "")
+            priority = tool_input.get("priority", "medium")
+            if priority not in ("low", "medium", "high"):
+                priority = "medium"
+            task_doc = {
+                "task_id": f"task_{uuid.uuid4().hex[:12]}",
+                "user_id": user_id,
+                "title": title,
+                "description": description,
+                "status": "pending",
+                "priority": priority,
+                "assigned_agents": [],
+                "result": None,
+                "source": "agent_tool",
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.tasks.insert_one(task_doc)
+            return f"Task created successfully: '{title}' (Priority: {priority}, ID: {task_doc['task_id']})"
+
+        elif tool_name == "analyze_data":
+            data_str = tool_input.get("data", "")
+            question = tool_input.get("question", "Summarize the data")
+            if not data_str:
+                return "Error: No data provided to analyze."
+            # Basic analysis - count lines, find numbers, summarize
+            lines = data_str.strip().split("\n")
+            numbers = []
+            for line in lines:
+                for part in line.replace(",", " ").split():
+                    try:
+                        numbers.append(float(part))
+                    except ValueError:
+                        pass
+            analysis = [f"Data has {len(lines)} lines."]
+            if numbers:
+                analysis.append(f"Found {len(numbers)} numbers: min={min(numbers)}, max={max(numbers)}, avg={sum(numbers)/len(numbers):.2f}, sum={sum(numbers):.2f}")
+            analysis.append(f"Analysis question: {question}")
+            return "\n".join(analysis)
+
+        return f"Unknown tool: {tool_name}"
+    except Exception as e:
+        return f"Tool execution error ({tool_name}): {str(e)[:200]}"
+
+
+def build_tool_prompt(tools: list) -> str:
+    """Build the tool instruction section for the system prompt."""
+    if not tools:
+        return ""
+    
+    tool_descriptions = []
+    for tool_name in tools:
+        tool = AGENT_TOOLS.get(tool_name)
+        if tool:
+            tool_descriptions.append(f"  - {tool['name']}: {tool['description']} | Parameters: {tool['parameters']}")
+    
+    return f"""
+
+--- TOOL SYSTEM ---
+You have access to the following tools. You can use them to gather information, perform calculations, or take actions.
+
+Available tools:
+{chr(10).join(tool_descriptions)}
+
+To use a tool, respond with EXACTLY this format on its own line:
+[TOOL_CALL] tool_name | {{"param1": "value1", "param2": "value2"}}
+
+Rules:
+- Use a tool ONLY when it genuinely helps answer the user's question
+- After a tool result is provided, incorporate it into your response naturally
+- You can use multiple tools if needed (one per message)
+- If the user's question can be answered from your own knowledge, respond directly WITHOUT using tools
+- Always explain what you're doing when using a tool
+--- END TOOL SYSTEM ---"""
+
+
+async def agent_execute_with_tools(
+    agent: dict,
+    user_content: str,
+    chat_id: str,
+    api_keys: dict,
+    model_provider: str,
+    model_name: str,
+    user_id: str,
+    attachments: list = None
+) -> dict:
+    """Execute an agent with tool support using a ReAct loop.
+    Returns: {"content": str, "execution_steps": list}
+    """
+    agent_tools = AGENT_TOOL_MAP.get(agent.get("agent_id", ""), [])
+    
+    # If agent has no tools, fall back to regular execution
+    if not agent_tools:
+        return None
+    
+    tool_prompt = build_tool_prompt(agent_tools)
+    enhanced_system_prompt = agent["system_prompt"] + tool_prompt
+    
+    execution_steps = []
+    max_iterations = 4
+    accumulated_context = f"User: {user_content}"
+    if attachments:
+        accumulated_context += f"\n[User attached {len(attachments)} file(s)]"
+    
+    final_response = ""
+    
+    for iteration in range(max_iterations):
+        # Call the LLM
+        try:
+            if api_keys.get("active_provider") == "direct":
+                direct_key = api_keys.get(model_provider, "")
+                if direct_key:
+                    llm_response = await call_direct_llm(
+                        model_provider, model_name,
+                        enhanced_system_prompt, accumulated_context,
+                        attachments if iteration == 0 else None, direct_key
+                    )
+                else:
+                    from emergentintegrations.llm.chat import LlmChat, UserMessage
+                    llm_chat = LlmChat(
+                        api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
+                        session_id=f"{chat_id}_tool_{iteration}",
+                        system_message=enhanced_system_prompt
+                    ).with_model(model_provider, model_name)
+                    user_message = UserMessage(text=accumulated_context)
+                    llm_response = await llm_chat.send_message(user_message)
+            else:
+                from emergentintegrations.llm.chat import LlmChat, UserMessage
+                llm_chat = LlmChat(
+                    api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
+                    session_id=f"{chat_id}_tool_{iteration}",
+                    system_message=enhanced_system_prompt
+                ).with_model(model_provider, model_name)
+                user_message = UserMessage(text=accumulated_context)
+                llm_response = await llm_chat.send_message(user_message)
+        except Exception as e:
+            logger.error(f"Agent tool loop LLM error (iter {iteration}): {e}")
+            if not final_response:
+                final_response = f"I apologize, but I encountered an error: {str(e)}"
+            break
+        
+        # Check for tool calls in the response
+        import re
+        tool_match = re.search(r'\[TOOL_CALL\]\s*(\w+)\s*\|\s*(\{.*?\})', llm_response, re.DOTALL)
+        
+        if tool_match:
+            tool_name = tool_match.group(1).strip()
+            tool_input_str = tool_match.group(2).strip()
+            
+            # Extract thinking (text before the tool call)
+            thinking_text = llm_response[:tool_match.start()].strip()
+            if thinking_text:
+                execution_steps.append({
+                    "step_type": "thinking",
+                    "content": thinking_text
+                })
+            
+            # Parse tool input
+            import json as json_lib
+            try:
+                tool_input = json_lib.loads(tool_input_str)
+            except json_lib.JSONDecodeError:
+                tool_input = {"query": tool_input_str}
+            
+            # Validate tool
+            if tool_name not in agent_tools:
+                execution_steps.append({
+                    "step_type": "tool_error",
+                    "tool_name": tool_name,
+                    "content": f"Tool '{tool_name}' is not available."
+                })
+                accumulated_context += f"\n\nSystem: Tool '{tool_name}' is not available. Please use one of: {', '.join(agent_tools)}. Or respond directly."
+                continue
+            
+            execution_steps.append({
+                "step_type": "tool_call",
+                "tool_name": tool_name,
+                "tool_input": tool_input
+            })
+            
+            # Execute the tool
+            tool_result = await execute_tool(tool_name, tool_input, user_id)
+            
+            execution_steps.append({
+                "step_type": "tool_result",
+                "tool_name": tool_name,
+                "content": tool_result
+            })
+            
+            # Feed result back to the LLM
+            accumulated_context += f"\n\nAssistant: {thinking_text}\n[Used tool: {tool_name}]\n\nTool Result ({tool_name}):\n{tool_result}\n\nNow incorporate this tool result into your response to the user. Do NOT use another tool call unless absolutely necessary. Provide your final answer."
+        else:
+            # No tool call - this is the final response
+            final_response = llm_response
+            break
+    
+    if not final_response and execution_steps:
+        # If we exhausted iterations, try to use last accumulated context
+        final_response = "Based on my analysis, here's what I found:\n\n"
+        for step in execution_steps:
+            if step["step_type"] == "tool_result":
+                final_response += f"{step['content']}\n\n"
+    
+    if not final_response:
+        final_response = "I encountered an issue while processing your request. Please try again."
+    
+    return {
+        "content": final_response,
+        "execution_steps": execution_steps if execution_steps else None
+    }
 
 # ============== AUTH ENDPOINTS ==============
 
