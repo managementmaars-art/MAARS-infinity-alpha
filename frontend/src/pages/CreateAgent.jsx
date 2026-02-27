@@ -63,6 +63,28 @@ const CreateAgent = () => {
     gemini: [
       { value: "gemini-3-flash-preview", label: "Gemini 3 Flash (Fast)" },
       { value: "gemini-3-pro-preview", label: "Gemini 3 Pro (Flagship)" }
+    ],
+    xai: [
+      { value: "grok-3", label: "Grok 3 (Flagship)" },
+      { value: "grok-3-mini", label: "Grok 3 Mini (Fast)" },
+      { value: "grok-2", label: "Grok 2 (Standard)" }
+    ],
+    deepseek: [
+      { value: "deepseek-chat", label: "DeepSeek Chat (Standard)" },
+      { value: "deepseek-reasoner", label: "DeepSeek Reasoner (Reasoning)" }
+    ],
+    mistral: [
+      { value: "mistral-large-latest", label: "Mistral Large (Flagship)" },
+      { value: "mistral-medium-latest", label: "Mistral Medium (Balanced)" },
+      { value: "mistral-small-latest", label: "Mistral Small (Economy)" }
+    ],
+    perplexity: [
+      { value: "sonar", label: "Sonar (Standard)" },
+      { value: "sonar-pro", label: "Sonar Pro (Advanced)" }
+    ],
+    cohere: [
+      { value: "command-r-plus", label: "Command R+ (Flagship)" },
+      { value: "command-r", label: "Command R (Standard)" }
     ]
   };
 
@@ -310,6 +332,11 @@ const CreateAgent = () => {
                   <SelectItem value="openai">OpenAI</SelectItem>
                   <SelectItem value="anthropic">Anthropic (Claude)</SelectItem>
                   <SelectItem value="gemini">Google (Gemini)</SelectItem>
+                  <SelectItem value="xai">xAI (Grok)</SelectItem>
+                  <SelectItem value="deepseek">DeepSeek</SelectItem>
+                  <SelectItem value="mistral">Mistral AI</SelectItem>
+                  <SelectItem value="perplexity">Perplexity</SelectItem>
+                  <SelectItem value="cohere">Cohere</SelectItem>
                 </SelectContent>
               </Select>
             </div>
