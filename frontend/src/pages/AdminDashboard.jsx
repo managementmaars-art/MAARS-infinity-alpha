@@ -1757,7 +1757,7 @@ const CustomPackagesTab = () => {
         <CardContent>
           <div className="space-y-3">
             <div className="grid grid-cols-7 gap-2 text-xs text-zinc-500 font-medium px-1">
-              <span>Credits</span><span>AI Cost</span><span>USD Price</span><span>BDT Price</span><span>Profit</span><span>Margin</span><span></span>
+              <span>Credits</span><span>AI Cost</span><span>USD Price</span><span>BDT <span className="text-emerald-500/70">(auto)</span></span><span>Profit</span><span>Margin</span><span></span>
             </div>
             {extraPacks.map((pack, i) => {
               const cost = pack.credits * avgCost;
@@ -1772,9 +1772,7 @@ const CustomPackagesTab = () => {
                 <input type="number" step="0.5" value={pack.price_usd}
                   onChange={e => updateExtraPack(i, "price_usd", e.target.value)}
                   className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
-                <input type="number" step="1" value={pack.price_bdt}
-                  onChange={e => updateExtraPack(i, "price_bdt", e.target.value)}
-                  className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                <span className="text-zinc-400 text-sm px-1">{pack.price_bdt}</span>
                 <span className="text-amber-400 text-sm px-1">${profit.toFixed(2)}</span>
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${profit > 0 ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}`}>
                   {profit > 0 ? "+" : ""}{margin}%
