@@ -131,12 +131,23 @@ async def get_custom_package_config():
         return config
     return DEFAULT_CUSTOM_PACKAGE_CONFIG
 
-CREDIT_PACKAGES = {
-    "credits_100": {"credits": 100, "price_usd": 6.0, "price_bdt": 640.0, "name": "100 Credits"},
-    "credits_300": {"credits": 300, "price_usd": 18.0, "price_bdt": 1910.0, "name": "300 Credits"},
-    "credits_700": {"credits": 700, "price_usd": 42.0, "price_bdt": 4450.0, "name": "700 Credits"},
-    "credits_1500": {"credits": 1500, "price_usd": 90.0, "price_bdt": 9540.0, "name": "1,500 Credits"}
-}
+CREDIT_PACKAGES = None  # Loaded from DB, fallback below
+
+DEFAULT_CREDIT_PACKAGES = [
+    {"id": "credits_100", "credits": 100, "price_usd": 6.0, "price_bdt": 640.0, "name": "100 Credits"},
+    {"id": "credits_300", "credits": 300, "price_usd": 18.0, "price_bdt": 1910.0, "name": "300 Credits"},
+    {"id": "credits_700", "credits": 700, "price_usd": 42.0, "price_bdt": 4450.0, "name": "700 Credits"},
+    {"id": "credits_1500", "credits": 1500, "price_usd": 90.0, "price_bdt": 9540.0, "name": "1,500 Credits"},
+]
+
+async def get_credit_packages():
+    config = await db.platform_config.find_one({"config_type": "credit_packages"}, {"_id": 0})
+    if config and config.get("packages"):
+        pkgs = {}
+        for p in config["packages"]:
+            pkgs[p["id"]] = p
+        return pkgs
+    return {p["id"]: p for p in DEFAULT_CREDIT_PACKAGES}
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
