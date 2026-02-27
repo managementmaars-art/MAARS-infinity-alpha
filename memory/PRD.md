@@ -10,24 +10,34 @@ Full-stack AI team platform with 20+ agents, Commander AI with auto-task delegat
 - 21 AI agents, Chat with 10+ LLMs, File gen (PDF/Excel/Word/CSV/Images/Videos)
 
 ### Admin Dashboard (8 tabs)
-- **Pricing Manager**: LIVE SYNC calculator for subscription plans (Free/Starter/Pro/Business)
+- **Pricing Manager**: LIVE SYNC calculator for subscription plans with live BDT rate
 - **Pricing Control Center** (Custom Packages tab):
-  - Profit Margin Calculator with LIVE SYNC at top
-  - AI Cost per Credit (read-only, from real usage), Target Margin %, BDT Exchange Rate
-  - "Apply X% Margin to All Credits" button to auto-set prices
-  - Agent & Commander per-unit pricing (USD/BDT)
-  - Credit Presets table: Credits | AI Cost | USD Price | BDT Price | Profit | Margin
-  - Extra Credit Packs table: same columns
-  - All pricing stored in DB, fully admin-configurable
-  - Single "Save All Pricing" button
+  - Profit Margin Calculator with LIVE SYNC
+  - AI Cost per Credit from real usage data (read-only)
+  - Target Profit Margin % with "Apply to All Credits" button
+  - **Live BDT Exchange Rate** fetched from HexaRate API (refreshes hourly)
+  - "Refresh Live" button for manual rate refresh
+  - All BDT prices auto-calculate from USD × live rate
+  - BDT fields are read-only with "auto" labels
+  - Full cost/profit/margin visibility per row
+  - `/api/exchange-rate` - public endpoint for live USD/BDT rate
 
 ### Commander AI + Group Chat
 - Delegation renders as individual agent chat bubbles with avatars, roles, priority badges
 
 ### Subscriptions & Billing
-- 4 plans + "Build Your Own" + Extra Credit Packs
+- 4 plans + "Build Your Own" + Extra Credit Packs (all admin-configurable)
 - Stripe checkout, multi-currency (USD/BDT)
-- Brand Footer on ALL pages
+
+### Brand Footer
+- "Martian AI by MAARS Global Corporation © 2026" on ALL pages
+
+## Key API Endpoints
+- Auth: /api/auth/register, /api/auth/login, /api/auth/me
+- Chat: /api/chats, /api/chats/{id}/messages
+- Admin: /api/admin/stats, /api/admin/pricing, /api/admin/avg-cost
+- Admin Pricing: /api/admin/custom-package, /api/admin/credit-packages
+- Public: /api/exchange-rate (live USD/BDT from HexaRate API)
 
 ## Backlog
 - P1: E2E subscription/credit testing
