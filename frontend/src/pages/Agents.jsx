@@ -5,7 +5,8 @@ import { Card, CardContent } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { 
   Bot, Plus, MessageSquare, Trash2, ArrowLeft,
-  LayoutDashboard, Users, ListTodo, Settings, LogOut, Menu, X, Sparkles
+  LayoutDashboard, Users, ListTodo, Settings, LogOut, Menu, X, Sparkles,
+  Search, Calculator, ClipboardList, BarChart3, Wrench
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
