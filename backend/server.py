@@ -244,6 +244,7 @@ class Message(BaseModel):
     role: str  # "user" or "assistant"
     content: str
     created_at: datetime
+    execution_steps: Optional[List[dict]] = None  # Tool execution steps for agent responses
 
 class Chat(BaseModel):
     model_config = ConfigDict(extra="ignore")
