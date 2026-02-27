@@ -820,22 +820,21 @@ def build_tool_prompt(tools: list) -> str:
     
     return f"""
 
---- TOOL SYSTEM ---
-You have access to the following tools. You can use them to gather information, perform calculations, or take actions.
+You are an autonomous AI agent with access to tools. When a task requires real-time data, calculations, or actions, you MUST use your tools.
 
-Available tools:
+AVAILABLE TOOLS:
 {chr(10).join(tool_descriptions)}
 
-To use a tool, respond with EXACTLY this format on its own line:
-[TOOL_CALL] tool_name | {{"param1": "value1", "param2": "value2"}}
+HOW TO USE A TOOL — output this exact format on a single line:
+[TOOL_CALL] tool_name | {{"param1": "value1"}}
 
-Rules:
-- Use a tool ONLY when it genuinely helps answer the user's question
-- After a tool result is provided, incorporate it into your response naturally
-- You can use multiple tools if needed (one per message)
-- If the user's question can be answered from your own knowledge, respond directly WITHOUT using tools
-- Always explain what you're doing when using a tool
---- END TOOL SYSTEM ---"""
+RULES:
+1. When the user asks to search, look up, or find current info → use web_search
+2. When the user needs math, percentages, or number crunching → use calculate
+3. When the user asks to create, add, or track a task → use create_task
+4. When data analysis is needed → use analyze_data
+5. For questions you can fully answer from memory, respond directly
+6. After receiving a tool result, weave it naturally into your final answer"""
 
 
 async def agent_execute_with_tools(
