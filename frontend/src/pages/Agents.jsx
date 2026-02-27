@@ -6,7 +6,8 @@ import { Badge } from "../components/ui/badge";
 import { 
   Bot, Plus, MessageSquare, Trash2, ArrowLeft,
   LayoutDashboard, Users, ListTodo, Settings, LogOut, Menu, X, Sparkles,
-  Search, Calculator, ClipboardList, BarChart3, Wrench
+  Search, Calculator, ClipboardList, BarChart3, Wrench,
+  Mail, MessageCircle, Phone, Github, Table, Image, Calendar, Send
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
