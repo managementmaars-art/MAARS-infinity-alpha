@@ -170,6 +170,7 @@ const AdminDashboard = () => {
     { id: "pricing", label: "Pricing Manager", icon: TrendingUp },
     { id: "packages", label: "Custom Packages", icon: DollarSign },
     { id: "apikeys", label: "API Keys", icon: Key },
+    { id: "integrations", label: "Integrations", icon: Plug },
     { id: "payments", label: "Payment Setup", icon: CreditCard },
   ];
 
