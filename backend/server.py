@@ -131,6 +131,34 @@ async def get_custom_package_config():
         return config
     return DEFAULT_CUSTOM_PACKAGE_CONFIG
 
+# Exchange rate cache (refreshes daily)
+_exchange_rate_cache = {"rate": None, "fetched_at": None}
+
+async def get_live_bdt_rate():
+    """Fetch live USD/BDT rate from HexaRate API, cached for 1 hour"""
+    now = datetime.now(timezone.utc)
+    if _exchange_rate_cache["rate"] and _exchange_rate_cache["fetched_at"]:
+        age = (now - _exchange_rate_cache["fetched_at"]).total_seconds()
+        if age < 3600:  # 1 hour cache
+            return _exchange_rate_cache["rate"]
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.get("https://hexarate.paikama.co/api/rates/latest/USD?target=BDT")
+            if resp.status_code == 200:
+                data = resp.json()
+                rate = data.get("data", {}).get("mid")
+                if rate and rate > 0:
+                    _exchange_rate_cache["rate"] = round(rate, 2)
+                    _exchange_rate_cache["fetched_at"] = now
+                    return _exchange_rate_cache["rate"]
+    except Exception as e:
+        logger.error(f"Exchange rate fetch error: {e}")
+    # Fallback: check DB for last saved rate
+    saved = await db.platform_config.find_one({"config_type": "exchange_rate"}, {"_id": 0})
+    if saved and saved.get("usd_bdt"):
+        return saved["usd_bdt"]
+    return 121.0  # Ultimate fallback
+
 CREDIT_PACKAGES = None  # Loaded from DB, fallback below
 
 DEFAULT_CREDIT_PACKAGES = [
