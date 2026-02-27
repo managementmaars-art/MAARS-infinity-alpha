@@ -349,17 +349,17 @@ const LandingPage = () => {
                 </div>
               </div>
             ))}
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-white font-medium text-sm">{m.name}</span>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-rose-500/20 text-rose-400">{m.tag}</span>
-                      </div>
-                      <p className="text-xs text-zinc-500 mt-0.5">{m.desc}</p>
-                    </div>
-                  </div>
-                ))}
+
+            {/* Smart Auto-Selection card */}
+            <div className="p-5 rounded-xl glass animate-slide-up flex flex-col justify-center" style={{ animationDelay: '0.45s', opacity: 0 }}>
+              <div className="p-4 rounded-lg bg-gradient-to-r from-indigo-500/10 to-violet-500/10 border border-indigo-500/20 mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Zap className="w-4 h-4 text-indigo-400" />
+                  <span className="text-sm font-semibold text-white">Smart Auto-Selection</span>
+                </div>
+                <p className="text-xs text-zinc-400">Each agent picks the best model for the task automatically — coding, writing, research, or analysis.</p>
               </div>
-              <div className="mt-4 p-3 rounded-lg bg-white/5 border border-white/10">
+              <div className="p-3 rounded-lg bg-white/5 border border-white/10">
                 <p className="text-xs text-zinc-400 text-center">
                   Also generates <span className="text-white font-medium">PDF, Excel, Word, CSV</span> documents on demand
                 </p>
