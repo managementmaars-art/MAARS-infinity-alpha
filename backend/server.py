@@ -1978,7 +1978,8 @@ async def get_plans():
     """Get all subscription plans + custom package config"""
     custom_config = await get_custom_package_config()
     custom_config.pop("config_type", None)
-    return {"plans": SUBSCRIPTION_PLANS, "credit_packages": CREDIT_PACKAGES, "custom_package": custom_config}
+    credit_pkgs = await get_credit_packages()
+    return {"plans": SUBSCRIPTION_PLANS, "credit_packages": credit_pkgs, "custom_package": custom_config}
 
 @api_router.get("/subscription")
 async def get_subscription(current_user: User = Depends(get_current_user)):
@@ -2029,10 +2030,11 @@ async def create_checkout(checkout_data: CheckoutRequest, request: Request, curr
             "currency": currency
         }
     elif checkout_data.type == "credits":
-        if checkout_data.package_id not in CREDIT_PACKAGES:
+        credit_pkgs = await get_credit_packages()
+        if checkout_data.package_id not in credit_pkgs:
             raise HTTPException(status_code=400, detail="Invalid credit package")
         
-        package = CREDIT_PACKAGES[checkout_data.package_id]
+        package = credit_pkgs[checkout_data.package_id]
         price_key = "price_bdt" if currency == "bdt" else "price_usd"
         amount = package[price_key]
         metadata = {
