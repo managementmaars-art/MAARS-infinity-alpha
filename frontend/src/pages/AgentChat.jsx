@@ -791,6 +791,23 @@ const AgentChat = () => {
                       </span>
                     ))}
                   </div>
+                  {selectedAgent.tools?.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 justify-center mt-3" data-testid="agent-chat-tools">
+                      <span className="flex items-center gap-1 text-xs text-amber-400 mr-1">
+                        <Wrench className="w-3 h-3" /> Tools:
+                      </span>
+                      {selectedAgent.tools.map((tool, i) => {
+                        const icons = { web_search: Search, calculate: Calculator, create_task: ClipboardList, analyze_data: BarChart3 };
+                        const labels = { web_search: "Web Search", calculate: "Calculator", create_task: "Task Creator", analyze_data: "Data Analyzer" };
+                        const Icon = icons[tool] || Wrench;
+                        return (
+                          <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                            <Icon className="w-3 h-3" /> {labels[tool] || tool}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
                 </>
               )}
             </div>
