@@ -798,8 +798,8 @@ const AgentChat = () => {
                         <Wrench className="w-3 h-3" /> Tools:
                       </span>
                       {selectedAgent.tools.map((tool, i) => {
-                        const icons = { web_search: Search, calculate: Calculator, create_task: ClipboardList, analyze_data: BarChart3 };
-                        const labels = { web_search: "Web Search", calculate: "Calculator", create_task: "Task Creator", analyze_data: "Data Analyzer" };
+                        const icons = { web_search: Search, calculate: Calculator, create_task: ClipboardList, analyze_data: BarChart3, send_slack: MessageCircle, send_email: Mail, send_sms: Phone, github_action: Github, airtable_action: Table, search_gif: Image, schedule_meeting: Calendar, google_calendar: Calendar, send_gmail: Mail };
+                        const labels = { web_search: "Web Search", calculate: "Calculator", create_task: "Task Creator", analyze_data: "Data Analyzer", send_slack: "Slack", send_email: "Email", send_sms: "SMS", github_action: "GitHub", airtable_action: "Airtable", search_gif: "GIFs", schedule_meeting: "Calendly", google_calendar: "Calendar", send_gmail: "Gmail" };
                         const Icon = icons[tool] || Wrench;
                         return (
                           <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
