@@ -1118,6 +1118,14 @@ async def get_agents_public():
     agents.sort(key=lambda a: (0 if a.get("agent_id") == "agent_commander" else 1, a.get("name", "")))
     return agents
 
+@api_router.get("/agents/tools")
+async def get_available_tools():
+    """Get all available tools and their descriptions"""
+    return {
+        "tools": {name: {"name": t["name"], "description": t["description"]} for name, t in AGENT_TOOLS.items()},
+        "agent_tools": AGENT_TOOL_MAP
+    }
+
 @api_router.get("/agents", response_model=List[Agent])
 async def get_agents(current_user: User = Depends(get_current_user)):
     # Get default agents and user's custom agents
