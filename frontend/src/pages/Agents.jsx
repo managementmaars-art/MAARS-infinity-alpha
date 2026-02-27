@@ -230,6 +230,23 @@ const Agents = () => {
                           </span>
                         ))}
                       </div>
+                      {agent.tools?.length > 0 && (
+                        <div className="flex items-center gap-1.5 mb-3" data-testid={`agent-tools-${agent.agent_id}`}>
+                          <Wrench className="w-3 h-3 text-amber-400" />
+                          <span className="text-[10px] text-amber-400/80 font-medium">Tools:</span>
+                          {agent.tools.map((tool, i) => {
+                            const toolIcons = { web_search: Search, calculate: Calculator, create_task: ClipboardList, analyze_data: BarChart3 };
+                            const ToolIcon = toolIcons[tool] || Wrench;
+                            const toolLabels = { web_search: "Search", calculate: "Math", create_task: "Tasks", analyze_data: "Analyze" };
+                            return (
+                              <span key={i} className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                                <ToolIcon className="w-2.5 h-2.5" />
+                                {toolLabels[tool] || tool}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      )}
                       <Button
                         onClick={() => navigate(`/chat/${agent.agent_id}`)}
                         className="w-full bg-white/5 hover:bg-white/10 text-white"
