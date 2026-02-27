@@ -1851,3 +1851,165 @@ const StatCard = ({ title, value, icon: Icon, color }) => {
 };
 
 export default AdminDashboard;
+
+// ============== INTEGRATIONS TAB ==============
+const IntegrationsTab = () => {
+  const { token } = useAuth();
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  const [integrations, setIntegrations] = useState({});
+  const [inputs, setInputs] = useState({});
+  const [testing, setTesting] = useState({});
+  const [testResults, setTestResults] = useState({});
+  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const serviceIcons = {
+    slack: "https://cdn.simpleicons.org/slack/E01E5A",
+    github: "https://cdn.simpleicons.org/github/white",
+    sendgrid: "https://cdn.simpleicons.org/sendgrid/1A82E2",
+    resend: "https://cdn.simpleicons.org/resend/white",
+    twilio: "https://cdn.simpleicons.org/twilio/F22F46",
+    airtable: "https://cdn.simpleicons.org/airtable/18BFFF",
+    calendly: "https://cdn.simpleicons.org/calendly/006BFF",
+    giphy: "https://cdn.simpleicons.org/giphy/black",
+    google_suite: "https://cdn.simpleicons.org/google/4285F4",
+  };
+
+  const keyLabels = {
+    bot_token: "Bot Token",
+    personal_access_token: "Personal Access Token",
+    api_key: "API Key",
+    account_sid: "Account SID",
+    auth_token: "Auth Token",
+    phone_number: "Phone Number",
+    service_account_json: "Service Account JSON",
+  };
+
+  useEffect(() => {
+    fetch(`${API}/api/admin/integrations`, { headers }).then(r => r.json()).then(data => {
+      setIntegrations(data);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const payload = {};
+      for (const [svcId, fields] of Object.entries(inputs)) {
+        const hasValue = Object.values(fields).some(v => v && v.trim());
+        if (hasValue) payload[svcId] = fields;
+      }
+      if (Object.keys(payload).length === 0) {
+        toast.info("No changes to save");
+        setSaving(false);
+        return;
+      }
+      const resp = await fetch(`${API}/api/admin/integrations`, {
+        method: "POST", headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (resp.ok) {
+        toast.success("Integration keys saved!");
+        setInputs({});
+        const data = await fetch(`${API}/api/admin/integrations`, { headers }).then(r => r.json());
+        setIntegrations(data);
+      } else toast.error("Failed to save");
+    } catch { toast.error("Save failed"); }
+    setSaving(false);
+  };
+
+  const handleTest = async (svcId) => {
+    setTesting(prev => ({ ...prev, [svcId]: true }));
+    try {
+      const resp = await fetch(`${API}/api/admin/integrations/test/${svcId}`, { headers });
+      const data = await resp.json();
+      setTestResults(prev => ({ ...prev, [svcId]: data }));
+      if (data.status === "active") toast.success(`${integrations[svcId]?.name}: Connected!`);
+      else toast.error(`${integrations[svcId]?.name}: ${data.message}`);
+    } catch { toast.error("Test failed"); }
+    setTesting(prev => ({ ...prev, [svcId]: false }));
+  };
+
+  if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-red-400" /></div>;
+
+  return (
+    <div className="space-y-6" data-testid="integrations-tab">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-white">Service Integrations</h2>
+          <p className="text-sm text-zinc-400 mt-1">Configure third-party services your AI agents can use as tools</p>
+        </div>
+        <Button onClick={handleSave} disabled={saving} className="bg-red-500 hover:bg-red-600" data-testid="save-integrations-btn">
+          {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Plug className="w-4 h-4 mr-2" />}
+          Save All
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {Object.entries(integrations).map(([svcId, svc]) => (
+          <Card key={svcId} className="bg-zinc-900/50 border-white/10" data-testid={`integration-card-${svcId}`}>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3 mb-3">
+                <img src={serviceIcons[svcId]} alt={svc.name} className="w-6 h-6" onError={(e) => { e.target.style.display = 'none'; }} />
+                <div className="flex-1">
+                  <h3 className="text-white font-medium">{svc.name}</h3>
+                  <p className="text-xs text-zinc-500">{svc.description}</p>
+                </div>
+                <Badge className={svc.configured ? "bg-emerald-500/20 text-emerald-400" : "bg-zinc-500/20 text-zinc-400"}>
+                  {svc.configured ? <><CheckCircle className="w-3 h-3 mr-1" /> Active</> : "Not configured"}
+                </Badge>
+              </div>
+
+              <div className="space-y-2">
+                {svc.key_fields?.map(field => (
+                  <div key={field}>
+                    <Label className="text-xs text-zinc-400">{keyLabels[field] || field}</Label>
+                    <Input
+                      type="password"
+                      placeholder={svc.keys_set?.[field] ? "******** (saved)" : `Enter ${keyLabels[field] || field}`}
+                      value={inputs[svcId]?.[field] || ""}
+                      onChange={e => setInputs(prev => ({ ...prev, [svcId]: { ...prev[svcId], [field]: e.target.value } }))}
+                      className="bg-black/30 border-white/10 text-white h-8 text-sm"
+                      data-testid={`integration-input-${svcId}-${field}`}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-2 mt-3">
+                <Button
+                  size="sm" variant="outline"
+                  onClick={() => handleTest(svcId)}
+                  disabled={testing[svcId] || !svc.configured}
+                  className="text-xs border-white/10 text-zinc-300 hover:bg-white/5"
+                  data-testid={`test-integration-${svcId}`}
+                >
+                  {testing[svcId] ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <TestTube className="w-3 h-3 mr-1" />}
+                  Test Connection
+                </Button>
+                {testResults[svcId] && (
+                  <span className={`text-xs ${testResults[svcId].status === 'active' ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {testResults[svcId].status === 'active' ? 'Connected' : testResults[svcId].message?.slice(0, 40)}
+                  </span>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <Card className="bg-zinc-900/50 border-white/10">
+        <CardContent className="p-4">
+          <h3 className="text-white font-medium mb-2">How Integrations Work</h3>
+          <ul className="text-sm text-zinc-400 space-y-1">
+            <li>1. Add API keys for the services you want to enable</li>
+            <li>2. AI agents automatically gain access to configured integrations as tools</li>
+            <li>3. Agents use tools when relevant (e.g., send_email, send_slack, github_action)</li>
+            <li>4. Unconfigured integrations are hidden from agents until keys are added</li>
+          </ul>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
