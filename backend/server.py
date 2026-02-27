@@ -887,7 +887,6 @@ async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
             question = tool_input.get("question", "Summarize the data")
             if not data_str:
                 return "Error: No data provided to analyze."
-            # Basic analysis - count lines, find numbers, summarize
             lines = data_str.strip().split("\n")
             numbers = []
             for line in lines:
@@ -901,6 +900,198 @@ async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
                 analysis.append(f"Found {len(numbers)} numbers: min={min(numbers)}, max={max(numbers)}, avg={sum(numbers)/len(numbers):.2f}, sum={sum(numbers):.2f}")
             analysis.append(f"Analysis question: {question}")
             return "\n".join(analysis)
+
+        elif tool_name == "send_slack":
+            token = await get_integration_key("slack", "bot_token")
+            if not token:
+                return "Slack is not configured. Ask your admin to add a Slack Bot Token in the Integrations panel."
+            channel = tool_input.get("channel", "#general").lstrip("#")
+            message = tool_input.get("message", "")
+            if not message:
+                return "Error: No message provided."
+            async with httpx.AsyncClient(timeout=10) as client:
+                resp = await client.post(
+                    "https://slack.com/api/chat.postMessage",
+                    headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+                    json={"channel": channel, "text": message}
+                )
+                data = resp.json()
+                if data.get("ok"):
+                    return f"Message sent to #{channel} successfully."
+                return f"Slack error: {data.get('error', 'Unknown error')}"
+
+        elif tool_name == "send_email":
+            # Try SendGrid first, then Resend
+            sg_key = await get_integration_key("sendgrid", "api_key")
+            resend_key = await get_integration_key("resend", "api_key")
+            to_email = tool_input.get("to", "")
+            subject = tool_input.get("subject", "No Subject")
+            body = tool_input.get("body", "")
+            if not to_email:
+                return "Error: No recipient email provided."
+            if sg_key:
+                async with httpx.AsyncClient(timeout=10) as client:
+                    resp = await client.post(
+                        "https://api.sendgrid.com/v3/mail/send",
+                        headers={"Authorization": f"Bearer {sg_key}", "Content-Type": "application/json"},
+                        json={
+                            "personalizations": [{"to": [{"email": to_email}]}],
+                            "from": {"email": "noreply@martianai.com"},
+                            "subject": subject,
+                            "content": [{"type": "text/html", "value": body}]
+                        }
+                    )
+                    if resp.status_code in (200, 201, 202):
+                        return f"Email sent to {to_email} via SendGrid successfully."
+                    return f"SendGrid error: {resp.status_code} - {resp.text[:200]}"
+            elif resend_key:
+                async with httpx.AsyncClient(timeout=10) as client:
+                    resp = await client.post(
+                        "https://api.resend.com/emails",
+                        headers={"Authorization": f"Bearer {resend_key}", "Content-Type": "application/json"},
+                        json={"from": "noreply@martianai.com", "to": [to_email], "subject": subject, "html": body}
+                    )
+                    if resp.status_code in (200, 201):
+                        return f"Email sent to {to_email} via Resend successfully."
+                    return f"Resend error: {resp.status_code} - {resp.text[:200]}"
+            return "Email service not configured. Ask your admin to add SendGrid or Resend API key in Integrations."
+
+        elif tool_name == "send_sms":
+            sid = await get_integration_key("twilio", "account_sid")
+            auth = await get_integration_key("twilio", "auth_token")
+            from_phone = await get_integration_key("twilio", "phone_number")
+            if not sid or not auth:
+                return "Twilio is not configured. Ask your admin to add Twilio credentials in the Integrations panel."
+            to_phone = tool_input.get("to", "")
+            sms_body = tool_input.get("message", "")
+            if not to_phone or not sms_body:
+                return "Error: Phone number and message are required."
+            async with httpx.AsyncClient(timeout=10) as client:
+                resp = await client.post(
+                    f"https://api.twilio.com/2010-04-01/Accounts/{sid}/Messages.json",
+                    auth=(sid, auth),
+                    data={"To": to_phone, "From": from_phone, "Body": sms_body[:160]}
+                )
+                data = resp.json()
+                if resp.status_code in (200, 201):
+                    return f"SMS sent to {to_phone} successfully. SID: {data.get('sid', 'N/A')}"
+                return f"Twilio error: {data.get('message', resp.text[:200])}"
+
+        elif tool_name == "github_action":
+            token = await get_integration_key("github", "personal_access_token")
+            if not token:
+                return "GitHub is not configured. Ask your admin to add a GitHub Personal Access Token in Integrations."
+            action = tool_input.get("action", "list_repos")
+            repo = tool_input.get("repo", "")
+            headers = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json"}
+            async with httpx.AsyncClient(timeout=10) as client:
+                if action == "create_issue":
+                    if not repo:
+                        return "Error: repo (owner/repo) is required."
+                    resp = await client.post(
+                        f"https://api.github.com/repos/{repo}/issues",
+                        headers=headers,
+                        json={"title": tool_input.get("title", "New Issue"), "body": tool_input.get("body", "")}
+                    )
+                    if resp.status_code == 201:
+                        data = resp.json()
+                        return f"Issue created: #{data['number']} - {data['title']} ({data['html_url']})"
+                    return f"GitHub error: {resp.status_code} - {resp.text[:200]}"
+                elif action == "list_issues":
+                    if not repo:
+                        return "Error: repo (owner/repo) is required."
+                    resp = await client.get(f"https://api.github.com/repos/{repo}/issues?per_page=10", headers=headers)
+                    issues = resp.json()
+                    if isinstance(issues, list):
+                        return "\n".join([f"#{i['number']} [{i['state']}] {i['title']}" for i in issues[:10]])
+                    return f"GitHub error: {resp.text[:200]}"
+                elif action == "list_repos":
+                    resp = await client.get("https://api.github.com/user/repos?per_page=10&sort=updated", headers=headers)
+                    repos = resp.json()
+                    if isinstance(repos, list):
+                        return "\n".join([f"{r['full_name']} - {r.get('description', 'No description')}" for r in repos[:10]])
+                    return f"GitHub error: {resp.text[:200]}"
+                elif action == "search_code":
+                    query = tool_input.get("body", tool_input.get("title", ""))
+                    resp = await client.get(f"https://api.github.com/search/code?q={query}&per_page=5", headers=headers)
+                    data = resp.json()
+                    items = data.get("items", [])
+                    return "\n".join([f"{it['repository']['full_name']}/{it['path']}" for it in items[:5]]) or "No results found."
+            return "Unknown GitHub action."
+
+        elif tool_name == "airtable_action":
+            token = await get_integration_key("airtable", "api_key")
+            if not token:
+                return "Airtable is not configured. Ask your admin to add an Airtable API key in Integrations."
+            action = tool_input.get("action", "list_records")
+            base_id = tool_input.get("base_id", "")
+            table_name = tool_input.get("table_name", "")
+            if not base_id or not table_name:
+                return "Error: base_id and table_name are required."
+            headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+            async with httpx.AsyncClient(timeout=10) as client:
+                if action == "list_records":
+                    resp = await client.get(f"https://api.airtable.com/v0/{base_id}/{table_name}?maxRecords=10", headers=headers)
+                    data = resp.json()
+                    records = data.get("records", [])
+                    return "\n".join([str(r.get("fields", {})) for r in records[:10]]) or "No records found."
+                elif action == "create_record":
+                    fields = tool_input.get("fields", {})
+                    resp = await client.post(
+                        f"https://api.airtable.com/v0/{base_id}/{table_name}",
+                        headers=headers,
+                        json={"records": [{"fields": fields}]}
+                    )
+                    if resp.status_code == 200:
+                        return "Record created successfully."
+                    return f"Airtable error: {resp.text[:200]}"
+            return "Unknown Airtable action."
+
+        elif tool_name == "search_gif":
+            token = await get_integration_key("giphy", "api_key")
+            if not token:
+                return "Giphy is not configured. Ask your admin to add a Giphy API key in Integrations."
+            query = tool_input.get("query", "")
+            if not query:
+                return "Error: No search query provided."
+            async with httpx.AsyncClient(timeout=10) as client:
+                resp = await client.get(
+                    "https://api.giphy.com/v1/gifs/search",
+                    params={"api_key": token, "q": query, "limit": 3, "rating": "g"}
+                )
+                data = resp.json()
+                gifs = data.get("data", [])
+                if gifs:
+                    return "\n".join([f"![{g['title']}]({g['images']['fixed_height']['url']})" for g in gifs[:3]])
+                return "No GIFs found."
+
+        elif tool_name == "schedule_meeting":
+            token = await get_integration_key("calendly", "api_key")
+            if not token:
+                return "Calendly is not configured. Ask your admin to add a Calendly API key in Integrations."
+            async with httpx.AsyncClient(timeout=10) as client:
+                resp = await client.get(
+                    "https://api.calendly.com/users/me",
+                    headers={"Authorization": f"Bearer {token}"}
+                )
+                if resp.status_code == 200:
+                    user_data = resp.json()
+                    scheduling_url = user_data.get("resource", {}).get("scheduling_url", "")
+                    return f"Calendly scheduling link: {scheduling_url}\nShare this with participants to schedule a meeting."
+                return f"Calendly error: {resp.text[:200]}"
+
+        elif tool_name == "google_calendar":
+            svc_json = await get_integration_key("google_suite", "service_account_json")
+            if not svc_json:
+                return "Google Suite is not configured. Ask your admin to add Google Suite credentials in Integrations."
+            action = tool_input.get("action", "list_events")
+            return f"Google Calendar {action}: This feature requires Google Suite OAuth setup. Please configure in Admin > Integrations."
+
+        elif tool_name == "send_gmail":
+            svc_json = await get_integration_key("google_suite", "service_account_json")
+            if not svc_json:
+                return "Google Suite is not configured. Ask your admin to add Google Suite credentials in Integrations."
+            return "Gmail: This feature requires Google Suite OAuth setup. Please configure in Admin > Integrations."
 
         return f"Unknown tool: {tool_name}"
     except Exception as e:
