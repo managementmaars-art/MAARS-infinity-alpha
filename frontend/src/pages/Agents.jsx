@@ -232,13 +232,13 @@ const Agents = () => {
                         ))}
                       </div>
                       {agent.tools?.length > 0 && (
-                        <div className="flex items-center gap-1.5 mb-3" data-testid={`agent-tools-${agent.agent_id}`}>
-                          <Wrench className="w-3 h-3 text-amber-400" />
+                        <div className="flex items-center gap-1.5 mb-3 flex-wrap" data-testid={`agent-tools-${agent.agent_id}`}>
+                          <Wrench className="w-3 h-3 text-amber-400 shrink-0" />
                           <span className="text-[10px] text-amber-400/80 font-medium">Tools:</span>
-                          {agent.tools.map((tool, i) => {
-                            const toolIcons = { web_search: Search, calculate: Calculator, create_task: ClipboardList, analyze_data: BarChart3 };
+                          {agent.tools.slice(0, 6).map((tool, i) => {
+                            const toolIcons = { web_search: Search, calculate: Calculator, create_task: ClipboardList, analyze_data: BarChart3, send_slack: MessageCircle, send_email: Mail, send_sms: Phone, github_action: Github, airtable_action: Table, search_gif: Image, schedule_meeting: Calendar, google_calendar: Calendar, send_gmail: Send };
                             const ToolIcon = toolIcons[tool] || Wrench;
-                            const toolLabels = { web_search: "Search", calculate: "Math", create_task: "Tasks", analyze_data: "Analyze" };
+                            const toolLabels = { web_search: "Search", calculate: "Math", create_task: "Tasks", analyze_data: "Analyze", send_slack: "Slack", send_email: "Email", send_sms: "SMS", github_action: "GitHub", airtable_action: "Airtable", search_gif: "GIFs", schedule_meeting: "Calendly", google_calendar: "Calendar", send_gmail: "Gmail" };
                             return (
                               <span key={i} className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
                                 <ToolIcon className="w-2.5 h-2.5" />
@@ -246,6 +246,9 @@ const Agents = () => {
                               </span>
                             );
                           })}
+                          {agent.tools.length > 6 && (
+                            <span className="text-[10px] text-amber-400/60">+{agent.tools.length - 6}</span>
+                          )}
                         </div>
                       )}
                       <Button
