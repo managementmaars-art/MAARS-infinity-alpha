@@ -912,27 +912,54 @@ const AdminDashboard = () => {
       if (res.ok) {
         const data = await res.json();
         setCalcResult(data);
+        // Auto-apply calculated prices to the editor
+        if (pricingEdit) {
+          const updated = { ...pricingEdit };
+          for (const [planId, calc] of Object.entries(data.plan_calculations)) {
+            if (updated.plans[planId]) {
+              updated.plans[planId].price_usd = calc.recommended_price_usd;
+              updated.plans[planId].price_bdt = calc.recommended_price_bdt;
+            }
+          }
+          updated.ai_cost_per_credit = calcInputs.ai_cost_per_credit;
+          updated.target_profit_margin = calcInputs.target_profit_margin;
+          updated.bdt_exchange_rate = calcInputs.bdt_exchange_rate;
+          setPricingEdit(updated);
+        }
       }
     } catch {
       toast.error("Calculation failed");
     }
   };
 
-  const applyCalculatedPrices = () => {
-    if (!calcResult || !pricingEdit) return;
-    const updated = { ...pricingEdit };
-    for (const [planId, calc] of Object.entries(calcResult.plan_calculations)) {
-      if (updated.plans[planId]) {
-        updated.plans[planId].price_usd = calc.recommended_price_usd;
-        updated.plans[planId].price_bdt = calc.recommended_price_bdt;
+  // Auto-sync: recalculate prices client-side whenever calcInputs change
+  useEffect(() => {
+    if (!pricingEdit) return;
+    const { ai_cost_per_credit, target_profit_margin, bdt_exchange_rate } = calcInputs;
+    if (!ai_cost_per_credit || !target_profit_margin || !bdt_exchange_rate) return;
+    
+    const marginMultiplier = 1 + (target_profit_margin / 100);
+    const updated = { ...pricingEdit, plans: { ...pricingEdit.plans } };
+    let changed = false;
+    
+    for (const [planId, plan] of Object.entries(updated.plans)) {
+      if (planId === "free") continue;
+      const baseCost = (plan.credits || 0) * ai_cost_per_credit;
+      const recUsd = Math.round(baseCost * marginMultiplier * 100) / 100;
+      const recBdt = Math.round(recUsd * bdt_exchange_rate);
+      if (plan.price_usd !== recUsd || plan.price_bdt !== recBdt) {
+        updated.plans[planId] = { ...plan, price_usd: recUsd, price_bdt: recBdt };
+        changed = true;
       }
     }
-    updated.ai_cost_per_credit = calcInputs.ai_cost_per_credit;
-    updated.target_profit_margin = calcInputs.target_profit_margin;
-    updated.bdt_exchange_rate = calcInputs.bdt_exchange_rate;
-    setPricingEdit(updated);
-    toast.success("Calculated prices applied! Click 'Publish Pricing' to save.");
-  };
+    
+    if (changed) {
+      updated.ai_cost_per_credit = ai_cost_per_credit;
+      updated.target_profit_margin = target_profit_margin;
+      updated.bdt_exchange_rate = bdt_exchange_rate;
+      setPricingEdit(updated);
+    }
+  }, [calcInputs.ai_cost_per_credit, calcInputs.target_profit_margin, calcInputs.bdt_exchange_rate]);
 
   const handlePublishPricing = async () => {
     if (!pricingEdit) return;
