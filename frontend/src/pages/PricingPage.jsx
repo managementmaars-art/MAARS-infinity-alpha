@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+import { BrandFooter } from "../components/BrandFooter";
 
 const PricingPage = () => {
   const navigate = useNavigate();
@@ -645,6 +646,7 @@ const PricingPage = () => {
           <p>Fixed plans include agent selection up to plan limits. Commander AI included in Pro and Business only.</p>
           <p className="mt-2">Questions? Contact support@maarsglobal.com</p>
         </div>
+        <BrandFooter className="mt-8" />
       </div>
     </div>
   );
