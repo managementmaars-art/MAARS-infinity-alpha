@@ -684,22 +684,89 @@ AGENT_TOOLS = {
     "web_search": {
         "name": "web_search",
         "description": "Search the web for current information, news, facts, or data. Use when you need up-to-date information beyond your training data.",
-        "parameters": "query (string): The search query"
+        "parameters": "query (string): The search query",
+        "category": "core"
     },
     "calculate": {
         "name": "calculate",
         "description": "Perform mathematical calculations. Supports arithmetic, percentages, conversions, and complex expressions.",
-        "parameters": "expression (string): The math expression to evaluate"
+        "parameters": "expression (string): The math expression to evaluate",
+        "category": "core"
     },
     "create_task": {
         "name": "create_task",
         "description": "Create a task in the user's task management system. Use when the user asks you to set up, schedule, or track work items.",
-        "parameters": "title (string): Task title, description (string): Task details, priority (string): low/medium/high"
+        "parameters": "title (string): Task title, description (string): Task details, priority (string): low/medium/high",
+        "category": "core"
     },
     "analyze_data": {
         "name": "analyze_data",
         "description": "Analyze structured data like CSV, tables, or numbers. Summarize patterns, trends, and insights.",
-        "parameters": "data (string): The data to analyze, question (string): What to analyze about the data"
+        "parameters": "data (string): The data to analyze, question (string): What to analyze about the data",
+        "category": "core"
+    },
+    "send_slack": {
+        "name": "send_slack",
+        "description": "Send a message to a Slack channel. Use when the user wants to notify a team or post updates to Slack.",
+        "parameters": "channel (string): Channel name (e.g. #general), message (string): The message text",
+        "category": "integration",
+        "requires": "slack"
+    },
+    "send_email": {
+        "name": "send_email",
+        "description": "Send an email using SendGrid or Resend. Use when the user needs to email someone.",
+        "parameters": "to (string): Recipient email, subject (string): Email subject, body (string): Email body (HTML supported)",
+        "category": "integration",
+        "requires": "sendgrid"
+    },
+    "send_sms": {
+        "name": "send_sms",
+        "description": "Send an SMS message using Twilio. Use when the user wants to text someone.",
+        "parameters": "to (string): Phone number with country code, message (string): SMS text (max 160 chars)",
+        "category": "integration",
+        "requires": "twilio"
+    },
+    "github_action": {
+        "name": "github_action",
+        "description": "Interact with GitHub. Create issues, read repos, list PRs, or search code.",
+        "parameters": "action (string): create_issue/list_issues/list_repos/search_code, repo (string): owner/repo, title (string): Issue title, body (string): Issue body",
+        "category": "integration",
+        "requires": "github"
+    },
+    "airtable_action": {
+        "name": "airtable_action",
+        "description": "Read or write records in Airtable. Use for database and spreadsheet operations.",
+        "parameters": "action (string): list_records/create_record, base_id (string): Airtable base ID, table_name (string): Table name, fields (object): Record fields for create",
+        "category": "integration",
+        "requires": "airtable"
+    },
+    "search_gif": {
+        "name": "search_gif",
+        "description": "Search for GIFs using Giphy. Returns animated GIF URLs.",
+        "parameters": "query (string): What to search for",
+        "category": "integration",
+        "requires": "giphy"
+    },
+    "schedule_meeting": {
+        "name": "schedule_meeting",
+        "description": "Create a scheduling link or check availability using Calendly.",
+        "parameters": "event_type (string): Meeting type name, duration (int): Duration in minutes",
+        "category": "integration",
+        "requires": "calendly"
+    },
+    "google_calendar": {
+        "name": "google_calendar",
+        "description": "Create or list Google Calendar events.",
+        "parameters": "action (string): create_event/list_events, title (string): Event title, date (string): Date ISO format, time (string): Time, duration_minutes (int): Duration",
+        "category": "integration",
+        "requires": "google_suite"
+    },
+    "send_gmail": {
+        "name": "send_gmail",
+        "description": "Send an email via Gmail. Use when the user specifically wants to use their Gmail.",
+        "parameters": "to (string): Recipient email, subject (string): Subject, body (string): Email body",
+        "category": "integration",
+        "requires": "google_suite"
     },
 }
 
