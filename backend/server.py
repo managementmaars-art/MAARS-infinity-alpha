@@ -1251,6 +1251,15 @@ async def get_create_agent_info(current_user: User = Depends(get_current_user)):
     }
 
 
+@api_router.get("/agents/tools")
+async def get_available_tools():
+    """Get all available tools and their descriptions"""
+    return {
+        "tools": {name: {"name": t["name"], "description": t["description"]} for name, t in AGENT_TOOLS.items()},
+        "agent_tools": AGENT_TOOL_MAP
+    }
+
+
 # ============== CHAT ENDPOINTS ==============
 
 @api_router.get("/chats", response_model=List[Chat])
