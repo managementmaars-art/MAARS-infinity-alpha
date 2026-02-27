@@ -128,6 +128,7 @@ const PaymentSuccess = () => {
           </>
         )}
       </div>
+      </div>
       <BrandFooter />
     </div>
   );
