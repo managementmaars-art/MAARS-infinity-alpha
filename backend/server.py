@@ -1623,17 +1623,45 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         is_commander = agent.get("is_commander", False) or agent.get("agent_id") == "agent_commander"
         
         delegation_data = None
+        execution_steps = None
+        
         if is_commander:
             commander_result = await commander_delegate(message_data.content, chat_id, api_keys, current_user.user_id)
             response_text = commander_result["content"]
             delegation_data = commander_result.get("delegation_data")
-        elif api_keys["active_provider"] == "direct":
-            # Use direct API keys
-            direct_key = api_keys.get(model_provider, "")
-            if direct_key:
-                response_text = await call_direct_llm(model_provider, model_name, agent["system_prompt"], message_data.content, message_data.attachments, direct_key)
+        else:
+            # Try tool-augmented execution first
+            tool_result = await agent_execute_with_tools(
+                agent, message_data.content, chat_id, api_keys,
+                model_provider, model_name, current_user.user_id,
+                message_data.attachments
+            )
+            
+            if tool_result:
+                response_text = tool_result["content"]
+                execution_steps = tool_result.get("execution_steps")
+            elif api_keys["active_provider"] == "direct":
+                # Use direct API keys
+                direct_key = api_keys.get(model_provider, "")
+                if direct_key:
+                    response_text = await call_direct_llm(model_provider, model_name, agent["system_prompt"], message_data.content, message_data.attachments, direct_key)
+                else:
+                    from emergentintegrations.llm.chat import LlmChat, UserMessage
+                    llm_chat = LlmChat(
+                        api_key=api_keys["emergent"],
+                        session_id=chat_id,
+                        system_message=agent["system_prompt"]
+                    ).with_model(model_provider, model_name)
+                    message_content = message_data.content
+                    if message_data.attachments:
+                        message_content += f"\n\n[User attached {len(message_data.attachments)} file(s)]"
+                    user_message = UserMessage(text=message_content)
+                    if message_data.attachments:
+                        for attachment in message_data.attachments:
+                            if attachment.startswith("data:image") or attachment.startswith("http"):
+                                user_message = user_message.add_image(attachment)
+                    response_text = await llm_chat.send_message(user_message)
             else:
-                # Fall back to Emergent key for this provider
                 from emergentintegrations.llm.chat import LlmChat, UserMessage
                 llm_chat = LlmChat(
                     api_key=api_keys["emergent"],
@@ -1649,23 +1677,6 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
                         if attachment.startswith("data:image") or attachment.startswith("http"):
                             user_message = user_message.add_image(attachment)
                 response_text = await llm_chat.send_message(user_message)
-        else:
-            # Use Emergent key (default)
-            from emergentintegrations.llm.chat import LlmChat, UserMessage
-            llm_chat = LlmChat(
-                api_key=api_keys["emergent"],
-                session_id=chat_id,
-                system_message=agent["system_prompt"]
-            ).with_model(model_provider, model_name)
-            message_content = message_data.content
-            if message_data.attachments:
-                message_content += f"\n\n[User attached {len(message_data.attachments)} file(s)]"
-            user_message = UserMessage(text=message_content)
-            if message_data.attachments:
-                for attachment in message_data.attachments:
-                    if attachment.startswith("data:image") or attachment.startswith("http"):
-                        user_message = user_message.add_image(attachment)
-            response_text = await llm_chat.send_message(user_message)
         
     except Exception as e:
         logger.error(f"LLM error: {e}")
@@ -1682,6 +1693,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     }
     if delegation_data:
         assistant_msg["delegation_data"] = delegation_data
+    if execution_steps:
+        assistant_msg["execution_steps"] = execution_steps
     
     # Update chat
     await db.chats.update_one(
