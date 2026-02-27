@@ -28,7 +28,7 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem("token"));
 
-  const checkAuth = useCallback(async () => {
+  const checkAuth = useCallback(async (signal) => {
     // CRITICAL: Skip auth check if returning from OAuth callback
     if (window.location.hash?.includes('session_id=')) {
       setLoading(false);
@@ -39,7 +39,10 @@ const AuthProvider = ({ children }) => {
       const response = await fetch(`${API}/auth/me`, {
         credentials: "include",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
+        signal,
       });
+
+      if (signal?.aborted) return;
 
       if (response.ok) {
         const userData = await response.json();
@@ -50,14 +53,17 @@ const AuthProvider = ({ children }) => {
         setToken(null);
       }
     } catch (error) {
+      if (error.name === 'AbortError') return;
       setUser(null);
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
   }, [token]);
 
   useEffect(() => {
-    checkAuth();
+    const controller = new AbortController();
+    checkAuth(controller.signal);
+    return () => controller.abort();
   }, [checkAuth]);
 
   const login = (userData, authToken) => {
