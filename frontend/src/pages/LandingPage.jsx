@@ -278,116 +278,77 @@ const LandingPage = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* OpenAI */}
-            <div className="p-6 rounded-xl glass animate-slide-up" style={{ animationDelay: '0s', opacity: 0 }} data-testid="models-openai">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-emerald-400" />
-                </div>
-                <h3 className="text-xl font-bold text-white font-['Outfit']">OpenAI</h3>
-              </div>
-              <div className="space-y-3">
-                {[
-                  { name: "GPT-5.2", tag: "Flagship", desc: "Most capable model for coding, analysis & complex tasks", color: "emerald" },
-                  { name: "GPT-4o", tag: "Fast", desc: "Balanced speed and quality for everyday tasks", color: "emerald" },
-                  { name: "GPT-4o Mini", tag: "Economy", desc: "Cost-efficient for simple questions & quick answers", color: "zinc" },
-                  { name: "O3", tag: "Reasoning", desc: "Advanced reasoning for math, logic & problem-solving", color: "amber" },
-                  { name: "O3 Mini", tag: "Reasoning", desc: "Lightweight reasoning for everyday analytical tasks", color: "zinc" },
-                ].map((m, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                    <div className="mt-0.5 w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-white font-medium text-sm">{m.name}</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full bg-${m.color}-500/20 text-${m.color}-400`}>{m.tag}</span>
-                      </div>
-                      <p className="text-xs text-zinc-500 mt-0.5">{m.desc}</p>
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { name: "OpenAI", color: "emerald", icon: "emerald", models: [
+                { name: "GPT-5.2", tag: "Flagship", desc: "Most capable for coding, analysis & complex tasks" },
+                { name: "GPT-4o", tag: "Fast", desc: "Balanced speed and quality" },
+                { name: "GPT-4o Mini", tag: "Economy", desc: "Cost-efficient for quick answers" },
+                { name: "O3", tag: "Reasoning", desc: "Advanced reasoning for math & logic" },
+                { name: "O3 Mini", tag: "Reasoning", desc: "Lightweight analytical tasks" },
+              ]},
+              { name: "Anthropic", color: "orange", models: [
+                { name: "Claude Sonnet 4.5", tag: "Flagship", desc: "Creative writing, analysis & nuanced tasks" },
+                { name: "Claude Opus 4.5", tag: "Premium", desc: "Deep research & complex analysis" },
+                { name: "Claude Haiku 4.5", tag: "Economy", desc: "Fast responses & summaries" },
+              ]},
+              { name: "Google", color: "blue", models: [
+                { name: "Gemini 3 Flash", tag: "Fast", desc: "Lightning-fast responses" },
+                { name: "Gemini 3 Pro", tag: "Flagship", desc: "Multimodal research & analysis" },
+              ]},
+              { name: "xAI (Grok)", color: "zinc", models: [
+                { name: "Grok 3", tag: "Flagship", desc: "1M context, reasoning & analysis" },
+                { name: "Grok 3 Mini", tag: "Economy", desc: "Cost-efficient reasoning" },
+                { name: "Grok 2", tag: "Fast", desc: "Competitive with GPT-4o" },
+              ]},
+              { name: "DeepSeek", color: "cyan", models: [
+                { name: "DeepSeek Chat", tag: "Economy", desc: "128K context, ultra-affordable" },
+                { name: "DeepSeek Reasoner", tag: "Reasoning", desc: "Deep math & logic reasoning" },
+              ]},
+              { name: "Mistral AI", color: "violet", models: [
+                { name: "Mistral Large", tag: "Flagship", desc: "Complex reasoning, enterprise-grade" },
+                { name: "Mistral Medium", tag: "Fast", desc: "Balanced performance" },
+                { name: "Mistral Small", tag: "Economy", desc: "Ultra-fast, simple tasks" },
+              ]},
+              { name: "Perplexity", color: "teal", models: [
+                { name: "Sonar", tag: "Search", desc: "Web-grounded real-time answers" },
+                { name: "Sonar Pro", tag: "Research", desc: "Deep web research with citations" },
+              ]},
+              { name: "Cohere", color: "pink", models: [
+                { name: "Command R+", tag: "Flagship", desc: "RAG & enterprise tasks" },
+                { name: "Command R", tag: "Economy", desc: "Cost-efficient summaries" },
+              ]},
+              { name: "AI Generation + Voice", color: "rose", models: [
+                { name: "GPT Image 1", tag: "Image Gen", desc: "Generate images from text" },
+                { name: "DALL-E 3", tag: "Image Gen", desc: "Creative image generation" },
+                { name: "Sora 2", tag: "Video Gen", desc: "AI video from text prompts" },
+                { name: "ElevenLabs", tag: "Voice", desc: "Multilingual TTS (Bangla, English, etc.)" },
+                { name: "Whisper", tag: "STT", desc: "Speech-to-text in 50+ languages" },
+              ]},
+            ].map((provider, pi) => (
+              <div key={pi} className="p-5 rounded-xl glass animate-slide-up" style={{ animationDelay: `${pi * 0.05}s`, opacity: 0 }} data-testid={`models-${provider.name.toLowerCase().replace(/[^a-z]/g, '')}`}>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={`w-9 h-9 rounded-lg bg-${provider.color}-500/20 flex items-center justify-center`}>
+                    <Sparkles className={`w-4 h-4 text-${provider.color}-400`} />
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Anthropic */}
-            <div className="p-6 rounded-xl glass animate-slide-up" style={{ animationDelay: '0.1s', opacity: 0 }} data-testid="models-anthropic">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-orange-400" />
+                  <h3 className="text-lg font-bold text-white font-['Outfit']">{provider.name}</h3>
                 </div>
-                <h3 className="text-xl font-bold text-white font-['Outfit']">Anthropic</h3>
-              </div>
-              <div className="space-y-3">
-                {[
-                  { name: "Claude Sonnet 4.5", tag: "Flagship", desc: "Best for creative writing, analysis & nuanced tasks", color: "orange" },
-                  { name: "Claude Opus 4.5", tag: "Premium", desc: "Deep research, long-form content & complex analysis", color: "amber" },
-                  { name: "Claude Haiku 4.5", tag: "Economy", desc: "Fast responses, summaries & lightweight tasks", color: "zinc" },
-                ].map((m, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                    <div className="mt-0.5 w-2 h-2 rounded-full bg-orange-400 shrink-0" />
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-white font-medium text-sm">{m.name}</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full bg-${m.color}-500/20 text-${m.color}-400`}>{m.tag}</span>
+                <div className="space-y-2">
+                  {provider.models.map((m, mi) => (
+                    <div key={mi} className="flex items-start gap-2.5 p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                      <div className={`mt-1 w-1.5 h-1.5 rounded-full bg-${provider.color}-400 shrink-0`} />
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-white font-medium text-sm">{m.name}</span>
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded-full bg-${provider.color}-500/20 text-${provider.color}-400`}>{m.tag}</span>
+                        </div>
+                        <p className="text-[11px] text-zinc-500 mt-0.5">{m.desc}</p>
                       </div>
-                      <p className="text-xs text-zinc-500 mt-0.5">{m.desc}</p>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Google */}
-            <div className="p-6 rounded-xl glass animate-slide-up" style={{ animationDelay: '0.2s', opacity: 0 }} data-testid="models-google">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-blue-400" />
+                  ))}
                 </div>
-                <h3 className="text-xl font-bold text-white font-['Outfit']">Google</h3>
               </div>
-              <div className="space-y-3">
-                {[
-                  { name: "Gemini 3 Flash", tag: "Fast", desc: "Lightning-fast responses for simple tasks & conversations", color: "blue" },
-                  { name: "Gemini 3 Pro", tag: "Flagship", desc: "Multimodal capabilities for research & complex analysis", color: "blue" },
-                ].map((m, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                    <div className="mt-0.5 w-2 h-2 rounded-full bg-blue-400 shrink-0" />
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-white font-medium text-sm">{m.name}</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full bg-${m.color}-500/20 text-${m.color}-400`}>{m.tag}</span>
-                      </div>
-                      <p className="text-xs text-zinc-500 mt-0.5">{m.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-6 p-4 rounded-lg bg-gradient-to-r from-indigo-500/10 to-violet-500/10 border border-indigo-500/20">
-                <div className="flex items-center gap-2 mb-2">
-                  <Zap className="w-4 h-4 text-indigo-400" />
-                  <span className="text-sm font-semibold text-white">Smart Auto-Selection</span>
-                </div>
-                <p className="text-xs text-zinc-400">Each agent automatically picks the best model for the task — coding, creative writing, research, data analysis, and more.</p>
-              </div>
-            </div>
-
-            {/* Generation Models */}
-            <div className="p-6 rounded-xl glass animate-slide-up" style={{ animationDelay: '0.3s', opacity: 0 }} data-testid="models-generation">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 rounded-lg bg-rose-500/20 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-rose-400" />
-                </div>
-                <h3 className="text-xl font-bold text-white font-['Outfit']">AI Generation</h3>
-              </div>
-              <div className="space-y-3">
-                {[
-                  { name: "GPT Image 1", tag: "Image Gen", desc: "Generate stunning images from text descriptions", color: "rose" },
-                  { name: "DALL-E 3", tag: "Image Gen", desc: "Creative and artistic image generation", color: "rose" },
-                  { name: "Sora 2", tag: "Video Gen", desc: "Generate AI videos from text prompts (4-12 sec)", color: "rose" },
-                ].map((m, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                    <div className="mt-0.5 w-2 h-2 rounded-full bg-rose-400 shrink-0" />
+            ))}
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-white font-medium text-sm">{m.name}</span>
