@@ -1098,16 +1098,32 @@ async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
         return f"Tool execution error ({tool_name}): {str(e)[:200]}"
 
 
-def build_tool_prompt(tools: list) -> str:
-    """Build the tool instruction section for the system prompt."""
+async def build_tool_prompt_async(tools: list) -> str:
+    """Build the tool instruction section for the system prompt, filtering out unconfigured integrations."""
     if not tools:
         return ""
     
+    integration_keys = await get_integration_keys()
+    
     tool_descriptions = []
+    available_tools = []
     for tool_name in tools:
         tool = AGENT_TOOLS.get(tool_name)
-        if tool:
-            tool_descriptions.append(f"  - {tool['name']}: {tool['description']} | Parameters: {tool['parameters']}")
+        if not tool:
+            continue
+        # Check if integration tool has its key configured
+        requires = tool.get("requires")
+        if requires:
+            service_config = integration_keys.get(requires, {})
+            service_def = INTEGRATION_SERVICES.get(requires, {})
+            has_key = any(service_config.get(f) for f in service_def.get("key_fields", []))
+            if not has_key:
+                continue
+        tool_descriptions.append(f"  - {tool['name']}: {tool['description']} | Parameters: {tool['parameters']}")
+        available_tools.append(tool_name)
+    
+    if not tool_descriptions:
+        return ""
     
     return f"""
 
@@ -1124,8 +1140,12 @@ RULES:
 2. When the user needs math, percentages, or number crunching → use calculate
 3. When the user asks to create, add, or track a task → use create_task
 4. When data analysis is needed → use analyze_data
-5. For questions you can fully answer from memory, respond directly
-6. After receiving a tool result, weave it naturally into your final answer"""
+5. When the user asks to send a message to Slack → use send_slack
+6. When the user asks to send an email → use send_email
+7. When the user asks to send a text/SMS → use send_sms
+8. When the user asks about GitHub repos/issues → use github_action
+9. For questions you can fully answer from memory, respond directly
+10. After receiving a tool result, weave it naturally into your final answer"""
 
 
 async def agent_execute_with_tools(
