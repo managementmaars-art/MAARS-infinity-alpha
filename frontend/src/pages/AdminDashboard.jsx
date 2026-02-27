@@ -996,7 +996,20 @@ const AdminDashboard = () => {
     }));
   };
 
-  const PricingManagerTab = () => (
+  const PricingManagerTab = () => {
+    // Compute live calculations from current inputs
+    const { ai_cost_per_credit, target_profit_margin, bdt_exchange_rate } = calcInputs;
+    const marginMultiplier = 1 + ((target_profit_margin || 0) / 100);
+    const planCredits = { free: 50, starter: 500, pro: 2000, business: 6000 };
+    const liveCalcs = {};
+    for (const [pid, credits] of Object.entries(planCredits)) {
+      const base = credits * (ai_cost_per_credit || 0);
+      const rec = pid === "free" ? 0 : Math.round(base * marginMultiplier * 100) / 100;
+      const recBdt = pid === "free" ? 0 : Math.round(rec * (bdt_exchange_rate || 0));
+      liveCalcs[pid] = { credits, base: Math.round(base * 100) / 100, rec, recBdt, profit: Math.round((rec - base) * 100) / 100 };
+    }
+
+    return (
     <div className="space-y-6">
       {/* Profit Margin Calculator */}
       <Card className="bg-zinc-900/50 border-white/10">
@@ -1006,10 +1019,11 @@ const AdminDashboard = () => {
               <TrendingUp className="w-5 h-5 text-amber-400" />
             </div>
             Profit Margin Calculator
+            <Badge className="bg-emerald-500/20 text-emerald-400 text-[10px] ml-2">LIVE SYNC</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-zinc-400 text-sm">Set your AI cost basis and desired margin to auto-calculate prices, or manually edit below.</p>
+          <p className="text-zinc-400 text-sm">Adjust your cost basis and desired margin — plan prices update instantly below.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
@@ -1033,7 +1047,7 @@ const AdminDashboard = () => {
                 className="bg-zinc-800/50 border-white/10"
                 data-testid="calc-margin-input"
               />
-              <p className="text-[10px] text-zinc-500">200% means 3x the cost</p>
+              <p className="text-[10px] text-zinc-500">{target_profit_margin}% means {(marginMultiplier).toFixed(1)}x the cost</p>
             </div>
             <div className="space-y-2">
               <Label className="text-zinc-300 text-sm">BDT Exchange Rate</Label>
@@ -1044,56 +1058,37 @@ const AdminDashboard = () => {
                 className="bg-zinc-800/50 border-white/10"
                 data-testid="calc-bdt-input"
               />
-              <p className="text-[10px] text-zinc-500">1 USD = X BDT</p>
+              <p className="text-[10px] text-zinc-500">1 USD = {bdt_exchange_rate} BDT</p>
             </div>
           </div>
 
-          <Button
-            onClick={handleCalculate}
-            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
-            data-testid="calculate-prices-btn"
-          >
-            Calculate Recommended Prices
-          </Button>
-
-          {calcResult && (
-            <div className="mt-4 space-y-3">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-white/10">
-                      <th className="text-left py-2 text-zinc-400">Plan</th>
-                      <th className="text-right py-2 text-zinc-400">Credits</th>
-                      <th className="text-right py-2 text-zinc-400">AI Cost</th>
-                      <th className="text-right py-2 text-zinc-400">Rec. USD</th>
-                      <th className="text-right py-2 text-zinc-400">Rec. BDT</th>
-                      <th className="text-right py-2 text-zinc-400">Profit/User</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-zinc-300">
-                    {Object.entries(calcResult.plan_calculations).map(([id, calc]) => (
-                      <tr key={id} className="border-b border-white/5">
-                        <td className="py-2 capitalize font-medium">{id}</td>
-                        <td className="text-right">{calc.credits}</td>
-                        <td className="text-right text-red-400">${calc.base_ai_cost_usd}</td>
-                        <td className="text-right text-emerald-400">${calc.recommended_price_usd}</td>
-                        <td className="text-right text-emerald-400">{calc.recommended_price_bdt}</td>
-                        <td className="text-right text-amber-400">${calc.profit_per_user_usd}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <Button
-                onClick={applyCalculatedPrices}
-                variant="outline"
-                className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
-                data-testid="apply-calc-btn"
-              >
-                Apply Calculated Prices Below
-              </Button>
-            </div>
-          )}
+          {/* Live price preview table */}
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-white/10">
+                  <th className="text-left py-2 text-zinc-400">Plan</th>
+                  <th className="text-right py-2 text-zinc-400">Credits</th>
+                  <th className="text-right py-2 text-zinc-400">AI Cost</th>
+                  <th className="text-right py-2 text-zinc-400">Price USD</th>
+                  <th className="text-right py-2 text-zinc-400">Price BDT</th>
+                  <th className="text-right py-2 text-zinc-400">Profit/User</th>
+                </tr>
+              </thead>
+              <tbody className="text-zinc-300">
+                {Object.entries(liveCalcs).map(([id, calc]) => (
+                  <tr key={id} className="border-b border-white/5">
+                    <td className="py-2 capitalize font-medium">{id}</td>
+                    <td className="text-right">{calc.credits}</td>
+                    <td className="text-right text-red-400">${calc.base}</td>
+                    <td className="text-right text-emerald-400">${calc.rec}</td>
+                    <td className="text-right text-emerald-400">{calc.recBdt}</td>
+                    <td className="text-right text-amber-400">${calc.profit}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </CardContent>
       </Card>
 
