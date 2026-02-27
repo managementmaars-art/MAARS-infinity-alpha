@@ -47,13 +47,18 @@ async def get_api_keys():
         "openai": "",
         "anthropic": "",
         "gemini": "",
+        "xai": "",
+        "deepseek": "",
+        "mistral": "",
+        "perplexity": "",
+        "cohere": "",
+        "elevenlabs": "",
         "emergent": EMERGENT_LLM_KEY,
-        "active_provider": "emergent"  # which key source to use
+        "active_provider": "emergent"
     }
     if config:
-        keys["openai"] = config.get("openai_key", "") or DIRECT_API_KEYS.get("openai", "")
-        keys["anthropic"] = config.get("anthropic_key", "") or DIRECT_API_KEYS.get("anthropic", "")
-        keys["gemini"] = config.get("gemini_key", "") or DIRECT_API_KEYS.get("gemini", "")
+        for p in ["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs"]:
+            keys[p] = config.get(f"{p}_key", "") or DIRECT_API_KEYS.get(p, "")
         keys["active_provider"] = config.get("active_provider", "emergent")
     return keys
 
