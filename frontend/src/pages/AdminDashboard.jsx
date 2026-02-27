@@ -81,10 +81,11 @@ const AdminDashboard = () => {
       }
       
       // Fetch profit data and API usage
-      const [profitRes, usageRes, avgCostRes] = await Promise.all([
+      const [profitRes, usageRes, avgCostRes, rateRes] = await Promise.all([
         fetch(`${API}/admin/profit`, { credentials: "include", headers: authHeaders }),
         fetch(`${API}/admin/api-usage`, { credentials: "include", headers: authHeaders }),
         fetch(`${API}/admin/avg-cost`, { credentials: "include", headers: authHeaders }),
+        fetch(`${API}/exchange-rate`),
       ]);
       if (profitRes.ok) setProfitData(await profitRes.json());
       if (usageRes.ok) setApiUsage(await usageRes.json());
@@ -92,6 +93,12 @@ const AdminDashboard = () => {
         const avgCost = await avgCostRes.json();
         if (avgCost.source === "real_usage" && avgCost.avg_cost_per_credit > 0) {
           setCalcInputs(prev => ({...prev, ai_cost_per_credit: avgCost.avg_cost_per_credit}));
+        }
+      }
+      if (rateRes.ok) {
+        const rateData = await rateRes.json();
+        if (rateData.usd_bdt > 0) {
+          setCalcInputs(prev => ({...prev, bdt_exchange_rate: rateData.usd_bdt}));
         }
       }
     } catch (error) {
