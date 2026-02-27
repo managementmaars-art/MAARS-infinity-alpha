@@ -1124,6 +1124,69 @@ async def call_direct_llm(provider: str, model_name: str, system_prompt: str, co
     raise ValueError(f"Unsupported provider: {provider}")
 
 
+async def call_direct_xai(model_name: str, system_prompt: str, content: str, api_key: str) -> str:
+    """Call xAI Grok API (OpenAI-compatible)"""
+    async with httpx.AsyncClient(timeout=120) as http:
+        resp = await http.post(
+            "https://api.x.ai/v1/chat/completions",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={"model": model_name, "messages": [{"role": "system", "content": system_prompt}, {"role": "user", "content": content}], "max_tokens": 4096}
+        )
+        resp.raise_for_status()
+        return resp.json()["choices"][0]["message"]["content"]
+
+
+async def call_direct_deepseek(model_name: str, system_prompt: str, content: str, api_key: str) -> str:
+    """Call DeepSeek API (OpenAI-compatible)"""
+    async with httpx.AsyncClient(timeout=120) as http:
+        resp = await http.post(
+            "https://api.deepseek.com/chat/completions",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={"model": model_name, "messages": [{"role": "system", "content": system_prompt}, {"role": "user", "content": content}], "max_tokens": 4096}
+        )
+        resp.raise_for_status()
+        return resp.json()["choices"][0]["message"]["content"]
+
+
+async def call_direct_mistral(model_name: str, system_prompt: str, content: str, api_key: str) -> str:
+    """Call Mistral API"""
+    async with httpx.AsyncClient(timeout=120) as http:
+        resp = await http.post(
+            "https://api.mistral.ai/v1/chat/completions",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={"model": model_name, "messages": [{"role": "system", "content": system_prompt}, {"role": "user", "content": content}], "max_tokens": 4096}
+        )
+        resp.raise_for_status()
+        return resp.json()["choices"][0]["message"]["content"]
+
+
+async def call_direct_perplexity(model_name: str, system_prompt: str, content: str, api_key: str) -> str:
+    """Call Perplexity API (OpenAI-compatible)"""
+    async with httpx.AsyncClient(timeout=120) as http:
+        resp = await http.post(
+            "https://api.perplexity.ai/chat/completions",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={"model": model_name, "messages": [{"role": "system", "content": system_prompt}, {"role": "user", "content": content}], "max_tokens": 4096}
+        )
+        resp.raise_for_status()
+        return resp.json()["choices"][0]["message"]["content"]
+
+
+async def call_direct_cohere(model_name: str, system_prompt: str, content: str, api_key: str) -> str:
+    """Call Cohere API"""
+    async with httpx.AsyncClient(timeout=120) as http:
+        resp = await http.post(
+            "https://api.cohere.com/v2/chat",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={"model": model_name, "messages": [{"role": "system", "content": system_prompt}, {"role": "user", "content": content}], "max_tokens": 4096}
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        msg = data.get("message", {})
+        parts = msg.get("content", [])
+        return parts[0].get("text", "") if parts else ""
+
+
 @api_router.post("/chats/{chat_id}/messages")
 async def send_message(chat_id: str, message_data: MessageCreate, current_user: User = Depends(get_current_user)):
     chat = await db.chats.find_one({"chat_id": chat_id, "user_id": current_user.user_id}, {"_id": 0})
