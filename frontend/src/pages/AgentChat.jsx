@@ -29,6 +29,23 @@ const AVAILABLE_MODELS = [
   // Google
   { provider: "gemini", model: "gemini-3-flash-preview", name: "Gemini 3 Flash", category: "fast" },
   { provider: "gemini", model: "gemini-3-pro-preview", name: "Gemini 3 Pro", category: "flagship" },
+  // xAI Grok
+  { provider: "xai", model: "grok-3", name: "Grok 3", category: "flagship" },
+  { provider: "xai", model: "grok-3-mini", name: "Grok 3 Mini", category: "economy" },
+  { provider: "xai", model: "grok-2", name: "Grok 2", category: "fast" },
+  // DeepSeek
+  { provider: "deepseek", model: "deepseek-chat", name: "DeepSeek Chat", category: "economy" },
+  { provider: "deepseek", model: "deepseek-reasoner", name: "DeepSeek Reasoner", category: "reasoning" },
+  // Mistral
+  { provider: "mistral", model: "mistral-large-latest", name: "Mistral Large", category: "flagship" },
+  { provider: "mistral", model: "mistral-medium-latest", name: "Mistral Medium", category: "fast" },
+  { provider: "mistral", model: "mistral-small-latest", name: "Mistral Small", category: "economy" },
+  // Perplexity
+  { provider: "perplexity", model: "sonar", name: "Perplexity Sonar", category: "search" },
+  { provider: "perplexity", model: "sonar-pro", name: "Perplexity Sonar Pro", category: "search" },
+  // Cohere
+  { provider: "cohere", model: "command-r-plus", name: "Cohere Command R+", category: "flagship" },
+  { provider: "cohere", model: "command-r", name: "Cohere Command R", category: "fast" },
 ];
 
 // Commander Group Chat Component - renders delegation as individual agent chat bubbles
