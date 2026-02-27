@@ -1167,7 +1167,7 @@ async def agent_execute_with_tools(
     if not agent_tools:
         return None
     
-    tool_prompt = build_tool_prompt(agent_tools)
+    tool_prompt = await build_tool_prompt_async(agent_tools)
     enhanced_system_prompt = agent["system_prompt"] + tool_prompt
     
     execution_steps = []
