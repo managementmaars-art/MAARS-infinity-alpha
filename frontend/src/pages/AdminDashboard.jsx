@@ -1922,7 +1922,7 @@ const IntegrationsTab = () => {
   const handleTest = async (svcId) => {
     setTesting(prev => ({ ...prev, [svcId]: true }));
     try {
-      const resp = await fetch(`${API}/api/admin/integrations/test/${svcId}`, { headers });
+      const resp = await fetch(`${API}/admin/integrations/test/${svcId}`, { headers });
       const data = await resp.json();
       setTestResults(prev => ({ ...prev, [svcId]: data }));
       if (data.status === "active") toast.success(`${integrations[svcId]?.name}: Connected!`);
