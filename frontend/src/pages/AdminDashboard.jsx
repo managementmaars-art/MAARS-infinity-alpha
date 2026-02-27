@@ -1674,29 +1674,27 @@ const CustomPackagesTab = () => {
           <div className="space-y-1">
             <label className="text-xs text-zinc-400">Per Agent (USD)</label>
             <input type="number" step="0.5" value={config.per_agent_price_usd || 0}
-              onChange={e => setConfig(p => ({...p, per_agent_price_usd: parseFloat(e.target.value) || 0}))}
+              onChange={e => { const v = parseFloat(e.target.value) || 0; setConfig(p => ({...p, per_agent_price_usd: v, per_agent_price_bdt: Math.round(v * bdtRate)})); }}
               className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               data-testid="per-agent-usd" />
           </div>
           <div className="space-y-1">
-            <label className="text-xs text-zinc-400">Per Agent (BDT)</label>
-            <input type="number" step="1" value={config.per_agent_price_bdt || 0}
-              onChange={e => setConfig(p => ({...p, per_agent_price_bdt: parseFloat(e.target.value) || 0}))}
-              className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+            <label className="text-xs text-zinc-400">Per Agent (BDT) <span className="text-emerald-500/70 text-[10px]">auto</span></label>
+            <input type="number" value={config.per_agent_price_bdt || 0} readOnly
+              className="w-full bg-zinc-800/50 border border-white/10 rounded-lg px-3 py-2 text-zinc-400 text-sm cursor-not-allowed"
               data-testid="per-agent-bdt" />
           </div>
           <div className="space-y-1">
             <label className="text-xs text-zinc-400">Commander Add-on (USD)</label>
             <input type="number" step="0.5" value={config.commander_addon_price_usd || 0}
-              onChange={e => setConfig(p => ({...p, commander_addon_price_usd: parseFloat(e.target.value) || 0}))}
+              onChange={e => { const v = parseFloat(e.target.value) || 0; setConfig(p => ({...p, commander_addon_price_usd: v, commander_addon_price_bdt: Math.round(v * bdtRate)})); }}
               className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
               data-testid="commander-price-usd" />
           </div>
           <div className="space-y-1">
-            <label className="text-xs text-zinc-400">Commander Add-on (BDT)</label>
-            <input type="number" step="1" value={config.commander_addon_price_bdt || 0}
-              onChange={e => setConfig(p => ({...p, commander_addon_price_bdt: parseFloat(e.target.value) || 0}))}
-              className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"
+            <label className="text-xs text-zinc-400">Commander Add-on (BDT) <span className="text-emerald-500/70 text-[10px]">auto</span></label>
+            <input type="number" value={config.commander_addon_price_bdt || 0} readOnly
+              className="w-full bg-zinc-800/50 border border-white/10 rounded-lg px-3 py-2 text-zinc-400 text-sm cursor-not-allowed"
               data-testid="commander-price-bdt" />
           </div>
         </CardContent>
