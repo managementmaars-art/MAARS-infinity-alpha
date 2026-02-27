@@ -118,6 +118,10 @@ const PricingPage = () => {
         const data = await res.json();
         setDynamicPlans(data.plans);
         if (data.custom_package) setCustomConfig(data.custom_package);
+        if (data.credit_packages) {
+          const pkgs = Object.entries(data.credit_packages).map(([id, p]) => ({ id, ...p }));
+          if (pkgs.length > 0) setCreditPackages(pkgs);
+        }
       }
     } catch {}
   };
