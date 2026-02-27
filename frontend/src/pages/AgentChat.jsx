@@ -137,6 +137,65 @@ const CommanderGroupChat = ({ msg, msgIndex, generatedFiles, generateFile, gener
   );
 };
 
+// Execution Steps Component - shows agent's reasoning and tool usage
+const ExecutionSteps = ({ steps }) => {
+  const [expanded, setExpanded] = useState(false);
+  if (!steps || steps.length === 0) return null;
+  
+  const toolIcons = { web_search: Search, calculate: Calculator, create_task: ClipboardList, analyze_data: BarChart3 };
+  const toolLabels = { web_search: "Web Search", calculate: "Calculate", create_task: "Create Task", analyze_data: "Analyze Data" };
+  
+  return (
+    <div className="mb-2" data-testid="execution-steps">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="flex items-center gap-1.5 text-xs text-amber-400/80 hover:text-amber-300 transition-colors"
+        data-testid="toggle-execution-steps"
+      >
+        <Brain className="w-3 h-3" />
+        <span className="font-medium">{steps.length} reasoning step{steps.length > 1 ? 's' : ''}</span>
+        {expanded ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+      </button>
+      {expanded && (
+        <div className="mt-2 space-y-1.5 pl-2 border-l-2 border-amber-500/20">
+          {steps.map((step, idx) => {
+            if (step.step_type === "thinking") {
+              return (
+                <div key={idx} className="flex items-start gap-2 text-xs" data-testid={`step-thinking-${idx}`}>
+                  <Brain className="w-3 h-3 text-indigo-400 mt-0.5 shrink-0" />
+                  <p className="text-zinc-400 italic">{step.content}</p>
+                </div>
+              );
+            }
+            if (step.step_type === "tool_call") {
+              const ToolIcon = toolIcons[step.tool_name] || Wrench;
+              return (
+                <div key={idx} className="flex items-start gap-2 text-xs" data-testid={`step-tool-call-${idx}`}>
+                  <Zap className="w-3 h-3 text-amber-400 mt-0.5 shrink-0" />
+                  <div>
+                    <span className="text-amber-400 font-medium">Using {toolLabels[step.tool_name] || step.tool_name}</span>
+                    <span className="text-zinc-500 ml-1">
+                      {step.tool_input?.query || step.tool_input?.expression || step.tool_input?.title || ''}
+                    </span>
+                  </div>
+                </div>
+              );
+            }
+            if (step.step_type === "tool_result") {
+              return (
+                <div key={idx} className="text-xs p-2 rounded bg-white/5 border border-white/5" data-testid={`step-tool-result-${idx}`}>
+                  <p className="text-emerald-400/80 font-mono text-[10px] leading-relaxed whitespace-pre-wrap line-clamp-4">{step.content}</p>
+                </div>
+              );
+            }
+            return null;
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const AgentChat = () => {
   const navigate = useNavigate();
   const { agentId } = useParams();
