@@ -1886,7 +1886,7 @@ const IntegrationsTab = () => {
   };
 
   useEffect(() => {
-    fetch(`${API}/api/admin/integrations`, { headers }).then(r => r.json()).then(data => {
+    fetch(`${API}/admin/integrations`, { headers }).then(r => r.json()).then(data => {
       setIntegrations(data);
       setLoading(false);
     }).catch(() => setLoading(false));
