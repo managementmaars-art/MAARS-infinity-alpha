@@ -1,53 +1,33 @@
 # Martian AI by MAARS Global Corporation - PRD
 
 ## Original Problem Statement
-Full-stack AI team platform with 20+ agents, Commander AI with auto-task delegation, multi-language audio, file generation (PDF/Excel/Word/CSV/Text/Images/Videos), subscription SaaS with Stripe, custom "Build Your Own" packages, private admin dashboard with cost reference.
+Full-stack AI team platform with 20+ agents, Commander AI with auto-task delegation, multi-language audio, file generation, subscription SaaS with Stripe, custom "Build Your Own" packages, private admin dashboard with cost reference.
 
 ## Implemented Features
 
 ### Core Platform
 - React + FastAPI + MongoDB, JWT + Google OAuth
-- 21 AI agents with unique sci-fi robot avatars
-- Chat with 10+ LLMs (GPT-5.2, Claude, Gemini, etc.)
-
-### Commander AI + Group Chat
-- Commander Orion: breaks goals -> sub-tasks -> delegates to specialists
-- Auto-creates tasks in DB with priority, assigned agent, results
-- Group Chat UI: delegation renders as individual agent chat bubbles
-
-### Audio
-- STT via OpenAI Whisper, mic button in chat
-
-### File Generation
-- Documents: PDF, Excel, Word, CSV, TXT
-- Images: GPT Image 1, DALL-E 3
-- Videos: Sora 2
-
-### Subscriptions & Billing
-- 4 plans (Free/Starter/Pro/Business) + "Build Your Own"
-- Stripe checkout, multi-currency (USD/BDT)
+- 21 AI agents, Chat with 10+ LLMs, File gen (PDF/Excel/Word/CSV/Images/Videos)
 
 ### Admin Dashboard (8 tabs)
-- Overview, Users, Agents, Transactions, Pricing Manager, Custom Packages, API Keys, Payment Setup
-- **Pricing Manager**: LIVE SYNC calculator with real cost data
-- **Pricing Control Center** (Custom Packages tab): Full control over ALL pricing:
+- **Pricing Manager**: LIVE SYNC calculator for subscription plans (Free/Starter/Pro/Business)
+- **Pricing Control Center** (Custom Packages tab):
+  - Profit Margin Calculator with LIVE SYNC at top
+  - AI Cost per Credit (read-only, from real usage), Target Margin %, BDT Exchange Rate
+  - "Apply X% Margin to All Credits" button to auto-set prices
   - Agent & Commander per-unit pricing (USD/BDT)
-  - Credit Presets for Build Your Own (add/remove/edit with margin badges)
-  - Extra Credit Packs for "Need More Credits?" section (add/remove/edit with margin badges)
-  - Profit margins auto-calculated from real API cost
-  - Single "Save All Pricing" button saves everything
-  - `/api/admin/credit-packages` GET/POST for extra credit packs
-  - All pricing stored in DB, no hardcoded values
+  - Credit Presets table: Credits | AI Cost | USD Price | BDT Price | Profit | Margin
+  - Extra Credit Packs table: same columns
+  - All pricing stored in DB, fully admin-configurable
+  - Single "Save All Pricing" button
 
-### Brand Footer
-- "Martian AI by MAARS Global Corporation © 2026" on ALL pages
+### Commander AI + Group Chat
+- Delegation renders as individual agent chat bubbles with avatars, roles, priority badges
 
-## Key API Endpoints
-- Auth: /api/auth/register, /api/auth/login, /api/auth/me
-- Chat: /api/chats, /api/chats/{id}/messages
-- Tasks: /api/tasks
-- Admin: /api/admin/stats, /api/admin/pricing, /api/admin/avg-cost
-- Admin Pricing: /api/admin/custom-package, /api/admin/credit-packages
+### Subscriptions & Billing
+- 4 plans + "Build Your Own" + Extra Credit Packs
+- Stripe checkout, multi-currency (USD/BDT)
+- Brand Footer on ALL pages
 
 ## Backlog
 - P1: E2E subscription/credit testing
