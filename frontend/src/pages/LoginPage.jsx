@@ -6,6 +6,7 @@ import { Label } from "../components/ui/label";
 import { Bot, Mail, Lock, ArrowLeft } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+import { BrandFooter } from "../components/BrandFooter";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -175,6 +176,7 @@ const LoginPage = () => {
           </p>
         </div>
       </div>
+      <BrandFooter />
     </div>
   );
 };
