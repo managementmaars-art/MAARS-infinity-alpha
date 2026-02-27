@@ -2983,6 +2983,34 @@ async def admin_update_custom_package(request: Request, admin: User = Depends(re
     
     return {"message": "Custom package config updated", "config": update_doc}
 
+@api_router.get("/admin/credit-packages")
+async def admin_get_credit_packages(admin: User = Depends(require_admin)):
+    """Get extra credit packages config"""
+    config = await db.platform_config.find_one({"config_type": "credit_packages"}, {"_id": 0})
+    if config and config.get("packages"):
+        return {"packages": config["packages"]}
+    return {"packages": DEFAULT_CREDIT_PACKAGES}
+
+@api_router.post("/admin/credit-packages")
+async def admin_update_credit_packages(request: Request, admin: User = Depends(require_admin)):
+    """Update extra credit packages"""
+    body = await request.json()
+    packages = []
+    for p in body.get("packages", []):
+        packages.append({
+            "id": p.get("id", f"credits_{p.get('credits', 0)}"),
+            "credits": int(p.get("credits", 0)),
+            "price_usd": float(p.get("price_usd", 0)),
+            "price_bdt": float(p.get("price_bdt", 0)),
+            "name": p.get("name", f"{p.get('credits', 0)} Credits"),
+        })
+    await db.platform_config.update_one(
+        {"config_type": "credit_packages"},
+        {"$set": {"config_type": "credit_packages", "packages": packages}},
+        upsert=True
+    )
+    return {"message": "Credit packages updated", "packages": packages}
+
 @api_router.get("/admin/transactions")
 async def admin_get_transactions(admin: User = Depends(require_admin)):
     """Get all payment transactions"""
