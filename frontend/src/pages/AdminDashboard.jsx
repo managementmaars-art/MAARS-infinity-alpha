@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+import { BrandFooter } from "../components/BrandFooter";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -1455,6 +1456,7 @@ const AdminDashboard = () => {
           {activeTab === "payments" && <PaymentSetupTab />}
         </div>
       </div>
+      <BrandFooter />
     </div>
   );
 };
