@@ -1675,9 +1675,83 @@ async def get_available_models(current_user: User = Depends(get_current_user)):
             {"provider": "openai", "model": "gpt-image-1", "name": "GPT Image 1", "category": "image_gen", "cost_per_credit": 0.02, "best_for": "AI image generation from text"},
             {"provider": "openai", "model": "dall-e-3", "name": "DALL-E 3", "category": "image_gen", "cost_per_credit": 0.015, "best_for": "Creative image generation"},
             {"provider": "openai", "model": "sora-2", "name": "Sora 2", "category": "video_gen", "cost_per_credit": 0.10, "best_for": "AI video generation from text"},
+            # xAI Grok
+            {"provider": "xai", "model": "grok-3", "name": "Grok 3", "category": "flagship", "cost_per_credit": 0.005, "best_for": "Reasoning, analysis, 1M context"},
+            {"provider": "xai", "model": "grok-3-mini", "name": "Grok 3 Mini", "category": "economy", "cost_per_credit": 0.001, "best_for": "Cost-efficient reasoning"},
+            {"provider": "xai", "model": "grok-2", "name": "Grok 2", "category": "fast", "cost_per_credit": 0.003, "best_for": "General tasks, competitive with GPT-4o"},
+            # DeepSeek
+            {"provider": "deepseek", "model": "deepseek-chat", "name": "DeepSeek Chat", "category": "economy", "cost_per_credit": 0.001, "best_for": "Cost-efficient chat, 128K context"},
+            {"provider": "deepseek", "model": "deepseek-reasoner", "name": "DeepSeek Reasoner", "category": "reasoning", "cost_per_credit": 0.001, "best_for": "Deep reasoning, math, logic"},
+            # Mistral
+            {"provider": "mistral", "model": "mistral-large-latest", "name": "Mistral Large", "category": "flagship", "cost_per_credit": 0.004, "best_for": "Complex reasoning, enterprise"},
+            {"provider": "mistral", "model": "mistral-medium-latest", "name": "Mistral Medium", "category": "fast", "cost_per_credit": 0.002, "best_for": "Balanced performance"},
+            {"provider": "mistral", "model": "mistral-small-latest", "name": "Mistral Small", "category": "economy", "cost_per_credit": 0.001, "best_for": "Simple tasks, very fast"},
+            # Perplexity
+            {"provider": "perplexity", "model": "sonar", "name": "Perplexity Sonar", "category": "search", "cost_per_credit": 0.002, "best_for": "Web-grounded answers, search"},
+            {"provider": "perplexity", "model": "sonar-pro", "name": "Perplexity Sonar Pro", "category": "search", "cost_per_credit": 0.008, "best_for": "Deep web research"},
+            # Cohere
+            {"provider": "cohere", "model": "command-r-plus", "name": "Cohere Command R+", "category": "flagship", "cost_per_credit": 0.005, "best_for": "RAG, enterprise tasks"},
+            {"provider": "cohere", "model": "command-r", "name": "Cohere Command R", "category": "fast", "cost_per_credit": 0.001, "best_for": "Cost-efficient RAG, summaries"},
         ],
         "default": {"provider": "openai", "model": "gpt-5.2"}
     }
+
+@api_router.post("/tts/generate")
+async def generate_tts(request: Request, current_user: User = Depends(get_current_user)):
+    """Generate text-to-speech audio using ElevenLabs"""
+    body = await request.json()
+    text = body.get("text", "")
+    voice_id = body.get("voice_id", "21m00Tcm4TlvDq8ikWAM")  # Default: Rachel
+    
+    if not text:
+        raise HTTPException(status_code=400, detail="Text is required")
+    
+    # Get ElevenLabs API key from user's settings
+    user_keys = await db.api_keys.find_one({"user_id": current_user.user_id}, {"_id": 0})
+    el_key = None
+    if user_keys:
+        el_key = user_keys.get("elevenlabs")
+    
+    # Check admin keys
+    if not el_key:
+        admin_keys = await db.platform_config.find_one({"config_type": "api_keys"}, {"_id": 0})
+        if admin_keys:
+            el_key = admin_keys.get("elevenlabs")
+    
+    if not el_key:
+        raise HTTPException(status_code=400, detail="ElevenLabs API key required. Add it in Settings > API Keys.")
+    
+    try:
+        from elevenlabs import ElevenLabs as ElevenLabsClient
+        el_client = ElevenLabsClient(api_key=el_key)
+        audio_gen = el_client.text_to_speech.convert(
+            text=text,
+            voice_id=voice_id,
+            model_id="eleven_multilingual_v2",
+        )
+        audio_data = b""
+        for chunk in audio_gen:
+            audio_data += chunk
+        
+        import base64
+        audio_b64 = base64.b64encode(audio_data).decode()
+        return {"audio_url": f"data:audio/mpeg;base64,{audio_b64}", "text": text}
+    except Exception as e:
+        logger.error(f"TTS error: {e}")
+        raise HTTPException(status_code=500, detail=f"TTS failed: {str(e)}")
+
+@api_router.get("/tts/voices")
+async def get_tts_voices(current_user: User = Depends(get_current_user)):
+    """Get available ElevenLabs voices"""
+    return {"voices": [
+        {"voice_id": "21m00Tcm4TlvDq8ikWAM", "name": "Rachel", "language": "English"},
+        {"voice_id": "EXAVITQu4vr4xnSDxMaL", "name": "Bella", "language": "English"},
+        {"voice_id": "ErXwobaYiN019PkySvjV", "name": "Antoni", "language": "English"},
+        {"voice_id": "MF3mGyEYCl7XYWbV9V6O", "name": "Elli", "language": "English"},
+        {"voice_id": "TxGEqnHWrfWFTfGW9XjX", "name": "Josh", "language": "English"},
+        {"voice_id": "pNInz6obpgDQGcFmaJgB", "name": "Adam", "language": "English"},
+        {"voice_id": "yoZ06aMxZJJ28mfd3POQ", "name": "Sam", "language": "English"},
+    ]}
 
 # ============== FILE GENERATION ENDPOINTS ==============
 
