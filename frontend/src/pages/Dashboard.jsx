@@ -349,6 +349,7 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+      <div className="lg:ml-64"><BrandFooter /></div>
     </div>
   );
 };
