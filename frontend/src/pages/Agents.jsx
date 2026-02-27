@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+import { BrandFooter } from "../components/BrandFooter";
 
 const Agents = () => {
   const navigate = useNavigate();
