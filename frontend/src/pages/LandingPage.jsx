@@ -274,7 +274,7 @@ const LandingPage = () => {
               Powered by World-Class AI Models
             </h2>
             <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
-              Every agent intelligently selects the best model for each task, or you can choose manually from 10 frontier models.
+              Every agent intelligently selects from 25+ frontier models across 9 providers — or you can choose manually.
             </p>
           </div>
 
