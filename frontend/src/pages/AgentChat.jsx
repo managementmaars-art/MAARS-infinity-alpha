@@ -169,6 +169,30 @@ const AgentChat = () => {
 
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
+  const playTTS = async (msgId, text) => {
+    if (ttsPlaying === msgId) {
+      if (ttsAudioRef.current) { ttsAudioRef.current.pause(); ttsAudioRef.current = null; }
+      setTtsPlaying(null);
+      return;
+    }
+    setTtsLoading(msgId);
+    try {
+      const res = await fetch(`${API}/tts/generate`, {
+        method: "POST", credentials: "include", headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify({ text: text.substring(0, 5000) })
+      });
+      if (!res.ok) { const e = await res.json(); toast.error(e.detail || "TTS failed"); return; }
+      const data = await res.json();
+      if (ttsAudioRef.current) ttsAudioRef.current.pause();
+      const audio = new Audio(data.audio_url);
+      ttsAudioRef.current = audio;
+      audio.onended = () => { setTtsPlaying(null); ttsAudioRef.current = null; };
+      audio.play();
+      setTtsPlaying(msgId);
+    } catch { toast.error("TTS not available"); }
+    finally { setTtsLoading(null); }
+  };
+
   useEffect(() => {
     fetchInitialData();
   }, []);
