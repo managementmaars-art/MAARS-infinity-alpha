@@ -1456,7 +1456,7 @@ const AdminDashboard = () => {
           {activeTab === "payments" && <PaymentSetupTab />}
         </div>
       </div>
-      <BrandFooter />
+      <div className="lg:ml-64"><BrandFooter /></div>
     </div>
   );
 };
