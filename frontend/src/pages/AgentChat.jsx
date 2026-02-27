@@ -924,6 +924,7 @@ const AgentChat = () => {
             </Button>
           </form>
         </div>
+        <BrandFooter />
       </div>
     </div>
   );
