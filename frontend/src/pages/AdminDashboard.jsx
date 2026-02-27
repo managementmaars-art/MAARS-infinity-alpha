@@ -544,6 +544,11 @@ const AdminDashboard = () => {
                   <option value="openai">OpenAI</option>
                   <option value="anthropic">Anthropic</option>
                   <option value="gemini">Google Gemini</option>
+                  <option value="xai">xAI (Grok)</option>
+                  <option value="deepseek">DeepSeek</option>
+                  <option value="mistral">Mistral AI</option>
+                  <option value="perplexity">Perplexity</option>
+                  <option value="cohere">Cohere</option>
                 </select>
               </div>
               <div className="space-y-2">
