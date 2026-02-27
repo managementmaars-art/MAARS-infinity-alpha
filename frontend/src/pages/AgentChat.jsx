@@ -143,8 +143,8 @@ const ExecutionSteps = ({ steps }) => {
   const [expanded, setExpanded] = useState(false);
   if (!steps || steps.length === 0) return null;
   
-  const toolIcons = { web_search: Search, calculate: Calculator, create_task: ClipboardList, analyze_data: BarChart3 };
-  const toolLabels = { web_search: "Web Search", calculate: "Calculate", create_task: "Create Task", analyze_data: "Analyze Data" };
+  const toolIcons = { web_search: Search, calculate: Calculator, create_task: ClipboardList, analyze_data: BarChart3, send_slack: MessageCircle, send_email: Mail, send_sms: Phone, github_action: Github, airtable_action: Table, search_gif: Image, schedule_meeting: Calendar, google_calendar: Calendar, send_gmail: Mail };
+  const toolLabels = { web_search: "Web Search", calculate: "Calculate", create_task: "Create Task", analyze_data: "Analyze Data", send_slack: "Slack Message", send_email: "Send Email", send_sms: "Send SMS", github_action: "GitHub", airtable_action: "Airtable", search_gif: "GIF Search", schedule_meeting: "Schedule", google_calendar: "Calendar", send_gmail: "Gmail" };
   
   return (
     <div className="mb-2" data-testid="execution-steps">
