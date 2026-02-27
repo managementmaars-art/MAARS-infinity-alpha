@@ -3059,52 +3059,88 @@ async def admin_api_usage(admin: User = Depends(require_admin)):
     api_keys_config = await get_api_keys()
     result = {}
     
+    provider_checks = {
+        "openai": {
+            "url": "https://api.openai.com/v1/models",
+            "headers_fn": lambda k: {"Authorization": f"Bearer {k}"},
+            "ok_codes": [200],
+            "models_key": "data",
+            "note": "OpenAI uses pay-as-you-go billing. Check dashboard.openai.com for balance."
+        },
+        "anthropic": {
+            "url": "https://api.anthropic.com/v1/models",
+            "headers_fn": lambda k: {"x-api-key": k, "anthropic-version": "2023-06-01"},
+            "ok_codes": [200, 403],
+            "note": "Anthropic uses pay-as-you-go billing. Check console.anthropic.com for balance."
+        },
+        "gemini": {
+            "url_fn": lambda k: f"https://generativelanguage.googleapis.com/v1beta/models?key={k}",
+            "ok_codes": [200],
+            "models_key": "models",
+            "note": "Gemini has free tier with rate limits. Paid tier via Google Cloud billing."
+        },
+        "xai": {
+            "url": "https://api.x.ai/v1/models",
+            "headers_fn": lambda k: {"Authorization": f"Bearer {k}"},
+            "ok_codes": [200],
+            "models_key": "data",
+            "note": "xAI Grok. Check console.x.ai for billing."
+        },
+        "deepseek": {
+            "url": "https://api.deepseek.com/models",
+            "headers_fn": lambda k: {"Authorization": f"Bearer {k}"},
+            "ok_codes": [200],
+            "note": "DeepSeek. Check platform.deepseek.com for billing."
+        },
+        "mistral": {
+            "url": "https://api.mistral.ai/v1/models",
+            "headers_fn": lambda k: {"Authorization": f"Bearer {k}"},
+            "ok_codes": [200],
+            "models_key": "data",
+            "note": "Mistral AI. Check console.mistral.ai for billing."
+        },
+        "perplexity": {
+            "url": "https://api.perplexity.ai/chat/completions",
+            "headers_fn": lambda k: {"Authorization": f"Bearer {k}"},
+            "ok_codes": [200, 401, 422],
+            "note": "Perplexity. Check perplexity.ai/settings for billing."
+        },
+        "cohere": {
+            "url": "https://api.cohere.ai/v1/models",
+            "headers_fn": lambda k: {"Authorization": f"Bearer {k}"},
+            "ok_codes": [200],
+            "note": "Cohere. Check dashboard.cohere.com for billing."
+        },
+        "elevenlabs": {
+            "url": "https://api.elevenlabs.io/v1/user",
+            "headers_fn": lambda k: {"xi-api-key": k},
+            "ok_codes": [200],
+            "note": "ElevenLabs TTS. Check elevenlabs.io for billing."
+        },
+    }
+    
     async with httpx.AsyncClient(timeout=10) as client:
-        # OpenAI usage
-        openai_key = api_keys_config.get("openai", "")
-        if openai_key:
+        for provider_id, check in provider_checks.items():
+            key = api_keys_config.get(provider_id, "")
+            if not key:
+                continue
             try:
-                resp = await client.get(
-                    "https://api.openai.com/v1/models",
-                    headers={"Authorization": f"Bearer {openai_key}"}
-                )
-                result["openai"] = {
-                    "status": "active" if resp.status_code == 200 else "error",
-                    "models_available": len(resp.json().get("data", [])) if resp.status_code == 200 else 0,
-                    "note": "OpenAI uses pay-as-you-go billing. Check dashboard.openai.com for balance."
+                url = check.get("url_fn", lambda k: check["url"])(key)
+                hdrs = check.get("headers_fn", lambda k: {})(key)
+                resp = await client.get(url, headers=hdrs)
+                entry = {
+                    "status": "active" if resp.status_code in check["ok_codes"] else "error",
+                    "note": check.get("note", "")
                 }
+                models_key = check.get("models_key")
+                if models_key and resp.status_code == 200:
+                    try:
+                        entry["models_available"] = len(resp.json().get(models_key, []))
+                    except Exception:
+                        pass
+                result[provider_id] = entry
             except Exception as e:
-                result["openai"] = {"status": "error", "note": str(e)[:100]}
-        
-        # Anthropic usage
-        anthropic_key = api_keys_config.get("anthropic", "")
-        if anthropic_key:
-            try:
-                resp = await client.get(
-                    "https://api.anthropic.com/v1/models",
-                    headers={"x-api-key": anthropic_key, "anthropic-version": "2023-06-01"}
-                )
-                result["anthropic"] = {
-                    "status": "active" if resp.status_code in (200, 403) else "error",
-                    "note": "Anthropic uses pay-as-you-go billing. Check console.anthropic.com for balance."
-                }
-            except Exception as e:
-                result["anthropic"] = {"status": "error", "note": str(e)[:100]}
-        
-        # Gemini usage
-        gemini_key = api_keys_config.get("gemini", "")
-        if gemini_key:
-            try:
-                resp = await client.get(
-                    f"https://generativelanguage.googleapis.com/v1beta/models?key={gemini_key}"
-                )
-                result["gemini"] = {
-                    "status": "active" if resp.status_code == 200 else "error",
-                    "models_available": len(resp.json().get("models", [])) if resp.status_code == 200 else 0,
-                    "note": "Gemini has free tier with rate limits. Paid tier via Google Cloud billing."
-                }
-            except Exception as e:
-                result["gemini"] = {"status": "error", "note": str(e)[:100]}
+                result[provider_id] = {"status": "error", "note": str(e)[:100]}
     
     # Our tracked usage per provider
     provider_pipeline = [
