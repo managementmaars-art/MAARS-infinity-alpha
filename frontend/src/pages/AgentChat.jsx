@@ -8,7 +8,7 @@ import {
   Bot, Send, Plus, ArrowLeft, MessageSquare, Trash2,
   LayoutDashboard, Users, ListTodo, Settings, LogOut, Menu, X,
   Paperclip, Image, FileText, Sparkles, Mic, MicOff, Loader2,
-  Download, Film, FileSpreadsheet, File
+  Download, Film, FileSpreadsheet, File, Volume2, VolumeX
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
