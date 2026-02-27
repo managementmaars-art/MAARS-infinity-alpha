@@ -794,6 +794,19 @@ const AgentChat = () => {
                           )}
                         </div>
                       )}
+                      {msg.role === "assistant" && (
+                        <button
+                          onClick={() => playTTS(msg.message_id || i, msg.content)}
+                          disabled={ttsLoading === (msg.message_id || i)}
+                          className="text-xs text-zinc-500 hover:text-indigo-400 transition-colors flex items-center gap-1 ml-auto"
+                          data-testid={`tts-btn-${i}`}
+                          title="Read aloud (ElevenLabs)"
+                        >
+                          {ttsLoading === (msg.message_id || i) ? <Loader2 className="w-3 h-3 animate-spin" /> :
+                           ttsPlaying === (msg.message_id || i) ? <VolumeX className="w-3 h-3 text-red-400" /> :
+                           <Volume2 className="w-3 h-3" />}
+                        </button>
+                      )}
                     </div>
                     {/* Generated file preview */}
                     {msg.role === "assistant" && (() => {
