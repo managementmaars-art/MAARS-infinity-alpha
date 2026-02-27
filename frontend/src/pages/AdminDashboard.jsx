@@ -34,7 +34,7 @@ const AdminDashboard = () => {
   const [calcResult, setCalcResult] = useState(null);
   const [calcInputs, setCalcInputs] = useState({ ai_cost_per_credit: 0.003, target_profit_margin: 200, bdt_exchange_rate: 107 });
   const [apiKeysConfig, setApiKeysConfig] = useState(null);
-  const [apiKeyInputs, setApiKeyInputs] = useState({ openai_key: "", anthropic_key: "", gemini_key: "", active_provider: "emergent" });
+  const [apiKeyInputs, setApiKeyInputs] = useState({ openai_key: "", anthropic_key: "", gemini_key: "", xai_key: "", deepseek_key: "", mistral_key: "", perplexity_key: "", cohere_key: "", elevenlabs_key: "", active_provider: "emergent" });
   const [testingKey, setTestingKey] = useState(null);
   const [newAgent, setNewAgent] = useState({
     name: "", description: "", role: "", system_prompt: "",
@@ -664,7 +664,7 @@ const AdminDashboard = () => {
         const data = await res.json();
         toast.success(`API keys saved! Using: ${data.active_provider === 'direct' ? 'Direct Provider Keys' : 'Emergent Universal Key'}`);
         fetchAdminData();
-        setApiKeyInputs(prev => ({...prev, openai_key: "", anthropic_key: "", gemini_key: ""}));
+        setApiKeyInputs(prev => ({...prev, openai_key: "", anthropic_key: "", gemini_key: "", xai_key: "", deepseek_key: "", mistral_key: "", perplexity_key: "", cohere_key: "", elevenlabs_key: ""}));
       } else {
         toast.error("Failed to save API keys");
       }
@@ -712,14 +712,15 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {["openai", "anthropic", "gemini"].map(provider => {
+              {["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs"].map(provider => {
                 const status = usage.providers?.[provider];
                 const tracked = usage.tracked_usage?.[provider];
                 if (!status && !tracked) return null;
+                const providerLabels = { openai: "OpenAI", anthropic: "Anthropic", gemini: "Google Gemini", xai: "xAI (Grok)", deepseek: "DeepSeek", mistral: "Mistral AI", perplexity: "Perplexity", cohere: "Cohere", elevenlabs: "ElevenLabs" };
                 return (
-                  <div key={provider} className="p-3 rounded-lg bg-white/5 border border-white/10">
+                  <div key={provider} className="p-3 rounded-lg bg-white/5 border border-white/10" data-testid={`api-status-${provider}`}>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-white font-medium capitalize">{provider}</span>
+                      <span className="text-white font-medium">{providerLabels[provider] || provider}</span>
                       <Badge className={status?.status === 'active' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}>
                         {status?.status || 'no key'}
                       </Badge>
