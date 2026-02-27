@@ -4,6 +4,7 @@ import { Button } from "../components/ui/button";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+import { BrandFooter } from "../components/BrandFooter";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
@@ -126,6 +127,7 @@ const PaymentSuccess = () => {
           </>
         )}
       </div>
+      <BrandFooter />
     </div>
   );
 };
