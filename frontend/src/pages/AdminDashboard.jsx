@@ -1142,14 +1142,12 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label className="text-zinc-300 text-sm">AI Cost per Credit (USD)</Label>
-              <Input
-                type="number"
-                step="0.001"
-                value={calcInputs.ai_cost_per_credit}
-                onChange={(e) => setCalcInputs(p => ({...p, ai_cost_per_credit: parseFloat(e.target.value) || 0}))}
-                className="bg-zinc-800/50 border-white/10"
-                data-testid="calc-cost-input"
-              />
+              <div
+                className="flex items-center h-10 px-3 rounded-md bg-zinc-800/80 border border-white/5 text-sm text-zinc-300 font-mono"
+                data-testid="calc-cost-display"
+              >
+                ${(calcInputs.ai_cost_per_credit || 0).toFixed(4)}
+              </div>
               <p className="text-[10px] text-zinc-500">Auto-populated from real usage data</p>
             </div>
             <div className="space-y-2">
