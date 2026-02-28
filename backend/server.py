@@ -2199,6 +2199,55 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     updated_sub = await db.subscriptions.find_one({"user_id": current_user.user_id}, {"_id": 0})
     credits_remaining = updated_sub.get("credits", 0) if updated_sub else 0
     
+    # Start background video generation if needed
+    if video_generating:
+        import asyncio
+        async def _bg_video_gen():
+            try:
+                api_keys_vid = await get_api_keys()
+                if api_keys_vid["active_provider"] == "direct" and api_keys_vid.get("openai"):
+                    vid_api_key = api_keys_vid["openai"]
+                else:
+                    vid_api_key = api_keys_vid.get("emergent", EMERGENT_LLM_KEY)
+                
+                vid_prompt = message_data.content
+                if len(response_text) > 100:
+                    try:
+                        from emergentintegrations.llm.chat import LlmChat, UserMessage as UM
+                        pc = LlmChat(api_key=vid_api_key, session_id=f"vidp_{uuid.uuid4().hex[:6]}", system_message="Convert into a concise video generation prompt (max 150 words). Focus on scene, action, mood, camera, lighting. Output ONLY the prompt.").with_model("openai", "gpt-4o-mini")
+                        vid_prompt = await pc.send_message(UM(text=f"User: {message_data.content}\n\nDesc:\n{response_text[:1200]}"))
+                    except Exception:
+                        pass
+                
+                from emergentintegrations.llm.openai.video_generation import OpenAIVideoGeneration
+                vg = OpenAIVideoGeneration(api_key=vid_api_key)
+                loop = asyncio.get_event_loop()
+                vb = await loop.run_in_executor(None, lambda: vg.text_to_video(prompt=vid_prompt[:2000], model="sora-2", size="1280x720", duration=4, max_wait_time=600))
+                
+                if vb:
+                    fid = uuid.uuid4().hex[:10]
+                    fn = f"{fid}_video.mp4"
+                    fp = UPLOAD_DIR / fn
+                    vg.save_video(vb, str(fp))
+                    vid_data = {"filename": fn, "url": f"/files/{fn}", "model": "sora-2", "prompt": vid_prompt[:500]}
+                    await db.chats.update_one(
+                        {"chat_id": chat_id, "messages.message_id": assistant_msg["message_id"]},
+                        {"$set": {"messages.$.generated_video": vid_data, "messages.$.video_generating": False}}
+                    )
+                    logger.info(f"Background video generated: {fn}")
+                else:
+                    await db.chats.update_one(
+                        {"chat_id": chat_id, "messages.message_id": assistant_msg["message_id"]},
+                        {"$set": {"messages.$.video_generating": False, "messages.$.video_error": "Video generation returned empty"}}
+                    )
+            except Exception as ve:
+                logger.error(f"Background video gen failed: {ve}")
+                await db.chats.update_one(
+                    {"chat_id": chat_id, "messages.message_id": assistant_msg["message_id"]},
+                    {"$set": {"messages.$.video_generating": False, "messages.$.video_error": str(ve)[:200]}}
+                )
+        asyncio.ensure_future(_bg_video_gen())
+    
     return {
         "user_message": user_msg,
         "assistant_message": assistant_msg,
