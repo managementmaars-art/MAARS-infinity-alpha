@@ -350,7 +350,7 @@ const Dashboard = () => {
                   return (
                     <Card
                       key={chat.chat_id}
-                      className="bg-zinc-900/50 border-white/10 hover:border-white/20 cursor-pointer transition-colors"
+                      className="bg-zinc-900/50 border-white/10 hover:border-white/20 cursor-pointer transition-colors group"
                       onClick={() => navigate(`/chat/${chat.agent_id}?chat=${chat.chat_id}`)}
                       data-testid={`recent-chat-${chat.chat_id}`}
                     >
@@ -366,6 +366,16 @@ const Dashboard = () => {
                             {agent?.name} • {chat.messages?.length || 0} messages
                           </p>
                         </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteChat(chat.chat_id);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 p-2 text-zinc-500 hover:text-red-400 transition-all"
+                          data-testid={`delete-recent-chat-${chat.chat_id}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                         <ChevronRight className="w-5 h-5 text-zinc-500" />
                       </CardContent>
                     </Card>
