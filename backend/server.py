@@ -1922,10 +1922,6 @@ async def call_llm_with_fallback(api_keys, model_provider, model_name, system_pr
             if attachments:
                 message_content += f"\n\n[User attached {len(attachments)} file(s)]"
             user_message = UserMessage(text=message_content)
-            if attachments:
-                for att in attachments:
-                    if att.startswith("data:image") or att.startswith("http"):
-                        user_message = user_message.add_image(att)
             result = await llm_chat.send_message(user_message)
             return result, fb_provider, fb_model
         except Exception as e:
