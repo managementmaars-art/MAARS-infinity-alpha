@@ -444,6 +444,7 @@ const AgentChat = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput("");
     setAttachments([]);
+    if (textareaRef.current) textareaRef.current.style.height = "40px";
 
     try {
       const response = await fetch(`${API}/chats/${chatId}/messages`, {
