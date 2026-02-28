@@ -2902,7 +2902,7 @@ async def generate_document(request: Request, current_user: User = Depends(get_c
         
         return {
             "filename": filename,
-            "url": f"/api/files/{filename}",
+            "url": f"/files/{filename}",
             "type": doc_type,
             "title": title,
             "size": filepath.stat().st_size
