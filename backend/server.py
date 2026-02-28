@@ -110,6 +110,7 @@ SUBSCRIPTION_PLANS = {
         "max_agents": 1,
         "max_custom_agents": 0,
         "includes_commander": False,
+        "max_team_members": 1,
         "features": ["1 AI employee", "50 credits/month", "Basic support"]
     },
     "starter": {
@@ -120,7 +121,8 @@ SUBSCRIPTION_PLANS = {
         "max_agents": 5,
         "max_custom_agents": 2,
         "includes_commander": False,
-        "features": ["5 AI employees", "500 credits/month", "2 custom agents", "Priority support", "File uploads"]
+        "max_team_members": 3,
+        "features": ["5 AI employees", "500 credits/month", "2 custom agents", "Team (up to 3)", "Priority support", "File uploads"]
     },
     "pro": {
         "name": "Pro",
@@ -130,7 +132,8 @@ SUBSCRIPTION_PLANS = {
         "max_agents": 10,
         "max_custom_agents": 5,
         "includes_commander": True,
-        "features": ["10 AI employees + Commander AI", "2,000 credits/month", "5 custom agents", "Priority support", "Unlimited uploads"]
+        "max_team_members": 10,
+        "features": ["10 AI employees + Commander AI", "2,000 credits/month", "5 custom agents", "Team (up to 10)", "Priority support", "Unlimited uploads"]
     },
     "business": {
         "name": "Business",
@@ -140,7 +143,8 @@ SUBSCRIPTION_PLANS = {
         "max_agents": 20,
         "max_custom_agents": -1,
         "includes_commander": True,
-        "features": ["All 20 AI employees + Commander AI", "6,000 credits/month", "Unlimited custom agents", "Dedicated support", "Unlimited everything", "API access"]
+        "max_team_members": -1,
+        "features": ["All 20 AI employees + Commander AI", "6,000 credits/month", "Unlimited custom agents", "Unlimited team members", "Dedicated support", "Unlimited everything", "API access"]
     }
 }
 
