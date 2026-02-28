@@ -535,6 +535,48 @@ const AdminDashboard = () => {
     </div>
   );
 
+  const [savingAgent, setSavingAgent] = useState(null);
+  const [expandedAgent, setExpandedAgent] = useState(null);
+
+  const handleToggleCapability = async (agentId, field, currentValue) => {
+    setSavingAgent(agentId);
+    try {
+      const res = await fetch(`${API}/admin/agents/${agentId}/settings`, {
+        method: "PUT",
+        credentials: "include",
+        headers,
+        body: JSON.stringify({ [field]: !currentValue })
+      });
+      if (res.ok) {
+        setAgents(prev => prev.map(a => a.agent_id === agentId ? { ...a, [field]: !currentValue } : a));
+        toast.success(`Updated ${field.replace('can_generate_', '').replace('_', ' ')} permission`);
+      } else {
+        toast.error("Failed to update");
+      }
+    } catch {
+      toast.error("Failed to update");
+    } finally {
+      setSavingAgent(null);
+    }
+  };
+
+  const CapabilityToggle = ({ agentId, field, label, icon: Icon, enabled }) => (
+    <button
+      onClick={() => handleToggleCapability(agentId, field, enabled)}
+      disabled={savingAgent === agentId}
+      className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
+        enabled
+          ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/25"
+          : "bg-zinc-800/50 text-zinc-500 border-zinc-700/50 hover:bg-zinc-700/50 hover:text-zinc-300"
+      }`}
+      data-testid={`toggle-${field}-${agentId}`}
+    >
+      {savingAgent === agentId ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Icon className="w-3.5 h-3.5" />}
+      {label}
+      {enabled ? <CheckCircle className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
+    </button>
+  );
+
   const AgentsTab = () => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -556,54 +598,25 @@ const AdminDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-zinc-300">Name</Label>
-                <Input
-                  value={newAgent.name}
-                  onChange={(e) => setNewAgent(p => ({...p, name: e.target.value}))}
-                  placeholder="Agent Name"
-                  className="bg-zinc-800/50 border-white/10"
-                  data-testid="admin-agent-name-input"
-                />
+                <Input value={newAgent.name} onChange={(e) => setNewAgent(p => ({...p, name: e.target.value}))} placeholder="Agent Name" className="bg-zinc-800/50 border-white/10" data-testid="admin-agent-name-input" />
               </div>
               <div className="space-y-2">
                 <Label className="text-zinc-300">Role</Label>
-                <Input
-                  value={newAgent.role}
-                  onChange={(e) => setNewAgent(p => ({...p, role: e.target.value}))}
-                  placeholder="e.g. Data Scientist"
-                  className="bg-zinc-800/50 border-white/10"
-                  data-testid="admin-agent-role-input"
-                />
+                <Input value={newAgent.role} onChange={(e) => setNewAgent(p => ({...p, role: e.target.value}))} placeholder="e.g. Data Scientist" className="bg-zinc-800/50 border-white/10" data-testid="admin-agent-role-input" />
               </div>
             </div>
             <div className="space-y-2">
               <Label className="text-zinc-300">Description</Label>
-              <Input
-                value={newAgent.description}
-                onChange={(e) => setNewAgent(p => ({...p, description: e.target.value}))}
-                placeholder="Brief description of the agent"
-                className="bg-zinc-800/50 border-white/10"
-                data-testid="admin-agent-desc-input"
-              />
+              <Input value={newAgent.description} onChange={(e) => setNewAgent(p => ({...p, description: e.target.value}))} placeholder="Brief description of the agent" className="bg-zinc-800/50 border-white/10" data-testid="admin-agent-desc-input" />
             </div>
             <div className="space-y-2">
               <Label className="text-zinc-300">System Prompt</Label>
-              <Textarea
-                value={newAgent.system_prompt}
-                onChange={(e) => setNewAgent(p => ({...p, system_prompt: e.target.value}))}
-                placeholder="You are... (define the agent's personality and instructions)"
-                className="bg-zinc-800/50 border-white/10 min-h-[100px]"
-                data-testid="admin-agent-prompt-input"
-              />
+              <Textarea value={newAgent.system_prompt} onChange={(e) => setNewAgent(p => ({...p, system_prompt: e.target.value}))} placeholder="You are... (define the agent's personality and instructions)" className="bg-zinc-800/50 border-white/10 min-h-[100px]" data-testid="admin-agent-prompt-input" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-zinc-300">Model Provider</Label>
-                <select
-                  value={newAgent.model_provider}
-                  onChange={(e) => setNewAgent(p => ({...p, model_provider: e.target.value}))}
-                  className="w-full h-10 px-3 rounded-md bg-zinc-800/50 border border-white/10 text-white"
-                  data-testid="admin-agent-provider-select"
-                >
+                <select value={newAgent.model_provider} onChange={(e) => setNewAgent(p => ({...p, model_provider: e.target.value}))} className="w-full h-10 px-3 rounded-md bg-zinc-800/50 border border-white/10 text-white" data-testid="admin-agent-provider-select">
                   <option value="openai">OpenAI</option>
                   <option value="anthropic">Anthropic</option>
                   <option value="gemini">Google Gemini</option>
@@ -616,60 +629,74 @@ const AdminDashboard = () => {
               </div>
               <div className="space-y-2">
                 <Label className="text-zinc-300">Model Name</Label>
-                <Input
-                  value={newAgent.model_name}
-                  onChange={(e) => setNewAgent(p => ({...p, model_name: e.target.value}))}
-                  placeholder="gpt-5.2"
-                  className="bg-zinc-800/50 border-white/10"
-                  data-testid="admin-agent-model-input"
-                />
+                <Input value={newAgent.model_name} onChange={(e) => setNewAgent(p => ({...p, model_name: e.target.value}))} placeholder="gpt-5.2" className="bg-zinc-800/50 border-white/10" data-testid="admin-agent-model-input" />
               </div>
             </div>
             <div className="space-y-2">
               <Label className="text-zinc-300">Capabilities (comma-separated)</Label>
-              <Input
-                value={newAgent.capabilities}
-                onChange={(e) => setNewAgent(p => ({...p, capabilities: e.target.value}))}
-                placeholder="Skill 1, Skill 2, Skill 3"
-                className="bg-zinc-800/50 border-white/10"
-                data-testid="admin-agent-capabilities-input"
-              />
+              <Input value={newAgent.capabilities} onChange={(e) => setNewAgent(p => ({...p, capabilities: e.target.value}))} placeholder="Skill 1, Skill 2, Skill 3" className="bg-zinc-800/50 border-white/10" data-testid="admin-agent-capabilities-input" />
             </div>
-            <Button
-              onClick={handleCreateAgent}
-              className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600"
-              data-testid="admin-save-agent-btn"
-            >
+            <Button onClick={handleCreateAgent} className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600" data-testid="admin-save-agent-btn">
               Create Agent
             </Button>
           </CardContent>
         </Card>
       )}
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         {agents.map((agent) => (
-          <Card key={agent.agent_id} className="bg-zinc-900/50 border-white/10" data-testid={`admin-agent-${agent.agent_id}`}>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-4">
+          <Card key={agent.agent_id} className="bg-zinc-900/50 border-white/10 overflow-hidden" data-testid={`admin-agent-${agent.agent_id}`}>
+            <CardContent className="p-0">
+              <div
+                className="flex items-center gap-4 p-4 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                onClick={() => setExpandedAgent(expandedAgent === agent.agent_id ? null : agent.agent_id)}
+                data-testid={`agent-row-${agent.agent_id}`}
+              >
                 <img src={agent.avatar} alt={agent.name} className="w-12 h-12 rounded-lg object-cover shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="font-medium text-white truncate">{agent.name}</p>
+                    {agent.is_commander && <Badge className="bg-amber-500/20 text-amber-400 text-[10px]">Commander</Badge>}
                     {agent.is_custom && <Badge className="bg-cyan-500/20 text-cyan-400 text-[10px]">Custom</Badge>}
                   </div>
                   <p className="text-sm text-zinc-400 truncate">{agent.role}</p>
-                  <p className="text-xs text-zinc-500 truncate">{agent.model_provider}/{agent.model_name}</p>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-red-400 hover:text-red-300 hover:bg-red-500/10 shrink-0"
-                  onClick={() => handleDeleteAgent(agent.agent_id, agent.name)}
-                  data-testid={`admin-delete-agent-${agent.agent_id}`}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center gap-2 shrink-0">
+                  <div className="hidden sm:flex items-center gap-1">
+                    {agent.can_generate_image && <Badge className="bg-blue-500/15 text-blue-400 text-[10px] border-blue-500/20">IMG</Badge>}
+                    {agent.can_generate_video && <Badge className="bg-purple-500/15 text-purple-400 text-[10px] border-purple-500/20">VID</Badge>}
+                    {agent.can_generate_pdf && <Badge className="bg-orange-500/15 text-orange-400 text-[10px] border-orange-500/20">PDF</Badge>}
+                    {agent.can_generate_files && <Badge className="bg-green-500/15 text-green-400 text-[10px] border-green-500/20">FILES</Badge>}
+                  </div>
+                  {expandedAgent === agent.agent_id ? <ChevronUp className="w-4 h-4 text-zinc-500" /> : <ChevronDown className="w-4 h-4 text-zinc-500" />}
+                </div>
               </div>
+
+              {expandedAgent === agent.agent_id && (
+                <div className="border-t border-white/5 px-4 py-4 bg-zinc-950/30 space-y-4" data-testid={`agent-expanded-${agent.agent_id}`}>
+                  <div>
+                    <p className="text-xs text-zinc-500 uppercase tracking-wider mb-2 font-medium">Generation Permissions</p>
+                    <div className="flex flex-wrap gap-2">
+                      <CapabilityToggle agentId={agent.agent_id} field="can_generate_image" label="Images" icon={Image} enabled={!!agent.can_generate_image} />
+                      <CapabilityToggle agentId={agent.agent_id} field="can_generate_video" label="Videos" icon={Film} enabled={!!agent.can_generate_video} />
+                      <CapabilityToggle agentId={agent.agent_id} field="can_generate_pdf" label="PDF" icon={FileText} enabled={!!agent.can_generate_pdf} />
+                      <CapabilityToggle agentId={agent.agent_id} field="can_generate_files" label="Files" icon={File} enabled={!!agent.can_generate_files} />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-zinc-500">
+                    <span>{agent.model_provider}/{agent.model_name}</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-7 text-xs"
+                      onClick={(e) => { e.stopPropagation(); handleDeleteAgent(agent.agent_id, agent.name); }}
+                      data-testid={`admin-delete-agent-${agent.agent_id}`}
+                    >
+                      <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete
+                    </Button>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         ))}
