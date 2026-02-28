@@ -2465,14 +2465,39 @@ Rules:
                 # Check if user attached an image for image-to-video
                 source_image_path = None
                 source_mime = "image/jpeg"
-                for att in user_attachments:
-                    if isinstance(att, str) and any(att.lower().endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.webp']):
-                        # Attachment is a file URL - download it
-                        att_path = UPLOAD_DIR / att.split("/")[-1] if "/files/" in att else None
-                        if att_path and att_path.exists():
-                            source_image_path = str(att_path)
-                            source_mime = "image/png" if att.endswith('.png') else "image/jpeg"
+                
+                # Check attachment_files first (saved files with paths)
+                for af in user_attachment_files:
+                    if af.get("type", "").startswith("image/"):
+                        file_url = af.get("file_url", "")
+                        fname = file_url.split("/")[-1] if file_url else ""
+                        fpath = UPLOAD_DIR / fname
+                        if fpath.exists():
+                            source_image_path = str(fpath)
+                            source_mime = af.get("type", "image/jpeg")
+                            logger.info(f"Using uploaded image for video: {fname}")
                             break
+                
+                # Fallback: check base64 attachments
+                if not source_image_path:
+                    for att in user_attachments:
+                        if isinstance(att, str) and att.startswith("data:image/"):
+                            # Save base64 image to disk
+                            try:
+                                header, b64data = att.split(",", 1)
+                                mime = header.split(":")[1].split(";")[0]
+                                ext = mime.split("/")[1].replace("jpeg", "jpg")
+                                img_bytes = base64.b64decode(b64data)
+                                tmp_name = f"{uuid.uuid4().hex[:10]}_vidref.{ext}"
+                                tmp_path = UPLOAD_DIR / tmp_name
+                                with open(tmp_path, 'wb') as f:
+                                    f.write(img_bytes)
+                                source_image_path = str(tmp_path)
+                                source_mime = mime
+                                logger.info(f"Saved base64 image for video: {tmp_name}")
+                                break
+                            except Exception as b64_err:
+                                logger.warning(f"Failed to decode base64 image: {b64_err}")
                 
                 # Also check if we just generated an image - use it as source for video
                 if not source_image_path and generated_image and generated_image.get("filename"):
