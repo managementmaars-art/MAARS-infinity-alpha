@@ -456,7 +456,8 @@ const AgentChat = () => {
           content: userMessage.content,
           model_provider: isAuto ? "auto" : provider,
           model_name: isAuto ? "auto" : model,
-          attachments: userMessage.attachments
+          attachments: userMessage.attachments,
+          attachment_files: userMessage.attachment_files
         })
       });
 
