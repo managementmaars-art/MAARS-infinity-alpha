@@ -3372,6 +3372,71 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
             ],
             "unit": "per 1K characters"
         },
+        "slack": {
+            "models": [
+                {"name": "Post Message", "input": "Free", "output": "per message"},
+                {"name": "Read Channel", "input": "Free", "output": "per request"},
+            ],
+            "unit": "Free with Bot Token (Slack workspace subscription separate)"
+        },
+        "github": {
+            "models": [
+                {"name": "REST API", "input": "Free", "output": "5,000 req/hr"},
+                {"name": "Create Issue/PR", "input": "Free", "output": "per action"},
+            ],
+            "unit": "Free for public repos. Requires Personal Access Token"
+        },
+        "sendgrid": {
+            "models": [
+                {"name": "Transactional Email", "input": "$0.001", "output": "per email"},
+                {"name": "Marketing Email", "input": "$0.002", "output": "per email"},
+            ],
+            "unit": "Free: 100/day. Essentials: $19.95/50K emails/mo"
+        },
+        "resend": {
+            "models": [
+                {"name": "Email Send", "input": "$0.001", "output": "per email"},
+                {"name": "Batch Email", "input": "$0.0008", "output": "per email"},
+            ],
+            "unit": "Free: 100/day. Pro: $20/50K emails/mo"
+        },
+        "twilio": {
+            "models": [
+                {"name": "SMS (US)", "input": "$0.0079", "output": "per SMS"},
+                {"name": "SMS (Intl)", "input": "$0.01-0.15", "output": "per SMS"},
+                {"name": "Voice Call", "input": "$0.014", "output": "per minute"},
+            ],
+            "unit": "Pay-as-you-go. Prices vary by country"
+        },
+        "airtable": {
+            "models": [
+                {"name": "Read Records", "input": "Free", "output": "5 req/sec"},
+                {"name": "Write Records", "input": "Free", "output": "5 req/sec"},
+            ],
+            "unit": "Free: 1,000 records. Plus: $20/mo unlimited"
+        },
+        "calendly": {
+            "models": [
+                {"name": "Schedule Event", "input": "Free", "output": "per event"},
+                {"name": "List Events", "input": "Free", "output": "per request"},
+            ],
+            "unit": "Free tier available. Pro: $12/mo includes API"
+        },
+        "giphy": {
+            "models": [
+                {"name": "Search GIFs", "input": "Free", "output": "42 req/hr"},
+                {"name": "Trending GIFs", "input": "Free", "output": "42 req/hr"},
+            ],
+            "unit": "Free API. Rate limited (production key: 1000 req/hr)"
+        },
+        "google_suite": {
+            "models": [
+                {"name": "Gmail Send", "input": "Free", "output": "per email"},
+                {"name": "Calendar Event", "input": "Free", "output": "per event"},
+                {"name": "Drive Read/Write", "input": "Free", "output": "per file"},
+            ],
+            "unit": "Free with service account. Google Workspace quota limits apply"
+        },
     }
     
     all_providers = ["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs"]
