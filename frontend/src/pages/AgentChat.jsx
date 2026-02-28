@@ -944,7 +944,7 @@ const AgentChat = () => {
                       const imgKey = `${msg.message_id || i}_image`;
                       const vidKey = `${msg.message_id || i}_video`;
                       const imgFile = generatedFiles[imgKey] || msg.generated_image;
-                      const vidFile = generatedFiles[vidKey];
+                      const vidFile = generatedFiles[vidKey] || msg.generated_video;
                       return (
                         <>
                           {(imgFile?.preview || imgFile?.url) && (
