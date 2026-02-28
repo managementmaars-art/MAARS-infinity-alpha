@@ -2283,18 +2283,25 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
             # Use LLM response as an enhanced prompt, or build one from user content
             img_prompt = message_data.content
             # Refine prompt for professional-grade image output
-            if len(response_text) > 50:
-                try:
-                    from emergentintegrations.llm.chat import LlmChat, UserMessage as UM
-                    prompt_chat = LlmChat(
-                        api_key=img_api_key,
-                        session_id=f"imgprompt_{uuid.uuid4().hex[:8]}",
-                        system_message="You are a professional image prompt engineer. Convert the design description into a detailed, vivid image generation prompt for GPT Image 1. Include specific details about style (flat design, 3D render, minimalist, etc.), color palette, composition, lighting, background, and resolution. For logos: specify clean vector-style, professional typography, scalable design. For marketing materials: specify layout, visual hierarchy, branding elements. Output ONLY the prompt text, nothing else."
-                    ).with_model("openai", "gpt-4o-mini")
-                    img_prompt = await prompt_chat.send_message(UM(text=f"User request: {message_data.content}\n\nDesigner's creative brief:\n{response_text[:2000]}"))
-                except Exception as prompt_err:
-                    logger.warning(f"Prompt refinement failed, using original: {prompt_err}")
-                    img_prompt = message_data.content
+            try:
+                from emergentintegrations.llm.chat import LlmChat, UserMessage as UM
+                prompt_chat = LlmChat(
+                    api_key=img_api_key,
+                    session_id=f"imgprompt_{uuid.uuid4().hex[:8]}",
+                    system_message="""You are an expert prompt engineer for GPT Image 1 (the same model used in ChatGPT). Your job is to write prompts that produce stunning, professional, publication-ready images.
+
+Rules:
+- Output ONLY the image prompt. No explanations.
+- Be extremely detailed and specific about every visual element.
+- For LOGOS: Specify vector-style clean design, flat or minimal 3D, precise typography style (sans-serif/serif/geometric), exact colors as hex values, white or transparent background, centered composition, no photographic elements, scalable crisp edges.
+- For ILLUSTRATIONS/ART: Specify art style, medium, color palette, mood, lighting direction, background details.
+- For MARKETING materials: Layout, hierarchy, grid structure, brand colors, call-to-action placement.
+- Always include: style, composition, color palette, background, mood/atmosphere.
+- Aim for the quality level of a professional graphic designer's output."""
+                ).with_model("openai", "gpt-4o-mini")
+                img_prompt = await prompt_chat.send_message(UM(text=f"User request: {message_data.content}\n\nDesigner's creative brief:\n{response_text[:2000]}"))
+            except Exception as prompt_err:
+                logger.warning(f"Prompt refinement failed, using original: {prompt_err}")
             
             from emergentintegrations.llm.openai.image_generation import OpenAIImageGeneration
             image_gen = OpenAIImageGeneration(api_key=img_api_key)
