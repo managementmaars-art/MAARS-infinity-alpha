@@ -1735,69 +1735,63 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
         doc_content = content  # Fallback to full content if extraction found nothing
     
     if file_format == "pdf":
-        from fpdf import FPDF
-        pdf = FPDF(orientation='P', unit='mm', format='A4')
-        pdf.set_auto_page_break(auto=True, margin=20)
-        pdf.set_left_margin(25)
-        pdf.set_right_margin(25)
-        pdf.add_page()
-        
-        # Use Unicode TTF font to avoid character encoding issues
-        vera_path = "/root/.venv/lib/python3.11/site-packages/reportlab/fonts/Vera.ttf"
-        vera_bold = "/root/.venv/lib/python3.11/site-packages/reportlab/fonts/VeraBd.ttf"
-        try:
-            pdf.add_font("Vera", "", vera_path, uni=True)
-            pdf.add_font("Vera", "B", vera_bold, uni=True)
-            font_name = "Vera"
-        except Exception:
-            font_name = "Helvetica"
-        
-        pdf.set_font(font_name, size=11)
-        w = pdf.w - pdf.l_margin - pdf.r_margin
-        
-        def clean_md(t):
-            t = _re.sub(r'\*\*(.*?)\*\*', r'\1', t)
-            t = _re.sub(r'\*(.*?)\*', r'\1', t)
-            t = _re.sub(r'`(.*?)`', r'\1', t)
-            return t.strip()
-        
-        for line in doc_content.split('\n'):
-            s = line.strip()
-            if s.startswith('# '):
-                pdf.ln(3)
-                pdf.set_font(font_name, "B", 16)
-                pdf.multi_cell(w, 8, clean_md(s[2:]))
-                pdf.ln(2)
-                pdf.set_font(font_name, size=11)
-            elif s.startswith('## '):
-                pdf.ln(2)
-                pdf.set_font(font_name, "B", 14)
-                pdf.multi_cell(w, 7, clean_md(s[3:]))
-                pdf.ln(1)
-                pdf.set_font(font_name, size=11)
-            elif s.startswith('### '):
-                pdf.ln(2)
-                pdf.set_font(font_name, "B", 12)
-                pdf.multi_cell(w, 7, clean_md(s[4:]))
-                pdf.ln(1)
-                pdf.set_font(font_name, size=11)
-            elif _re.match(r'^---+$', s) or _re.match(r'^\*\*\*+$', s):
-                y = pdf.get_y()
-                pdf.line(pdf.l_margin, y, pdf.l_margin + w, y)
-                pdf.ln(4)
-            elif s == '':
-                pdf.ln(3)
-            elif s.startswith('- ') or s.startswith('* '):
-                pdf.cell(5, 6, chr(8226) + " ")
-                pdf.multi_cell(w - 5, 6, clean_md(s[2:]))
-            elif _re.match(r'^\d+[\.\)]\s', s):
-                pdf.multi_cell(w, 6, clean_md(s))
-            else:
-                pdf.multi_cell(w, 6, clean_md(s))
+        from reportlab.lib.pagesizes import A4
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, HRFlowable
+        from reportlab.lib.units import mm
+        from reportlab.lib.enums import TA_LEFT
+        from io import BytesIO
         
         filename = f"{file_id}_{filename_base}.pdf"
         filepath = UPLOAD_DIR / filename
-        pdf.output(str(filepath))
+        
+        doc_pdf = SimpleDocTemplate(str(filepath), pagesize=A4,
+                                     leftMargin=25*mm, rightMargin=25*mm,
+                                     topMargin=20*mm, bottomMargin=20*mm)
+        
+        styles = getSampleStyleSheet()
+        style_body = ParagraphStyle('Body', parent=styles['Normal'], fontSize=11, leading=15, spaceAfter=4)
+        style_h1 = ParagraphStyle('H1', parent=styles['Heading1'], fontSize=18, leading=22, spaceAfter=8, spaceBefore=12)
+        style_h2 = ParagraphStyle('H2', parent=styles['Heading2'], fontSize=15, leading=19, spaceAfter=6, spaceBefore=10)
+        style_h3 = ParagraphStyle('H3', parent=styles['Heading3'], fontSize=13, leading=17, spaceAfter=4, spaceBefore=8)
+        style_bullet = ParagraphStyle('Bullet', parent=style_body, leftIndent=15, bulletIndent=5)
+        
+        def clean_md(t):
+            # Convert markdown bold/italic to reportlab tags
+            t = _re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', t)
+            t = _re.sub(r'\*(.*?)\*', r'<i>\1</i>', t)
+            t = _re.sub(r'`(.*?)`', r'<font face="Courier">\1</font>', t)
+            # Escape XML special chars (but preserve our tags)
+            t = t.replace('&', '&amp;')
+            t = _re.sub(r'<(?!/?(?:b|i|font)[>\s])', '&lt;', t)
+            return t
+        
+        story = []
+        for line in doc_content.split('\n'):
+            s = line.strip()
+            if s.startswith('# '):
+                story.append(Paragraph(clean_md(s[2:].strip('*')), style_h1))
+            elif s.startswith('## '):
+                story.append(Paragraph(clean_md(s[3:].strip('*')), style_h2))
+            elif s.startswith('### '):
+                story.append(Paragraph(clean_md(s[4:].strip('*')), style_h3))
+            elif _re.match(r'^---+$', s) or _re.match(r'^\*\*\*+$', s):
+                story.append(HRFlowable(width="100%", thickness=1, color="grey"))
+                story.append(Spacer(1, 4*mm))
+            elif s == '':
+                story.append(Spacer(1, 3*mm))
+            elif s.startswith('- ') or s.startswith('* '):
+                story.append(Paragraph(clean_md(s[2:]), style_bullet, bulletText='\u2022'))
+            elif _re.match(r'^(\d+[\.\)])\s(.+)', s):
+                m = _re.match(r'^(\d+[\.\)])\s(.+)', s)
+                story.append(Paragraph(clean_md(m.group(2)), style_bullet, bulletText=m.group(1)))
+            elif s:
+                story.append(Paragraph(clean_md(s), style_body))
+        
+        if not story:
+            story.append(Paragraph("(Empty document)", style_body))
+        
+        doc_pdf.build(story)
         return filepath, filename, "application/pdf"
     
     elif file_format == "docx":
