@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+import { CreditsDisplay } from "../components/CreditsDisplay";
 
 const AVAILABLE_MODELS = [
   { provider: "auto", model: "auto", name: "Auto (Smart Selection)", category: "auto" },
