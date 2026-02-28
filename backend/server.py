@@ -279,6 +279,8 @@ class Message(BaseModel):
     execution_steps: Optional[List[dict]] = None  # Tool execution steps for agent responses
     generated_image: Optional[dict] = None  # Auto-generated image data
     generated_video: Optional[dict] = None  # Auto-generated video data
+    video_generating: Optional[bool] = None  # Video being generated in background
+    video_error: Optional[str] = None
     model_used: Optional[str] = None
     auto_selected: Optional[bool] = None
     model_reason: Optional[str] = None
