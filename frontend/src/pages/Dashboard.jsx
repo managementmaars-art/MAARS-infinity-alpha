@@ -167,11 +167,14 @@ const Dashboard = () => {
       <div className="lg:ml-64 pt-16 lg:pt-0">
         <div className="p-6 lg:p-8 max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2 font-['Outfit']">
-              Welcome back, {user?.name?.split(" ")[0]}
-            </h1>
-            <p className="text-zinc-400">Here's what's happening with your AI team today.</p>
+          <div className="mb-8 flex items-start justify-between">
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2 font-['Outfit']">
+                Welcome back, {user?.name?.split(" ")[0]}
+              </h1>
+              <p className="text-zinc-400">Here's what's happening with your AI team today.</p>
+            </div>
+            <CreditsDisplay />
           </div>
 
           {/* Stats Grid */}
