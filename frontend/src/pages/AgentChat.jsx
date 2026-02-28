@@ -1142,11 +1142,23 @@ const AgentChat = () => {
                 <Mic className="w-4 h-4" />
               )}
             </Button>
-            <Input
+            <textarea
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => {
+                setInput(e.target.value);
+                e.target.style.height = "auto";
+                e.target.style.height = Math.min(e.target.scrollHeight, 200) + "px";
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  if (input.trim() && selectedAgent && !sending) sendMessage(e);
+                }
+              }}
               placeholder={`Message ${selectedAgent?.name || "AI"}...`}
-              className="flex-1 bg-zinc-900/50 border-white/10 focus:border-indigo-500"
+              className="flex-1 bg-zinc-900/50 border border-white/10 focus:border-indigo-500 rounded-md px-3 py-2 text-sm text-white placeholder:text-zinc-500 resize-none overflow-y-auto outline-none"
+              style={{ minHeight: "40px", maxHeight: "200px" }}
+              rows={1}
               disabled={sending || !selectedAgent}
               data-testid="chat-input"
             />
