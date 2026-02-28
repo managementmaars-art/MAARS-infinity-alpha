@@ -795,10 +795,10 @@ const AgentChat = () => {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col pt-16 lg:pt-0">
+      <div className="flex-1 flex flex-col h-screen pt-16 lg:pt-0 overflow-hidden">
         {/* Agent Header */}
         {selectedAgent && (
-          <div className="hidden lg:flex items-center gap-4 p-4 border-b border-white/10">
+          <div className="hidden lg:flex items-center gap-4 p-4 border-b border-white/10 shrink-0">
             <img
               src={selectedAgent.avatar}
               alt={selectedAgent.name}
