@@ -1709,8 +1709,9 @@ def extract_document_content(raw_text: str) -> str:
     else:
         content = raw_text
     
-    # Remove trailing AI notes like "**Important Note:**" or "*I am an AI*"
-    end_patterns = [r'\*\*Important Note', r'\*I am an AI', r'\*Please note:', r'\*Disclaimer:']
+    # Remove trailing AI notes like "**Important Note:**" or "*I am an AI*" or "Next Steps for You"
+    end_patterns = [r'\*\*Important Note', r'\*I am an AI', r'\*Please note:', r'\*Disclaimer:', 
+                    r'### Next Steps', r'\*\*Next Steps', r'Would you like me to']
     result_lines = content.split('\n')
     cut_idx = len(result_lines)
     for i, line in enumerate(result_lines):
