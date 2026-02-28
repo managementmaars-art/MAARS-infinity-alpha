@@ -1836,7 +1836,7 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
     elif file_format == "csv":
         filename = f"{file_id}_{filename_base}.csv"
         filepath = UPLOAD_DIR / filename
-        lines = content.strip().split('\n')
+        lines = doc_content.strip().split('\n')
         with open(filepath, 'w', encoding='utf-8') as f:
             for line in lines:
                 # Try to detect table rows (| col1 | col2 |)
