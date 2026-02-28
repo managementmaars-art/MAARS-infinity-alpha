@@ -1874,8 +1874,7 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
     else:  # txt
         filename = f"{file_id}_{filename_base}.txt"
         filepath = UPLOAD_DIR / filename
-        # Strip markdown formatting
-        text = _re.sub(r'\*\*(.*?)\*\*', r'\1', content)
+        text = _re.sub(r'\*\*(.*?)\*\*', r'\1', doc_content)
         text = _re.sub(r'\*(.*?)\*', r'\1', text)
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(text)
