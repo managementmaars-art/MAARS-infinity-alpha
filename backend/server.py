@@ -2529,28 +2529,29 @@ Rules:
 
 @api_router.post("/upload")
 async def upload_file(file: UploadFile = File(...), current_user: User = Depends(get_current_user)):
-    """Upload any file and return base64 encoded data for use in chat"""
+    """Upload any file and return base64 encoded data + save to disk for processing"""
     try:
         contents = await file.read()
         
-        # Check file size (max 50MB)
         if len(contents) > 50 * 1024 * 1024:
             raise HTTPException(status_code=400, detail="File too large. Max 50MB.")
         
-        # Encode to base64
         b64_content = base64.b64encode(contents).decode('utf-8')
-        
-        # Determine content type
         content_type = file.content_type or "application/octet-stream"
+        data_url = f"data:{content_type};base64,{b64_content}"
         
-        # Create data URL for images
-        if content_type.startswith("image/"):
-            data_url = f"data:{content_type};base64,{b64_content}"
-        else:
-            data_url = f"data:{content_type};base64,{b64_content}"
+        # Also save to disk for image-to-video and other processing
+        file_id = uuid.uuid4().hex[:10]
+        ext = file.filename.rsplit('.', 1)[-1] if '.' in file.filename else 'bin'
+        saved_filename = f"{file_id}_upload.{ext}"
+        saved_path = UPLOAD_DIR / saved_filename
+        with open(saved_path, 'wb') as f:
+            f.write(contents)
         
         return {
             "filename": file.filename,
+            "saved_filename": saved_filename,
+            "file_url": f"/files/{saved_filename}",
             "content_type": content_type,
             "size": len(contents),
             "data_url": data_url
