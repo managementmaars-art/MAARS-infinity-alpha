@@ -982,10 +982,25 @@ const AgentChat = () => {
                     {msg.role === "assistant" && (() => {
                       const imgKey = `${msg.message_id || i}_image`;
                       const vidKey = `${msg.message_id || i}_video`;
+                      const fileKey = `${msg.message_id || i}_file`;
                       const imgFile = generatedFiles[imgKey] || msg.generated_image;
                       const vidFile = generatedFiles[vidKey] || msg.generated_video;
+                      const docFile = generatedFiles[fileKey] || msg.generated_file;
+                      const formatIcons = { pdf: "text-red-400 bg-red-500/10 border-red-500/30", docx: "text-blue-400 bg-blue-500/10 border-blue-500/30", xlsx: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30", csv: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30", txt: "text-zinc-400 bg-zinc-500/10 border-zinc-500/30" };
                       return (
                         <>
+                          {docFile?.url && (
+                            <div className={`mt-3 rounded-xl border p-4 max-w-sm flex items-center gap-3 ${formatIcons[docFile.format] || "text-zinc-400 bg-zinc-500/10 border-white/10"}`} data-testid={`generated-file-${msg.message_id || i}`}>
+                              <FileText className="w-8 h-8 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-white truncate">{docFile.filename}</p>
+                                <p className="text-xs opacity-70">{docFile.format?.toUpperCase()} {docFile.size ? `- ${(docFile.size / 1024).toFixed(1)}KB` : ""}</p>
+                              </div>
+                              <a href={`${API}${docFile.url}`} download={docFile.filename} className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors">
+                                <Download className="w-3.5 h-3.5" />Download
+                              </a>
+                            </div>
+                          )}
                           {(imgFile?.preview || imgFile?.url) && (
                             <div className="mt-3 rounded-lg overflow-hidden border border-white/10 max-w-sm" data-testid={`generated-image-${msg.message_id || i}`}>
                               <img src={imgFile.preview || `${API}${imgFile.url}`} alt="Generated" className="w-full" />
