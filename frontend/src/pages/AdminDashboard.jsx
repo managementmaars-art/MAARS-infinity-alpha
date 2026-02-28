@@ -1163,18 +1163,48 @@ const AdminDashboard = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Live AI Cost Summary - auto-updates every 15s */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-xl bg-white/5 border border-white/5" data-testid="live-cost-summary">
+            <div>
+              <p className="text-[10px] text-zinc-500 mb-0.5 flex items-center gap-1">
+                Total AI Cost <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              </p>
+              <p className="text-xl font-bold text-red-400 font-mono" data-testid="live-total-cost">${liveCost.total_cost_usd?.toFixed(4) || '0.00'}</p>
+            </div>
+            <div>
+              <p className="text-[10px] text-zinc-500 mb-0.5 flex items-center gap-1">
+                Cost per Credit <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              </p>
+              <p className="text-xl font-bold text-amber-400 font-mono" data-testid="live-cost-per-credit">${liveCost.avg_cost_per_credit?.toFixed(6) || '0.003'}</p>
+            </div>
+            <div>
+              <p className="text-[10px] text-zinc-500 mb-0.5">Total API Calls</p>
+              <p className="text-xl font-bold text-white font-mono" data-testid="live-total-calls">{liveCost.total_calls?.toLocaleString() || 0}</p>
+            </div>
+            <div>
+              <p className="text-[10px] text-zinc-500 mb-0.5">Data Source</p>
+              <p className="text-sm font-medium mt-1">
+                {liveCost.source === "real_usage" 
+                  ? <span className="text-emerald-400 flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5" /> Real Usage</span>
+                  : <span className="text-zinc-500">Default Estimate</span>
+                }
+              </p>
+              <p className="text-[10px] text-zinc-600 mt-0.5">Refreshes every 15s</p>
+            </div>
+          </div>
+
           <p className="text-zinc-400 text-sm">Set your target margin and apply it to all pricing — plan prices and credit packs update instantly.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label className="text-zinc-300 text-sm">AI Cost per Credit (USD)</Label>
               <div
-                className="flex items-center h-10 px-3 rounded-md bg-zinc-800/80 border border-white/5 text-sm text-zinc-300 font-mono"
+                className="flex items-center h-10 px-3 rounded-md bg-zinc-800/80 border border-white/5 text-sm text-amber-400 font-mono font-bold"
                 data-testid="calc-cost-display"
               >
-                ${(calcInputs.ai_cost_per_credit || 0).toFixed(4)}
+                ${(calcInputs.ai_cost_per_credit || 0).toFixed(6)}
               </div>
-              <p className="text-[10px] text-zinc-500">Auto-populated from real usage data</p>
+              <p className="text-[10px] text-emerald-500/70 flex items-center gap-1"><span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live from {liveCost.total_calls} API calls</p>
             </div>
             <div className="space-y-2">
               <Label className="text-zinc-300 text-sm">Target Profit Margin (%)</Label>
