@@ -2171,7 +2171,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         "model_used": f"{model_provider}/{model_name}",
         "auto_selected": auto_selected,
         "model_reason": model_reason if auto_selected else None,
-        "credits_remaining": credits_remaining
+        "credits_remaining": credits_remaining,
+        "generated_image": generated_image
     }
 
 # ============== FILE UPLOAD ENDPOINT ==============
