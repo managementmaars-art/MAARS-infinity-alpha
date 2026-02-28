@@ -945,7 +945,7 @@ async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
                         headers={"Authorization": f"Bearer {sg_key}", "Content-Type": "application/json"},
                         json={
                             "personalizations": [{"to": [{"email": to_email}]}],
-                            "from": {"email": "noreply@martianai.com"},
+                            "from": {"email": "noreply@maarsglobal.com"},
                             "subject": subject,
                             "content": [{"type": "text/html", "value": body}]
                         }
@@ -958,7 +958,7 @@ async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
                     resp = await client.post(
                         "https://api.resend.com/emails",
                         headers={"Authorization": f"Bearer {resend_key}", "Content-Type": "application/json"},
-                        json={"from": "noreply@martianai.com", "to": [to_email], "subject": subject, "html": body}
+                        json={"from": "noreply@maarsglobal.com", "to": [to_email], "subject": subject, "html": body}
                     )
                     if resp.status_code in (200, 201):
                         return f"Email sent to {to_email} via Resend successfully."
