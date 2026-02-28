@@ -2258,6 +2258,22 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     try:
         api_keys = await get_api_keys()
         
+        # Build conversation history for context
+        chat_messages = chat.get("messages", [])
+        history_lines = []
+        for prev_msg in chat_messages[-20:]:  # Last 20 messages for context
+            role_label = "User" if prev_msg.get("role") == "user" else "Assistant"
+            history_lines.append(f"{role_label}: {prev_msg.get('content', '')[:1500]}")
+        
+        conversation_context = ""
+        if history_lines:
+            conversation_context = "--- CONVERSATION HISTORY ---\n" + "\n".join(history_lines) + "\n--- END HISTORY ---\n\nLatest message from user:\n"
+        
+        full_user_content = conversation_context + message_data.content
+        
+        # Build enhanced system prompt with clarification instruction
+        enhanced_agent_prompt = agent["system_prompt"] + CLARIFICATION_INSTRUCTION
+        
         # Check if this is Commander AI - use delegation
         is_commander = agent.get("is_commander", False) or agent.get("agent_id") == "agent_commander"
         
@@ -2271,7 +2287,7 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         else:
             # Try tool-augmented execution first
             tool_result = await agent_execute_with_tools(
-                agent, message_data.content, chat_id, api_keys,
+                agent, full_user_content, chat_id, api_keys,
                 model_provider, model_name, current_user.user_id,
                 message_data.attachments
             )
@@ -2282,7 +2298,7 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
             else:
                 response_text, model_provider, model_name = await call_llm_with_fallback(
                     api_keys, model_provider, model_name,
-                    agent["system_prompt"], message_data.content,
+                    enhanced_agent_prompt, full_user_content,
                     message_data.attachments, chat_id
                 )
         
