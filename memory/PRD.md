@@ -9,33 +9,26 @@ Full-stack AI team platform with 20+ autonomous agents, Commander AI delegation,
 - React + FastAPI + MongoDB, JWT + Google OAuth
 - 21 AI agents with unique sci-fi robot avatars
 
+### Chat UI
+- Resizable sidebar (drag to adjust width, 200-600px range)
+- Navigation (Dashboard/All Agents/Tasks) at TOP of sidebar
+- Sticky message input that stays visible while scrolling
+- Model selector with 25+ models across 9 providers
+- File attachments, voice input (Whisper STT), TTS playback
+- Execution steps display for agent tool usage
+
 ### Autonomous Agent Architecture
 - **Tool System**: ReAct-pattern execution engine supporting multi-step reasoning
-- **Core Tools**: web_search (DuckDuckGo), calculate (safe math eval), create_task (task management), analyze_data (data analysis)
+- **Core Tools**: web_search, calculate, create_task, analyze_data
 - **Integration Tools**: send_slack, send_email, send_sms, github_action, airtable_action, search_gif, schedule_meeting, google_calendar, send_gmail
-- **Agent-Tool Mapping**: Each agent has specific tools based on their role
-- **Execution Steps**: Frontend displays reasoning steps (thinking, tool calls, tool results) in collapsible UI
-- **Feedback Loop**: Agents review tool results and incorporate them into final responses
 - **Dynamic Tool Availability**: Integration tools only available when admin configures API keys
 
 ### 3rd Party Service Integrations (Admin Configurable)
-- **Slack** - Bot Token, send messages to channels
-- **GitHub** - Personal Access Token, create issues/PRs, read repos
-- **SendGrid** - API Key, transactional/marketing emails
-- **Resend** - API Key, modern email sending
-- **Twilio** - Account SID + Auth Token + Phone, SMS/voice
-- **Airtable** - API Key, read/write bases and records
-- **Calendly** - API Key, schedule meetings
-- **Giphy** - API Key, GIF search
-- **Google Suite** - Service Account JSON, Gmail/Calendar/Drive
-- Each integration has: admin UI config, Test Connection, auto-detected by agents
+- Slack, GitHub, SendGrid, Resend, Twilio, Airtable, Calendly, Giphy, Google Suite
+- Each with admin UI config, Test Connection, and auto-detection by agents
 
 ### AI Models (25+ models across 9 providers)
 - OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Perplexity, Cohere, ElevenLabs
-- Universal Key + Direct API key support
-
-### Voice & Audio
-- STT via OpenAI Whisper, TTS via ElevenLabs Multilingual v2
 
 ### File Generation
 - Documents: PDF, Excel, Word, CSV, TXT
@@ -43,16 +36,12 @@ Full-stack AI team platform with 20+ autonomous agents, Commander AI delegation,
 - Videos: Sora 2
 
 ### Admin Dashboard (9 tabs)
-- Overview, Users, Agents, Transactions, Pricing Manager, Custom Packages, API Keys, **Integrations** (NEW), Payment Setup
-- All 9 AI providers shown in API Keys tab
-- All 9 integration services configurable in Integrations tab with Test Connection
+- Overview, Users, Agents, Transactions, Pricing Manager, Custom Packages, API Keys, Integrations, Payment Setup
 
 ### Subscriptions & Billing
-- 4 plans + "Build Your Own" + Extra Credit Packs
-- Stripe checkout, multi-currency (USD/BDT)
+- 4 plans + "Build Your Own" + Extra Credit Packs, Stripe checkout
 
 ### Commander AI + Group Chat
-- Task delegation with group chat bubbles
 
 ## Backlog
 - P1: Teams & Collaboration (invite members, shared agents, role-based permissions)
