@@ -2446,9 +2446,12 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
                 
                 from emergentintegrations.llm.openai.video_generation import OpenAIVideoGeneration
                 vg = OpenAIVideoGeneration(api_key=vid_api_key)
-                loop = asyncio.get_event_loop()
                 logger.info(f"Starting Sora 2 video gen: prompt={vid_prompt[:100]}...")
-                vb = await loop.run_in_executor(None, lambda: vg.text_to_video(prompt=vid_prompt[:2000], model="sora-2", size="1280x720", duration=8, max_wait_time=600))
+                
+                def _sync_gen():
+                    return vg.text_to_video(prompt=vid_prompt[:2000], model="sora-2", size="1280x720", duration=8, max_wait_time=600)
+                
+                vb = await asyncio.to_thread(_sync_gen)
                 logger.info(f"Video gen result: type={type(vb)}, has_data={bool(vb)}")
                 
                 if vb:
@@ -2473,7 +2476,7 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
                     {"chat_id": chat_id, "messages.message_id": assistant_msg["message_id"]},
                     {"$set": {"messages.$.video_generating": False, "messages.$.video_error": str(ve)[:200]}}
                 )
-        asyncio.ensure_future(_bg_video_gen())
+        asyncio.create_task(_bg_video_gen())
     
     return {
         "user_message": user_msg,
