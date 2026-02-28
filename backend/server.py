@@ -4793,6 +4793,30 @@ async def startup():
 async def shutdown_db_client():
     client.close()
 
+
+# ============== ADMIN AGENT MANAGEMENT ==============
+
+@api_router.get("/admin/agents")
+async def admin_get_agents(admin: User = Depends(require_admin)):
+    """Get all agents with their settings for admin management"""
+    agents = await db.agents.find({}, {"_id": 0}).to_list(50)
+    return {"agents": agents}
+
+@api_router.put("/admin/agents/{agent_id}/settings")
+async def admin_update_agent_settings(agent_id: str, body: dict = Body(...), admin: User = Depends(require_admin)):
+    """Update agent settings including generation permissions"""
+    allowed_fields = {"can_generate_image", "can_generate_video", "can_generate_pdf", "can_generate_files", "system_prompt", "capabilities", "is_active"}
+    update = {k: v for k, v in body.items() if k in allowed_fields}
+    if not update:
+        raise HTTPException(status_code=400, detail="No valid fields to update")
+    
+    result = await db.agents.update_one({"agent_id": agent_id}, {"$set": update})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    
+    return {"success": True, "updated": list(update.keys())}
+
+
 app.include_router(api_router)
 
 app.add_middleware(
