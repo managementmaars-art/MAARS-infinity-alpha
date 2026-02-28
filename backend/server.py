@@ -1620,31 +1620,28 @@ async def get_chat(chat_id: str, current_user: User = Depends(get_current_user))
 # ============== AUTO MODEL SELECTION ==============
 
 def detect_video_generation_request(content: str, agent_role: str) -> bool:
-    """Detect if a user message is requesting video generation."""
-    content_lower = content.lower()
-    
-    generation_verbs = ['generate', 'create', 'make', 'produce', 'render', 'build me', 'give me', 'shoot', 'film', 'record']
-    video_nouns = ['video', 'commercial', 'ad', 'advertisement', 'clip', 'trailer', 'promo', 'animation',
-                   'reel', 'short film', 'footage', 'motion', 'cinematic', 'tiktok', 'youtube video']
-    
-    has_verb = any(v in content_lower for v in generation_verbs)
-    has_noun = any(n in content_lower for n in video_nouns)
-    
-    video_roles = ['video content specialist', 'video', 'videographer', 'filmmaker', 'animator']
+    """Detect if a user message is requesting video generation. Only video-specialist agents can generate videos."""
+    # ONLY video-specialist agents can trigger video generation
+    video_roles = ['video content specialist', 'videographer', 'filmmaker', 'animator']
     is_video_agent = any(r in agent_role.lower() for r in video_roles)
+    if not is_video_agent:
+        return False
     
-    if is_video_agent and has_verb:
-        return True
-    if has_verb and has_noun:
-        return True
-    
-    return False
+    content_lower = content.lower()
+    generation_verbs = ['generate', 'create', 'make', 'produce', 'render', 'build me', 'give me', 'shoot', 'film', 'record']
+    has_verb = any(v in content_lower for v in generation_verbs)
+    return has_verb
 
 
 def detect_image_generation_request(content: str, agent_role: str) -> bool:
-    """Detect if a user message is requesting image/visual generation."""
-    content_lower = content.lower()
+    """Detect if a user message is requesting image/visual generation. Only design agents can generate images."""
+    # ONLY graphic/design agents can trigger image generation
+    visual_roles = ['graphic designer', 'designer', 'illustrator', 'artist']
+    is_visual_agent = any(r in agent_role.lower() for r in visual_roles)
+    if not is_visual_agent:
+        return False
     
+    content_lower = content.lower()
     generation_verbs = ['generate', 'create', 'make', 'design', 'draw', 'sketch', 'produce',
                         'illustrate', 'render', 'build me', 'give me', 'show me', 'craft']
     visual_nouns = ['image', 'picture', 'logo', 'banner', 'illustration', 'icon', 'graphic',
@@ -1655,15 +1652,8 @@ def detect_image_generation_request(content: str, agent_role: str) -> bool:
     has_verb = any(v in content_lower for v in generation_verbs)
     has_noun = any(n in content_lower for n in visual_nouns)
     
-    # Strong visual agent roles auto-trigger more easily
-    visual_roles = ['graphic designer', 'designer', 'illustrator', 'artist']
-    is_visual_agent = any(r in agent_role.lower() for r in visual_roles)
-    
-    # If visual agent + any generation verb (even without explicit visual noun)
-    if is_visual_agent and has_verb:
+    if has_verb:
         return True
-    
-    # Any agent + explicit generation verb + visual noun
     if has_verb and has_noun:
         return True
     
