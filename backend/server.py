@@ -1855,7 +1855,7 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
         ws.title = "Sheet1"
         
         row_num = 1
-        for line in content.strip().split('\n'):
+        for line in doc_content.strip().split('\n'):
             if '|' in line and not line.strip().replace('-', '').replace('|', '').strip() == '':
                 cells = [c.strip().strip('*') for c in line.split('|') if c.strip()]
                 if cells and not all(c.replace('-', '').strip() == '' for c in cells):
