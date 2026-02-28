@@ -336,23 +336,28 @@ const Tasks = () => {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-zinc-300">Assign Agents</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {agents.map((agent) => (
-                        <button
-                          key={agent.agent_id}
-                          type="button"
-                          onClick={() => toggleAgent(agent.agent_id)}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                            newTask.assigned_agents.includes(agent.agent_id)
-                              ? "bg-indigo-500/20 ring-1 ring-indigo-500"
-                              : "bg-zinc-800/50 hover:bg-zinc-800"
-                          }`}
-                          data-testid={`assign-agent-${agent.agent_id}`}
-                        >
-                          <img src={agent.avatar} alt="" className="w-6 h-6 rounded object-cover" />
-                          <span className="text-sm text-zinc-300">{agent.name}</span>
-                        </button>
-                      ))}
+                    <div className="max-h-48 overflow-y-auto rounded-lg border border-white/5 p-2">
+                      <div className="flex flex-wrap gap-2">
+                        {agents.map((agent) => (
+                          <button
+                            key={agent.agent_id}
+                            type="button"
+                            onClick={() => toggleAgent(agent.agent_id)}
+                            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                              newTask.assigned_agents.includes(agent.agent_id)
+                                ? "bg-indigo-500/20 ring-1 ring-indigo-500"
+                                : "bg-zinc-800/50 hover:bg-zinc-800"
+                            }`}
+                            data-testid={`assign-agent-${agent.agent_id}`}
+                          >
+                            <img src={agent.avatar} alt="" className="w-6 h-6 rounded object-cover" />
+                            <div className="text-left">
+                              <span className="text-sm text-zinc-300 block leading-tight">{agent.name}</span>
+                              <span className="text-[10px] text-zinc-500 block leading-tight">{agent.role}</span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                   <div className="flex gap-3 pt-4">

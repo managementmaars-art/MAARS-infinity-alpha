@@ -456,10 +456,10 @@ const SettingsPage = () => {
             </CardContent>
           </Card>
 
-          {/* Danger Zone */}
-          <Card className="bg-zinc-900/50 border-red-500/20">
+          {/* Account */}
+          <Card className="bg-zinc-900/50 border-white/10">
             <CardHeader>
-              <CardTitle className="text-red-400 font-['Outfit']">Danger Zone</CardTitle>
+              <CardTitle className="text-zinc-300 font-['Outfit']">Account</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">

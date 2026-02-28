@@ -689,7 +689,7 @@ const AgentChat = () => {
           return (
             <button
               key={type}
-              onClick={() => generateFile(type, truncated, msgId, `${currentAgent?.name || "Agent"} Output`)}
+              onClick={() => generateFile(type, truncated, msgId, `${selectedAgent?.name || "Agent"} Output`)}
               disabled={isGenerating}
               className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium transition-colors ${color} border border-white/5`}
               data-testid={`gen-${type}-${msgId}`}
