@@ -1145,6 +1145,7 @@ const AgentChat = () => {
               )}
             </Button>
             <textarea
+              ref={textareaRef}
               value={input}
               onChange={(e) => {
                 setInput(e.target.value);
