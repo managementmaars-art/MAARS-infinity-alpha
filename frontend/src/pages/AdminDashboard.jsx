@@ -1032,6 +1032,34 @@ const AdminDashboard = () => {
       liveCalcs[pid] = { credits, base: Math.round(base * 100) / 100, rec, recBdt, profit: Math.round((rec - base) * 100) / 100 };
     }
 
+    const syncAllBdtPricing = (newRate) => {
+      setCalcInputs(p => ({...p, bdt_exchange_rate: newRate}));
+      if (pricingEdit) {
+        const updated = { ...pricingEdit, plans: { ...pricingEdit.plans } };
+        for (const [planId, plan] of Object.entries(updated.plans)) {
+          if (planId !== 'free') {
+            updated.plans[planId] = { ...plan, price_bdt: Math.round((plan.price_usd || 0) * newRate) };
+          }
+        }
+        setPricingEdit(updated);
+      }
+    };
+
+    const applyMarginToPlans = () => {
+      if (pricingEdit) {
+        const updated = { ...pricingEdit, plans: { ...pricingEdit.plans } };
+        for (const [planId, plan] of Object.entries(updated.plans)) {
+          if (planId !== 'free') {
+            const cost = (plan.credits || 0) * (ai_cost_per_credit || 0.003);
+            const usd = Math.round(cost * marginMultiplier * 100) / 100;
+            updated.plans[planId] = { ...plan, price_usd: usd, price_bdt: Math.round(usd * (bdt_exchange_rate || 107)) };
+          }
+        }
+        setPricingEdit(updated);
+        toast.success(`Applied ${target_profit_margin}% margin to all plans`);
+      }
+    };
+
     return (
     <div className="space-y-6">
       {/* Profit Margin Calculator */}
@@ -1046,7 +1074,7 @@ const AdminDashboard = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-zinc-400 text-sm">Adjust your cost basis and desired margin — plan prices update instantly below.</p>
+          <p className="text-zinc-400 text-sm">Set your target margin and apply it to all pricing — plan prices and credit packs update instantly.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
@@ -1074,16 +1102,34 @@ const AdminDashboard = () => {
             </div>
             <div className="space-y-2">
               <Label className="text-zinc-300 text-sm">BDT Exchange Rate</Label>
-              <Input
-                type="number"
-                value={calcInputs.bdt_exchange_rate}
-                onChange={(e) => setCalcInputs(p => ({...p, bdt_exchange_rate: parseFloat(e.target.value) || 0}))}
-                className="bg-zinc-800/50 border-white/10"
-                data-testid="calc-bdt-input"
-              />
-              <p className="text-[10px] text-zinc-500">1 USD = {bdt_exchange_rate} BDT</p>
+              <div className="flex gap-2">
+                <Input
+                  type="number"
+                  value={calcInputs.bdt_exchange_rate}
+                  onChange={(e) => syncAllBdtPricing(parseFloat(e.target.value) || 0)}
+                  className="bg-zinc-800/50 border-white/10 flex-1"
+                  data-testid="calc-bdt-input"
+                />
+                <Button variant="outline" size="sm" className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 text-xs whitespace-nowrap"
+                  data-testid="refresh-rate-btn"
+                  onClick={async () => {
+                    try {
+                      const res = await fetch(`${API}/exchange-rate`);
+                      if (res.ok) { const d = await res.json(); syncAllBdtPricing(d.usd_bdt); toast.success(`Rate updated: 1 USD = ${d.usd_bdt} BDT`); }
+                    } catch { toast.error("Failed to fetch rate"); }
+                  }}>
+                  Refresh Live
+                </Button>
+              </div>
+              <p className="text-[10px] text-emerald-500/70">Live rate: 1 USD = {bdt_exchange_rate} BDT (auto-syncs all BDT prices)</p>
             </div>
           </div>
+
+          <Button onClick={applyMarginToPlans}
+            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
+            data-testid="apply-margin-plans-btn">
+            Apply {target_profit_margin}% Margin to All Plans
+          </Button>
 
           {/* Live price preview table */}
           <div className="mt-4 overflow-x-auto">
