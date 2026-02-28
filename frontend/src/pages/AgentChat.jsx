@@ -873,6 +873,11 @@ const AgentChat = () => {
                 <p className="text-sm text-zinc-400">{selectedAgent.role}</p>
               </div>
             </div>
+            {currentChat && (
+              <Button variant="ghost" size="sm" onClick={shareChat} className="text-zinc-400 hover:text-indigo-400 h-8" data-testid="share-chat-btn">
+                <Share2 className="w-4 h-4 mr-1" />Share
+              </Button>
+            )}
           </div>
         )}
 
