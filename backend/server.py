@@ -2181,6 +2181,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         assistant_msg["execution_steps"] = execution_steps
     if generated_image:
         assistant_msg["generated_image"] = generated_image
+    if generated_video:
+        assistant_msg["generated_video"] = generated_video
     
     # Update chat
     await db.chats.update_one(
