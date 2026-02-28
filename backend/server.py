@@ -2042,6 +2042,59 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         logger.error(f"LLM error: {e}")
         response_text = f"I apologize, but I'm having trouble processing your request right now. Error: {str(e)}"
     
+    # Auto-detect image generation requests and generate images
+    generated_image = None
+    if detect_image_generation_request(message_data.content, agent.get("role", "")):
+        try:
+            api_keys_img = await get_api_keys()
+            if api_keys_img["active_provider"] == "direct" and api_keys_img.get("openai"):
+                img_api_key = api_keys_img["openai"]
+            else:
+                img_api_key = api_keys_img.get("emergent", EMERGENT_LLM_KEY)
+            
+            # Use LLM response as an enhanced prompt, or build one from user content
+            img_prompt = message_data.content
+            # Try to extract a concise prompt from the LLM's design description
+            if len(response_text) > 100:
+                try:
+                    from emergentintegrations.llm.chat import LlmChat, UserMessage as UM
+                    prompt_chat = LlmChat(
+                        api_key=img_api_key,
+                        session_id=f"imgprompt_{uuid.uuid4().hex[:8]}",
+                        system_message="Convert the following design description into a concise, vivid image generation prompt (max 200 words). Focus on visual details, style, colors, and composition. Output ONLY the prompt, nothing else."
+                    ).with_model("openai", "gpt-4o-mini")
+                    img_prompt = await prompt_chat.send_message(UM(text=f"User request: {message_data.content}\n\nDesign description:\n{response_text[:1500]}"))
+                except Exception as prompt_err:
+                    logger.warning(f"Prompt refinement failed, using original: {prompt_err}")
+                    img_prompt = message_data.content
+            
+            from emergentintegrations.llm.openai.image_generation import OpenAIImageGeneration
+            image_gen = OpenAIImageGeneration(api_key=img_api_key)
+            images = await image_gen.generate_images(
+                prompt=img_prompt[:2000],
+                model="gpt-image-1",
+                number_of_images=1
+            )
+            
+            if images and len(images) > 0:
+                file_id = uuid.uuid4().hex[:10]
+                filename = f"{file_id}_generated.png"
+                filepath = UPLOAD_DIR / filename
+                with open(filepath, "wb") as f:
+                    f.write(images[0])
+                image_b64 = base64.b64encode(images[0]).decode()
+                generated_image = {
+                    "filename": filename,
+                    "url": f"/api/files/{filename}",
+                    "preview": f"data:image/png;base64,{image_b64}",
+                    "model": "gpt-image-1",
+                    "prompt": img_prompt[:500]
+                }
+                logger.info(f"Auto-generated image for user request: {message_data.content[:80]}")
+        except Exception as img_err:
+            logger.error(f"Auto image generation failed: {img_err}")
+            # Don't fail the entire message, just skip image generation
+    
     # Create assistant message
     assistant_msg = {
         "message_id": f"msg_{uuid.uuid4().hex[:12]}",
@@ -2055,6 +2108,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         assistant_msg["delegation_data"] = delegation_data
     if execution_steps:
         assistant_msg["execution_steps"] = execution_steps
+    if generated_image:
+        assistant_msg["generated_image"] = generated_image
     
     # Update chat
     await db.chats.update_one(
