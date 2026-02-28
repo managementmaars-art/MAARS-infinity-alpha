@@ -233,6 +233,7 @@ const AdminDashboard = () => {
 
   const OverviewTab = () => {
     const p = profitData;
+    const costs = apiKeysConfig?.cost_reference || {};
     return (
     <div className="space-y-6">
       {/* Top stats */}
