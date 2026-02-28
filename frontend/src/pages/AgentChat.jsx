@@ -439,6 +439,11 @@ const AgentChat = () => {
           const imgKey = `${data.assistant_message.message_id}_image`;
           setGeneratedFiles(prev => ({ ...prev, [imgKey]: data.generated_image }));
         }
+        // Auto-store generated video if present
+        if (data.generated_video && data.assistant_message?.message_id) {
+          const vidKey = `${data.assistant_message.message_id}_video`;
+          setGeneratedFiles(prev => ({ ...prev, [vidKey]: data.generated_video }));
+        }
         // Show toast if auto-selected
         if (data.auto_selected && data.model_reason) {
           toast.success(`Smart Selection: ${data.model_used} - ${data.model_reason}`);
