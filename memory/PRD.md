@@ -13,25 +13,28 @@ Full-stack AI team platform (rebranded from Martian AI to MAARS Command) with 20
 ### Credits System UI (Updated Feb 28, 2026)
 - Global credit balance pill (fixed top-right, visible on all authenticated pages)
 - "Buy Credits" golden button with dropdown panel
-- Dropdown: Available Credits, Free/Monthly/Top-up breakdown, Manage Subscriptions
 - Buy Credits modal: Dynamic packages fetched from /api/plans (admin-configured prices)
 - Currency toggle (USD/BDT) in Buy Credits modal
-- Custom amount input for flexible purchases
 - Stripe checkout integration for all purchases
 
 ### Admin Profit Calculator (Updated Feb 28, 2026)
 - AI Cost/Credit is read-only, auto-populated from real usage data
-- Removed editable $/Credit inputs from plan editors and credit pack rows
 - AI cost auto-updates across all profit calculators when usage data changes
 
-### Auto File Generation (Added Feb 28, 2026)
+### Admin Agent Capability Management (Added Feb 28, 2026)
+- Expandable agent rows in Agents tab with "Generation Permissions" section
+- Toggle buttons for: can_generate_image, can_generate_video, can_generate_pdf, can_generate_files
+- Real-time badge display (IMG, VID, PDF, FILES) on collapsed agent rows
+- Backend PUT /api/admin/agents/{agent_id}/settings endpoint
+- Agent permissions enforced during message processing (image/video/file generation)
+
+### Auto File Generation
 - Agents auto-detect file format requests (PDF, DOCX, XLSX, CSV, TXT) and generate downloadable files inline
-- Unicode-safe PDF generation with markdown formatting support
-- Manual file gen buttons (PDF, Word, Excel, Text, Image, Video) on every assistant response
+- Unicode-safe PDF generation with reportlab + markdown formatting support
 
 ### Chat Management
-- Delete chats from Dashboard (hover trash icon on recent conversations)
-- Delete chats from Chat sidebar (existing)
+- Delete chats from Dashboard and Chat sidebar
+- Auto-expanding textarea for chat input
 
 ### Auto Image Generation
 - GPT Image 1 with smart detection + prompt refinement, inline rendering
@@ -39,6 +42,7 @@ Full-stack AI team platform (rebranded from Martian AI to MAARS Command) with 20
 ### Auto Video Generation
 - Sora 2 background generation (non-blocking, ~2-5 min)
 - Polling UI: spinner during gen, auto-updates with video player
+- Image-to-video support via file upload
 
 ### LLM Fallback + Smart Auto Selection
 - Auto-retry across models, routes to reliable OpenAI/Gemini providers
