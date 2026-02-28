@@ -1757,13 +1757,13 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
         style_bullet = ParagraphStyle('Bullet', parent=style_body, leftIndent=15, bulletIndent=5)
         
         def clean_md(t):
-            # Convert markdown bold/italic to reportlab tags
+            # First escape ampersands and angle brackets
+            t = t.replace('&', '&amp;')
+            t = t.replace('<', '&lt;').replace('>', '&gt;')
+            # Then convert markdown bold/italic to reportlab XML tags
             t = _re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', t)
             t = _re.sub(r'\*(.*?)\*', r'<i>\1</i>', t)
             t = _re.sub(r'`(.*?)`', r'<font face="Courier">\1</font>', t)
-            # Escape XML special chars (but preserve our tags)
-            t = t.replace('&', '&amp;')
-            t = _re.sub(r'<(?!/?(?:b|i|font)[>\s])', '&lt;', t)
             return t
         
         story = []
