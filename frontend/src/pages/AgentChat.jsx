@@ -942,10 +942,10 @@ const AgentChat = () => {
                       const vidFile = generatedFiles[vidKey];
                       return (
                         <>
-                          {imgFile?.preview && (
-                            <div className="mt-3 rounded-lg overflow-hidden border border-white/10 max-w-sm">
-                              <img src={imgFile.preview} alt="Generated" className="w-full" />
-                              <a href={`${API}${imgFile.url}`} download className="block text-center text-xs text-indigo-400 py-2 hover:bg-white/5">
+                          {(imgFile?.preview || imgFile?.url) && (
+                            <div className="mt-3 rounded-lg overflow-hidden border border-white/10 max-w-sm" data-testid={`generated-image-${msg.message_id || i}`}>
+                              <img src={imgFile.preview || `${API}${imgFile.url}`} alt="Generated" className="w-full" />
+                              <a href={imgFile.url ? `${API}${imgFile.url}` : imgFile.preview} download className="block text-center text-xs text-indigo-400 py-2 hover:bg-white/5">
                                 <Download className="w-3 h-3 inline mr-1" />Download PNG
                               </a>
                             </div>
