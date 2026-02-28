@@ -2955,7 +2955,7 @@ async def generate_image(request: Request, current_user: User = Depends(get_curr
         
         return {
             "filename": filename,
-            "url": f"/api/files/{filename}",
+            "url": f"/files/{filename}",
             "preview": f"data:image/png;base64,{image_b64}",
             "model": model,
             "prompt": prompt
