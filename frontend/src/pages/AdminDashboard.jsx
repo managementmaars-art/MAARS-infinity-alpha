@@ -1344,12 +1344,12 @@ const AdminDashboard = () => {
                     <div className="space-y-1">
                       <Label className="text-zinc-400 text-xs">AI Cost/Credit</Label>
                       <div
-                        className="flex items-center h-9 px-3 rounded-md bg-zinc-800/80 border border-white/5 text-sm text-zinc-400 font-mono"
+                        className="flex items-center h-9 px-3 rounded-md bg-zinc-800/80 border border-white/5 text-sm text-amber-400 font-mono"
                         data-testid={`ai-cost-${planId}`}
                       >
-                        ${(calcInputs.ai_cost_per_credit || 0).toFixed(4)}
+                        ${(calcInputs.ai_cost_per_credit || 0).toFixed(6)}
                       </div>
-                      <p className="text-[10px] text-zinc-500">Auto from usage data</p>
+                      <p className="text-[10px] text-emerald-500/70 flex items-center gap-1"><span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live</p>
                     </div>
                     <div className="space-y-1">
                       <Label className="text-zinc-400 text-xs">Sell Price USD</Label>
