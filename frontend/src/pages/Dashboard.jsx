@@ -9,6 +9,7 @@ import {
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
 import { BrandFooter } from "../components/BrandFooter";
+import { CreditsDisplay } from "../components/CreditsDisplay";
 
 const Dashboard = () => {
   const navigate = useNavigate();
