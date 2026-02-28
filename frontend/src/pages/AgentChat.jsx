@@ -1100,7 +1100,7 @@ const AgentChat = () => {
             )}
           </div>
 
-          <form onSubmit={sendMessage} className="max-w-3xl mx-auto flex gap-3">
+          <form onSubmit={sendMessage} className="max-w-3xl mx-auto flex gap-3 items-end">
             <input
               type="file"
               ref={fileInputRef}
