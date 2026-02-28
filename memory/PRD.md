@@ -29,26 +29,42 @@ Full-stack AI team platform with 20+ autonomous agents, Commander AI delegation,
 
 ### AI Models (25+ models across 9 providers)
 - OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Perplexity, Cohere, ElevenLabs
+- API Key testing verified for ALL 9 providers with descriptive error messages
 
 ### File Generation
 - Documents: PDF, Excel, Word, CSV, TXT
 - Images: GPT Image 1, DALL-E 3
 - Videos: Sora 2
 
-### Admin Dashboard (9 tabs)
-- Overview, Users, Agents, Transactions, Pricing Manager, Custom Packages, API Keys, Integrations, Payment Setup
+### Admin Dashboard
+- Overview, Users, Agents, Transactions, Pricing Manager, Custom Packages, API Keys & Integrations, Payment Setup
 
-### Subscriptions & Billing
-- 4 plans + "Build Your Own" + Extra Credit Packs, Stripe checkout
+### Subscriptions & Billing (Verified E2E - Feb 28 2026)
+- 4 plans (Free/Starter/Pro/Business) + "Build Your Own" + Extra Credit Packs
+- Stripe checkout integration working
+- Credit deduction on message send verified
+- Default free plan with 50 credits for new users
 
 ### Commander AI + Group Chat
 
 ## Backlog
 - P1: Teams & Collaboration (invite members, shared agents, role-based permissions)
-- P1: E2E subscription/credit testing
 - P1: Commander AI as purchasable add-on
 - P2: Backend refactoring (break server.py into modules)
+- P2: Frontend refactoring (break AdminDashboard.jsx into sub-components)
 - P2: Custom domain UI
 
 ## Credentials
 - Admin: management.maars@marsgc.net / MaarsAdmin2024!
+
+## Architecture
+```
+/app/
+  backend/
+    server.py   # Monolithic (4300+ lines) - auth, chat, ReAct engine, billing, admin, tools, integrations
+    .env
+  frontend/src/
+    App.js
+    pages/ (AdminDashboard.jsx, AgentChat.jsx, PricingPage.jsx, etc.)
+    components/ui/ (Shadcn)
+```
