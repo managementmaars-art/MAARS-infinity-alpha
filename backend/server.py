@@ -1629,6 +1629,35 @@ async def get_chat(chat_id: str, current_user: User = Depends(get_current_user))
 
 # ============== AUTO MODEL SELECTION ==============
 
+def detect_image_generation_request(content: str, agent_role: str) -> bool:
+    """Detect if a user message is requesting image/visual generation."""
+    content_lower = content.lower()
+    
+    generation_verbs = ['generate', 'create', 'make', 'design', 'draw', 'sketch', 'produce',
+                        'illustrate', 'render', 'build me', 'give me', 'show me', 'craft']
+    visual_nouns = ['image', 'picture', 'logo', 'banner', 'illustration', 'icon', 'graphic',
+                    'visual', 'poster', 'thumbnail', 'artwork', 'photo', 'infographic',
+                    'mockup', 'cover', 'avatar', 'badge', 'flyer', 'brochure', 'card',
+                    'wallpaper', 'meme', 'diagram', 'drawing', 'painting', 'portrait']
+    
+    has_verb = any(v in content_lower for v in generation_verbs)
+    has_noun = any(n in content_lower for n in visual_nouns)
+    
+    # Strong visual agent roles auto-trigger more easily
+    visual_roles = ['graphic designer', 'designer', 'illustrator', 'artist']
+    is_visual_agent = any(r in agent_role.lower() for r in visual_roles)
+    
+    # If visual agent + any generation verb (even without explicit visual noun)
+    if is_visual_agent and has_verb:
+        return True
+    
+    # Any agent + explicit generation verb + visual noun
+    if has_verb and has_noun:
+        return True
+    
+    return False
+
+
 def auto_select_model(content: str, agent_role: str) -> tuple:
     """
     Automatically select the best AI model based on task content and agent role.
