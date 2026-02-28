@@ -438,6 +438,7 @@ const AgentChat = () => {
       content: input, 
       message_id: `temp_${Date.now()}`,
       attachments: attachments.map(a => a.preview),
+      attachment_files: attachments.filter(a => a.file_url).map(a => ({ file_url: a.file_url, type: a.type, filename: a.filename })),
       model_used: isAuto ? "Auto-selecting..." : selectedModel,
       auto_selected: isAuto
     };
