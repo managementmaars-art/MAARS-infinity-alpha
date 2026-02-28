@@ -1994,9 +1994,9 @@ const CustomPackagesTab = () => {
                 <input type="number" value={pack.credits}
                   onChange={e => updateExtraPack(i, "credits", e.target.value)}
                   className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
-                <div className="bg-zinc-800/80 border border-white/5 rounded-lg px-3 py-2 text-zinc-400 text-sm font-mono"
+                <div className="bg-zinc-800/80 border border-white/5 rounded-lg px-3 py-2 text-amber-400 text-sm font-mono"
                   data-testid={`ai-cost-credit-pack-${i}`}>
-                  ${avgCost.toFixed(4)}
+                  ${avgCost.toFixed(6)}
                 </div>
                 <span className="text-red-400 text-sm px-1">${cost.toFixed(2)}</span>
                 <input type="number" step="0.5" value={pack.price_usd}
