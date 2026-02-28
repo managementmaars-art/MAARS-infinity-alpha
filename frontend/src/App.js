@@ -236,6 +236,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <AppRouter />
+        <Watermark />
         <Toaster position="top-right" richColors />
       </AuthProvider>
     </BrowserRouter>
