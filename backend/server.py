@@ -2142,14 +2142,20 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
                     vid_prompt = message_data.content
             
             from emergentintegrations.llm.openai.video_generation import OpenAIVideoGeneration
+            import asyncio
             video_gen = OpenAIVideoGeneration(api_key=vid_api_key)
-            video_bytes = video_gen.text_to_video(
-                prompt=vid_prompt[:2000],
-                model="sora-2",
-                size="1280x720",
-                duration=4,
-                max_wait_time=600
-            )
+            
+            def _gen_video():
+                return video_gen.text_to_video(
+                    prompt=vid_prompt[:2000],
+                    model="sora-2",
+                    size="1280x720",
+                    duration=4,
+                    max_wait_time=600
+                )
+            
+            loop = asyncio.get_event_loop()
+            video_bytes = await loop.run_in_executor(None, _gen_video)
             
             if video_bytes:
                 file_id = uuid.uuid4().hex[:10]
