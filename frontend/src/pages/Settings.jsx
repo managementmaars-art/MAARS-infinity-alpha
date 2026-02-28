@@ -138,7 +138,7 @@ const SettingsPage = () => {
             <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
-            <span className="text-lg font-bold text-white font-['Outfit']">Martian AI</span>
+            <span className="text-lg font-bold text-white font-['Outfit']">MAARS Command</span>
             <p className="text-[9px] text-zinc-500 -mt-1">by MAARS Global Corp</p>
           </div>
         </Link>
@@ -191,7 +191,7 @@ const SettingsPage = () => {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
               <Bot className="w-5 h-5 text-white" />
             </div>
-            <span className="text-lg font-bold text-white font-['Outfit']">Martian AI</span>
+            <span className="text-lg font-bold text-white font-['Outfit']">MAARS Command</span>
           </Link>
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-zinc-400">
             {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
