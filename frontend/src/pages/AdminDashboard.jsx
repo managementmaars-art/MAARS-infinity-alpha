@@ -2012,69 +2012,78 @@ const IntegrationsTab = () => {
 
   return (
     <div className="space-y-6" data-testid="integrations-tab">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-white">Service Integrations</h2>
-          <p className="text-sm text-zinc-400 mt-1">Configure third-party services your AI agents can use as tools</p>
-        </div>
-        <Button onClick={handleSave} disabled={saving} className="bg-red-500 hover:bg-red-600" data-testid="save-integrations-btn">
-          {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Plug className="w-4 h-4 mr-2" />}
-          Save All
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {Object.entries(integrations).map(([svcId, svc]) => (
-          <Card key={svcId} className="bg-zinc-900/50 border-white/10" data-testid={`integration-card-${svcId}`}>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3 mb-3">
-                <img src={serviceIcons[svcId]} alt={svc.name} className="w-6 h-6" onError={(e) => { e.target.style.display = 'none'; }} />
-                <div className="flex-1">
-                  <h3 className="text-white font-medium">{svc.name}</h3>
-                  <p className="text-xs text-zinc-500">{svc.description}</p>
+      {/* Service Integrations - same style as API Keys */}
+      <Card className="bg-zinc-900/50 border-white/10">
+        <CardHeader>
+          <CardTitle className="text-white font-['Outfit'] flex items-center gap-3 text-base">
+            <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
+              <Plug className="w-5 h-5 text-violet-400" />
+            </div>
+            Service Integrations
+          </CardTitle>
+          <p className="text-zinc-400 text-sm">Configure third-party services your AI agents can use as tools (Slack, GitHub, Email, SMS, etc.)</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {Object.entries(integrations).map(([svcId, svc]) => {
+            const docUrls = {
+              slack: "https://api.slack.com/apps", github: "https://github.com/settings/tokens",
+              sendgrid: "https://app.sendgrid.com/settings/api_keys", resend: "https://resend.com/api-keys",
+              twilio: "https://console.twilio.com/", airtable: "https://airtable.com/create/tokens",
+              calendly: "https://calendly.com/integrations/api_webhooks", giphy: "https://developers.giphy.com/dashboard/",
+              google_suite: "https://console.cloud.google.com/iam-admin/serviceaccounts"
+            };
+            return (
+              <div key={svcId} className="p-4 rounded-lg bg-white/5 space-y-3" data-testid={`integration-card-${svcId}`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <img src={serviceIcons[svcId]} alt={svc.name} className="w-5 h-5" onError={(e) => { e.target.style.display = 'none'; }} />
+                    <span className="text-white font-medium">{svc.name}</span>
+                    <span className="text-xs text-zinc-500 hidden sm:inline">— {svc.description}</span>
+                    {svc.configured && <Badge className="bg-emerald-500/20 text-emerald-400 text-[10px]">Active</Badge>}
+                  </div>
+                  <a href={docUrls[svcId] || "#"} target="_blank" rel="noopener noreferrer" className="text-xs text-indigo-400 hover:underline">Get key</a>
                 </div>
-                <Badge className={svc.configured ? "bg-emerald-500/20 text-emerald-400" : "bg-zinc-500/20 text-zinc-400"}>
-                  {svc.configured ? <><CheckCircle className="w-3 h-3 mr-1" /> Active</> : "Not configured"}
-                </Badge>
-              </div>
-
-              <div className="space-y-2">
                 {svc.key_fields?.map(field => (
-                  <div key={field}>
-                    <Label className="text-xs text-zinc-400">{keyLabels[field] || field}</Label>
+                  <div key={field} className="flex gap-2">
                     <Input
                       type="password"
-                      placeholder={svc.keys_set?.[field] ? "******** (saved)" : `Enter ${keyLabels[field] || field}`}
                       value={inputs[svcId]?.[field] || ""}
                       onChange={e => setInputs(prev => ({ ...prev, [svcId]: { ...prev[svcId], [field]: e.target.value } }))}
-                      className="bg-black/30 border-white/10 text-white h-8 text-sm"
+                      placeholder={svc.keys_set?.[field] ? `${keyLabels[field] || field}: ******** (saved)` : `Enter ${keyLabels[field] || field}`}
+                      className="bg-zinc-800/50 border-white/10 text-sm font-mono"
                       data-testid={`integration-input-${svcId}-${field}`}
                     />
+                    {svc.key_fields.indexOf(field) === svc.key_fields.length - 1 && (
+                      <Button
+                        variant="outline" size="sm" className="border-white/10 shrink-0"
+                        onClick={() => handleTest(svcId)}
+                        disabled={testing[svcId] || !svc.configured}
+                        data-testid={`test-integration-${svcId}`}
+                      >
+                        {testing[svcId] ? "Testing..." : "Test"}
+                      </Button>
+                    )}
                   </div>
                 ))}
-              </div>
-
-              <div className="flex items-center gap-2 mt-3">
-                <Button
-                  size="sm" variant="outline"
-                  onClick={() => handleTest(svcId)}
-                  disabled={testing[svcId] || !svc.configured}
-                  className="text-xs border-white/10 text-zinc-300 hover:bg-white/5"
-                  data-testid={`test-integration-${svcId}`}
-                >
-                  {testing[svcId] ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <TestTube className="w-3 h-3 mr-1" />}
-                  Test Connection
-                </Button>
                 {testResults[svcId] && (
-                  <span className={`text-xs ${testResults[svcId].status === 'active' ? 'text-emerald-400' : 'text-red-400'}`}>
-                    {testResults[svcId].status === 'active' ? 'Connected' : testResults[svcId].message?.slice(0, 40)}
-                  </span>
+                  <p className={`text-xs ${testResults[svcId].status === 'active' ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {testResults[svcId].status === 'active' ? 'Connected successfully' : testResults[svcId].message?.slice(0, 60)}
+                  </p>
                 )}
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+            );
+          })}
+
+          <div className="flex gap-3 pt-2">
+            <Button onClick={handleSave} disabled={saving}
+              className="bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600"
+              data-testid="save-integrations-btn">
+              {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Plug className="w-4 h-4 mr-2" />}
+              Save Integrations
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="bg-zinc-900/50 border-white/10">
         <CardContent className="p-4">
