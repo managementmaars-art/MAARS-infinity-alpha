@@ -1288,20 +1288,14 @@ const AdminDashboard = () => {
 
                   <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
                     <div className="space-y-1">
-                      <Label className="text-zinc-400 text-xs">$/Credit</Label>
-                      <Input
-                        type="number"
-                        step="0.001"
-                        value={plan.credits > 0 ? (plan.price_usd / plan.credits).toFixed(4) : "0"}
-                        onChange={(e) => {
-                          const ppc = parseFloat(e.target.value) || 0;
-                          const newUsd = (plan.credits * ppc).toFixed(2);
-                          updatePlanField(planId, 'price_usd', newUsd);
-                          updatePlanField(planId, 'price_bdt', Math.round(parseFloat(newUsd) * (bdt_exchange_rate || 107)));
-                        }}
-                        className="bg-zinc-800/50 border-amber-500/30 h-9 text-sm text-amber-400"
-                        data-testid={`edit-${planId}-ppc`}
-                      />
+                      <Label className="text-zinc-400 text-xs">AI Cost/Credit</Label>
+                      <div
+                        className="flex items-center h-9 px-3 rounded-md bg-zinc-800/80 border border-white/5 text-sm text-zinc-400 font-mono"
+                        data-testid={`ai-cost-${planId}`}
+                      >
+                        ${(calcInputs.ai_cost_per_credit || 0).toFixed(4)}
+                      </div>
+                      <p className="text-[10px] text-zinc-500">Auto from usage data</p>
                     </div>
                     <div className="space-y-1">
                       <Label className="text-zinc-400 text-xs">Sell Price USD</Label>
