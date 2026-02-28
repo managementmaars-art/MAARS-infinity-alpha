@@ -2329,10 +2329,10 @@ Rules:
             logger.error(f"Auto image generation failed: {img_err}")
             # Don't fail the entire message, just skip image generation
     
-    # Auto-detect video generation requests and generate videos
+    # Auto-detect video generation requests (only if agent has can_generate_video permission)
     generated_video = None
     video_generating = False
-    if not generated_image and detect_video_generation_request(message_data.content, agent.get("role", "")):
+    if agent.get("can_generate_video", False) and not generated_image and detect_video_generation_request(message_data.content, agent.get("role", "")):
         video_generating = True
         # Video generation happens in background after response is sent
     
