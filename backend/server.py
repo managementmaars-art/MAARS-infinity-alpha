@@ -2270,6 +2270,28 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         video_generating = True
         # Video generation happens in background after response is sent
     
+    # Auto-detect file format requests and generate downloadable files
+    generated_file = None
+    requested_format = detect_file_format_request(message_data.content)
+    if requested_format and response_text and not generated_image:
+        try:
+            # Create a clean filename from the chat context
+            words = _re.sub(r'[^\w\s]', '', message_data.content.lower()).split()[:4]
+            filename_base = '_'.join(words) if words else 'document'
+            filepath, filename, content_type = generate_file_from_content(
+                response_text, requested_format, filename_base
+            )
+            generated_file = {
+                "filename": filename,
+                "url": f"/files/{filename}",
+                "format": requested_format,
+                "content_type": content_type,
+                "size": filepath.stat().st_size
+            }
+            logger.info(f"Auto-generated {requested_format} file: {filename}")
+        except Exception as file_err:
+            logger.error(f"Auto file generation failed: {file_err}")
+    
     # Create assistant message
     assistant_msg = {
         "message_id": f"msg_{uuid.uuid4().hex[:12]}",
