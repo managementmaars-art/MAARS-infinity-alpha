@@ -279,54 +279,48 @@ const Dashboard = () => {
               {agents.map((agent) => (
                 <div
                   key={agent.agent_id}
-                  className="relative"
-                  style={{ minHeight: '64px' }}
+                  className="relative group"
                 >
                   <Card
-                    className="bg-zinc-900/50 border-white/10 hover:border-amber-500/60 cursor-pointer group relative overflow-hidden transition-all duration-500 ease-out hover:shadow-[0_0_30px_rgba(245,158,11,0.15)] hover:z-50 hover:scale-[2.2] hover:-translate-y-[30%] origin-center"
+                    className="bg-zinc-900/50 border-white/10 hover:border-white/30 cursor-pointer transition-colors"
                     onClick={() => navigate(`/chat/${agent.agent_id}`)}
                     data-testid={`agent-card-${agent.agent_id}`}
                   >
-                    {/* Expanded hover state — full image bg */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
-                      <img
-                        src={agent.avatar}
-                        alt={agent.name}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-                      <span className="absolute top-1.5 right-1.5 px-1.5 py-0.5 text-[5px] font-bold rounded-full bg-amber-500 text-black uppercase tracking-wider">
-                        {agent.role}
-                      </span>
-                      <div className="absolute bottom-0 left-0 right-0 p-2">
-                        <p className="text-indigo-400 text-[5px] font-medium">{agent.role}</p>
-                        <h3 className="font-bold text-white text-[7px] leading-tight mb-0.5">{agent.name}</h3>
-                        <div className="flex flex-wrap gap-0.5">
-                          {(agent.capabilities || []).slice(0, 2).map((cap, i) => (
-                            <span key={i} className="px-1 py-px text-[4px] rounded-full bg-white/20 text-zinc-200">
-                              {cap}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    {/* Default compact view */}
-                    <CardContent className="p-3 relative z-0 group-hover:opacity-0 transition-opacity duration-300">
+                    <CardContent className="p-3">
                       <div className="flex items-center gap-3">
-                        <img
-                          src={agent.avatar}
-                          alt={agent.name}
-                          className="w-10 h-10 rounded-lg object-cover shrink-0"
-                        />
+                        <img src={agent.avatar} alt={agent.name} className="w-10 h-10 rounded-lg object-cover shrink-0" />
                         <div className="min-w-0">
-                          <h3 className="font-semibold text-sm text-white truncate">
-                            {agent.name}
-                          </h3>
+                          <h3 className="font-semibold text-sm text-white truncate">{agent.name}</h3>
                           <p className="text-xs text-zinc-400 truncate">{agent.role}</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
+                  {/* Hover popup */}
+                  <div
+                    className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-56 rounded-xl overflow-hidden border border-amber-500/50 shadow-[0_8px_40px_rgba(245,158,11,0.2)] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50 bg-zinc-950"
+                    onClick={() => navigate(`/chat/${agent.agent_id}`)}
+                  >
+                    <div className="relative aspect-square">
+                      <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                      <span className="absolute top-2 right-2 px-2 py-0.5 text-[9px] font-bold rounded-full bg-amber-500 text-black uppercase tracking-wider">
+                        {agent.role}
+                      </span>
+                      <div className="absolute bottom-0 left-0 right-0 p-3">
+                        <p className="text-indigo-400 text-[10px] font-medium">{agent.role}</p>
+                        <h3 className="font-bold text-white text-sm leading-tight">{agent.name}</h3>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {(agent.capabilities || []).slice(0, 3).map((cap, i) => (
+                            <span key={i} className="px-1.5 py-0.5 text-[8px] rounded-full bg-white/15 text-zinc-300 backdrop-blur-sm">{cap}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-3 border-t border-white/5">
+                      <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-3">{agent.description}</p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
