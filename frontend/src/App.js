@@ -204,6 +204,21 @@ const AdminRoute = ({ children }) => {
   return children;
 };
 
+// Global floating credits display for authenticated users
+const GlobalCreditsDisplay = () => {
+  const { user, loading } = useAuth();
+  const location = useLocation();
+
+  const publicPaths = ["/", "/login", "/register", "/pricing"];
+  if (loading || !user || publicPaths.includes(location.pathname)) return null;
+
+  return (
+    <div className="fixed top-4 right-4 z-[55]" data-testid="global-credits-display">
+      <CreditsDisplay />
+    </div>
+  );
+};
+
 // App Router with session_id detection
 const AppRouter = () => {
   const location = useLocation();
