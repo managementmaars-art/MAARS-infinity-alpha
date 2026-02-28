@@ -1286,7 +1286,23 @@ const AdminDashboard = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                  <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+                    <div className="space-y-1">
+                      <Label className="text-zinc-400 text-xs">$/Credit</Label>
+                      <Input
+                        type="number"
+                        step="0.001"
+                        value={plan.credits > 0 ? (plan.price_usd / plan.credits).toFixed(4) : "0"}
+                        onChange={(e) => {
+                          const ppc = parseFloat(e.target.value) || 0;
+                          const newUsd = (plan.credits * ppc).toFixed(2);
+                          updatePlanField(planId, 'price_usd', newUsd);
+                          updatePlanField(planId, 'price_bdt', Math.round(parseFloat(newUsd) * (bdt_exchange_rate || 107)));
+                        }}
+                        className="bg-zinc-800/50 border-amber-500/30 h-9 text-sm text-amber-400"
+                        data-testid={`edit-${planId}-ppc`}
+                      />
+                    </div>
                     <div className="space-y-1">
                       <Label className="text-zinc-400 text-xs">Sell Price USD</Label>
                       <Input
