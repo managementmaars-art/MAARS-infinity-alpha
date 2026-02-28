@@ -758,7 +758,7 @@ const AgentChat = () => {
       )}
 
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex w-80 bg-zinc-900/50 border-r border-white/10 flex-col">
+      <div className="hidden lg:flex flex-col bg-zinc-900/50 border-r border-white/10 relative" style={{ width: sidebarWidth, minWidth: 200, maxWidth: 600 }}>
         <div className="p-4 border-b border-white/10">
           <Link to="/dashboard" className="flex items-center gap-2 mb-4">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
@@ -784,6 +784,13 @@ const AgentChat = () => {
           deleteChat={deleteChat}
           startNewChat={startNewChat}
           navigate={navigate}
+        />
+        {/* Resize Handle */}
+        <div
+          ref={resizeRef}
+          onMouseDown={startResize}
+          className="absolute right-0 top-0 bottom-0 w-1.5 cursor-col-resize hover:bg-indigo-500/40 active:bg-indigo-500/60 transition-colors z-10"
+          data-testid="sidebar-resize-handle"
         />
       </div>
 
