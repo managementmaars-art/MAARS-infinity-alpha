@@ -1727,22 +1727,22 @@ def auto_select_model(content: str, agent_role: str) -> tuple:
     best_task = max(scores, key=scores.get)
     best_score = scores[best_task]
     
-    # Select model based on task type
+    # Select model based on task type — use reliable providers (OpenAI/Gemini via Emergent key)
     if best_score >= 2:
         if best_task == 'coding':
             return ('openai', 'gpt-5.2', 'GPT-5.2 selected - best for coding & technical tasks')
         elif best_task == 'reasoning':
-            return ('openai', 'o3', 'O3 selected - best for complex reasoning & analysis')
+            return ('openai', 'gpt-5.2', 'GPT-5.2 selected - best for complex reasoning & analysis')
         elif best_task == 'creative':
-            return ('anthropic', 'claude-sonnet-4-5-20250929', 'Claude Sonnet 4.5 selected - best for creative writing')
+            return ('openai', 'gpt-5.2', 'GPT-5.2 selected - best for creative work')
         elif best_task == 'quick':
-            return ('gemini', 'gemini-3-flash-preview', 'Gemini 3 Flash selected - fastest for simple tasks')
+            return ('openai', 'gpt-4o-mini', 'GPT-4o Mini selected - fastest for simple tasks')
         elif best_task == 'long_form':
-            return ('anthropic', 'claude-opus-4-5-20251101', 'Claude Opus 4.5 selected - best for detailed long-form content')
+            return ('openai', 'gpt-5.2', 'GPT-5.2 selected - best for detailed long-form content')
         elif best_task == 'data':
-            return ('gemini', 'gemini-3-pro-preview', 'Gemini 3 Pro selected - best for data analysis & multimodal')
+            return ('openai', 'gpt-4o', 'GPT-4o selected - best for data analysis & multimodal')
         elif best_task == 'legal':
-            return ('anthropic', 'claude-sonnet-4-5-20250929', 'Claude Sonnet 4.5 selected - precise for legal analysis')
+            return ('openai', 'gpt-5.2', 'GPT-5.2 selected - precise for legal analysis')
     
     # For very short messages or greetings, use fast model
     if len(content) < 50:
