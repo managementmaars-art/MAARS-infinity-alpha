@@ -3495,43 +3495,100 @@ async def admin_test_api_key(request: Request, admin: User = Depends(require_adm
     if not provider or not api_key:
         raise HTTPException(status_code=400, detail="Provider and api_key required")
     
+    test_configs = {
+        "openai": {
+            "url": "https://api.openai.com/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: f"Key verified! Access to {len(r.json().get('data', []))} models.",
+            "help": "Get your key at https://platform.openai.com/api-keys"
+        },
+        "anthropic": {
+            "url": "https://api.anthropic.com/v1/models",
+            "headers": {"x-api-key": api_key, "anthropic-version": "2023-06-01"},
+            "success_codes": [200, 403],
+            "success_msg": lambda r: "Key verified! Anthropic API access confirmed.",
+            "help": "Get your key at https://console.anthropic.com/settings/keys"
+        },
+        "gemini": {
+            "url": f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}",
+            "headers": {},
+            "success_msg": lambda r: f"Key verified! Access to {len(r.json().get('models', []))} Gemini models.",
+            "help": "Get your key at https://aistudio.google.com/app/apikey"
+        },
+        "xai": {
+            "url": "https://api.x.ai/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: f"Key verified! xAI (Grok) API access confirmed. {len(r.json().get('data', []))} models.",
+            "help": "Get your key at https://console.x.ai/team/default/api-keys"
+        },
+        "deepseek": {
+            "url": "https://api.deepseek.com/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: "Key verified! DeepSeek API access confirmed.",
+            "help": "Get your key at https://platform.deepseek.com/api_keys"
+        },
+        "mistral": {
+            "url": "https://api.mistral.ai/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: f"Key verified! Access to {len(r.json().get('data', []))} Mistral models.",
+            "help": "Get your key at https://console.mistral.ai/api-keys"
+        },
+        "perplexity": {
+            "url": "https://api.perplexity.ai/chat/completions",
+            "headers": {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            "method": "post",
+            "body": {"model": "sonar", "messages": [{"role": "user", "content": "hi"}], "max_tokens": 1},
+            "success_codes": [200, 422],
+            "success_msg": lambda r: "Key verified! Perplexity API access confirmed.",
+            "help": "Get your key at https://www.perplexity.ai/settings/api"
+        },
+        "cohere": {
+            "url": "https://api.cohere.ai/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: "Key verified! Cohere API access confirmed.",
+            "help": "Get your key at https://dashboard.cohere.com/api-keys"
+        },
+        "elevenlabs": {
+            "url": "https://api.elevenlabs.io/v1/user",
+            "headers": {"xi-api-key": api_key},
+            "success_msg": lambda r: "Key verified! ElevenLabs API access confirmed.",
+            "help": "Get your key at https://elevenlabs.io/app/settings/api-keys"
+        },
+    }
+    
+    config = test_configs.get(provider)
+    if not config:
+        return {"success": False, "message": f"Unknown provider '{provider}'. Supported: {', '.join(test_configs.keys())}"}
+    
     try:
         async with httpx.AsyncClient(timeout=15) as client:
-            if provider == "openai":
-                resp = await client.get(
-                    "https://api.openai.com/v1/models",
-                    headers={"Authorization": f"Bearer {api_key}"}
-                )
-                resp.raise_for_status()
-                models = resp.json().get("data", [])
-                return {"success": True, "message": f"Key verified! Access to {len(models)} models."}
-            
-            elif provider == "anthropic":
-                resp = await client.get(
-                    "https://api.anthropic.com/v1/models",
-                    headers={"x-api-key": api_key, "anthropic-version": "2023-06-01"}
-                )
-                if resp.status_code == 200:
-                    return {"success": True, "message": "Key verified! Anthropic API access confirmed."}
-                elif resp.status_code == 401:
-                    return {"success": False, "message": "Invalid API key. Check your Anthropic key."}
-                else:
-                    return {"success": True, "message": f"Key accepted (status {resp.status_code})."}
-            
-            elif provider == "gemini":
-                resp = await client.get(
-                    f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}"
-                )
-                resp.raise_for_status()
-                models = resp.json().get("models", [])
-                return {"success": True, "message": f"Key verified! Access to {len(models)} Gemini models."}
-            
+            success_codes = config.get("success_codes", [200])
+            if config.get("method") == "post":
+                resp = await client.post(config["url"], headers=config["headers"], json=config.get("body", {}))
             else:
-                raise HTTPException(status_code=400, detail="Invalid provider")
-    except httpx.HTTPStatusError as e:
-        return {"success": False, "message": f"Key test failed: {e.response.status_code} {e.response.reason_phrase}"}
+                resp = await client.get(config["url"], headers=config["headers"])
+            
+            if resp.status_code in success_codes or resp.status_code == 200:
+                return {"success": True, "message": config["success_msg"](resp)}
+            elif resp.status_code == 401:
+                return {"success": False, "message": f"Invalid API key. The key was rejected by {provider}. {config['help']}"}
+            elif resp.status_code == 403:
+                return {"success": True, "message": f"Key accepted but may have restricted permissions. Check your {provider} dashboard."}
+            elif resp.status_code == 429:
+                return {"success": False, "message": f"Rate limited by {provider}. Your key is valid but you've hit the rate limit. Try again in a moment."}
+            else:
+                error_detail = ""
+                try:
+                    error_detail = resp.json().get("error", {}).get("message", resp.text[:150])
+                except Exception:
+                    error_detail = resp.text[:150]
+                return {"success": False, "message": f"{provider} returned {resp.status_code}: {error_detail}. {config['help']}"}
+    except httpx.ConnectError:
+        return {"success": False, "message": f"Cannot connect to {provider} API. Check your internet connection or the provider may be down."}
+    except httpx.TimeoutException:
+        return {"success": False, "message": f"Connection to {provider} timed out. The API may be slow or unreachable. Try again."}
     except Exception as e:
-        return {"success": False, "message": f"Key test failed: {str(e)[:120]}"}
+        return {"success": False, "message": f"Test failed: {str(e)[:150]}. {config.get('help', '')}"}
 
 
 @api_router.get("/admin/pricing")
