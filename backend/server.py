@@ -2441,11 +2441,11 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
                     vid_api_key = api_keys_vid.get("emergent", EMERGENT_LLM_KEY)
                 
                 vid_prompt = message_data.content
-                if len(response_text) > 100:
+                if len(response_text) > 50:
                     try:
                         from emergentintegrations.llm.chat import LlmChat, UserMessage as UM
-                        pc = LlmChat(api_key=vid_api_key, session_id=f"vidp_{uuid.uuid4().hex[:6]}", system_message="Convert into a concise video generation prompt (max 150 words). Focus on scene, action, mood, camera, lighting. Output ONLY the prompt.").with_model("openai", "gpt-4o-mini")
-                        vid_prompt = await pc.send_message(UM(text=f"User: {message_data.content}\n\nDesc:\n{response_text[:1200]}"))
+                        pc = LlmChat(api_key=vid_api_key, session_id=f"vidp_{uuid.uuid4().hex[:6]}", system_message="You are a professional video prompt engineer for Sora 2 AI. Convert the description into a detailed cinematic video prompt (max 200 words). Include: scene composition, camera movement (dolly, crane, tracking shot), lighting (golden hour, studio, neon), subject action/motion, mood/atmosphere, color grading style, depth of field. Be specific and visual. Output ONLY the prompt.").with_model("openai", "gpt-4o-mini")
+                        vid_prompt = await pc.send_message(UM(text=f"User: {message_data.content}\n\nDirector's brief:\n{response_text[:2000]}"))
                     except Exception:
                         pass
                 
