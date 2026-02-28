@@ -1681,65 +1681,10 @@ const CustomPackagesTab = () => {
     <div className="space-y-6" data-testid="custom-packages-tab">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white font-['Outfit']">Pricing Control Center</h2>
+          <h2 className="text-xl font-bold text-white font-['Outfit']">Custom Package Pricing</h2>
           <p className="text-zinc-400 text-sm mt-1">Set prices for agents, credits, and extra credit packs with real-time cost and profit visibility.</p>
         </div>
       </div>
-
-      {/* Profit Margin Calculator */}
-      <Card className="bg-zinc-900/50 border-white/10">
-        <CardHeader>
-          <CardTitle className="text-white font-['Outfit'] flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-amber-400" />
-            </div>
-            Profit Margin Calculator
-            <Badge className="bg-emerald-500/20 text-emerald-400 text-[10px] ml-2">LIVE SYNC</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-zinc-400 text-sm">Set your target margin and apply it to all credit pricing, or manually edit individual prices below.</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-1">
-              <Label className="text-zinc-300 text-sm">AI Cost per Credit (USD)</Label>
-              <Input type="number" step="0.001" value={avgCost} readOnly
-                className="bg-zinc-800/50 border-white/10 text-zinc-400" data-testid="pkg-calc-cost" />
-              <p className="text-[10px] text-zinc-500">From real usage data (read-only)</p>
-            </div>
-            <div className="space-y-1">
-              <Label className="text-zinc-300 text-sm">Target Profit Margin (%)</Label>
-              <Input type="number" value={targetMargin}
-                onChange={e => setTargetMargin(parseInt(e.target.value) || 0)}
-                className="bg-zinc-800/50 border-white/10" data-testid="pkg-calc-margin" />
-              <p className="text-[10px] text-zinc-500">{targetMargin}% means {marginMult.toFixed(1)}x the cost</p>
-            </div>
-            <div className="space-y-1">
-              <Label className="text-zinc-300 text-sm">BDT Exchange Rate</Label>
-              <div className="flex gap-2">
-                <Input type="number" value={bdtRate}
-                  onChange={e => syncAllBdt(parseFloat(e.target.value) || 0)}
-                  className="bg-zinc-800/50 border-white/10 flex-1" data-testid="pkg-calc-bdt" />
-                <Button variant="outline" size="sm" className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 text-xs whitespace-nowrap"
-                  data-testid="refresh-rate-btn"
-                  onClick={async () => {
-                    try {
-                      const res = await fetch(`${API}/exchange-rate`);
-                      if (res.ok) { const d = await res.json(); syncAllBdt(d.usd_bdt); toast.success(`Rate updated: 1 USD = ${d.usd_bdt} BDT`); }
-                    } catch { toast.error("Failed to fetch rate"); }
-                  }}>
-                  Refresh Live
-                </Button>
-              </div>
-              <p className="text-[10px] text-emerald-500/70">Live rate: 1 USD = {bdtRate} BDT (auto-syncs all BDT prices)</p>
-            </div>
-          </div>
-          <Button onClick={applyMarginToAll}
-            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
-            data-testid="apply-margin-all-btn">
-            Apply {targetMargin}% Margin to All Credits
-          </Button>
-        </CardContent>
-      </Card>
 
       {/* Agent & Commander Pricing */}
       <Card className="bg-zinc-900/50 border-white/10">
