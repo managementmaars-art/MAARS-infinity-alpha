@@ -2336,10 +2336,15 @@ Rules:
         video_generating = True
         # Video generation happens in background after response is sent
     
-    # Auto-detect file format requests and generate downloadable files
+    # Auto-detect file format requests (check agent permissions)
     generated_file = None
     requested_format = detect_file_format_request(message_data.content)
-    if requested_format and response_text and not generated_image:
+    can_gen_files = agent.get("can_generate_files", True)
+    can_gen_pdf = agent.get("can_generate_pdf", True)
+    if requested_format and response_text and not generated_image and can_gen_files:
+        if requested_format == "pdf" and not can_gen_pdf:
+            pass  # Agent not allowed to generate PDFs
+        else:
         try:
             # Create a clean filename from the chat context
             words = _re.sub(r'[^\w\s]', '', message_data.content.lower()).split()[:4]
