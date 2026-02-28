@@ -1691,54 +1691,113 @@ def detect_file_format_request(content: str) -> Optional[str]:
     return None
 
 
+def extract_document_content(raw_text: str) -> str:
+    """Strip AI conversational preamble and extract only the actual document content."""
+    lines = raw_text.split('\n')
+    
+    # Look for the start of the actual document: first heading, separator, or "AGREEMENT"/"CONTRACT" etc.
+    doc_start_patterns = [
+        r'^#{1,3}\s',          # Markdown headings
+        r'^---+$', r'^\*\*\*+$',  # Separators
+        r'^\*\*[A-Z]',        # Bold uppercase start (e.g. **MUTUAL NON-DISCLOSURE**)
+        r'^[A-Z][A-Z\s]{5,}$', # ALL CAPS lines (e.g. SUPPLY AGREEMENT)
+    ]
+    
+    start_idx = 0
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        for pattern in doc_start_patterns:
+            if _re.match(pattern, stripped):
+                start_idx = i
+                break
+        if start_idx > 0:
+            break
+    
+    # If we found a document start after some preamble, use from there
+    if start_idx > 0:
+        content = '\n'.join(lines[start_idx:])
+    else:
+        content = raw_text
+    
+    # Remove trailing AI notes like "**Important Note:**" or "*I am an AI*"
+    end_patterns = [r'\*\*Important Note', r'\*I am an AI', r'\*Please note:', r'\*Disclaimer:']
+    result_lines = content.split('\n')
+    cut_idx = len(result_lines)
+    for i, line in enumerate(result_lines):
+        for pattern in end_patterns:
+            if _re.search(pattern, line):
+                cut_idx = i
+                break
+        if cut_idx < len(result_lines):
+            break
+    
+    return '\n'.join(result_lines[:cut_idx]).strip()
+
+
 def generate_file_from_content(content: str, file_format: str, filename_base: str) -> tuple:
     """Generate a file from text content. Returns (filepath, filename, content_type)."""
     file_id = uuid.uuid4().hex[:10]
     
+    # Strip AI preamble for all formats
+    doc_content = extract_document_content(content)
+    if not doc_content.strip():
+        doc_content = content  # Fallback to full content if extraction found nothing
+    
     if file_format == "pdf":
         from fpdf import FPDF
-        pdf = FPDF()
-        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf = FPDF(orientation='P', unit='mm', format='A4')
+        pdf.set_auto_page_break(auto=True, margin=20)
+        pdf.set_left_margin(20)
+        pdf.set_right_margin(20)
         pdf.add_page()
-        # Use built-in font with latin-1 encoding, replace unsupported chars
         pdf.set_font("Helvetica", size=11)
-        effective_width = pdf.w - pdf.l_margin - pdf.r_margin
+        w = pdf.w - pdf.l_margin - pdf.r_margin  # effective print width
         
-        def safe_text(t):
-            """Sanitize text to Latin-1 compatible characters for Helvetica"""
-            replacements = {
-                '\u2018': "'", '\u2019': "'", '\u201c': '"', '\u201d': '"',
-                '\u2013': '-', '\u2014': '--', '\u2026': '...', '\u2022': '-',
-                '\u00a0': ' ', '\u200b': '', '\u200e': '', '\u200f': '',
-                '\u2011': '-', '\u2012': '-', '\u2010': '-',
-            }
-            for k, v in replacements.items():
-                t = t.replace(k, v)
+        def safe(t):
+            reps = {'\u2018':"'",'\u2019':"'",'\u201c':'"','\u201d':'"',
+                    '\u2013':'-','\u2014':'--','\u2026':'...','\u2022':'-',
+                    '\u00a0':' ','\u200b':'','\u200e':'','\u200f':''}
+            for k,v in reps.items(): t = t.replace(k,v)
             return t.encode('latin-1', errors='replace').decode('latin-1')
         
-        for line in content.split('\n'):
-            clean = line.strip()
-            if clean.startswith('# '):
+        def clean_md(t):
+            t = _re.sub(r'\*\*(.*?)\*\*', r'\1', t)
+            t = _re.sub(r'\*(.*?)\*', r'\1', t)
+            return t
+        
+        for line in doc_content.split('\n'):
+            s = line.strip()
+            if s.startswith('# '):
+                pdf.ln(3)
                 pdf.set_font("Helvetica", "B", 16)
-                pdf.multi_cell(effective_width, 10, safe_text(clean[2:].strip('*')))
+                pdf.multi_cell(w, 8, safe(clean_md(s[2:])))
+                pdf.ln(2)
                 pdf.set_font("Helvetica", size=11)
-            elif clean.startswith('## '):
+            elif s.startswith('## '):
+                pdf.ln(2)
                 pdf.set_font("Helvetica", "B", 14)
-                pdf.multi_cell(effective_width, 9, safe_text(clean[3:].strip('*')))
+                pdf.multi_cell(w, 7, safe(clean_md(s[3:])))
+                pdf.ln(1)
                 pdf.set_font("Helvetica", size=11)
-            elif clean.startswith('### '):
+            elif s.startswith('### '):
+                pdf.ln(2)
                 pdf.set_font("Helvetica", "B", 12)
-                pdf.multi_cell(effective_width, 8, safe_text(clean[4:].strip('*')))
+                pdf.multi_cell(w, 7, safe(clean_md(s[4:])))
+                pdf.ln(1)
                 pdf.set_font("Helvetica", size=11)
-            elif clean.startswith('---') or clean.startswith('***'):
-                pdf.line(pdf.l_margin, pdf.get_y(), pdf.w - pdf.r_margin, pdf.get_y())
-                pdf.ln(5)
-            elif clean == '':
+            elif _re.match(r'^---+$', s) or _re.match(r'^\*\*\*+$', s):
+                y = pdf.get_y()
+                pdf.line(pdf.l_margin, y, pdf.l_margin + w, y)
                 pdf.ln(4)
+            elif s == '':
+                pdf.ln(3)
+            elif s.startswith('- ') or s.startswith('* '):
+                pdf.set_x(pdf.l_margin + 5)
+                pdf.multi_cell(w - 5, 6, safe("  " + clean_md(s)))
+            elif _re.match(r'^\d+[\.\)]\s', s):
+                pdf.multi_cell(w, 6, safe(clean_md(s)))
             else:
-                text = _re.sub(r'\*\*(.*?)\*\*', r'\1', clean)
-                text = _re.sub(r'\*(.*?)\*', r'\1', text)
-                pdf.multi_cell(effective_width, 6, safe_text(text))
+                pdf.multi_cell(w, 6, safe(clean_md(s)))
         
         filename = f"{file_id}_{filename_base}.pdf"
         filepath = UPLOAD_DIR / filename
