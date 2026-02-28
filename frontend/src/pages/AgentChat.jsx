@@ -724,6 +724,20 @@ const AgentChat = () => {
     }
   };
 
+  const shareChat = async () => {
+    if (!currentChat) return;
+    try {
+      const res = await fetch(`${API}/chats/${currentChat.chat_id}/share`, { method: "POST", credentials: "include", headers });
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(data.shared ? "Chat shared with team" : "Chat unshared from team");
+      } else {
+        const err = await res.json().catch(() => ({}));
+        toast.error(err.detail || "Failed to share");
+      }
+    } catch { toast.error("Failed to share chat"); }
+  };
+
   const handleLogout = async () => {
     await logout();
     navigate("/");
