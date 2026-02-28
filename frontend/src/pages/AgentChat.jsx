@@ -1235,6 +1235,14 @@ const SidebarContent = ({
         <ListTodo className="w-4 h-4" />
         <span className="text-sm font-medium">Tasks</span>
       </Link>
+      <Link
+        to="/team"
+        className="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
+        data-testid="nav-team"
+      >
+        <Users className="w-4 h-4" />
+        <span className="text-sm font-medium">Team</span>
+      </Link>
     </div>
 
     {/* Agents */}
