@@ -1615,6 +1615,28 @@ async def get_chat(chat_id: str, current_user: User = Depends(get_current_user))
 
 # ============== AUTO MODEL SELECTION ==============
 
+def detect_video_generation_request(content: str, agent_role: str) -> bool:
+    """Detect if a user message is requesting video generation."""
+    content_lower = content.lower()
+    
+    generation_verbs = ['generate', 'create', 'make', 'produce', 'render', 'build me', 'give me', 'shoot', 'film', 'record']
+    video_nouns = ['video', 'commercial', 'ad', 'advertisement', 'clip', 'trailer', 'promo', 'animation',
+                   'reel', 'short film', 'footage', 'motion', 'cinematic', 'tiktok', 'youtube video']
+    
+    has_verb = any(v in content_lower for v in generation_verbs)
+    has_noun = any(n in content_lower for n in video_nouns)
+    
+    video_roles = ['video content specialist', 'video', 'videographer', 'filmmaker', 'animator']
+    is_video_agent = any(r in agent_role.lower() for r in video_roles)
+    
+    if is_video_agent and has_verb:
+        return True
+    if has_verb and has_noun:
+        return True
+    
+    return False
+
+
 def detect_image_generation_request(content: str, agent_role: str) -> bool:
     """Detect if a user message is requesting image/visual generation."""
     content_lower = content.lower()
