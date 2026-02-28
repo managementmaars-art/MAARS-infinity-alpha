@@ -1737,23 +1737,34 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
         from fpdf import FPDF
         pdf = FPDF(orientation='P', unit='mm', format='A4')
         pdf.set_auto_page_break(auto=True, margin=20)
-        pdf.set_left_margin(20)
-        pdf.set_right_margin(20)
+        pdf.set_left_margin(25)
+        pdf.set_right_margin(25)
         pdf.add_page()
         pdf.set_font("Helvetica", size=11)
-        w = pdf.w - pdf.l_margin - pdf.r_margin  # effective print width
+        w = pdf.w - pdf.l_margin - pdf.r_margin
         
         def safe(t):
-            reps = {'\u2018':"'",'\u2019':"'",'\u201c':'"','\u201d':'"',
-                    '\u2013':'-','\u2014':'--','\u2026':'...','\u2022':'-',
-                    '\u00a0':' ','\u200b':'','\u200e':'','\u200f':''}
-            for k,v in reps.items(): t = t.replace(k,v)
-            return t.encode('latin-1', errors='replace').decode('latin-1')
+            """Thoroughly sanitize text for Latin-1 Helvetica font."""
+            import unicodedata
+            reps = {
+                '\u2018':"'", '\u2019':"'", '\u201c':'"', '\u201d':'"',
+                '\u2013':'-', '\u2014':'--', '\u2026':'...', '\u2022':'*',
+                '\u00a0':' ', '\u200b':'', '\u200e':'', '\u200f':'',
+                '\u2011':'-', '\u2012':'-', '\u2010':'-', '\u2032':"'",
+                '\u2033':'"', '\u2039':'<', '\u203a':'>', '\u00ab':'<<',
+                '\u00bb':'>>', '\ufeff':'', '\u0027':"'", '\u201a':',',
+            }
+            for k,v in reps.items():
+                t = t.replace(k, v)
+            # Normalize unicode then encode safely
+            t = unicodedata.normalize('NFKD', t)
+            return t.encode('latin-1', errors='ignore').decode('latin-1')
         
         def clean_md(t):
             t = _re.sub(r'\*\*(.*?)\*\*', r'\1', t)
             t = _re.sub(r'\*(.*?)\*', r'\1', t)
-            return t
+            t = _re.sub(r'`(.*?)`', r'\1', t)
+            return t.strip()
         
         for line in doc_content.split('\n'):
             s = line.strip()
@@ -1782,8 +1793,10 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
             elif s == '':
                 pdf.ln(3)
             elif s.startswith('- ') or s.startswith('* '):
-                pdf.set_x(pdf.l_margin + 5)
-                pdf.multi_cell(w - 5, 6, safe("  " + clean_md(s)))
+                text = safe(clean_md(s[2:]))
+                pdf.cell(5, 6, "-")
+                x = pdf.get_x()
+                pdf.multi_cell(w - 5, 6, text)
             elif _re.match(r'^\d+[\.\)]\s', s):
                 pdf.multi_cell(w, 6, safe(clean_md(s)))
             else:
