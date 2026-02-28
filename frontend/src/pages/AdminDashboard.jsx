@@ -244,6 +244,64 @@ const AdminDashboard = () => {
         <StatCard title="Revenue" value={`$${stats?.total_revenue?.toFixed(2) || '0.00'}`} icon={DollarSign} color="amber" />
       </div>
 
+      {/* Subscription Distribution + Credits Overview */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card className="bg-zinc-900/50 border-white/10">
+          <CardHeader>
+            <CardTitle className="text-white font-['Outfit'] text-base">Subscription Distribution</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {stats?.plan_distribution && Object.keys(stats.plan_distribution).length > 0 ? (
+              <div className="space-y-3">
+                {Object.entries(stats.plan_distribution).map(([plan, count]) => (
+                  <div key={plan} className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${
+                        plan === 'business' ? 'bg-amber-400' :
+                        plan === 'pro' ? 'bg-violet-400' :
+                        plan === 'starter' ? 'bg-indigo-400' : 'bg-zinc-400'
+                      }`} />
+                      <span className="text-zinc-300 capitalize">{plan}</span>
+                    </div>
+                    <Badge variant="outline" className="border-white/10 text-zinc-300">{count} users</Badge>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-zinc-500 text-sm">No subscription data yet</p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="bg-zinc-900/50 border-white/10">
+          <CardHeader>
+            <CardTitle className="text-white font-['Outfit'] text-base">Credits Overview</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-zinc-400">Total Credits Used</span>
+              <span className="text-white font-semibold">{stats?.total_credits_used || 0}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-zinc-400">Credits Remaining (All Users)</span>
+              <span className="text-white font-semibold">{stats?.total_credits_remaining || 0}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-zinc-400">Active Subscriptions</span>
+              <span className="text-white font-semibold">{stats?.active_subscriptions || 0}</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Agent/Task stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard title="Total Agents" value={stats?.total_agents || 0} icon={Bot} color="cyan" />
+        <StatCard title="Custom Agents" value={stats?.custom_agents || 0} icon={UserCheck} color="pink" />
+        <StatCard title="Total Tasks" value={stats?.total_tasks || 0} icon={ListTodo} color="orange" />
+        <StatCard title="Subscriptions" value={stats?.active_subscriptions || 0} icon={CreditCard} color="teal" />
+      </div>
+
       {/* Profit Dashboard */}
       <Card className="bg-zinc-900/50 border-white/10" data-testid="profit-dashboard">
         <CardHeader>
