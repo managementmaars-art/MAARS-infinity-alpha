@@ -1669,6 +1669,148 @@ def detect_image_generation_request(content: str, agent_role: str) -> bool:
     return False
 
 
+import re as _re
+
+def detect_file_format_request(content: str) -> Optional[str]:
+    """Detect if user is requesting output in a downloadable file format. Returns format or None."""
+    content_lower = content.lower()
+    
+    format_patterns = {
+        "pdf": [r'\bpdf\b', r'\bpdf format\b', r'\bas a pdf\b', r'\bin pdf\b', r'\bto pdf\b'],
+        "docx": [r'\bdocx?\b', r'\bword\b', r'\bword doc\b', r'\bas a doc\b', r'\bin word\b', r'\bword format\b'],
+        "csv": [r'\bcsv\b', r'\bcsv format\b', r'\bas a csv\b', r'\bin csv\b'],
+        "xlsx": [r'\bxlsx?\b', r'\bexcel\b', r'\bspreadsheet\b', r'\bas an? excel\b', r'\bin excel\b'],
+        "txt": [r'\btxt\b', r'\btext file\b', r'\bas a text file\b', r'\bin txt\b', r'\bplain text file\b'],
+    }
+    
+    for fmt, patterns in format_patterns.items():
+        for pattern in patterns:
+            if _re.search(pattern, content_lower):
+                return fmt
+    return None
+
+
+def generate_file_from_content(content: str, file_format: str, filename_base: str) -> tuple:
+    """Generate a file from text content. Returns (filepath, filename, content_type)."""
+    file_id = uuid.uuid4().hex[:10]
+    
+    if file_format == "pdf":
+        from fpdf import FPDF
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=20)
+        pdf.add_page()
+        pdf.set_font("Helvetica", size=11)
+        
+        for line in content.split('\n'):
+            clean = line.strip()
+            # Handle markdown headers
+            if clean.startswith('# '):
+                pdf.set_font("Helvetica", "B", 18)
+                pdf.cell(0, 12, clean[2:].strip('*'), new_x="LMARGIN", new_y="NEXT")
+                pdf.set_font("Helvetica", size=11)
+            elif clean.startswith('## '):
+                pdf.set_font("Helvetica", "B", 15)
+                pdf.cell(0, 10, clean[3:].strip('*'), new_x="LMARGIN", new_y="NEXT")
+                pdf.set_font("Helvetica", size=11)
+            elif clean.startswith('### '):
+                pdf.set_font("Helvetica", "B", 13)
+                pdf.cell(0, 9, clean[4:].strip('*'), new_x="LMARGIN", new_y="NEXT")
+                pdf.set_font("Helvetica", size=11)
+            elif clean.startswith('---') or clean.startswith('***'):
+                pdf.line(pdf.get_x(), pdf.get_y(), pdf.get_x() + 170, pdf.get_y())
+                pdf.ln(5)
+            elif clean == '':
+                pdf.ln(4)
+            else:
+                # Strip markdown bold/italic
+                text = _re.sub(r'\*\*(.*?)\*\*', r'\1', clean)
+                text = _re.sub(r'\*(.*?)\*', r'\1', text)
+                pdf.multi_cell(0, 6, text)
+        
+        filename = f"{file_id}_{filename_base}.pdf"
+        filepath = UPLOAD_DIR / filename
+        pdf.output(str(filepath))
+        return filepath, filename, "application/pdf"
+    
+    elif file_format == "docx":
+        from docx import Document
+        from docx.shared import Pt, Inches
+        doc = Document()
+        
+        for line in content.split('\n'):
+            clean = line.strip()
+            if clean.startswith('# '):
+                doc.add_heading(clean[2:].strip('*'), level=1)
+            elif clean.startswith('## '):
+                doc.add_heading(clean[3:].strip('*'), level=2)
+            elif clean.startswith('### '):
+                doc.add_heading(clean[4:].strip('*'), level=3)
+            elif clean.startswith('---') or clean.startswith('***'):
+                doc.add_paragraph('_' * 50)
+            elif clean.startswith('- ') or clean.startswith('* '):
+                doc.add_paragraph(clean[2:], style='List Bullet')
+            elif _re.match(r'^\d+\.', clean):
+                doc.add_paragraph(clean, style='List Number')
+            elif clean:
+                text = _re.sub(r'\*\*(.*?)\*\*', r'\1', clean)
+                text = _re.sub(r'\*(.*?)\*', r'\1', text)
+                doc.add_paragraph(text)
+        
+        filename = f"{file_id}_{filename_base}.docx"
+        filepath = UPLOAD_DIR / filename
+        doc.save(str(filepath))
+        return filepath, filename, "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    
+    elif file_format == "csv":
+        filename = f"{file_id}_{filename_base}.csv"
+        filepath = UPLOAD_DIR / filename
+        lines = content.strip().split('\n')
+        with open(filepath, 'w', encoding='utf-8') as f:
+            for line in lines:
+                # Try to detect table rows (| col1 | col2 |)
+                if '|' in line and not line.strip().startswith('---'):
+                    cells = [c.strip().strip('*') for c in line.split('|') if c.strip() and c.strip() != '---']
+                    if cells:
+                        f.write(','.join(f'"{c}"' for c in cells) + '\n')
+                elif line.strip():
+                    f.write(line.strip() + '\n')
+        return filepath, filename, "text/csv"
+    
+    elif file_format == "xlsx":
+        from openpyxl import Workbook
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Sheet1"
+        
+        row_num = 1
+        for line in content.strip().split('\n'):
+            if '|' in line and not line.strip().replace('-', '').replace('|', '').strip() == '':
+                cells = [c.strip().strip('*') for c in line.split('|') if c.strip()]
+                if cells and not all(c.replace('-', '').strip() == '' for c in cells):
+                    for col, cell in enumerate(cells, 1):
+                        ws.cell(row=row_num, column=col, value=cell)
+                    row_num += 1
+            elif line.strip():
+                ws.cell(row=row_num, column=1, value=line.strip())
+                row_num += 1
+        
+        filename = f"{file_id}_{filename_base}.xlsx"
+        filepath = UPLOAD_DIR / filename
+        wb.save(str(filepath))
+        return filepath, filename, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    
+    else:  # txt
+        filename = f"{file_id}_{filename_base}.txt"
+        filepath = UPLOAD_DIR / filename
+        # Strip markdown formatting
+        text = _re.sub(r'\*\*(.*?)\*\*', r'\1', content)
+        text = _re.sub(r'\*(.*?)\*', r'\1', text)
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(text)
+        return filepath, filename, "text/plain"
+
+
+
 def auto_select_model(content: str, agent_role: str) -> tuple:
     """
     Automatically select the best AI model based on task content and agent role.
