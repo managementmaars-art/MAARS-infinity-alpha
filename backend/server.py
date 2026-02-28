@@ -1906,6 +1906,57 @@ async def call_direct_cohere(model_name: str, system_prompt: str, content: str, 
         return parts[0].get("text", "") if parts else ""
 
 
+async def call_llm_with_fallback(api_keys, model_provider, model_name, system_prompt, content, attachments, chat_id):
+    """Call LLM with automatic fallback to alternative models on failure."""
+    fallback_models = [
+        (model_provider, model_name),
+        ("openai", "gpt-5.2"),
+        ("openai", "gpt-4o"),
+        ("openai", "gpt-4o-mini"),
+        ("gemini", "gemini-3-flash-preview"),
+    ]
+    seen = set()
+    unique_fallbacks = []
+    for mp, mn in fallback_models:
+        key = f"{mp}/{mn}"
+        if key not in seen:
+            seen.add(key)
+            unique_fallbacks.append((mp, mn))
+    
+    last_error = None
+    for fb_provider, fb_model in unique_fallbacks:
+        try:
+            if api_keys["active_provider"] == "direct":
+                direct_key = api_keys.get(fb_provider, "")
+                if direct_key:
+                    result = await call_direct_llm(fb_provider, fb_model, system_prompt, content, attachments, direct_key)
+                    return result, fb_provider, fb_model
+            
+            from emergentintegrations.llm.chat import LlmChat, UserMessage
+            llm_chat = LlmChat(
+                api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
+                session_id=f"{chat_id}_{uuid.uuid4().hex[:6]}",
+                system_message=system_prompt
+            ).with_model(fb_provider, fb_model)
+            message_content = content
+            if attachments:
+                message_content += f"\n\n[User attached {len(attachments)} file(s)]"
+            user_message = UserMessage(text=message_content)
+            if attachments:
+                for att in attachments:
+                    if att.startswith("data:image") or att.startswith("http"):
+                        user_message = user_message.add_image(att)
+            result = await llm_chat.send_message(user_message)
+            return result, fb_provider, fb_model
+        except Exception as e:
+            last_error = e
+            logger.warning(f"LLM call failed for {fb_provider}/{fb_model}: {e}. Trying fallback...")
+            continue
+    
+    raise last_error or Exception("All LLM models failed")
+
+
+
 @api_router.post("/chats/{chat_id}/messages")
 async def send_message(chat_id: str, message_data: MessageCreate, current_user: User = Depends(get_current_user)):
     chat = await db.chats.find_one({"chat_id": chat_id, "user_id": current_user.user_id}, {"_id": 0})
