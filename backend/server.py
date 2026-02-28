@@ -2999,7 +2999,8 @@ async def generate_image(request: Request, current_user: User = Depends(get_curr
         images = await image_gen.generate_images(
             prompt=prompt,
             model=model,
-            number_of_images=1
+            number_of_images=1,
+            quality="high"
         )
         
         if not images or len(images) == 0:
