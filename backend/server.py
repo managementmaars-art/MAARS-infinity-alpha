@@ -2272,9 +2272,9 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         logger.error(f"LLM error: {e}")
         response_text = f"I apologize, but I'm having trouble processing your request right now. Error: {str(e)}"
     
-    # Auto-detect image generation requests and generate images
+    # Auto-detect image generation requests (only if agent has can_generate_image permission)
     generated_image = None
-    if detect_image_generation_request(message_data.content, agent.get("role", "")):
+    if agent.get("can_generate_image", False) and detect_image_generation_request(message_data.content, agent.get("role", "")):
         try:
             api_keys_img = await get_api_keys()
             # Always use Emergent key for image generation (most reliable)
