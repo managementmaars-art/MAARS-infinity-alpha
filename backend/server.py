@@ -304,9 +304,10 @@ class ChatCreate(BaseModel):
 
 class MessageCreate(BaseModel):
     content: str
-    model_provider: Optional[str] = None  # Override agent's default
-    model_name: Optional[str] = None  # Override agent's default
-    attachments: Optional[List[str]] = None  # File URLs or base64 data
+    model_provider: Optional[str] = None
+    model_name: Optional[str] = None
+    attachments: Optional[List[str]] = None
+    attachment_files: Optional[List[dict]] = None
 
 # ============== SUBSCRIPTION MODELS ==============
 
