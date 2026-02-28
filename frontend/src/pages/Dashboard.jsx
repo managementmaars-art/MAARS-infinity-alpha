@@ -9,7 +9,6 @@ import {
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
 import { BrandFooter } from "../components/BrandFooter";
-import { CreditsDisplay } from "../components/CreditsDisplay";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -185,7 +184,6 @@ const Dashboard = () => {
               </h1>
               <p className="text-zinc-400">Here's what's happening with your AI team today.</p>
             </div>
-            <CreditsDisplay />
           </div>
 
           {/* Stats Grid */}
