@@ -251,6 +251,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <GlobalCreditsDisplay />
         <AppRouter />
         <Watermark />
         <Toaster position="top-right" richColors />
