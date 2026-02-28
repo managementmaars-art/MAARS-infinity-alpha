@@ -938,7 +938,7 @@ const AgentChat = () => {
                     {msg.role === "assistant" && (() => {
                       const imgKey = `${msg.message_id || i}_image`;
                       const vidKey = `${msg.message_id || i}_video`;
-                      const imgFile = generatedFiles[imgKey];
+                      const imgFile = generatedFiles[imgKey] || msg.generated_image;
                       const vidFile = generatedFiles[vidKey];
                       return (
                         <>
