@@ -1700,23 +1700,35 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
         pdf = FPDF()
         pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
+        # Use built-in font with latin-1 encoding, replace unsupported chars
         pdf.set_font("Helvetica", size=11)
         effective_width = pdf.w - pdf.l_margin - pdf.r_margin
         
+        def safe_text(t):
+            """Sanitize text to Latin-1 compatible characters for Helvetica"""
+            replacements = {
+                '\u2018': "'", '\u2019': "'", '\u201c': '"', '\u201d': '"',
+                '\u2013': '-', '\u2014': '--', '\u2026': '...', '\u2022': '-',
+                '\u00a0': ' ', '\u200b': '', '\u200e': '', '\u200f': '',
+                '\u2011': '-', '\u2012': '-', '\u2010': '-',
+            }
+            for k, v in replacements.items():
+                t = t.replace(k, v)
+            return t.encode('latin-1', errors='replace').decode('latin-1')
+        
         for line in content.split('\n'):
             clean = line.strip()
-            # Handle markdown headers
             if clean.startswith('# '):
                 pdf.set_font("Helvetica", "B", 16)
-                pdf.multi_cell(effective_width, 10, clean[2:].strip('*'))
+                pdf.multi_cell(effective_width, 10, safe_text(clean[2:].strip('*')))
                 pdf.set_font("Helvetica", size=11)
             elif clean.startswith('## '):
                 pdf.set_font("Helvetica", "B", 14)
-                pdf.multi_cell(effective_width, 9, clean[3:].strip('*'))
+                pdf.multi_cell(effective_width, 9, safe_text(clean[3:].strip('*')))
                 pdf.set_font("Helvetica", size=11)
             elif clean.startswith('### '):
                 pdf.set_font("Helvetica", "B", 12)
-                pdf.multi_cell(effective_width, 8, clean[4:].strip('*'))
+                pdf.multi_cell(effective_width, 8, safe_text(clean[4:].strip('*')))
                 pdf.set_font("Helvetica", size=11)
             elif clean.startswith('---') or clean.startswith('***'):
                 pdf.line(pdf.l_margin, pdf.get_y(), pdf.w - pdf.r_margin, pdf.get_y())
@@ -1724,10 +1736,9 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
             elif clean == '':
                 pdf.ln(4)
             else:
-                # Strip markdown bold/italic
                 text = _re.sub(r'\*\*(.*?)\*\*', r'\1', clean)
                 text = _re.sub(r'\*(.*?)\*', r'\1', text)
-                pdf.multi_cell(effective_width, 6, text)
+                pdf.multi_cell(effective_width, 6, safe_text(text))
         
         filename = f"{file_id}_{filename_base}.pdf"
         filepath = UPLOAD_DIR / filename
