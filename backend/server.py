@@ -218,6 +218,11 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer(auto_error=False)
 
+# Health check endpoint (must be on app directly, not api_router, for Kubernetes probes)
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
