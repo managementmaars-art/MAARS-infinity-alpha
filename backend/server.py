@@ -2277,10 +2277,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     if detect_image_generation_request(message_data.content, agent.get("role", "")):
         try:
             api_keys_img = await get_api_keys()
-            if api_keys_img["active_provider"] == "direct" and api_keys_img.get("openai"):
-                img_api_key = api_keys_img["openai"]
-            else:
-                img_api_key = api_keys_img.get("emergent", EMERGENT_LLM_KEY)
+            # Always use Emergent key for image generation (most reliable)
+            img_api_key = api_keys_img.get("emergent") or EMERGENT_LLM_KEY
             
             # Use LLM response as an enhanced prompt, or build one from user content
             img_prompt = message_data.content
