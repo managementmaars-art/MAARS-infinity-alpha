@@ -1,39 +1,42 @@
-# Martian AI by MAARS Global Corporation - PRD
+# MAARS Command by MAARS Global Corporation - PRD
 
 ## Original Problem Statement
-Full-stack AI team platform with 20+ autonomous agents, Commander AI delegation, file generation, subscriptions, admin dashboard.
+Full-stack AI team platform (rebranded from Martian AI to MAARS Command) with 20+ autonomous agents, Commander AI delegation, file generation, subscriptions, admin dashboard.
 
 ## Implemented Features
 
+### Branding
+- Rebranded from "Martian AI" to "MAARS Command" across entire app
+- MAARS Global Corporation watermark (fixed bottom-right, scroll-adapted)
+- "Powered by GPT-5.2, Claude & Gemini" badge
+
+### Credits System UI
+- Credit balance pill in header (amber diamond icon + amount)
+- "Buy Credits" golden button
+- Dropdown panel: Available Credits, Free/Monthly/Top-up breakdown, Manage Subscriptions
+- Buy Credits modal: 5 preset packages (100/$20 to 6000/$1000) + custom amount input
+- Stripe checkout integration for purchases
+
+### Chat Management
+- Delete chats from Dashboard (hover trash icon on recent conversations)
+- Delete chats from Chat sidebar (existing)
+
 ### Auto Image Generation
-- Smart detection based on keywords + agent role
-- Visual agents (Graphic Designer) auto-trigger
-- GPT Image 1 with prompt refinement, inline rendering
+- GPT Image 1 with smart detection + prompt refinement, inline rendering
 
-### Auto Video Generation (Feb 28 2026)
-- Smart detection for video/commercial/animation requests
-- Video agents (Riley Chen) auto-trigger
+### Auto Video Generation
 - Sora 2 background generation (non-blocking, ~2-5 min)
-- Polling-based UI: shows spinner during gen, auto-updates with video player
-- Download MP4 support
+- Polling UI: spinner during gen, auto-updates with video player
 
-### LLM Fallback System
-- Auto-retry across models: Selected → GPT-5.2 → GPT-4o → GPT-4o-mini → Gemini 3 Flash
-- No raw errors shown to users
-
-### Smart Auto Model Selection
-- Keyword + agent role scoring for task classification
-- Routes to reliable providers (OpenAI/Gemini) by default
+### LLM Fallback + Smart Auto Selection
+- Auto-retry across models, routes to reliable OpenAI/Gemini providers
 
 ### Agent Card Hover Popups
-- Floating popup on hover with full avatar, role badge, capabilities, description
+- Floating popup with full avatar, role badge, capabilities, description
 
 ### Core Platform
 - React + FastAPI + MongoDB, JWT + Google OAuth, 21 AI agents
-- Resizable sidebar, sticky input, 25+ models across 9 providers
-- ReAct autonomous agents with tool execution
-- 9 service integrations (Slack, GitHub, SendGrid, etc.)
-- Stripe subscriptions, credit system, admin dashboard
+- ReAct autonomous agents, 9 service integrations, Stripe subscriptions
 
 ## Backlog
 - P1: Teams & Collaboration (invites, shared agents, roles)
