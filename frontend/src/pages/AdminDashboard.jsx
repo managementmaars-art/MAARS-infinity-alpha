@@ -1872,9 +1872,11 @@ const CustomPackagesTab = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-1">
               <Label className="text-zinc-300 text-sm">AI Cost per Credit (USD)</Label>
-              <Input type="number" step="0.001" value={avgCost} readOnly
-                className="bg-zinc-800/50 border-white/10 text-zinc-400" data-testid="pkg-calc-cost" />
-              <p className="text-[10px] text-zinc-500">From real usage data (read-only)</p>
+              <div className="flex items-center h-10 px-3 rounded-md bg-zinc-800/80 border border-white/5 text-sm text-amber-400 font-mono font-bold"
+                data-testid="pkg-calc-cost">
+                ${avgCost.toFixed(6)}
+              </div>
+              <p className="text-[10px] text-emerald-500/70 flex items-center gap-1"><span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live from real usage</p>
             </div>
             <div className="space-y-1">
               <Label className="text-zinc-300 text-sm">Target Profit Margin (%)</Label>
