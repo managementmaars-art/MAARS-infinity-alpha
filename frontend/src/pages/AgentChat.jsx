@@ -956,11 +956,27 @@ const AgentChat = () => {
                             </div>
                           )}
                           {vidFile?.url && (
-                            <div className="mt-3 rounded-lg overflow-hidden border border-white/10 max-w-sm">
+                            <div className="mt-3 rounded-lg overflow-hidden border border-white/10 max-w-sm" data-testid={`generated-video-${msg.message_id || i}`}>
                               <video controls className="w-full" src={`${API}${vidFile.url}`} />
                               <a href={`${API}${vidFile.url}`} download className="block text-center text-xs text-violet-400 py-2 hover:bg-white/5">
                                 <Download className="w-3 h-3 inline mr-1" />Download MP4
                               </a>
+                            </div>
+                          )}
+                          {!vidFile?.url && msg.video_generating && (
+                            <div className="mt-3 rounded-lg border border-violet-500/30 bg-violet-500/5 p-4 max-w-sm" data-testid={`video-generating-${msg.message_id || i}`}>
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full border-2 border-violet-400 border-t-transparent animate-spin" />
+                                <div>
+                                  <p className="text-sm text-violet-300 font-medium">Generating video with Sora 2...</p>
+                                  <p className="text-xs text-zinc-500 mt-0.5">This may take 3-5 minutes. You can continue chatting.</p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          {msg.video_error && (
+                            <div className="mt-3 rounded-lg border border-red-500/30 bg-red-500/5 p-3 max-w-sm">
+                              <p className="text-xs text-red-400">Video generation failed: {msg.video_error}</p>
                             </div>
                           )}
                         </>
