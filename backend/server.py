@@ -278,6 +278,7 @@ class Message(BaseModel):
     created_at: datetime
     execution_steps: Optional[List[dict]] = None  # Tool execution steps for agent responses
     generated_image: Optional[dict] = None  # Auto-generated image data
+    generated_video: Optional[dict] = None  # Auto-generated video data
     model_used: Optional[str] = None
     auto_selected: Optional[bool] = None
     model_reason: Optional[str] = None
