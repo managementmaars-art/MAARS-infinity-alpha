@@ -167,10 +167,8 @@ const AdminDashboard = () => {
     { id: "users", label: "Users", icon: Users },
     { id: "agents", label: "Agents", icon: Bot },
     { id: "transactions", label: "Transactions", icon: DollarSign },
-    { id: "pricing", label: "Pricing Manager", icon: TrendingUp },
-    { id: "packages", label: "Custom Packages", icon: DollarSign },
-    { id: "apikeys", label: "API Keys", icon: Key },
-    { id: "integrations", label: "Integrations", icon: Plug },
+    { id: "pricing", label: "Pricing & Packages", icon: TrendingUp },
+    { id: "apikeys", label: "API Keys & Integrations", icon: Key },
     { id: "payments", label: "Payment Setup", icon: CreditCard },
   ];
 
