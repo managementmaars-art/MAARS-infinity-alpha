@@ -2284,16 +2284,16 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
             
             # Use LLM response as an enhanced prompt, or build one from user content
             img_prompt = message_data.content
-            # Try to extract a concise prompt from the LLM's design description
-            if len(response_text) > 100:
+            # Refine prompt for professional-grade image output
+            if len(response_text) > 50:
                 try:
                     from emergentintegrations.llm.chat import LlmChat, UserMessage as UM
                     prompt_chat = LlmChat(
                         api_key=img_api_key,
                         session_id=f"imgprompt_{uuid.uuid4().hex[:8]}",
-                        system_message="Convert the following design description into a concise, vivid image generation prompt (max 200 words). Focus on visual details, style, colors, and composition. Output ONLY the prompt, nothing else."
+                        system_message="You are a professional image prompt engineer. Convert the design description into a detailed, vivid image generation prompt for GPT Image 1. Include specific details about style (flat design, 3D render, minimalist, etc.), color palette, composition, lighting, background, and resolution. For logos: specify clean vector-style, professional typography, scalable design. For marketing materials: specify layout, visual hierarchy, branding elements. Output ONLY the prompt text, nothing else."
                     ).with_model("openai", "gpt-4o-mini")
-                    img_prompt = await prompt_chat.send_message(UM(text=f"User request: {message_data.content}\n\nDesign description:\n{response_text[:1500]}"))
+                    img_prompt = await prompt_chat.send_message(UM(text=f"User request: {message_data.content}\n\nDesigner's creative brief:\n{response_text[:2000]}"))
                 except Exception as prompt_err:
                     logger.warning(f"Prompt refinement failed, using original: {prompt_err}")
                     img_prompt = message_data.content
