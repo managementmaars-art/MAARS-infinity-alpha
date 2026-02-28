@@ -1115,6 +1115,34 @@ const SidebarContent = ({
   currentChat, loadChat, deleteChat, startNewChat, navigate 
 }) => (
   <div className="flex-1 flex flex-col overflow-hidden">
+    {/* Navigation - at the top */}
+    <div className="px-4 pt-3 pb-2 space-y-0.5 border-b border-white/10">
+      <Link
+        to="/dashboard"
+        className="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
+        data-testid="nav-dashboard"
+      >
+        <LayoutDashboard className="w-4 h-4" />
+        <span className="text-sm font-medium">Dashboard</span>
+      </Link>
+      <Link
+        to="/agents"
+        className="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
+        data-testid="nav-agents"
+      >
+        <Users className="w-4 h-4" />
+        <span className="text-sm font-medium">All Agents</span>
+      </Link>
+      <Link
+        to="/tasks"
+        className="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
+        data-testid="nav-tasks"
+      >
+        <ListTodo className="w-4 h-4" />
+        <span className="text-sm font-medium">Tasks</span>
+      </Link>
+    </div>
+
     {/* Agents */}
     <div className="p-4 border-b border-white/10">
       <p className="text-xs font-semibold text-zinc-500 uppercase mb-2">Agents</p>
@@ -1183,31 +1211,6 @@ const SidebarContent = ({
         </div>
       </div>
     </ScrollArea>
-
-    {/* Navigation */}
-    <div className="p-4 border-t border-white/10 space-y-1">
-      <Link
-        to="/dashboard"
-        className="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
-      >
-        <LayoutDashboard className="w-4 h-4" />
-        <span className="text-sm">Dashboard</span>
-      </Link>
-      <Link
-        to="/agents"
-        className="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
-      >
-        <Users className="w-4 h-4" />
-        <span className="text-sm">All Agents</span>
-      </Link>
-      <Link
-        to="/tasks"
-        className="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
-      >
-        <ListTodo className="w-4 h-4" />
-        <span className="text-sm">Tasks</span>
-      </Link>
-    </div>
   </div>
 );
 
