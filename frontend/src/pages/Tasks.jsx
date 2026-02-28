@@ -418,7 +418,7 @@ const Tasks = () => {
                             {task.priority}
                           </Badge>
                           <Badge className="bg-zinc-700 text-zinc-300 border-0 text-xs">
-                            {task.status.replace("_", " ")}
+                            {task.status === "in_progress" ? "working on it..." : task.status.replace("_", " ")}
                           </Badge>
                           {task.source === "commander" && (
                             <Badge className="bg-amber-500/20 text-amber-400 border-0 text-xs flex items-center gap-1" data-testid="commander-badge">
