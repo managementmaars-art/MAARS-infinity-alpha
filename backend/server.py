@@ -1741,25 +1741,19 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
         pdf.set_left_margin(25)
         pdf.set_right_margin(25)
         pdf.add_page()
-        pdf.set_font("Helvetica", size=11)
-        w = pdf.w - pdf.l_margin - pdf.r_margin
         
-        def safe(t):
-            """Thoroughly sanitize text for Latin-1 Helvetica font."""
-            import unicodedata
-            reps = {
-                '\u2018':"'", '\u2019':"'", '\u201c':'"', '\u201d':'"',
-                '\u2013':'-', '\u2014':'--', '\u2026':'...', '\u2022':'*',
-                '\u00a0':' ', '\u200b':'', '\u200e':'', '\u200f':'',
-                '\u2011':'-', '\u2012':'-', '\u2010':'-', '\u2032':"'",
-                '\u2033':'"', '\u2039':'<', '\u203a':'>', '\u00ab':'<<',
-                '\u00bb':'>>', '\ufeff':'', '\u0027':"'", '\u201a':',',
-            }
-            for k,v in reps.items():
-                t = t.replace(k, v)
-            # Normalize unicode then encode safely
-            t = unicodedata.normalize('NFKD', t)
-            return t.encode('latin-1', errors='ignore').decode('latin-1')
+        # Use Unicode TTF font to avoid character encoding issues
+        vera_path = "/root/.venv/lib/python3.11/site-packages/reportlab/fonts/Vera.ttf"
+        vera_bold = "/root/.venv/lib/python3.11/site-packages/reportlab/fonts/VeraBd.ttf"
+        try:
+            pdf.add_font("Vera", "", vera_path, uni=True)
+            pdf.add_font("Vera", "B", vera_bold, uni=True)
+            font_name = "Vera"
+        except Exception:
+            font_name = "Helvetica"
+        
+        pdf.set_font(font_name, size=11)
+        w = pdf.w - pdf.l_margin - pdf.r_margin
         
         def clean_md(t):
             t = _re.sub(r'\*\*(.*?)\*\*', r'\1', t)
@@ -1771,22 +1765,22 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
             s = line.strip()
             if s.startswith('# '):
                 pdf.ln(3)
-                pdf.set_font("Helvetica", "B", 16)
-                pdf.multi_cell(w, 8, safe(clean_md(s[2:])))
+                pdf.set_font(font_name, "B", 16)
+                pdf.multi_cell(w, 8, clean_md(s[2:]))
                 pdf.ln(2)
-                pdf.set_font("Helvetica", size=11)
+                pdf.set_font(font_name, size=11)
             elif s.startswith('## '):
                 pdf.ln(2)
-                pdf.set_font("Helvetica", "B", 14)
-                pdf.multi_cell(w, 7, safe(clean_md(s[3:])))
+                pdf.set_font(font_name, "B", 14)
+                pdf.multi_cell(w, 7, clean_md(s[3:]))
                 pdf.ln(1)
-                pdf.set_font("Helvetica", size=11)
+                pdf.set_font(font_name, size=11)
             elif s.startswith('### '):
                 pdf.ln(2)
-                pdf.set_font("Helvetica", "B", 12)
-                pdf.multi_cell(w, 7, safe(clean_md(s[4:])))
+                pdf.set_font(font_name, "B", 12)
+                pdf.multi_cell(w, 7, clean_md(s[4:]))
                 pdf.ln(1)
-                pdf.set_font("Helvetica", size=11)
+                pdf.set_font(font_name, size=11)
             elif _re.match(r'^---+$', s) or _re.match(r'^\*\*\*+$', s):
                 y = pdf.get_y()
                 pdf.line(pdf.l_margin, y, pdf.l_margin + w, y)
@@ -1794,14 +1788,12 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
             elif s == '':
                 pdf.ln(3)
             elif s.startswith('- ') or s.startswith('* '):
-                text = safe(clean_md(s[2:]))
-                pdf.cell(5, 6, "-")
-                x = pdf.get_x()
-                pdf.multi_cell(w - 5, 6, text)
+                pdf.cell(5, 6, chr(8226) + " ")
+                pdf.multi_cell(w - 5, 6, clean_md(s[2:]))
             elif _re.match(r'^\d+[\.\)]\s', s):
-                pdf.multi_cell(w, 6, safe(clean_md(s)))
+                pdf.multi_cell(w, 6, clean_md(s))
             else:
-                pdf.multi_cell(w, 6, safe(clean_md(s)))
+                pdf.multi_cell(w, 6, clean_md(s))
         
         filename = f"{file_id}_{filename_base}.pdf"
         filepath = UPLOAD_DIR / filename
