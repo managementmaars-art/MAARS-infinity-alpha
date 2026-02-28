@@ -2833,7 +2833,7 @@ async def generate_video(request: Request, current_user: User = Depends(get_curr
         
         return {
             "filename": filename,
-            "url": f"/api/files/{filename}",
+            "url": f"/files/{filename}",
             "model": model,
             "size": size,
             "duration": duration,
