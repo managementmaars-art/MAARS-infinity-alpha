@@ -12,10 +12,8 @@ Full-stack AI team platform (rebranded from Martian AI to MAARS Command) with 20
 
 ### Credits System UI (Updated Feb 28, 2026)
 - Global credit balance pill (fixed top-right, visible on all authenticated pages)
-- "Buy Credits" golden button with dropdown panel
 - Buy Credits modal: Dynamic packages fetched from /api/plans (admin-configured prices)
-- Currency toggle (USD/BDT) in Buy Credits modal
-- Stripe checkout integration for all purchases
+- Currency toggle (USD/BDT), Stripe checkout integration
 
 ### Admin Profit Calculator (Updated Feb 28, 2026)
 - AI Cost/Credit is read-only, auto-populated from real usage data
@@ -26,29 +24,30 @@ Full-stack AI team platform (rebranded from Martian AI to MAARS Command) with 20
 - Toggle buttons for: can_generate_image, can_generate_video, can_generate_pdf, can_generate_files
 - Real-time badge display (IMG, VID, PDF, FILES) on collapsed agent rows
 - Backend PUT /api/admin/agents/{agent_id}/settings endpoint
-- Agent permissions enforced during message processing (image/video/file generation)
+
+### Smart Clarification Questions (Added Feb 28, 2026)
+- All 21 agents ask targeted clarifying questions before generating deliverables
+- Agents ask about specifics: audience, goals, tone, format, constraints, etc.
+- Simple factual questions and greetings get direct answers (no unnecessary Q&A)
+- Conversation history (last 20 messages) passed to LLM for context continuity
+- Agents use answers from previous messages to avoid re-asking
+- Users can say "just do it" to skip questions and get output with reasonable defaults
 
 ### Auto File Generation
-- Agents auto-detect file format requests (PDF, DOCX, XLSX, CSV, TXT) and generate downloadable files inline
-- Unicode-safe PDF generation with reportlab + markdown formatting support
+- PDF, DOCX, XLSX, CSV, TXT generation with download links inline
+- Unicode-safe PDF generation with reportlab + markdown formatting
 
 ### Chat Management
-- Delete chats from Dashboard and Chat sidebar
-- Auto-expanding textarea for chat input
+- Delete chats, auto-expanding textarea
 
 ### Auto Image Generation
-- GPT Image 1 with smart detection + prompt refinement, inline rendering
+- GPT Image 1 with smart detection + prompt refinement
 
 ### Auto Video Generation
-- Sora 2 background generation (non-blocking, ~2-5 min)
-- Polling UI: spinner during gen, auto-updates with video player
-- Image-to-video support via file upload
+- Sora 2 background generation (~2-5 min), image-to-video support
 
 ### LLM Fallback + Smart Auto Selection
-- Auto-retry across models, routes to reliable OpenAI/Gemini providers
-
-### Agent Card Hover Popups
-- Floating popup with full avatar, role badge, capabilities, description
+- Auto-retry across models
 
 ### Core Platform
 - React + FastAPI + MongoDB, JWT + Google OAuth, 21 AI agents
