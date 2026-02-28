@@ -229,6 +229,7 @@ const AgentChat = () => {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const resizeRef = useRef(null);
+  const textareaRef = useRef(null);
 
   // Sidebar resize handlers
   const startResize = (e) => {
