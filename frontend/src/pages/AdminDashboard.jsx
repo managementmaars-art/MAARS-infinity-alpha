@@ -765,20 +765,20 @@ const AdminDashboard = () => {
             {["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs"].map(provider => {
               const status = usage.providers?.[provider];
               const tracked = usage.tracked_usage?.[provider];
-              if (!status && !tracked) return null;
               const providerLabels = { openai: "OpenAI", anthropic: "Anthropic", gemini: "Google Gemini", xai: "xAI (Grok)", deepseek: "DeepSeek", mistral: "Mistral AI", perplexity: "Perplexity", cohere: "Cohere", elevenlabs: "ElevenLabs" };
+              const hasKey = status?.status === 'active' || status?.status === 'error';
               return (
                 <div key={provider} className="p-3 rounded-lg bg-white/5 border border-white/10" data-testid={`api-status-${provider}`}>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-white font-medium">{providerLabels[provider] || provider}</span>
-                    <Badge className={status?.status === 'active' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}>
+                    <Badge className={status?.status === 'active' ? 'bg-emerald-500/20 text-emerald-400' : hasKey ? 'bg-red-500/20 text-red-400' : 'bg-zinc-500/20 text-zinc-400'}>
                       {status?.status || 'no key'}
                     </Badge>
                   </div>
                   {status?.models_available > 0 && (
                     <p className="text-xs text-zinc-400">{status.models_available} models available</p>
                   )}
-                  {tracked && (
+                  {tracked ? (
                     <div className="mt-2 pt-2 border-t border-white/5 space-y-1">
                       <div className="flex justify-between text-xs">
                         <span className="text-zinc-500">API Calls</span>
@@ -792,6 +792,10 @@ const AdminDashboard = () => {
                         <span className="text-zinc-500">Est. Cost</span>
                         <span className="text-red-400 font-mono">${tracked.total_cost.toFixed(4)}</span>
                       </div>
+                    </div>
+                  ) : (
+                    <div className="mt-2 pt-2 border-t border-white/5">
+                      <p className="text-[10px] text-zinc-500">{hasKey ? '' : 'No key configured'}</p>
                     </div>
                   )}
                   {status?.note && <p className="text-[10px] text-zinc-600 mt-2">{status.note}</p>}
