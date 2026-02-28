@@ -2309,6 +2309,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         assistant_msg["generated_image"] = generated_image
     if generated_video:
         assistant_msg["generated_video"] = generated_video
+    if generated_file:
+        assistant_msg["generated_file"] = generated_file
     if video_generating:
         assistant_msg["video_generating"] = True
     
