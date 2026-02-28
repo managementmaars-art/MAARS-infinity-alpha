@@ -527,7 +527,8 @@ const AgentChat = () => {
             filename: data.filename,
             type: data.content_type,
             size: data.size,
-            preview: data.data_url
+            preview: data.data_url,
+            file_url: data.file_url
           }]);
           toast.success(`${file.name} uploaded`);
         } else {
