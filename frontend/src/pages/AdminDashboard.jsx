@@ -1918,18 +1918,27 @@ const CustomPackagesTab = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="grid grid-cols-7 gap-2 text-xs text-zinc-500 font-medium px-1">
-              <span>Credits</span><span>AI Cost</span><span>USD Price</span><span>BDT <span className="text-emerald-500/70">(auto)</span></span><span>Profit</span><span>Margin</span><span></span>
+            <div className="grid grid-cols-8 gap-2 text-xs text-zinc-500 font-medium px-1">
+              <span>Credits</span><span>$/Credit</span><span>AI Cost</span><span>USD Price</span><span>BDT <span className="text-emerald-500/70">(auto)</span></span><span>Profit</span><span>Margin</span><span></span>
             </div>
             {extraPacks.map((pack, i) => {
               const cost = pack.credits * avgCost;
+              const pricePerCredit = pack.credits > 0 ? (pack.price_usd / pack.credits) : 0;
               const profit = pack.price_usd - cost;
               const margin = cost > 0 ? ((profit / cost) * 100).toFixed(0) : 0;
               return (
-              <div key={pack.id || i} className="grid grid-cols-7 gap-2 items-center" data-testid={`extra-pack-${i}`}>
+              <div key={pack.id || i} className="grid grid-cols-8 gap-2 items-center" data-testid={`extra-pack-${i}`}>
                 <input type="number" value={pack.credits}
                   onChange={e => updateExtraPack(i, "credits", e.target.value)}
                   className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                <input type="number" step="0.01" value={pack.price_per_credit || pricePerCredit.toFixed(4)}
+                  onChange={e => {
+                    const ppc = parseFloat(e.target.value) || 0;
+                    const newPrice = (pack.credits * ppc).toFixed(2);
+                    updateExtraPack(i, "price_per_credit", e.target.value);
+                    updateExtraPack(i, "price_usd", newPrice);
+                  }}
+                  className="bg-zinc-800 border border-amber-500/30 rounded-lg px-3 py-2 text-amber-400 text-sm" />
                 <span className="text-red-400 text-sm px-1">${cost.toFixed(2)}</span>
                 <input type="number" step="0.5" value={pack.price_usd}
                   onChange={e => updateExtraPack(i, "price_usd", e.target.value)}
