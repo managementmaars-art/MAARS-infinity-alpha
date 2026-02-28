@@ -24,6 +24,11 @@ Full-stack AI team platform (rebranded from Martian AI to MAARS Command) with 20
 - Removed editable $/Credit inputs from plan editors and credit pack rows
 - AI cost auto-updates across all profit calculators when usage data changes
 
+### Auto File Generation (Added Feb 28, 2026)
+- Agents auto-detect file format requests (PDF, DOCX, XLSX, CSV, TXT) and generate downloadable files inline
+- Unicode-safe PDF generation with markdown formatting support
+- Manual file gen buttons (PDF, Word, Excel, Text, Image, Video) on every assistant response
+
 ### Chat Management
 - Delete chats from Dashboard (hover trash icon on recent conversations)
 - Delete chats from Chat sidebar (existing)
