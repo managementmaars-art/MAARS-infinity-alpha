@@ -2345,23 +2345,23 @@ Rules:
         if requested_format == "pdf" and not can_gen_pdf:
             pass  # Agent not allowed to generate PDFs
         else:
-        try:
-            # Create a clean filename from the chat context
-            words = _re.sub(r'[^\w\s]', '', message_data.content.lower()).split()[:4]
-            filename_base = '_'.join(words) if words else 'document'
-            filepath, filename, content_type = generate_file_from_content(
-                response_text, requested_format, filename_base
-            )
-            generated_file = {
-                "filename": filename,
-                "url": f"/files/{filename}",
-                "format": requested_format,
-                "content_type": content_type,
-                "size": filepath.stat().st_size
-            }
-            logger.info(f"Auto-generated {requested_format} file: {filename}")
-        except Exception as file_err:
-            logger.error(f"Auto file generation failed: {file_err}")
+            try:
+                # Create a clean filename from the chat context
+                words = _re.sub(r'[^\w\s]', '', message_data.content.lower()).split()[:4]
+                filename_base = '_'.join(words) if words else 'document'
+                filepath, filename, content_type = generate_file_from_content(
+                    response_text, requested_format, filename_base
+                )
+                generated_file = {
+                    "filename": filename,
+                    "url": f"/files/{filename}",
+                    "format": requested_format,
+                    "content_type": content_type,
+                    "size": filepath.stat().st_size
+                }
+                logger.info(f"Auto-generated {requested_format} file: {filename}")
+            except Exception as file_err:
+                logger.error(f"Auto file generation failed: {file_err}")
     
     # Create assistant message
     assistant_msg = {
