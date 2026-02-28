@@ -2090,7 +2090,7 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
                     f.write(images[0])
                 generated_image = {
                     "filename": filename,
-                    "url": f"/api/files/{filename}",
+                    "url": f"/files/{filename}",
                     "model": "gpt-image-1",
                     "prompt": img_prompt[:500]
                 }
