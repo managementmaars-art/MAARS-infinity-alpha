@@ -704,7 +704,7 @@ const AgentChat = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex" data-testid="chat-page">
+    <div className="h-screen bg-background flex overflow-hidden" data-testid="chat-page">
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
         <div className="flex items-center justify-between h-16 px-4">
