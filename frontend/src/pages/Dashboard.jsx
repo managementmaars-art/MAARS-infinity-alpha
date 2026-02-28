@@ -28,14 +28,14 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       const [agentsRes, chatsRes, statsRes] = await Promise.all([
-        fetch(`${API}/agents`, { credentials: "include", headers }),
-        fetch(`${API}/chats`, { credentials: "include", headers }),
-        fetch(`${API}/stats`, { credentials: "include", headers })
+        fetch(`${API}/agents`, { credentials: "include", headers }).catch(() => null),
+        fetch(`${API}/chats`, { credentials: "include", headers }).catch(() => null),
+        fetch(`${API}/stats`, { credentials: "include", headers }).catch(() => null)
       ]);
 
-      if (agentsRes.ok) setAgents(await agentsRes.json());
-      if (chatsRes.ok) setRecentChats(await chatsRes.json());
-      if (statsRes.ok) setStats(await statsRes.json());
+      if (agentsRes?.ok) setAgents(await agentsRes.json());
+      if (chatsRes?.ok) setRecentChats(await chatsRes.json());
+      if (statsRes?.ok) setStats(await statsRes.json());
     } catch (error) {
       toast.error("Failed to load dashboard data");
     } finally {

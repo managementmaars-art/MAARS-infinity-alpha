@@ -44,12 +44,12 @@ const Tasks = () => {
   const fetchData = async () => {
     try {
       const [tasksRes, agentsRes] = await Promise.all([
-        fetch(`${API}/tasks`, { credentials: "include", headers }),
-        fetch(`${API}/agents`, { credentials: "include", headers })
+        fetch(`${API}/tasks`, { credentials: "include", headers }).catch(() => null),
+        fetch(`${API}/agents`, { credentials: "include", headers }).catch(() => null)
       ]);
 
-      if (tasksRes.ok) setTasks(await tasksRes.json());
-      if (agentsRes.ok) setAgents(await agentsRes.json());
+      if (tasksRes?.ok) setTasks(await tasksRes.json());
+      if (agentsRes?.ok) setAgents(await agentsRes.json());
     } catch (error) {
       toast.error("Failed to load data");
     } finally {
