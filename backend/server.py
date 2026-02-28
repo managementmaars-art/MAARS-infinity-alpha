@@ -1809,7 +1809,7 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
         from docx.shared import Pt, Inches
         doc = Document()
         
-        for line in content.split('\n'):
+        for line in doc_content.split('\n'):
             clean = line.strip()
             if clean.startswith('# '):
                 doc.add_heading(clean[2:].strip('*'), level=1)
