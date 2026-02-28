@@ -361,6 +361,18 @@ class TaskUpdate(BaseModel):
     priority: Optional[str] = None
     assigned_agents: Optional[List[str]] = None
 
+# ============== TEAM MODELS ==============
+
+class TeamCreate(BaseModel):
+    name: str
+
+class TeamInvite(BaseModel):
+    email: str
+    role: str = "member"  # "admin" or "member"
+
+class TeamMemberUpdate(BaseModel):
+    role: str  # "admin" or "member"
+
 # ============== AUTH HELPERS ==============
 
 def hash_password(password: str) -> str:
