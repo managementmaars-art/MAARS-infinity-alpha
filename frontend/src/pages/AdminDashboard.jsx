@@ -1492,10 +1492,8 @@ const AdminDashboard = () => {
           {activeTab === "users" && <UsersTab />}
           {activeTab === "agents" && <AgentsTab />}
           {activeTab === "transactions" && <TransactionsTab />}
-          {activeTab === "pricing" && <PricingManagerTab />}
-          {activeTab === "packages" && <CustomPackagesTab />}
-          {activeTab === "apikeys" && <ApiKeysTab />}
-          {activeTab === "integrations" && <IntegrationsTab />}
+          {activeTab === "pricing" && <><PricingManagerTab /><div className="mt-6"><CustomPackagesTab /></div></>}
+          {activeTab === "apikeys" && <><ApiKeysTab /><div className="mt-6"><IntegrationsTab /></div></>}
           {activeTab === "payments" && <PaymentSetupTab />}
         </div>
       </div>
