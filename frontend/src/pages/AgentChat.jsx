@@ -991,8 +991,8 @@ const AgentChat = () => {
           )}
         </ScrollArea>
 
-        {/* Input */}
-        <div className="p-4 border-t border-white/10">
+        {/* Input - Always visible at bottom */}
+        <div className="p-4 border-t border-white/10 shrink-0 bg-background">
           {/* Attachments Preview */}
           {attachments.length > 0 && (
             <div className="max-w-3xl mx-auto mb-3 flex flex-wrap gap-2">
