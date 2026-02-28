@@ -127,6 +127,17 @@ const Dashboard = () => {
     );
   }
 
+  const handleDeleteChat = async (chatId) => {
+    try {
+      const res = await fetch(`${API}/chats/${chatId}`, { method: "DELETE", credentials: "include", headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        setRecentChats(prev => prev.filter(c => c.chat_id !== chatId));
+        toast.success("Chat deleted");
+      }
+    } catch { toast.error("Failed to delete chat"); }
+  };
+
+
   return (
     <div className="min-h-screen bg-background" data-testid="dashboard-page">
       {/* Mobile Header */}
