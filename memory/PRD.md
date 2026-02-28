@@ -10,12 +10,14 @@ Full-stack AI team platform (rebranded from Martian AI to MAARS Command) with 20
 - MAARS Global Corporation watermark (fixed bottom-right, scroll-adapted)
 - "Powered by GPT-5.2, Claude & Gemini" badge
 
-### Credits System UI
-- Credit balance pill in header (amber diamond icon + amount)
-- "Buy Credits" golden button
-- Dropdown panel: Available Credits, Free/Monthly/Top-up breakdown, Manage Subscriptions
-- Buy Credits modal: 5 preset packages (100/$20 to 6000/$1000) + custom amount input
-- Stripe checkout integration for purchases
+### Credits System UI (Updated Feb 28, 2026)
+- Global credit balance pill (fixed top-right, visible on all authenticated pages)
+- "Buy Credits" golden button with dropdown panel
+- Dropdown: Available Credits, Free/Monthly/Top-up breakdown, Manage Subscriptions
+- Buy Credits modal: Dynamic packages fetched from /api/plans (admin-configured prices)
+- Currency toggle (USD/BDT) in Buy Credits modal
+- Custom amount input for flexible purchases
+- Stripe checkout integration for all purchases
 
 ### Chat Management
 - Delete chats from Dashboard (hover trash icon on recent conversations)
