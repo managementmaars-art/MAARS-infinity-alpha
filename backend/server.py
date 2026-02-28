@@ -1185,34 +1185,14 @@ async def agent_execute_with_tools(
     final_response = ""
     
     for iteration in range(max_iterations):
-        # Call the LLM
+        # Call the LLM with fallback
         try:
-            if api_keys.get("active_provider") == "direct":
-                direct_key = api_keys.get(model_provider, "")
-                if direct_key:
-                    llm_response = await call_direct_llm(
-                        model_provider, model_name,
-                        enhanced_system_prompt, accumulated_context,
-                        attachments if iteration == 0 else None, direct_key
-                    )
-                else:
-                    from emergentintegrations.llm.chat import LlmChat, UserMessage
-                    llm_chat = LlmChat(
-                        api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-                        session_id=f"{chat_id}_tool_{iteration}",
-                        system_message=enhanced_system_prompt
-                    ).with_model(model_provider, model_name)
-                    user_message = UserMessage(text=accumulated_context)
-                    llm_response = await llm_chat.send_message(user_message)
-            else:
-                from emergentintegrations.llm.chat import LlmChat, UserMessage
-                llm_chat = LlmChat(
-                    api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-                    session_id=f"{chat_id}_tool_{iteration}",
-                    system_message=enhanced_system_prompt
-                ).with_model(model_provider, model_name)
-                user_message = UserMessage(text=accumulated_context)
-                llm_response = await llm_chat.send_message(user_message)
+            llm_response, model_provider, model_name = await call_llm_with_fallback(
+                api_keys, model_provider, model_name,
+                enhanced_system_prompt, accumulated_context,
+                attachments if iteration == 0 else None,
+                f"{chat_id}_tool_{iteration}"
+            )
         except Exception as e:
             logger.error(f"Agent tool loop LLM error (iter {iteration}): {e}")
             if not final_response:
