@@ -307,6 +307,37 @@ const AgentChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Poll for background video generation completion
+  useEffect(() => {
+    const hasGenerating = messages.some(m => m.video_generating && !m.generated_video);
+    if (!hasGenerating || !chatId) return;
+    
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`${API}/chats/${chatId}`, { credentials: "include", headers });
+        if (res.ok) {
+          const chat = await res.json();
+          const updated = chat.messages || [];
+          const changed = updated.some(m => m.generated_video && !m.video_generating);
+          if (changed) {
+            setMessages(updated);
+            // Store video in generatedFiles
+            updated.forEach(m => {
+              if (m.generated_video) {
+                setGeneratedFiles(prev => ({ ...prev, [`${m.message_id}_video`]: m.generated_video }));
+              }
+            });
+          }
+          // Stop polling if no more generating
+          if (!updated.some(m => m.video_generating)) clearInterval(interval);
+        }
+      } catch {}
+    }, 10000); // Poll every 10 seconds
+    
+    return () => clearInterval(interval);
+  }, [messages, chatId]);
+
+
   const fetchInitialData = async () => {
     try {
       const [agentsRes, chatsRes] = await Promise.all([
