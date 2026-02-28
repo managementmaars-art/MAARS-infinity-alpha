@@ -279,7 +279,7 @@ const Dashboard = () => {
               {agents.map((agent) => (
                 <Card
                   key={agent.agent_id}
-                  className="bg-zinc-900/50 border-white/10 hover:border-white/20 cursor-pointer transition-colors group"
+                  className="bg-zinc-900/50 border-white/10 hover:border-indigo-500/40 cursor-pointer transition-all duration-300 group relative overflow-hidden"
                   onClick={() => navigate(`/chat/${agent.agent_id}`)}
                   data-testid={`agent-card-${agent.agent_id}`}
                 >
@@ -288,7 +288,7 @@ const Dashboard = () => {
                       <img
                         src={agent.avatar}
                         alt={agent.name}
-                        className="w-10 h-10 rounded-lg object-cover shrink-0"
+                        className="w-10 h-10 rounded-lg object-cover shrink-0 transition-transform duration-300 group-hover:scale-125"
                       />
                       <div className="min-w-0">
                         <h3 className="font-semibold text-sm text-white group-hover:text-indigo-400 transition-colors truncate">
@@ -296,6 +296,12 @@ const Dashboard = () => {
                         </h3>
                         <p className="text-xs text-zinc-400 truncate">{agent.role}</p>
                       </div>
+                    </div>
+                    {/* Hover tooltip with description */}
+                    <div className="max-h-0 group-hover:max-h-24 overflow-hidden transition-all duration-300 ease-in-out">
+                      <p className="text-[11px] text-zinc-400 mt-2 leading-relaxed line-clamp-3" data-testid={`agent-desc-${agent.agent_id}`}>
+                        {agent.description}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
