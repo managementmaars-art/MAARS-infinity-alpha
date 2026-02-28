@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, Response, Request, UploadFile, File, Form
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, Response, Request, UploadFile, File, Form, Body
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import StreamingResponse
 from dotenv import load_dotenv
@@ -4827,12 +4827,6 @@ async def shutdown_db_client():
 
 
 # ============== ADMIN AGENT MANAGEMENT ==============
-
-@api_router.get("/admin/agents")
-async def admin_get_agents(admin: User = Depends(require_admin)):
-    """Get all agents with their settings for admin management"""
-    agents = await db.agents.find({}, {"_id": 0}).to_list(50)
-    return {"agents": agents}
 
 @api_router.put("/admin/agents/{agent_id}/settings")
 async def admin_update_agent_settings(agent_id: str, body: dict = Body(...), admin: User = Depends(require_admin)):
