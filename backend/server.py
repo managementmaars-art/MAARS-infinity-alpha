@@ -3070,20 +3070,42 @@ async def create_checkout(checkout_data: CheckoutRequest, request: Request, curr
         }
     elif checkout_data.type == "credits":
         credit_pkgs = await get_credit_packages()
-        if checkout_data.package_id not in credit_pkgs:
-            raise HTTPException(status_code=400, detail="Invalid credit package")
         
-        package = credit_pkgs[checkout_data.package_id]
-        price_key = "price_bdt" if currency == "bdt" else "price_usd"
-        amount = package[price_key]
-        metadata = {
-            "type": "credits",
-            "package_id": checkout_data.package_id,
-            "credits": str(package["credits"]),
-            "user_id": current_user.user_id,
-            "email": current_user.email,
-            "currency": currency
-        }
+        # Support custom credit amounts (custom_<credits>)
+        if checkout_data.package_id and checkout_data.package_id.startswith("custom_"):
+            try:
+                custom_credits = int(checkout_data.package_id.split("_")[1])
+                if custom_credits < 5:
+                    raise HTTPException(status_code=400, detail="Minimum 5 credits")
+                custom_price_usd = custom_credits / 5.0
+                rate = await get_usd_bdt_rate()
+                custom_price_bdt = round(custom_price_usd * rate, 2)
+                price = custom_price_bdt if currency == "bdt" else custom_price_usd
+                metadata = {
+                    "type": "credits",
+                    "package_id": checkout_data.package_id,
+                    "credits": str(custom_credits),
+                    "user_id": current_user.user_id,
+                    "email": current_user.email,
+                    "currency": currency
+                }
+                amount = price
+            except (ValueError, IndexError):
+                raise HTTPException(status_code=400, detail="Invalid custom credit amount")
+        elif checkout_data.package_id not in credit_pkgs:
+            raise HTTPException(status_code=400, detail="Invalid credit package")
+        else:
+            package = credit_pkgs[checkout_data.package_id]
+            price_key = "price_bdt" if currency == "bdt" else "price_usd"
+            amount = package[price_key]
+            metadata = {
+                "type": "credits",
+                "package_id": checkout_data.package_id,
+                "credits": str(package["credits"]),
+                "user_id": current_user.user_id,
+                "email": current_user.email,
+                "currency": currency
+            }
     else:
         raise HTTPException(status_code=400, detail="Invalid checkout type")
     
