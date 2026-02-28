@@ -1724,6 +1724,18 @@ const CustomPackagesTab = () => {
     fetchConfig();
   }, []);
 
+  // Background polling for live AI cost
+  useEffect(() => {
+    const fetchAvgCost = async () => {
+      try {
+        const res = await fetch(`${API}/admin/avg-cost`, { headers, credentials: "include" });
+        if (res.ok) { const d = await res.json(); if (d.avg_cost_per_credit > 0) setAvgCost(d.avg_cost_per_credit); }
+      } catch {}
+    };
+    const interval = setInterval(fetchAvgCost, 15000);
+    return () => clearInterval(interval);
+  }, [token]);
+
   const fetchConfig = async () => {
     try {
       const [res1, res2, res3, res4] = await Promise.all([
