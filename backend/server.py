@@ -2433,10 +2433,7 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         async def _bg_video_gen():
             try:
                 api_keys_vid = await get_api_keys()
-                if api_keys_vid["active_provider"] == "direct" and api_keys_vid.get("openai"):
-                    vid_api_key = api_keys_vid["openai"]
-                else:
-                    vid_api_key = api_keys_vid.get("emergent", EMERGENT_LLM_KEY)
+                vid_api_key = api_keys_vid.get("emergent") or EMERGENT_LLM_KEY
                 
                 vid_prompt = message_data.content
                 if len(response_text) > 50:
