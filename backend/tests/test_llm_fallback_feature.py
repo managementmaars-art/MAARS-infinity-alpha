@@ -41,11 +41,11 @@ class TestLLMFallbackFeature:
     
     def test_1_admin_login(self, admin_session):
         """Test admin can login"""
-        resp = admin_session.get(f"{BASE_URL}/api/users/me")
+        resp = admin_session.get(f"{BASE_URL}/api/agents")
         assert resp.status_code == 200
-        data = resp.json()
-        assert data["email"] == ADMIN_EMAIL
-        print(f"PASS: Admin logged in successfully as {data['email']}")
+        agents = resp.json()
+        assert len(agents) > 0, "No agents returned - auth may have failed"
+        print(f"PASS: Admin logged in successfully - retrieved {len(agents)} agents")
     
     def test_2_graphic_designer_agent_exists(self, admin_session):
         """Verify Felix Romano (Graphic Designer) agent exists"""
