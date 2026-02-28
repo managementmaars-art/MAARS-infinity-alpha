@@ -2982,11 +2982,7 @@ async def generate_image(request: Request, current_user: User = Depends(get_curr
     
     try:
         api_keys = await get_api_keys()
-        
-        if api_keys["active_provider"] == "direct" and api_keys.get("openai"):
-            api_key = api_keys["openai"]
-        else:
-            api_key = api_keys.get("emergent", EMERGENT_LLM_KEY)
+        api_key = api_keys.get("emergent") or EMERGENT_LLM_KEY
         
         from emergentintegrations.llm.openai.image_generation import OpenAIImageGeneration
         
