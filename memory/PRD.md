@@ -19,6 +19,11 @@ Full-stack AI team platform (rebranded from Martian AI to MAARS Command) with 20
 - Custom amount input for flexible purchases
 - Stripe checkout integration for all purchases
 
+### Admin Profit Calculator (Updated Feb 28, 2026)
+- AI Cost/Credit is read-only, auto-populated from real usage data
+- Removed editable $/Credit inputs from plan editors and credit pack rows
+- AI cost auto-updates across all profit calculators when usage data changes
+
 ### Chat Management
 - Delete chats from Dashboard (hover trash icon on recent conversations)
 - Delete chats from Chat sidebar (existing)
