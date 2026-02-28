@@ -3851,14 +3851,24 @@ async def admin_avg_cost(admin: User = Depends(require_admin)):
         {"$group": {
             "_id": None,
             "total_cost": {"$sum": "$estimated_cost_usd"},
-            "total_calls": {"$sum": 1}
+            "total_calls": {"$sum": 1},
+            "total_input_tokens": {"$sum": "$input_tokens"},
+            "total_output_tokens": {"$sum": "$output_tokens"}
         }}
     ]
     cost_result = await db.usage_logs.aggregate(cost_pipeline).to_list(1)
     if cost_result and cost_result[0]["total_calls"] > 0:
-        avg = cost_result[0]["total_cost"] / cost_result[0]["total_calls"]
-        return {"avg_cost_per_credit": round(avg, 6), "total_calls": cost_result[0]["total_calls"], "source": "real_usage"}
-    return {"avg_cost_per_credit": 0.003, "total_calls": 0, "source": "default"}
+        r = cost_result[0]
+        avg = r["total_cost"] / r["total_calls"]
+        return {
+            "avg_cost_per_credit": round(avg, 6),
+            "total_cost_usd": round(r["total_cost"], 6),
+            "total_calls": r["total_calls"],
+            "total_input_tokens": r.get("total_input_tokens", 0),
+            "total_output_tokens": r.get("total_output_tokens", 0),
+            "source": "real_usage"
+        }
+    return {"avg_cost_per_credit": 0.003, "total_cost_usd": 0, "total_calls": 0, "total_input_tokens": 0, "total_output_tokens": 0, "source": "default"}
 
 @api_router.get("/exchange-rate")
 async def get_exchange_rate():
