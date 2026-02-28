@@ -17,6 +17,14 @@ Full-stack AI team platform with 20+ autonomous agents, Commander AI delegation,
 - File attachments, voice input (Whisper STT), TTS playback
 - Execution steps display for agent tool usage
 
+### Auto Image Generation (Feb 28 2026)
+- **Smart Detection**: Auto-detects image generation requests based on keywords + agent role
+- **Visual Agents**: Graphic Designer (Felix Romano) and similar agents auto-trigger image generation
+- **Any Agent**: Explicit image requests (e.g. "generate me a logo") work across all agents
+- **GPT Image 1**: Uses prompt refinement via GPT-4o-mini before generating with GPT Image 1
+- **Inline Rendering**: Generated images appear inline in chat with Download PNG links
+- **Persistent Storage**: Images stored as files and referenced by URL in messages
+
 ### Autonomous Agent Architecture
 - **Tool System**: ReAct-pattern execution engine supporting multi-step reasoning
 - **Core Tools**: web_search, calculate, create_task, analyze_data
@@ -61,7 +69,7 @@ Full-stack AI team platform with 20+ autonomous agents, Commander AI delegation,
 ```
 /app/
   backend/
-    server.py   # Monolithic (4300+ lines) - auth, chat, ReAct engine, billing, admin, tools, integrations
+    server.py   # Monolithic (4400+ lines) - auth, chat, ReAct engine, billing, admin, tools, integrations
     .env
   frontend/src/
     App.js
