@@ -2120,57 +2120,10 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     
     # Auto-detect video generation requests and generate videos
     generated_video = None
+    video_generating = False
     if not generated_image and detect_video_generation_request(message_data.content, agent.get("role", "")):
-        try:
-            api_keys_vid = await get_api_keys()
-            if api_keys_vid["active_provider"] == "direct" and api_keys_vid.get("openai"):
-                vid_api_key = api_keys_vid["openai"]
-            else:
-                vid_api_key = api_keys_vid.get("emergent", EMERGENT_LLM_KEY)
-            
-            vid_prompt = message_data.content
-            if len(response_text) > 100:
-                try:
-                    from emergentintegrations.llm.chat import LlmChat, UserMessage as UM
-                    prompt_chat = LlmChat(
-                        api_key=vid_api_key,
-                        session_id=f"vidprompt_{uuid.uuid4().hex[:8]}",
-                        system_message="Convert the following into a concise, vivid video generation prompt (max 150 words). Focus on scene, action, mood, camera movement, lighting. Output ONLY the prompt."
-                    ).with_model("openai", "gpt-4o-mini")
-                    vid_prompt = await prompt_chat.send_message(UM(text=f"User request: {message_data.content}\n\nDescription:\n{response_text[:1500]}"))
-                except Exception:
-                    vid_prompt = message_data.content
-            
-            from emergentintegrations.llm.openai.video_generation import OpenAIVideoGeneration
-            import asyncio
-            video_gen = OpenAIVideoGeneration(api_key=vid_api_key)
-            
-            def _gen_video():
-                return video_gen.text_to_video(
-                    prompt=vid_prompt[:2000],
-                    model="sora-2",
-                    size="1280x720",
-                    duration=4,
-                    max_wait_time=600
-                )
-            
-            loop = asyncio.get_event_loop()
-            video_bytes = await loop.run_in_executor(None, _gen_video)
-            
-            if video_bytes:
-                file_id = uuid.uuid4().hex[:10]
-                filename = f"{file_id}_video.mp4"
-                filepath = UPLOAD_DIR / filename
-                video_gen.save_video(video_bytes, str(filepath))
-                generated_video = {
-                    "filename": filename,
-                    "url": f"/files/{filename}",
-                    "model": "sora-2",
-                    "prompt": vid_prompt[:500]
-                }
-                logger.info(f"Auto-generated video for: {message_data.content[:80]}")
-        except Exception as vid_err:
-            logger.error(f"Auto video generation failed: {vid_err}")
+        video_generating = True
+        # Video generation happens in background after response is sent
     
     # Create assistant message
     assistant_msg = {
