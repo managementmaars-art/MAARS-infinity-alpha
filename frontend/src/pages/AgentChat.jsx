@@ -838,16 +838,19 @@ const AgentChat = () => {
       <div className="flex-1 flex flex-col h-screen pt-16 lg:pt-0 overflow-hidden">
         {/* Agent Header */}
         {selectedAgent && (
-          <div className="hidden lg:flex items-center gap-4 p-4 border-b border-white/10 shrink-0">
-            <img
-              src={selectedAgent.avatar}
-              alt={selectedAgent.name}
-              className="w-10 h-10 rounded-lg object-cover"
-            />
-            <div>
-              <h2 className="font-semibold text-white">{selectedAgent.name}</h2>
-              <p className="text-sm text-zinc-400">{selectedAgent.role}</p>
+          <div className="hidden lg:flex items-center justify-between p-4 border-b border-white/10 shrink-0">
+            <div className="flex items-center gap-4">
+              <img
+                src={selectedAgent.avatar}
+                alt={selectedAgent.name}
+                className="w-10 h-10 rounded-lg object-cover"
+              />
+              <div>
+                <h2 className="font-semibold text-white">{selectedAgent.name}</h2>
+                <p className="text-sm text-zinc-400">{selectedAgent.role}</p>
+              </div>
             </div>
+            <CreditsDisplay />
           </div>
         )}
 
