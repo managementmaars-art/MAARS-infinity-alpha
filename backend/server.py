@@ -1698,27 +1698,28 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
     if file_format == "pdf":
         from fpdf import FPDF
         pdf = FPDF()
-        pdf.set_auto_page_break(auto=True, margin=20)
+        pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
         pdf.set_font("Helvetica", size=11)
+        effective_width = pdf.w - pdf.l_margin - pdf.r_margin
         
         for line in content.split('\n'):
             clean = line.strip()
             # Handle markdown headers
             if clean.startswith('# '):
-                pdf.set_font("Helvetica", "B", 18)
-                pdf.cell(0, 12, clean[2:].strip('*'), new_x="LMARGIN", new_y="NEXT")
+                pdf.set_font("Helvetica", "B", 16)
+                pdf.multi_cell(effective_width, 10, clean[2:].strip('*'))
                 pdf.set_font("Helvetica", size=11)
             elif clean.startswith('## '):
-                pdf.set_font("Helvetica", "B", 15)
-                pdf.cell(0, 10, clean[3:].strip('*'), new_x="LMARGIN", new_y="NEXT")
+                pdf.set_font("Helvetica", "B", 14)
+                pdf.multi_cell(effective_width, 9, clean[3:].strip('*'))
                 pdf.set_font("Helvetica", size=11)
             elif clean.startswith('### '):
-                pdf.set_font("Helvetica", "B", 13)
-                pdf.cell(0, 9, clean[4:].strip('*'), new_x="LMARGIN", new_y="NEXT")
+                pdf.set_font("Helvetica", "B", 12)
+                pdf.multi_cell(effective_width, 8, clean[4:].strip('*'))
                 pdf.set_font("Helvetica", size=11)
             elif clean.startswith('---') or clean.startswith('***'):
-                pdf.line(pdf.get_x(), pdf.get_y(), pdf.get_x() + 170, pdf.get_y())
+                pdf.line(pdf.l_margin, pdf.get_y(), pdf.w - pdf.r_margin, pdf.get_y())
                 pdf.ln(5)
             elif clean == '':
                 pdf.ln(4)
@@ -1726,7 +1727,7 @@ def generate_file_from_content(content: str, file_format: str, filename_base: st
                 # Strip markdown bold/italic
                 text = _re.sub(r'\*\*(.*?)\*\*', r'\1', clean)
                 text = _re.sub(r'\*(.*?)\*', r'\1', text)
-                pdf.multi_cell(0, 6, text)
+                pdf.multi_cell(effective_width, 6, text)
         
         filename = f"{file_id}_{filename_base}.pdf"
         filepath = UPLOAD_DIR / filename
