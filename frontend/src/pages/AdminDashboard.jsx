@@ -816,25 +816,44 @@ const AdminDashboard = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {Object.entries(integrationStatus).map(([svcId, svc]) => (
-              <div key={svcId} className="p-3 rounded-lg bg-white/5 border border-white/10" data-testid={`integration-status-${svcId}`}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-white font-medium">{svc.name}</span>
-                  <Badge className={svc.configured ? 'bg-emerald-500/20 text-emerald-400' : 'bg-zinc-500/20 text-zinc-400'}>
-                    {svc.configured ? 'active' : 'no key'}
-                  </Badge>
-                </div>
-                <p className="text-xs text-zinc-400">{svc.description}</p>
-                <div className="mt-2 pt-2 border-t border-white/5 space-y-1">
-                  {svc.key_fields?.map(field => (
-                    <div key={field} className="flex justify-between text-xs">
-                      <span className="text-zinc-500">{field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
-                      <span className={svc.keys_set?.[field] ? "text-emerald-400" : "text-zinc-600"}>{svc.keys_set?.[field] ? "Configured" : "Not set"}</span>
+            {Object.entries(integrationStatus).map(([svcId, svc]) => {
+              const costData = {
+                slack: { unit: "per message", cost: "$0.00", note: "Free (Bot Token). Slack charges per workspace, not per API call." },
+                github: { unit: "per request", cost: "$0.00", note: "Free for public repos. 5,000 req/hr with token." },
+                sendgrid: { unit: "per email", cost: "$0.001", note: "Free tier: 100 emails/day. Paid: ~$0.001/email." },
+                resend: { unit: "per email", cost: "$0.001", note: "Free tier: 100 emails/day. Paid: ~$0.001/email." },
+                twilio: { unit: "per SMS", cost: "$0.0079", note: "~$0.0079/SMS (US). Varies by country." },
+                airtable: { unit: "per record", cost: "$0.00", note: "Free tier: 1,000 records. Paid: unlimited." },
+                calendly: { unit: "per event", cost: "$0.00", note: "Free tier available. API included in paid plans." },
+                giphy: { unit: "per search", cost: "$0.00", note: "Free API. Rate limited to 42 searches/hr." },
+                google_suite: { unit: "per request", cost: "$0.00", note: "Free with service account. Quotas apply." },
+              };
+              const pricing = costData[svcId] || { unit: "per call", cost: "$0.00", note: "" };
+              return (
+                <div key={svcId} className="p-3 rounded-lg bg-white/5 border border-white/10" data-testid={`integration-status-${svcId}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-white font-medium">{svc.name}</span>
+                    <Badge className={svc.configured ? 'bg-emerald-500/20 text-emerald-400' : 'bg-zinc-500/20 text-zinc-400'}>
+                      {svc.configured ? 'active' : 'no key'}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-zinc-400">{svc.description}</p>
+                  <div className="mt-2 pt-2 border-t border-white/5 space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-zinc-500">Cost {pricing.unit}</span>
+                      <span className="text-red-400 font-mono">{pricing.cost}</span>
                     </div>
-                  ))}
+                    {svc.key_fields?.map(field => (
+                      <div key={field} className="flex justify-between text-xs">
+                        <span className="text-zinc-500">{field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+                        <span className={svc.keys_set?.[field] ? "text-emerald-400" : "text-zinc-600"}>{svc.keys_set?.[field] ? "Set" : "Not set"}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-zinc-600 mt-2">{pricing.note}</p>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </CardContent>
       </Card>
