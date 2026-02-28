@@ -1175,6 +1175,14 @@ const AdminDashboard = () => {
               const isLoss = profitUsd < 0;
               const isLowMargin = marginPct < 100 && !isLoss;
 
+              const applyMarginToPlan = (margin) => {
+                const mult = 1 + (margin / 100);
+                const usd = Math.round(costUsd * mult * 100) / 100;
+                updatePlanField(planId, 'price_usd', usd);
+                updatePlanField(planId, 'price_bdt', Math.round(usd * (bdt_exchange_rate || 107)));
+                toast.success(`Applied ${margin}% margin to ${plan.name}`);
+              };
+
               return (
                 <div key={planId} className="p-4 rounded-lg bg-white/5 space-y-3">
                   <div className="flex items-center justify-between">
@@ -1189,6 +1197,29 @@ const AdminDashboard = () => {
                       }`} data-testid={`margin-${planId}`}>
                         {isLoss ? 'LOSS' : `${marginPct}% margin`}
                       </Badge>
+                    </div>
+                  </div>
+
+                  {/* Per-plan margin control */}
+                  <div className="flex items-center gap-2 p-2 rounded bg-white/5 border border-white/5">
+                    <span className="text-xs text-zinc-400 shrink-0">Set margin:</span>
+                    {[100, 200, 500, 1000].map(m => (
+                      <Button key={m} size="sm" variant="outline"
+                        className={`text-[10px] h-6 px-2 border-white/10 ${parseInt(marginPct) === m ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'text-zinc-400 hover:bg-white/5'}`}
+                        onClick={() => applyMarginToPlan(m)}
+                        data-testid={`plan-margin-${planId}-${m}`}
+                      >{m}%</Button>
+                    ))}
+                    <div className="flex items-center gap-1 ml-1">
+                      <Input
+                        type="number" placeholder="Custom"
+                        className="bg-zinc-800/50 border-white/10 h-6 w-16 text-[10px] px-1.5"
+                        data-testid={`plan-margin-${planId}-custom`}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') applyMarginToPlan(parseInt(e.target.value) || 0);
+                        }}
+                      />
+                      <span className="text-[10px] text-zinc-500">%</span>
                     </div>
                   </div>
 
