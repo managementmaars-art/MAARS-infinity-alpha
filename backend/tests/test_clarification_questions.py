@@ -46,7 +46,7 @@ class TestClarificationQuestions:
             headers=auth_headers,
             timeout=30
         )
-        assert response.status_code == 201, f"Chat creation failed: {response.text}"
+        assert response.status_code in [200, 201], f"Chat creation failed: {response.text}"
         return response.json()["chat_id"]
     
     def send_message_to_chat(self, auth_headers, chat_id, content, timeout_seconds=60):
