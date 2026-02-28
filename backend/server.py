@@ -2303,7 +2303,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
             images = await image_gen.generate_images(
                 prompt=img_prompt[:2000],
                 model="gpt-image-1",
-                number_of_images=1
+                number_of_images=1,
+                quality="high"
             )
             
             if images and len(images) > 0:
