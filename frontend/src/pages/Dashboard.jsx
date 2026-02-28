@@ -279,16 +279,43 @@ const Dashboard = () => {
               {agents.map((agent) => (
                 <Card
                   key={agent.agent_id}
-                  className="bg-zinc-900/50 border-white/10 hover:border-indigo-500/40 cursor-pointer transition-all duration-300 group relative overflow-hidden"
+                  className="bg-zinc-900/50 border-white/10 hover:border-amber-500/50 cursor-pointer transition-all duration-500 group relative overflow-hidden"
+                  style={{ minHeight: '64px' }}
                   onClick={() => navigate(`/chat/${agent.agent_id}`)}
                   data-testid={`agent-card-${agent.agent_id}`}
                 >
-                  <CardContent className="p-3">
+                  {/* Expanded hover image — fills card */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
+                    <img
+                      src={agent.avatar}
+                      alt={agent.name}
+                      className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+                    {/* Role badge */}
+                    <span className="absolute top-2 right-2 px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500 text-black uppercase tracking-wide">
+                      {agent.role}
+                    </span>
+                    {/* Bottom overlay text */}
+                    <div className="absolute bottom-0 left-0 right-0 p-3">
+                      <p className="text-indigo-400 text-[10px] font-medium mb-0.5">{agent.role}</p>
+                      <h3 className="font-bold text-white text-sm leading-tight mb-1.5">{agent.name}</h3>
+                      <div className="flex flex-wrap gap-1">
+                        {(agent.capabilities || []).slice(0, 2).map((cap, i) => (
+                          <span key={i} className="px-1.5 py-0.5 text-[9px] rounded-full bg-white/15 text-zinc-300 backdrop-blur-sm">
+                            {cap}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  {/* Default compact view */}
+                  <CardContent className="p-3 relative z-0">
                     <div className="flex items-center gap-3">
                       <img
                         src={agent.avatar}
                         alt={agent.name}
-                        className="w-10 h-10 rounded-lg object-cover shrink-0 transition-transform duration-300 group-hover:scale-125"
+                        className="w-10 h-10 rounded-lg object-cover shrink-0"
                       />
                       <div className="min-w-0">
                         <h3 className="font-semibold text-sm text-white group-hover:text-indigo-400 transition-colors truncate">
@@ -296,12 +323,6 @@ const Dashboard = () => {
                         </h3>
                         <p className="text-xs text-zinc-400 truncate">{agent.role}</p>
                       </div>
-                    </div>
-                    {/* Hover tooltip with description */}
-                    <div className="max-h-0 group-hover:max-h-24 overflow-hidden transition-all duration-300 ease-in-out">
-                      <p className="text-[11px] text-zinc-400 mt-2 leading-relaxed line-clamp-3" data-testid={`agent-desc-${agent.agent_id}`}>
-                        {agent.description}
-                      </p>
                     </div>
                   </CardContent>
                 </Card>
