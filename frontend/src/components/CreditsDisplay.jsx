@@ -77,7 +77,22 @@ export const CreditsDisplay = () => {
     }
   };
 
-  if (!credits) return null;
+  if (!credits) return (
+    <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-800/80 border border-white/10">
+        <Diamond className="w-3.5 h-3.5 text-amber-400" />
+        <span className="text-sm font-semibold text-zinc-500">--</span>
+      </div>
+      <button
+        onClick={() => setShowBuyModal(true)}
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors"
+        data-testid="buy-credits-btn"
+      >
+        <Plus className="w-3 h-3" />
+        Buy Credits
+      </button>
+    </div>
+  );
 
   const totalCredits = credits.credits || 0;
   const planCredits = subscription?.plan?.credits || 0;
