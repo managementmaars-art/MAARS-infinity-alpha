@@ -2818,15 +2818,21 @@ async def generate_video(request: Request, current_user: User = Depends(get_curr
             api_key = api_keys.get("emergent", EMERGENT_LLM_KEY)
         
         from emergentintegrations.llm.openai.video_generation import OpenAIVideoGeneration
+        import asyncio as _asyncio
         
         video_gen = OpenAIVideoGeneration(api_key=api_key)
-        video_bytes = video_gen.text_to_video(
-            prompt=prompt,
-            model=model,
-            size=size,
-            duration=duration,
-            max_wait_time=600
-        )
+        
+        def _gen():
+            return video_gen.text_to_video(
+                prompt=prompt,
+                model=model,
+                size=size,
+                duration=duration,
+                max_wait_time=600
+            )
+        
+        loop = _asyncio.get_event_loop()
+        video_bytes = await loop.run_in_executor(None, _gen)
         
         if not video_bytes:
             raise HTTPException(status_code=500, detail="Video generation failed")
