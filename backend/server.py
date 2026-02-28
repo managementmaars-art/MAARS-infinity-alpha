@@ -2437,6 +2437,7 @@ Rules:
     # Start background video generation if needed
     if video_generating:
         import asyncio
+        user_attachments = message_data.attachments or []
         async def _bg_video_gen():
             try:
                 api_keys_vid = await get_api_keys()
@@ -2453,10 +2454,37 @@ Rules:
                 
                 from emergentintegrations.llm.openai.video_generation import OpenAIVideoGeneration
                 vg = OpenAIVideoGeneration(api_key=vid_api_key)
-                logger.info(f"Starting Sora 2 video gen: prompt={vid_prompt[:100]}...")
+                
+                # Check if user attached an image for image-to-video
+                source_image_path = None
+                source_mime = "image/jpeg"
+                for att in user_attachments:
+                    if isinstance(att, str) and any(att.lower().endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.webp']):
+                        # Attachment is a file URL - download it
+                        att_path = UPLOAD_DIR / att.split("/")[-1] if "/files/" in att else None
+                        if att_path and att_path.exists():
+                            source_image_path = str(att_path)
+                            source_mime = "image/png" if att.endswith('.png') else "image/jpeg"
+                            break
+                
+                # Also check if we just generated an image - use it as source for video
+                if not source_image_path and generated_image and generated_image.get("filename"):
+                    img_path = UPLOAD_DIR / generated_image["filename"]
+                    if img_path.exists():
+                        source_image_path = str(img_path)
+                        source_mime = "image/png"
+                
+                if source_image_path:
+                    logger.info(f"Starting Sora 2 image-to-video: image={source_image_path}, prompt={vid_prompt[:80]}...")
+                else:
+                    logger.info(f"Starting Sora 2 text-to-video: prompt={vid_prompt[:100]}...")
                 
                 def _sync_gen():
-                    return vg.text_to_video(prompt=vid_prompt[:2000], model="sora-2", size="1280x720", duration=8, max_wait_time=600)
+                    kwargs = dict(prompt=vid_prompt[:2000], model="sora-2", size="1280x720", duration=8, max_wait_time=600)
+                    if source_image_path:
+                        kwargs["image_path"] = source_image_path
+                        kwargs["mime_type"] = source_mime
+                    return vg.text_to_video(**kwargs)
                 
                 vb = await asyncio.to_thread(_sync_gen)
                 logger.info(f"Video gen result: type={type(vb)}, has_data={bool(vb)}")
