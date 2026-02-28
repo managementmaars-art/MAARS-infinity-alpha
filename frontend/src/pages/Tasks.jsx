@@ -433,22 +433,22 @@ const Tasks = () => {
                         )}
                         
                         {task.assigned_agents?.length > 0 && (
-                          <div className="flex items-center gap-2 mb-3">
+                          <div className="flex items-center gap-2 mb-3 flex-wrap">
                             <span className="text-xs text-zinc-500">Assigned:</span>
-                            <div className="flex -space-x-2">
-                              {task.assigned_agents.map((agentId) => {
-                                const agent = agents.find(a => a.agent_id === agentId);
-                                return agent ? (
+                            {task.assigned_agents.map((agentId) => {
+                              const agent = agents.find(a => a.agent_id === agentId);
+                              return agent ? (
+                                <div key={agentId} className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-white/5">
                                   <img
-                                    key={agentId}
                                     src={agent.avatar}
                                     alt={agent.name}
-                                    title={agent.name}
-                                    className="w-6 h-6 rounded-full border-2 border-zinc-900 object-cover"
+                                    className="w-5 h-5 rounded-full object-cover"
                                   />
-                                ) : null;
-                              })}
-                            </div>
+                                  <span className="text-xs text-zinc-300">{agent.name}</span>
+                                  <span className="text-[10px] text-zinc-500">({agent.role})</span>
+                                </div>
+                              ) : null;
+                            })}
                           </div>
                         )}
 
