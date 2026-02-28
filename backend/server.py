@@ -1196,7 +1196,7 @@ async def agent_execute_with_tools(
         return None
     
     tool_prompt = await build_tool_prompt_async(agent_tools)
-    enhanced_system_prompt = agent["system_prompt"] + tool_prompt
+    enhanced_system_prompt = agent["system_prompt"] + CLARIFICATION_INSTRUCTION + tool_prompt
     
     execution_steps = []
     max_iterations = 4
