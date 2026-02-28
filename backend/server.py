@@ -2082,11 +2082,9 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
                 filepath = UPLOAD_DIR / filename
                 with open(filepath, "wb") as f:
                     f.write(images[0])
-                image_b64 = base64.b64encode(images[0]).decode()
                 generated_image = {
                     "filename": filename,
                     "url": f"/api/files/{filename}",
-                    "preview": f"data:image/png;base64,{image_b64}",
                     "model": "gpt-image-1",
                     "prompt": img_prompt[:500]
                 }
