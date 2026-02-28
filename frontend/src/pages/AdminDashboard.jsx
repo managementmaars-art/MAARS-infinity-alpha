@@ -42,12 +42,38 @@ const AdminDashboard = () => {
     model_provider: "openai", model_name: "gpt-5.2", capabilities: ""
   });
 
+  // Live cost tracking state - auto-updates in background
+  const [liveCost, setLiveCost] = useState({ avg_cost_per_credit: 0.003, total_cost_usd: 0, total_calls: 0, source: "default" });
+  const liveCostRef = useRef(liveCost);
+  liveCostRef.current = liveCost;
+
   const headers = token ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } : {};
   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
+
+  const fetchLiveCost = useCallback(async () => {
+    if (!token) return;
+    try {
+      const res = await fetch(`${API}/admin/avg-cost`, { credentials: "include", headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        const data = await res.json();
+        setLiveCost(data);
+        if (data.source === "real_usage" && data.avg_cost_per_credit > 0) {
+          setCalcInputs(prev => ({ ...prev, ai_cost_per_credit: data.avg_cost_per_credit }));
+        }
+      }
+    } catch (e) { /* silent */ }
+  }, [token]);
 
   useEffect(() => {
     fetchAdminData();
   }, []);
+
+  // Background polling every 15s for live cost data
+  useEffect(() => {
+    fetchLiveCost();
+    const interval = setInterval(fetchLiveCost, 15000);
+    return () => clearInterval(interval);
+  }, [fetchLiveCost]);
 
   const fetchAdminData = async () => {
     setLoading(true);
