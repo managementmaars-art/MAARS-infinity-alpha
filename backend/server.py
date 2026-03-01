@@ -2421,6 +2421,31 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         logger.error(f"LLM error: {e}")
         response_text = f"I apologize, but I'm having trouble processing your request right now. Error: {str(e)}"
     
+    # Agent-to-Agent Collaboration: check if response contains consultation requests
+    try:
+        if "[CONSULT:" in response_text:
+            import re
+            consult_matches = re.findall(r'\[CONSULT:(\w+)\](.*?)\[/CONSULT\]', response_text, re.DOTALL)
+            for consult_agent_id, consult_query in consult_matches:
+                consult_agent = await db.agents.find_one({"agent_id": consult_agent_id})
+                if consult_agent:
+                    try:
+                        consult_prompt = f"A colleague ({agent.get('name')}, {agent.get('role')}) is asking for your expert input. Give a concise, direct answer. Do not ask questions.\n\nTheir question: {consult_query.strip()}"
+                        consult_response, _, _ = await call_llm_with_fallback(
+                            api_keys, consult_agent.get("model_provider", "openai"),
+                            consult_agent.get("model_name", "gpt-5.2"),
+                            consult_agent["system_prompt"], consult_prompt, [], chat_id
+                        )
+                        # Replace the consultation tag with the actual response
+                        tag = f"[CONSULT:{consult_agent_id}]{consult_query}[/CONSULT]"
+                        replacement = f"\n\n**Input from {consult_agent['name']} ({consult_agent['role']}):**\n{consult_response}\n"
+                        response_text = response_text.replace(tag, replacement)
+                    except Exception as ce:
+                        logger.error(f"Consultation with {consult_agent_id} failed: {ce}")
+                        response_text = response_text.replace(f"[CONSULT:{consult_agent_id}]{consult_query}[/CONSULT]", f"\n(Tried to consult {consult_agent.get('name')} but they were unavailable)\n")
+    except Exception as collab_err:
+        logger.error(f"Collaboration processing error: {collab_err}")
+    
     # Auto-detect image generation requests (only if agent has can_generate_image permission)
     generated_image = None
     if agent.get("can_generate_image", False) and detect_image_generation_request(message_data.content, agent.get("role", "")):
