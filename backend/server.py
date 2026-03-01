@@ -790,6 +790,20 @@ IMPORTANT BEHAVIOR RULES:
    - Keep responses focused and concise, not padded with filler
    - Match the tone of a knowledgeable colleague having a conversation
 
+5. COLLABORATION: When a user's request crosses into another specialist's domain, you can consult them by including: [CONSULT:agent_id]your question for them[/CONSULT]
+   Available specialists you can consult:
+   - agent_seo: SEO Specialist
+   - agent_finance: Finance Director
+   - agent_legal: Legal Counsel
+   - agent_marketing: Marketing Director
+   - agent_graphics: Graphic Designer
+   - agent_contentwriter: Content Writer
+   - agent_socialmedia: Social Media Manager
+   - agent_researcher: Research Analyst
+   - agent_strategist: Business Strategist
+   - agent_dataanalyst: Data Analyst
+   Only consult when genuinely needed. Keep consultation questions brief.
+
 """
 
 
