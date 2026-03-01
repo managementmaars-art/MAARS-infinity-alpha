@@ -2751,6 +2751,30 @@ AGENT_ROLE_MAP = {
     "schedule": "agent_secretary",
 }
 
+async def background_commander_delegate(goal: str, chat_id: str, msg_id: str, api_keys: dict, user_id: str):
+    """Run commander delegation in background and update chat when complete."""
+    try:
+        result = await commander_delegate(goal, chat_id, api_keys, user_id)
+        # Update the processing message with the final result
+        await db.chats.update_one(
+            {"chat_id": chat_id, "messages.message_id": msg_id},
+            {"$set": {
+                "messages.$.content": result["content"],
+                "messages.$.delegation_data": result.get("delegation_data"),
+                "messages.$.commander_status": "complete"
+            }}
+        )
+        logger.info(f"Commander delegation complete for chat {chat_id}")
+    except Exception as e:
+        logger.error(f"Background commander delegation failed: {e}")
+        await db.chats.update_one(
+            {"chat_id": chat_id, "messages.message_id": msg_id},
+            {"$set": {
+                "messages.$.content": f"I encountered an issue while coordinating the specialists. Please try again.\n\nError: {str(e)[:200]}",
+                "messages.$.commander_status": "error"
+            }}
+        )
+
 async def commander_delegate(goal: str, chat_id: str, api_keys: dict, user_id: str) -> dict:
     """Commander AI breaks down a goal, delegates to specialists, and auto-creates tasks.
     Returns a dict with 'content' (summary text) and 'delegation_data' (structured group chat data)."""
