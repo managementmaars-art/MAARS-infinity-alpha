@@ -3473,6 +3473,21 @@ async def invite_to_team(team_id: str, data: TeamInvite, current_user: User = De
     }
     await db.team_invites.insert_one(invite)
     invite.pop("_id", None)
+    
+    # Send email notification (non-blocking, skips if SMTP not configured)
+    asyncio.create_task(send_email_notification(
+        to_email=data.email,
+        subject=f"You've been invited to {team['name']} on MAARS Command",
+        html_body=f"""
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#111;color:#fff;border-radius:12px;">
+            <h2 style="color:#818cf8;">You're Invited!</h2>
+            <p>{current_user.name} has invited you to join <strong>{team['name']}</strong> on MAARS Command as a <strong>{data.role}</strong>.</p>
+            <p>Log in to your MAARS Command account to accept the invitation and start collaborating with your team.</p>
+            <p style="margin-top:20px;"><a href="{os.environ.get('FRONTEND_URL', 'https://maarscommand.com')}/team" style="display:inline-block;padding:12px 24px;background:linear-gradient(to right,#6366f1,#8b5cf6);color:#fff;text-decoration:none;border-radius:8px;font-weight:bold;">Accept Invitation</a></p>
+            <p style="color:#888;font-size:12px;margin-top:30px;">MAARS Command by MAARS Global Corporation</p>
+        </div>"""
+    ))
+    
     return invite
 
 @api_router.get("/teams/invites/pending")
