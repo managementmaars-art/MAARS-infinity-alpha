@@ -20,6 +20,9 @@ from models.schemas import (
     Task, TaskCreate, TaskUpdate,
     TeamCreate, TeamInvite, TeamMemberUpdate
 )
+
+# Import agent/tool config from extracted config
+from config import DEFAULT_AGENTS, CLARIFICATION_INSTRUCTION, AGENT_TOOLS, AGENT_TOOL_MAP
 import uuid
 from datetime import datetime, timezone, timedelta
 import bcrypt
