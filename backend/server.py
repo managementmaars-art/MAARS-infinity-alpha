@@ -3058,59 +3058,59 @@ async def get_available_models(current_user: User = Depends(get_current_user)):
 
 @api_router.post("/tts/generate")
 async def generate_tts(request: Request, current_user: User = Depends(get_current_user)):
-    """Generate text-to-speech audio using ElevenLabs"""
+    """Generate text-to-speech audio using OpenAI TTS (works with Emergent key)"""
     body = await request.json()
     text = body.get("text", "")
-    voice_id = body.get("voice_id", "21m00Tcm4TlvDq8ikWAM")  # Default: Rachel
+    voice = body.get("voice", "nova")
     
     if not text:
         raise HTTPException(status_code=400, detail="Text is required")
     
-    # Get ElevenLabs API key from user's settings
-    user_keys = await db.api_keys.find_one({"user_id": current_user.user_id}, {"_id": 0})
-    el_key = None
-    if user_keys:
-        el_key = user_keys.get("elevenlabs")
-    
-    # Check admin keys
-    if not el_key:
-        admin_keys = await db.platform_config.find_one({"config_type": "api_keys"}, {"_id": 0})
-        if admin_keys:
-            el_key = admin_keys.get("elevenlabs")
-    
-    if not el_key:
-        raise HTTPException(status_code=400, detail="ElevenLabs API key required. Add it in Settings > API Keys.")
+    # Truncate to 4096 chars (OpenAI TTS limit)
+    text = text[:4096]
     
     try:
-        from elevenlabs import ElevenLabs as ElevenLabsClient
-        el_client = ElevenLabsClient(api_key=el_key)
-        audio_gen = el_client.text_to_speech.convert(
+        from emergentintegrations.llm.openai import OpenAITextToSpeech
+        
+        # Use Emergent key or admin-configured OpenAI key
+        api_key = EMERGENT_LLM_KEY
+        if not api_key:
+            admin_keys = await db.platform_config.find_one({"config_type": "api_keys"}, {"_id": 0})
+            if admin_keys:
+                api_key = admin_keys.get("openai", "")
+        
+        if not api_key:
+            raise HTTPException(400, "No API key available for TTS")
+        
+        tts = OpenAITextToSpeech(api_key=api_key)
+        audio_bytes = await tts.generate_speech(
             text=text,
-            voice_id=voice_id,
-            model_id="eleven_multilingual_v2",
+            model="tts-1",
+            voice=voice,
+            response_format="mp3",
+            speed=1.0
         )
-        audio_data = b""
-        for chunk in audio_gen:
-            audio_data += chunk
         
         import base64
-        audio_b64 = base64.b64encode(audio_data).decode()
-        return {"audio_url": f"data:audio/mpeg;base64,{audio_b64}", "text": text}
+        audio_b64 = base64.b64encode(audio_bytes).decode()
+        return {"audio_url": f"data:audio/mpeg;base64,{audio_b64}", "text": text, "voice": voice}
     except Exception as e:
         logger.error(f"TTS error: {e}")
         raise HTTPException(status_code=500, detail=f"TTS failed: {str(e)}")
 
 @api_router.get("/tts/voices")
 async def get_tts_voices(current_user: User = Depends(get_current_user)):
-    """Get available ElevenLabs voices"""
+    """Get available OpenAI TTS voices"""
     return {"voices": [
-        {"voice_id": "21m00Tcm4TlvDq8ikWAM", "name": "Rachel", "language": "English"},
-        {"voice_id": "EXAVITQu4vr4xnSDxMaL", "name": "Bella", "language": "English"},
-        {"voice_id": "ErXwobaYiN019PkySvjV", "name": "Antoni", "language": "English"},
-        {"voice_id": "MF3mGyEYCl7XYWbV9V6O", "name": "Elli", "language": "English"},
-        {"voice_id": "TxGEqnHWrfWFTfGW9XjX", "name": "Josh", "language": "English"},
-        {"voice_id": "pNInz6obpgDQGcFmaJgB", "name": "Adam", "language": "English"},
-        {"voice_id": "yoZ06aMxZJJ28mfd3POQ", "name": "Sam", "language": "English"},
+        {"voice_id": "alloy", "name": "Alloy", "description": "Neutral, balanced"},
+        {"voice_id": "nova", "name": "Nova", "description": "Energetic, upbeat"},
+        {"voice_id": "shimmer", "name": "Shimmer", "description": "Bright, cheerful"},
+        {"voice_id": "echo", "name": "Echo", "description": "Smooth, calm"},
+        {"voice_id": "onyx", "name": "Onyx", "description": "Deep, authoritative"},
+        {"voice_id": "fable", "name": "Fable", "description": "Expressive, storytelling"},
+        {"voice_id": "coral", "name": "Coral", "description": "Warm, friendly"},
+        {"voice_id": "sage", "name": "Sage", "description": "Wise, measured"},
+        {"voice_id": "ash", "name": "Ash", "description": "Clear, articulate"},
     ]}
 
 # ============== FILE GENERATION ENDPOINTS ==============
