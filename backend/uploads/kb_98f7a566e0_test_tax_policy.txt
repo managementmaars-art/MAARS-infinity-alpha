@@ -1,0 +1,35 @@
+[Page 1]
+Bangladesh Income Tax Act 2025
+
+Section 1: Overview
+The Bangladesh Income Tax Act of 2025 establishes the framework for income taxation in Bangladesh. This act replaces the previous Income Tax Ordinance of 1984.
+
+Section 2: Tax Rates for Individual Taxpayers
+For the tax year 2025-2026, the following tax rates apply:
+- First BDT 350,000: NIL (Tax-free threshold)
+- Next BDT 100,000: 5%
+- Next BDT 300,000: 10%
+- Next BDT 400,000: 15%
+- Next BDT 500,000: 20%
+- Remaining amount: 25%
+
+[Page 2]
+Section 3: Corporate Tax Rates
+- Listed companies: 22.5%
+- Non-listed public companies: 27.5%
+- Other companies: 30%
+- Banks and financial institutions: 37.5%
+- Mobile phone operators: 40%
+
+Section 4: VAT Registration
+All businesses with an annual turnover exceeding BDT 3 crore must register for VAT. The standard VAT rate is 15%.
+
+[Page 3]
+Section 5: Tax Filing Deadlines
+- Individual taxpayers: September 30 of the assessment year
+- Corporate taxpayers: By the 15th day of the 7th month following the year end
+- Advance tax installments: Due on September 15, December 15, March 15, and June 15
+
+Section 6: Penalties
+- Late filing penalty: BDT 2,000 or 10% of tax liability, whichever is higher
+- Tax evasion: Up to 100% of the evaded amount plus criminal prosecution
