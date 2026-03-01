@@ -2703,42 +2703,52 @@ async def speech_to_text(audio_file: UploadFile = File(...), language: Optional[
 @api_router.get("/models")
 async def get_available_models(current_user: User = Depends(get_current_user)):
     """Get all available AI models for switching"""
+    models = [
+        # OpenAI
+        {"provider": "openai", "model": "gpt-5.2", "name": "GPT-5.2", "category": "flagship", "cost_per_credit": 0.006, "credits": 3, "best_for": "Coding, analysis, general tasks"},
+        {"provider": "openai", "model": "gpt-4o", "name": "GPT-4o", "category": "fast", "cost_per_credit": 0.003, "credits": 2, "best_for": "Balanced speed and quality"},
+        {"provider": "openai", "model": "gpt-4o-mini", "name": "GPT-4o Mini", "category": "economy", "cost_per_credit": 0.001, "credits": 1, "best_for": "Simple tasks, quick answers"},
+        {"provider": "openai", "model": "o3", "name": "O3", "category": "reasoning", "cost_per_credit": 0.012, "credits": 5, "best_for": "Complex reasoning, math, logic"},
+        {"provider": "openai", "model": "o3-mini", "name": "O3 Mini", "category": "reasoning", "cost_per_credit": 0.005, "credits": 2, "best_for": "Light reasoning tasks"},
+        # Anthropic
+        {"provider": "anthropic", "model": "claude-sonnet-4-5-20250929", "name": "Claude Sonnet 4.5", "category": "flagship", "cost_per_credit": 0.005, "credits": 3, "best_for": "Creative writing, analysis"},
+        {"provider": "anthropic", "model": "claude-opus-4-5-20251101", "name": "Claude Opus 4.5", "category": "premium", "cost_per_credit": 0.025, "credits": 5, "best_for": "Long-form, deep research"},
+        {"provider": "anthropic", "model": "claude-haiku-4-5-20250929", "name": "Claude Haiku 4.5", "category": "economy", "cost_per_credit": 0.001, "credits": 1, "best_for": "Quick responses, summaries"},
+        # Google
+        {"provider": "gemini", "model": "gemini-3-flash-preview", "name": "Gemini 3 Flash", "category": "fast", "cost_per_credit": 0.002, "credits": 1, "best_for": "Fast responses, simple tasks"},
+        {"provider": "gemini", "model": "gemini-3-pro-preview", "name": "Gemini 3 Pro", "category": "flagship", "cost_per_credit": 0.005, "credits": 2, "best_for": "Multimodal, research"},
+        # Generation models
+        {"provider": "gemini", "model": "gemini-3-pro-image-preview", "name": "Nano Banana 2", "category": "image_gen", "cost_per_credit": 0.01, "credits": 5, "best_for": "AI image generation (Gemini 3.1 Flash)"},
+        {"provider": "openai", "model": "sora-2", "name": "Sora 2", "category": "video_gen", "cost_per_credit": 0.10, "credits": 10, "best_for": "AI video generation from text"},
+        # xAI Grok
+        {"provider": "xai", "model": "grok-3", "name": "Grok 3", "category": "flagship", "cost_per_credit": 0.005, "credits": 3, "best_for": "Reasoning, analysis, 1M context"},
+        {"provider": "xai", "model": "grok-3-mini", "name": "Grok 3 Mini", "category": "economy", "cost_per_credit": 0.001, "credits": 1, "best_for": "Cost-efficient reasoning"},
+        {"provider": "xai", "model": "grok-2", "name": "Grok 2", "category": "fast", "cost_per_credit": 0.003, "credits": 2, "best_for": "General tasks, competitive with GPT-4o"},
+        # DeepSeek
+        {"provider": "deepseek", "model": "deepseek-chat", "name": "DeepSeek Chat", "category": "economy", "cost_per_credit": 0.001, "credits": 1, "best_for": "Cost-efficient chat, 128K context"},
+        {"provider": "deepseek", "model": "deepseek-reasoner", "name": "DeepSeek Reasoner", "category": "reasoning", "cost_per_credit": 0.001, "credits": 2, "best_for": "Deep reasoning, math, logic"},
+        # Mistral
+        {"provider": "mistral", "model": "mistral-large-latest", "name": "Mistral Large", "category": "flagship", "cost_per_credit": 0.004, "credits": 3, "best_for": "Complex reasoning, enterprise"},
+        {"provider": "mistral", "model": "mistral-medium-latest", "name": "Mistral Medium", "category": "fast", "cost_per_credit": 0.002, "credits": 2, "best_for": "Balanced performance"},
+        {"provider": "mistral", "model": "mistral-small-latest", "name": "Mistral Small", "category": "economy", "cost_per_credit": 0.001, "credits": 1, "best_for": "Simple tasks, very fast"},
+        # Perplexity
+        {"provider": "perplexity", "model": "sonar", "name": "Perplexity Sonar", "category": "search", "cost_per_credit": 0.002, "credits": 2, "best_for": "Web-grounded answers, search"},
+        {"provider": "perplexity", "model": "sonar-pro", "name": "Perplexity Sonar Pro", "category": "search", "cost_per_credit": 0.008, "credits": 3, "best_for": "Deep web research"},
+        # Cohere
+        {"provider": "cohere", "model": "command-r-plus", "name": "Cohere Command R+", "category": "flagship", "cost_per_credit": 0.005, "credits": 3, "best_for": "RAG, enterprise tasks"},
+        {"provider": "cohere", "model": "command-r", "name": "Cohere Command R", "category": "fast", "cost_per_credit": 0.001, "credits": 1, "best_for": "Cost-efficient RAG, summaries"},
+    ]
     return {
-        "models": [
-            # OpenAI
-            {"provider": "openai", "model": "gpt-5.2", "name": "GPT-5.2", "category": "flagship", "cost_per_credit": 0.006, "best_for": "Coding, analysis, general tasks"},
-            {"provider": "openai", "model": "gpt-4o", "name": "GPT-4o", "category": "fast", "cost_per_credit": 0.003, "best_for": "Balanced speed and quality"},
-            {"provider": "openai", "model": "gpt-4o-mini", "name": "GPT-4o Mini", "category": "economy", "cost_per_credit": 0.001, "best_for": "Simple tasks, quick answers"},
-            {"provider": "openai", "model": "o3", "name": "O3", "category": "reasoning", "cost_per_credit": 0.012, "best_for": "Complex reasoning, math, logic"},
-            {"provider": "openai", "model": "o3-mini", "name": "O3 Mini", "category": "reasoning", "cost_per_credit": 0.005, "best_for": "Light reasoning tasks"},
-            # Anthropic
-            {"provider": "anthropic", "model": "claude-sonnet-4-5-20250929", "name": "Claude Sonnet 4.5", "category": "flagship", "cost_per_credit": 0.005, "best_for": "Creative writing, analysis"},
-            {"provider": "anthropic", "model": "claude-opus-4-5-20251101", "name": "Claude Opus 4.5", "category": "premium", "cost_per_credit": 0.025, "best_for": "Long-form, deep research"},
-            {"provider": "anthropic", "model": "claude-haiku-4-5-20250929", "name": "Claude Haiku 4.5", "category": "economy", "cost_per_credit": 0.001, "best_for": "Quick responses, summaries"},
-            # Google
-            {"provider": "gemini", "model": "gemini-3-flash-preview", "name": "Gemini 3 Flash", "category": "fast", "cost_per_credit": 0.002, "best_for": "Fast responses, simple tasks"},
-            {"provider": "gemini", "model": "gemini-3-pro-preview", "name": "Gemini 3 Pro", "category": "flagship", "cost_per_credit": 0.005, "best_for": "Multimodal, research"},
-            # Generation models
-            {"provider": "gemini", "model": "gemini-3-pro-image-preview", "name": "Nano Banana 2", "category": "image_gen", "cost_per_credit": 0.01, "best_for": "AI image generation (Gemini)"},
-            {"provider": "openai", "model": "sora-2", "name": "Sora 2", "category": "video_gen", "cost_per_credit": 0.10, "best_for": "AI video generation from text"},
-            # xAI Grok
-            {"provider": "xai", "model": "grok-3", "name": "Grok 3", "category": "flagship", "cost_per_credit": 0.005, "best_for": "Reasoning, analysis, 1M context"},
-            {"provider": "xai", "model": "grok-3-mini", "name": "Grok 3 Mini", "category": "economy", "cost_per_credit": 0.001, "best_for": "Cost-efficient reasoning"},
-            {"provider": "xai", "model": "grok-2", "name": "Grok 2", "category": "fast", "cost_per_credit": 0.003, "best_for": "General tasks, competitive with GPT-4o"},
-            # DeepSeek
-            {"provider": "deepseek", "model": "deepseek-chat", "name": "DeepSeek Chat", "category": "economy", "cost_per_credit": 0.001, "best_for": "Cost-efficient chat, 128K context"},
-            {"provider": "deepseek", "model": "deepseek-reasoner", "name": "DeepSeek Reasoner", "category": "reasoning", "cost_per_credit": 0.001, "best_for": "Deep reasoning, math, logic"},
-            # Mistral
-            {"provider": "mistral", "model": "mistral-large-latest", "name": "Mistral Large", "category": "flagship", "cost_per_credit": 0.004, "best_for": "Complex reasoning, enterprise"},
-            {"provider": "mistral", "model": "mistral-medium-latest", "name": "Mistral Medium", "category": "fast", "cost_per_credit": 0.002, "best_for": "Balanced performance"},
-            {"provider": "mistral", "model": "mistral-small-latest", "name": "Mistral Small", "category": "economy", "cost_per_credit": 0.001, "best_for": "Simple tasks, very fast"},
-            # Perplexity
-            {"provider": "perplexity", "model": "sonar", "name": "Perplexity Sonar", "category": "search", "cost_per_credit": 0.002, "best_for": "Web-grounded answers, search"},
-            {"provider": "perplexity", "model": "sonar-pro", "name": "Perplexity Sonar Pro", "category": "search", "cost_per_credit": 0.008, "best_for": "Deep web research"},
-            # Cohere
-            {"provider": "cohere", "model": "command-r-plus", "name": "Cohere Command R+", "category": "flagship", "cost_per_credit": 0.005, "best_for": "RAG, enterprise tasks"},
-            {"provider": "cohere", "model": "command-r", "name": "Cohere Command R", "category": "fast", "cost_per_credit": 0.001, "best_for": "Cost-efficient RAG, summaries"},
-        ],
+        "models": models,
+        "credit_tiers": {
+            "economy": {"credits": 1, "label": "1 credit"},
+            "fast": {"credits": 2, "label": "2 credits"},
+            "flagship": {"credits": 3, "label": "3 credits"},
+            "premium": {"credits": 5, "label": "5 credits"},
+            "reasoning": {"credits": "2-5", "label": "2-5 credits"},
+            "image_gen": {"credits": 5, "label": "+5 credits"},
+            "video_gen": {"credits": 10, "label": "+10 credits"},
+        },
         "default": {"provider": "openai", "model": "gpt-5.2"}
     }
 
