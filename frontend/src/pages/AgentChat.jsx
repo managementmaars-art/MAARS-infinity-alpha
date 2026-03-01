@@ -274,7 +274,7 @@ const AgentChat = () => {
     try {
       const res = await fetch(`${API}/tts/generate`, {
         method: "POST", credentials: "include", headers: { ...headers, "Content-Type": "application/json" },
-        body: JSON.stringify({ text: text.substring(0, 5000) })
+        body: JSON.stringify({ text: text.substring(0, 4000), voice: "nova" })
       });
       if (!res.ok) { const e = await res.json(); toast.error(e.detail || "TTS failed"); return; }
       const data = await res.json();
