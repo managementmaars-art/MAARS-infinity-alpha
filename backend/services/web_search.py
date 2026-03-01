@@ -67,33 +67,46 @@ async def web_search(query: str, max_results: int = 5) -> List[Dict]:
 async def scrape_page(url: str, timeout: float = 8.0) -> str:
     """Scrape a webpage and extract clean text content."""
     try:
-        async with httpx.AsyncClient(follow_redirects=True, timeout=timeout) as client:
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-            }
-            resp = await client.get(url, headers=headers)
-            resp.raise_for_status()
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate",
+            "DNT": "1",
+            "Connection": "keep-alive",
+            "Upgrade-Insecure-Requests": "1",
+        }
+        async with httpx.AsyncClient(follow_redirects=True, timeout=timeout, headers=headers) as client:
+            resp = await client.get(url)
+            if resp.status_code != 200:
+                return ""
 
         soup = BeautifulSoup(resp.text, "html.parser")
 
         # Remove scripts, styles, nav, footer
-        for tag in soup(["script", "style", "nav", "footer", "header", "aside", "iframe", "noscript"]):
+        for tag in soup(["script", "style", "nav", "footer", "header", "aside", "iframe", "noscript", "svg"]):
             tag.decompose()
 
-        # Get text from main content areas
-        main = soup.find("main") or soup.find("article") or soup.find("div", {"role": "main"})
+        # Try main content areas first
+        main = (soup.find("main") or soup.find("article") or
+                soup.find("div", {"id": "mw-content-text"}) or  # Wikipedia
+                soup.find("div", {"role": "main"}) or
+                soup.find("div", class_="post-content") or
+                soup.find("div", class_="article-body"))
+
         if main:
             text = main.get_text(separator="\n", strip=True)
         else:
-            text = soup.get_text(separator="\n", strip=True)
+            # Fallback: get all <p> tags
+            paragraphs = soup.find_all("p")
+            text = "\n".join(p.get_text(strip=True) for p in paragraphs if len(p.get_text(strip=True)) > 40)
 
         # Clean up
-        lines = [line.strip() for line in text.splitlines() if line.strip()]
+        lines = [line.strip() for line in text.splitlines() if line.strip() and len(line.strip()) > 20]
         text = "\n".join(lines)
 
-        # Limit to ~2000 chars
-        if len(text) > 2000:
-            text = text[:2000] + "..."
+        if len(text) > 2500:
+            text = text[:2500] + "..."
 
         return text
     except Exception as e:
