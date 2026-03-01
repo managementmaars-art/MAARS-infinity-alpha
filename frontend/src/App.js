@@ -42,7 +42,6 @@ const AuthProvider = ({ children }) => {
 
     try {
       const response = await fetch(`${API}/auth/me`, {
-        credentials: "include",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         signal,
       });
@@ -83,7 +82,6 @@ const AuthProvider = ({ children }) => {
     try {
       await fetch(`${API}/auth/logout`, {
         method: "POST",
-        credentials: "include",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
     } catch (error) {
@@ -128,7 +126,6 @@ const AuthCallback = () => {
         const response = await fetch(`${API}/auth/session`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include",
           body: JSON.stringify({ session_id: sessionId }),
         });
 
