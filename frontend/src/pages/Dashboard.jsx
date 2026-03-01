@@ -88,6 +88,7 @@ const Dashboard = () => {
         <NavItem icon={MessageSquare} label="Chat" to="/chat" />
         <NavItem icon={Users} label="Agents" to="/agents" />
         <NavItem icon={ListTodo} label="Tasks" to="/tasks" />
+        <NavItem icon={BarChart3} label="My Insights" to="/insights" />
         <NavItem icon={Users} label="Team" to="/team" />
         <NavItem icon={Settings} label="Settings" to="/settings" />
         {user?.is_admin && (
