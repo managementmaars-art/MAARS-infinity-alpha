@@ -4916,6 +4916,38 @@ MODEL_COSTS_MAP = {
     "sora-2": {"input": 0.10, "output": 0.0, "provider": "openai", "per_unit": "second"},
 }
 
+# Credit cost per model — how many credits each model consumes per message
+MODEL_CREDIT_COSTS = {
+    # Economy (1 credit)
+    "gpt-4o-mini": 1, "claude-haiku-4-5-20250929": 1, "gemini-3-flash-preview": 1,
+    "deepseek-chat": 1, "mistral-small-latest": 1, "command-r": 1, "grok-3-mini": 1,
+    # Standard (2 credits)
+    "gpt-4o": 2, "grok-2": 2, "mistral-medium-latest": 2, "sonar": 2,
+    "gemini-3-pro-preview": 2, "deepseek-reasoner": 2,
+    # Flagship (3 credits)
+    "gpt-5.2": 3, "claude-sonnet-4-5-20250929": 3, "grok-3": 3,
+    "mistral-large-latest": 3, "command-r-plus": 3, "sonar-pro": 3,
+    # Premium (5 credits)
+    "claude-opus-4-5-20251101": 5, "o3": 5,
+    # Reasoning (2 credits)
+    "o3-mini": 2,
+    # Image Generation (5 credits)
+    "gemini-3-pro-image-preview": 5, "gemini-nano-banana-2": 5,
+    "gpt-image-1": 5, "dall-e-3": 5,
+    # Video Generation (10 credits)
+    "sora-2": 10,
+}
+
+def get_credit_cost(model_name: str, has_image: bool = False, has_video: bool = False) -> int:
+    """Get the credit cost for a model, with extras for generation."""
+    model_clean = model_name.split("/")[-1] if "/" in model_name else model_name
+    base_cost = MODEL_CREDIT_COSTS.get(model_clean, 2)
+    if has_image:
+        base_cost += MODEL_CREDIT_COSTS.get("gemini-nano-banana-2", 5)
+    if has_video:
+        base_cost += MODEL_CREDIT_COSTS.get("sora-2", 10)
+    return base_cost
+
 async def backfill_usage_logs():
     """Backfill usage logs from historical chat messages (runs once)"""
     already_done = await db.platform_config.find_one({"config_type": "usage_backfill_done"})
