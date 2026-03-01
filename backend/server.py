@@ -888,6 +888,9 @@ async def register(user_data: UserCreate):
     }
     await db.users.insert_one(user_doc)
     
+    # Welcome notification
+    await create_notification(user_id, "welcome", "Welcome to MAARS Command!", "Your AI team of 21 specialists is ready. Start by chatting with any agent.", "/dashboard")
+    
     token = create_jwt_token(user_id, user_data.email)
     is_admin = user_data.email == ADMIN_EMAIL
     return {"token": token, "user": {"user_id": user_id, "email": user_data.email, "name": user_data.name, "is_admin": is_admin}}
