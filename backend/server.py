@@ -2876,7 +2876,7 @@ Choose 2-4 most relevant specialists. Be specific about what each should do. Ass
                 system_message=agent["system_prompt"]
             ).with_model(agent.get("model_provider", "openai"), agent.get("model_name", "gpt-5.2"))
             
-            specialist_prompt = f"The Commander has assigned you this task as part of a larger project. Do NOT ask clarifying questions — just execute the task directly with your best professional output.\n\nOverall Goal: {goal}\n\nYour specific task: {ct['desc']}\n\nProvide a concise but actionable response. Focus on deliverables and next steps."
+            specialist_prompt = f"The Commander has assigned you this task as part of a larger project. Do NOT ask clarifying questions — just execute the task directly with your best professional output.\n\nWrite in clean, conversational paragraphs. Avoid excessive markdown headers (## ###). Use bold sparingly. Be concise and professional.\n\nOverall Goal: {goal}\n\nYour specific task: {ct['desc']}\n\nProvide a concise but actionable response. Focus on deliverables and next steps."
             
             response = await specialist.send_message(UserMessage(text=specialist_prompt))
             agent_entry["response"] = response
