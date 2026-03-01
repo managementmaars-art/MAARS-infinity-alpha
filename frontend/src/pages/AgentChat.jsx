@@ -1072,6 +1072,9 @@ const AgentChat = () => {
                           {msg.credits_deducted > 0 && (
                             <span className="text-zinc-600 ml-1">• {msg.credits_deducted}cr</span>
                           )}
+                          {msg.web_searched && (
+                            <span className="text-cyan-400 ml-1 flex items-center gap-0.5">• <Globe className="w-3 h-3" /> Web</span>
+                          )}
                         </div>
                       )}
                       {msg.role === "assistant" && (
