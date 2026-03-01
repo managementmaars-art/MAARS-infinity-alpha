@@ -11,6 +11,15 @@ import asyncio
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional, Dict, Any
+
+# Import models from extracted schemas
+from models.schemas import (
+    UserCreate, UserLogin, User, Agent, AgentCreate,
+    Message, Chat, ChatCreate, MessageCreate,
+    SubscriptionCreate, CreditPurchase, CheckoutRequest,
+    Task, TaskCreate, TaskUpdate,
+    TeamCreate, TeamInvite, TeamMemberUpdate
+)
 import uuid
 from datetime import datetime, timezone, timedelta
 import bcrypt
