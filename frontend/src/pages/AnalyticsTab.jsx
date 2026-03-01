@@ -113,6 +113,31 @@ const AnalyticsTab = () => {
     }
   };
 
+  const handleExportCSV = async () => {
+    try {
+      const res = await fetch(`${API}/admin/analytics/export?format=csv`, {
+        credentials: "include",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `maars_analytics_${new Date().toISOString().slice(0,10)}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        toast.success("Analytics exported");
+      } else {
+        toast.error("Export failed");
+      }
+    } catch {
+      toast.error("Export failed");
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64" data-testid="analytics-loading">
