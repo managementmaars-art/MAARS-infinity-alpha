@@ -844,8 +844,11 @@ RULES:
 6. When the user asks to send an email → use send_email
 7. When the user asks to send a text/SMS → use send_sms
 8. When the user asks about GitHub repos/issues → use github_action
-9. For questions you can fully answer from memory, respond directly
-10. After receiving a tool result, weave it naturally into your final answer"""
+9. When the user references tasks, to-dos, or shared work → use query_tasks first
+10. When the user asks about what another team member/agent discussed → use query_agent_history
+11. When the user asks to update, complete, or change a task → use update_task
+12. For questions you can fully answer from memory, respond directly
+13. After receiving a tool result, weave it naturally into your final answer"""
 
 
 async def agent_execute_with_tools(
