@@ -153,7 +153,6 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/agents`, {
         method: "POST",
-        ,
         headers,
         body: JSON.stringify({
           ...newAgent,
