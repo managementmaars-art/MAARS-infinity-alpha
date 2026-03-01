@@ -194,12 +194,14 @@ const AdminDashboard = () => {
 
   const tabs = [
     { id: "overview", label: "Overview", icon: Activity },
+    { id: "analytics", label: "Analytics", icon: BarChart3 },
     { id: "users", label: "Users", icon: Users },
     { id: "agents", label: "Agents", icon: Bot },
     { id: "transactions", label: "Transactions", icon: DollarSign },
     { id: "pricing", label: "Pricing & Packages", icon: TrendingUp },
     { id: "apikeys", label: "API Keys & Integrations", icon: Key },
     { id: "payments", label: "Payment Setup", icon: CreditCard },
+    { id: "smtp", label: "Email (SMTP)", icon: Mail },
   ];
 
   const NavItem = ({ icon: Icon, label, to, active }) => (
