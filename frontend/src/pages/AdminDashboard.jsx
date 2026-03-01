@@ -558,7 +558,9 @@ const AdminDashboard = () => {
       donts: agent.donts || "",
       knowledge_base: agent.knowledge_base || "",
       model_provider: agent.model_provider || "openai",
-      model_name: agent.model_name || "gpt-5.2"
+      model_name: agent.model_name || "gpt-5.2",
+      temperature: agent.temperature ?? 0.7,
+      max_tokens: agent.max_tokens ?? 4096
     });
   };
 
