@@ -96,6 +96,16 @@ const AnalyticsTab = () => {
     } catch {}
   };
 
+  const fetchPerformance = async () => {
+    try {
+      const res = await fetch(`${API}/admin/agent-performance`, {
+        credentials: "include",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) setPerformance(await res.json());
+    } catch {}
+  };
+
   const fetchAnalytics = async () => {
     setLoading(true);
     try {
