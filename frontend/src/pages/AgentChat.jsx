@@ -337,6 +337,30 @@ const AgentChat = () => {
     return () => clearInterval(interval);
   }, [messages, currentChat]);
 
+  // Poll for Commander delegation completion
+  useEffect(() => {
+    const hasProcessing = messages.some(m => m.commander_status === "processing");
+    const activeChatId = currentChat?.chat_id;
+    if (!hasProcessing || !activeChatId) return;
+    
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`${API}/chats/${activeChatId}`, { credentials: "include", headers });
+        if (res.ok) {
+          const chat = await res.json();
+          const updated = chat.messages || [];
+          const complete = updated.some(m => m.commander_status === "complete" || m.commander_status === "error");
+          if (complete) {
+            setMessages(updated);
+            clearInterval(interval);
+          }
+        }
+      } catch {}
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [messages, currentChat]);
+
 
   const fetchInitialData = async () => {
     try {
