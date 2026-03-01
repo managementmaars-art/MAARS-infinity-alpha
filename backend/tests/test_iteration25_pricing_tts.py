@@ -277,17 +277,21 @@ class TestCommanderDelegation:
         assert response.status_code == 200, f"Commander message failed: {response.text}"
         data = response.json()
         
-        # Commander should return a response (may or may not delegate for simple queries)
-        assert "content" in data or "message_id" in data, "Missing response content"
+        # Response structure is {assistant_message: {...}, user_message: {...}, credits_used: ...}
+        assistant_msg = data.get("assistant_message", data)
         
-        # If commander_status exists, it should indicate processing is started
-        commander_status = data.get("commander_status")
-        if commander_status:
-            print(f"Commander status: {commander_status}")
-            # Valid statuses: processing, complete, pending
-            assert commander_status in ["processing", "complete", "pending", None]
+        # Commander should return with commander_status=processing (background delegation)
+        commander_status = assistant_msg.get("commander_status")
+        print(f"Commander status: {commander_status}")
         
-        print(f"Commander delegation test PASSED: Got response with content")
+        # For delegation requests, status should be 'processing' indicating background work started
+        assert commander_status in ["processing", "complete", "pending", None], f"Invalid commander_status: {commander_status}"
+        
+        # Verify content exists
+        content = assistant_msg.get("content", "")
+        assert len(content) > 0, "Commander response content is empty"
+        
+        print(f"Commander delegation test PASSED: commander_status={commander_status}, content length={len(content)}")
 
 
 if __name__ == "__main__":
