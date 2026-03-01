@@ -112,13 +112,14 @@ class TestRegressionPlans:
         response = requests.get(f"{BASE_URL}/api/plans")
         assert response.status_code == 200, f"Plans request failed: {response.text}"
         data = response.json()
-        assert isinstance(data, list), "Response should be a list"
-        assert len(data) == 4, f"Expected 4 plans, got {len(data)}"
-        plan_ids = [p["id"] for p in data]
-        assert "free" in plan_ids
-        assert "starter" in plan_ids
-        assert "pro" in plan_ids
-        assert "business" in plan_ids
+        # Plans endpoint returns {plans: {...}, credit_packages: {...}}
+        assert "plans" in data, "Response should contain 'plans' key"
+        plans = data["plans"]
+        assert len(plans) == 4, f"Expected 4 plans, got {len(plans)}"
+        assert "free" in plans
+        assert "starter" in plans
+        assert "pro" in plans
+        assert "business" in plans
 
 
 class TestRegressionAgents:
