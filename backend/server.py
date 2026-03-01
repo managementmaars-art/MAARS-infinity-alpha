@@ -2423,6 +2423,7 @@ Rules:
         "model_used": f"{model_provider}/{model_name}",
         "auto_selected": auto_selected,
         "model_reason": model_reason if auto_selected else None,
+        "credits_deducted": credits_to_deduct,
         "credits_remaining": credits_remaining,
         "generated_image": generated_image,
         "generated_video": generated_video,
