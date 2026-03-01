@@ -2820,11 +2820,11 @@ Choose 2-4 most relevant specialists. Be specific about what each should do. Ass
     }
     
     # Also build plain text content as fallback
-    text_parts = [f"## Commander Orion's Mission Report\n\n**Goal:** {goal}\n\n**Delegation Plan:** {len(tasks)} specialists deployed | **{len(created_tasks)} tasks created**\n\n---\n"]
+    text_parts = [f"Commander Orion's Mission Report\n\nGoal: {goal}\n\nDelegation Plan: {len(tasks)} specialists deployed | {len(created_tasks)} tasks created\n\n---\n"]
     for i, a in enumerate(delegation_agents):
-        priority_icon = {"high": "!!!", "medium": "!!", "low": "!"}.get(a["priority"], "!!")
-        text_parts.append(f"### {i+1}. {a['agent_name']} ({a['agent_role']}) [{priority_icon} {a['priority'].upper()}]\n**Task:** {a['task']}\n\n{a['response']}\n\n---\n")
-    text_parts.append(f"\n## Commander's Summary\nAll specialists have reported. **{len(created_tasks)} tasks** have been auto-created and can be found on your **Tasks** page. Review the outputs above and let me know if you'd like any section expanded or revised.")
+        priority_label = {"high": "HIGH", "medium": "MED", "low": "LOW"}.get(a["priority"], "MED")
+        text_parts.append(f"{i+1}. {a['agent_name']} ({a['agent_role']}) [{priority_label}]\nTask: {a['task']}\n\n{a['response']}\n\n---\n")
+    text_parts.append(f"\nAll specialists have reported. {len(created_tasks)} tasks have been auto-created and can be found on your Tasks page. Let me know if you'd like any section expanded or revised.")
     
     return {"content": "\n".join(text_parts), "delegation_data": delegation_data}
 
