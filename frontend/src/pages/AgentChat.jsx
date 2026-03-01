@@ -415,8 +415,19 @@ const AgentChat = () => {
       if (response.ok) {
         const chat = await response.json();
         setCurrentChat(chat);
-        setMessages(chat.messages || []);
-        initFeedback(chat.messages || []);
+        const msgs = chat.messages || [];
+        setMessages(msgs);
+        initFeedback(msgs);
+        // Pre-populate generatedFiles from loaded messages (for videos/images completed in background)
+        const filesFromMsgs = {};
+        msgs.forEach(m => {
+          if (m.generated_video) filesFromMsgs[`${m.message_id}_video`] = m.generated_video;
+          if (m.generated_image) filesFromMsgs[`${m.message_id}_image`] = m.generated_image;
+          if (m.generated_file) filesFromMsgs[`${m.message_id}_file`] = m.generated_file;
+        });
+        if (Object.keys(filesFromMsgs).length > 0) {
+          setGeneratedFiles(prev => ({ ...prev, ...filesFromMsgs }));
+        }
         const agent = agents.find(a => a.agent_id === chat.agent_id);
         if (agent) setSelectedAgent(agent);
       }
