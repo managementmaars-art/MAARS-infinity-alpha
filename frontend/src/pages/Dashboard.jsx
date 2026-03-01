@@ -146,7 +146,9 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background" data-testid="dashboard-page">
-      {/* Mobile Header */}
+      {showOnboarding && (
+        <OnboardingFlow onComplete={() => setShowOnboarding(false)} />
+      )}      {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
         <div className="flex items-center justify-between h-16 px-4">
           <Link to="/dashboard" className="flex items-center gap-2">
