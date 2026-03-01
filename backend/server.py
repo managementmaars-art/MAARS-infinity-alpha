@@ -5557,6 +5557,95 @@ async def admin_test_smtp(request: Request, admin: User = Depends(require_admin)
         raise HTTPException(500, "Failed to send test email. Check your credentials.")
 
 
+# ============== MESSAGE FEEDBACK (THUMBS UP/DOWN) ==============
+
+@api_router.post("/chats/{chat_id}/messages/{message_id}/feedback")
+async def submit_message_feedback(chat_id: str, message_id: str, request: Request, current_user: User = Depends(get_current_user)):
+    """Submit thumbs up/down feedback on an assistant message."""
+    data = await request.json()
+    feedback = data.get("feedback")  # "up", "down", or null (remove)
+    if feedback not in ("up", "down", None):
+        raise HTTPException(400, "feedback must be 'up', 'down', or null")
+
+    chat = await db.chats.find_one({"chat_id": chat_id, "user_id": current_user.user_id}, {"_id": 0})
+    if not chat:
+        raise HTTPException(404, "Chat not found")
+
+    # Find the message and update feedback
+    messages = chat.get("messages", [])
+    found = False
+    for msg in messages:
+        if msg.get("message_id") == message_id and msg.get("role") == "assistant":
+            msg["feedback"] = feedback
+            msg["feedback_at"] = datetime.now(timezone.utc).isoformat()
+            msg["feedback_by"] = current_user.user_id
+            found = True
+            break
+
+    if not found:
+        raise HTTPException(404, "Message not found")
+
+    await db.chats.update_one({"chat_id": chat_id}, {"$set": {"messages": messages}})
+    return {"success": True, "feedback": feedback}
+
+
+@api_router.get("/admin/agent-performance")
+async def admin_agent_performance(admin: User = Depends(require_admin)):
+    """Get performance metrics for all agents based on user feedback."""
+    # Aggregate feedback from all chats
+    pipeline = [
+        {"$unwind": "$messages"},
+        {"$match": {"messages.role": "assistant", "messages.feedback": {"$in": ["up", "down"]}}},
+        {"$group": {
+            "_id": "$agent_id",
+            "total_feedback": {"$sum": 1},
+            "thumbs_up": {"$sum": {"$cond": [{"$eq": ["$messages.feedback", "up"]}, 1, 0]}},
+            "thumbs_down": {"$sum": {"$cond": [{"$eq": ["$messages.feedback", "down"]}, 1, 0]}},
+        }},
+        {"$sort": {"total_feedback": -1}}
+    ]
+    feedback_data = await db.chats.aggregate(pipeline).to_list(50)
+
+    # Get total messages per agent
+    msg_pipeline = [
+        {"$unwind": "$messages"},
+        {"$match": {"messages.role": "assistant"}},
+        {"$group": {"_id": "$agent_id", "total_messages": {"$sum": 1}}},
+    ]
+    msg_data = await db.chats.aggregate(msg_pipeline).to_list(50)
+    msg_map = {m["_id"]: m["total_messages"] for m in msg_data}
+
+    # Get agent names
+    agents = await db.agents.find({}, {"_id": 0, "agent_id": 1, "name": 1, "avatar": 1, "role": 1}).to_list(200)
+    agent_map = {a["agent_id"]: a for a in agents}
+    feedback_map = {f["_id"]: f for f in feedback_data}
+
+    performance = []
+    for a in agents:
+        aid = a["agent_id"]
+        f = feedback_map.get(aid, {})
+        total_msgs = msg_map.get(aid, 0)
+        up = f.get("thumbs_up", 0)
+        down = f.get("thumbs_down", 0)
+        total_fb = up + down
+        satisfaction = round((up / total_fb * 100), 1) if total_fb > 0 else None
+        performance.append({
+            "agent_id": aid,
+            "name": a.get("name", aid),
+            "avatar": a.get("avatar", ""),
+            "role": a.get("role", ""),
+            "total_messages": total_msgs,
+            "thumbs_up": up,
+            "thumbs_down": down,
+            "total_feedback": total_fb,
+            "satisfaction_rate": satisfaction,
+            "feedback_rate": round((total_fb / total_msgs * 100), 1) if total_msgs > 0 else 0,
+        })
+
+    performance.sort(key=lambda x: (x["satisfaction_rate"] or 0, x["total_messages"]), reverse=True)
+    return performance
+
+
 # ============== REAL-TIME ACTIVITY FEED ==============
 
 @api_router.get("/admin/activity-feed")
