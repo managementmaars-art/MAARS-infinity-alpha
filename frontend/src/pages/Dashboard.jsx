@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { 
+import {
   Bot, MessageSquare, ListTodo, Sparkles, Plus, ChevronRight,
-  LayoutDashboard, Users, Settings, LogOut, Menu, X, Shield, Trash2
+  LayoutDashboard, Users, Settings, LogOut, Menu, X, Shield, Trash2, BarChart3
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
