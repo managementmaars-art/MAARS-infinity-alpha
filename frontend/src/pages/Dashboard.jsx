@@ -25,6 +25,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchData();
+    // Show onboarding for new users
+    if (user && !user.onboarding_completed) {
+      setShowOnboarding(true);
+    }
   }, []);
 
   const fetchData = async () => {
