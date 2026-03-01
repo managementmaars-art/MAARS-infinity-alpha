@@ -400,8 +400,10 @@ class TestHeaderBadgeToggle:
         assert target_agent is not None, "No suitable agent found"
         agent_id = target_agent["agent_id"]
         
-        # Get current state
-        current_img = target_agent.get("can_generate_image", False)
+        # Get current state via admin endpoint (has full data)
+        admin_get_resp = requests.get(f"{BASE_URL}/api/admin/agents/{agent_id}", headers=headers)
+        assert admin_get_resp.status_code == 200, f"Failed to get admin agent: {admin_get_resp.text}"
+        current_img = admin_get_resp.json().get("can_generate_image", False)
         
         # Toggle image generation via PUT /admin/agents/{id}/settings
         toggle_resp = requests.put(
@@ -411,11 +413,11 @@ class TestHeaderBadgeToggle:
         )
         assert toggle_resp.status_code == 200, f"Failed to toggle: {toggle_resp.text}"
         
-        # Verify toggle worked
-        verify_resp = requests.get(f"{BASE_URL}/api/agents/{agent_id}", headers=headers)
+        # Verify toggle worked via admin endpoint
+        verify_resp = requests.get(f"{BASE_URL}/api/admin/agents/{agent_id}", headers=headers)
         assert verify_resp.status_code == 200
         new_state = verify_resp.json().get("can_generate_image", False)
-        assert new_state == (not current_img), "Toggle didn't change state"
+        assert new_state == (not current_img), f"Toggle didn't change state. Expected {not current_img}, got {new_state}"
         
         # Revert to original state
         requests.put(
