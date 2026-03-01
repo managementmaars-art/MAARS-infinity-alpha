@@ -1055,12 +1055,32 @@ const AgentChat = () => {
                           disabled={ttsLoading === (msg.message_id || i)}
                           className="text-xs text-zinc-500 hover:text-indigo-400 transition-colors flex items-center gap-1 ml-auto"
                           data-testid={`tts-btn-${i}`}
-                          title="Read aloud (ElevenLabs)"
+                          title="Read aloud"
                         >
                           {ttsLoading === (msg.message_id || i) ? <Loader2 className="w-3 h-3 animate-spin" /> :
                            ttsPlaying === (msg.message_id || i) ? <VolumeX className="w-3 h-3 text-red-400" /> :
                            <Volume2 className="w-3 h-3" />}
                         </button>
+                      )}
+                      {msg.role === "assistant" && msg.message_id && (
+                        <div className="flex items-center gap-1 ml-2 border-l border-white/10 pl-2">
+                          <button
+                            onClick={() => submitFeedback(currentChat?.chat_id, msg.message_id, "up")}
+                            className={`p-1 rounded transition-colors ${feedbackState[msg.message_id] === "up" ? "text-emerald-400 bg-emerald-500/15" : "text-zinc-600 hover:text-emerald-400 hover:bg-emerald-500/10"}`}
+                            data-testid={`feedback-up-${i}`}
+                            title="Good response"
+                          >
+                            <ThumbsUp className="w-3 h-3" />
+                          </button>
+                          <button
+                            onClick={() => submitFeedback(currentChat?.chat_id, msg.message_id, "down")}
+                            className={`p-1 rounded transition-colors ${feedbackState[msg.message_id] === "down" ? "text-red-400 bg-red-500/15" : "text-zinc-600 hover:text-red-400 hover:bg-red-500/10"}`}
+                            data-testid={`feedback-down-${i}`}
+                            title="Poor response"
+                          >
+                            <ThumbsDown className="w-3 h-3" />
+                          </button>
+                        </div>
                       )}
                     </div>
                     {/* Generated file preview */}
