@@ -5563,6 +5563,52 @@ async def clear_notifications(current_user: User = Depends(get_current_user)):
     return {"success": True}
 
 
+# ============== USER AGENT CUSTOMIZATION (Per-User Overrides) ==============
+
+@api_router.get("/agents/{agent_id}/my-settings")
+async def get_user_agent_settings(agent_id: str, current_user: User = Depends(get_current_user)):
+    """Get user's personal customization for an agent."""
+    override = await db.user_agent_overrides.find_one(
+        {"user_id": current_user.user_id, "agent_id": agent_id}, {"_id": 0}
+    )
+    if not override:
+        return {"agent_id": agent_id, "has_override": False}
+    override["has_override"] = True
+    return override
+
+@api_router.put("/agents/{agent_id}/my-settings")
+async def update_user_agent_settings(agent_id: str, request: Request, current_user: User = Depends(get_current_user)):
+    """Save user's personal agent customization (temperature, max_tokens, personality_tone, custom_instructions)."""
+    data = await request.json()
+    allowed = {"temperature", "max_tokens", "personality_tone", "custom_instructions"}
+    update = {k: v for k, v in data.items() if k in allowed and v is not None}
+    if not update:
+        raise HTTPException(400, "No valid fields to update")
+    
+    # Validate ranges
+    if "temperature" in update:
+        update["temperature"] = max(0, min(2, float(update["temperature"])))
+    if "max_tokens" in update:
+        update["max_tokens"] = max(256, min(16384, int(update["max_tokens"])))
+    
+    await db.user_agent_overrides.update_one(
+        {"user_id": current_user.user_id, "agent_id": agent_id},
+        {"$set": {**update, "user_id": current_user.user_id, "agent_id": agent_id, "updated_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True
+    )
+    result = await db.user_agent_overrides.find_one(
+        {"user_id": current_user.user_id, "agent_id": agent_id}, {"_id": 0}
+    )
+    result["has_override"] = True
+    return result
+
+@api_router.delete("/agents/{agent_id}/my-settings")
+async def reset_user_agent_settings(agent_id: str, current_user: User = Depends(get_current_user)):
+    """Reset user's agent customization back to defaults."""
+    await db.user_agent_overrides.delete_one({"user_id": current_user.user_id, "agent_id": agent_id})
+    return {"success": True, "agent_id": agent_id}
+
+
 @app.on_event("startup")
 async def startup():
     global SUBSCRIPTION_PLANS, CUSTOM_AGENT_CREDIT_COST
