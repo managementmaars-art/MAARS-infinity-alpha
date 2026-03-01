@@ -878,6 +878,19 @@ async def agent_execute_with_tools(
     if workspace_ctx:
         enhanced_system_prompt += workspace_ctx
     
+    # Apply user-specific overrides if present
+    user_override = await db.user_agent_overrides.find_one(
+        {"user_id": user_id, "agent_id": agent.get("agent_id")}, {"_id": 0}
+    )
+    if user_override:
+        override_parts = []
+        if user_override.get("personality_tone"):
+            override_parts.append(f"User-requested personality adjustment: {user_override['personality_tone']}")
+        if user_override.get("custom_instructions"):
+            override_parts.append(f"User-specific instructions: {user_override['custom_instructions']}")
+        if override_parts:
+            enhanced_system_prompt += "\n\n--- USER CUSTOMIZATION ---\n" + "\n".join(override_parts)
+    
     execution_steps = []
     max_iterations = 4
     accumulated_context = f"User: {user_content}"
