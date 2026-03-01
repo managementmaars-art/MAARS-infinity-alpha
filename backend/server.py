@@ -5965,7 +5965,7 @@ async def search_agent_knowledge(agent_id: str, request: Request, current_user: 
         raise HTTPException(400, "Query is required")
     from services.rag_service import search_knowledge_base
     results = await search_knowledge_base(
-        db, agent_id, query, top_k=5, threshold=0.55, api_key=EMERGENT_LLM_KEY
+        db, agent_id, query, top_k=5, threshold=0.05, api_key=EMERGENT_LLM_KEY
     )
     return {"results": results, "count": len(results)}
 
