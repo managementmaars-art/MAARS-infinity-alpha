@@ -871,14 +871,15 @@ const AgentChat = () => {
       {/* Desktop Sidebar */}
       <div className="hidden lg:flex flex-col bg-zinc-900/50 border-r border-white/10 relative" style={{ width: sidebarWidth, minWidth: 200, maxWidth: 600 }}>
         <div className="p-4 border-b border-white/10">
-          <Link to="/dashboard" className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
-              <Bot className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-lg font-bold text-white font-['Outfit']">MAARS Command</span>
-          </Link>
-          <div className="flex items-center gap-2 mb-4 justify-between">
+          <div className="flex items-center justify-between mb-4">
+            <Link to="/dashboard" className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
+                <Bot className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-lg font-bold text-white font-['Outfit']">MAARS Command</span>
+            </Link>
             <NotificationCenter />
+          </div>
           <Button
             onClick={startNewChat}
             className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
