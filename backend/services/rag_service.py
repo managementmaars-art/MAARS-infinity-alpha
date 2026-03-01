@@ -1,24 +1,17 @@
 """RAG (Retrieval-Augmented Generation) service for MAARS Command.
-Handles document processing, embedding generation, and semantic search."""
+Uses TF-IDF + cosine similarity for fast, effective document search without external API calls."""
 
-import os
-import uuid
 import logging
 import numpy as np
-from typing import List, Dict, Optional, Tuple
-from datetime import datetime, timezone
-from pathlib import Path
+from typing import List, Dict
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity as sklearn_cosine
 
 logger = logging.getLogger(__name__)
 
-EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
-UPLOAD_DIR = Path(__file__).parent.parent / "backend" / "uploads"
-if not UPLOAD_DIR.exists():
-    UPLOAD_DIR = Path(__file__).parent / "uploads"
-
 
 def extract_text_from_pdf(file_path: str) -> str:
-    """Extract text from a PDF file."""
+    """Extract text from a PDF file with page markers."""
     from PyPDF2 import PdfReader
     reader = PdfReader(file_path)
     text_parts = []
@@ -33,13 +26,11 @@ def chunk_text(text: str, chunk_size: int = 400, chunk_overlap: int = 80) -> Lis
     """Split text into overlapping chunks, preserving page references."""
     chunks = []
     current_page = 1
-
     paragraphs = text.split("\n\n")
     current_chunk = ""
     current_sources = set()
 
     for para in paragraphs:
-        # Track page numbers
         if para.strip().startswith("[Page "):
             try:
                 current_page = int(para.strip().split("]")[0].replace("[Page ", ""))
@@ -47,13 +38,11 @@ def chunk_text(text: str, chunk_size: int = 400, chunk_overlap: int = 80) -> Lis
                 pass
 
         words_in_para = len(para.split())
-
         if len(current_chunk.split()) + words_in_para > chunk_size and current_chunk:
             chunks.append({
                 "text": current_chunk.strip(),
                 "pages": sorted(current_sources) if current_sources else [current_page],
             })
-            # Keep overlap from the end of current chunk
             overlap_words = current_chunk.split()[-chunk_overlap:]
             current_chunk = " ".join(overlap_words) + " " + para
             current_sources = {current_page}
@@ -70,85 +59,45 @@ def chunk_text(text: str, chunk_size: int = 400, chunk_overlap: int = 80) -> Lis
     return chunks
 
 
-async def generate_embedding(text: str, api_key: str = None) -> List[float]:
-    """Generate embedding vector for text using OpenAI text-embedding-3-small via Emergent proxy."""
-    import litellm
-    from emergentintegrations.llm.utils import get_integration_proxy_url
-
-    key = api_key or EMERGENT_LLM_KEY
-    proxy_url = get_integration_proxy_url()
-
-    response = await litellm.aembedding(
-        model="text-embedding-3-small",
-        input=[text.replace("\n", " ")[:8000]],
-        api_key=key,
-        api_base=proxy_url + "/llm",
-        custom_llm_provider="openai",
-    )
-
-    return response.data[0]["embedding"]
-
-
-async def generate_embeddings_batch(texts: List[str], api_key: str = None, batch_size: int = 50) -> List[List[float]]:
-    """Generate embeddings for multiple texts in batches."""
-    import litellm
-    from emergentintegrations.llm.utils import get_integration_proxy_url
-
-    key = api_key or EMERGENT_LLM_KEY
-    proxy_url = get_integration_proxy_url()
-    all_embeddings = []
-
-    for i in range(0, len(texts), batch_size):
-        batch = [t.replace("\n", " ")[:8000] for t in texts[i:i + batch_size]]
-        response = await litellm.aembedding(
-            model="text-embedding-3-small",
-            input=batch,
-            api_key=key,
-            api_base=proxy_url + "/llm",
-            custom_llm_provider="openai",
-        )
-        all_embeddings.extend([item["embedding"] for item in response.data])
-
-    return all_embeddings
-
-
-def cosine_similarity(a: List[float], b: List[float]) -> float:
-    """Compute cosine similarity between two vectors."""
-    a_arr = np.array(a, dtype=np.float32)
-    b_arr = np.array(b, dtype=np.float32)
-    dot = np.dot(a_arr, b_arr)
-    norm_a = np.linalg.norm(a_arr)
-    norm_b = np.linalg.norm(b_arr)
-    if norm_a == 0 or norm_b == 0:
-        return 0.0
-    return float(dot / (norm_a * norm_b))
-
-
 async def search_knowledge_base(
-    db, agent_id: str, query: str, top_k: int = 5, threshold: float = 0.65, api_key: str = None
+    db, agent_id: str, query: str, top_k: int = 5, threshold: float = 0.10, api_key: str = None
 ) -> List[Dict]:
-    """Search an agent's knowledge base for relevant chunks."""
-    query_embedding = await generate_embedding(query, api_key)
-
+    """Search an agent's knowledge base using TF-IDF similarity."""
     chunks = await db.knowledge_chunks.find(
         {"agent_id": agent_id},
-        {"_id": 0, "text": 1, "embedding": 1, "doc_id": 1, "doc_title": 1, "pages": 1, "chunk_index": 1}
+        {"_id": 0, "text": 1, "doc_id": 1, "doc_title": 1, "pages": 1, "chunk_index": 1}
     ).to_list(None)
 
     if not chunks:
         return []
 
+    chunk_texts = [c["text"] for c in chunks]
+
+    # TF-IDF vectorization with query
+    vectorizer = TfidfVectorizer(
+        stop_words="english",
+        max_features=10000,
+        ngram_range=(1, 2),
+        sublinear_tf=True,
+    )
+    all_texts = chunk_texts + [query]
+    tfidf_matrix = vectorizer.fit_transform(all_texts)
+
+    query_vec = tfidf_matrix[-1]
+    chunk_vecs = tfidf_matrix[:-1]
+
+    similarities = sklearn_cosine(query_vec, chunk_vecs).flatten()
+
     scored = []
-    for chunk in chunks:
-        score = cosine_similarity(query_embedding, chunk["embedding"])
+    for i, score in enumerate(similarities):
         if score >= threshold:
             scored.append({
-                "text": chunk["text"],
-                "score": round(score, 4),
-                "doc_title": chunk.get("doc_title", "Unknown"),
-                "doc_id": chunk.get("doc_id", ""),
-                "pages": chunk.get("pages", []),
-                "chunk_index": chunk.get("chunk_index", 0),
+                "text": chunks[i]["text"],
+                "score": round(float(score), 4),
+                "doc_title": chunks[i].get("doc_title", "Unknown"),
+                "doc_id": chunks[i].get("doc_id", ""),
+                "pages": chunks[i].get("pages", []),
+                "chunk_index": chunks[i].get("chunk_index", 0),
             })
 
     scored.sort(key=lambda x: x["score"], reverse=True)
