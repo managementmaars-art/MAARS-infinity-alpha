@@ -3254,6 +3254,12 @@ async def accept_invite(invite_id: str, current_user: User = Depends(get_current
         {"$push": {"members": new_member}}
     )
     await db.team_invites.update_one({"invite_id": invite_id}, {"$set": {"status": "accepted"}})
+    
+    # Notify team owner
+    owner_id = team.get("owner_id")
+    if owner_id:
+        await create_notification(owner_id, "team_join", f"{current_user.name} joined your team", f"{current_user.name} accepted the invite to {team.get('name', 'your team')}.", "/team")
+    
     return {"success": True, "team_id": invite["team_id"], "team_name": invite["team_name"]}
 
 @api_router.post("/teams/invites/{invite_id}/decline")
