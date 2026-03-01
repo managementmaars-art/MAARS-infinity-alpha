@@ -5,6 +5,12 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 
 ## Implemented Features
 
+### Real-time Activity Feed (Added Mar 1, 2026)
+- Live feed on Analytics dashboard showing recent signups, payments, chats, team creations
+- Auto-refreshes every 15 seconds with manual refresh button
+- Events sorted by timestamp (newest first), relative timestamps ("2m ago")
+- Endpoint: GET /api/admin/activity-feed
+
 ### Customer Analytics Dashboard (Added Mar 1, 2026)
 - Comprehensive admin analytics tab with KPI cards (Total Users, Active 7d/30d, Total Chats, Revenue, MRR)
 - Daily Signups, Messages, Revenue, API Cost charts (30-day time series with recharts)
@@ -22,6 +28,12 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 - Step-by-step setup guide for Gmail App Passwords
 - Endpoints: GET/POST /api/admin/smtp-config, POST /api/admin/smtp-test
 
+### Commander AI Add-on (Confirmed Complete Mar 1, 2026)
+- Commander Orion available as purchasable add-on in "Build Your Own" package
+- Toggle in pricing page with per-month pricing ($15 USD / ৳1605 BDT)
+- Included by default in Pro and Business plans
+- Gated for custom package users without the add-on
+
 ### Dynamic Pricing (Fixed Mar 1, 2026)
 - Admin-set prices persist across server restarts (loaded from DB on startup)
 - /api/plans returns admin-configured prices (not hardcoded defaults)
@@ -31,7 +43,6 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 - OpenAI TTS via Emergent key (no extra API key needed)
 - 9 voices: Alloy, Nova, Shimmer, Echo, Onyx, Fable, Coral, Sage, Ash
 - Speaker button on every assistant message in chat
-- POST /api/tts/generate endpoint
 
 ### Brain Editor (Added Mar 1, 2026)
 - Full agent customization in Admin > Agents > Edit Brain
@@ -63,19 +74,18 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 
 ## Production Launch Checklist
 - [ ] Set live Stripe key (STRIPE_API_KEY)
-- [ ] Set Gmail SMTP (SMTP_EMAIL, SMTP_PASSWORD) via Admin > Email (SMTP) tab
+- [ ] Set Gmail SMTP via Admin > Email (SMTP) tab
 - [ ] Set custom domain + FRONTEND_URL
 
 ## Credentials
 - Admin: management.maars@marsgc.net / MaarsAdmin2024!
 
 ## Backlog
-- P1: Commander AI as purchasable add-on for Build Your Own package
 - P1: More integrations (Slack, Calendly, Airtable)
 - P2: Custom domain UI
-- P2: Refactor server.py (5500+ lines) and AdminDashboard.jsx (2400+ lines) into modular structure
+- P2: Refactor server.py (5700+ lines) and AdminDashboard.jsx (2400+ lines) into modular structure
 
 ## Architecture
 - Backend: /app/backend/server.py (monolithic - needs refactoring)
-- Frontend: /app/frontend/src/pages/ (AdminDashboard.jsx + AnalyticsTab.jsx + SmtpConfigTab.jsx + AgentChat.jsx + Team.jsx)
+- Frontend: /app/frontend/src/pages/ (AdminDashboard.jsx + AnalyticsTab.jsx + SmtpConfigTab.jsx + AgentChat.jsx + Team.jsx + PricingPage.jsx)
 - Database: MongoDB with collections: users, chats, agents, subscriptions, payment_transactions, usage_logs, teams, team_invites, tasks, platform_config, user_sessions
