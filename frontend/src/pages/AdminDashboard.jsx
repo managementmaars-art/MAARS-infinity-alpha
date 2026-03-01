@@ -597,12 +597,14 @@ const AdminDashboard = () => {
       });
       if (res.ok) {
         setAgents(prev => prev.map(a => a.agent_id === agentId ? { ...a, [field]: !currentValue } : a));
-        toast.success(`Updated ${field.replace('can_generate_', '').replace('_', ' ')} permission`);
+        const label = field === "is_active" ? "active status" : field.replace('can_generate_', '') + " generation";
+        toast.success(`${!currentValue ? "Enabled" : "Disabled"} ${label}`);
       } else {
-        toast.error("Failed to update");
+        const err = await res.json().catch(() => ({}));
+        toast.error(err.detail || `Toggle failed (${res.status}). Please try again.`);
       }
-    } catch {
-      toast.error("Failed to update");
+    } catch (e) {
+      toast.error(`Network error: ${e.message}. Check your connection.`);
     } finally {
       setSavingAgent(null);
     }
