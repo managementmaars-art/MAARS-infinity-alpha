@@ -195,6 +195,7 @@ const Dashboard = () => {
               </h1>
               <p className="text-zinc-400">Here's what's happening with your AI team today.</p>
             </div>
+            <NotificationCenter />
           </div>
 
           {/* Stats Grid */}
