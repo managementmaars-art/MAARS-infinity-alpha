@@ -2338,9 +2338,38 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         execution_steps = None
         
         if is_commander:
-            commander_result = await commander_delegate(message_data.content, chat_id, api_keys, current_user.user_id)
-            response_text = commander_result["content"]
-            delegation_data = commander_result.get("delegation_data")
+            # Run Commander delegation as background task (takes 2-3 min for multiple agents)
+            processing_msg_id = f"msg_{uuid.uuid4().hex[:12]}"
+            processing_msg = {
+                "message_id": processing_msg_id,
+                "chat_id": chat_id,
+                "role": "assistant",
+                "content": f"Analyzing your goal and deploying specialists... This will take a moment as I coordinate multiple agents.\n\nGoal: {message_data.content}",
+                "model_used": f"{model_provider}/{model_name}",
+                "agent_id": agent.get("agent_id"),
+                "created_at": now.isoformat(),
+                "commander_status": "processing"
+            }
+            
+            # Save user msg + processing msg immediately
+            await db.chats.update_one(
+                {"chat_id": chat_id},
+                {"$push": {"messages": {"$each": [user_msg, processing_msg]}}, "$set": {"updated_at": now.isoformat()}}
+            )
+            
+            # Start background task
+            asyncio.create_task(background_commander_delegate(
+                message_data.content, chat_id, processing_msg_id, api_keys, current_user.user_id
+            ))
+            
+            # Deduct 1 credit for the commander call
+            await db.subscriptions.update_one({"user_id": current_user.user_id}, {"$inc": {"credits": -1}})
+            
+            return {
+                "user_message": user_msg,
+                "assistant_message": processing_msg,
+                "credits_used": 1
+            }
         else:
             # Try tool-augmented execution first
             tool_result = await agent_execute_with_tools(
