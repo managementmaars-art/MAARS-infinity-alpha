@@ -5274,6 +5274,277 @@ async def admin_test_integration(service_id: str, admin: User = Depends(require_
     except Exception as e:
         return {"status": "error", "message": str(e)[:200]}
 
+# ============== CUSTOMER ANALYTICS DASHBOARD ==============
+
+@api_router.get("/admin/analytics")
+async def admin_analytics(admin: User = Depends(require_admin)):
+    """Comprehensive analytics dashboard data for admin."""
+    now = datetime.now(timezone.utc)
+    thirty_days_ago = (now - timedelta(days=30)).isoformat()
+    seven_days_ago = (now - timedelta(days=7)).isoformat()
+
+    # --- KPIs ---
+    total_users = await db.users.count_documents({})
+    active_7d = await db.users.count_documents({"last_active": {"$gte": seven_days_ago}})
+    active_30d = await db.users.count_documents({"last_active": {"$gte": thirty_days_ago}})
+    # Fallback: if last_active isn't tracked, count users who created chats recently
+    if active_7d == 0 and total_users > 0:
+        recent_chatters_7d = await db.chats.distinct("user_id", {"created_at": {"$gte": seven_days_ago}})
+        active_7d = len(recent_chatters_7d)
+        recent_chatters_30d = await db.chats.distinct("user_id", {"created_at": {"$gte": thirty_days_ago}})
+        active_30d = len(recent_chatters_30d)
+
+    total_chats = await db.chats.count_documents({})
+
+    # Revenue
+    rev_pipeline = [
+        {"$match": {"payment_status": "paid"}},
+        {"$group": {"_id": None, "total": {"$sum": "$amount"}, "count": {"$sum": 1}}}
+    ]
+    rev_result = await db.payment_transactions.aggregate(rev_pipeline).to_list(1)
+    total_revenue = rev_result[0]["total"] if rev_result else 0
+
+    # MRR: sum of active paid subscription plan prices
+    mrr = 0
+    subs = await db.subscriptions.find({"status": "active"}, {"_id": 0, "plan_id": 1}).to_list(1000)
+    for s in subs:
+        plan = SUBSCRIPTION_PLANS.get(s.get("plan_id", "free"), {})
+        mrr += plan.get("price_usd", 0)
+
+    # --- Daily Signups (last 30 days) ---
+    all_users = await db.users.find({}, {"_id": 0, "created_at": 1}).to_list(5000)
+    daily_signups = {}
+    for u in all_users:
+        ca = u.get("created_at", "")
+        if ca:
+            day = ca[:10]
+            daily_signups[day] = daily_signups.get(day, 0) + 1
+
+    # Build last 30 days array
+    signup_series = []
+    for i in range(30, -1, -1):
+        d = (now - timedelta(days=i)).strftime("%Y-%m-%d")
+        signup_series.append({"date": d, "signups": daily_signups.get(d, 0)})
+
+    # --- Daily Messages (last 30 days) ---
+    all_chats = await db.chats.find({}, {"_id": 0, "messages": 1}).to_list(5000)
+    daily_messages = {}
+    for chat in all_chats:
+        for msg in chat.get("messages", []):
+            ca = msg.get("created_at", "")
+            if ca:
+                day = ca[:10]
+                daily_messages[day] = daily_messages.get(day, 0) + 1
+
+    message_series = []
+    for i in range(30, -1, -1):
+        d = (now - timedelta(days=i)).strftime("%Y-%m-%d")
+        message_series.append({"date": d, "messages": daily_messages.get(d, 0)})
+
+    # --- Daily Revenue (last 30 days) ---
+    paid_txns = await db.payment_transactions.find(
+        {"payment_status": "paid"}, {"_id": 0, "amount": 1, "created_at": 1}
+    ).to_list(5000)
+    daily_revenue = {}
+    for tx in paid_txns:
+        ca = tx.get("created_at", "")
+        if ca:
+            day = ca[:10]
+            daily_revenue[day] = daily_revenue.get(day, 0) + tx.get("amount", 0)
+
+    revenue_series = []
+    for i in range(30, -1, -1):
+        d = (now - timedelta(days=i)).strftime("%Y-%m-%d")
+        revenue_series.append({"date": d, "revenue": round(daily_revenue.get(d, 0), 2)})
+
+    # --- Agent Usage ---
+    agent_usage_pipeline = [
+        {"$unwind": "$messages"},
+        {"$match": {"messages.role": "assistant"}},
+        {"$group": {"_id": "$agent_id", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}}
+    ]
+    agent_usage_raw = await db.chats.aggregate(agent_usage_pipeline).to_list(50)
+    # Enrich with agent names
+    agent_map = {}
+    all_agents = await db.agents.find({}, {"_id": 0, "agent_id": 1, "name": 1, "avatar": 1}).to_list(200)
+    for a in all_agents:
+        agent_map[a["agent_id"]] = a
+    agent_usage = []
+    for item in agent_usage_raw:
+        aid = item["_id"]
+        agent_info = agent_map.get(aid, {})
+        agent_usage.append({
+            "agent_id": aid,
+            "name": agent_info.get("name", aid or "Unknown"),
+            "messages": item["count"]
+        })
+
+    # --- Subscription Distribution ---
+    plan_pipeline = [
+        {"$group": {"_id": "$plan_id", "count": {"$sum": 1}}}
+    ]
+    plan_dist = await db.subscriptions.aggregate(plan_pipeline).to_list(10)
+    plan_distribution = [{"plan": item["_id"] or "free", "count": item["count"]} for item in plan_dist]
+
+    # --- Token Usage (last 30 days from usage_logs) ---
+    token_pipeline = [
+        {"$match": {"created_at": {"$gte": thirty_days_ago}}},
+        {"$group": {
+            "_id": {"$substr": ["$created_at", 0, 10]},
+            "input_tokens": {"$sum": "$input_tokens"},
+            "output_tokens": {"$sum": "$output_tokens"},
+            "cost": {"$sum": "$estimated_cost_usd"},
+            "calls": {"$sum": 1}
+        }},
+        {"$sort": {"_id": 1}}
+    ]
+    token_raw = await db.usage_logs.aggregate(token_pipeline).to_list(31)
+    token_map = {item["_id"]: item for item in token_raw}
+    token_series = []
+    for i in range(30, -1, -1):
+        d = (now - timedelta(days=i)).strftime("%Y-%m-%d")
+        entry = token_map.get(d, {})
+        token_series.append({
+            "date": d,
+            "input_tokens": entry.get("input_tokens", 0),
+            "output_tokens": entry.get("output_tokens", 0),
+            "cost": round(entry.get("cost", 0), 4),
+            "calls": entry.get("calls", 0)
+        })
+
+    # --- Top Users by Messages ---
+    top_users_pipeline = [
+        {"$project": {"user_id": 1, "msg_count": {"$size": "$messages"}}},
+        {"$group": {"_id": "$user_id", "total_messages": {"$sum": "$msg_count"}}},
+        {"$sort": {"total_messages": -1}},
+        {"$limit": 10}
+    ]
+    top_users_raw = await db.chats.aggregate(top_users_pipeline).to_list(10)
+    user_ids = [u["_id"] for u in top_users_raw]
+    user_map = {}
+    if user_ids:
+        user_docs = await db.users.find({"user_id": {"$in": user_ids}}, {"_id": 0, "user_id": 1, "name": 1, "email": 1}).to_list(10)
+        for ud in user_docs:
+            user_map[ud["user_id"]] = ud
+    top_users = []
+    for u in top_users_raw:
+        info = user_map.get(u["_id"], {})
+        top_users.append({
+            "user_id": u["_id"],
+            "name": info.get("name", "Unknown"),
+            "email": info.get("email", ""),
+            "total_messages": u["total_messages"]
+        })
+
+    # --- Cost by Model ---
+    model_cost_pipeline = [
+        {"$group": {
+            "_id": "$model",
+            "cost": {"$sum": "$estimated_cost_usd"},
+            "calls": {"$sum": 1}
+        }},
+        {"$sort": {"cost": -1}},
+        {"$limit": 10}
+    ]
+    model_costs = await db.usage_logs.aggregate(model_cost_pipeline).to_list(10)
+    model_cost_data = [{"model": m["_id"] or "unknown", "cost": round(m["cost"], 4), "calls": m["calls"]} for m in model_costs]
+
+    return {
+        "kpis": {
+            "total_users": total_users,
+            "active_7d": active_7d,
+            "active_30d": active_30d,
+            "total_chats": total_chats,
+            "total_revenue": round(total_revenue, 2),
+            "mrr": round(mrr, 2),
+        },
+        "daily_signups": signup_series,
+        "daily_messages": message_series,
+        "daily_revenue": revenue_series,
+        "agent_usage": agent_usage,
+        "plan_distribution": plan_distribution,
+        "token_usage": token_series,
+        "top_users": top_users,
+        "model_costs": model_cost_data,
+    }
+
+
+# ============== SMTP CONFIGURATION ==============
+
+@api_router.get("/admin/smtp-config")
+async def admin_get_smtp_config(admin: User = Depends(require_admin)):
+    """Get current SMTP configuration status (masked)."""
+    return {
+        "email": SMTP_EMAIL or "",
+        "has_password": bool(SMTP_PASSWORD),
+        "configured": bool(SMTP_EMAIL and SMTP_PASSWORD)
+    }
+
+@api_router.post("/admin/smtp-config")
+async def admin_update_smtp_config(request: Request, admin: User = Depends(require_admin)):
+    """Update SMTP configuration. Saves to .env and reloads in memory."""
+    global SMTP_EMAIL, SMTP_PASSWORD
+    data = await request.json()
+    new_email = data.get("email", "").strip()
+    new_password = data.get("password", "").strip()
+
+    if not new_email:
+        raise HTTPException(400, "Email is required")
+
+    # Update globals
+    SMTP_EMAIL = new_email
+    if new_password:
+        SMTP_PASSWORD = new_password
+
+    # Persist to .env file
+    env_path = ROOT_DIR / '.env'
+    lines = env_path.read_text().splitlines()
+    new_lines = []
+    email_set = False
+    password_set = False
+    for line in lines:
+        if line.startswith("SMTP_EMAIL="):
+            new_lines.append(f"SMTP_EMAIL={new_email}")
+            email_set = True
+        elif line.startswith("SMTP_PASSWORD=") and new_password:
+            new_lines.append(f"SMTP_PASSWORD={new_password}")
+            password_set = True
+        else:
+            new_lines.append(line)
+    if not email_set:
+        new_lines.append(f"SMTP_EMAIL={new_email}")
+    if new_password and not password_set:
+        new_lines.append(f"SMTP_PASSWORD={new_password}")
+    env_path.write_text("\n".join(new_lines) + "\n")
+
+    return {"success": True, "configured": bool(SMTP_EMAIL and SMTP_PASSWORD)}
+
+@api_router.post("/admin/smtp-test")
+async def admin_test_smtp(request: Request, admin: User = Depends(require_admin)):
+    """Send a test email to verify SMTP configuration."""
+    data = await request.json()
+    test_to = data.get("to_email", admin.email)
+
+    if not SMTP_EMAIL or not SMTP_PASSWORD:
+        raise HTTPException(400, "SMTP not configured. Save credentials first.")
+
+    html = """
+    <div style="font-family:Arial;padding:20px;background:#111;color:#fff;border-radius:12px;">
+        <h2 style="color:#ef4444;">MAARS Command - SMTP Test</h2>
+        <p>This is a test email from your MAARS Command platform.</p>
+        <p>If you're seeing this, your Gmail SMTP is configured correctly!</p>
+        <hr style="border-color:#333;"/>
+        <p style="color:#666;font-size:12px;">MAARS Global Corporation</p>
+    </div>
+    """
+    success = await send_email_notification(test_to, "MAARS Command - SMTP Test", html)
+    if success:
+        return {"success": True, "message": f"Test email sent to {test_to}"}
+    else:
+        raise HTTPException(500, "Failed to send test email. Check your credentials.")
+
+
 @app.on_event("startup")
 async def startup():
     global SUBSCRIPTION_PLANS, CUSTOM_AGENT_CREDIT_COST
