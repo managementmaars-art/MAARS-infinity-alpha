@@ -2319,11 +2319,12 @@ const IntegrationsTab = () => {
   };
 
   useEffect(() => {
-    fetch(`${API}/admin/integrations`, { headers }).then(r => r.json()).then(data => {
+    if (!token) return;
+    fetch(`${API}/admin/integrations`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()).then(data => {
       setIntegrations(data);
       setLoading(false);
     }).catch(() => setLoading(false));
-  }, []);
+  }, [token]);
 
   const handleSave = async () => {
     setSaving(true);
