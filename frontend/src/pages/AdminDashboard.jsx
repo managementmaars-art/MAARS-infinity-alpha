@@ -751,6 +751,77 @@ const AdminDashboard = () => {
         ))}
         {agents.length === 0 && <p className="text-zinc-500 text-center py-8">No agents found</p>}
       </div>
+
+      {/* Brain Editor Modal */}
+      {brainEdit && (
+        <Dialog open={!!brainEdit} onOpenChange={() => setBrainEdit(null)}>
+          <DialogContent className="bg-zinc-900 border-white/10 max-w-2xl max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-white font-['Outfit'] flex items-center gap-2"><Brain className="w-5 h-5 text-indigo-400" />Brain Editor — {brainEdit.name}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-2">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-zinc-400 text-xs">Name</Label>
+                  <Input value={brainEdit.name} onChange={e => setBrainEdit(p => ({...p, name: e.target.value}))} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid="brain-name" />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-zinc-400 text-xs">Role</Label>
+                  <Input value={brainEdit.role} onChange={e => setBrainEdit(p => ({...p, role: e.target.value}))} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid="brain-role" />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-zinc-400 text-xs">Description</Label>
+                <Input value={brainEdit.description} onChange={e => setBrainEdit(p => ({...p, description: e.target.value}))} placeholder="What this agent does in one line" className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid="brain-description" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-zinc-400 text-xs">Personality & Tone</Label>
+                <Textarea value={brainEdit.personality_tone} onChange={e => setBrainEdit(p => ({...p, personality_tone: e.target.value}))} placeholder="e.g. Professional but approachable. Uses data to back up claims. Avoids jargon unless explaining it." className="bg-zinc-800/50 border-white/10 text-sm min-h-[60px]" data-testid="brain-tone" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-zinc-400 text-xs">Expertise Areas</Label>
+                <Textarea value={brainEdit.expertise_areas} onChange={e => setBrainEdit(p => ({...p, expertise_areas: e.target.value}))} placeholder="e.g. Digital marketing, brand strategy, social media campaigns, content marketing, analytics" className="bg-zinc-800/50 border-white/10 text-sm min-h-[60px]" data-testid="brain-expertise" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-zinc-400 text-xs">Always Do (Do's)</Label>
+                  <Textarea value={brainEdit.dos} onChange={e => setBrainEdit(p => ({...p, dos: e.target.value}))} placeholder="e.g. Back up suggestions with data. Provide actionable steps. Consider ROI." className="bg-zinc-800/50 border-white/10 text-sm min-h-[80px]" data-testid="brain-dos" />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-zinc-400 text-xs">Never Do (Don'ts)</Label>
+                  <Textarea value={brainEdit.donts} onChange={e => setBrainEdit(p => ({...p, donts: e.target.value}))} placeholder="e.g. Don't promise guaranteed results. Don't suggest unethical practices. Don't ignore budget constraints." className="bg-zinc-800/50 border-white/10 text-sm min-h-[80px]" data-testid="brain-donts" />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-zinc-400 text-xs">Knowledge Base (Optional)</Label>
+                <Textarea value={brainEdit.knowledge_base} onChange={e => setBrainEdit(p => ({...p, knowledge_base: e.target.value}))} placeholder="Paste any specific knowledge, company info, brand guidelines, or reference material this agent should always have access to." className="bg-zinc-800/50 border-white/10 text-sm min-h-[80px]" data-testid="brain-knowledge" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-zinc-400 text-xs">Model Provider</Label>
+                  <select value={brainEdit.model_provider} onChange={e => setBrainEdit(p => ({...p, model_provider: e.target.value}))} className="w-full h-9 px-3 rounded-md bg-zinc-800/50 border border-white/10 text-white text-sm" data-testid="brain-provider">
+                    <option value="openai">OpenAI</option>
+                    <option value="anthropic">Anthropic</option>
+                    <option value="gemini">Google Gemini</option>
+                    <option value="xai">xAI (Grok)</option>
+                    <option value="deepseek">DeepSeek</option>
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-zinc-400 text-xs">Model Name</Label>
+                  <Input value={brainEdit.model_name} onChange={e => setBrainEdit(p => ({...p, model_name: e.target.value}))} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid="brain-model" />
+                </div>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <Button onClick={saveBrain} disabled={savingBrain} className="flex-1 bg-gradient-to-r from-indigo-500 to-violet-500" data-testid="save-brain-btn">
+                  {savingBrain ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Brain className="w-4 h-4 mr-2" />}Save Brain
+                </Button>
+                <Button variant="ghost" onClick={() => setBrainEdit(null)} className="text-zinc-400">Cancel</Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 
