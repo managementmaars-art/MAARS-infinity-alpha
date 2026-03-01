@@ -13,13 +13,14 @@ import {
   LayoutDashboard, ListTodo, Settings, LogOut, Menu, X,
   DollarSign, Activity, UserCheck, Plus, Trash2, ChevronDown, ChevronUp, Key,
   Plug, CheckCircle, XCircle, Loader2, ExternalLink, TestTube, Image, Film, FileText, File, Brain, Edit3,
-  BarChart3, Mail, ToggleLeft, ToggleRight, Thermometer, Hash
+  BarChart3, Mail, ToggleLeft, ToggleRight, Thermometer, Hash, Paintbrush
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
 import { BrandFooter } from "../components/BrandFooter";
 import AnalyticsTab from "./AnalyticsTab";
 import SmtpConfigTab from "./SmtpConfigTab";
+import BrandingTab from "./BrandingTab";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -202,6 +203,7 @@ const AdminDashboard = () => {
     { id: "apikeys", label: "API Keys & Integrations", icon: Key },
     { id: "payments", label: "Payment Setup", icon: CreditCard },
     { id: "smtp", label: "Email (SMTP)", icon: Mail },
+    { id: "branding", label: "Branding & Domain", icon: Paintbrush },
   ];
 
   const NavItem = ({ icon: Icon, label, to, active }) => (
@@ -1905,6 +1907,7 @@ const AdminDashboard = () => {
           {activeTab === "apikeys" && <><ApiKeysTab /><div className="mt-6"><IntegrationsTab /></div></>}
           {activeTab === "payments" && <PaymentSetupTab />}
           {activeTab === "smtp" && <SmtpConfigTab />}
+          {activeTab === "branding" && <BrandingTab />}
         </div>
       </div>
       <div className="lg:ml-64"><BrandFooter /></div>
