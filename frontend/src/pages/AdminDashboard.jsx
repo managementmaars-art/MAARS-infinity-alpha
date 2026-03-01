@@ -537,6 +537,44 @@ const AdminDashboard = () => {
 
   const [savingAgent, setSavingAgent] = useState(null);
   const [expandedAgent, setExpandedAgent] = useState(null);
+  const [brainEdit, setBrainEdit] = useState(null);
+  const [savingBrain, setSavingBrain] = useState(false);
+
+  const openBrainEditor = (agent) => {
+    setBrainEdit({
+      agent_id: agent.agent_id,
+      name: agent.name || "",
+      role: agent.role || "",
+      description: agent.description || "",
+      personality_tone: agent.personality_tone || "",
+      expertise_areas: agent.expertise_areas || "",
+      dos: agent.dos || "",
+      donts: agent.donts || "",
+      knowledge_base: agent.knowledge_base || "",
+      model_provider: agent.model_provider || "openai",
+      model_name: agent.model_name || "gpt-5.2"
+    });
+  };
+
+  const saveBrain = async () => {
+    if (!brainEdit) return;
+    setSavingBrain(true);
+    try {
+      const res = await fetch(`${API}/admin/agents/${brainEdit.agent_id}/brain`, {
+        method: "PUT", credentials: "include", headers,
+        body: JSON.stringify(brainEdit)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAgents(prev => prev.map(a => a.agent_id === brainEdit.agent_id ? { ...a, ...data.agent } : a));
+        toast.success("Brain updated!");
+        setBrainEdit(null);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        toast.error(err.detail || "Failed to save");
+      }
+    } catch { toast.error("Failed to save brain"); } finally { setSavingBrain(false); }
+  };
 
   const handleToggleCapability = async (agentId, field, currentValue) => {
     setSavingAgent(agentId);
