@@ -5330,6 +5330,76 @@ async def admin_activity_feed(limit: int = 30, admin: User = Depends(require_adm
     return events[:limit]
 
 
+# ============== BRANDING & WHITE-LABEL ==============
+
+@api_router.get("/admin/branding")
+async def get_branding(admin: User = Depends(require_admin)):
+    """Get current branding configuration."""
+    config = await db.platform_config.find_one({"config_type": "branding"}, {"_id": 0})
+    defaults = {
+        "config_type": "branding",
+        "platform_name": "MAARS Command",
+        "tagline": "AI-Powered Team Platform",
+        "logo_url": "",
+        "favicon_url": "",
+        "primary_color": "#ef4444",
+        "accent_color": "#f97316",
+        "custom_domain": "",
+        "custom_domain_status": "not_configured",
+        "footer_text": "MAARS Global Corporation",
+        "support_email": "",
+    }
+    if config:
+        defaults.update({k: v for k, v in config.items() if v is not None})
+    return defaults
+
+@api_router.post("/admin/branding")
+async def update_branding(request: Request, admin: User = Depends(require_admin)):
+    """Update branding and white-label settings."""
+    data = await request.json()
+    allowed_fields = {
+        "platform_name", "tagline", "logo_url", "favicon_url",
+        "primary_color", "accent_color", "custom_domain",
+        "footer_text", "support_email"
+    }
+    update = {k: v for k, v in data.items() if k in allowed_fields}
+    if not update:
+        raise HTTPException(400, "No valid fields to update")
+
+    # If custom domain changed, set status
+    if "custom_domain" in update:
+        domain = update["custom_domain"].strip()
+        update["custom_domain"] = domain
+        update["custom_domain_status"] = "pending_verification" if domain else "not_configured"
+        update["custom_domain_updated_at"] = datetime.now(timezone.utc).isoformat()
+
+    await db.platform_config.update_one(
+        {"config_type": "branding"},
+        {"$set": {**update, "config_type": "branding", "updated_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True
+    )
+    return await get_branding(admin)
+
+@api_router.get("/branding/public")
+async def get_public_branding():
+    """Public endpoint for branding (no auth) — used by frontend to apply customization."""
+    config = await db.platform_config.find_one({"config_type": "branding"}, {"_id": 0})
+    defaults = {
+        "platform_name": "MAARS Command",
+        "tagline": "AI-Powered Team Platform",
+        "logo_url": "",
+        "favicon_url": "",
+        "primary_color": "#ef4444",
+        "accent_color": "#f97316",
+        "footer_text": "MAARS Global Corporation",
+    }
+    if config:
+        for k in defaults:
+            if config.get(k):
+                defaults[k] = config[k]
+    return defaults
+
+
 @api_router.get("/admin/analytics/export")
 async def admin_analytics_export(format: str = "csv", admin: User = Depends(require_admin)):
     """Export analytics data as CSV."""
