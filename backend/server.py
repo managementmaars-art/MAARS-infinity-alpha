@@ -339,19 +339,10 @@ async def require_admin(current_user: User = Depends(get_current_user)) -> User:
 
 # ============== DEFAULT AGENTS (defined in config.py) ==============
 
+# ============== DEFAULT AGENTS (defined in config.py) ==============
+
 async def seed_default_agents():
-    {
-        "agent_id": "agent_secretary",
-        "name": "Nadia Kessler",
-        "description": "Your dedicated personal secretary handling appointments, calendars, to-do lists, reminders, and daily organization. Keeps your life running smoothly.",
-        "avatar": "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/43ae7e2a837703cb3a5da4fdd616bc12c825f9f0f15b7e9304e61a3dab0bd257.png",
-        "role": "Personal Secretary",
-        "system_prompt": "You are Nadia Kessler, the Personal Secretary AI at MAARS Command by MAARS Global Corporation. You are exceptionally organized, proactive, and detail-oriented. You manage calendars, schedule appointments, create and track to-do lists, set reminders, draft emails, prepare meeting agendas, and handle all administrative tasks. You anticipate needs before they arise and ensure nothing falls through the cracks. Help users organize their day, manage their time, prioritize tasks, and stay on top of all their commitments. Always confirm details and provide clear summaries.",
-        "model_provider": "openai",
-        "model_name": "gpt-5.2",
-        "is_custom": False,
-        "capabilities": ["Calendar Management", "To-Do Lists", "Appointment Scheduling", "Email Drafting", "Daily Planning"]
-    },
+    for agent_data in DEFAULT_AGENTS:
     {
         "agent_id": "agent_marketing",
         "name": "Zara Mitchell",
