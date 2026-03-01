@@ -4050,6 +4050,7 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
             "models": [
                 {"name": "Gemini 3 Flash", "input": "$0.075", "output": "$0.30"},
                 {"name": "Gemini 3 Pro", "input": "$1.25", "output": "$5.00"},
+                {"name": "Nano Banana 2 (3.1 Flash Image)", "input": "$0.02/img", "output": "1024x1024"},
             ],
             "unit": "per 1M tokens"
         },

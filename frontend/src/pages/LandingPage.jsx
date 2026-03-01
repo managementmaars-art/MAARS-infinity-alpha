@@ -319,6 +319,7 @@ const LandingPage = () => {
                 { name: "Command R", tag: "Economy", desc: "Cost-efficient summaries" },
               ]},
               { name: "AI Generation + Voice", color: "rose", models: [
+                { name: "Nano Banana 2", tag: "Image Gen", desc: "Gemini 3.1 Flash image generation" },
                 { name: "GPT Image 1", tag: "Image Gen", desc: "Generate images from text" },
                 { name: "DALL-E 3", tag: "Image Gen", desc: "Creative image generation" },
                 { name: "Sora 2", tag: "Video Gen", desc: "AI video from text prompts" },
