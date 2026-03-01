@@ -723,15 +723,26 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex items-center justify-between text-xs text-zinc-500">
                     <span>{agent.model_provider}/{agent.model_name}</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-7 text-xs"
-                      onClick={(e) => { e.stopPropagation(); handleDeleteAgent(agent.agent_id, agent.name); }}
-                      data-testid={`admin-delete-agent-${agent.agent_id}`}
-                    >
-                      <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 h-7 text-xs"
+                        onClick={(e) => { e.stopPropagation(); openBrainEditor(agent); }}
+                        data-testid={`admin-edit-brain-${agent.agent_id}`}
+                      >
+                        <Brain className="w-3.5 h-3.5 mr-1" /> Edit Brain
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-7 text-xs"
+                        onClick={(e) => { e.stopPropagation(); handleDeleteAgent(agent.agent_id, agent.name); }}
+                        data-testid={`admin-delete-agent-${agent.agent_id}`}
+                      >
+                        <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}
