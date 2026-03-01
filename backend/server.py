@@ -2562,7 +2562,6 @@ Rules:
     
     # Start background video generation if needed
     if video_generating:
-        import asyncio
         user_attachments = message_data.attachments or []
         user_attachment_files = message_data.attachment_files or []
         async def _bg_video_gen():
