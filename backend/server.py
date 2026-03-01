@@ -742,6 +742,34 @@ async def seed_default_agents():
                     {"$set": update_fields}
                 )
     logger.info("Default agents seeded")
+    
+    # Set default capability flags for agents that should have them
+    capability_defaults = {
+        "agent_graphics": {"can_generate_image": True, "can_generate_video": False, "can_generate_pdf": True, "can_generate_files": True},
+        "agent_video": {"can_generate_image": False, "can_generate_video": True, "can_generate_pdf": True, "can_generate_files": True},
+        "agent_socialmedia": {"can_generate_image": True, "can_generate_video": False, "can_generate_pdf": True, "can_generate_files": True},
+        "agent_contentwriter": {"can_generate_image": True, "can_generate_video": False, "can_generate_pdf": True, "can_generate_files": True},
+        "agent_webdesigner": {"can_generate_image": True, "can_generate_video": False, "can_generate_pdf": True, "can_generate_files": True},
+    }
+    for agent_id, caps in capability_defaults.items():
+        existing = await db.agents.find_one({"agent_id": agent_id})
+        if existing:
+            update = {}
+            for field, default_val in caps.items():
+                if field not in existing:
+                    update[field] = default_val
+            if update:
+                await db.agents.update_one({"agent_id": agent_id}, {"$set": update})
+    
+    # Ensure all agents have capability fields (default: PDF and Files only)
+    all_agents = await db.agents.find({}).to_list(50)
+    for agent in all_agents:
+        update = {}
+        for field in ["can_generate_image", "can_generate_video", "can_generate_pdf", "can_generate_files"]:
+            if field not in agent:
+                update[field] = field in ("can_generate_pdf", "can_generate_files")
+        if update:
+            await db.agents.update_one({"agent_id": agent["agent_id"]}, {"$set": update})
 
 # ============== CLARIFICATION INSTRUCTION ==============
 CLARIFICATION_INSTRUCTION = """
