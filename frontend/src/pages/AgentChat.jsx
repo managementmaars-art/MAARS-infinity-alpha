@@ -1362,6 +1362,7 @@ const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent,
             onClick={() => {
               setSelectedAgent(agent);
               navigate(`/chat/${agent.agent_id}`);
+              toast.success(`Switched to ${agent.name}`);
             }}
             className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
               selectedAgent?.agent_id === agent.agent_id
