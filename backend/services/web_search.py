@@ -14,16 +14,18 @@ logger = logging.getLogger(__name__)
 
 # Keywords/patterns that suggest the user needs web data
 WEB_TRIGGER_PATTERNS = [
-    r'\b(latest|current|today|recent|new|updated|2024|2025|2026)\b',
-    r'\b(price|rate|cost|stock|market|exchange)\b',
-    r'\b(news|happened|announced|released|launched)\b',
-    r'\b(what is|who is|where is|how to|how much|how many)\b',
-    r'\b(weather|forecast|score|result|standings)\b',
-    r'\b(law|regulation|policy|circular|act|amendment)\b',
-    r'\b(review|compare|comparison|vs|versus|best|top)\b',
-    r'\b(website|url|link|site|source)\b',
-    r'\b(find|search|look up|lookup|google|check)\b',
-    r'\b(tell me about|explain|describe|details about|info on)\b',
+    r'\b(latest|current|today|recent|new|updated|now|this year|this month)\b',
+    r'\b(202[3-9]|203[0-9])\b',
+    r'\b(price|rate|cost|stock|market|exchange|salary|wage)\b',
+    r'\b(news|happened|announced|released|launched|trending)\b',
+    r'\b(what is|what are|who is|who are|where is|how to|how much|how many|when is|when did)\b',
+    r'\b(weather|forecast|score|result|standings|schedule)\b',
+    r'\b(law|regulation|policy|circular|act|amendment|rule|guideline|deadline)\b',
+    r'\b(review|compare|comparison|vs|versus|best|top|ranking)\b',
+    r'\b(website|url|link|site|source|reference)\b',
+    r'\b(find|search|look up|lookup|google|check|verify)\b',
+    r'\b(tell me about|explain|describe|details about|info on|information about)\b',
+    r'\b(country|government|bank|company|organization|university)\b',
 ]
 
 
