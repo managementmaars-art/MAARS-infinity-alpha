@@ -17,6 +17,8 @@ import {
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
 import { BrandFooter } from "../components/BrandFooter";
+import AnalyticsTab from "./AnalyticsTab";
+import SmtpConfigTab from "./SmtpConfigTab";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
