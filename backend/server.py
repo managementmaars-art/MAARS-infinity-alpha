@@ -2419,10 +2419,11 @@ Rules:
                         {"$set": {"messages.$.video_generating": False, "messages.$.video_error": error_msg}}
                     )
             except Exception as ve:
-                logger.error(f"Background video gen failed: {ve}")
+                error_detail = str(ve)[:300]
+                logger.error(f"Background video gen failed: {error_detail}")
                 await db.chats.update_one(
                     {"chat_id": chat_id, "messages.message_id": assistant_msg["message_id"]},
-                    {"$set": {"messages.$.video_generating": False, "messages.$.video_error": str(ve)[:200]}}
+                    {"$set": {"messages.$.video_generating": False, "messages.$.video_error": f"Video generation error: {error_detail}"}}
                 )
         asyncio.create_task(_bg_video_gen())
     
