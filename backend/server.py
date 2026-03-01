@@ -2433,10 +2433,14 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
                 response_text = tool_result["content"]
                 execution_steps = tool_result.get("execution_steps")
             else:
+                # Get agent-level temperature and max_tokens settings
+                agent_temp = agent.get("temperature")
+                agent_max_tokens = agent.get("max_tokens")
                 response_text, model_provider, model_name = await call_llm_with_fallback(
                     api_keys, model_provider, model_name,
                     enhanced_agent_prompt, full_user_content,
-                    message_data.attachments, chat_id
+                    message_data.attachments, chat_id,
+                    temperature=agent_temp, max_tokens=agent_max_tokens
                 )
         
     except Exception as e:
