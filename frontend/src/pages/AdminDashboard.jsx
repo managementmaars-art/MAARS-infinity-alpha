@@ -1850,12 +1850,14 @@ const AdminDashboard = () => {
 
           {/* Tab Content */}
           {activeTab === "overview" && <OverviewTab />}
+          {activeTab === "analytics" && <AnalyticsTab />}
           {activeTab === "users" && <UsersTab />}
           {activeTab === "agents" && <AgentsTab />}
           {activeTab === "transactions" && <TransactionsTab />}
           {activeTab === "pricing" && <><PricingManagerTab /><div className="mt-6"><CustomPackagesTab /></div></>}
           {activeTab === "apikeys" && <><ApiKeysTab /><div className="mt-6"><IntegrationsTab /></div></>}
           {activeTab === "payments" && <PaymentSetupTab />}
+          {activeTab === "smtp" && <SmtpConfigTab />}
         </div>
       </div>
       <div className="lg:ml-64"><BrandFooter /></div>
