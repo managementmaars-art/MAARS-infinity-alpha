@@ -120,7 +120,7 @@ const CommanderGroupChat = ({ msg, msgIndex, generatedFiles, generateFile, gener
               <ListTodo className="w-3 h-3" />
               {agent.task_title || agent.task}
             </div>
-            <p className="text-zinc-200 text-sm whitespace-pre-wrap leading-relaxed">{agent.response}</p>
+            <MarkdownRenderer content={agent.response} />
           </div>
         </div>
       ))}
