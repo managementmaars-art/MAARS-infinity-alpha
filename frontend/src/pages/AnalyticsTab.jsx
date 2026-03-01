@@ -462,6 +462,53 @@ const AnalyticsTab = () => {
           </ResponsiveContainer>
         </div>
       </ChartCard>
+
+      {/* Agent Performance Scoring */}
+      <ChartCard title="Agent Performance Scoring" icon={Star} className="col-span-full">
+        {performance.length > 0 ? (
+          <div className="space-y-2">
+            {performance.map((agent, i) => {
+              const sat = agent.satisfaction_rate;
+              const barColor = sat === null ? "bg-zinc-600" : sat >= 80 ? "bg-emerald-500" : sat >= 50 ? "bg-amber-500" : "bg-red-500";
+              return (
+                <div key={agent.agent_id} className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/[0.07] transition-colors" data-testid={`perf-agent-${i}`}>
+                  <img src={agent.avatar} alt="" className="w-9 h-9 rounded-lg object-cover shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm text-white font-medium truncate">{agent.name}</p>
+                      <span className="text-[10px] text-zinc-500">{agent.role}</span>
+                    </div>
+                    <div className="flex items-center gap-3 mt-1">
+                      <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden max-w-[200px]">
+                        <div className={`h-full rounded-full ${barColor}`} style={{ width: `${sat ?? 0}%` }} />
+                      </div>
+                      <div className="flex items-center gap-2 text-[11px]">
+                        <span className="text-zinc-500">{agent.total_messages} msgs</span>
+                        {agent.total_feedback > 0 && (
+                          <>
+                            <span className="text-emerald-400 flex items-center gap-0.5"><ThumbsUp className="w-3 h-3" />{agent.thumbs_up}</span>
+                            <span className="text-red-400 flex items-center gap-0.5"><ThumbsDown className="w-3 h-3" />{agent.thumbs_down}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0 w-16">
+                    {sat !== null ? (
+                      <p className={`text-lg font-bold ${sat >= 80 ? "text-emerald-400" : sat >= 50 ? "text-amber-400" : "text-red-400"}`}>{sat}%</p>
+                    ) : (
+                      <p className="text-xs text-zinc-600">No ratings</p>
+                    )}
+                    {agent.feedback_rate > 0 && <p className="text-[10px] text-zinc-600">{agent.feedback_rate}% rated</p>}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-zinc-500 text-sm py-8 text-center">No performance data yet. Users will rate responses with thumbs up/down.</p>
+        )}
+      </ChartCard>
     </div>
   );
 };
