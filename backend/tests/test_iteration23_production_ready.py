@@ -42,11 +42,11 @@ class TestHealthAndAuth:
         })
         assert response.status_code == 200, f"Login failed: {response.text}"
         data = response.json()
-        assert "access_token" in data
+        assert "token" in data
         assert "user" in data
         assert data["user"]["email"] == ADMIN_EMAIL
         print(f"Admin login successful: {data['user']['name']}")
-        return data["access_token"]
+        return data["token"]
 
 
 @pytest.fixture
@@ -58,7 +58,7 @@ def admin_token():
     })
     if response.status_code != 200:
         pytest.skip("Admin login failed - skipping authenticated tests")
-    return response.json()["access_token"]
+    return response.json()["token"]
 
 
 @pytest.fixture
