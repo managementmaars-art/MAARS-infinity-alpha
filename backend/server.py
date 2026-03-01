@@ -2248,6 +2248,7 @@ Rules:
         "agent_id": agent.get("agent_id"),
         "agent_name": agent.get("name"),
         "agent_avatar": agent.get("avatar"),
+        "web_searched": bool(web_search_context),
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     if delegation_data:
