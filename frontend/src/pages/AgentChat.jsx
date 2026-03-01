@@ -502,10 +502,15 @@ const AgentChat = () => {
 
       if (response.ok) {
         const data = await response.json();
+        // Attach credits_deducted to assistant message for display
+        const assistantMsg = data.assistant_message;
+        if (data.credits_deducted) {
+          assistantMsg.credits_deducted = data.credits_deducted;
+        }
         setMessages(prev => [
           ...prev.slice(0, -1),
           data.user_message,
-          data.assistant_message
+          assistantMsg
         ]);
         // Auto-store generated image if present
         if (data.generated_image && data.assistant_message?.message_id) {
