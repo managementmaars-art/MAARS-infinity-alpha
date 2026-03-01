@@ -10,6 +10,7 @@ import { useAuth, API } from "../App";
 import { toast } from "sonner";
 import { BrandFooter } from "../components/BrandFooter";
 import OnboardingFlow from "./OnboardingFlow";
+import NotificationCenter from "../components/NotificationCenter";
 
 const Dashboard = () => {
   const navigate = useNavigate();
