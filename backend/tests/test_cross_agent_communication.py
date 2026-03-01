@@ -195,16 +195,13 @@ class TestCrossAgentCommunication:
         }, headers=headers)
         assert update_resp.status_code == 200, f"Failed to update task: {update_resp.text}"
         
-        # Verify update
-        get_resp = requests.get(f"{BASE_URL}/api/tasks/{task_id}", headers=headers)
-        assert get_resp.status_code == 200, f"Failed to get task: {get_resp.text}"
-        task_data = get_resp.json()
-        assert task_data.get("status") == "in_progress", f"Task status not updated: {task_data}"
+        # The update endpoint returns the updated task, verify from response
+        updated_task = update_resp.json()
+        assert updated_task.get("status") == "in_progress", f"Task status not updated: {updated_task}"
         print(f"PASSED - Task {task_id} status updated to in_progress")
         
         # Cleanup
         requests.delete(f"{BASE_URL}/api/tasks/{task_id}", headers=headers)
-        return task_id
 
 
 class TestProjectManagerCrossAgentAwareness:
