@@ -1,0 +1,122 @@
+{
+  "summary": "Iteration 29: Testing Agent Performance Scoring, Message Feedback, and Analytics Export. All 15 backend tests PASSED. All frontend UI elements verified. Fixed a bug in Message Pydantic model where feedback fields were missing.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Analytics Tab",
+        "issues": ["Chart console warnings: 'The width(-1) and height(-1) of chart should be greater than 0' - cosmetic/render timing issue"]
+      }
+    ]
+  },
+  "test_results": {
+    "backend_tests": {
+      "TestRegressionAuthLogin": {
+        "test_login_with_valid_admin_credentials": "PASSED"
+      },
+      "TestRegressionPlans": {
+        "test_plans_returns_four_plans": "PASSED - Returns free, starter, pro, business"
+      },
+      "TestRegressionAgents": {
+        "test_agents_returns_list": "PASSED - Returns list of agents"
+      },
+      "TestRegressionAnalytics": {
+        "test_admin_analytics_returns_kpis": "PASSED - KPIs include total_users, total_chats, total_revenue, mrr"
+      },
+      "TestMessageFeedback": {
+        "test_feedback_up_saves_correctly": "PASSED - Feedback 'up' persists in database",
+        "test_feedback_down_saves_correctly": "PASSED - Feedback 'down' persists in database",
+        "test_feedback_null_removes_feedback": "PASSED - Null feedback removes existing feedback",
+        "test_feedback_invalid_value_rejected": "PASSED - Returns 400 for invalid feedback values"
+      },
+      "TestAgentPerformance": {
+        "test_agent_performance_requires_admin": "PASSED - Returns 401 without auth",
+        "test_agent_performance_returns_metrics": "PASSED - Returns array with agent metrics",
+        "test_agent_performance_structure_complete": "PASSED - All fields present: agent_id, name, avatar, role, total_messages, thumbs_up, thumbs_down, total_feedback, satisfaction_rate, feedback_rate"
+      },
+      "TestAnalyticsExport": {
+        "test_export_returns_csv_content_type": "PASSED - Returns text/csv",
+        "test_export_has_content_disposition": "PASSED - Has attachment header with maars_analytics_*.csv",
+        "test_export_requires_admin": "PASSED - Returns 401 without auth"
+      },
+      "TestFeedbackWithPerformance": {
+        "test_submit_feedback_and_verify_in_performance": "PASSED - Feedback reflected in agent-performance endpoint"
+      }
+    },
+    "frontend_tests": {
+      "feedback_buttons": "PASSED - Found thumbs up/down buttons (data-testid='feedback-up-{i}', 'feedback-down-{i}') on assistant messages",
+      "feedback_click": "PASSED - Clicking thumbs up button works correctly",
+      "analytics_tab": "PASSED - Analytics tab loads with charts and KPIs",
+      "export_csv_button": "PASSED - Export CSV button (data-testid='export-csv-btn') found and visible",
+      "agent_performance_section": "PASSED - 'Agent Performance Scoring' section with 21 agents displayed (data-testid='perf-agent-{i}')",
+      "login_regression": "PASSED - Admin login works correctly"
+    }
+  },
+  "bugs_fixed": {
+    "message_feedback_not_returning": {
+      "issue": "Message Pydantic model in /app/backend/models/schemas.py was missing feedback, feedback_at, feedback_by fields",
+      "root_cause": "ConfigDict(extra='ignore') was silently dropping fields not explicitly defined in the model",
+      "fix": "Added feedback: Optional[str], feedback_at: Optional[str], feedback_by: Optional[str] fields to Message model",
+      "file_changed": "/app/backend/models/schemas.py"
+    }
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_feedback_performance_iteration29.py",
+    "/app/test_reports/pytest/iteration29_tests.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Backend models extraction to schemas.py was incomplete - Message model was missing new feedback fields",
+    "The fix ensures feedback data flows through properly: POST saves to MongoDB, GET returns via Pydantic model"
+  ],
+  "updated_files": [
+    "/app/backend/models/schemas.py",
+    "/app/backend/tests/test_feedback_performance_iteration29.py"
+  ],
+  "success_rate": {
+    "backend": "100% (15/15 tests passed)",
+    "frontend": "100% (all elements verified)"
+  },
+  "test_credentials": {
+    "admin_email": "management.maars@marsgc.net",
+    "admin_password": "MaarsAdmin2024!"
+  },
+  "seed_data_creation": "Used existing data - 14 users, 36 chats, 21 agents",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Agent Performance Scoring feature fully working. Feedback buttons (thumbs up/down) appear on all assistant messages. Performance metrics show on Analytics tab with satisfaction_rate calculation. CSV export includes USERS, AGENT USAGE, PAYMENTS, SUMMARY sections. Fixed bug where Message model was missing feedback fields - now properly included.",
+  "mocked_apis": {
+    "email_sending": "MOCKED - Email notification sending logs to console when SMTP not configured"
+  },
+  "features_verified": {
+    "message_feedback": {
+      "endpoint": "POST /api/chats/{chat_id}/messages/{message_id}/feedback",
+      "body": "{feedback: 'up'|'down'|null}",
+      "ui_elements": ["feedback-up-{i}", "feedback-down-{i}"],
+      "fields_stored": ["feedback", "feedback_at", "feedback_by"]
+    },
+    "agent_performance": {
+      "endpoint": "GET /api/admin/agent-performance",
+      "requires_admin": true,
+      "returns": "Array of {agent_id, name, avatar, role, total_messages, thumbs_up, thumbs_down, total_feedback, satisfaction_rate, feedback_rate}",
+      "ui_element": "perf-agent-{i} entries in Analytics tab"
+    },
+    "analytics_export": {
+      "endpoint": "GET /api/admin/analytics/export?format=csv",
+      "button_testid": "export-csv-btn",
+      "content_type": "text/csv",
+      "sections": ["USERS", "AGENT USAGE", "PAYMENTS", "SUMMARY"]
+    },
+    "regression_checks": {
+      "auth_login": "Working - admin can login",
+      "plans": "Working - returns 4 plans (free, starter, pro, business)",
+      "agents": "Working - returns agent list",
+      "analytics": "Working - returns KPIs"
+    }
+  }
+}
