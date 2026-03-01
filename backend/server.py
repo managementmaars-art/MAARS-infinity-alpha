@@ -5545,6 +5545,84 @@ async def admin_test_smtp(request: Request, admin: User = Depends(require_admin)
         raise HTTPException(500, "Failed to send test email. Check your credentials.")
 
 
+# ============== REAL-TIME ACTIVITY FEED ==============
+
+@api_router.get("/admin/activity-feed")
+async def admin_activity_feed(limit: int = 30, admin: User = Depends(require_admin)):
+    """Get recent platform activity events for the live feed."""
+    events = []
+
+    # Recent signups
+    recent_users = await db.users.find(
+        {}, {"_id": 0, "user_id": 1, "name": 1, "email": 1, "created_at": 1}
+    ).sort("created_at", -1).to_list(limit)
+    for u in recent_users:
+        events.append({
+            "type": "signup",
+            "icon": "user-plus",
+            "title": f"New user signed up",
+            "detail": u.get("name") or u.get("email", "Unknown"),
+            "timestamp": u.get("created_at", ""),
+        })
+
+    # Recent payments
+    recent_payments = await db.payment_transactions.find(
+        {"payment_status": "paid"}, {"_id": 0, "email": 1, "amount": 1, "currency": 1, "type": 1, "created_at": 1}
+    ).sort("created_at", -1).to_list(limit)
+    for p in recent_payments:
+        curr = "$" if p.get("currency", "usd") == "usd" else "৳"
+        events.append({
+            "type": "payment",
+            "icon": "dollar-sign",
+            "title": f"Payment received: {curr}{p.get('amount', 0):.2f}",
+            "detail": f"{p.get('email', 'Unknown')} — {p.get('type', 'subscription')}",
+            "timestamp": p.get("created_at", ""),
+        })
+
+    # Recent chats created
+    recent_chats = await db.chats.find(
+        {}, {"_id": 0, "chat_id": 1, "user_id": 1, "agent_id": 1, "title": 1, "created_at": 1}
+    ).sort("created_at", -1).to_list(limit)
+    agent_map = {}
+    all_agents = await db.agents.find({}, {"_id": 0, "agent_id": 1, "name": 1}).to_list(200)
+    for a in all_agents:
+        agent_map[a["agent_id"]] = a.get("name", a["agent_id"])
+    user_map = {}
+    user_ids = list(set(c.get("user_id") for c in recent_chats if c.get("user_id")))
+    if user_ids:
+        user_docs = await db.users.find({"user_id": {"$in": user_ids}}, {"_id": 0, "user_id": 1, "name": 1}).to_list(500)
+        for ud in user_docs:
+            user_map[ud["user_id"]] = ud.get("name", "Unknown")
+    for c in recent_chats:
+        agent_name = agent_map.get(c.get("agent_id"), "Unknown Agent")
+        user_name = user_map.get(c.get("user_id"), "Unknown User")
+        events.append({
+            "type": "chat",
+            "icon": "message-square",
+            "title": f"Chat started with {agent_name}",
+            "detail": user_name,
+            "timestamp": c.get("created_at", ""),
+        })
+
+    # Recent team creations
+    recent_teams = await db.teams.find(
+        {}, {"_id": 0, "name": 1, "created_at": 1}
+    ).sort("created_at", -1).to_list(10)
+    for t in recent_teams:
+        events.append({
+            "type": "team",
+            "icon": "users",
+            "title": f"Team created: {t.get('name', 'Unnamed')}",
+            "detail": "",
+            "timestamp": t.get("created_at", ""),
+        })
+
+    # Sort all events by timestamp descending
+    events.sort(key=lambda e: e.get("timestamp", ""), reverse=True)
+
+    return events[:limit]
+
+
 @app.on_event("startup")
 async def startup():
     global SUBSCRIPTION_PLANS, CUSTOM_AGENT_CREDIT_COST
