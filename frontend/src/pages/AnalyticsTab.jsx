@@ -84,9 +84,7 @@ const AnalyticsTab = () => {
 
   const fetchFeed = async () => {
     try {
-      const res = await fetch(`${API}/admin/activity-feed?limit=20`, {
-        credentials: "include",
-        headers: { Authorization: `Bearer ${token}` }
+      const res = await fetch(`${API}/admin/activity-feed?limit=20`, { headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
         const newFeed = await res.json();
@@ -98,9 +96,7 @@ const AnalyticsTab = () => {
 
   const fetchPerformance = async () => {
     try {
-      const res = await fetch(`${API}/admin/agent-performance`, {
-        credentials: "include",
-        headers: { Authorization: `Bearer ${token}` }
+      const res = await fetch(`${API}/admin/agent-performance`, { headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) setPerformance(await res.json());
     } catch {}
@@ -109,9 +105,7 @@ const AnalyticsTab = () => {
   const fetchAnalytics = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API}/admin/analytics`, {
-        credentials: "include",
-        headers: { Authorization: `Bearer ${token}` }
+      const res = await fetch(`${API}/admin/analytics`, { headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
         setData(await res.json());
@@ -127,9 +121,7 @@ const AnalyticsTab = () => {
 
   const handleExportCSV = async () => {
     try {
-      const res = await fetch(`${API}/admin/analytics/export?format=csv`, {
-        credentials: "include",
-        headers: { Authorization: `Bearer ${token}` }
+      const res = await fetch(`${API}/admin/analytics/export?format=csv`, { headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
         const blob = await res.blob();

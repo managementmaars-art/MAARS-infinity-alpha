@@ -49,9 +49,7 @@ const InsightsPage = () => {
   const fetchInsights = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API}/user/insights`, {
-        credentials: "include",
-        headers: { Authorization: `Bearer ${token}` }
+      const res = await fetch(`${API}/user/insights`, { headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) setData(await res.json());
       else toast.error("Failed to load insights");

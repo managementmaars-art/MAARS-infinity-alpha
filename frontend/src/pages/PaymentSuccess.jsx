@@ -27,9 +27,7 @@ const PaymentSuccess = () => {
 
   const verifyPayment = async () => {
     try {
-      const response = await fetch(`${API}/checkout/status/${sessionId}`, {
-        credentials: "include",
-        headers
+      const response = await fetch(`${API}/checkout/status/${sessionId}`, { headers
       });
 
       if (response.ok) {

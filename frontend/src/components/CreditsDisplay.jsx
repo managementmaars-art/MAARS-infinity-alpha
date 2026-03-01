@@ -18,9 +18,7 @@ export const CreditsDisplay = () => {
   const fetchSub = useCallback(async () => {
     if (!token) return;
     try {
-      const res = await fetch(`${API}/subscription`, {
-        credentials: "include",
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await fetch(`${API}/subscription`, { headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) setSub(await res.json());
     } catch (e) {
@@ -75,9 +73,7 @@ export const CreditsDisplay = () => {
     setBuying(true);
     try {
       const res = await fetch(`${API}/checkout`, {
-        method: "POST",
-        credentials: "include",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        method: "POST", headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "credits",
           package_id: pkg.id,
@@ -108,9 +104,7 @@ export const CreditsDisplay = () => {
     setBuying(true);
     try {
       const res = await fetch(`${API}/checkout`, {
-        method: "POST",
-        credentials: "include",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        method: "POST", headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "credits",
           package_id: `custom_${Math.round(amount * 5)}`,

@@ -9,8 +9,7 @@ import { Badge } from "../components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { ScrollArea } from "../components/ui/scroll-area";
-import { 
-  Bot, Plus, Play, Trash2, CheckCircle, Clock, AlertCircle,
+import { Bot, Plus, Play, Trash2, CheckCircle, Clock, AlertCircle,
   LayoutDashboard, Users, MessageSquare, ListTodo, Settings, LogOut, Menu, X,
   Shield
 } from "lucide-react";
@@ -44,8 +43,8 @@ const Tasks = () => {
   const fetchData = async () => {
     try {
       const [tasksRes, agentsRes] = await Promise.all([
-        fetch(`${API}/tasks`, { credentials: "include", headers }).catch(() => null),
-        fetch(`${API}/agents`, { credentials: "include", headers }).catch(() => null)
+        fetch(`${API}/tasks`, { headers }).catch(() => null),
+        fetch(`${API}/agents`, { headers }).catch(() => null)
       ]);
 
       if (tasksRes?.ok) setTasks(await tasksRes.json());
@@ -68,9 +67,7 @@ const Tasks = () => {
     try {
       const response = await fetch(`${API}/tasks`, {
         method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(newTask)
+        headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify(newTask)
       });
 
       if (response.ok) {
@@ -92,9 +89,7 @@ const Tasks = () => {
     
     try {
       const response = await fetch(`${API}/tasks/${taskId}/execute`, {
-        method: "POST",
-        credentials: "include",
-        headers
+        method: "POST", headers
       });
 
       if (response.ok) {
@@ -118,9 +113,7 @@ const Tasks = () => {
   const deleteTask = async (taskId) => {
     try {
       const response = await fetch(`${API}/tasks/${taskId}`, {
-        method: "DELETE",
-        credentials: "include",
-        headers
+        method: "DELETE", headers
       });
 
       if (response.ok) {

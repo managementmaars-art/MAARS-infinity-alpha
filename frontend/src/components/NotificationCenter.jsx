@@ -59,9 +59,7 @@ const NotificationCenter = () => {
 
   const fetchNotifications = async () => {
     try {
-      const res = await fetch(`${API}/notifications`, {
-        credentials: "include",
-        headers: { Authorization: `Bearer ${token}` }
+      const res = await fetch(`${API}/notifications`, { headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
         const data = await res.json();
@@ -76,8 +74,7 @@ const NotificationCenter = () => {
     setUnread(prev => Math.max(0, prev - 1));
     try {
       await fetch(`${API}/notifications/${id}/read`, {
-        method: "POST", credentials: "include",
-        headers: { Authorization: `Bearer ${token}` }
+        method: "POST", headers: { Authorization: `Bearer ${token}` }
       });
     } catch {}
   };
@@ -87,8 +84,7 @@ const NotificationCenter = () => {
     setUnread(0);
     try {
       await fetch(`${API}/notifications/read-all`, {
-        method: "POST", credentials: "include",
-        headers: { Authorization: `Bearer ${token}` }
+        method: "POST", headers: { Authorization: `Bearer ${token}` }
       });
     } catch {}
   };
@@ -97,8 +93,7 @@ const NotificationCenter = () => {
     setNotifications(prev => prev.filter(n => !n.read));
     try {
       await fetch(`${API}/notifications/clear`, {
-        method: "DELETE", credentials: "include",
-        headers: { Authorization: `Bearer ${token}` }
+        method: "DELETE", headers: { Authorization: `Bearer ${token}` }
       });
     } catch {}
   };

@@ -38,7 +38,7 @@ const CreateAgent = () => {
 
   const fetchCreateInfo = async () => {
     try {
-      const res = await fetch(`${API}/agents/create/info`, { credentials: "include", headers });
+      const res = await fetch(`${API}/agents/create/info`, { headers });
       if (res.ok) setCreateInfo(await res.json());
     } catch {
       // Silently fail
@@ -119,9 +119,7 @@ const CreateAgent = () => {
     try {
       const response = await fetch(`${API}/agents`, {
         method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(formData)
+        headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify(formData)
       });
 
       if (response.ok) {

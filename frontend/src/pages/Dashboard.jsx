@@ -35,9 +35,9 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       const [agentsRes, chatsRes, statsRes] = await Promise.all([
-        fetch(`${API}/agents`, { credentials: "include", headers }).catch(() => null),
-        fetch(`${API}/chats`, { credentials: "include", headers }).catch(() => null),
-        fetch(`${API}/stats`, { credentials: "include", headers }).catch(() => null)
+        fetch(`${API}/agents`, { headers }).catch(() => null),
+        fetch(`${API}/chats`, { headers }).catch(() => null),
+        fetch(`${API}/stats`, { headers }).catch(() => null)
       ]);
 
       if (agentsRes?.ok) setAgents(await agentsRes.json());
@@ -137,7 +137,7 @@ const Dashboard = () => {
 
   const handleDeleteChat = async (chatId) => {
     try {
-      const res = await fetch(`${API}/chats/${chatId}`, { method: "DELETE", credentials: "include", headers: { Authorization: `Bearer ${token}` } });
+      const res = await fetch(`${API}/chats/${chatId}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
       if (res.ok) {
         setRecentChats(prev => prev.filter(c => c.chat_id !== chatId));
         toast.success("Chat deleted");

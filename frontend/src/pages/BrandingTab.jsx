@@ -30,7 +30,7 @@ const BrandingTab = () => {
   const fetchBranding = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API}/admin/branding`, { credentials: "include", headers: authHeaders });
+      const res = await fetch(`${API}/admin/branding`, { headers: authHeaders });
       if (res.ok) setConfig(await res.json());
     } catch {}
     setLoading(false);
@@ -41,7 +41,7 @@ const BrandingTab = () => {
     try {
       const { config_type, custom_domain_status, custom_domain_updated_at, custom_domain_verified_at, updated_at, ...payload } = config;
       const res = await fetch(`${API}/admin/branding`, {
-        method: "POST", credentials: "include", headers,
+        method: "POST", headers,
         body: JSON.stringify(payload)
       });
       if (res.ok) {
@@ -63,7 +63,7 @@ const BrandingTab = () => {
       const formData = new FormData();
       formData.append("file", file);
       const res = await fetch(`${API}/admin/branding/upload-logo`, {
-        method: "POST", credentials: "include", headers: authHeaders, body: formData,
+        method: "POST", headers: authHeaders, body: formData,
       });
       if (res.ok) {
         const data = await res.json();
@@ -82,7 +82,7 @@ const BrandingTab = () => {
     setVerifying(true);
     try {
       const res = await fetch(`${API}/admin/branding/verify-domain`, {
-        method: "POST", credentials: "include", headers,
+        method: "POST", headers,
       });
       if (res.ok) {
         const data = await res.json();

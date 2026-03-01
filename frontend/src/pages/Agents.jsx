@@ -3,8 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
-import { 
-  Bot, Plus, MessageSquare, Trash2, ArrowLeft,
+import { Bot, Plus, MessageSquare, Trash2, ArrowLeft,
   LayoutDashboard, Users, ListTodo, Settings, LogOut, Menu, X, Sparkles,
   Search, Calculator, ClipboardList, BarChart3, Wrench,
   Mail, MessageCircle, Phone, Github, Table, Image, Calendar, Send
@@ -28,9 +27,7 @@ const Agents = () => {
 
   const fetchAgents = async () => {
     try {
-      const response = await fetch(`${API}/agents`, {
-        credentials: "include",
-        headers
+      const response = await fetch(`${API}/agents`, { headers
       });
       if (response.ok) {
         setAgents(await response.json());
@@ -45,9 +42,7 @@ const Agents = () => {
   const deleteAgent = async (agentId) => {
     try {
       const response = await fetch(`${API}/agents/${agentId}`, {
-        method: "DELETE",
-        credentials: "include",
-        headers
+        method: "DELETE", headers
       });
 
       if (response.ok) {

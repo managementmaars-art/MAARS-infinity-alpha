@@ -4,8 +4,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { ScrollArea } from "../components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { 
-  Bot, Send, Plus, ArrowLeft, MessageSquare, Trash2,
+import { Bot, Send, Plus, ArrowLeft, MessageSquare, Trash2,
   LayoutDashboard, Users, ListTodo, Settings, LogOut, Menu, X,
   Paperclip, Image, FileText, Sparkles, Mic, MicOff, Loader2,
   Download, Film, FileSpreadsheet, File, Volume2, VolumeX,
@@ -278,7 +277,7 @@ const AgentChat = () => {
     setTtsLoading(msgId);
     try {
       const res = await fetch(`${API}/tts/generate`, {
-        method: "POST", credentials: "include", headers: { ...headers, "Content-Type": "application/json" },
+        method: "POST", headers: { ...headers, "Content-Type": "application/json" },
         body: JSON.stringify({ text: text.substring(0, 4000), voice: "nova" })
       });
       if (!res.ok) { const e = await res.json(); toast.error(e.detail || "TTS failed"); return; }
@@ -306,8 +305,7 @@ const AgentChat = () => {
     setFeedbackState(prev => ({ ...prev, [messageId]: newFeedback }));
     try {
       await fetch(`${API}/chats/${chatId}/messages/${messageId}/feedback`, {
-        method: "POST", credentials: "include",
-        headers: { ...headers, "Content-Type": "application/json" },
+        method: "POST", headers: { ...headers, "Content-Type": "application/json" },
         body: JSON.stringify({ feedback: newFeedback })
       });
     } catch {}
@@ -341,7 +339,7 @@ const AgentChat = () => {
     
     const interval = setInterval(async () => {
       try {
-        const res = await fetch(`${API}/chats/${activeChatId}`, { credentials: "include", headers });
+        const res = await fetch(`${API}/chats/${activeChatId}`, { headers });
         if (res.ok) {
           const chat = await res.json();
           const updated = chat.messages || [];
@@ -370,7 +368,7 @@ const AgentChat = () => {
     
     const interval = setInterval(async () => {
       try {
-        const res = await fetch(`${API}/chats/${activeChatId}`, { credentials: "include", headers });
+        const res = await fetch(`${API}/chats/${activeChatId}`, { headers });
         if (res.ok) {
           const chat = await res.json();
           const updated = chat.messages || [];
@@ -390,8 +388,8 @@ const AgentChat = () => {
   const fetchInitialData = async () => {
     try {
       const [agentsRes, chatsRes] = await Promise.all([
-        fetch(`${API}/agents`, { credentials: "include", headers }),
-        fetch(`${API}/chats`, { credentials: "include", headers })
+        fetch(`${API}/agents`, { headers }),
+        fetch(`${API}/chats`, { headers })
       ]);
 
       if (agentsRes.ok) {
@@ -411,9 +409,7 @@ const AgentChat = () => {
 
   const loadChat = async (chatId) => {
     try {
-      const response = await fetch(`${API}/chats/${chatId}`, {
-        credentials: "include",
-        headers
+      const response = await fetch(`${API}/chats/${chatId}`, { headers
       });
       if (response.ok) {
         const chat = await response.json();
@@ -434,9 +430,7 @@ const AgentChat = () => {
     try {
       const response = await fetch(`${API}/chats`, {
         method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ agent_id: selectedAgent.agent_id })
+        headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify({ agent_id: selectedAgent.agent_id })
       });
 
       if (response.ok) {
@@ -461,9 +455,7 @@ const AgentChat = () => {
       try {
         const response = await fetch(`${API}/chats`, {
           method: "POST",
-          headers: { ...headers, "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ agent_id: selectedAgent.agent_id })
+          headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify({ agent_id: selectedAgent.agent_id })
         });
         if (response.ok) {
           const chat = await response.json();
@@ -483,8 +475,7 @@ const AgentChat = () => {
     setSending(true);
     const [provider, model] = selectedModel.split("/");
     const isAuto = provider === "auto";
-    const userMessage = { 
-      role: "user", 
+    const userMessage = { role: "user", 
       content: input, 
       message_id: `temp_${Date.now()}`,
       attachments: attachments.map(a => a.preview),
@@ -500,10 +491,7 @@ const AgentChat = () => {
     try {
       const response = await fetch(`${API}/chats/${chatId}/messages`, {
         method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ 
-          content: userMessage.content,
+        headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify({ content: userMessage.content,
           model_provider: isAuto ? "auto" : provider,
           model_name: isAuto ? "auto" : model,
           attachments: userMessage.attachments,
@@ -568,9 +556,7 @@ const AgentChat = () => {
 
         const response = await fetch(`${API}/upload`, {
           method: "POST",
-          headers: headers,
-          credentials: "include",
-          body: formData
+          headers: headers, body: formData
         });
 
         if (response.ok) {
@@ -638,9 +624,7 @@ const AgentChat = () => {
       
       const response = await fetch(`${API}/audio/speech-to-text`, {
         method: "POST",
-        headers: { ...headers },
-        credentials: "include",
-        body: formData
+        headers: { ...headers }, body: formData
       });
       
       if (response.ok) {
@@ -683,9 +667,7 @@ const AgentChat = () => {
       
       const response = await fetch(endpoint, {
         method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(body)
+        headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify(body)
       });
       
       if (response.ok) {
@@ -756,9 +738,7 @@ const AgentChat = () => {
   const deleteChat = async (chatId) => {
     try {
       const response = await fetch(`${API}/chats/${chatId}`, {
-        method: "DELETE",
-        credentials: "include",
-        headers
+        method: "DELETE", headers
       });
 
       if (response.ok) {
@@ -777,7 +757,7 @@ const AgentChat = () => {
   const shareChat = async () => {
     if (!currentChat) return;
     try {
-      const res = await fetch(`${API}/chats/${currentChat.chat_id}/share`, { method: "POST", credentials: "include", headers });
+      const res = await fetch(`${API}/chats/${currentChat.chat_id}/share`, { method: "POST", headers });
       if (res.ok) {
         const data = await res.json();
         toast.success(data.shared ? "Chat shared with team" : "Chat unshared from team");
@@ -1327,8 +1307,7 @@ const AgentChat = () => {
 };
 
 // Sidebar Content Component
-const SidebarContent = ({ 
-  agents, chats, selectedAgent, setSelectedAgent, 
+const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent, 
   currentChat, loadChat, deleteChat, startNewChat, navigate 
 }) => (
   <div className="flex-1 flex flex-col overflow-hidden">

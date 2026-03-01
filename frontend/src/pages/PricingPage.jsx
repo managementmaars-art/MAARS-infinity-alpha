@@ -5,8 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Badge } from "../components/ui/badge";
 import { Switch } from "../components/ui/switch";
 import { Label } from "../components/ui/label";
-import { 
-  Bot, Check, Sparkles, Zap, Crown, Building, CreditCard,
+import { Bot, Check, Sparkles, Zap, Crown, Building, CreditCard,
   ArrowLeft, Loader2, Globe, Package, Plus, X, Shield
 } from "lucide-react";
 import { useAuth, API } from "../App";
@@ -149,9 +148,7 @@ const PricingPage = () => {
 
   const fetchSubscription = async () => {
     try {
-      const response = await fetch(`${API}/subscription`, {
-        credentials: "include",
-        headers
+      const response = await fetch(`${API}/subscription`, { headers
       });
       if (response.ok) {
         const data = await response.json();
@@ -180,9 +177,7 @@ const PricingPage = () => {
     try {
       const response = await fetch(`${API}/checkout`, {
         method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
+        headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify({
           type: "subscription",
           plan_id: planId,
           origin_url: window.location.origin,
@@ -217,9 +212,7 @@ const PricingPage = () => {
     try {
       const response = await fetch(`${API}/checkout`, {
         method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
+        headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify({
           type: "credits",
           package_id: packageId,
           origin_url: window.location.origin,
@@ -269,9 +262,7 @@ const PricingPage = () => {
     try {
       const response = await fetch(`${API}/custom-package/checkout`, {
         method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
+        headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify({
           selected_agents: selectedAgents,
           credit_preset_id: selectedCredit,
           include_commander: includeCommander,

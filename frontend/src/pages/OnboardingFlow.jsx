@@ -53,8 +53,7 @@ const OnboardingFlow = ({ onComplete }) => {
     setExiting(true);
     try {
       await fetch(`${API}/auth/onboarding-complete`, {
-        method: "POST", credentials: "include",
-        headers: { Authorization: `Bearer ${token}` }
+        method: "POST", headers: { Authorization: `Bearer ${token}` }
       });
     } catch {}
     setTimeout(() => onComplete(), 300);
@@ -64,8 +63,7 @@ const OnboardingFlow = ({ onComplete }) => {
     setExiting(true);
     try {
       await fetch(`${API}/auth/onboarding-complete`, {
-        method: "POST", credentials: "include",
-        headers: { Authorization: `Bearer ${token}` }
+        method: "POST", headers: { Authorization: `Bearer ${token}` }
       });
     } catch {}
     setTimeout(() => onComplete(), 300);

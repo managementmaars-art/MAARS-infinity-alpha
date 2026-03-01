@@ -25,7 +25,7 @@ const SmtpConfigTab = () => {
   const fetchConfig = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API}/admin/smtp-config`, { credentials: "include", headers: { Authorization: `Bearer ${token}` } });
+      const res = await fetch(`${API}/admin/smtp-config`, { headers: { Authorization: `Bearer ${token}` } });
       if (res.ok) {
         const data = await res.json();
         setConfig(data);
@@ -40,7 +40,7 @@ const SmtpConfigTab = () => {
     setSaving(true);
     try {
       const res = await fetch(`${API}/admin/smtp-config`, {
-        method: "POST", credentials: "include", headers,
+        method: "POST", headers,
         body: JSON.stringify({ email, password: password || undefined })
       });
       if (res.ok) {
@@ -59,7 +59,7 @@ const SmtpConfigTab = () => {
     setTesting(true);
     try {
       const res = await fetch(`${API}/admin/smtp-test`, {
-        method: "POST", credentials: "include", headers,
+        method: "POST", headers,
         body: JSON.stringify({ to_email: testEmail || undefined })
       });
       if (res.ok) {

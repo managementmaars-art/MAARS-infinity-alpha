@@ -37,14 +37,14 @@ const Team = () => {
   const fetchAll = async () => {
     try {
       const [teamsRes, invitesRes] = await Promise.all([
-        fetch(`${API}/teams`, { credentials: "include", headers }).catch(() => null),
-        fetch(`${API}/teams/invites/pending`, { credentials: "include", headers }).catch(() => null)
+        fetch(`${API}/teams`, { headers }).catch(() => null),
+        fetch(`${API}/teams/invites/pending`, { headers }).catch(() => null)
       ]);
       if (teamsRes?.ok) {
         const t = await teamsRes.json();
         setTeams(t);
         if (t.length > 0) {
-          const sharedRes = await fetch(`${API}/teams/${t[0].team_id}/shared-chats`, { credentials: "include", headers }).catch(() => null);
+          const sharedRes = await fetch(`${API}/teams/${t[0].team_id}/shared-chats`, { headers }).catch(() => null);
           if (sharedRes?.ok) setSharedChats(await sharedRes.json());
         }
       }
@@ -56,7 +56,7 @@ const Team = () => {
     if (!teamName.trim()) return toast.error("Enter a team name");
     setProcessing(true);
     try {
-      const res = await fetch(`${API}/teams`, { method: "POST", credentials: "include", headers, body: JSON.stringify({ name: teamName }) });
+      const res = await fetch(`${API}/teams`, { method: "POST", headers, body: JSON.stringify({ name: teamName }) });
       if (res.ok) {
         toast.success("Team created!");
         setCreateOpen(false);
@@ -75,7 +75,7 @@ const Team = () => {
     setProcessing(true);
     try {
       const res = await fetch(`${API}/teams/${teams[0].team_id}/invite`, {
-        method: "POST", credentials: "include", headers,
+        method: "POST", headers,
         body: JSON.stringify({ email: inviteEmail, role: inviteRole })
       });
       if (res.ok) {
@@ -93,7 +93,7 @@ const Team = () => {
   const respondInvite = async (inviteId, action) => {
     setProcessing(true);
     try {
-      const res = await fetch(`${API}/teams/invites/${inviteId}/${action}`, { method: "POST", credentials: "include", headers });
+      const res = await fetch(`${API}/teams/invites/${inviteId}/${action}`, { method: "POST", headers });
       if (res.ok) {
         toast.success(action === "accept" ? "You joined the team!" : "Invite declined");
         fetchAll();
@@ -104,7 +104,7 @@ const Team = () => {
   const removeMember = async (teamId, userId, name) => {
     if (!window.confirm(`Remove ${name} from the team?`)) return;
     try {
-      const res = await fetch(`${API}/teams/${teamId}/members/${userId}`, { method: "DELETE", credentials: "include", headers });
+      const res = await fetch(`${API}/teams/${teamId}/members/${userId}`, { method: "DELETE", headers });
       if (res.ok) { toast.success("Member removed"); fetchAll(); }
       else { const err = await res.json().catch(() => ({})); toast.error(err.detail || "Failed"); }
     } catch { toast.error("Failed to remove member"); }
@@ -113,7 +113,7 @@ const Team = () => {
   const updateRole = async (teamId, userId, newRole) => {
     try {
       const res = await fetch(`${API}/teams/${teamId}/members/${userId}`, {
-        method: "PUT", credentials: "include", headers,
+        method: "PUT", headers,
         body: JSON.stringify({ role: newRole })
       });
       if (res.ok) { toast.success("Role updated"); fetchAll(); }
@@ -124,7 +124,7 @@ const Team = () => {
   const deleteTeam = async (teamId) => {
     if (!window.confirm("Delete this team? All members will be removed.")) return;
     try {
-      const res = await fetch(`${API}/teams/${teamId}`, { method: "DELETE", credentials: "include", headers });
+      const res = await fetch(`${API}/teams/${teamId}`, { method: "DELETE", headers });
       if (res.ok) { toast.success("Team deleted"); fetchAll(); }
       else { toast.error("Failed to delete team"); }
     } catch { toast.error("Failed"); }

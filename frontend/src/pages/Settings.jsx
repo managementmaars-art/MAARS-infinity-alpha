@@ -7,8 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Separator } from "../components/ui/separator";
 import { Badge } from "../components/ui/badge";
 import { Progress } from "../components/ui/progress";
-import { 
-  Bot, User, Mail, Shield, LogOut, CreditCard, Sparkles, Crown, Zap,
+import { Bot, User, Mail, Shield, LogOut, CreditCard, Sparkles, Crown, Zap,
   LayoutDashboard, Users, MessageSquare, ListTodo, Settings, Menu, X,
   Check, Save, Loader2
 } from "lucide-react";
@@ -36,9 +35,7 @@ const SettingsPage = () => {
 
   const fetchSubscription = async () => {
     try {
-      const response = await fetch(`${API}/subscription`, {
-        credentials: "include",
-        headers
+      const response = await fetch(`${API}/subscription`, { headers
       });
       if (response.ok) {
         setSubscription(await response.json());
@@ -50,14 +47,14 @@ const SettingsPage = () => {
 
   const fetchAgents = async () => {
     try {
-      const res = await fetch(`${API}/agents`, { headers, credentials: "include" });
+      const res = await fetch(`${API}/agents`, { headers, });
       if (res.ok) setAllAgents(await res.json());
     } catch {}
   };
 
   const fetchSelectedAgents = async () => {
     try {
-      const res = await fetch(`${API}/subscription/agents`, { headers, credentials: "include" });
+      const res = await fetch(`${API}/subscription/agents`, { headers, });
       if (res.ok) {
         const data = await res.json();
         setAgentConfig(data);
@@ -77,9 +74,7 @@ const SettingsPage = () => {
     try {
       const res = await fetch(`${API}/subscription/agents`, {
         method: "PUT",
-        headers: { ...headers, "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ selected_agents: selectedAgents })
+        headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify({ selected_agents: selectedAgents })
       });
       if (res.ok) {
         toast.success("Agent selection saved!");

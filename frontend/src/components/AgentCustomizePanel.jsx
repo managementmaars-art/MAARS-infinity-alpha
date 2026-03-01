@@ -28,7 +28,7 @@ const AgentCustomizePanel = ({ agent, onClose }) => {
   const fetchSettings = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API}/agents/${agent.agent_id}/my-settings`, { credentials: "include", headers: authHeaders });
+      const res = await fetch(`${API}/agents/${agent.agent_id}/my-settings`, { headers: authHeaders });
       if (res.ok) {
         const data = await res.json();
         if (data.has_override) {
@@ -49,7 +49,7 @@ const AgentCustomizePanel = ({ agent, onClose }) => {
     setSaving(true);
     try {
       const res = await fetch(`${API}/agents/${agent.agent_id}/my-settings`, {
-        method: "PUT", credentials: "include", headers,
+        method: "PUT", headers,
         body: JSON.stringify(settings),
       });
       if (res.ok) {
@@ -66,7 +66,7 @@ const AgentCustomizePanel = ({ agent, onClose }) => {
     setSaving(true);
     try {
       const res = await fetch(`${API}/agents/${agent.agent_id}/my-settings`, {
-        method: "DELETE", credentials: "include", headers: authHeaders,
+        method: "DELETE", headers: authHeaders,
       });
       if (res.ok) {
         setSettings({
