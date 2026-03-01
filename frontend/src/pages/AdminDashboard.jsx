@@ -21,6 +21,7 @@ import { BrandFooter } from "../components/BrandFooter";
 import AnalyticsTab from "./AnalyticsTab";
 import SmtpConfigTab from "./SmtpConfigTab";
 import BrandingTab from "./BrandingTab";
+import KnowledgeBaseTab from "./KnowledgeBaseTab";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
