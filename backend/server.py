@@ -5380,6 +5380,47 @@ async def update_branding(request: Request, admin: User = Depends(require_admin)
     )
     return await get_branding(admin)
 
+@api_router.post("/admin/branding/upload-logo")
+async def upload_branding_logo(file: UploadFile = File(...), admin: User = Depends(require_admin)):
+    """Upload logo or favicon for branding. Returns the file URL."""
+    contents = await file.read()
+    if len(contents) > 5 * 1024 * 1024:
+        raise HTTPException(400, "Logo file too large. Max 5MB.")
+    allowed_ext = {"png", "jpg", "jpeg", "svg", "webp", "ico"}
+    ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else ''
+    if ext not in allowed_ext:
+        raise HTTPException(400, f"Unsupported file type. Allowed: {', '.join(allowed_ext)}")
+    file_id = uuid.uuid4().hex[:10]
+    saved_filename = f"brand_{file_id}.{ext}"
+    saved_path = UPLOAD_DIR / saved_filename
+    with open(saved_path, 'wb') as f:
+        f.write(contents)
+    return {"url": f"/api/files/{saved_filename}", "filename": saved_filename}
+
+@api_router.post("/admin/branding/verify-domain")
+async def verify_custom_domain(request: Request, admin: User = Depends(require_admin)):
+    """Check DNS status of the configured custom domain."""
+    config = await db.platform_config.find_one({"config_type": "branding"}, {"_id": 0})
+    domain = config.get("custom_domain", "") if config else ""
+    if not domain:
+        raise HTTPException(400, "No custom domain configured")
+    import socket
+    status = "pending_verification"
+    dns_result = None
+    try:
+        result = socket.getaddrinfo(domain, None)
+        dns_result = result[0][4][0] if result else None
+        status = "verified" if dns_result else "pending_verification"
+    except socket.gaierror:
+        status = "dns_not_found"
+    except Exception:
+        status = "verification_error"
+    await db.platform_config.update_one(
+        {"config_type": "branding"},
+        {"$set": {"custom_domain_status": status, "custom_domain_verified_at": datetime.now(timezone.utc).isoformat()}}
+    )
+    return {"domain": domain, "status": status, "dns_result": dns_result}
+
 @api_router.get("/branding/public")
 async def get_public_branding():
     """Public endpoint for branding (no auth) — used by frontend to apply customization."""
