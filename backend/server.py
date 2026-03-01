@@ -343,8 +343,7 @@ async def require_admin(current_user: User = Depends(get_current_user)) -> User:
 
 async def seed_default_agents():
     for agent_data in DEFAULT_AGENTS:
-    {
-        "agent_id": "agent_marketing",
+        existing = await db.agents.find_one({"agent_id": agent_data["agent_id"]})
         "name": "Zara Mitchell",
         "description": "Creative marketing specialist crafting campaigns, social media content, ad copy, and brand messaging that converts audiences into customers.",
         "avatar": "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/c4305af2c26cea8648db361e275c2f1ef2db69815efff20a57aa4e0807abfcce.png",
