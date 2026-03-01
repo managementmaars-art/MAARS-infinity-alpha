@@ -5,28 +5,24 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 
 ## Implemented Features (Latest First)
 
-### Bug Fix: Header Badge Toggles + Improved Error Handling (Mar 1, 2026 - Latest)
-- **Root Cause**: IMG/PDF/FILES badges in agent rows were display-only Badge components, not clickable
-- **Fix**: Changed to `<button>` elements with `onClick` handlers and `e.stopPropagation()`
-- Badges always visible (greyed+strikethrough when disabled, colored when enabled)
-- Improved error messages: show HTTP status codes and network error details
-- Toast messages now say "Enabled/Disabled {type} generation"
-- All 12 tests passed (iteration_35)
+### Bug Fix: CORS credentials causing "Failed to save/update" (Mar 1, 2026 - Latest)
+- **Root Cause**: `credentials: "include"` in ALL frontend fetch calls caused CORS errors in the user's browser. When credentials mode is "include", browsers require specific CORS headers that K8s proxy may not provide. Since the app uses JWT tokens in Authorization header (NOT cookies), `credentials: "include"` was unnecessary.
+- **Fix**: Removed `credentials: "include"` from ALL 17+ frontend files
+- Made header badges (IMG/PDF/FILES) clickable toggles directly
+- Improved error messages with HTTP status codes
+- All 17 backend tests + all frontend tests passed (iteration_36)
 
 ### User Agent Customization (Mar 1, 2026)
 - Per-user agent overrides for personality, temperature, max_tokens, custom instructions
-- "Customize" button in chat header, settings panel with sliders and text areas
+- "Customize" button in chat header
 - Endpoints: GET/PUT/DELETE `/api/agents/{agent_id}/my-settings`
-- All 21 tests passed (iteration_34)
 
 ### Custom Domain UI & White-Label Branding (Mar 1, 2026)
 - Admin tab: Brand Identity, Logo/Favicon upload, Color pickers, Custom Domain + DNS verification
 - BrandingProvider context for dynamic theming
-- All 18 tests passed (iteration_33)
 
 ### Earlier Features
 - Notification Center, User Insights, Onboarding, Analytics, AI Controls, SMTP Config
-- Backend Refactoring Phase 1 (models/schemas.py, config.py)
 - 21 AI agents, Commander AI, Voice Mode, Stripe Subscriptions, Team Collaboration
 
 ## Credentials
@@ -39,6 +35,7 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 - P2: Complete server.py modularization
 
 ## Test Reports (All 100%)
-- iteration_35: Header badge toggles bug fix (12/12)
+- iteration_36: CORS fix verified, all admin features (17/17 + all frontend)
+- iteration_35: Header badge toggles (12/12)
 - iteration_34: User agent customization (21/21)
 - iteration_33: Branding & custom domain (18/18)
