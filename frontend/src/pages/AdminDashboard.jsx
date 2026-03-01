@@ -720,10 +720,12 @@ const AdminDashboard = () => {
                     {agent.is_active !== false ? <ToggleRight className="w-6 h-6" /> : <ToggleLeft className="w-6 h-6" />}
                   </button>
                   <div className="hidden sm:flex items-center gap-1">
-                    {agent.can_generate_image && <Badge className="bg-blue-500/15 text-blue-400 text-[10px] border-blue-500/20">IMG</Badge>}
-                    {agent.can_generate_video && <Badge className="bg-purple-500/15 text-purple-400 text-[10px] border-purple-500/20">VID</Badge>}
-                    {agent.can_generate_pdf && <Badge className="bg-orange-500/15 text-orange-400 text-[10px] border-orange-500/20">PDF</Badge>}
-                    {agent.can_generate_files && <Badge className="bg-green-500/15 text-green-400 text-[10px] border-green-500/20">FILES</Badge>}
+                    <button onClick={(e) => { e.stopPropagation(); handleToggleCapability(agent.agent_id, "can_generate_image", !!agent.can_generate_image); }} title="Toggle image generation" data-testid={`header-toggle-img-${agent.agent_id}`}
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium border transition-all cursor-pointer ${agent.can_generate_image ? 'bg-blue-500/15 text-blue-400 border-blue-500/20 hover:bg-blue-500/30' : 'bg-zinc-800/50 text-zinc-600 border-zinc-700/30 hover:bg-zinc-700/50 line-through'}`}>IMG</button>
+                    <button onClick={(e) => { e.stopPropagation(); handleToggleCapability(agent.agent_id, "can_generate_pdf", !!agent.can_generate_pdf); }} title="Toggle PDF generation" data-testid={`header-toggle-pdf-${agent.agent_id}`}
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium border transition-all cursor-pointer ${agent.can_generate_pdf ? 'bg-orange-500/15 text-orange-400 border-orange-500/20 hover:bg-orange-500/30' : 'bg-zinc-800/50 text-zinc-600 border-zinc-700/30 hover:bg-zinc-700/50 line-through'}`}>PDF</button>
+                    <button onClick={(e) => { e.stopPropagation(); handleToggleCapability(agent.agent_id, "can_generate_files", !!agent.can_generate_files); }} title="Toggle file generation" data-testid={`header-toggle-files-${agent.agent_id}`}
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium border transition-all cursor-pointer ${agent.can_generate_files ? 'bg-green-500/15 text-green-400 border-green-500/20 hover:bg-green-500/30' : 'bg-zinc-800/50 text-zinc-600 border-zinc-700/30 hover:bg-zinc-700/50 line-through'}`}>FILES</button>
                   </div>
                   {expandedAgent === agent.agent_id ? <ChevronUp className="w-4 h-4 text-zinc-500" /> : <ChevronDown className="w-4 h-4 text-zinc-500" />}
                 </div>
