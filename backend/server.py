@@ -33,6 +33,38 @@ JWT_EXPIRATION_HOURS = 24 * 7  # 7 days
 # LLM Settings
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
 
+# Email Settings (Gmail SMTP)
+SMTP_EMAIL = os.environ.get('SMTP_EMAIL', '')
+SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', '')
+
+async def send_email_notification(to_email: str, subject: str, html_body: str):
+    """Send email via Gmail SMTP. Silently skips if credentials not configured."""
+    if not SMTP_EMAIL or not SMTP_PASSWORD:
+        logger.info(f"Email skipped (SMTP not configured): to={to_email}, subject={subject}")
+        return False
+    try:
+        import smtplib
+        from email.mime.text import MIMEText
+        from email.mime.multipart import MIMEMultipart
+        
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = subject
+        msg["From"] = f"MAARS Command <{SMTP_EMAIL}>"
+        msg["To"] = to_email
+        msg.attach(MIMEText(html_body, "html"))
+        
+        def _send():
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+                server.login(SMTP_EMAIL, SMTP_PASSWORD)
+                server.sendmail(SMTP_EMAIL, to_email, msg.as_string())
+        
+        await asyncio.to_thread(_send)
+        logger.info(f"Email sent to {to_email}: {subject}")
+        return True
+    except Exception as e:
+        logger.error(f"Email send failed: {e}")
+        return False
+
 # Direct API Keys (can be overridden from admin panel via DB)
 DIRECT_API_KEYS = {
     "openai": os.environ.get('OPENAI_API_KEY', ''),
