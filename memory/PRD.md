@@ -5,37 +5,56 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 
 ## Implemented Features (Latest First)
 
-### Bug Fix: CORS credentials causing "Failed to save/update" (Mar 1, 2026 - Latest)
-- **Root Cause**: `credentials: "include"` in ALL frontend fetch calls caused CORS errors in the user's browser. When credentials mode is "include", browsers require specific CORS headers that K8s proxy may not provide. Since the app uses JWT tokens in Authorization header (NOT cookies), `credentials: "include"` was unnecessary.
-- **Fix**: Removed `credentials: "include"` from ALL 17+ frontend files
-- Made header badges (IMG/PDF/FILES) clickable toggles directly
-- Improved error messages with HTTP status codes
-- All 17 backend tests + all frontend tests passed (iteration_36)
+### Cross-Agent Communication System (Mar 1, 2026 - Latest)
+- **Root cause**: Agents were isolated — each only saw its own chat, no shared workspace
+- **Workspace Context Injection**: `build_workspace_context()` fetches recent tasks + other agents' latest messages and injects into EVERY agent's system prompt
+- **New workspace tools** for ALL 21 agents:
+  - `query_tasks` — List/search/filter all workspace tasks
+  - `update_task` — Mark tasks complete, add results, update description
+  - `query_agent_history` — Read recent conversation with any other agent
+- Context injected in BOTH `send_message()` and `agent_execute_with_tools()`
+- Tested: Secretary creates task → PM reviews it and proposes subtasks (VERIFIED)
+- All 14 backend + all frontend tests passed (iteration_37)
 
-### User Agent Customization (Mar 1, 2026)
-- Per-user agent overrides for personality, temperature, max_tokens, custom instructions
-- "Customize" button in chat header
-- Endpoints: GET/PUT/DELETE `/api/agents/{agent_id}/my-settings`
+### Bug Fix: CORS + credentials causing API failures (Mar 1, 2026)
+- Removed `credentials: "include"` from ALL frontend fetch calls (JWT auth doesn't need cookies)
+- Made header badges (IMG/PDF/FILES) clickable toggles
+- Fixed IntegrationsTab useEffect dependency (token)
+- All 17 backend tests passed (iteration_36)
 
-### Custom Domain UI & White-Label Branding (Mar 1, 2026)
-- Admin tab: Brand Identity, Logo/Favicon upload, Color pickers, Custom Domain + DNS verification
-- BrandingProvider context for dynamic theming
+### User Agent Customization + White-Label Branding (Mar 1, 2026)
+- Per-user agent overrides, Customize panel in chat, BrandingProvider context
+- All 21 tests passed (iteration_34), 18 tests (iteration_33)
 
 ### Earlier Features
-- Notification Center, User Insights, Onboarding, Analytics, AI Controls, SMTP Config
+- Notification Center, User Insights, Onboarding, Analytics, AI Controls
+- SMTP Config, Backend Refactoring Phase 1
 - 21 AI agents, Commander AI, Voice Mode, Stripe Subscriptions, Team Collaboration
 
 ## Credentials
 - Admin: management.maars@marsgc.net / MaarsAdmin2024!
 
+## Architecture
+```
+Cross-Agent Communication Flow:
+1. User sends message to Agent A
+2. build_workspace_context() fetches:
+   - Recent tasks (from db.tasks)
+   - Latest messages from other agent chats
+3. Context injected into system prompt
+4. Agent sees shared workspace + can use query_tasks/update_task/query_agent_history tools
+5. Agent responds with full awareness of team activity
+```
+
 ## Backlog
-- P1: Backend refactoring - extract admin routes from server.py to routes/admin.py
-- P1: Third-party integrations (Slack, Calendly, Airtable) backend logic
-- P2: AdminDashboard.jsx refactoring
+- P1: Backend refactoring — extract admin routes to routes/admin.py
+- P1: Third-party integrations backend logic (Slack, Calendly, Airtable)
+- P2: AdminDashboard.jsx component extraction
 - P2: Complete server.py modularization
 
 ## Test Reports (All 100%)
-- iteration_36: CORS fix verified, all admin features (17/17 + all frontend)
-- iteration_35: Header badge toggles (12/12)
-- iteration_34: User agent customization (21/21)
-- iteration_33: Branding & custom domain (18/18)
+- iteration_37: Cross-agent communication (14/14 + all frontend)
+- iteration_36: CORS fix (17/17)
+- iteration_35: Header toggles (12/12)
+- iteration_34: User customization (21/21)
+- iteration_33: Branding (18/18)
