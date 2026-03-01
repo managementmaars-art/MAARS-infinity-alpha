@@ -56,10 +56,30 @@ const AnalyticsTab = () => {
   const { token } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [feed, setFeed] = useState([]);
+  const [feedLoading, setFeedLoading] = useState(false);
+  const feedRef = useRef([]);
 
   useEffect(() => {
     fetchAnalytics();
+    fetchFeed();
+    const interval = setInterval(fetchFeed, 15000);
+    return () => clearInterval(interval);
   }, []);
+
+  const fetchFeed = async () => {
+    try {
+      const res = await fetch(`${API}/admin/activity-feed?limit=20`, {
+        credentials: "include",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const newFeed = await res.json();
+        setFeed(newFeed);
+        feedRef.current = newFeed;
+      }
+    } catch {}
+  };
 
   const fetchAnalytics = async () => {
     setLoading(true);
