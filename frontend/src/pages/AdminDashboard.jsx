@@ -702,10 +702,19 @@ const AdminDashboard = () => {
                     <p className="font-medium text-white truncate">{agent.name}</p>
                     {agent.is_commander && <Badge className="bg-amber-500/20 text-amber-400 text-[10px]">Commander</Badge>}
                     {agent.is_custom && <Badge className="bg-cyan-500/20 text-cyan-400 text-[10px]">Custom</Badge>}
+                    {agent.is_active === false && <Badge className="bg-red-500/20 text-red-400 text-[10px]">Disabled</Badge>}
                   </div>
                   <p className="text-sm text-zinc-400 truncate">{agent.role}</p>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-3 shrink-0">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleToggleCapability(agent.agent_id, "is_active", agent.is_active !== false); }}
+                    className={`p-1 rounded transition-colors ${agent.is_active !== false ? 'text-emerald-400 hover:text-emerald-300' : 'text-zinc-600 hover:text-zinc-400'}`}
+                    title={agent.is_active !== false ? "Active — click to disable" : "Disabled — click to enable"}
+                    data-testid={`toggle-active-${agent.agent_id}`}
+                  >
+                    {agent.is_active !== false ? <ToggleRight className="w-6 h-6" /> : <ToggleLeft className="w-6 h-6" />}
+                  </button>
                   <div className="hidden sm:flex items-center gap-1">
                     {agent.can_generate_image && <Badge className="bg-blue-500/15 text-blue-400 text-[10px] border-blue-500/20">IMG</Badge>}
                     {agent.can_generate_video && <Badge className="bg-purple-500/15 text-purple-400 text-[10px] border-purple-500/20">VID</Badge>}
