@@ -2000,7 +2000,7 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
             if kb_count > 0:
                 rag_results = await search_knowledge_base(
                     db, agent.get("agent_id", ""), message_data.content,
-                    top_k=5, threshold=0.60, api_key=EMERGENT_LLM_KEY
+                    top_k=5, threshold=0.10
                 )
                 if rag_results:
                     rag_context = build_rag_context(rag_results)
