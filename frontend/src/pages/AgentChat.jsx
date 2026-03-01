@@ -49,6 +49,8 @@ const AVAILABLE_MODELS = [
   { provider: "cohere", model: "command-r", name: "Cohere Command R", category: "fast" },
 ];
 
+import NotificationCenter from "../components/NotificationCenter";
+
 // Commander Group Chat Component - renders delegation as individual agent chat bubbles
 const CommanderGroupChat = ({ msg, msgIndex, generatedFiles, generateFile, generatingFile, currentAgent }) => {
   const data = msg.delegation_data;
