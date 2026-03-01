@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import {
   Users, MessageSquare, DollarSign, TrendingUp, Activity,
-  BarChart3, PieChart as PieChartIcon, Loader2, Bot, Zap, Crown
+  BarChart3, PieChart as PieChartIcon, Loader2, Bot, Zap, Crown,
+  UserPlus, Radio, RefreshCw
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
