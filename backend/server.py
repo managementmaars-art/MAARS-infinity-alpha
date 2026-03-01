@@ -393,6 +393,53 @@ async def seed_default_agents():
 # CLARIFICATION_INSTRUCTION, AGENT_TOOLS, AGENT_TOOL_MAP imported from config.py
 
 
+# ============== WORKSPACE CONTEXT (Cross-Agent Communication) ==============
+
+async def build_workspace_context(user_id: str, current_agent_id: str) -> str:
+    """Build shared workspace context for cross-agent awareness.
+    Includes: recent tasks, recent activity from other agent conversations."""
+    context_parts = []
+
+    # 1. Get recent tasks for this user (last 15)
+    tasks_cursor = db.tasks.find(
+        {"user_id": user_id}, {"_id": 0, "task_id": 1, "title": 1, "description": 1, "status": 1, "priority": 1, "assigned_agents": 1, "created_at": 1, "result": 1}
+    ).sort("created_at", -1).limit(15)
+    tasks = await tasks_cursor.to_list(15)
+    if tasks:
+        task_lines = []
+        for t in tasks:
+            assigned = ", ".join(t.get("assigned_agents", [])) or "unassigned"
+            result_snippet = ""
+            if t.get("result"):
+                result_snippet = f" | Result: {str(t['result'])[:150]}..."
+            task_lines.append(f"- [{t.get('status','pending').upper()}] {t.get('title','')} (Priority: {t.get('priority','medium')}, Assigned: {assigned}, ID: {t.get('task_id','')}){result_snippet}")
+        context_parts.append("## WORKSPACE TASKS\n" + "\n".join(task_lines))
+
+    # 2. Get recent messages from OTHER agent conversations (last message from each)
+    other_chats = db.chats.find(
+        {"user_id": user_id, "agent_id": {"$ne": current_agent_id, "$exists": True}},
+        {"_id": 0, "agent_id": 1, "messages": {"$slice": -2}}
+    ).sort("updated_at", -1).limit(8)
+    summaries = []
+    async for chat in other_chats:
+        agent_id = chat.get("agent_id", "")
+        agent_doc = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0, "name": 1, "role": 1})
+        agent_name = agent_doc.get("name", agent_id) if agent_doc else agent_id
+        agent_role = agent_doc.get("role", "") if agent_doc else ""
+        msgs = chat.get("messages", [])
+        if msgs:
+            last = msgs[-1]
+            content_preview = str(last.get("content", ""))[:300]
+            role = "User" if last.get("role") == "user" else agent_name
+            summaries.append(f"- {agent_name} ({agent_role}): {role} said: \"{content_preview}\"")
+    if summaries:
+        context_parts.append("## RECENT TEAM ACTIVITY (Other Agents)\n" + "\n".join(summaries))
+
+    if not context_parts:
+        return ""
+
+    return "\n\n--- SHARED WORKSPACE CONTEXT ---\n" + "\n\n".join(context_parts) + "\n--- END WORKSPACE CONTEXT ---\n\nUse this context to understand what other team members are working on and what tasks exist. Reference tasks by their ID when relevant. Collaborate with the user's goals across agents.\n"
+
 
 async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
     """Execute a tool and return the result as a string."""
