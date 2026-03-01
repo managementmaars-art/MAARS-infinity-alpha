@@ -10,7 +10,7 @@ import {
   Paperclip, Image, FileText, Sparkles, Mic, MicOff, Loader2,
   Download, Film, FileSpreadsheet, File, Volume2, VolumeX,
   Search, Calculator, ClipboardList, BarChart3, Wrench, ChevronDown, ChevronRight, Brain, Zap,
-  Mail, MessageCircle, Phone, Github, Table, Calendar, Share2
+  Mail, MessageCircle, Phone, Github, Table, Calendar, Share2, ThumbsUp, ThumbsDown
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
