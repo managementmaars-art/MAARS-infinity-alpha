@@ -3270,7 +3270,7 @@ async def generate_video(request: Request, current_user: User = Depends(get_curr
                 max_wait_time=600
             )
         
-        loop = _asyncio.get_event_loop()
+        loop = asyncio.get_event_loop()
         video_bytes = await loop.run_in_executor(None, _gen)
         
         if not video_bytes:
