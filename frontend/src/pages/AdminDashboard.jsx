@@ -597,8 +597,7 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/agents/${agentId}/settings`, {
         method: "PUT",
-        credentials: "include",
-        headers,
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify({ [field]: !currentValue })
       });
       if (res.ok) {
@@ -606,11 +605,14 @@ const AdminDashboard = () => {
         const label = field === "is_active" ? "active status" : field.replace('can_generate_', '') + " generation";
         toast.success(`${!currentValue ? "Enabled" : "Disabled"} ${label}`);
       } else {
-        const err = await res.json().catch(() => ({}));
-        toast.error(err.detail || `Toggle failed (${res.status}). Please try again.`);
+        let errMsg = `Toggle failed (HTTP ${res.status})`;
+        try { const err = await res.json(); errMsg = err.detail || errMsg; } catch {}
+        toast.error(errMsg);
+        console.error("Toggle failed:", res.status, errMsg);
       }
     } catch (e) {
-      toast.error(`Network error: ${e.message}. Check your connection.`);
+      console.error("Toggle error:", e);
+      toast.error(`Connection error. Please refresh and try again.`);
     } finally {
       setSavingAgent(null);
     }
