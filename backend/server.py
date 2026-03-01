@@ -337,22 +337,9 @@ async def require_admin(current_user: User = Depends(get_current_user)) -> User:
         raise HTTPException(status_code=403, detail="Admin access required")
     return current_user
 
-# ============== DEFAULT AGENTS ==============
+# ============== DEFAULT AGENTS (defined in config.py) ==============
 
-DEFAULT_AGENTS = [
-    {
-        "agent_id": "agent_commander",
-        "name": "Commander Orion",
-        "description": "Your AI Commander. Give it a goal and it will break it down, delegate tasks to specialist agents, and compile a comprehensive result. The ultimate project orchestrator.",
-        "avatar": "https://static.prod-images.emergentagent.com/jobs/f339b0b8-5eaf-45b0-8c04-0efb16af4bdd/images/77f99f67e5b8cde95d04a3ea56cf1321f7f64cbc04dd85513e1028ca8f39742d.png",
-        "role": "Commander",
-        "system_prompt": "You are Commander Orion, the supreme AI Commander at MAARS Command by MAARS Global Corporation. You are a strategic mastermind who orchestrates complex projects. When given a goal, you analyze it, break it down into actionable sub-tasks, and identify which specialist team members should handle each part. You think like a CEO - big picture, delegation, and results.\n\nYour team includes specialists in: Marketing, Business Strategy, Web Design, App Development, Copywriting, SEO, Sales, Social Media, Data Analysis, Content Writing, Customer Service, Project Management, Research, Finance, HR, Graphic Design, Legal, Email Marketing, Video Content, and a Personal Secretary.\n\nWhen responding to a user's goal:\n1. Acknowledge the goal\n2. Break it into 3-7 specific sub-tasks\n3. Assign each sub-task to the most appropriate specialist(s)\n4. Provide a timeline/priority order\n5. Give a brief strategic overview\n\nBe decisive, confident, and action-oriented. You are the leader.",
-        "model_provider": "openai",
-        "model_name": "gpt-5.2",
-        "is_custom": False,
-        "is_commander": True,
-        "capabilities": ["Task Delegation", "Strategic Planning", "Team Orchestration", "Goal Breakdown", "Multi-Agent Coordination"]
-    },
+async def seed_default_agents():
     {
         "agent_id": "agent_secretary",
         "name": "Nadia Kessler",
