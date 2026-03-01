@@ -1865,6 +1865,19 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         # Build enhanced system prompt with clarification instruction
         enhanced_agent_prompt = agent["system_prompt"] + CLARIFICATION_INSTRUCTION
         
+        # Apply user-specific agent overrides (personality, temperature, etc.)
+        user_override = await db.user_agent_overrides.find_one(
+            {"user_id": current_user.user_id, "agent_id": agent.get("agent_id")}, {"_id": 0}
+        )
+        if user_override:
+            override_parts = []
+            if user_override.get("personality_tone"):
+                override_parts.append(f"User-requested personality adjustment: {user_override['personality_tone']}")
+            if user_override.get("custom_instructions"):
+                override_parts.append(f"User-specific instructions: {user_override['custom_instructions']}")
+            if override_parts:
+                enhanced_agent_prompt += "\n\n--- USER CUSTOMIZATION ---\n" + "\n".join(override_parts)
+        
         # Check if this is Commander AI - use delegation
         is_commander = agent.get("is_commander", False) or agent.get("agent_id") == "agent_commander"
         
