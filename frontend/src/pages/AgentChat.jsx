@@ -227,6 +227,7 @@ const AgentChat = () => {
   const [ttsPlaying, setTtsPlaying] = useState(null);
   const [ttsLoading, setTtsLoading] = useState(null);
   const [feedbackState, setFeedbackState] = useState({});
+  const [showCustomize, setShowCustomize] = useState(false);
   const ttsAudioRef = useRef(null);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
