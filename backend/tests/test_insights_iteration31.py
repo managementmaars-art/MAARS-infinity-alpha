@@ -219,8 +219,8 @@ class TestRegressionAdminAnalytics:
         assert "kpis" in data, "Missing 'kpis' key"
         kpis = data["kpis"]
         
-        # Check essential KPIs
-        expected_kpis = ["total_users", "total_chats", "total_messages"]
+        # Check essential KPIs (total_users, total_chats, mrr, etc.)
+        expected_kpis = ["total_users", "total_chats", "mrr"]
         for kpi in expected_kpis:
             assert kpi in kpis, f"Missing KPI '{kpi}'"
 
@@ -236,12 +236,13 @@ class TestRegressionPlans:
         
         assert "plans" in data, "Missing 'plans' key"
         plans = data["plans"]
+        # Plans is a dict with plan_id as keys
+        assert isinstance(plans, dict), "plans should be a dict"
         assert len(plans) == 4, f"Expected 4 plans, got {len(plans)}"
         
-        # Verify plan IDs
-        plan_ids = [p["id"] for p in plans]
+        # Verify plan IDs as keys
         for expected in ["free", "starter", "pro", "business"]:
-            assert expected in plan_ids, f"Missing plan '{expected}'"
+            assert expected in plans, f"Missing plan '{expected}'"
 
 
 class TestRegressionAgentChat:
