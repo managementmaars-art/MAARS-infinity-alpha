@@ -3257,7 +3257,7 @@ async def generate_video(request: Request, current_user: User = Depends(get_curr
         api_key = api_keys.get("emergent") or EMERGENT_LLM_KEY
         
         from emergentintegrations.llm.openai.video_generation import OpenAIVideoGeneration
-        import asyncio as _asyncio
+        import aiohttp
         
         video_gen = OpenAIVideoGeneration(api_key=api_key)
         
