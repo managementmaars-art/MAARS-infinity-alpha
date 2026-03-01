@@ -4565,6 +4565,9 @@ async def admin_update_pricing(request: Request, admin: User = Depends(require_a
         for plan_id, plan in plans.items():
             if not all(k in plan for k in ["name", "price_usd", "price_bdt", "credits", "max_agents", "max_custom_agents"]):
                 raise HTTPException(status_code=400, detail=f"Invalid plan structure for {plan_id}")
+            # Ensure max_team_members is preserved
+            if "max_team_members" not in plan:
+                plan["max_team_members"] = SUBSCRIPTION_PLANS.get(plan_id, {}).get("max_team_members", 1)
         SUBSCRIPTION_PLANS.update(plans)
     
     if "custom_agent_credit_cost" in pricing_data:
