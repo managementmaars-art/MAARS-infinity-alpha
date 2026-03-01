@@ -1993,6 +1993,22 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         if workspace_ctx:
             enhanced_agent_prompt += workspace_ctx
         
+        # RAG: Search agent's knowledge base and inject relevant context
+        try:
+            from services.rag_service import search_knowledge_base, build_rag_context
+            kb_count = await db.knowledge_chunks.count_documents({"agent_id": agent.get("agent_id", "")})
+            if kb_count > 0:
+                rag_results = await search_knowledge_base(
+                    db, agent.get("agent_id", ""), message_data.content,
+                    top_k=5, threshold=0.60, api_key=EMERGENT_LLM_KEY
+                )
+                if rag_results:
+                    rag_context = build_rag_context(rag_results)
+                    enhanced_agent_prompt += rag_context
+                    logger.info(f"RAG: Injected {len(rag_results)} knowledge chunks for {agent.get('agent_id')}")
+        except Exception as rag_err:
+            logger.error(f"RAG retrieval error: {rag_err}")
+        
         # Apply user-specific agent overrides (personality, temperature, etc.)
         user_override = await db.user_agent_overrides.find_one(
             {"user_id": current_user.user_id, "agent_id": agent.get("agent_id")}, {"_id": 0}
