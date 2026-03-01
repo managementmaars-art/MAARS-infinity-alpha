@@ -1053,6 +1053,9 @@ const AgentChat = () => {
                           {msg.auto_selected && msg.model_reason && (
                             <span className="text-indigo-400 ml-1">• {msg.model_reason}</span>
                           )}
+                          {msg.credits_deducted > 0 && (
+                            <span className="text-zinc-600 ml-1">• {msg.credits_deducted}cr</span>
+                          )}
                         </div>
                       )}
                       {msg.role === "assistant" && (
