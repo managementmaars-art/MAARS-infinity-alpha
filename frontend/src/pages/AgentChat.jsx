@@ -993,7 +993,7 @@ const AgentChat = () => {
                 if (msg.role === "assistant" && msg.commander_status === "processing") {
                   return (
                     <div key={msg.message_id || i} className="flex gap-3" data-testid={`message-${i}`}>
-                      <img src={selectedAgent?.avatar} alt="" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+                      <img src={msg.agent_avatar || selectedAgent?.avatar} alt="" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
                       <div className="rounded-xl px-4 py-3 bg-zinc-800/50 border border-indigo-500/20 max-w-[85%]">
                         <div className="flex items-center gap-2 mb-2">
                           <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
