@@ -2260,10 +2260,12 @@ Rules:
         }
     )
     
-    # Deduct 1 credit for the message
+    # Deduct credits based on model used
+    model_used_for_credits = assistant_msg.get("model_used", "gpt-5.2")
+    credits_to_deduct = get_credit_cost(model_used_for_credits, has_image=bool(generated_image), has_video=video_generating)
     await db.subscriptions.update_one(
         {"user_id": current_user.user_id},
-        {"$inc": {"credits": -1, "credits_used": 1}}
+        {"$inc": {"credits": -credits_to_deduct, "credits_used": credits_to_deduct}}
     )
     
     # Log API usage for cost tracking
