@@ -571,7 +571,8 @@ const AdminDashboard = () => {
     setSavingBrain(true);
     try {
       const res = await fetch(`${API}/admin/agents/${brainEdit.agent_id}/brain`, {
-        method: "PUT", credentials: "include", headers,
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify(brainEdit)
       });
       if (res.ok) {
@@ -580,10 +581,15 @@ const AdminDashboard = () => {
         toast.success("Brain updated!");
         setBrainEdit(null);
       } else {
-        const err = await res.json().catch(() => ({}));
-        toast.error(err.detail || `Save failed (${res.status}). Please try again.`);
+        let errMsg = `Save failed (HTTP ${res.status})`;
+        try { const err = await res.json(); errMsg = err.detail || errMsg; } catch {}
+        toast.error(errMsg);
+        console.error("Brain save failed:", res.status, errMsg);
       }
-    } catch (e) { toast.error(`Network error: ${e.message}. Check your connection.`); } finally { setSavingBrain(false); }
+    } catch (e) {
+      console.error("Brain save error:", e);
+      toast.error(`Connection error. Please refresh and try again.`);
+    } finally { setSavingBrain(false); }
   };
 
   const handleToggleCapability = async (agentId, field, currentValue) => {
