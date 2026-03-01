@@ -58,7 +58,7 @@ const AdminDashboard = () => {
   const fetchLiveCost = useCallback(async () => {
     if (!token) return;
     try {
-      const res = await fetch(`${API}/admin/avg-cost`, { credentials: "include", headers: { Authorization: `Bearer ${token}` } });
+      const res = await fetch(`${API}/admin/avg-cost`, { headers: { Authorization: `Bearer ${token}` } });
       if (res.ok) {
         const data = await res.json();
         setLiveCost(data);
@@ -84,12 +84,12 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const [statsRes, usersRes, agentsRes, txRes, pricingRes, keysRes] = await Promise.all([
-        fetch(`${API}/admin/stats`, { credentials: "include", headers: authHeaders }),
-        fetch(`${API}/admin/users`, { credentials: "include", headers: authHeaders }),
-        fetch(`${API}/admin/agents`, { credentials: "include", headers: authHeaders }),
-        fetch(`${API}/admin/transactions`, { credentials: "include", headers: authHeaders }),
-        fetch(`${API}/admin/pricing`, { credentials: "include", headers: authHeaders }),
-        fetch(`${API}/admin/api-keys`, { credentials: "include", headers: authHeaders })
+        fetch(`${API}/admin/stats`, { headers: authHeaders }),
+        fetch(`${API}/admin/users`, { headers: authHeaders }),
+        fetch(`${API}/admin/agents`, { headers: authHeaders }),
+        fetch(`${API}/admin/transactions`, { headers: authHeaders }),
+        fetch(`${API}/admin/pricing`, { headers: authHeaders }),
+        fetch(`${API}/admin/api-keys`, { headers: authHeaders })
       ]);
 
       if (statsRes.ok) setStats(await statsRes.json());
@@ -114,9 +114,9 @@ const AdminDashboard = () => {
       
       // Fetch profit data and API usage
       const [profitRes, usageRes, avgCostRes, rateRes] = await Promise.all([
-        fetch(`${API}/admin/profit`, { credentials: "include", headers: authHeaders }),
-        fetch(`${API}/admin/api-usage`, { credentials: "include", headers: authHeaders }),
-        fetch(`${API}/admin/avg-cost`, { credentials: "include", headers: authHeaders }),
+        fetch(`${API}/admin/profit`, { headers: authHeaders }),
+        fetch(`${API}/admin/api-usage`, { headers: authHeaders }),
+        fetch(`${API}/admin/avg-cost`, { headers: authHeaders }),
         fetch(`${API}/exchange-rate`),
       ]);
       if (profitRes.ok) setProfitData(await profitRes.json());
@@ -153,7 +153,7 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/agents`, {
         method: "POST",
-        credentials: "include",
+        ,
         headers,
         body: JSON.stringify({
           ...newAgent,
@@ -179,7 +179,7 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/agents/${agentId}`, {
         method: "DELETE",
-        credentials: "include",
+        ,
         headers: authHeaders
       });
       if (res.ok) {
@@ -938,7 +938,7 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/api-keys`, {
         method: "PUT",
-        credentials: "include",
+        ,
         headers: { ...headers, "Content-Type": "application/json" },
         body: JSON.stringify(apiKeyInputs)
       });
@@ -961,7 +961,7 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/api-keys/test`, {
         method: "POST",
-        credentials: "include",
+        ,
         headers: { ...headers, "Content-Type": "application/json" },
         body: JSON.stringify({ provider, api_key: key })
       });
@@ -1231,7 +1231,7 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/pricing/calculate`, {
         method: "POST",
-        credentials: "include",
+        ,
         headers,
         body: JSON.stringify(calcInputs)
       });
@@ -1292,7 +1292,7 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/pricing`, {
         method: "PUT",
-        credentials: "include",
+        ,
         headers,
         body: JSON.stringify(pricingEdit)
       });
@@ -1945,7 +1945,7 @@ const CustomPackagesTab = () => {
   useEffect(() => {
     const fetchAvgCost = async () => {
       try {
-        const res = await fetch(`${API}/admin/avg-cost`, { headers, credentials: "include" });
+        const res = await fetch(`${API}/admin/avg-cost`, { headers });
         if (res.ok) { const d = await res.json(); if (d.avg_cost_per_credit > 0) setAvgCost(d.avg_cost_per_credit); }
       } catch {}
     };
@@ -1956,9 +1956,9 @@ const CustomPackagesTab = () => {
   const fetchConfig = async () => {
     try {
       const [res1, res2, res3, res4] = await Promise.all([
-        fetch(`${API}/admin/custom-package`, { headers, credentials: "include" }),
-        fetch(`${API}/admin/credit-packages`, { headers, credentials: "include" }),
-        fetch(`${API}/admin/avg-cost`, { headers, credentials: "include" }),
+        fetch(`${API}/admin/custom-package`, { headers }),
+        fetch(`${API}/admin/credit-packages`, { headers }),
+        fetch(`${API}/admin/avg-cost`, { headers }),
         fetch(`${API}/exchange-rate`),
       ]);
       if (res1.ok) setConfig(await res1.json());
@@ -1974,11 +1974,11 @@ const CustomPackagesTab = () => {
       const [r1, r2] = await Promise.all([
         fetch(`${API}/admin/custom-package`, {
           method: "POST", headers: { ...headers, "Content-Type": "application/json" },
-          credentials: "include", body: JSON.stringify(config)
+          body: JSON.stringify(config)
         }),
         fetch(`${API}/admin/credit-packages`, {
           method: "POST", headers: { ...headers, "Content-Type": "application/json" },
-          credentials: "include", body: JSON.stringify({ packages: extraPacks })
+          body: JSON.stringify({ packages: extraPacks })
         }),
       ]);
       if (r1.ok && r2.ok) {
