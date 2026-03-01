@@ -2106,56 +2106,54 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     if agent.get("can_generate_image", False) and detect_image_generation_request(message_data.content, agent.get("role", "")):
         try:
             api_keys_img = await get_api_keys()
-            # Always use Emergent key for image generation (most reliable)
             img_api_key = api_keys_img.get("emergent") or EMERGENT_LLM_KEY
             
-            # Use LLM response as an enhanced prompt, or build one from user content
-            img_prompt = message_data.content
             # Refine prompt for professional-grade image output
+            img_prompt = message_data.content
             try:
                 from emergentintegrations.llm.chat import LlmChat, UserMessage as UM
                 prompt_chat = LlmChat(
                     api_key=img_api_key,
                     session_id=f"imgprompt_{uuid.uuid4().hex[:8]}",
-                    system_message="""You are an expert prompt engineer for GPT Image 1 (the same model used in ChatGPT). Your job is to write prompts that produce stunning, professional, publication-ready images.
-
+                    system_message="""You are an expert prompt engineer for Gemini image generation. Write prompts that produce stunning, professional images.
 Rules:
 - Output ONLY the image prompt. No explanations.
-- Be extremely detailed and specific about every visual element.
-- For LOGOS: Specify vector-style clean design, flat or minimal 3D, precise typography style (sans-serif/serif/geometric), exact colors as hex values, white or transparent background, centered composition, no photographic elements, scalable crisp edges.
-- For ILLUSTRATIONS/ART: Specify art style, medium, color palette, mood, lighting direction, background details.
-- For MARKETING materials: Layout, hierarchy, grid structure, brand colors, call-to-action placement.
-- Always include: style, composition, color palette, background, mood/atmosphere.
-- Aim for the quality level of a professional graphic designer's output."""
+- Be detailed about every visual element: style, composition, color palette, lighting, mood.
+- For LOGOS: vector-style clean design, typography, exact colors, white background.
+- For ILLUSTRATIONS: art style, medium, palette, mood, lighting.
+- For MARKETING: layout, hierarchy, brand colors, call-to-action placement."""
                 ).with_model("openai", "gpt-4o-mini")
-                img_prompt = await prompt_chat.send_message(UM(text=f"User request: {message_data.content}\n\nDesigner's creative brief:\n{response_text[:2000]}"))
+                img_prompt = await prompt_chat.send_message(UM(text=f"User request: {message_data.content}\n\nCreative brief:\n{response_text[:2000]}"))
             except Exception as prompt_err:
                 logger.warning(f"Prompt refinement failed, using original: {prompt_err}")
             
-            from emergentintegrations.llm.openai.image_generation import OpenAIImageGeneration
-            image_gen = OpenAIImageGeneration(api_key=img_api_key)
-            images = await image_gen.generate_images(
-                prompt=img_prompt[:2000],
-                model="gpt-image-1",
-                number_of_images=1,
-                quality="high"
+            # Use Gemini Nano Banana 2 for image generation
+            import base64 as b64
+            from emergentintegrations.llm.chat import LlmChat as ImgChat, UserMessage as ImgMsg
+            img_chat = ImgChat(
+                api_key=img_api_key,
+                session_id=f"imggen_{uuid.uuid4().hex[:8]}",
+                system_message="You are an image generation assistant. Generate the requested image."
             )
+            img_chat.with_model("gemini", "gemini-3-pro-image-preview").with_params(modalities=["image", "text"])
+            _, gen_images = await img_chat.send_message_multimodal_response(ImgMsg(text=img_prompt[:2000]))
             
-            if images and len(images) > 0:
+            if gen_images and len(gen_images) > 0:
                 file_id = uuid.uuid4().hex[:10]
                 filename = f"{file_id}_generated.png"
                 filepath = UPLOAD_DIR / filename
+                image_bytes = b64.b64decode(gen_images[0]["data"])
                 with open(filepath, "wb") as f:
-                    f.write(images[0])
+                    f.write(image_bytes)
                 generated_image = {
                     "filename": filename,
                     "url": f"/files/{filename}",
-                    "model": "gpt-image-1",
+                    "model": "gemini-nano-banana-2",
                     "prompt": img_prompt[:500]
                 }
-                logger.info(f"Auto-generated image for user request: {message_data.content[:80]}")
+                logger.info(f"Generated image via Nano Banana 2: {message_data.content[:80]}")
         except Exception as img_err:
-            logger.error(f"Auto image generation failed: {img_err}")
+            logger.error(f"Image generation failed: {img_err}")
             # Don't fail the entire message, just skip image generation
     
     # Auto-detect video generation requests (only if agent has can_generate_video permission)
