@@ -177,7 +177,7 @@ class TestCrossAgentCommunication:
         return data
     
     def test_update_task_status(self, headers):
-        """Test updating task status via API"""
+        """Test updating task status via API (PATCH method)"""
         # First create a task
         unique_id = uuid.uuid4().hex[:8]
         create_resp = requests.post(f"{BASE_URL}/api/tasks", json={
@@ -189,8 +189,8 @@ class TestCrossAgentCommunication:
         assert create_resp.status_code == 200, f"Failed to create task: {create_resp.text}"
         task_id = create_resp.json()["task_id"]
         
-        # Update the task status
-        update_resp = requests.put(f"{BASE_URL}/api/tasks/{task_id}", json={
+        # Update the task status (PATCH not PUT)
+        update_resp = requests.patch(f"{BASE_URL}/api/tasks/{task_id}", json={
             "status": "in_progress"
         }, headers=headers)
         assert update_resp.status_code == 200, f"Failed to update task: {update_resp.text}"
@@ -386,7 +386,7 @@ class TestHeaderBadgeToggle:
         }
     
     def test_toggle_agent_capability(self, headers):
-        """Test toggling agent capability (header badge)"""
+        """Test toggling agent capability (header badge) via PUT /admin/agents/{id}/settings"""
         # Get agents list
         agents_resp = requests.get(f"{BASE_URL}/api/agents", headers=headers)
         assert agents_resp.status_code == 200, f"Failed to get agents: {agents_resp.text}"
@@ -406,9 +406,9 @@ class TestHeaderBadgeToggle:
         # Get current state
         current_img = target_agent.get("can_generate_image", False)
         
-        # Toggle image generation
-        toggle_resp = requests.patch(
-            f"{BASE_URL}/api/admin/agents/{agent_id}",
+        # Toggle image generation via PUT /admin/agents/{id}/settings
+        toggle_resp = requests.put(
+            f"{BASE_URL}/api/admin/agents/{agent_id}/settings",
             json={"can_generate_image": not current_img},
             headers=headers
         )
@@ -421,8 +421,8 @@ class TestHeaderBadgeToggle:
         assert new_state == (not current_img), "Toggle didn't change state"
         
         # Revert to original state
-        requests.patch(
-            f"{BASE_URL}/api/admin/agents/{agent_id}",
+        requests.put(
+            f"{BASE_URL}/api/admin/agents/{agent_id}/settings",
             json={"can_generate_image": current_img},
             headers=headers
         )
@@ -452,7 +452,7 @@ class TestBrainEditorSave:
         }
     
     def test_brain_editor_save(self, headers):
-        """Test saving brain (system prompt) for an agent"""
+        """Test saving brain (system prompt) for an agent via PUT /admin/agents/{id}/brain"""
         agent_id = "agent_secretary"
         
         # Get current prompt
@@ -460,12 +460,12 @@ class TestBrainEditorSave:
         assert get_resp.status_code == 200
         original_prompt = get_resp.json().get("system_prompt", "")
         
-        # Update with test string
+        # Update with test string via PUT /admin/agents/{id}/brain
         test_marker = f" [TEST_MARKER_{uuid.uuid4().hex[:6]}]"
         new_prompt = original_prompt + test_marker
         
-        update_resp = requests.patch(
-            f"{BASE_URL}/api/admin/agents/{agent_id}",
+        update_resp = requests.put(
+            f"{BASE_URL}/api/admin/agents/{agent_id}/brain",
             json={"system_prompt": new_prompt},
             headers=headers
         )
@@ -478,8 +478,8 @@ class TestBrainEditorSave:
         assert test_marker in saved_prompt, "Brain save didn't persist"
         
         # Revert to original
-        requests.patch(
-            f"{BASE_URL}/api/admin/agents/{agent_id}",
+        requests.put(
+            f"{BASE_URL}/api/admin/agents/{agent_id}/brain",
             json={"system_prompt": original_prompt},
             headers=headers
         )
