@@ -2232,7 +2232,7 @@ async def call_direct_cohere(model_name: str, system_prompt: str, content: str, 
         return parts[0].get("text", "") if parts else ""
 
 
-async def call_llm_with_fallback(api_keys, model_provider, model_name, system_prompt, content, attachments, chat_id):
+async def call_llm_with_fallback(api_keys, model_provider, model_name, system_prompt, content, attachments, chat_id, temperature=None, max_tokens=None):
     """Call LLM with automatic fallback to alternative models on failure."""
     fallback_models = [
         (model_provider, model_name),
@@ -2264,6 +2264,14 @@ async def call_llm_with_fallback(api_keys, model_provider, model_name, system_pr
                 session_id=f"{chat_id}_{uuid.uuid4().hex[:6]}",
                 system_message=system_prompt
             ).with_model(fb_provider, fb_model)
+            # Apply temperature and max_tokens if set
+            extra_params = {}
+            if temperature is not None:
+                extra_params["temperature"] = temperature
+            if max_tokens is not None:
+                extra_params["max_tokens"] = max_tokens
+            if extra_params:
+                llm_chat = llm_chat.with_params(**extra_params)
             message_content = content
             if attachments:
                 message_content += f"\n\n[User attached {len(attachments)} file(s)]"
