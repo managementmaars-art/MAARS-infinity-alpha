@@ -1967,6 +1967,11 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         # Build enhanced system prompt with clarification instruction
         enhanced_agent_prompt = agent["system_prompt"] + CLARIFICATION_INSTRUCTION
         
+        # Inject shared workspace context (tasks, other agents' work)
+        workspace_ctx = await build_workspace_context(current_user.user_id, agent.get("agent_id", ""))
+        if workspace_ctx:
+            enhanced_agent_prompt += workspace_ctx
+        
         # Apply user-specific agent overrides (personality, temperature, etc.)
         user_override = await db.user_agent_overrides.find_one(
             {"user_id": current_user.user_id, "agent_id": agent.get("agent_id")}, {"_id": 0}
