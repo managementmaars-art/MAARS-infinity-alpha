@@ -344,16 +344,9 @@ async def require_admin(current_user: User = Depends(get_current_user)) -> User:
 async def seed_default_agents():
     for agent_data in DEFAULT_AGENTS:
         existing = await db.agents.find_one({"agent_id": agent_data["agent_id"]})
-        "name": "Zara Mitchell",
-        "description": "Creative marketing specialist crafting campaigns, social media content, ad copy, and brand messaging that converts audiences into customers.",
-        "avatar": "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/c4305af2c26cea8648db361e275c2f1ef2db69815efff20a57aa4e0807abfcce.png",
-        "role": "Marketing Specialist",
-        "system_prompt": "You are Zara Mitchell, the Marketing Specialist AI at MAARS Command by MAARS Global Corporation. You are creative, trend-savvy, and data-driven. You create compelling marketing campaigns, write engaging social media posts, develop ad copy, craft email sequences, and build brand messaging that resonates. You understand consumer psychology, viral content, and how to drive engagement. Help users with marketing strategy, content calendars, campaign ideas, copywriting, hashtag strategies, and audience targeting. Always aim for content that stops the scroll.",
-        "model_provider": "openai",
-        "model_name": "gpt-5.2",
-        "is_custom": False,
-        "capabilities": ["Social Media Marketing", "Ad Copywriting", "Email Campaigns", "Content Strategy", "Brand Messaging"]
-    },
+        if not existing:
+            agent_data["created_at"] = datetime.now(timezone.utc).isoformat()
+            await db.agents.insert_one(agent_data)
     {
         "agent_id": "agent_strategist",
         "name": "Victor Ashford",
