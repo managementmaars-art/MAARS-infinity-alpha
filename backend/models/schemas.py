@@ -67,6 +67,10 @@ class Message(BaseModel):
     model_reason: Optional[str] = None
     attachments: Optional[List[str]] = None
     delegation_data: Optional[dict] = None
+    # Feedback fields for agent performance scoring
+    feedback: Optional[str] = None  # "up", "down", or None
+    feedback_at: Optional[str] = None  # ISO timestamp
+    feedback_by: Optional[str] = None  # user_id who gave feedback
 
 class Chat(BaseModel):
     model_config = ConfigDict(extra="ignore")
