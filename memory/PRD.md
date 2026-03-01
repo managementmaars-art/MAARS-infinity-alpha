@@ -5,72 +5,58 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 
 ## Implemented Features
 
+### AI Controllability & Flexibility (Added Mar 1, 2026)
+- **Agent Enable/Disable Toggle:** Admin can activate/deactivate any agent. Disabled agents are hidden from users but visible to admin.
+- **Temperature Control:** Per-agent temperature slider (0.0 Precise → 2.0 Creative) in Brain Editor
+- **Max Tokens Control:** Per-agent max response length slider (256 → 16384) in Brain Editor
+- **Analytics Export:** Download full analytics as CSV (Users, Agent Usage, Payments, Summary)
+- Temperature and max_tokens are passed through to LLM calls via `with_params()`
+
 ### Real-time Activity Feed (Added Mar 1, 2026)
 - Live feed on Analytics dashboard showing recent signups, payments, chats, team creations
 - Auto-refreshes every 15 seconds with manual refresh button
-- Events sorted by timestamp (newest first), relative timestamps ("2m ago")
-- Endpoint: GET /api/admin/activity-feed
+- Events sorted by timestamp (newest first), relative timestamps
 
 ### Customer Analytics Dashboard (Added Mar 1, 2026)
-- Comprehensive admin analytics tab with KPI cards (Total Users, Active 7d/30d, Total Chats, Revenue, MRR)
-- Daily Signups, Messages, Revenue, API Cost charts (30-day time series with recharts)
-- Agent Usage horizontal bar chart (messages per agent)
-- Subscription Distribution donut chart
-- Top Users by Messages ranked list
-- Cost by AI Model breakdown with progress bars
-- Token Usage Breakdown stacked bar chart (Input/Output tokens)
-- Endpoint: GET /api/admin/analytics
+- KPI cards (Total Users, Active 7d/30d, Total Chats, Revenue, MRR)
+- 7 recharts charts: daily signups, messages, revenue, API cost, agent usage, subscription distribution, token usage
+- Top Users by Messages, Cost by AI Model breakdown
 
 ### Gmail SMTP Configuration UI (Added Mar 1, 2026)
-- Admin panel tab for securely entering Gmail SMTP email and App Password
-- Credentials saved to .env and loaded in memory
-- Test email functionality to verify SMTP setup
-- Step-by-step setup guide for Gmail App Passwords
-- Endpoints: GET/POST /api/admin/smtp-config, POST /api/admin/smtp-test
+- Admin tab for securely entering Gmail SMTP email and App Password
+- Test email functionality, step-by-step setup guide
 
-### Commander AI Add-on (Confirmed Complete Mar 1, 2026)
-- Commander Orion available as purchasable add-on in "Build Your Own" package
-- Toggle in pricing page with per-month pricing ($15 USD / ৳1605 BDT)
+### Commander AI Add-on (Complete)
+- Purchasable add-on in "Build Your Own" package ($15/month)
 - Included by default in Pro and Business plans
-- Gated for custom package users without the add-on
 
-### Dynamic Pricing (Fixed Mar 1, 2026)
-- Admin-set prices persist across server restarts (loaded from DB on startup)
-- /api/plans returns admin-configured prices (not hardcoded defaults)
-- Team size limits included in plans (Free:1, Starter:3, Pro:10, Business:unlimited)
+### Brain Editor (Complete)
+- Full agent customization: Personality, Expertise, Do's/Don'ts, Knowledge Base, Model, Temperature, Max Tokens
 
-### Voice Mode / TTS (Added Mar 1, 2026)
-- OpenAI TTS via Emergent key (no extra API key needed)
-- 9 voices: Alloy, Nova, Shimmer, Echo, Onyx, Fable, Coral, Sage, Ash
-- Speaker button on every assistant message in chat
+### Core AI Functionality (Complete)
+- 21 specialized AI agents with distinct personalities
+- Auto model selection (25 models from 8 providers)
+- Agent-to-Agent collaboration via [CONSULT:] tags
+- Commander AI background delegation
+- Clarification questions, conversation history
+- Tool execution (web search, calculate, tasks, email, Slack, GitHub, etc.)
+- File generation (PDF, DOCX), Image generation (DALL-E 3, GPT Image 1), Video generation (Sora 2)
+- Voice mode (OpenAI TTS, 9 voices)
+- Capability gating per agent (toggle image/video/PDF/files)
 
-### Brain Editor (Added Mar 1, 2026)
-- Full agent customization in Admin > Agents > Edit Brain
-- Fields: Personality/Tone, Expertise, Do's/Don'ts, Knowledge Base, Model
-- Auto-rebuilds system prompt from brain config
+### Monetization (Complete)
+- Dynamic Stripe subscriptions (Free, Starter, Pro, Business, Custom)
+- Credit system, admin-configurable pricing
+- Build Your Own package with per-agent selection
 
-### Agent Collaboration
-- Agents consult other specialists mid-conversation via [CONSULT:] tags
-- 10 specialist agents available for cross-consultation
+### Team Collaboration (Complete)
+- Team creation, email invites, role management (Owner/Admin/Member)
+- Shared credit pool, chat sharing
 
-### Commander AI — Background Delegation
-- Instant response, background specialist coordination (2-3 min)
-- Auto-creates tasks, polls for completion
-
-### Team Collaboration
-- Create teams, invite by email, accept/decline
-- Owner/Admin/Member roles, shared credit pool
-- Chat sharing toggle, shared chats view
-
-### Smart Agent Behavior
-- Clarification questions, clean writing style
-- Conversation history, capability enforcement
-
-### Core Platform
-- React + FastAPI + MongoDB, JWT + Google OAuth
-- 21 AI agents, Stripe subscriptions, credit system
-- Auto image/video/file generation, admin dashboard
-- /health for Kubernetes deployment
+### Platform (Complete)
+- JWT + Google OAuth authentication
+- React + FastAPI + MongoDB
+- Kubernetes-ready with /health endpoint
 
 ## Production Launch Checklist
 - [ ] Set live Stripe key (STRIPE_API_KEY)
@@ -83,9 +69,9 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 ## Backlog
 - P1: More integrations (Slack, Calendly, Airtable)
 - P2: Custom domain UI
-- P2: Refactor server.py (5700+ lines) and AdminDashboard.jsx (2400+ lines) into modular structure
+- P2: Refactor server.py (5800+ lines) and AdminDashboard.jsx into modular structure
 
 ## Architecture
-- Backend: /app/backend/server.py (monolithic - needs refactoring)
-- Frontend: /app/frontend/src/pages/ (AdminDashboard.jsx + AnalyticsTab.jsx + SmtpConfigTab.jsx + AgentChat.jsx + Team.jsx + PricingPage.jsx)
-- Database: MongoDB with collections: users, chats, agents, subscriptions, payment_transactions, usage_logs, teams, team_invites, tasks, platform_config, user_sessions
+- Backend: /app/backend/server.py (monolithic)
+- Frontend: /app/frontend/src/pages/ (AdminDashboard.jsx, AnalyticsTab.jsx, SmtpConfigTab.jsx, AgentChat.jsx, Team.jsx, PricingPage.jsx, Settings.jsx)
+- Database: MongoDB (users, chats, agents, subscriptions, payment_transactions, usage_logs, teams, team_invites, tasks, platform_config, user_sessions)
