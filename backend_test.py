@@ -7,7 +7,7 @@ import time
 from datetime import datetime
 
 class NexusAIBackendTester:
-    def __init__(self, base_url="https://agent-performance-11.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://commander-ai-suite.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.token = None
         self.user_id = None
