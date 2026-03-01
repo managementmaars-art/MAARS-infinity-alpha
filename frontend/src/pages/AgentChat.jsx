@@ -50,6 +50,7 @@ const AVAILABLE_MODELS = [
 
 import NotificationCenter from "../components/NotificationCenter";
 import AgentCustomizePanel from "../components/AgentCustomizePanel";
+import MarkdownRenderer from "../components/MarkdownRenderer";
 
 // Commander Group Chat Component - renders delegation as individual agent chat bubbles
 const CommanderGroupChat = ({ msg, msgIndex, generatedFiles, generateFile, generatingFile, currentAgent }) => {
