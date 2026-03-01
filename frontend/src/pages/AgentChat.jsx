@@ -415,6 +415,7 @@ const AgentChat = () => {
         const chat = await response.json();
         setCurrentChat(chat);
         setMessages(chat.messages || []);
+        initFeedback(chat.messages || []);
         const agent = agents.find(a => a.agent_id === chat.agent_id);
         if (agent) setSelectedAgent(agent);
       }
