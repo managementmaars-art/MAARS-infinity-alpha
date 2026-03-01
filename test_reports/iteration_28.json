@@ -1,0 +1,119 @@
+{
+  "summary": "Iteration 28: Testing Agent Enable/Disable toggle, Brain Editor temperature/max_tokens, and CSV Analytics Export. All 17 backend tests PASSED. All frontend UI components verified working correctly. New admin controls fully functional.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_results": {
+    "backend_tests": {
+      "TestAgentToggle": {
+        "test_disable_agent_via_settings": "PASSED - PUT /api/admin/agents/{agent_id}/settings with is_active=false works",
+        "test_disabled_agent_not_in_user_endpoint": "PASSED - GET /api/agents does NOT return disabled agents",
+        "test_disabled_agent_not_in_public_endpoint": "PASSED - GET /api/agents/public does NOT return disabled agents",
+        "test_admin_endpoint_returns_disabled_agents": "PASSED - GET /api/admin/agents returns ALL agents including disabled",
+        "test_enable_agent_via_settings": "PASSED - PUT /api/admin/agents/{agent_id}/settings with is_active=true re-enables"
+      },
+      "TestBrainEditorTemperatureMaxTokens": {
+        "test_save_temperature_via_brain_endpoint": "PASSED - Temperature 0.8 saved and persisted",
+        "test_save_max_tokens_via_brain_endpoint": "PASSED - Max tokens 8192 saved and persisted",
+        "test_save_both_temperature_and_max_tokens": "PASSED - Both params saved together"
+      },
+      "TestAnalyticsExport": {
+        "test_analytics_export_returns_csv": "PASSED - Returns text/csv content type",
+        "test_analytics_export_has_users_section": "PASSED - Contains === USERS === section",
+        "test_analytics_export_has_agent_usage_section": "PASSED - Contains === AGENT USAGE === section",
+        "test_analytics_export_has_payments_section": "PASSED - Contains === PAYMENTS === section",
+        "test_analytics_export_has_summary_section": "PASSED - Contains === SUMMARY === with totals",
+        "test_analytics_export_has_content_disposition": "PASSED - attachment; filename=maars_analytics_*.csv"
+      },
+      "TestAnalyticsRegression": {
+        "test_analytics_endpoint_works": "PASSED - GET /api/admin/analytics returns KPIs",
+        "test_activity_feed_regression": "PASSED - Activity feed returns events"
+      },
+      "TestCleanup": {
+        "test_restore_agent_state": "PASSED - agent_seo re-enabled"
+      }
+    },
+    "frontend_tests": {
+      "agent_toggle_buttons": "PASSED - Found 21 toggle-active-{agent_id} buttons with green ToggleRight icons",
+      "toggle_disabled_state": "PASSED - Toggle changes to grey ToggleLeft when disabled",
+      "disabled_badge": "PASSED - 'Disabled' badge appears when agent is_active=false",
+      "brain_editor_button": "PASSED - Edit Brain buttons found with data-testid='admin-edit-brain-{agent_id}'",
+      "temperature_slider": "PASSED - data-testid='brain-temperature' with range 0-2, value 0.7",
+      "max_tokens_slider": "PASSED - data-testid='brain-max-tokens' with range 256-16384, value 4096",
+      "export_csv_button": "PASSED - data-testid='export-csv-btn' found with 'Export CSV' text",
+      "kpi_cards_regression": "PASSED - All KPI cards render (total-users, active-7d, active-30d, total-chats, total-revenue, mrr)",
+      "activity_feed_regression": "PASSED - Activity feed card renders with 20 items"
+    }
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_agent_toggle_brain_export.py",
+    "/app/test_reports/pytest/iteration28_tests.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Agent toggle (is_active) correctly filters disabled agents from user-facing endpoints (/api/agents, /api/agents/public) while admin endpoint (/api/admin/agents) returns all agents",
+    "Brain Editor properly saves temperature and max_tokens via PUT /api/admin/agents/{agent_id}/brain endpoint",
+    "CSV export generates proper sections: USERS, AGENT USAGE, PAYMENTS, SUMMARY with Content-Disposition header for download",
+    "All data-testid attributes properly implemented: toggle-active-{agent_id}, brain-temperature, brain-max-tokens, export-csv-btn"
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_agent_toggle_brain_export.py"
+  ],
+  "success_rate": {
+    "backend": "100% (17/17 tests passed)",
+    "frontend": "100% (all elements verified)"
+  },
+  "test_credentials": {
+    "admin_email": "management.maars@marsgc.net",
+    "admin_password": "MaarsAdmin2024!"
+  },
+  "seed_data_creation": "Used existing data - 14 users, 21 agents, existing payment transactions",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Agent enable/disable toggle fully working. Admin can disable agents via toggle button (ToggleRight→ToggleLeft), 'Disabled' badge appears. Disabled agents filtered from user endpoints. Brain Editor has temperature slider (0-2) and max_tokens slider (256-16384). CSV Export button downloads analytics file with 4 sections. All previous features (analytics dashboard, activity feed, SMTP config) still working.",
+  "mocked_apis": {
+    "email_sending": "MOCKED - Email notification sending logs to console when SMTP not configured"
+  },
+  "features_verified": {
+    "agent_toggle": {
+      "endpoint": "PUT /api/admin/agents/{agent_id}/settings",
+      "field": "is_active (boolean)",
+      "ui_element": "toggle-active-{agent_id} button with ToggleRight/ToggleLeft icons",
+      "badge": "'Disabled' badge appears when is_active=false",
+      "filtering": "Disabled agents excluded from /api/agents and /api/agents/public"
+    },
+    "brain_editor_enhancements": {
+      "endpoint": "PUT /api/admin/agents/{agent_id}/brain",
+      "temperature_slider": {
+        "testid": "brain-temperature",
+        "range": "0 to 2",
+        "step": "0.1",
+        "labels": "Precise / Balanced / Creative"
+      },
+      "max_tokens_slider": {
+        "testid": "brain-max-tokens",
+        "range": "256 to 16384",
+        "step": "256",
+        "labels": "256 / 8192 / 16384"
+      }
+    },
+    "csv_export": {
+      "endpoint": "GET /api/admin/analytics/export?format=csv",
+      "button_testid": "export-csv-btn",
+      "content_type": "text/csv",
+      "sections": ["USERS", "AGENT USAGE", "PAYMENTS", "SUMMARY"],
+      "filename_format": "maars_analytics_YYYYMMDD.csv"
+    },
+    "regression_checks": {
+      "analytics_kpis": "All 6 KPI cards render",
+      "activity_feed": "20 events displayed with auto-refresh",
+      "agents_list": "21 agents with toggle and capability badges"
+    }
+  }
+}
