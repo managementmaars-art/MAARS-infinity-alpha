@@ -3,74 +3,42 @@
 ## Original Problem Statement
 Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous agents with separate brains, Commander AI delegation, agent collaboration, voice mode, file generation, subscriptions, admin dashboard, team collaboration — production-ready for selling subscriptions.
 
-## Implemented Features
+## Implemented Features (Latest First)
 
-### User Agent Customization (Mar 1, 2026 - Latest)
-- **Per-user agent overrides**: Users can customize agent behavior for their own sessions only (not global)
-- "Customize" button in chat header next to agent name opens settings panel
-- Fields: Personality Adjustment, Custom Instructions, Temperature (0-2 slider), Max Tokens (256-16384 slider)
-- Settings persist per user+agent pair in `user_agent_overrides` collection
-- Reset to defaults button clears overrides
-- Backend applies overrides during message generation (personality/instructions → system prompt, temp/tokens → LLM params)
+### Bug Fix: Header Badge Toggles + Improved Error Handling (Mar 1, 2026 - Latest)
+- **Root Cause**: IMG/PDF/FILES badges in agent rows were display-only Badge components, not clickable
+- **Fix**: Changed to `<button>` elements with `onClick` handlers and `e.stopPropagation()`
+- Badges always visible (greyed+strikethrough when disabled, colored when enabled)
+- Improved error messages: show HTTP status codes and network error details
+- Toast messages now say "Enabled/Disabled {type} generation"
+- All 12 tests passed (iteration_35)
+
+### User Agent Customization (Mar 1, 2026)
+- Per-user agent overrides for personality, temperature, max_tokens, custom instructions
+- "Customize" button in chat header, settings panel with sliders and text areas
 - Endpoints: GET/PUT/DELETE `/api/agents/{agent_id}/my-settings`
 - All 21 tests passed (iteration_34)
 
 ### Custom Domain UI & White-Label Branding (Mar 1, 2026)
-- **Branding & Domain** admin tab with 4 sections:
-  - Brand Identity: Platform Name, Tagline, Footer Text, Support Email
-  - Logo & Favicon: File upload (PNG/JPG/SVG/WebP, 5MB max) + URL paste
-  - Brand Colors: Primary & Accent color pickers with hex input & live preview
-  - Custom Domain: Domain input, CNAME DNS instructions, Verify DNS button
-- **BrandingProvider** context: Applies CSS variables, dynamic favicon, page title
-- **BrandFooter** dynamically shows platform name and footer text
-- Backend: GET/POST /api/admin/branding, POST /upload-logo, POST /verify-domain, GET /branding/public
+- Admin tab: Brand Identity, Logo/Favicon upload, Color pickers, Custom Domain + DNS verification
+- BrandingProvider context for dynamic theming
 - All 18 tests passed (iteration_33)
 
-### Notification Center, User Insights, Onboarding, Analytics, AI Controls, SMTP, Refactoring
-- See previous changelog for full details on these features
-
-## Previously Implemented
-- 21 AI agents with Brain Editor, Commander AI, Agent Collaboration
-- Auto model selection (25 models), File/Image/Video generation
-- Voice mode (OpenAI TTS), Dynamic Stripe subscriptions + Credits
-- Team collaboration, JWT + Google OAuth, Kubernetes /health
+### Earlier Features
+- Notification Center, User Insights, Onboarding, Analytics, AI Controls, SMTP Config
+- Backend Refactoring Phase 1 (models/schemas.py, config.py)
+- 21 AI agents, Commander AI, Voice Mode, Stripe Subscriptions, Team Collaboration
 
 ## Credentials
 - Admin: management.maars@marsgc.net / MaarsAdmin2024!
 
 ## Backlog
-- P1: Backend refactoring - extract admin routes from server.py (~5700 lines) to routes/admin.py
-- P1: Third-party integrations (Slack, Calendly, Airtable) - UI exists, backend logic not implemented
-- P2: AdminDashboard.jsx refactoring - extract remaining tabs into components
-- P2: Complete server.py modularization - extract auth, chats, teams routes
-
-## Architecture
-```
-/app/backend/
-├── server.py (5700+ lines - monolithic, needs refactoring)
-├── config.py (agent definitions, tool configs)
-├── models/schemas.py (Pydantic models)
-├── uploads/ (file storage)
-└── tests/
-
-/app/frontend/src/
-├── App.js (BrandingProvider wraps app)
-├── pages/
-│   ├── AdminDashboard.jsx (all admin tabs)
-│   ├── BrandingTab.jsx (branding & domain admin UI)
-│   ├── AgentChat.jsx (chat + Customize button)
-│   └── ...
-└── components/
-    ├── AgentCustomizePanel.jsx (NEW - per-user agent settings)
-    ├── BrandingProvider.jsx (dynamic branding context)
-    ├── BrandFooter.jsx (dynamic footer)
-    └── ...
-```
-
-## Key DB Collections
-- `user_agent_overrides`: {user_id, agent_id, temperature, max_tokens, personality_tone, custom_instructions}
-- `platform_config`: {config_type: "branding", platform_name, primary_color, accent_color, custom_domain, ...}
+- P1: Backend refactoring - extract admin routes from server.py to routes/admin.py
+- P1: Third-party integrations (Slack, Calendly, Airtable) backend logic
+- P2: AdminDashboard.jsx refactoring
+- P2: Complete server.py modularization
 
 ## Test Reports (All 100%)
-- iteration_34: User Agent Customization + Admin Brain/Toggle + Branding (21/21 backend + all frontend)
-- iteration_33: Branding & Custom Domain (18/18)
+- iteration_35: Header badge toggles bug fix (12/12)
+- iteration_34: User agent customization (21/21)
+- iteration_33: Branding & custom domain (18/18)
