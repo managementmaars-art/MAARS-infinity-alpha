@@ -5667,7 +5667,7 @@ async def admin_update_agent_brain(agent_id: str, body: dict = Body(...), admin:
     if not agent:
         raise HTTPException(404, "Agent not found")
     
-    allowed = {"name", "role", "description", "system_prompt", "personality_tone", "expertise_areas", "dos", "donts", "example_responses", "knowledge_base", "model_provider", "model_name"}
+    allowed = {"name", "role", "description", "system_prompt", "personality_tone", "expertise_areas", "dos", "donts", "example_responses", "knowledge_base", "model_provider", "model_name", "temperature", "max_tokens"}
     update = {k: v for k, v in body.items() if k in allowed}
     if not update:
         raise HTTPException(400, "No valid fields")
