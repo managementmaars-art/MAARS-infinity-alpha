@@ -1528,7 +1528,7 @@ async def logout(request: Request, response: Response):
 async def get_agents_public():
     """Public endpoint: return default agents (no auth required)"""
     agents = await db.agents.find(
-        {"is_custom": False},
+        {"is_custom": False, "is_active": {"$ne": False}},
         {"_id": 0, "agent_id": 1, "name": 1, "avatar": 1, "role": 1, "description": 1, "capabilities": 1, "is_commander": 1}
     ).to_list(50)
     # Inject tools info
@@ -1547,9 +1547,9 @@ async def get_available_tools():
 
 @api_router.get("/agents", response_model=List[Agent])
 async def get_agents(current_user: User = Depends(get_current_user)):
-    # Get default agents and user's custom agents
+    # Get default agents and user's custom agents, filter out deactivated ones
     agents = await db.agents.find(
-        {"$or": [{"is_custom": False}, {"creator_id": current_user.user_id}]},
+        {"$or": [{"is_custom": False}, {"creator_id": current_user.user_id}], "is_active": {"$ne": False}},
         {"_id": 0}
     ).to_list(100)
     
