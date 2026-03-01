@@ -2168,6 +2168,26 @@ Rules:
                     "prompt": img_prompt[:500]
                 }
                 logger.info(f"Generated image via Nano Banana 2: {message_data.content[:80]}")
+                # Log image generation usage separately
+                try:
+                    img_usage = {
+                        "log_id": f"usage_{uuid.uuid4().hex[:10]}",
+                        "user_id": current_user.user_id,
+                        "chat_id": chat_id,
+                        "agent_id": chat["agent_id"],
+                        "model": "gemini/gemini-3-pro-image-preview",
+                        "provider": "gemini",
+                        "input_tokens": 0,
+                        "output_tokens": 0,
+                        "images_generated": 1,
+                        "estimated_cost_usd": 0.02,
+                        "type": "image_generation",
+                        "key_source": "emergent",
+                        "created_at": datetime.now(timezone.utc).isoformat()
+                    }
+                    await db.usage_logs.insert_one(img_usage)
+                except Exception:
+                    pass
         except Exception as img_err:
             logger.error(f"Image generation failed: {img_err}")
             # Don't fail the entire message, just skip image generation
