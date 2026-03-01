@@ -4,10 +4,11 @@ import { Badge } from "../components/ui/badge";
 import {
   Users, MessageSquare, DollarSign, TrendingUp, Activity,
   BarChart3, PieChart as PieChartIcon, Loader2, Bot, Zap, Crown,
-  UserPlus, Radio, RefreshCw
+  UserPlus, Radio, RefreshCw, Download
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+import { Button } from "../components/ui/button";
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
