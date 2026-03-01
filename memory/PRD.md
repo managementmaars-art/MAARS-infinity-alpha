@@ -5,7 +5,17 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 
 ## Implemented Features
 
-### Custom Domain UI & White-Label Branding (Mar 1, 2026 - Latest)
+### User Agent Customization (Mar 1, 2026 - Latest)
+- **Per-user agent overrides**: Users can customize agent behavior for their own sessions only (not global)
+- "Customize" button in chat header next to agent name opens settings panel
+- Fields: Personality Adjustment, Custom Instructions, Temperature (0-2 slider), Max Tokens (256-16384 slider)
+- Settings persist per user+agent pair in `user_agent_overrides` collection
+- Reset to defaults button clears overrides
+- Backend applies overrides during message generation (personality/instructions → system prompt, temp/tokens → LLM params)
+- Endpoints: GET/PUT/DELETE `/api/agents/{agent_id}/my-settings`
+- All 21 tests passed (iteration_34)
+
+### Custom Domain UI & White-Label Branding (Mar 1, 2026)
 - **Branding & Domain** admin tab with 4 sections:
   - Brand Identity: Platform Name, Tagline, Footer Text, Support Email
   - Logo & Favicon: File upload (PNG/JPG/SVG/WebP, 5MB max) + URL paste
@@ -16,35 +26,8 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 - Backend: GET/POST /api/admin/branding, POST /upload-logo, POST /verify-domain, GET /branding/public
 - All 18 tests passed (iteration_33)
 
-### Notification Center (Mar 1, 2026)
-- Bell icon with unread count badge in Dashboard and Chat headers
-- Dropdown panel with notification list, "Read all", "Clear" buttons
-- Auto-notifications on: user registration, credits low, team invite accepted
-- Endpoints: GET /api/notifications, POST /read, POST /read-all, DELETE /clear
-
-### User Usage Insights Dashboard
-- Personal stats at /insights: messages, chats, credits, ratings, streak
-- 30-day activity chart, favorite agents, agent recommendations
-
-### User Onboarding Flow
-- 5-step guided tour: Welcome → Meet Agents → How It Works → Features → Ready
-
-### Agent Performance Scoring
-- Thumbs up/down feedback on every AI response
-- Agent Performance Dashboard in admin Analytics tab
-
-### Customer Analytics Dashboard
-- KPI cards, 7 charts, Live Activity Feed (15s auto-refresh), Export to CSV
-
-### AI Controllability
-- Agent Enable/Disable Toggle, Temperature/Max Tokens sliders
-
-### Gmail SMTP Configuration UI
-- Admin tab for credentials with test email and setup guide
-
-### Backend Refactoring (Phase 1)
-- Extracted 15 Pydantic models to models/schemas.py
-- Extracted DEFAULT_AGENTS, constants, tool config to config.py
+### Notification Center, User Insights, Onboarding, Analytics, AI Controls, SMTP, Refactoring
+- See previous changelog for full details on these features
 
 ## Previously Implemented
 - 21 AI agents with Brain Editor, Commander AI, Agent Collaboration
@@ -56,7 +39,7 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 - Admin: management.maars@marsgc.net / MaarsAdmin2024!
 
 ## Backlog
-- P1: Continue route extraction (admin routes to routes/admin.py) - server.py still ~5600 lines
+- P1: Backend refactoring - extract admin routes from server.py (~5700 lines) to routes/admin.py
 - P1: Third-party integrations (Slack, Calendly, Airtable) - UI exists, backend logic not implemented
 - P2: AdminDashboard.jsx refactoring - extract remaining tabs into components
 - P2: Complete server.py modularization - extract auth, chats, teams routes
@@ -64,7 +47,7 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 ## Architecture
 ```
 /app/backend/
-├── server.py (5600+ lines - monolithic, needs refactoring)
+├── server.py (5700+ lines - monolithic, needs refactoring)
 ├── config.py (agent definitions, tool configs)
 ├── models/schemas.py (Pydantic models)
 ├── uploads/ (file storage)
@@ -73,18 +56,21 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 /app/frontend/src/
 ├── App.js (BrandingProvider wraps app)
 ├── pages/
-│   ├── AdminDashboard.jsx (tabs: overview, analytics, users, agents, transactions, pricing, apikeys, payments, smtp, branding)
-│   ├── BrandingTab.jsx (NEW - branding & domain admin UI)
-│   ├── AnalyticsTab.jsx, SmtpConfigTab.jsx
-│   ├── AgentChat.jsx, Dashboard.jsx, Insights.jsx
+│   ├── AdminDashboard.jsx (all admin tabs)
+│   ├── BrandingTab.jsx (branding & domain admin UI)
+│   ├── AgentChat.jsx (chat + Customize button)
 │   └── ...
 └── components/
-    ├── BrandingProvider.jsx (NEW - dynamic branding context)
-    ├── BrandFooter.jsx (updated - uses branding context)
-    ├── OnboardingFlow.jsx, NotificationCenter.jsx
+    ├── AgentCustomizePanel.jsx (NEW - per-user agent settings)
+    ├── BrandingProvider.jsx (dynamic branding context)
+    ├── BrandFooter.jsx (dynamic footer)
     └── ...
 ```
 
+## Key DB Collections
+- `user_agent_overrides`: {user_id, agent_id, temperature, max_tokens, personality_tone, custom_instructions}
+- `platform_config`: {config_type: "branding", platform_name, primary_color, accent_color, custom_domain, ...}
+
 ## Test Reports (All 100%)
-- iteration_33: Branding & Custom Domain (18/18 backend + all frontend)
-- iteration_26-32: Previous features
+- iteration_34: User Agent Customization + Admin Brain/Toggle + Branding (21/21 backend + all frontend)
+- iteration_33: Branding & Custom Domain (18/18)
