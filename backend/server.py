@@ -2677,8 +2677,7 @@ async def get_available_models(current_user: User = Depends(get_current_user)):
             {"provider": "gemini", "model": "gemini-3-flash-preview", "name": "Gemini 3 Flash", "category": "fast", "cost_per_credit": 0.002, "best_for": "Fast responses, simple tasks"},
             {"provider": "gemini", "model": "gemini-3-pro-preview", "name": "Gemini 3 Pro", "category": "flagship", "cost_per_credit": 0.005, "best_for": "Multimodal, research"},
             # Generation models
-            {"provider": "openai", "model": "gpt-image-1", "name": "GPT Image 1", "category": "image_gen", "cost_per_credit": 0.02, "best_for": "AI image generation from text"},
-            {"provider": "openai", "model": "dall-e-3", "name": "DALL-E 3", "category": "image_gen", "cost_per_credit": 0.015, "best_for": "Creative image generation"},
+            {"provider": "gemini", "model": "gemini-3-pro-image-preview", "name": "Nano Banana 2", "category": "image_gen", "cost_per_credit": 0.01, "best_for": "AI image generation (Gemini)"},
             {"provider": "openai", "model": "sora-2", "name": "Sora 2", "category": "video_gen", "cost_per_credit": 0.10, "best_for": "AI video generation from text"},
             # xAI Grok
             {"provider": "xai", "model": "grok-3", "name": "Grok 3", "category": "flagship", "cost_per_credit": 0.005, "best_for": "Reasoning, analysis, 1M context"},
