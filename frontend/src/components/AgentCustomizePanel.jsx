@@ -85,7 +85,7 @@ const AgentCustomizePanel = ({ agent, onClose }) => {
   if (!agent) return null;
 
   return (
-    <div className="absolute right-0 top-full mt-1 w-80 z-50 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl p-4 space-y-4" data-testid="agent-customize-panel">
+    <div className="fixed right-4 top-16 w-80 z-[60] bg-zinc-900 border border-white/10 rounded-xl shadow-2xl p-4 space-y-4" data-testid="agent-customize-panel">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Settings className="w-4 h-4 text-indigo-400" />
