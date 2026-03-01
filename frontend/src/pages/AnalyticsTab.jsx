@@ -71,11 +71,13 @@ const AnalyticsTab = () => {
   const [loading, setLoading] = useState(true);
   const [feed, setFeed] = useState([]);
   const [feedLoading, setFeedLoading] = useState(false);
+  const [performance, setPerformance] = useState([]);
   const feedRef = useRef([]);
 
   useEffect(() => {
     fetchAnalytics();
     fetchFeed();
+    fetchPerformance();
     const interval = setInterval(fetchFeed, 15000);
     return () => clearInterval(interval);
   }, []);
