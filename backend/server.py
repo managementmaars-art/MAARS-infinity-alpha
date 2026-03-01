@@ -2391,7 +2391,14 @@ Rules:
                     return vg.text_to_video(**kwargs)
                 
                 vb = await asyncio.to_thread(_sync_gen)
-                logger.info(f"Video gen result: type={type(vb)}, has_data={bool(vb)}")
+                logger.info(f"Video gen result: type={type(vb)}, has_data={bool(vb)}, size={len(vb) if vb else 0}")
+                
+                # Retry once if empty
+                if not vb:
+                    logger.warning("Sora 2 returned empty on first attempt, retrying in 30s...")
+                    await asyncio.sleep(30)
+                    vb = await asyncio.to_thread(_sync_gen)
+                    logger.info(f"Video gen retry result: type={type(vb)}, has_data={bool(vb)}, size={len(vb) if vb else 0}")
                 
                 if vb:
                     fid = uuid.uuid4().hex[:10]
@@ -2405,9 +2412,11 @@ Rules:
                     )
                     logger.info(f"Background video generated: {fn}")
                 else:
+                    error_msg = "Sora 2 returned no video data after retry. The generation may have timed out or been rejected."
+                    logger.error(error_msg)
                     await db.chats.update_one(
                         {"chat_id": chat_id, "messages.message_id": assistant_msg["message_id"]},
-                        {"$set": {"messages.$.video_generating": False, "messages.$.video_error": "Video generation returned empty"}}
+                        {"$set": {"messages.$.video_generating": False, "messages.$.video_error": error_msg}}
                     )
             except Exception as ve:
                 logger.error(f"Background video gen failed: {ve}")
