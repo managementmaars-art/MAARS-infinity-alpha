@@ -347,8 +347,8 @@ async def seed_default_agents():
         if not existing:
             agent_data["created_at"] = datetime.now(timezone.utc).isoformat()
             await db.agents.insert_one(agent_data)
-    {
-        "agent_id": "agent_strategist",
+        else:
+            # Update avatar and tools if changed
         "name": "Victor Ashford",
         "description": "Business strategist analyzing markets, competitors, and opportunities to develop winning strategies and actionable business plans.",
         "avatar": "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/48310a3af62b331e8f13d73aa7ac03cdfd9565c00fc03fd7dade81f63edfe3a7.png",
