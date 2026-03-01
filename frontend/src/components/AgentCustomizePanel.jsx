@@ -194,6 +194,7 @@ const AgentCustomizePanel = ({ agent, onClose }) => {
         </>
       )}
     </div>
+    </>
   );
 };
 
