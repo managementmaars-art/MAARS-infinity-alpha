@@ -1,30 +1,31 @@
 # MAARS Command by MAARS Global Corporation - PRD
 
 ## Original Problem Statement
-Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous agents with separate brains, Commander AI delegation, agent collaboration, voice mode, file generation, subscriptions, admin dashboard, team collaboration — production-ready for selling subscriptions.
+Full-stack AI team platform with 20+ autonomous agents, Commander AI delegation, agent collaboration, voice mode, file generation, subscriptions, admin dashboard — production-ready for selling subscriptions.
 
 ## Implemented Features
 
-### Video Generation Fix (Mar 1, 2026 - LATEST)
-- **Backend retry logic**: Sora 2 retries once (30s delay) if first attempt returns empty
-- **Frontend file hydration**: Pre-populates generatedFiles from DB when loading messages — videos/images completed in background now visible when returning to chat
-- **Better error messages**: Detailed error logging instead of generic "returned empty"
-- Verified: Sora 2 generated 5.8MB video successfully after retry
+### Agent Web Browsing (Mar 1, 2026 - LATEST)
+- **Auto-detect:** Regex pattern matching (12 patterns) detects when a message needs web data
+- **DuckDuckGo search:** Uses `ddgs` library for live web search (4 results per query)
+- **Page scraping:** BeautifulSoup extracts clean text from top results with 8s timeout
+- **Context injection:** Web data injected before workspace/RAG context for priority
+- **System prompt updated:** Rule 5 tells agents they HAVE web browsing capability
+- **Globe icon:** Cyan Globe icon + "Web" label shown on messages that used web search
+- All tests passed (iteration_41: 8/8 backend, 6/6 frontend)
+
+### Video Generation Fix (Mar 1, 2026)
+- Sora 2 retry logic (30s delay), frontend file hydration on chat reload
 
 ### Model-Aware Credit System (Mar 1, 2026)
-- Dynamic credit costs: Economy=1, Fast=2, Flagship=3, Premium=5
-- Generation add-ons: Image gen +5cr, Video gen +10cr
-- 28 models across 9 providers in MODEL_CREDIT_COSTS
-- Frontend credit badges in model selector, credits shown per message
-- All tests passed (iteration_40: 9/9 backend, 6/6 frontend)
+- 28 models, tiered credits: Economy=1, Fast=2, Flagship=3, Premium=5, Image+5, Video+10
 
-### RAG Knowledge Base System (Mar 1, 2026)
-- Per-agent document upload, TF-IDF search, auto context injection, source citations
-- All tests passed (iteration_39)
+### RAG Knowledge Base (Mar 1, 2026)
+- Per-agent document upload, TF-IDF search, source citations
 
 ### Previous
 - Markdown rendering, Nano Banana 2, Admin CORS fix, Cross-Agent Communication
-- User Customization, White-Label Branding, 21 agents, Stripe, etc.
+- User Customization, White-Label Branding, 21 agents, Stripe, Team Collaboration
 
 ## Credentials
 - Admin: management.maars@marsgc.net / MaarsAdmin2024!
@@ -32,3 +33,9 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 ## Backlog
 - P1: Third-party integrations backend logic (Slack, Calendly, Airtable) — MOCKED
 - P2: Backend refactoring, AdminDashboard.jsx extraction
+
+## Test Reports (All 100%)
+- iteration_41: Web browsing (8/8 + 6/6)
+- iteration_40: Credit system (9/9 + 6/6)
+- iteration_39: RAG + avatar + toast (9/9 + all)
+- iteration_38: Markdown + Nano Banana 2 + Admin (10/10 + all)
