@@ -5259,6 +5259,56 @@ async def admin_update_agent_settings(agent_id: str, body: dict = Body(...), adm
     
     return {"success": True, "updated": list(update.keys())}
 
+@api_router.put("/admin/agents/{agent_id}/brain")
+async def admin_update_agent_brain(agent_id: str, body: dict = Body(...), admin: User = Depends(require_admin)):
+    """Update agent brain configuration — personality, tone, knowledge, rules."""
+    agent = await db.agents.find_one({"agent_id": agent_id})
+    if not agent:
+        raise HTTPException(404, "Agent not found")
+    
+    allowed = {"name", "role", "description", "system_prompt", "personality_tone", "expertise_areas", "dos", "donts", "example_responses", "knowledge_base", "model_provider", "model_name"}
+    update = {k: v for k, v in body.items() if k in allowed}
+    if not update:
+        raise HTTPException(400, "No valid fields")
+    
+    # Auto-rebuild system prompt from brain fields if personality fields are provided
+    brain_fields = {"personality_tone", "expertise_areas", "dos", "donts", "knowledge_base"}
+    if brain_fields.intersection(update.keys()):
+        # Save brain fields separately and also rebuild system prompt
+        tone = update.get("personality_tone", agent.get("personality_tone", ""))
+        expertise = update.get("expertise_areas", agent.get("expertise_areas", ""))
+        dos = update.get("dos", agent.get("dos", ""))
+        donts = update.get("donts", agent.get("donts", ""))
+        knowledge = update.get("knowledge_base", agent.get("knowledge_base", ""))
+        name = update.get("name", agent.get("name"))
+        role = update.get("role", agent.get("role"))
+        
+        brain_prompt_parts = [agent.get("system_prompt", "").split("\n\n--- BRAIN CONFIG ---")[0].strip()]
+        brain_config = []
+        if tone: brain_config.append(f"Personality & Tone: {tone}")
+        if expertise: brain_config.append(f"Expertise Areas: {expertise}")
+        if dos: brain_config.append(f"Always do: {dos}")
+        if donts: brain_config.append(f"Never do: {donts}")
+        if knowledge: brain_config.append(f"Knowledge Base: {knowledge}")
+        
+        if brain_config:
+            brain_prompt_parts.append("\n\n--- BRAIN CONFIG ---\n" + "\n".join(brain_config))
+        
+        update["system_prompt"] = "\n".join(brain_prompt_parts)
+    
+    await db.agents.update_one({"agent_id": agent_id}, {"$set": update})
+    
+    updated_agent = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0})
+    return {"success": True, "agent": updated_agent}
+
+@api_router.get("/admin/agents/{agent_id}")
+async def admin_get_agent_detail(agent_id: str, admin: User = Depends(require_admin)):
+    """Get full agent details for brain editor."""
+    agent = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0})
+    if not agent:
+        raise HTTPException(404, "Agent not found")
+    return agent
+
 
 app.include_router(api_router)
 
