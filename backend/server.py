@@ -873,6 +873,11 @@ async def agent_execute_with_tools(
     tool_prompt = await build_tool_prompt_async(agent_tools)
     enhanced_system_prompt = agent["system_prompt"] + CLARIFICATION_INSTRUCTION + tool_prompt
     
+    # Inject workspace context so agent can see cross-agent tasks and activity
+    workspace_ctx = await build_workspace_context(user_id, agent.get("agent_id", ""))
+    if workspace_ctx:
+        enhanced_system_prompt += workspace_ctx
+    
     execution_steps = []
     max_iterations = 4
     accumulated_context = f"User: {user_content}"
