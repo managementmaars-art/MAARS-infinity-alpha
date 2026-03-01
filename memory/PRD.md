@@ -1,44 +1,42 @@
 # MAARS Command by MAARS Global Corporation - PRD
 
 ## Original Problem Statement
-Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous agents with separate brains, Commander AI delegation, agent-to-agent collaboration, file generation, subscriptions, admin dashboard, team collaboration.
+Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous agents with separate brains, Commander AI delegation, agent collaboration, voice mode, file generation, subscriptions, admin dashboard, team collaboration — production-ready for selling subscriptions.
 
 ## Implemented Features
 
-### Brain Editor (Added Mar 1, 2026)
-- Full agent brain customization UI in Admin > Agents tab
-- Editable fields: Name, Role, Description, Personality & Tone, Expertise Areas, Do's, Don'ts, Knowledge Base, Model Provider, Model Name
-- Auto-rebuilds system prompt from brain config fields
-- PUT /api/admin/agents/{agent_id}/brain endpoint
-- Simple enough for non-technical business owner
+### Dynamic Pricing (Fixed Mar 1, 2026)
+- Admin-set prices persist across server restarts (loaded from DB on startup)
+- /api/plans returns admin-configured prices (not hardcoded defaults)
+- Team size limits included in plans (Free:1, Starter:3, Pro:10, Business:unlimited)
 
-### Agent-to-Agent Collaboration (Added Mar 1, 2026)
-- Agents can consult other specialists mid-conversation
-- Uses [CONSULT:agent_id]question[/CONSULT] tag system
-- Backend intercepts tags, calls the referenced agent, integrates response
+### Voice Mode / TTS (Added Mar 1, 2026)
+- OpenAI TTS via Emergent key (no extra API key needed)
+- 9 voices: Alloy, Nova, Shimmer, Echo, Onyx, Fable, Coral, Sage, Ash
+- Speaker button on every assistant message in chat
+- POST /api/tts/generate endpoint
+
+### Brain Editor (Added Mar 1, 2026)
+- Full agent customization in Admin > Agents > Edit Brain
+- Fields: Personality/Tone, Expertise, Do's/Don'ts, Knowledge Base, Model
+- Auto-rebuilds system prompt from brain config
+
+### Agent Collaboration
+- Agents consult other specialists mid-conversation via [CONSULT:] tags
 - 10 specialist agents available for cross-consultation
 
 ### Commander AI — Background Delegation
-- Returns immediately, runs specialists in background (2-3 min)
-- Auto-creates tasks, polls for completion every 5 seconds
-- Processing spinner UI while specialists work
+- Instant response, background specialist coordination (2-3 min)
+- Auto-creates tasks, polls for completion
 
 ### Team Collaboration
-- Create & manage teams, invite by email, accept/decline invites
-- 3 roles: Owner/Admin/Member with different permissions
-- Team size per plan: Free:1, Starter:3, Pro:10, Business:unlimited
-- Chat sharing toggle, shared chats on Team page
+- Create teams, invite by email, accept/decline
+- Owner/Admin/Member roles, shared credit pool
+- Chat sharing toggle, shared chats view
 
 ### Smart Agent Behavior
-- Clarification questions before deliverables
-- Clean conversational writing style
-- Conversation history for continuity
-
-### Admin Dashboard
-- Live profit calculator
-- Agent capability toggles (image/video/pdf/files)
-- Brain Editor for each agent
-- Stripe payment setup
+- Clarification questions, clean writing style
+- Conversation history, capability enforcement
 
 ### Email Notifications (Placeholder)
 - Gmail SMTP utility ready, professional HTML template
@@ -47,20 +45,17 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 ### Core Platform
 - React + FastAPI + MongoDB, JWT + Google OAuth
 - 21 AI agents, Stripe subscriptions, credit system
-- Auto image/video/file generation
-- /health endpoint for Kubernetes deployment
+- Auto image/video/file generation, admin dashboard
+- /health for Kubernetes deployment
 
 ## Production Launch Checklist
 - [ ] Set live Stripe key (STRIPE_API_KEY)
-- [ ] Set Gmail SMTP credentials (SMTP_EMAIL, SMTP_PASSWORD)
-- [ ] Set custom domain
-- [ ] Configure FRONTEND_URL in .env for email links
-
-## Backlog
-- P1: Voice mode (ElevenLabs or OpenAI TTS)
-- P1: More integrations (Slack, Calendly, Airtable, Google Suite)
-- P2: Custom domain UI
-- P2: Refactor server.py into modules
+- [ ] Set Gmail SMTP (SMTP_EMAIL, SMTP_PASSWORD)
+- [ ] Set custom domain + FRONTEND_URL
 
 ## Credentials
 - Admin: management.maars@marsgc.net / MaarsAdmin2024!
+
+## Backlog
+- P1: More integrations (Slack, Calendly, Airtable)
+- P2: Custom domain UI, Refactor server.py
