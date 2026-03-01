@@ -527,6 +527,61 @@ async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
             await db.tasks.insert_one(task_doc)
             return f"Task created successfully: '{title}' (Priority: {priority}, ID: {task_doc['task_id']})"
 
+        elif tool_name == "query_tasks":
+            status_filter = tool_input.get("status", "")
+            query = {"user_id": user_id}
+            if status_filter and status_filter in ("pending", "in_progress", "completed", "cancelled"):
+                query["status"] = status_filter
+            cursor = db.tasks.find(query, {"_id": 0}).sort("created_at", -1).limit(20)
+            tasks = await cursor.to_list(20)
+            if not tasks:
+                return "No tasks found."
+            lines = []
+            for t in tasks:
+                assigned = ", ".join(t.get("assigned_agents", [])) or "unassigned"
+                lines.append(f"[{t['status'].upper()}] {t['title']} | Priority: {t.get('priority','medium')} | Assigned: {assigned} | ID: {t['task_id']}\n  Description: {t.get('description','')[:200]}")
+                if t.get("result"):
+                    lines.append(f"  Result: {str(t['result'])[:300]}")
+            return f"Found {len(tasks)} tasks:\n" + "\n".join(lines)
+
+        elif tool_name == "update_task":
+            task_id = tool_input.get("task_id", "")
+            if not task_id:
+                return "Error: task_id is required"
+            task = await db.tasks.find_one({"task_id": task_id, "user_id": user_id}, {"_id": 0})
+            if not task:
+                return f"Task '{task_id}' not found."
+            update = {}
+            if tool_input.get("status") in ("pending", "in_progress", "completed", "cancelled"):
+                update["status"] = tool_input["status"]
+            if tool_input.get("result"):
+                update["result"] = tool_input["result"]
+            if tool_input.get("description"):
+                update["description"] = tool_input["description"]
+            if not update:
+                return f"Task '{task_id}' found but no valid updates provided. Current: [{task['status']}] {task['title']}"
+            update["updated_at"] = datetime.now(timezone.utc).isoformat()
+            await db.tasks.update_one({"task_id": task_id}, {"$set": update})
+            return f"Task '{task['title']}' updated: {', '.join(f'{k}={v}' for k, v in update.items() if k != 'updated_at')}"
+
+        elif tool_name == "query_agent_history":
+            target_agent = tool_input.get("agent_id", "")
+            if not target_agent:
+                return "Error: agent_id is required (e.g. 'agent_marketing', 'agent_projectmanager')"
+            chat = await db.chats.find_one(
+                {"user_id": user_id, "agent_id": target_agent},
+                {"_id": 0, "messages": {"$slice": -10}}
+            )
+            if not chat or not chat.get("messages"):
+                return f"No conversation history found with {target_agent}."
+            agent_doc = await db.agents.find_one({"agent_id": target_agent}, {"_id": 0, "name": 1, "role": 1})
+            agent_name = agent_doc.get("name", target_agent) if agent_doc else target_agent
+            lines = [f"Recent conversation with {agent_name}:"]
+            for msg in chat["messages"]:
+                role = "User" if msg.get("role") == "user" else agent_name
+                lines.append(f"  {role}: {str(msg.get('content',''))[:400]}")
+            return "\n".join(lines)
+
         elif tool_name == "analyze_data":
             data_str = tool_input.get("data", "")
             question = tool_input.get("question", "Summarize the data")
