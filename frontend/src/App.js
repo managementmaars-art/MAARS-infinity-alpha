@@ -18,6 +18,7 @@ import InsightsPage from "./pages/InsightsPage";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
+import { BrandingProvider } from "./components/BrandingProvider";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const API = `${BACKEND_URL}/api`;
@@ -255,10 +256,12 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <GlobalCreditsDisplay />
-        <AppRouter />
-        <Watermark />
-        <Toaster position="top-right" richColors />
+        <BrandingProvider>
+          <GlobalCreditsDisplay />
+          <AppRouter />
+          <Watermark />
+          <Toaster position="top-right" richColors />
+        </BrandingProvider>
       </AuthProvider>
     </BrowserRouter>
   );
