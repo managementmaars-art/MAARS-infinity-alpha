@@ -2122,6 +2122,12 @@ Rules:
     updated_sub = await db.subscriptions.find_one({"user_id": current_user.user_id}, {"_id": 0})
     credits_remaining = updated_sub.get("credits", 0) if updated_sub else 0
     
+    # Low credits notification
+    if credits_remaining > 0 and credits_remaining <= 20:
+        existing_low = await db.notifications.find_one({"user_id": current_user.user_id, "type": "credits_low", "read": False})
+        if not existing_low:
+            await create_notification(current_user.user_id, "credits_low", "Credits Running Low!", f"You have {credits_remaining} credits left. Consider upgrading your plan or purchasing more credits.", "/pricing")
+    
     # Start background video generation if needed
     if video_generating:
         user_attachments = message_data.attachments or []
