@@ -926,7 +926,7 @@ const AgentChat = () => {
                 <p className="text-sm text-zinc-400">{selectedAgent.role}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 relative">
+            <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="sm"
@@ -941,11 +941,11 @@ const AgentChat = () => {
                   <Share2 className="w-4 h-4 mr-1" />Share
                 </Button>
               )}
-              {showCustomize && (
-                <AgentCustomizePanel agent={selectedAgent} onClose={() => setShowCustomize(false)} />
-              )}
             </div>
           </div>
+        )}
+        {showCustomize && selectedAgent && (
+          <AgentCustomizePanel agent={selectedAgent} onClose={() => setShowCustomize(false)} />
         )}
 
         {/* Messages */}
