@@ -1929,9 +1929,14 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
                 response_text = tool_result["content"]
                 execution_steps = tool_result.get("execution_steps")
             else:
-                # Get agent-level temperature and max_tokens settings
+                # Get agent-level temperature and max_tokens settings, with user overrides taking priority
                 agent_temp = agent.get("temperature")
                 agent_max_tokens = agent.get("max_tokens")
+                if user_override:
+                    if user_override.get("temperature") is not None:
+                        agent_temp = user_override["temperature"]
+                    if user_override.get("max_tokens") is not None:
+                        agent_max_tokens = user_override["max_tokens"]
                 response_text, model_provider, model_name = await call_llm_with_fallback(
                     api_keys, model_provider, model_name,
                     enhanced_agent_prompt, full_user_content,
