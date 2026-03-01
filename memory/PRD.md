@@ -3,54 +3,53 @@
 ## Original Problem Statement
 Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous agents with separate brains, Commander AI delegation, agent collaboration, voice mode, file generation, subscriptions, admin dashboard, team collaboration — production-ready for selling subscriptions.
 
-## Implemented Features
+## Implemented Features (This Session - Mar 1, 2026)
 
-### Agent Performance Scoring (Added Mar 1, 2026)
-- **Thumbs Up/Down feedback** on every AI assistant response — users rate quality inline
-- **Agent Performance Dashboard** in admin Analytics tab — satisfaction rates, thumbs up/down counts, total messages per agent
-- Color-coded performance bars (green >=80%, amber >=50%, red <50%)
-- Feedback stored with timestamp and user attribution
-- Endpoints: POST /api/chats/{chat_id}/messages/{message_id}/feedback, GET /api/admin/agent-performance
+### User Onboarding Flow
+- 5-step guided tour: Welcome → Meet Agents → How It Works → Features → Ready
+- Personalized greeting, agent avatars preview, feature highlights, sample prompt
+- Skip tour and Start Chatting buttons both mark completion
+- Onboarding state persisted in MongoDB, only shows once per user
+- Endpoints: GET /api/auth/me (onboarding_completed field), POST /api/auth/onboarding-complete
 
-### AI Controllability & Flexibility (Added Mar 1, 2026)
-- **Agent Enable/Disable Toggle:** Admin can activate/deactivate any agent. Disabled agents hidden from users.
-- **Temperature Control:** Per-agent temperature slider (0.0 Precise → 2.0 Creative) in Brain Editor
-- **Max Tokens Control:** Per-agent max response length slider (256 → 16384) in Brain Editor
-- **Analytics Export:** Download full analytics as CSV (Users, Agent Usage, Payments, Summary)
+### Agent Performance Scoring
+- Thumbs up/down feedback on every AI assistant response
+- Agent Performance Dashboard in admin Analytics tab
+- Color-coded satisfaction bars (green >=80%, amber >=50%, red <50%)
+- Endpoints: POST /feedback, GET /admin/agent-performance
 
-### Real-time Activity Feed (Added Mar 1, 2026)
-- Live feed on Analytics dashboard showing recent signups, payments, chats, team creations
-- Auto-refreshes every 15 seconds with manual refresh button
-
-### Customer Analytics Dashboard (Added Mar 1, 2026)
+### Customer Analytics Dashboard
 - KPI cards (Total Users, Active 7d/30d, Total Chats, Revenue, MRR)
-- 7 recharts charts: daily signups, messages, revenue, API cost, agent usage, subscription distribution, token usage
-- Top Users by Messages, Cost by AI Model breakdown
+- 7 recharts charts + Agent Performance section + Live Activity Feed
+- Export to CSV with users, agent usage, payments, summary
 
-### Gmail SMTP Configuration UI (Added Mar 1, 2026)
-- Admin tab for securely entering Gmail SMTP email and App Password
-- Test email functionality, step-by-step setup guide
+### AI Controllability
+- Agent Enable/Disable Toggle (hidden from users when disabled)
+- Per-agent Temperature slider (0.0-2.0) and Max Tokens slider (256-16384)
+- Temperature/max_tokens passed to LLM calls via with_params()
 
-### Backend Refactoring (Started Mar 1, 2026)
-- Extracted 15 Pydantic models to `/app/backend/models/schemas.py`
-- Created modular directory structure: `models/`, `routes/`, `services/`
-- server.py reduced from ~5900 to ~5765 lines (first phase)
+### Gmail SMTP Configuration UI
+- Admin tab for Gmail SMTP credentials with test email functionality
+- Step-by-step setup guide for App Passwords
 
-### Core Platform Features (Complete)
-- 21 specialized AI agents with distinct personalities and brain configs
-- Commander AI background delegation with auto-task creation
-- Agent-to-Agent collaboration via [CONSULT:] tags
-- Auto model selection (25 models from 8 providers) with per-agent overrides
-- File generation (PDF, DOCX), Image generation (DALL-E 3, GPT Image 1), Video generation (Sora 2)
+### Live Activity Feed
+- Auto-refreshing (15s) feed showing signups, payments, chats, team events
+
+### Backend Refactoring (Phase 1)
+- Extracted 15 Pydantic models to /app/backend/models/schemas.py
+- Created modular directory structure: models/, routes/, services/
+
+## Previously Implemented (Before This Session)
+- 21 specialized AI agents with Brain Editor
+- Commander AI background delegation + Agent Collaboration
+- Auto model selection (25 models, 8 providers)
+- File/Image/Video generation (PDF, DOCX, DALL-E 3, Sora 2)
 - Voice mode (OpenAI TTS, 9 voices)
-- Brain Editor (personality, tone, expertise, dos/donts, knowledge base, model, temperature, max_tokens)
-- Capability gating per agent (toggle image/video/PDF/files)
-- Dynamic Stripe subscriptions (Free, Starter, Pro, Business, Custom Build Your Own)
+- Dynamic Stripe subscriptions + Credit system
 - Commander AI as purchasable add-on ($15/month)
-- Credit system with admin-configurable pricing
 - Team collaboration (invites, roles, shared chats)
 - JWT + Google OAuth authentication
-- React + FastAPI + MongoDB, Kubernetes-ready
+- Kubernetes-ready with /health endpoint
 
 ## Production Launch Checklist
 - [ ] Set live Stripe key (STRIPE_API_KEY)
@@ -61,35 +60,34 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 - Admin: management.maars@marsgc.net / MaarsAdmin2024!
 
 ## Backlog
-- P1: Continue refactoring — extract admin routes to routes/admin.py, services to services/llm.py
-- P1: More integrations (Slack, Calendly, Airtable)
+- P1: Backend refactoring Phase 2 — extract admin routes to routes/admin.py, LLM services to services/llm.py
+- P1: Third-party integrations (Slack, Calendly, Airtable)
 - P2: Custom domain UI
-- P2: White-label/custom branding options
+- P2: White-label/branding options
 
 ## Architecture
 ```
 /app/backend/
-├── server.py           (main app, routes, services — ~5765 lines, being refactored)
-├── models/
-│   ├── __init__.py
-│   └── schemas.py      (15 Pydantic models extracted)
-├── routes/
-│   └── __init__.py     (ready for route extraction)
-├── services/
-│   └── __init__.py     (ready for service extraction)
+├── server.py           (~5765 lines — main app)
+├── models/schemas.py   (15 Pydantic models)
+├── routes/             (ready for extraction)
+├── services/           (ready for extraction)
+├── tests/              (pytest files from testing agent)
 └── .env
 
-/app/frontend/src/
-├── pages/
-│   ├── AdminDashboard.jsx  (main admin with tabs)
-│   ├── AnalyticsTab.jsx    (extracted analytics + performance)
-│   ├── SmtpConfigTab.jsx   (extracted SMTP config)
-│   ├── AgentChat.jsx       (chat + feedback buttons)
-│   ├── Team.jsx            (team management)
-│   ├── PricingPage.jsx     (subscription pricing)
-│   └── Settings.jsx        (user settings)
-└── components/ui/          (shadcn components)
+/app/frontend/src/pages/
+├── AdminDashboard.jsx  (admin with tabs)
+├── AnalyticsTab.jsx    (analytics + performance scoring)
+├── SmtpConfigTab.jsx   (SMTP configuration)
+├── OnboardingFlow.jsx  (5-step user onboarding)
+├── AgentChat.jsx       (chat + feedback)
+├── Dashboard.jsx       (main dashboard + onboarding trigger)
+├── Team.jsx, Settings.jsx, PricingPage.jsx, etc.
 ```
 
-## Database Collections
-users, chats, agents, subscriptions, payment_transactions, usage_logs, teams, team_invites, tasks, platform_config, user_sessions
+## Test Reports
+- iteration_26: Analytics + SMTP (100%)
+- iteration_27: Activity Feed (100%)
+- iteration_28: Agent Controls (100%)
+- iteration_29: Feedback + Performance (100%)
+- iteration_30: Onboarding Flow (100%)
