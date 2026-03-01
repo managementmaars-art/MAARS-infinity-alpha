@@ -135,6 +135,60 @@ const AnalyticsTab = () => {
         <KpiCard title="MRR" value={`$${kpis.mrr.toFixed(2)}`} subtitle="Monthly Recurring" icon={TrendingUp} color="red" />
       </div>
 
+      {/* Live Activity Feed */}
+      <Card className="bg-zinc-900/50 border-white/10" data-testid="activity-feed">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-white font-['Outfit'] text-base flex items-center gap-2">
+              <div className="relative">
+                <Radio className="w-4 h-4 text-red-400" />
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              </div>
+              Live Activity Feed
+            </CardTitle>
+            <button onClick={fetchFeed} className="text-zinc-500 hover:text-white transition-colors" data-testid="refresh-feed-btn">
+              <RefreshCw className="w-4 h-4" />
+            </button>
+          </div>
+          <p className="text-xs text-zinc-500">Auto-refreshes every 15 seconds</p>
+        </CardHeader>
+        <CardContent>
+          <div className="max-h-64 overflow-y-auto space-y-1 pr-1 scrollbar-thin">
+            {feed.length > 0 ? feed.map((event, i) => {
+              const IconMap = {
+                "user-plus": UserPlus,
+                "dollar-sign": DollarSign,
+                "message-square": MessageSquare,
+                "users": Users,
+              };
+              const colorMap = {
+                signup: "emerald",
+                payment: "amber",
+                chat: "indigo",
+                team: "violet",
+              };
+              const EventIcon = IconMap[event.icon] || Activity;
+              const color = colorMap[event.type] || "zinc";
+              const timeAgo = getTimeAgo(event.timestamp);
+              return (
+                <div key={`${event.type}-${i}`} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors" data-testid={`feed-item-${i}`}>
+                  <div className={`w-8 h-8 rounded-full bg-${color}-500/15 flex items-center justify-center shrink-0`}>
+                    <EventIcon className={`w-4 h-4 text-${color}-400`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-white truncate">{event.title}</p>
+                    {event.detail && <p className="text-xs text-zinc-500 truncate">{event.detail}</p>}
+                  </div>
+                  <span className="text-[10px] text-zinc-600 whitespace-nowrap shrink-0">{timeAgo}</span>
+                </div>
+              );
+            }) : (
+              <p className="text-zinc-500 text-sm text-center py-6">No activity yet</p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Row 1: User Signups + Messages */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ChartCard title="Daily Signups (30d)" icon={Users}>
