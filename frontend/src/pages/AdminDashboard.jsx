@@ -203,6 +203,7 @@ const AdminDashboard = () => {
     { id: "payments", label: "Payment Setup", icon: CreditCard },
     { id: "smtp", label: "Email (SMTP)", icon: Mail },
     { id: "branding", label: "Branding & Domain", icon: Paintbrush },
+    { id: "knowledge", label: "Knowledge Base", icon: BookOpen },
   ];
 
   const NavItem = ({ icon: Icon, label, to, active }) => (
