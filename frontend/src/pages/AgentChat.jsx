@@ -926,11 +926,25 @@ const AgentChat = () => {
                 <p className="text-sm text-zinc-400">{selectedAgent.role}</p>
               </div>
             </div>
-            {currentChat && (
-              <Button variant="ghost" size="sm" onClick={shareChat} className="text-zinc-400 hover:text-indigo-400 h-8" data-testid="share-chat-btn">
-                <Share2 className="w-4 h-4 mr-1" />Share
+            <div className="flex items-center gap-2 relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowCustomize(!showCustomize)}
+                className={`text-zinc-400 hover:text-indigo-400 h-8 ${showCustomize ? 'text-indigo-400 bg-indigo-500/10' : ''}`}
+                data-testid="customize-agent-btn"
+              >
+                <Settings className="w-4 h-4 mr-1" />Customize
               </Button>
-            )}
+              {currentChat && (
+                <Button variant="ghost" size="sm" onClick={shareChat} className="text-zinc-400 hover:text-indigo-400 h-8" data-testid="share-chat-btn">
+                  <Share2 className="w-4 h-4 mr-1" />Share
+                </Button>
+              )}
+              {showCustomize && (
+                <AgentCustomizePanel agent={selectedAgent} onClose={() => setShowCustomize(false)} />
+              )}
+            </div>
           </div>
         )}
 
