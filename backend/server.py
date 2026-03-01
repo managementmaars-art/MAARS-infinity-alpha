@@ -2021,18 +2021,6 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         except Exception as rag_err:
             logger.error(f"RAG retrieval error: {rag_err}")
         
-        # Web Search: Auto-detect if agent needs internet data to answer
-        web_search_context = None
-        try:
-            from services.web_search import auto_search_for_message
-            web_ctx = await auto_search_for_message(message_data.content, agent.get("role", ""))
-            if web_ctx:
-                enhanced_agent_prompt += web_ctx
-                web_search_context = True
-                logger.info(f"Web search: Injected web results for '{message_data.content[:60]}...'")
-        except Exception as ws_err:
-            logger.error(f"Web search error: {ws_err}")
-        
         # Apply user-specific agent overrides (personality, temperature, etc.)
         user_override = await db.user_agent_overrides.find_one(
             {"user_id": current_user.user_id, "agent_id": agent.get("agent_id")}, {"_id": 0}
