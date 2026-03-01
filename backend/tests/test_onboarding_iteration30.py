@@ -173,10 +173,14 @@ class TestRegressionEndpoints:
         assert response.status_code == 200, f"GET /admin/analytics failed: {response.text}"
         data = response.json()
         
+        # Verify main structure
+        assert "kpis" in data, "Missing 'kpis' key in analytics response"
+        kpis = data["kpis"]
+        
         # Verify KPI fields exist
         expected_kpis = ["total_users", "total_chats", "total_revenue", "mrr"]
         for kpi in expected_kpis:
-            assert kpi in data, f"Missing KPI: {kpi}"
+            assert kpi in kpis, f"Missing KPI: {kpi}"
         
         print(f"✓ GET /admin/analytics returns KPIs: {expected_kpis}")
     
