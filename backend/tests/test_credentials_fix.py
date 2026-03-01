@@ -256,14 +256,23 @@ class TestAdminTabs:
         data = response.json()
         print("✅ Pricing config loaded")
     
-    def test_pricing_publish(self, auth_headers):
-        """POST /admin/pricing/publish - Publish pricing changes"""
-        response = requests.post(
-            f"{BASE_URL}/api/admin/pricing/publish",
+    def test_pricing_save(self, auth_headers):
+        """PUT /admin/pricing - Save/Publish pricing changes"""
+        # Get current pricing
+        get_response = requests.get(
+            f"{BASE_URL}/api/admin/pricing",
             headers=auth_headers
         )
+        current = get_response.json()
+        
+        # Save with current values (acts as publish)
+        response = requests.put(
+            f"{BASE_URL}/api/admin/pricing",
+            headers=auth_headers,
+            json=current
+        )
         assert response.status_code == 200
-        print("✅ Pricing publish successful")
+        print("✅ Pricing save/publish successful")
     
     def test_branding_config(self, auth_headers):
         """GET /admin/branding - Branding tab data"""
