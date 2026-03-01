@@ -2213,6 +2213,9 @@ Rules:
         "role": "assistant",
         "content": response_text,
         "model_used": f"{model_provider}/{model_name}",
+        "agent_id": agent.get("agent_id"),
+        "agent_name": agent.get("name"),
+        "agent_avatar": agent.get("avatar"),
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     if delegation_data:
