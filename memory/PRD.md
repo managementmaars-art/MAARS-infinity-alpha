@@ -5,6 +5,23 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 
 ## Implemented Features
 
+### Customer Analytics Dashboard (Added Mar 1, 2026)
+- Comprehensive admin analytics tab with KPI cards (Total Users, Active 7d/30d, Total Chats, Revenue, MRR)
+- Daily Signups, Messages, Revenue, API Cost charts (30-day time series with recharts)
+- Agent Usage horizontal bar chart (messages per agent)
+- Subscription Distribution donut chart
+- Top Users by Messages ranked list
+- Cost by AI Model breakdown with progress bars
+- Token Usage Breakdown stacked bar chart (Input/Output tokens)
+- Endpoint: GET /api/admin/analytics
+
+### Gmail SMTP Configuration UI (Added Mar 1, 2026)
+- Admin panel tab for securely entering Gmail SMTP email and App Password
+- Credentials saved to .env and loaded in memory
+- Test email functionality to verify SMTP setup
+- Step-by-step setup guide for Gmail App Passwords
+- Endpoints: GET/POST /api/admin/smtp-config, POST /api/admin/smtp-test
+
 ### Dynamic Pricing (Fixed Mar 1, 2026)
 - Admin-set prices persist across server restarts (loaded from DB on startup)
 - /api/plans returns admin-configured prices (not hardcoded defaults)
@@ -38,10 +55,6 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 - Clarification questions, clean writing style
 - Conversation history, capability enforcement
 
-### Email Notifications (Placeholder)
-- Gmail SMTP utility ready, professional HTML template
-- Gracefully skips when credentials not set
-
 ### Core Platform
 - React + FastAPI + MongoDB, JWT + Google OAuth
 - 21 AI agents, Stripe subscriptions, credit system
@@ -50,12 +63,19 @@ Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous age
 
 ## Production Launch Checklist
 - [ ] Set live Stripe key (STRIPE_API_KEY)
-- [ ] Set Gmail SMTP (SMTP_EMAIL, SMTP_PASSWORD)
+- [ ] Set Gmail SMTP (SMTP_EMAIL, SMTP_PASSWORD) via Admin > Email (SMTP) tab
 - [ ] Set custom domain + FRONTEND_URL
 
 ## Credentials
 - Admin: management.maars@marsgc.net / MaarsAdmin2024!
 
 ## Backlog
+- P1: Commander AI as purchasable add-on for Build Your Own package
 - P1: More integrations (Slack, Calendly, Airtable)
-- P2: Custom domain UI, Refactor server.py
+- P2: Custom domain UI
+- P2: Refactor server.py (5500+ lines) and AdminDashboard.jsx (2400+ lines) into modular structure
+
+## Architecture
+- Backend: /app/backend/server.py (monolithic - needs refactoring)
+- Frontend: /app/frontend/src/pages/ (AdminDashboard.jsx + AnalyticsTab.jsx + SmtpConfigTab.jsx + AgentChat.jsx + Team.jsx)
+- Database: MongoDB with collections: users, chats, agents, subscriptions, payment_transactions, usage_logs, teams, team_invites, tasks, platform_config, user_sessions
