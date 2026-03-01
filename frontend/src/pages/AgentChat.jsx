@@ -1215,21 +1215,33 @@ const AgentChat = () => {
               <span className="text-xs text-zinc-400">Model:</span>
             </div>
             <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger className="w-[220px] h-8 text-xs bg-zinc-900/50 border-white/10" data-testid="model-selector">
+              <SelectTrigger className="w-[260px] h-8 text-xs bg-zinc-900/50 border-white/10" data-testid="model-selector">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {AVAILABLE_MODELS.map((m) => (
                   <SelectItem key={`${m.provider}/${m.model}`} value={`${m.provider}/${m.model}`}>
-                    {m.provider === "auto" ? "🧠 " : ""}{m.name}
+                    <span className="flex items-center justify-between w-full gap-2">
+                      <span>{m.provider === "auto" ? "" : ""}{m.name}</span>
+                      {m.credits > 0 && (
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
+                          m.credits <= 1 ? "bg-emerald-500/15 text-emerald-400" :
+                          m.credits <= 2 ? "bg-blue-500/15 text-blue-400" :
+                          m.credits <= 3 ? "bg-amber-500/15 text-amber-400" :
+                          "bg-rose-500/15 text-rose-400"
+                        }`}>{m.credits}cr</span>
+                      )}
+                    </span>
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
             {selectedModel === "auto/auto" ? (
-              <span className="text-xs text-indigo-400">AI picks the best model for each task</span>
+              <span className="text-xs text-indigo-400">AI picks the best model (1-5 credits)</span>
             ) : (
-              <span className="text-xs text-zinc-500">No limits • Switch anytime</span>
+              <span className="text-xs text-zinc-500">
+                {AVAILABLE_MODELS.find(m => `${m.provider}/${m.model}` === selectedModel)?.credits || 2} credits per message
+              </span>
             )}
           </div>
 
