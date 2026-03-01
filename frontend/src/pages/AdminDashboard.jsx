@@ -581,9 +581,9 @@ const AdminDashboard = () => {
         setBrainEdit(null);
       } else {
         const err = await res.json().catch(() => ({}));
-        toast.error(err.detail || "Failed to save");
+        toast.error(err.detail || `Save failed (${res.status}). Please try again.`);
       }
-    } catch { toast.error("Failed to save brain"); } finally { setSavingBrain(false); }
+    } catch (e) { toast.error(`Network error: ${e.message}. Check your connection.`); } finally { setSavingBrain(false); }
   };
 
   const handleToggleCapability = async (agentId, field, currentValue) => {
