@@ -379,6 +379,24 @@ AGENT_TOOLS = {
         "category": "integration",
         "requires": "google_suite"
     },
+    "query_tasks": {
+        "name": "query_tasks",
+        "description": "Search and list tasks in the shared workspace. Use this to find tasks created by any agent or the user. You can filter by status.",
+        "parameters": "status (string, optional): Filter by status - pending/in_progress/completed/cancelled. Leave empty for all tasks.",
+        "category": "workspace"
+    },
+    "update_task": {
+        "name": "update_task",
+        "description": "Update a task's status, result, or description. Use this to mark tasks complete, add results, or update progress.",
+        "parameters": "task_id (string, required): The task ID to update, status (string, optional): new status - pending/in_progress/completed/cancelled, result (string, optional): Task result or output, description (string, optional): Updated description",
+        "category": "workspace"
+    },
+    "query_agent_history": {
+        "name": "query_agent_history",
+        "description": "Read recent conversation history with another team member (agent). Use this to see what the user discussed with another specialist.",
+        "parameters": "agent_id (string, required): The agent to query, e.g. 'agent_marketing', 'agent_projectmanager', 'agent_secretary', 'agent_copywriter', 'agent_finance', etc.",
+        "category": "workspace"
+    },
 }
 
 # Map agents to their available tools
