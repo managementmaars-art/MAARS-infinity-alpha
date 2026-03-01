@@ -5273,8 +5273,18 @@ async def admin_test_integration(service_id: str, admin: User = Depends(require_
 
 @app.on_event("startup")
 async def startup():
+    global SUBSCRIPTION_PLANS, CUSTOM_AGENT_CREDIT_COST
     await seed_default_agents()
     await backfill_usage_logs()
+    
+    # Load admin-configured pricing from DB (overrides hardcoded defaults)
+    saved_pricing = await db.platform_config.find_one({"config_type": "pricing"}, {"_id": 0})
+    if saved_pricing and saved_pricing.get("plans"):
+        SUBSCRIPTION_PLANS.update(saved_pricing["plans"])
+        logger.info("Loaded pricing from database")
+    if saved_pricing and "custom_agent_credit_cost" in saved_pricing:
+        CUSTOM_AGENT_CREDIT_COST = saved_pricing["custom_agent_credit_cost"]
+    
     logger.info("MAARS Global AI Team Backend started")
 
 @app.on_event("shutdown")
