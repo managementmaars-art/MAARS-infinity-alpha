@@ -178,7 +178,6 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/agents/${agentId}`, {
         method: "DELETE",
-        ,
         headers: authHeaders
       });
       if (res.ok) {
@@ -937,7 +936,6 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/api-keys`, {
         method: "PUT",
-        ,
         headers: { ...headers, "Content-Type": "application/json" },
         body: JSON.stringify(apiKeyInputs)
       });
@@ -960,7 +958,6 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/api-keys/test`, {
         method: "POST",
-        ,
         headers: { ...headers, "Content-Type": "application/json" },
         body: JSON.stringify({ provider, api_key: key })
       });
@@ -1230,7 +1227,6 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/pricing/calculate`, {
         method: "POST",
-        ,
         headers,
         body: JSON.stringify(calcInputs)
       });
@@ -1291,7 +1287,6 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API}/admin/pricing`, {
         method: "PUT",
-        ,
         headers,
         body: JSON.stringify(pricingEdit)
       });
