@@ -829,6 +829,42 @@ const AdminDashboard = () => {
                   <Input value={brainEdit.model_name} onChange={e => setBrainEdit(p => ({...p, model_name: e.target.value}))} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid="brain-model" />
                 </div>
               </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-zinc-400 text-xs flex items-center gap-1.5">
+                    <Thermometer className="w-3 h-3" /> Temperature: {brainEdit.temperature?.toFixed(1) ?? "0.7"}
+                  </Label>
+                  <input
+                    type="range" min="0" max="2" step="0.1"
+                    value={brainEdit.temperature ?? 0.7}
+                    onChange={e => setBrainEdit(p => ({...p, temperature: parseFloat(e.target.value)}))}
+                    className="w-full h-2 rounded-full appearance-none bg-zinc-700 accent-indigo-500"
+                    data-testid="brain-temperature"
+                  />
+                  <div className="flex justify-between text-[10px] text-zinc-600">
+                    <span>Precise</span>
+                    <span>Balanced</span>
+                    <span>Creative</span>
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-zinc-400 text-xs flex items-center gap-1.5">
+                    <Hash className="w-3 h-3" /> Max Tokens: {brainEdit.max_tokens ?? 4096}
+                  </Label>
+                  <input
+                    type="range" min="256" max="16384" step="256"
+                    value={brainEdit.max_tokens ?? 4096}
+                    onChange={e => setBrainEdit(p => ({...p, max_tokens: parseInt(e.target.value)}))}
+                    className="w-full h-2 rounded-full appearance-none bg-zinc-700 accent-indigo-500"
+                    data-testid="brain-max-tokens"
+                  />
+                  <div className="flex justify-between text-[10px] text-zinc-600">
+                    <span>256</span>
+                    <span>8192</span>
+                    <span>16384</span>
+                  </div>
+                </div>
+              </div>
               <div className="flex gap-3 pt-2">
                 <Button onClick={saveBrain} disabled={savingBrain} className="flex-1 bg-gradient-to-r from-indigo-500 to-violet-500" data-testid="save-brain-btn">
                   {savingBrain ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Brain className="w-4 h-4 mr-2" />}Save Brain
