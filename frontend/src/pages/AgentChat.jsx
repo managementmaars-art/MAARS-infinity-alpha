@@ -964,6 +964,23 @@ const AgentChat = () => {
                     />
                   );
                 }
+                
+                // Commander processing indicator
+                if (msg.role === "assistant" && msg.commander_status === "processing") {
+                  return (
+                    <div key={msg.message_id || i} className="flex gap-3" data-testid={`message-${i}`}>
+                      <img src={selectedAgent?.avatar} alt="" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+                      <div className="rounded-xl px-4 py-3 bg-zinc-800/50 border border-indigo-500/20 max-w-[85%]">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
+                          <span className="text-indigo-400 text-sm font-medium">Commander is coordinating specialists...</span>
+                        </div>
+                        <p className="text-zinc-300 text-sm">{msg.content}</p>
+                        <p className="text-zinc-500 text-xs mt-2">This usually takes 1-3 minutes. Results will appear automatically.</p>
+                      </div>
+                    </div>
+                  );
+                }
 
                 return (
                 <div
