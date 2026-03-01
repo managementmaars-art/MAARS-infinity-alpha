@@ -1916,6 +1916,7 @@ const AdminDashboard = () => {
           {activeTab === "payments" && <PaymentSetupTab />}
           {activeTab === "smtp" && <SmtpConfigTab />}
           {activeTab === "branding" && <BrandingTab />}
+          {activeTab === "knowledge" && <KnowledgeBaseTab />}
         </div>
       </div>
       <div className="lg:ml-64"><BrandFooter /></div>
