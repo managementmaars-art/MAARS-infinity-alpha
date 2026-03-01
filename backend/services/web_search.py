@@ -44,9 +44,9 @@ def needs_web_search(message: str) -> bool:
 
 
 async def web_search(query: str, max_results: int = 5) -> List[Dict]:
-    """Search the web using DuckDuckGo and return results."""
+    """Search the web using DDGS and return results."""
     try:
-        from duckduckgo_search import DDGS
+        from ddgs import DDGS
         results = []
         with DDGS() as ddgs:
             for r in ddgs.text(query, max_results=max_results):
