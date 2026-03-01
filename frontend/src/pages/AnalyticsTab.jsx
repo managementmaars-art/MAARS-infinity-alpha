@@ -163,6 +163,22 @@ const AnalyticsTab = () => {
 
   return (
     <div className="space-y-6" data-testid="analytics-tab">
+      {/* Header with Export */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-white font-['Outfit']">Platform Analytics</h2>
+          <p className="text-xs text-zinc-500">Real-time business intelligence</p>
+        </div>
+        <Button
+          onClick={handleExportCSV}
+          variant="outline"
+          className="border-white/10 text-zinc-300 hover:text-white"
+          data-testid="export-csv-btn"
+        >
+          <Download className="w-4 h-4 mr-2" /> Export CSV
+        </Button>
+      </div>
+
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <KpiCard title="Total Users" value={kpis.total_users} icon={Users} color="indigo" />
