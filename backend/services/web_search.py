@@ -155,20 +155,21 @@ def build_web_context(search_data: Dict) -> str:
     if not results:
         return ""
 
-    parts = ["\n--- WEB SEARCH RESULTS ---"]
-    parts.append(f"Search query: \"{search_data.get('query', '')}\"")
-    parts.append(f"Searched at: {search_data.get('searched_at', 'now')}\n")
+    parts = ["\n--- WEB SEARCH RESULTS (LIVE INTERNET DATA) ---"]
+    parts.append(f"You just searched the internet for: \"{search_data.get('query', '')}\"")
+    parts.append(f"Search time: {search_data.get('searched_at', 'just now')}")
+    parts.append("IMPORTANT: You HAVE web browsing capability. The data below is from LIVE internet sources. Use it to answer the user's question accurately.\n")
 
     for i, r in enumerate(results, 1):
         parts.append(f"[Web Source {i}: {r['title']}]")
         parts.append(f"URL: {r['url']}")
         if r.get("full_text"):
-            parts.append(r["full_text"][:1500])
+            parts.append(r["full_text"][:2000])
         elif r.get("snippet"):
             parts.append(r["snippet"])
         parts.append("")
 
-    parts.append("WEB CITATION INSTRUCTIONS: When using web information, cite the source like: \"According to [Source Title](URL)...\" or include the URL. Always mention if information might be outdated.")
+    parts.append("INSTRUCTIONS: Use the above web data to provide an informed, accurate answer. Cite sources with titles and URLs. If the data is insufficient, say what you found and suggest the user check specific sources for more details. Do NOT say you lack internet access — you just searched the web and these are the results.")
     parts.append("--- END WEB SEARCH ---\n")
     return "\n".join(parts)
 
