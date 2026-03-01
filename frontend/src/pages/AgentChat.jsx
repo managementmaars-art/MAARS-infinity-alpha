@@ -999,7 +999,7 @@ const AgentChat = () => {
                           <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
                           <span className="text-indigo-400 text-sm font-medium">Commander is coordinating specialists...</span>
                         </div>
-                        <p className="text-zinc-300 text-sm">{msg.content}</p>
+                        <MarkdownRenderer content={msg.content} className="text-sm" />
                         <p className="text-zinc-500 text-xs mt-2">This usually takes 1-3 minutes. Results will appear automatically.</p>
                       </div>
                     </div>
