@@ -1040,7 +1040,11 @@ const AgentChat = () => {
                     {msg.role === "assistant" && msg.execution_steps && (
                       <ExecutionSteps steps={msg.execution_steps} />
                     )}
-                    <p className="whitespace-pre-wrap">{msg.content}</p>
+                    {msg.role === "assistant" ? (
+                      <MarkdownRenderer content={msg.content} />
+                    ) : (
+                      <p className="whitespace-pre-wrap text-sm">{msg.content}</p>
+                    )}
                     <div className="flex items-center gap-2 mt-2">
                       {msg.model_used && (
                         <div className="text-xs text-zinc-500 flex items-center gap-1">
