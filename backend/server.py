@@ -5635,6 +5635,79 @@ async def admin_activity_feed(limit: int = 30, admin: User = Depends(require_adm
     return events[:limit]
 
 
+@api_router.get("/admin/analytics/export")
+async def admin_analytics_export(format: str = "csv", admin: User = Depends(require_admin)):
+    """Export analytics data as CSV."""
+    import io
+    import csv
+
+    now = datetime.now(timezone.utc)
+
+    # Users
+    users = await db.users.find({}, {"_id": 0, "user_id": 1, "name": 1, "email": 1, "created_at": 1}).to_list(5000)
+
+    # Subscriptions
+    subs = await db.subscriptions.find({}, {"_id": 0, "user_id": 1, "plan_id": 1, "credits": 1, "credits_used": 1, "status": 1}).to_list(5000)
+    sub_map = {s["user_id"]: s for s in subs}
+
+    # Agent usage
+    agent_pipeline = [
+        {"$unwind": "$messages"},
+        {"$match": {"messages.role": "assistant"}},
+        {"$group": {"_id": "$agent_id", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}}
+    ]
+    agent_usage = await db.chats.aggregate(agent_pipeline).to_list(50)
+    agent_names = {}
+    all_agents = await db.agents.find({}, {"_id": 0, "agent_id": 1, "name": 1}).to_list(200)
+    for a in all_agents:
+        agent_names[a["agent_id"]] = a.get("name", a["agent_id"])
+
+    # Payment transactions
+    txns = await db.payment_transactions.find(
+        {"payment_status": "paid"}, {"_id": 0, "email": 1, "amount": 1, "currency": 1, "type": 1, "created_at": 1}
+    ).to_list(5000)
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    # Sheet 1: Users
+    writer.writerow(["=== USERS ==="])
+    writer.writerow(["User ID", "Name", "Email", "Signed Up", "Plan", "Credits", "Credits Used"])
+    for u in users:
+        s = sub_map.get(u["user_id"], {})
+        writer.writerow([u["user_id"], u.get("name", ""), u.get("email", ""), u.get("created_at", ""), s.get("plan_id", "free"), s.get("credits", 0), s.get("credits_used", 0)])
+
+    writer.writerow([])
+    writer.writerow(["=== AGENT USAGE ==="])
+    writer.writerow(["Agent", "Messages"])
+    for au in agent_usage:
+        writer.writerow([agent_names.get(au["_id"], au["_id"]), au["count"]])
+
+    writer.writerow([])
+    writer.writerow(["=== PAYMENTS ==="])
+    writer.writerow(["Email", "Amount", "Currency", "Type", "Date"])
+    for t in txns:
+        writer.writerow([t.get("email", ""), t.get("amount", 0), t.get("currency", "usd"), t.get("type", ""), t.get("created_at", "")])
+
+    writer.writerow([])
+    writer.writerow(["=== SUMMARY ==="])
+    writer.writerow(["Total Users", len(users)])
+    writer.writerow(["Total Paid Transactions", len(txns)])
+    writer.writerow(["Total Revenue", sum(t.get("amount", 0) for t in txns)])
+    writer.writerow(["Report Generated", now.isoformat()])
+
+    csv_content = output.getvalue()
+    output.close()
+
+    from starlette.responses import Response
+    return Response(
+        content=csv_content,
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=maars_analytics_{now.strftime('%Y%m%d')}.csv"}
+    )
+
+
 @app.on_event("startup")
 async def startup():
     global SUBSCRIPTION_PLANS, CUSTOM_AGENT_CREDIT_COST
