@@ -289,6 +289,26 @@ const AgentChat = () => {
     finally { setTtsLoading(null); }
   };
 
+  // Initialize feedback state from loaded messages
+  const initFeedback = (msgs) => {
+    const fb = {};
+    msgs.forEach(m => { if (m.feedback) fb[m.message_id] = m.feedback; });
+    setFeedbackState(fb);
+  };
+
+  const submitFeedback = async (chatId, messageId, type) => {
+    const current = feedbackState[messageId];
+    const newFeedback = current === type ? null : type;
+    setFeedbackState(prev => ({ ...prev, [messageId]: newFeedback }));
+    try {
+      await fetch(`${API}/chats/${chatId}/messages/${messageId}/feedback`, {
+        method: "POST", credentials: "include",
+        headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify({ feedback: newFeedback })
+      });
+    } catch {}
+  };
+
   useEffect(() => {
     fetchInitialData();
   }, []);
