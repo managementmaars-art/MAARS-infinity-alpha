@@ -3,59 +3,73 @@
 ## Original Problem Statement
 Full-stack AI team platform inspired by Sintra AI + Emergent. 20+ autonomous agents with separate brains, Commander AI delegation, agent collaboration, voice mode, file generation, subscriptions, admin dashboard, team collaboration — production-ready for selling subscriptions.
 
-## Implemented Features (Latest First)
+## User Personas
+- **Admin (management.maars@marsgc.net):** Manages platform, agents, pricing, branding, knowledge bases
+- **Subscribers:** Use AI agents for tasks, can customize agents, upload documents to knowledge bases
+- **Team Members:** Collaborate within shared workspaces
 
-### P0 Verification Complete (Mar 1, 2026 - Latest)
-- **Markdown Rendering:** react-markdown with remark-gfm renders chat messages correctly (headers, lists, bold, code, tables, blockquotes)
-- **Nano Banana 2 Image Generation:** Backend uses Gemini gemini-3-pro-image-preview model for image generation. Verified working for graphic designer agent.
-- **Admin Controls CORS Fix Verified:** Toggle permissions and brain save working after removing credentials: "include" from all frontend fetch calls
-- **Signup flow:** Verified working
-- All tests passed (iteration_38: 10/10 backend, 100% frontend)
+## Core Requirements
+1. AI Team & Commander AI with autonomous delegation
+2. Multi-model support (GPT, Claude, Gemini) with universal + direct keys
+3. Stripe subscription system with credit system
+4. Admin panel for full platform management
+5. Team collaboration via email invites
+6. White-labeling with custom domains, logos, colors
+7. RAG (Knowledge Base) for domain-specific knowledge per agent
+8. Inter-agent communication and shared workspace context
 
-### Cross-Agent Communication System (Mar 1, 2026)
-- **Workspace Context Injection**: build_workspace_context() fetches recent tasks + other agents' latest messages and injects into EVERY agent's system prompt
-- **New workspace tools** for ALL 21 agents: query_tasks, update_task, query_agent_history
-- Tested: Secretary creates task -> PM reviews it and proposes subtasks (VERIFIED)
-- All 14 backend + all frontend tests passed (iteration_37)
+## Implemented Features
 
-### Bug Fix: CORS + credentials causing API failures (Mar 1, 2026)
-- Removed credentials: "include" from ALL frontend fetch calls (JWT auth doesn't need cookies)
-- Made header badges (IMG/PDF/FILES) clickable toggles
-- Fixed IntegrationsTab useEffect dependency (token)
-- All 17 backend tests passed (iteration_36)
+### RAG Knowledge Base System (Mar 1, 2026 - LATEST)
+- **Per-agent document upload:** PDFs, TXT, MD, CSV, DOCX (max 25MB)
+- **Text extraction & chunking:** PyPDF2 for PDFs, overlapping chunks with page tracking
+- **TF-IDF search:** Fast semantic search using sklearn (no external API needed)
+- **RAG context injection:** Relevant knowledge base chunks auto-injected into agent prompts
+- **Source citations:** Agents cite "According to [Document], Page X..."
+- **Admin UI:** Knowledge Base tab in admin dashboard with agent selector, upload, search testing
+- All tests passed (iteration_39: 9/9 backend, all frontend verified)
 
-### User Agent Customization + White-Label Branding (Mar 1, 2026)
-- Per-user agent overrides, Customize panel in chat, BrandingProvider context
-- All 21 tests passed (iteration_34), 18 tests (iteration_33)
+### UI Fixes (Mar 1, 2026)
+- **Avatar persistence:** Past messages keep their original agent's avatar (stored agent_avatar in messages)
+- **Agent switch toast:** "Switched to [agent name]" toast on agent change
 
-### Earlier Features
-- Notification Center, User Insights, Onboarding, Analytics, AI Controls
-- SMTP Config, Backend Refactoring Phase 1
-- 21 AI agents, Commander AI, Voice Mode, Stripe Subscriptions, Team Collaboration
+### Previous Implementations
+- P0 Verification (Markdown rendering, Nano Banana 2 image gen, Admin CORS fix) — iteration_38
+- Cross-Agent Communication System — iteration_37
+- CORS Bug Fix (removed credentials: include) — iteration_36
+- User Agent Customization + White-Label Branding — iterations_33-34
+- Notification Center, Onboarding, Analytics, AI Controls, SMTP, 21 agents, Stripe, etc.
 
 ## Credentials
 - Admin: management.maars@marsgc.net / MaarsAdmin2024!
 
 ## Architecture
 ```
-Cross-Agent Communication Flow:
-1. User sends message to Agent A
-2. build_workspace_context() fetches:
-   - Recent tasks (from db.tasks)
-   - Latest messages from other agent chats
-3. Context injected into system prompt
-4. Agent sees shared workspace + can use query_tasks/update_task/query_agent_history tools
-5. Agent responds with full awareness of team activity
+Backend: FastAPI + MongoDB + TF-IDF (sklearn)
+Frontend: React + Tailwind + Shadcn UI
+RAG Flow:
+  1. Admin uploads document to agent's knowledge base
+  2. Background task extracts text, chunks it, stores in MongoDB
+  3. User sends message to agent
+  4. TF-IDF search finds relevant chunks
+  5. Context injected into agent prompt with citation instructions
+  6. Agent responds with cited sources
 ```
+
+## Key Collections
+- knowledge_docs: {doc_id, agent_id, title, filename, status, chunk_count, ...}
+- knowledge_chunks: {chunk_id, doc_id, agent_id, doc_title, text, pages, chunk_index}
+- user_agent_overrides: {user_id, agent_id, settings}
+- config: {branding, custom_domain}
 
 ## Backlog (Prioritized)
 - P1: Third-party integrations backend logic (Slack, Calendly, Airtable) — admin UI exists, backend execution logic is MOCKED
 - P2: Backend refactoring — extract remaining routes from server.py to modular routers
 - P2: AdminDashboard.jsx component extraction (Pricing, Users, Agents tabs)
-- P2: Complete server.py modularization
 
 ## Test Reports (All 100%)
-- iteration_38: Markdown + Nano Banana 2 + Admin controls + Signup (10/10 backend + all frontend)
+- iteration_39: RAG + avatar persistence + agent switch toast (9/9 + all frontend)
+- iteration_38: Markdown + Nano Banana 2 + Admin controls (10/10 + all frontend)
 - iteration_37: Cross-agent communication (14/14 + all frontend)
 - iteration_36: CORS fix (17/17)
 - iteration_35: Header toggles (12/12)
