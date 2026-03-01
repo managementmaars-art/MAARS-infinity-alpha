@@ -15,37 +15,37 @@ import { useAuth, API } from "../App";
 import { toast } from "sonner";
 
 const AVAILABLE_MODELS = [
-  { provider: "auto", model: "auto", name: "Auto (Smart Selection)", category: "auto" },
+  { provider: "auto", model: "auto", name: "Auto (Smart Selection)", category: "auto", credits: 0 },
   // OpenAI
-  { provider: "openai", model: "gpt-5.2", name: "GPT-5.2", category: "flagship" },
-  { provider: "openai", model: "gpt-4o", name: "GPT-4o", category: "fast" },
-  { provider: "openai", model: "gpt-4o-mini", name: "GPT-4o Mini", category: "economy" },
-  { provider: "openai", model: "o3", name: "O3 (Reasoning)", category: "reasoning" },
-  { provider: "openai", model: "o3-mini", name: "O3 Mini", category: "reasoning" },
+  { provider: "openai", model: "gpt-5.2", name: "GPT-5.2", category: "flagship", credits: 3 },
+  { provider: "openai", model: "gpt-4o", name: "GPT-4o", category: "fast", credits: 2 },
+  { provider: "openai", model: "gpt-4o-mini", name: "GPT-4o Mini", category: "economy", credits: 1 },
+  { provider: "openai", model: "o3", name: "O3 (Reasoning)", category: "reasoning", credits: 5 },
+  { provider: "openai", model: "o3-mini", name: "O3 Mini", category: "reasoning", credits: 2 },
   // Anthropic
-  { provider: "anthropic", model: "claude-sonnet-4-5-20250929", name: "Claude Sonnet 4.5", category: "flagship" },
-  { provider: "anthropic", model: "claude-opus-4-5-20251101", name: "Claude Opus 4.5", category: "premium" },
-  { provider: "anthropic", model: "claude-haiku-4-5-20250929", name: "Claude Haiku 4.5", category: "economy" },
+  { provider: "anthropic", model: "claude-sonnet-4-5-20250929", name: "Claude Sonnet 4.5", category: "flagship", credits: 3 },
+  { provider: "anthropic", model: "claude-opus-4-5-20251101", name: "Claude Opus 4.5", category: "premium", credits: 5 },
+  { provider: "anthropic", model: "claude-haiku-4-5-20250929", name: "Claude Haiku 4.5", category: "economy", credits: 1 },
   // Google
-  { provider: "gemini", model: "gemini-3-flash-preview", name: "Gemini 3 Flash", category: "fast" },
-  { provider: "gemini", model: "gemini-3-pro-preview", name: "Gemini 3 Pro", category: "flagship" },
+  { provider: "gemini", model: "gemini-3-flash-preview", name: "Gemini 3 Flash", category: "fast", credits: 1 },
+  { provider: "gemini", model: "gemini-3-pro-preview", name: "Gemini 3 Pro", category: "flagship", credits: 2 },
   // xAI Grok
-  { provider: "xai", model: "grok-3", name: "Grok 3", category: "flagship" },
-  { provider: "xai", model: "grok-3-mini", name: "Grok 3 Mini", category: "economy" },
-  { provider: "xai", model: "grok-2", name: "Grok 2", category: "fast" },
+  { provider: "xai", model: "grok-3", name: "Grok 3", category: "flagship", credits: 3 },
+  { provider: "xai", model: "grok-3-mini", name: "Grok 3 Mini", category: "economy", credits: 1 },
+  { provider: "xai", model: "grok-2", name: "Grok 2", category: "fast", credits: 2 },
   // DeepSeek
-  { provider: "deepseek", model: "deepseek-chat", name: "DeepSeek Chat", category: "economy" },
-  { provider: "deepseek", model: "deepseek-reasoner", name: "DeepSeek Reasoner", category: "reasoning" },
+  { provider: "deepseek", model: "deepseek-chat", name: "DeepSeek Chat", category: "economy", credits: 1 },
+  { provider: "deepseek", model: "deepseek-reasoner", name: "DeepSeek Reasoner", category: "reasoning", credits: 2 },
   // Mistral
-  { provider: "mistral", model: "mistral-large-latest", name: "Mistral Large", category: "flagship" },
-  { provider: "mistral", model: "mistral-medium-latest", name: "Mistral Medium", category: "fast" },
-  { provider: "mistral", model: "mistral-small-latest", name: "Mistral Small", category: "economy" },
+  { provider: "mistral", model: "mistral-large-latest", name: "Mistral Large", category: "flagship", credits: 3 },
+  { provider: "mistral", model: "mistral-medium-latest", name: "Mistral Medium", category: "fast", credits: 2 },
+  { provider: "mistral", model: "mistral-small-latest", name: "Mistral Small", category: "economy", credits: 1 },
   // Perplexity
-  { provider: "perplexity", model: "sonar", name: "Perplexity Sonar", category: "search" },
-  { provider: "perplexity", model: "sonar-pro", name: "Perplexity Sonar Pro", category: "search" },
+  { provider: "perplexity", model: "sonar", name: "Perplexity Sonar", category: "search", credits: 2 },
+  { provider: "perplexity", model: "sonar-pro", name: "Perplexity Sonar Pro", category: "search", credits: 3 },
   // Cohere
-  { provider: "cohere", model: "command-r-plus", name: "Cohere Command R+", category: "flagship" },
-  { provider: "cohere", model: "command-r", name: "Cohere Command R", category: "fast" },
+  { provider: "cohere", model: "command-r-plus", name: "Cohere Command R+", category: "flagship", credits: 3 },
+  { provider: "cohere", model: "command-r", name: "Cohere Command R", category: "fast", credits: 1 },
 ];
 
 import NotificationCenter from "../components/NotificationCenter";
