@@ -4,7 +4,7 @@ import { Badge } from "../components/ui/badge";
 import {
   Users, MessageSquare, DollarSign, TrendingUp, Activity,
   BarChart3, PieChart as PieChartIcon, Loader2, Bot, Zap, Crown,
-  UserPlus, Radio, RefreshCw, Download
+  UserPlus, Radio, RefreshCw, Download, ThumbsUp, ThumbsDown, Star
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
