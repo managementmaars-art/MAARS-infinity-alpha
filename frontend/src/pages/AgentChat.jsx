@@ -877,6 +877,8 @@ const AgentChat = () => {
             </div>
             <span className="text-lg font-bold text-white font-['Outfit']">MAARS Command</span>
           </Link>
+          <div className="flex items-center gap-2 mb-4 justify-between">
+            <NotificationCenter />
           <Button
             onClick={startNewChat}
             className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
