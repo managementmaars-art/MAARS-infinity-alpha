@@ -1988,6 +1988,18 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         # Build enhanced system prompt with clarification instruction
         enhanced_agent_prompt = agent["system_prompt"] + CLARIFICATION_INSTRUCTION
         
+        # Web Search: Auto-detect if agent needs internet data to answer (injected FIRST for priority)
+        web_search_context = None
+        try:
+            from services.web_search import auto_search_for_message
+            web_ctx = await auto_search_for_message(message_data.content, agent.get("role", ""))
+            if web_ctx:
+                enhanced_agent_prompt += web_ctx
+                web_search_context = True
+                logger.info(f"Web search: Injected web results for '{message_data.content[:60]}...'")
+        except Exception as ws_err:
+            logger.error(f"Web search error: {ws_err}")
+        
         # Inject shared workspace context (tasks, other agents' work)
         workspace_ctx = await build_workspace_context(current_user.user_id, agent.get("agent_id", ""))
         if workspace_ctx:
