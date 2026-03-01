@@ -7,6 +7,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Separator } from "../components/ui/separator";
 import { Textarea } from "../components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
 import {
   Bot, Users, MessageSquare, CreditCard, TrendingUp, Shield,
   LayoutDashboard, ListTodo, Settings, LogOut, Menu, X,
