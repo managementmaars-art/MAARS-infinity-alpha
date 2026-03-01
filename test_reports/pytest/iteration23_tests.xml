@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="10" failures="1" skipped="0" tests="12" time="4.244" timestamp="2026-03-01T00:22:15.059919+00:00" hostname="agent-env-17db2555-9ffe-42f0-a98d-324105ee3709"><testcase classname="backend.tests.test_iteration23_production_ready.TestHealthAndAuth" name="test_health_endpoint_returns_200" time="0.234" /><testcase classname="backend.tests.test_iteration23_production_ready.TestHealthAndAuth" name="test_admin_login_success" time="0.338"><failure message="AssertionError: assert 'access_token' in {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidXNlcl85YTA2NDNiMzgwOTQiLCJlbWFpbCI6Im1hbmFnZW1lbnQubWFhcnNAbWFyc2djLm5ldCIsImV4cCI6MTc3MjkyOTMzNX0.LnOaEZB541ZOhlZSMnSgsuZJ6hUPlHCmzOF2pTyC0EQ', 'user': {'email': 'management.maars@marsgc.net', 'is_admin': True, 'name': 'Mirza Arafat Abbas', 'user_id': 'user_9a0643b38094'}}">backend/tests/test_iteration23_production_ready.py:45: in test_admin_login_success
+    assert "access_token" in data
+E   AssertionError: assert 'access_token' in {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidXNlcl85YTA2NDNiMzgwOTQiLCJlbWFpbCI6Im1hbmFnZW1lbnQubWFhcnNAbWFyc2djLm5ldCIsImV4cCI6MTc3MjkyOTMzNX0.LnOaEZB541ZOhlZSMnSgsuZJ6hUPlHCmzOF2pTyC0EQ', 'user': {'email': 'management.maars@marsgc.net', 'is_admin': True, 'name': 'Mirza Arafat Abbas', 'user_id': 'user_9a0643b38094'}}</failure></testcase><testcase classname="backend.tests.test_iteration23_production_ready.TestCommanderAIDelegation" name="test_commander_message_returns_processing_status" time="0.343"><error message="failed on setup with &quot;KeyError: 'access_token'&quot;">backend/tests/test_iteration23_production_ready.py:61: in admin_token
+    return response.json()["access_token"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'access_token'</error></testcase><testcase classname="backend.tests.test_iteration23_production_ready.TestCommanderAIDelegation" name="test_commander_delegation_completes" time="0.350"><error message="failed on setup with &quot;KeyError: 'access_token'&quot;">backend/tests/test_iteration23_production_ready.py:61: in admin_token
+    return response.json()["access_token"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'access_token'</error></testcase><testcase classname="backend.tests.test_iteration23_production_ready.TestAgentClarifyingQuestions" name="test_marketing_asks_clarifying_questions" time="0.330"><error message="failed on setup with &quot;KeyError: 'access_token'&quot;">backend/tests/test_iteration23_production_ready.py:61: in admin_token
+    return response.json()["access_token"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'access_token'</error></testcase><testcase classname="backend.tests.test_iteration23_production_ready.TestAgentClarifyingQuestions" name="test_legal_gives_direct_answer_for_simple_question" time="0.337"><error message="failed on setup with &quot;KeyError: 'access_token'&quot;">backend/tests/test_iteration23_production_ready.py:61: in admin_token
+    return response.json()["access_token"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'access_token'</error></testcase><testcase classname="backend.tests.test_iteration23_production_ready.TestAgentClarifyingQuestions" name="test_graphics_has_can_generate_image" time="0.341"><error message="failed on setup with &quot;KeyError: 'access_token'&quot;">backend/tests/test_iteration23_production_ready.py:61: in admin_token
+    return response.json()["access_token"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'access_token'</error></testcase><testcase classname="backend.tests.test_iteration23_production_ready.TestAgentClarifyingQuestions" name="test_graphics_asks_questions_for_logo" time="0.335"><error message="failed on setup with &quot;KeyError: 'access_token'&quot;">backend/tests/test_iteration23_production_ready.py:61: in admin_token
+    return response.json()["access_token"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'access_token'</error></testcase><testcase classname="backend.tests.test_iteration23_production_ready.TestAgentWritingStyle" name="test_minimal_markdown_headers" time="0.359"><error message="failed on setup with &quot;KeyError: 'access_token'&quot;">backend/tests/test_iteration23_production_ready.py:61: in admin_token
+    return response.json()["access_token"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'access_token'</error></testcase><testcase classname="backend.tests.test_iteration23_production_ready.TestTeamCollaboration" name="test_get_teams_returns_list" time="0.439"><error message="failed on setup with &quot;KeyError: 'access_token'&quot;">backend/tests/test_iteration23_production_ready.py:61: in admin_token
+    return response.json()["access_token"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'access_token'</error></testcase><testcase classname="backend.tests.test_iteration23_production_ready.TestTeamCollaboration" name="test_team_invite_endpoint_no_crash" time="0.330"><error message="failed on setup with &quot;KeyError: 'access_token'&quot;">backend/tests/test_iteration23_production_ready.py:61: in admin_token
+    return response.json()["access_token"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'access_token'</error></testcase><testcase classname="backend.tests.test_iteration23_production_ready.TestAllAgents" name="test_all_21_agents_exist" time="0.336"><error message="failed on setup with &quot;KeyError: 'access_token'&quot;">backend/tests/test_iteration23_production_ready.py:61: in admin_token
+    return response.json()["access_token"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'access_token'</error></testcase></testsuite></testsuites>
