@@ -2368,7 +2368,7 @@ AGENT_ROLE_MAP = {
 async def background_commander_delegate(goal: str, chat_id: str, msg_id: str, api_keys: dict, user_id: str):
     """Run commander delegation in background and update chat when complete."""
     try:
-        result = await commander_delegate(goal, chat_id, api_keys, user_id)
+        result = await commander_delegate(goal, chat_id, api_keys, user_id, msg_id)
         # Update the processing message with the final result
         await db.chats.update_one(
             {"chat_id": chat_id, "messages.message_id": msg_id},
@@ -2389,10 +2389,24 @@ async def background_commander_delegate(goal: str, chat_id: str, msg_id: str, ap
             }}
         )
 
-async def commander_delegate(goal: str, chat_id: str, api_keys: dict, user_id: str) -> dict:
+async def commander_delegate(goal: str, chat_id: str, api_keys: dict, user_id: str, msg_id: str = None) -> dict:
     """Commander AI breaks down a goal, delegates to specialists, and auto-creates tasks.
-    Returns a dict with 'content' (summary text) and 'delegation_data' (structured group chat data)."""
+    Returns a dict with 'content' (summary text) and 'delegation_data' (structured group chat data).
+    Updates progress in real-time if msg_id is provided."""
+    
+    async def update_progress(phase, agents_progress=None, current_agent=None):
+        """Push real-time progress to the message for frontend polling."""
+        if not msg_id:
+            return
+        progress = {"phase": phase, "agents": agents_progress or [], "current_agent": current_agent}
+        await db.chats.update_one(
+            {"chat_id": chat_id, "messages.message_id": msg_id},
+            {"$set": {"messages.$.delegation_progress": progress}}
+        )
+
     # Step 1: Use LLM to analyze the goal and create a delegation plan
+    await update_progress("planning")
+    
     plan_prompt = f"""You are Commander Orion. A user has given you this goal:
 
 "{goal}"
@@ -2436,6 +2450,9 @@ Choose 2-4 most relevant specialists. Be specific about what each should do. Ass
     created_tasks = []
     now = datetime.now(timezone.utc).isoformat()
     
+    # Build agent progress list for real-time tracking
+    agents_progress = []
+    
     for i, task_item in enumerate(tasks):
         task_desc = task_item.get("task", "")
         agent_role = task_item.get("agent_role", "").lower()
@@ -2460,7 +2477,23 @@ Choose 2-4 most relevant specialists. Be specific about what each should do. Ass
             "updated_at": now,
         }
         await db.tasks.insert_one(task_doc)
+        
+        # Fetch agent info for progress tracking
+        agent_doc = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0, "agent_id": 1, "name": 1, "avatar": 1, "role": 1})
+        agents_progress.append({
+            "agent_id": agent_id,
+            "agent_name": agent_doc.get("name", "Agent") if agent_doc else "Agent",
+            "agent_avatar": agent_doc.get("avatar", "") if agent_doc else "",
+            "agent_role": agent_doc.get("role", "Specialist") if agent_doc else "Specialist",
+            "task_title": title,
+            "priority": priority,
+            "status": "pending"
+        })
+        
         created_tasks.append({"task_id": task_doc["task_id"], "title": title, "agent_id": agent_id, "priority": priority, "desc": task_desc})
+    
+    # Send initial progress with all agents in pending state
+    await update_progress("delegating", agents_progress)
     
     # Step 3: Execute each sub-task with the appropriate agent and collect structured data
     delegation_agents = []
@@ -2469,6 +2502,11 @@ Choose 2-4 most relevant specialists. Be specific about what each should do. Ass
         agent = await db.agents.find_one({"agent_id": ct["agent_id"]}, {"_id": 0})
         if not agent:
             continue
+        
+        # Update progress: mark this agent as "working"
+        if i < len(agents_progress):
+            agents_progress[i]["status"] = "working"
+            await update_progress("delegating", agents_progress, agents_progress[i]["agent_name"])
         
         agent_entry = {
             "agent_id": ct["agent_id"],
@@ -2506,6 +2544,14 @@ Choose 2-4 most relevant specialists. Be specific about what each should do. Ass
             agent_entry["status"] = "failed"
         
         delegation_agents.append(agent_entry)
+        
+        # Update progress: mark this agent as completed/failed
+        if i < len(agents_progress):
+            agents_progress[i]["status"] = agent_entry["status"]
+            await update_progress("delegating", agents_progress)
+    
+    # All agents complete - update progress
+    await update_progress("complete", agents_progress)
     
     # Build summary content (still readable as plain text for backwards compatibility)
     summary = f"Mission Report: {len(created_tasks)} specialists deployed for your goal. {len(created_tasks)} tasks auto-created. Check the Tasks page for tracking."

@@ -13,6 +13,7 @@ import { Bot, Send, Plus, ArrowLeft, MessageSquare, Trash2,
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+import { CollaborationWorkflow } from "../components/chat/CollaborationWorkflow";
 
 const AVAILABLE_MODELS = [
   { provider: "auto", model: "auto", name: "Auto (Smart Selection)", category: "auto", credits: 0 },
@@ -363,7 +364,7 @@ const AgentChat = () => {
     return () => clearInterval(interval);
   }, [messages, currentChat]);
 
-  // Poll for Commander delegation completion
+  // Poll for Commander delegation completion and progress
   useEffect(() => {
     const hasProcessing = messages.some(m => m.commander_status === "processing");
     const activeChatId = currentChat?.chat_id;
@@ -376,16 +377,17 @@ const AgentChat = () => {
           const chat = await res.json();
           const updated = chat.messages || [];
           const complete = updated.some(m => m.commander_status === "complete" || m.commander_status === "error");
+          // Always update messages to show live progress
+          setMessages(updated);
           if (complete) {
-            setMessages(updated);
             clearInterval(interval);
           }
         }
       } catch {}
-    }, 5000);
+    }, 3000);
     
     return () => clearInterval(interval);
-  }, [messages, currentChat]);
+  }, [messages.some(m => m.commander_status === "processing"), currentChat?.chat_id]);
 
 
   const fetchInitialData = async () => {
@@ -1086,18 +1088,27 @@ const AgentChat = () => {
                   );
                 }
                 
-                // Commander processing indicator
+                // Commander processing indicator with live collaboration view
                 if (msg.role === "assistant" && msg.commander_status === "processing") {
                   return (
                     <div key={msg.message_id || i} className="flex gap-3" data-testid={`message-${i}`}>
                       <img src={msg.agent_avatar || selectedAgent?.avatar} alt="" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
-                      <div className="rounded-xl px-4 py-3 bg-zinc-800/50 border border-indigo-500/20 max-w-[85%]">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
-                          <span className="text-indigo-400 text-sm font-medium">Commander is coordinating specialists...</span>
-                        </div>
-                        <MarkdownRenderer content={msg.content} className="text-sm" />
-                        <p className="text-zinc-500 text-xs mt-2">This usually takes 1-3 minutes. Results will appear automatically.</p>
+                      <div className="flex-1 max-w-[85%]">
+                        {msg.delegation_progress ? (
+                          <CollaborationWorkflow
+                            progress={msg.delegation_progress}
+                            commanderAvatar={msg.agent_avatar || selectedAgent?.avatar}
+                          />
+                        ) : (
+                          <div className="rounded-xl px-4 py-3 bg-zinc-800/50 border border-indigo-500/20">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
+                              <span className="text-indigo-400 text-sm font-medium">Commander is coordinating specialists...</span>
+                            </div>
+                            <MarkdownRenderer content={msg.content} className="text-sm" />
+                            <p className="text-zinc-500 text-xs mt-2">This usually takes 1-3 minutes. Results will appear automatically.</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
