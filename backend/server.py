@@ -33,15 +33,15 @@ import base64
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+# MongoDB connection - shared module
+from db import db, client
 
-# JWT Settings
-JWT_SECRET = os.environ.get('JWT_SECRET', 'nexus-ai-secret-key-2024')
-JWT_ALGORITHM = "HS256"
-JWT_EXPIRATION_HOURS = 24 * 7  # 7 days
+# Auth utilities - shared module
+from auth import (
+    hash_password, verify_password, create_jwt_token,
+    get_current_user, require_admin,
+    JWT_SECRET, JWT_ALGORITHM, JWT_EXPIRATION_HOURS, ADMIN_EMAIL, security
+)
 
 # LLM Settings
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
@@ -142,8 +142,7 @@ async def get_integration_key(service: str, field: str = None):
 # Stripe Settings
 STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY', '')
 
-# Admin Settings
-ADMIN_EMAIL = "management.maars@marsgc.net"
+# Admin email is imported from auth module
 
 # ============== SUBSCRIPTION PLANS (200% profit margin) ==============
 SUBSCRIPTION_PLANS = {
@@ -265,7 +264,10 @@ async def get_credit_packages():
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
-security = HTTPBearer(auto_error=False)
+
+# Include auth routes
+from routes.auth import router as auth_router
+api_router.include_router(auth_router)
 
 # Health check endpoint (must be on app directly, not api_router, for Kubernetes probes)
 @app.get("/health")
@@ -275,68 +277,6 @@ async def health_check():
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
-# ============== MODELS ==============
-
-# ============== AUTH HELPERS ==============
-
-def hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-
-def verify_password(password: str, hashed: str) -> bool:
-    return bcrypt.checkpw(password.encode(), hashed.encode())
-
-def create_jwt_token(user_id: str, email: str) -> str:
-    payload = {
-        "user_id": user_id,
-        "email": email,
-        "exp": datetime.now(timezone.utc) + timedelta(hours=JWT_EXPIRATION_HOURS)
-    }
-    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
-
-async def get_current_user(request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)) -> User:
-    # Try cookie first
-    session_token = request.cookies.get("session_token")
-    
-    if session_token:
-        # Google OAuth session
-        session = await db.user_sessions.find_one({"session_token": session_token}, {"_id": 0})
-        if session:
-            expires_at = session.get("expires_at")
-            if isinstance(expires_at, str):
-                expires_at = datetime.fromisoformat(expires_at)
-            if expires_at.tzinfo is None:
-                expires_at = expires_at.replace(tzinfo=timezone.utc)
-            if expires_at > datetime.now(timezone.utc):
-                user = await db.users.find_one({"user_id": session["user_id"]}, {"_id": 0})
-                if user:
-                    if isinstance(user.get('created_at'), str):
-                        user['created_at'] = datetime.fromisoformat(user['created_at'])
-                    user['is_admin'] = user.get('email') == ADMIN_EMAIL
-                    return User(**user)
-    
-    # Try JWT token from header
-    if credentials:
-        try:
-            payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-            user = await db.users.find_one({"user_id": payload["user_id"]}, {"_id": 0})
-            if user:
-                if isinstance(user.get('created_at'), str):
-                    user['created_at'] = datetime.fromisoformat(user['created_at'])
-                user['is_admin'] = user.get('email') == ADMIN_EMAIL
-                return User(**user)
-        except jwt.ExpiredSignatureError:
-            raise HTTPException(status_code=401, detail="Token expired")
-        except jwt.InvalidTokenError:
-            pass
-    
-    raise HTTPException(status_code=401, detail="Not authenticated")
-
-async def require_admin(current_user: User = Depends(get_current_user)) -> User:
-    if not current_user.is_admin:
-        raise HTTPException(status_code=403, detail="Admin access required")
-    return current_user
-
 
 # ============== DEFAULT AGENTS (defined in config.py) ==============
 
@@ -990,143 +930,7 @@ async def agent_execute_with_tools(
         "execution_steps": execution_steps if execution_steps else None
     }
 
-# ============== AUTH ENDPOINTS ==============
-
-@api_router.post("/auth/register")
-async def register(user_data: UserCreate):
-    existing = await db.users.find_one({"email": user_data.email})
-    if existing:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    
-    user_id = f"user_{uuid.uuid4().hex[:12]}"
-    hashed_pw = hash_password(user_data.password)
-    
-    user_doc = {
-        "user_id": user_id,
-        "email": user_data.email,
-        "name": user_data.name,
-        "password_hash": hashed_pw,
-        "picture": None,
-        "created_at": datetime.now(timezone.utc).isoformat()
-    }
-    await db.users.insert_one(user_doc)
-    
-    # Welcome notification
-    await create_notification(user_id, "welcome", "Welcome to MAARS Command!", "Your AI team of 21 specialists is ready. Start by chatting with any agent.", "/dashboard")
-    
-    token = create_jwt_token(user_id, user_data.email)
-    is_admin = user_data.email == ADMIN_EMAIL
-    return {"token": token, "user": {"user_id": user_id, "email": user_data.email, "name": user_data.name, "is_admin": is_admin}}
-
-@api_router.post("/auth/login")
-async def login(user_data: UserLogin):
-    user = await db.users.find_one({"email": user_data.email}, {"_id": 0})
-    if not user or not verify_password(user_data.password, user.get("password_hash", "")):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-    token = create_jwt_token(user["user_id"], user["email"])
-    is_admin = user["email"] == ADMIN_EMAIL
-    return {"token": token, "user": {"user_id": user["user_id"], "email": user["email"], "name": user["name"], "is_admin": is_admin}}
-
-@api_router.post("/auth/session")
-async def exchange_session(request: Request, response: Response):
-    body = await request.json()
-    session_id = body.get("session_id")
-    
-    if not session_id:
-        raise HTTPException(status_code=400, detail="session_id required")
-    
-    # Exchange session_id with Emergent Auth
-    async with httpx.AsyncClient() as client:
-        try:
-            resp = await client.get(
-                "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data",
-                headers={"X-Session-ID": session_id}
-            )
-            if resp.status_code != 200:
-                raise HTTPException(status_code=401, detail="Invalid session")
-            
-            data = resp.json()
-        except Exception as e:
-            logger.error(f"Auth exchange error: {e}")
-            raise HTTPException(status_code=401, detail="Authentication failed")
-    
-    # Find or create user
-    user = await db.users.find_one({"email": data["email"]}, {"_id": 0})
-    if not user:
-        user_id = f"user_{uuid.uuid4().hex[:12]}"
-        user_doc = {
-            "user_id": user_id,
-            "email": data["email"],
-            "name": data["name"],
-            "picture": data.get("picture"),
-            "created_at": datetime.now(timezone.utc).isoformat()
-        }
-        await db.users.insert_one(user_doc)
-        user = user_doc
-    else:
-        user_id = user["user_id"]
-        # Update picture if changed
-        if data.get("picture") and data["picture"] != user.get("picture"):
-            await db.users.update_one({"user_id": user_id}, {"$set": {"picture": data["picture"]}})
-            user["picture"] = data["picture"]
-    
-    # Store session
-    session_token = data.get("session_token", f"session_{uuid.uuid4().hex}")
-    expires_at = datetime.now(timezone.utc) + timedelta(days=7)
-    
-    await db.user_sessions.update_one(
-        {"user_id": user_id},
-        {"$set": {
-            "user_id": user_id,
-            "session_token": session_token,
-            "expires_at": expires_at.isoformat(),
-            "created_at": datetime.now(timezone.utc).isoformat()
-        }},
-        upsert=True
-    )
-    
-    # Set cookie
-    response.set_cookie(
-        key="session_token",
-        value=session_token,
-        httponly=True,
-        secure=True,
-        samesite="none",
-        path="/",
-        max_age=7 * 24 * 60 * 60
-    )
-    
-    return {"user_id": user_id, "email": user["email"], "name": user["name"], "picture": user.get("picture"), "is_admin": user["email"] == ADMIN_EMAIL}
-
-@api_router.get("/auth/me")
-async def get_me(current_user: User = Depends(get_current_user)):
-    user_doc = await db.users.find_one({"user_id": current_user.user_id}, {"_id": 0})
-    return {
-        "user_id": current_user.user_id,
-        "email": current_user.email,
-        "name": current_user.name,
-        "picture": current_user.picture,
-        "is_admin": current_user.is_admin,
-        "created_at": current_user.created_at.isoformat() if isinstance(current_user.created_at, datetime) else current_user.created_at,
-        "onboarding_completed": user_doc.get("onboarding_completed", False) if user_doc else False
-    }
-
-@api_router.post("/auth/onboarding-complete")
-async def complete_onboarding(current_user: User = Depends(get_current_user)):
-    await db.users.update_one(
-        {"user_id": current_user.user_id},
-        {"$set": {"onboarding_completed": True}}
-    )
-    return {"success": True}
-
-@api_router.post("/auth/logout")
-async def logout(request: Request, response: Response):
-    session_token = request.cookies.get("session_token")
-    if session_token:
-        await db.user_sessions.delete_one({"session_token": session_token})
-    response.delete_cookie(key="session_token", path="/")
-    return {"message": "Logged out"}
+# Auth endpoints now in routes/auth.py
 
 # ============== AGENT ENDPOINTS ==============
 

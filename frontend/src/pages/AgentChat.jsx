@@ -228,6 +228,8 @@ const AgentChat = () => {
   const [ttsLoading, setTtsLoading] = useState(null);
   const [feedbackState, setFeedbackState] = useState({});
   const [showCustomize, setShowCustomize] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragCounterRef = useRef(0);
   const ttsAudioRef = useRef(null);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -602,6 +604,69 @@ const AgentChat = () => {
     setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Drag-and-drop handlers
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current++;
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current--;
+    if (dragCounterRef.current === 0) {
+      setIsDragging(false);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    dragCounterRef.current = 0;
+
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length === 0) return;
+
+    setUploading(true);
+    for (const file of files) {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await fetch(`${API}/upload`, {
+          method: "POST",
+          headers: headers,
+          body: formData
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setAttachments(prev => [...prev, {
+            filename: data.filename,
+            type: data.content_type,
+            size: data.size,
+            preview: data.data_url,
+            file_url: data.file_url
+          }]);
+          toast.success(`${file.name} uploaded`);
+        } else {
+          toast.error(`Failed to upload ${file.name}`);
+        }
+      } catch {
+        toast.error(`Failed to upload ${file.name}`);
+      }
+    }
+    setUploading(false);
+  };
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -908,7 +973,23 @@ const AgentChat = () => {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col h-screen pt-16 lg:pt-0 overflow-hidden">
+      <div
+        className="flex-1 flex flex-col h-screen pt-16 lg:pt-0 overflow-hidden relative"
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
+        {/* Drag-and-drop overlay */}
+        {isDragging && (
+          <div className="absolute inset-0 z-40 bg-indigo-500/10 backdrop-blur-sm border-2 border-dashed border-indigo-500 rounded-xl flex items-center justify-center" data-testid="drag-drop-overlay">
+            <div className="text-center">
+              <Image className="w-12 h-12 text-indigo-400 mx-auto mb-3 animate-bounce" />
+              <p className="text-lg font-semibold text-indigo-300">Drop files here</p>
+              <p className="text-sm text-zinc-400 mt-1">Images, PDFs, documents — AI will analyze them</p>
+            </div>
+          </div>
+        )}
         {/* Agent Header */}
         {selectedAgent && (
           <div className="hidden lg:flex items-center justify-between p-4 border-b border-white/10 shrink-0">
@@ -1043,12 +1124,22 @@ const AgentChat = () => {
                     }`}
                   >
                     {msg.attachments?.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-2">
+                      <div className="flex flex-wrap gap-2 mb-3">
                         {msg.attachments.map((att, idx) => (
                           att?.startsWith("data:image") ? (
-                            <img key={idx} src={att} alt="attachment" className="max-w-[200px] rounded-lg" />
+                            <div key={idx} className="relative group">
+                              <img src={att} alt="attachment" className="max-w-[200px] max-h-[160px] rounded-lg border border-white/10 object-cover" />
+                              {msg.role === "user" && (
+                                <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-black/60 text-[10px] text-indigo-300 flex items-center gap-1">
+                                  <Sparkles className="w-2.5 h-2.5" /> AI Vision
+                                </div>
+                              )}
+                            </div>
                           ) : (
-                            <div key={idx} className="px-2 py-1 bg-white/10 rounded text-xs">File attached</div>
+                            <div key={idx} className="px-3 py-2 bg-white/10 rounded-lg text-xs flex items-center gap-2">
+                              <FileText className="w-4 h-4 text-zinc-400" />
+                              <span>File attached</span>
+                            </div>
                           )
                         ))}
                       </div>
@@ -1283,7 +1374,7 @@ const AgentChat = () => {
               onChange={handleFileUpload}
               multiple
               className="hidden"
-              accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx"
+              accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx,.webp,.heic"
             />
             <Button
               type="button"
@@ -1330,6 +1421,37 @@ const AgentChat = () => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   if (input.trim() && selectedAgent && !sending) sendMessage(e);
+                }
+              }}
+              onPaste={async (e) => {
+                const items = Array.from(e.clipboardData.items);
+                const imageItems = items.filter(item => item.type.startsWith("image/"));
+                if (imageItems.length > 0) {
+                  e.preventDefault();
+                  setUploading(true);
+                  for (const item of imageItems) {
+                    const file = item.getAsFile();
+                    if (!file) continue;
+                    try {
+                      const formData = new FormData();
+                      formData.append('file', file);
+                      const response = await fetch(`${API}/upload`, {
+                        method: "POST", headers, body: formData
+                      });
+                      if (response.ok) {
+                        const data = await response.json();
+                        setAttachments(prev => [...prev, {
+                          filename: data.filename,
+                          type: data.content_type,
+                          size: data.size,
+                          preview: data.data_url,
+                          file_url: data.file_url
+                        }]);
+                        toast.success("Image pasted");
+                      }
+                    } catch { toast.error("Failed to paste image"); }
+                  }
+                  setUploading(false);
                 }
               }}
               placeholder={`Message ${selectedAgent?.name || "AI"}...`}
