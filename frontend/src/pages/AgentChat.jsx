@@ -9,7 +9,7 @@ import { Bot, Send, Plus, ArrowLeft, MessageSquare, Trash2,
   Paperclip, Image, FileText, Sparkles, Mic, MicOff, Loader2,
   Download, Film, FileSpreadsheet, File, Volume2, VolumeX,
   Search, Calculator, ClipboardList, BarChart3, Wrench, ChevronDown, ChevronRight, Brain, Zap,
-  Mail, MessageCircle, Phone, Github, Table, Calendar, Share2, ThumbsUp, ThumbsDown, Globe
+  Mail, MessageCircle, Phone, Github, Table, Calendar, Share2, ThumbsUp, ThumbsDown, Globe, Scan
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -146,8 +146,8 @@ const ExecutionSteps = ({ steps }) => {
   const [expanded, setExpanded] = useState(false);
   if (!steps || steps.length === 0) return null;
   
-  const toolIcons = { web_search: Search, calculate: Calculator, create_task: ClipboardList, analyze_data: BarChart3, send_slack: MessageCircle, send_email: Mail, send_sms: Phone, github_action: Github, airtable_action: Table, search_gif: Image, schedule_meeting: Calendar, google_calendar: Calendar, send_gmail: Mail };
-  const toolLabels = { web_search: "Web Search", calculate: "Calculate", create_task: "Create Task", analyze_data: "Analyze Data", send_slack: "Slack Message", send_email: "Send Email", send_sms: "Send SMS", github_action: "GitHub", airtable_action: "Airtable", search_gif: "GIF Search", schedule_meeting: "Schedule", google_calendar: "Calendar", send_gmail: "Gmail" };
+  const toolIcons = { web_search: Search, calculate: Calculator, create_task: ClipboardList, analyze_data: BarChart3, send_slack: MessageCircle, send_email: Mail, send_sms: Phone, github_action: Github, airtable_action: Table, search_gif: Image, schedule_meeting: Calendar, google_calendar: Calendar, send_gmail: Mail, product_scan: Scan, query_tasks: ClipboardList, update_task: ClipboardList, query_agent_history: Users };
+  const toolLabels = { web_search: "Web Search", calculate: "Calculate", create_task: "Create Task", analyze_data: "Analyze Data", send_slack: "Slack Message", send_email: "Send Email", send_sms: "Send SMS", github_action: "GitHub", airtable_action: "Airtable", search_gif: "GIF Search", schedule_meeting: "Schedule", google_calendar: "Calendar", send_gmail: "Gmail", product_scan: "Product Scanner", query_tasks: "Query Tasks", update_task: "Update Task", query_agent_history: "Agent History" };
   
   return (
     <div className="mb-2" data-testid="execution-steps">
@@ -179,13 +179,48 @@ const ExecutionSteps = ({ steps }) => {
                   <div>
                     <span className="text-amber-400 font-medium">Using {toolLabels[step.tool_name] || step.tool_name}</span>
                     <span className="text-zinc-500 ml-1">
-                      {step.tool_input?.query || step.tool_input?.expression || step.tool_input?.title || ''}
+                      {step.tool_input?.query || step.tool_input?.expression || step.tool_input?.title || step.tool_input?.product_query || ''}
                     </span>
                   </div>
                 </div>
               );
             }
             if (step.step_type === "tool_result") {
+              // Special rendering for product_scan results
+              const isProductScan = steps[idx - 1]?.tool_name === "product_scan" || (step.content && step.content.includes("PRODUCT SCAN RESULTS"));
+              if (isProductScan && step.content) {
+                const imageUrls = [];
+                const urlRegex = /Image \d+: (https?:\/\/[^\s]+)/g;
+                let match;
+                while ((match = urlRegex.exec(step.content)) !== null) {
+                  imageUrls.push(match[1]);
+                }
+                const productName = step.content.match(/PRODUCT SCAN RESULTS: (.+?)===/) ?
+                  step.content.match(/PRODUCT SCAN RESULTS: (.+?)===/)[1].trim() : "Product";
+
+                return (
+                  <div key={idx} className="rounded-lg bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 p-3" data-testid={`product-scan-result-${idx}`}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Scan className="w-4 h-4 text-indigo-400" />
+                      <span className="text-indigo-300 font-semibold text-xs">Product Identified: {productName}</span>
+                    </div>
+                    {imageUrls.length > 0 && (
+                      <div className="flex gap-2 mb-2 overflow-x-auto pb-1">
+                        {imageUrls.slice(0, 4).map((url, imgIdx) => (
+                          <img
+                            key={imgIdx}
+                            src={url}
+                            alt={`Reference ${imgIdx + 1}`}
+                            className="w-16 h-16 rounded-md object-cover border border-white/10 flex-shrink-0"
+                            onError={(e) => e.target.style.display = 'none'}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    <p className="text-emerald-400/80 font-mono text-[10px] leading-relaxed whitespace-pre-wrap line-clamp-6">{step.content.replace(/Image \d+: https?:\/\/[^\s]+/g, '').slice(0, 500)}</p>
+                  </div>
+                );
+              }
               return (
                 <div key={idx} className="text-xs p-2 rounded bg-white/5 border border-white/5" data-testid={`step-tool-result-${idx}`}>
                   <p className="text-emerald-400/80 font-mono text-[10px] leading-relaxed whitespace-pre-wrap line-clamp-4">{step.content}</p>

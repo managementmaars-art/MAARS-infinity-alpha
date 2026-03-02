@@ -733,6 +733,30 @@ async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
                 return "Google Suite is not configured. Ask your admin to add Google Suite credentials in Integrations."
             return "Gmail: This feature requires Google Suite OAuth setup. Please configure in Admin > Integrations."
 
+        elif tool_name == "product_scan":
+            product_query = tool_input.get("product_query", "")
+            if not product_query:
+                return "Error: No product query provided. Specify the product name/brand/model to scan."
+            try:
+                from services.product_scanner import scan_product
+                result = await scan_product(product_query, UPLOAD_DIR)
+                context = result.get("context", "")
+                ref_path = result.get("reference_image_path")
+                images = result.get("images", [])
+                
+                output_parts = [context]
+                if ref_path:
+                    output_parts.append(f"\n[Downloaded high-res reference image: {ref_path}]")
+                if images:
+                    output_parts.append(f"\nFound {len(images)} professional product images for reference.")
+                    for i, img in enumerate(images[:4], 1):
+                        output_parts.append(f"  Image {i}: {img['url']}")
+                
+                return "\n".join(output_parts)
+            except Exception as scan_err:
+                logger.error(f"Product scan error: {scan_err}")
+                return f"Product scan failed: {str(scan_err)[:200]}. Try a web_search instead."
+
         return f"Unknown tool: {tool_name}"
     except Exception as e:
         return f"Tool execution error ({tool_name}): {str(e)[:200]}"
@@ -1814,10 +1838,16 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         ))
         if has_images:
             image_instruction = (
-                "\n\n[The user has attached image(s). Analyze the image(s) carefully and thoroughly. "
-                "Describe what you see, identify products/objects/text/people/locations if relevant. "
-                "If the user asked a question about the image, answer it using both your analysis and any web data provided. "
-                "Be specific and detailed in your visual analysis.]"
+                "\n\n[VISION ACTIVE: The user has attached image(s). Analyze them carefully and thoroughly. "
+                "1) IDENTIFY: Detect and name any products, brands, models, objects, text, people, or locations visible. "
+                "Be as specific as possible (e.g. 'iPhone 16 Pro Max in Desert Titanium' not just 'a phone'). "
+                "2) DESCRIBE: Note colors, materials, condition, setting, and distinguishing features. "
+                "3) RESEARCH: If you identify a product, use the product_scan tool to search for detailed specs, pricing, "
+                "reviews, and high-quality reference images from the web. "
+                "4) ACT: If the user asks for a commercial video, ad, or marketing content about the product, "
+                "use all gathered data (your visual analysis + product scan results) to create the best possible output. "
+                "5) For video generation requests, craft a detailed cinematic prompt using the identified product name "
+                "and professional reference imagery found via product_scan.]"
             )
             full_user_content += image_instruction
         
@@ -2176,8 +2206,15 @@ Rules:
                 if len(response_text) > 50:
                     try:
                         from emergentintegrations.llm.chat import LlmChat, UserMessage as UM
-                        pc = LlmChat(api_key=vid_api_key, session_id=f"vidp_{uuid.uuid4().hex[:6]}", system_message="You are a professional video prompt engineer for Sora 2 AI. Convert the description into a detailed cinematic video prompt (max 200 words). Include: scene composition, camera movement (dolly, crane, tracking shot), lighting (golden hour, studio, neon), subject action/motion, mood/atmosphere, color grading style, depth of field. Be specific and visual. Output ONLY the prompt.").with_model("openai", "gpt-4o-mini")
-                        vid_prompt = await pc.send_message(UM(text=f"User: {message_data.content}\n\nDirector's brief:\n{response_text[:2000]}"))
+                        # Include product scan data if agent found any via tools
+                        extra_context = ""
+                        if execution_steps:
+                            for step in execution_steps:
+                                if step.get("tool") == "product_scan" and step.get("result"):
+                                    extra_context = f"\n\nProduct Research Data:\n{step['result'][:1500]}"
+                                    break
+                        pc = LlmChat(api_key=vid_api_key, session_id=f"vidp_{uuid.uuid4().hex[:6]}", system_message="You are a professional video prompt engineer for Sora 2 AI. Convert the description into a detailed cinematic video prompt (max 200 words). Include: scene composition, camera movement (dolly, crane, tracking shot), lighting (golden hour, studio, neon), subject action/motion, mood/atmosphere, color grading style, depth of field. If product research data is provided, use the EXACT product name and key features in the prompt for accuracy. Be specific and visual. Output ONLY the prompt.").with_model("openai", "gpt-4o-mini")
+                        vid_prompt = await pc.send_message(UM(text=f"User: {message_data.content}\n\nDirector's brief:\n{response_text[:2000]}{extra_context}"))
                     except Exception:
                         pass
                 
@@ -2227,6 +2264,22 @@ Rules:
                     if img_path.exists():
                         source_image_path = str(img_path)
                         source_mime = "image/png"
+                
+                # Check if product_scan downloaded a high-quality reference image
+                if not source_image_path and execution_steps:
+                    for step in execution_steps:
+                        if step.get("tool") == "product_scan" and step.get("result"):
+                            # Extract downloaded reference image path from product scan result
+                            import re as _re_vid
+                            ref_match = _re_vid.search(r'Downloaded high-res reference image: (.+?)\]', step["result"])
+                            if ref_match:
+                                ref_path = ref_match.group(1).strip()
+                                from pathlib import Path as _P
+                                if _P(ref_path).exists():
+                                    source_image_path = ref_path
+                                    source_mime = "image/jpeg"
+                                    logger.info(f"Using product scan reference image for video: {ref_path}")
+                                    break
                 
                 if source_image_path:
                     logger.info(f"Starting Sora 2 image-to-video: image={source_image_path}, prompt={vid_prompt[:80]}...")
