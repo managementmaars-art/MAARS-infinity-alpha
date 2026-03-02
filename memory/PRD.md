@@ -1,30 +1,65 @@
 # MAARS Command by MAARS Global Corporation - PRD
 
 ## Original Problem Statement
-Full-stack AI team platform with 20+ autonomous agents, Commander AI delegation, agent collaboration, voice mode, file generation, subscriptions, admin dashboard — production-ready for selling subscriptions.
+Build a full-stack AI team platform ("MAARS Command") comparable to Sintra.ai and Emergent, ready for launch to sell subscriptions. Features include specialized AI agents, Commander AI delegation, multi-model support, Stripe subscriptions, admin dashboard, RAG knowledge base, web browsing, image analysis (vision), and multilingual audio I/O.
 
-## Implemented Features
+## Core Requirements
+1. AI Team & Commander AI with 21+ specialized agents
+2. Multi-model support (GPT-5.2, Claude, Gemini, etc.) with universal key + direct provider keys
+3. Stripe-integrated subscription tiers with dynamic credit system
+4. Admin dashboard for pricing, agent management, analytics
+5. RAG knowledge base (per-agent document uploads)
+6. Automatic web browsing for real-time information
+7. Image analysis (vision) for all agents
+8. Video/image generation (Sora 2, DALL-E 3, Nano Banana 2)
+9. TTS/STT (ElevenLabs, OpenAI, Whisper)
 
-### Production-Grade Web Browsing (Mar 2, 2026 - LATEST)
-- **ChatGPT-like browsing:** Agents auto-search internet for factual/current questions
-- **Smart detection:** FORCE patterns (dates, prices, news), SOFT patterns (2+ needed), question heuristic
-- **DuckDuckGo search + page scraping:** 5 results, scrapes top 3 with BeautifulSoup
-- **Key innovation:** Web data injected into USER MESSAGE (not system prompt) — forces LLM to use it
-- **Source citations:** Agents cite with [Title](URL) format naturally
-- **Globe icon:** Cyan indicator on web-searched messages in chat UI
-- **No false triggers:** Greetings, short messages correctly skipped
-- All tests passed (iteration_42: 10/10 backend, 6/6 frontend)
+## Architecture
+- **Backend:** FastAPI + MongoDB (Motor async driver)
+- **Frontend:** React + Tailwind CSS + Shadcn/UI
+- **Auth:** JWT + Emergent Google OAuth
+- **AI:** emergentintegrations library with Emergent LLM Key
+- **Search:** DuckDuckGo + BeautifulSoup4
+- **RAG:** scikit-learn TF-IDF local model
+- **Payments:** Stripe
 
-### Previous Features
-- Model-Aware Credit System (28 models, tiered credits)
-- RAG Knowledge Base (per-agent docs, TF-IDF search, citations)
-- Video Gen Fix (Sora 2 retry), Avatar Persistence, Agent Switch Toast
-- Markdown rendering, Nano Banana 2, Cross-Agent Communication
-- User Customization, White-Label Branding, 21 agents, Stripe
-
-## Credentials
-- Admin: management.maars@marsgc.net / MaarsAdmin2024!
+## What's Implemented (as of March 2, 2026)
+- [x] Full auth system (JWT + Google OAuth) - **refactored to routes/auth.py**
+- [x] 21+ specialized AI agents with Commander AI delegation
+- [x] Multi-model LLM support with auto-selection
+- [x] Stripe subscription integration (multi-tier)
+- [x] Dynamic model-aware credit system with UI display
+- [x] Admin dashboard with full management capabilities
+- [x] RAG knowledge base (TF-IDF, per-agent documents)
+- [x] Automatic web browsing (DuckDuckGo + synthesis)
+- [x] Image analysis (vision) - all agents can analyze uploaded images
+- [x] Drag-and-drop file uploads + clipboard paste
+- [x] AI Vision badge on image attachments
+- [x] Video generation (Sora 2) with background processing
+- [x] Image generation (DALL-E 3, Nano Banana 2, GPT Image 1)
+- [x] TTS/STT (ElevenLabs, OpenAI TTS, Whisper)
+- [x] Agent customization panel
+- [x] Notification system
+- [x] Admin analytics, branding, SMTP config
+- [x] Backend refactoring: auth routes extracted to routes/auth.py, shared auth module at auth.py, shared DB at db.py
+- [x] Frontend refactoring: CustomPackagesTab and IntegrationsTab extracted to components/admin/
 
 ## Backlog
-- P1: Third-party integrations backend logic (Slack, Calendly, Airtable) — MOCKED
-- P2: Backend refactoring, AdminDashboard.jsx extraction
+### P1
+- Implement backend logic to USE saved integration API keys (Slack, Airtable, GitHub, etc.) - currently MOCKED
+
+### P2
+- Continue backend refactoring: extract agent, chat, admin, generation routes from server.py
+- Continue frontend refactoring: extract remaining AdminDashboard inline tabs (Overview, Users, Agents, Transactions, PricingManager, PaymentSetup) to components
+
+## Key Files
+- `/app/backend/server.py` - Main server (still large, ~5900 lines)
+- `/app/backend/auth.py` - Shared auth utilities
+- `/app/backend/db.py` - Shared database connection
+- `/app/backend/routes/auth.py` - Auth route endpoints
+- `/app/backend/services/rag_service.py` - RAG TF-IDF service
+- `/app/backend/services/web_search_service.py` - Web search service
+- `/app/frontend/src/pages/AgentChat.jsx` - Main chat interface
+- `/app/frontend/src/pages/AdminDashboard.jsx` - Admin panel
+- `/app/frontend/src/components/admin/CustomPackagesTab.jsx` - Extracted tab
+- `/app/frontend/src/components/admin/IntegrationsTab.jsx` - Extracted tab
