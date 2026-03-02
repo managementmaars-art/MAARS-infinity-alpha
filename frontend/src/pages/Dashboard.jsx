@@ -4,13 +4,14 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import {
   Bot, MessageSquare, ListTodo, Sparkles, Plus, ChevronRight,
-  LayoutDashboard, Users, Settings, LogOut, Menu, X, Shield, Trash2, BarChart3, Package
+  LayoutDashboard, Users, Settings, LogOut, Menu, X, Shield, Trash2, BarChart3, Package, Rocket
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
 import { BrandFooter } from "../components/BrandFooter";
 import OnboardingFlow from "./OnboardingFlow";
 import NotificationCenter from "../components/NotificationCenter";
+import CommandCenter from "../components/projects/CommandCenter";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -89,6 +90,7 @@ const Dashboard = () => {
 
       <nav className="flex-1 px-4 space-y-1">
         <NavItem icon={LayoutDashboard} label="Dashboard" to="/dashboard" active />
+        <NavItem icon={Rocket} label="Projects" to="/projects" />
         <NavItem icon={MessageSquare} label="Chat" to="/chat" />
         <NavItem icon={Users} label="Agents" to="/agents" />
         <NavItem icon={Package} label="Products" to="/products" />
@@ -195,11 +197,16 @@ const Dashboard = () => {
           <div className="mb-8 flex items-start justify-between">
             <div>
               <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2 font-['Outfit']">
-                Welcome back, {user?.name?.split(" ")[0]}
+                Command Center
               </h1>
-              <p className="text-zinc-400">Here's what's happening with your AI team today.</p>
+              <p className="text-zinc-400">Set goals. Deploy agents. Run your AI workforce.</p>
             </div>
             <NotificationCenter />
+          </div>
+
+          {/* Command Center */}
+          <div className="mb-8">
+            <CommandCenter />
           </div>
 
           {/* Stats Grid */}

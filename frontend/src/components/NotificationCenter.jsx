@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth, API } from "../App";
 import {
   Bell, Check, CheckCheck, Trash2, X, MessageSquare, CreditCard,
-  UserPlus, Sparkles, AlertTriangle, Gift
+  UserPlus, Sparkles, AlertTriangle, Gift, CheckCircle
 } from "lucide-react";
 
 const iconMap = {
@@ -12,6 +12,7 @@ const iconMap = {
   team_join: UserPlus,
   team_invite: UserPlus,
   team_share: MessageSquare,
+  project_complete: CheckCircle,
   report_ready: MessageSquare,
   subscription: CreditCard,
   default: Bell,
@@ -23,6 +24,7 @@ const colorMap = {
   team_join: "emerald",
   team_invite: "cyan",
   team_share: "violet",
+  project_complete: "emerald",
   report_ready: "violet",
   subscription: "rose",
   default: "zinc",

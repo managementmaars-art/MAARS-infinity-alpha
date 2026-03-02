@@ -143,3 +143,24 @@ class TeamInvite(BaseModel):
 
 class TeamMemberUpdate(BaseModel):
     role: str
+
+
+# ============== PROJECT / WORKFLOW MODELS ==============
+
+class MilestoneCreate(BaseModel):
+    title: str
+    description: str = ""
+
+class ProjectCreate(BaseModel):
+    goal: str
+    execution_mode: str = "approval"  # draft, approval, autonomous
+    priority: str = "high"
+
+class ProjectUpdate(BaseModel):
+    title: Optional[str] = None
+    status: Optional[str] = None
+    execution_mode: Optional[str] = None
+    priority: Optional[str] = None
+
+class AutonomySettings(BaseModel):
+    autonomy_level: str = "approval"  # manual, approval, autonomous

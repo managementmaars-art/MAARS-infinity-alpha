@@ -29,6 +29,7 @@ from routes.notifications_routes import router as notifications_router
 from routes.user import router as user_router
 from routes.products import router as products_router
 from routes.knowledge_base import router as knowledge_base_router
+from routes.projects import router as projects_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -52,6 +53,7 @@ api_router.include_router(notifications_router)
 api_router.include_router(user_router)
 api_router.include_router(products_router)
 api_router.include_router(knowledge_base_router)
+api_router.include_router(projects_router)
 
 app.include_router(api_router)
 
@@ -76,6 +78,9 @@ async def startup():
     await db.subscriptions.create_index("user_id", unique=True)
     await db.users.create_index("email", unique=True)
     await db.audit_log.create_index([("created_at", -1)])
+    await db.projects.create_index([("user_id", 1), ("status", 1)])
+    await db.projects.create_index([("user_id", 1), ("created_at", -1)])
+    await db.tasks.create_index([("project_id", 1)])
     await db.knowledge_docs.create_index([("agent_id", 1)])
     logger.info("MongoDB indexes ensured")
 
