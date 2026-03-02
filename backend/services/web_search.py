@@ -73,12 +73,10 @@ def should_search(message: str) -> bool:
 
 def extract_search_query(message: str) -> str:
     """Extract a clean, effective search query from the user's message."""
-    # Remove common filler words for a tighter query
     query = message.strip()
 
-    # If it's a question, keep it as-is but cap length
+    # Cap length
     if len(query) > 150:
-        # Take up to the first sentence or 150 chars
         for sep in ['. ', '? ', '! ', '\n']:
             idx = query.find(sep)
             if 0 < idx < 200:
@@ -89,11 +87,14 @@ def extract_search_query(message: str) -> str:
 
     # Remove polite prefixes
     for prefix in ['can you ', 'could you ', 'please ', 'i want to know ', 'i need to know ',
-                    'tell me ', 'help me ', 'i would like to know ']:
+                    'tell me ', 'help me ', 'i would like to know ', 'do you know ']:
         if query.lower().startswith(prefix):
             query = query[len(prefix):]
 
-    return query.strip()
+    # Remove trailing question mark for cleaner search
+    query = query.rstrip('?').strip()
+
+    return query
 
 
 async def web_search(query: str, max_results: int = 5) -> List[Dict]:
