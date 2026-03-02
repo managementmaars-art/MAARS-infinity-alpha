@@ -37,9 +37,14 @@ IMPORTANT RESPONSE GUIDELINES:
 """
 
 
-@router.get("/chats", response_model=List[Chat])
-async def get_chats(current_user: User = Depends(get_current_user)):
-    chats = await db.chats.find({"user_id": current_user.user_id}, {"_id": 0}).sort("updated_at", -1).to_list(100)
+@router.get("/chats")
+async def get_chats(page: int = 1, limit: int = 50, current_user: User = Depends(get_current_user)):
+    skip = (page - 1) * limit
+    total = await db.chats.count_documents({"user_id": current_user.user_id})
+    chats = await db.chats.find(
+        {"user_id": current_user.user_id},
+        {"_id": 0, "messages": {"$slice": -1}, "chat_id": 1, "title": 1, "agent_id": 1, "user_id": 1, "created_at": 1, "updated_at": 1, "pinned_messages": 1, "shared_with_team": 1}
+    ).sort("updated_at", -1).skip(skip).to_list(limit)
     
     for chat in chats:
         if isinstance(chat.get('created_at'), str):
@@ -50,7 +55,7 @@ async def get_chats(current_user: User = Depends(get_current_user)):
             if isinstance(msg.get('created_at'), str):
                 msg['created_at'] = datetime.fromisoformat(msg['created_at'])
     
-    return chats
+    return {"chats": chats, "total": total, "page": page, "pages": max(1, -(-total // limit))}
 
 @router.post("/chats", response_model=Chat)
 async def create_chat(chat_data: ChatCreate, current_user: User = Depends(get_current_user)):

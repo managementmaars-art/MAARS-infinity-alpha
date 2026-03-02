@@ -41,7 +41,10 @@ const Dashboard = () => {
       ]);
 
       if (agentsRes?.ok) setAgents(await agentsRes.json());
-      if (chatsRes?.ok) setRecentChats(await chatsRes.json());
+      if (chatsRes?.ok) {
+        const data = await chatsRes.json();
+        setRecentChats(data.chats || data);
+      }
       if (statsRes?.ok) setStats(await statsRes.json());
     } catch (error) {
       toast.error("Failed to load dashboard data");

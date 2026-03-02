@@ -718,9 +718,17 @@ async def admin_api_usage(admin: User = Depends(require_admin)):
     return {"providers": result, "tracked_usage": tracked_usage}
 
 @router.get("/admin/users")
-async def admin_get_users(admin: User = Depends(require_admin)):
-    """Get all users with their subscription info"""
-    users = await db.users.find({}, {"_id": 0, "password_hash": 0}).sort("created_at", -1).to_list(500)
+async def admin_get_users(page: int = 1, limit: int = 50, search: str = "", admin: User = Depends(require_admin)):
+    """Get all users with their subscription info (paginated)"""
+    query = {}
+    if search:
+        query["$or"] = [
+            {"name": {"$regex": search, "$options": "i"}},
+            {"email": {"$regex": search, "$options": "i"}}
+        ]
+    skip = (page - 1) * limit
+    total = await db.users.count_documents(query)
+    users = await db.users.find(query, {"_id": 0, "password_hash": 0}).sort("created_at", -1).skip(skip).to_list(limit)
     
     # Enrich with subscription data
     for u in users:
@@ -728,7 +736,7 @@ async def admin_get_users(admin: User = Depends(require_admin)):
         u["subscription"] = sub or {"plan_id": "free", "credits": 0, "credits_used": 0}
         u["is_admin"] = u.get("email") == ADMIN_EMAIL
     
-    return users
+    return {"users": users, "total": total, "page": page, "pages": max(1, -(-total // limit))}
 
 @router.get("/admin/agents")
 async def admin_get_all_agents(admin: User = Depends(require_admin)):
@@ -840,10 +848,12 @@ async def admin_update_credit_packages(request: Request, admin: User = Depends(r
     return {"message": "Credit packages updated", "packages": packages}
 
 @router.get("/admin/transactions")
-async def admin_get_transactions(admin: User = Depends(require_admin)):
-    """Get all payment transactions"""
-    transactions = await db.payment_transactions.find({}, {"_id": 0}).sort("created_at", -1).to_list(200)
-    return transactions
+async def admin_get_transactions(page: int = 1, limit: int = 50, admin: User = Depends(require_admin)):
+    """Get all payment transactions (paginated)"""
+    skip = (page - 1) * limit
+    total = await db.payment_transactions.count_documents({})
+    transactions = await db.payment_transactions.find({}, {"_id": 0}).sort("created_at", -1).skip(skip).to_list(limit)
+    return {"transactions": transactions, "total": total, "page": page, "pages": max(1, -(-total // limit))}
 
 @router.patch("/admin/users/{user_id}/subscription")
 async def admin_update_subscription(user_id: str, plan_id: str, credits: int = 0, admin: User = Depends(require_admin)):
@@ -2058,3 +2068,143 @@ async def admin_credit_burn_rate(admin: User = Depends(require_admin)):
             "calls": d["calls"]
         } for d in daily_burn]
     }
+
+
+# ============== ENHANCED ANALYTICS - PHASE 3 ==============
+
+@router.get("/admin/analytics/agent-leaderboard")
+async def admin_agent_leaderboard(admin: User = Depends(require_admin)):
+    """Agent performance leaderboard - most used, best rated, fastest."""
+    pipeline = [
+        {"$group": {
+            "_id": "$agent_id",
+            "total_chats": {"$sum": 1},
+            "total_messages": {"$sum": {"$size": {"$ifNull": ["$messages", []]}}},
+            "last_used": {"$max": "$updated_at"},
+        }},
+        {"$sort": {"total_chats": -1}}
+    ]
+    usage = await db.chats.aggregate(pipeline).to_list(50)
+    
+    agents = await db.agents.find({}, {"_id": 0, "agent_id": 1, "name": 1, "avatar": 1, "role": 1}).to_list(200)
+    agent_map = {a["agent_id"]: a for a in agents}
+    
+    # Get feedback stats
+    feedback_pipeline = [
+        {"$unwind": "$messages"},
+        {"$match": {"messages.feedback": {"$exists": True}}},
+        {"$group": {
+            "_id": "$agent_id",
+            "positive": {"$sum": {"$cond": [{"$eq": ["$messages.feedback", "up"]}, 1, 0]}},
+            "negative": {"$sum": {"$cond": [{"$eq": ["$messages.feedback", "down"]}, 1, 0]}},
+            "total_feedback": {"$sum": 1}
+        }}
+    ]
+    feedback = await db.chats.aggregate(feedback_pipeline).to_list(50)
+    feedback_map = {f["_id"]: f for f in feedback}
+    
+    leaderboard = []
+    for u in usage:
+        aid = u["_id"]
+        agent = agent_map.get(aid, {})
+        fb = feedback_map.get(aid, {})
+        positive = fb.get("positive", 0)
+        total_fb = fb.get("total_feedback", 0)
+        satisfaction = round((positive / max(total_fb, 1)) * 100, 1)
+        leaderboard.append({
+            "agent_id": aid,
+            "name": agent.get("name", aid),
+            "avatar": agent.get("avatar", ""),
+            "role": agent.get("role", ""),
+            "total_chats": u["total_chats"],
+            "total_messages": u["total_messages"],
+            "satisfaction_pct": satisfaction,
+            "positive_feedback": positive,
+            "negative_feedback": fb.get("negative", 0),
+            "last_used": u.get("last_used", ""),
+        })
+    
+    return {"leaderboard": leaderboard}
+
+
+@router.get("/admin/analytics/engagement-heatmap")
+async def admin_engagement_heatmap(admin: User = Depends(require_admin)):
+    """User activity heatmap - messages by hour and day of week."""
+    pipeline = [
+        {"$unwind": "$messages"},
+        {"$match": {"messages.role": "user"}},
+        {"$project": {
+            "timestamp": "$messages.created_at"
+        }}
+    ]
+    raw = await db.chats.aggregate(pipeline).to_list(10000)
+    
+    heatmap = [[0]*24 for _ in range(7)]  # 7 days x 24 hours
+    for r in raw:
+        ts = r.get("timestamp", "")
+        if not ts:
+            continue
+        try:
+            dt = datetime.fromisoformat(str(ts).replace("Z", "+00:00")) if isinstance(ts, str) else ts
+            heatmap[dt.weekday()][dt.hour] += 1
+        except Exception:
+            continue
+    
+    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    result = []
+    for d_idx, day in enumerate(days):
+        for h in range(24):
+            if heatmap[d_idx][h] > 0:
+                result.append({"day": day, "hour": h, "count": heatmap[d_idx][h]})
+    
+    max_count = max((r["count"] for r in result), default=1)
+    for r in result:
+        r["intensity"] = round(r["count"] / max(max_count, 1), 2)
+    
+    return {"heatmap": result, "days": days, "max_count": max_count}
+
+
+@router.get("/admin/analytics/revenue-trends")
+async def admin_revenue_trends(days: int = 30, admin: User = Depends(require_admin)):
+    """Revenue trends with growth rates."""
+    now = datetime.now(timezone.utc)
+    start = (now - timedelta(days=days)).isoformat()
+    
+    pipeline = [
+        {"$match": {"created_at": {"$gte": start}, "payment_status": "paid"}},
+        {"$group": {
+            "_id": {"$substr": ["$created_at", 0, 10]},
+            "revenue": {"$sum": "$amount"},
+            "transactions": {"$sum": 1}
+        }},
+        {"$sort": {"_id": 1}}
+    ]
+    daily = await db.payment_transactions.aggregate(pipeline).to_list(days)
+    
+    trends = []
+    for i, d in enumerate(daily):
+        prev_rev = daily[i-1]["revenue"] if i > 0 else d["revenue"]
+        growth = round(((d["revenue"] - prev_rev) / max(prev_rev, 0.01)) * 100, 1) if i > 0 else 0
+        cumulative = sum(dd["revenue"] for dd in daily[:i+1])
+        trends.append({
+            "date": d["_id"],
+            "revenue": round(d["revenue"], 2),
+            "transactions": d["transactions"],
+            "growth_pct": growth,
+            "cumulative": round(cumulative, 2),
+        })
+    
+    total = sum(d["revenue"] for d in daily)
+    avg_daily = total / max(len(daily), 1)
+    
+    return {
+        "trends": trends,
+        "summary": {
+            "total_revenue": round(total, 2),
+            "avg_daily_revenue": round(avg_daily, 2),
+            "total_transactions": sum(d["transactions"] for d in daily),
+            "period_days": days,
+        }
+    }
+
+

@@ -96,6 +96,11 @@ async def invite_to_team(team_id: str, data: TeamInvite, current_user: User = De
     await db.team_invites.insert_one(invite)
     invite.pop("_id", None)
     
+    # Notify the invited user if they already have an account
+    invited_user = await db.users.find_one({"email": data.email}, {"_id": 0, "user_id": 1})
+    if invited_user:
+        await create_notification(invited_user["user_id"], "team_invite", f"Team Invite: {team['name']}", f"{current_user.name} invited you to join {team['name']}. Check your pending invites.", "/team")
+    
     # Send email notification (non-blocking, skips if SMTP not configured)
     asyncio.create_task(send_email_notification(
         to_email=data.email,
@@ -243,6 +248,12 @@ async def share_chat_with_team(chat_id: str, current_user: User = Depends(get_cu
         return {"shared": False}
     else:
         await db.chats.update_one({"chat_id": chat_id}, {"$set": {"shared_with_team": team["team_id"]}})
+        # Notify team members
+        full_team = await db.teams.find_one({"team_id": team["team_id"]})
+        if full_team:
+            for m in full_team.get("members", []):
+                if m["user_id"] != current_user.user_id:
+                    await create_notification(m["user_id"], "team_share", f"Chat shared in {full_team.get('name', 'your team')}", f"{current_user.name} shared a chat: {chat.get('title', 'Untitled')}", "/team")
         return {"shared": True, "team_id": team["team_id"]}
 
 @router.get("/teams/{team_id}/shared-chats")

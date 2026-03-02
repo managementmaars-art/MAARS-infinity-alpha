@@ -9,6 +9,7 @@ from auth import get_current_user, require_admin, User, ADMIN_EMAIL
 from models.schemas import Agent, AgentCreate
 from shared.constants import SUBSCRIPTION_PLANS, CUSTOM_AGENT_CREDIT_COST
 from config import AGENT_TOOL_MAP, AGENT_TOOLS
+from services.cache_service import cache
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -16,14 +17,17 @@ router = APIRouter()
 @router.get("/agents/public")
 async def get_agents_public():
     """Public endpoint: return default agents (no auth required)"""
+    cached = cache.get("agents_public")
+    if cached:
+        return cached
     agents = await db.agents.find(
         {"is_custom": False, "is_active": {"$ne": False}},
         {"_id": 0, "agent_id": 1, "name": 1, "avatar": 1, "role": 1, "description": 1, "capabilities": 1, "is_commander": 1}
     ).to_list(50)
-    # Inject tools info
     for agent in agents:
         agent["tools"] = AGENT_TOOL_MAP.get(agent.get("agent_id", ""), [])
     agents.sort(key=lambda a: (0 if a.get("agent_id") == "agent_commander" else 1, a.get("name", "")))
+    cache.set("agents_public", agents, ttl=120)
     return agents
 
 @router.get("/agents/tools")

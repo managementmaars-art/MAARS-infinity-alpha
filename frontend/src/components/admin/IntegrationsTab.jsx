@@ -3,9 +3,10 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
-import { Plug, Loader2, CheckCircle, XCircle, Wrench } from "lucide-react";
+import { Plug, Loader2, CheckCircle, XCircle, Wrench, Wand2 } from "lucide-react";
 import { useAuth, API } from "../../App";
 import { toast } from "sonner";
+import IntegrationWizard from "./IntegrationWizard";
 
 const IntegrationsTab = () => {
   const { token } = useAuth();
@@ -17,6 +18,7 @@ const IntegrationsTab = () => {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [toolStatus, setToolStatus] = useState(null);
+  const [showWizard, setShowWizard] = useState(false);
 
   const serviceIcons = {
     slack: "https://cdn.simpleicons.org/slack/E01E5A",
@@ -96,14 +98,29 @@ const IntegrationsTab = () => {
 
   return (
     <div className="space-y-6" data-testid="integrations-tab">
+      {showWizard && (
+        <IntegrationWizard
+          onClose={() => setShowWizard(false)}
+          onComplete={() => {
+            fetch(`${API}/admin/integrations`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()).then(setIntegrations);
+            fetch(`${API}/admin/integration-status`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()).then(setToolStatus).catch(() => {});
+          }}
+        />
+      )}
+
       <Card className="bg-zinc-900/50 border-white/10">
         <CardHeader>
-          <CardTitle className="text-white font-['Outfit'] flex items-center gap-3 text-base">
-            <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
-              <Plug className="w-5 h-5 text-violet-400" />
-            </div>
-            Service Integrations
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-white font-['Outfit'] flex items-center gap-3 text-base">
+              <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                <Plug className="w-5 h-5 text-violet-400" />
+              </div>
+              Service Integrations
+            </CardTitle>
+            <Button onClick={() => setShowWizard(true)} variant="outline" className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10" data-testid="open-wizard-btn">
+              <Wand2 className="w-4 h-4 mr-2" />Quick Setup
+            </Button>
+          </div>
           <p className="text-zinc-400 text-sm">Configure third-party services your AI agents can use as tools (Slack, GitHub, Email, SMS, etc.)</p>
         </CardHeader>
         <CardContent className="space-y-4">

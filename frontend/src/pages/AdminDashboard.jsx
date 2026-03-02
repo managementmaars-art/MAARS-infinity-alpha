@@ -99,9 +99,15 @@ const AdminDashboard = () => {
       ]);
 
       if (statsRes.ok) setStats(await statsRes.json());
-      if (usersRes.ok) setUsers(await usersRes.json());
+      if (usersRes.ok) {
+        const data = await usersRes.json();
+        setUsers(data.users || data);
+      }
       if (agentsRes.ok) setAgents(await agentsRes.json());
-      if (txRes.ok) setTransactions(await txRes.json());
+      if (txRes.ok) {
+        const data = await txRes.json();
+        setTransactions(data.transactions || data);
+      }
       if (pricingRes.ok) {
         const p = await pricingRes.json();
         setPricingConfig(p);

@@ -70,13 +70,15 @@ async def save_product(data: ProductSave, current_user: User = Depends(get_curre
 
 
 @router.get("/products")
-async def list_products(current_user: User = Depends(get_current_user)):
+async def list_products(page: int = 1, limit: int = 50, current_user: User = Depends(get_current_user)):
+    skip = (page - 1) * limit
+    total = await db.product_catalog.count_documents({"user_id": current_user.user_id})
     cursor = db.product_catalog.find(
         {"user_id": current_user.user_id},
         {"_id": 0}
-    ).sort("created_at", -1)
-    products = await cursor.to_list(100)
-    return {"products": products}
+    ).sort("created_at", -1).skip(skip)
+    products = await cursor.to_list(limit)
+    return {"products": products, "total": total, "page": page, "pages": max(1, -(-total // limit))}
 
 
 @router.get("/products/{product_id}")

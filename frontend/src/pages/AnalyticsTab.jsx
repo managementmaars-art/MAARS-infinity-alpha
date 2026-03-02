@@ -75,6 +75,9 @@ const AnalyticsTab = () => {
   const [retention, setRetention] = useState([]);
   const [projections, setProjections] = useState(null);
   const [creditBurn, setCreditBurn] = useState(null);
+  const [leaderboard, setLeaderboard] = useState(null);
+  const [heatmap, setHeatmap] = useState(null);
+  const [revTrends, setRevTrends] = useState(null);
   const feedRef = useRef([]);
 
   useEffect(() => {
@@ -84,6 +87,9 @@ const AnalyticsTab = () => {
     fetchRetention();
     fetchProjections();
     fetchCreditBurn();
+    fetchLeaderboard();
+    fetchHeatmap();
+    fetchRevTrends();
     const interval = setInterval(fetchFeed, 15000);
     return () => clearInterval(interval);
   }, []);
@@ -127,6 +133,31 @@ const AnalyticsTab = () => {
       const res = await fetch(`${API}/admin/analytics/credit-burn`, { headers: { Authorization: `Bearer ${token}` } });
       if (res.ok) setCreditBurn(await res.json());
     } catch {}
+  };
+
+  const fetchLeaderboard = async () => {
+    try {
+      const res = await fetch(`${API}/admin/analytics/agent-leaderboard`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) setLeaderboard(await res.json());
+    } catch {}
+  };
+
+  const fetchHeatmap = async () => {
+    try {
+      const res = await fetch(`${API}/admin/analytics/engagement-heatmap`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) setHeatmap(await res.json());
+    } catch {}
+  };
+
+  const fetchRevTrends = async () => {
+    try {
+      const res = await fetch(`${API}/admin/analytics/revenue-trends?days=30`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) setRevTrends(await res.json());
+    } catch {}
+  };
+
+  const handleExport = (report) => {
+    window.open(`${API}/admin/analytics/export?report=${report}&token=${token}`, "_blank");
   };
 
   const fetchAnalytics = async () => {
@@ -619,6 +650,133 @@ const AnalyticsTab = () => {
           </ResponsiveContainer>
         </ChartCard>
       )}
+
+      {/* Agent Leaderboard */}
+      {leaderboard?.leaderboard?.length > 0 && (
+        <ChartCard title="Agent Leaderboard" icon={Crown} className="col-span-1 lg:col-span-2">
+          <div className="space-y-2" data-testid="agent-leaderboard">
+            {leaderboard.leaderboard.slice(0, 10).map((agent, i) => (
+              <div key={agent.agent_id} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] transition-colors" data-testid={`leaderboard-agent-${i}`}>
+                <span className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold ${
+                  i === 0 ? "bg-amber-500/20 text-amber-400" : i === 1 ? "bg-zinc-400/20 text-zinc-300" : i === 2 ? "bg-orange-500/20 text-orange-400" : "bg-zinc-800 text-zinc-500"
+                }`}>{i + 1}</span>
+                {agent.avatar && <img src={agent.avatar} alt="" className="w-8 h-8 rounded-full object-cover" />}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-white font-medium truncate">{agent.name}</p>
+                  <p className="text-[10px] text-zinc-500">{agent.role}</p>
+                </div>
+                <div className="flex items-center gap-4 text-xs">
+                  <div className="text-center">
+                    <p className="text-white font-medium">{agent.total_chats}</p>
+                    <p className="text-zinc-600">chats</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-white font-medium">{agent.total_messages}</p>
+                    <p className="text-zinc-600">msgs</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex items-center gap-1">
+                      {agent.satisfaction_pct >= 70 ? <ThumbsUp className="w-3 h-3 text-emerald-400" /> : <ThumbsDown className="w-3 h-3 text-red-400" />}
+                      <span className={agent.satisfaction_pct >= 70 ? "text-emerald-400" : "text-red-400"}>{agent.satisfaction_pct}%</span>
+                    </div>
+                    <p className="text-zinc-600">rating</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </ChartCard>
+      )}
+
+      {/* Engagement Heatmap */}
+      {heatmap?.heatmap?.length > 0 && (
+        <ChartCard title="User Activity Heatmap" icon={Activity} className="col-span-1 lg:col-span-2">
+          <div data-testid="engagement-heatmap">
+            <div className="flex gap-0.5">
+              <div className="w-8" />
+              {Array.from({length: 24}, (_, h) => (
+                <div key={h} className="flex-1 text-center text-[8px] text-zinc-600">{h}</div>
+              ))}
+            </div>
+            {(heatmap.days || []).map(day => {
+              const dayData = Object.fromEntries(heatmap.heatmap.filter(h => h.day === day).map(h => [h.hour, h]));
+              return (
+                <div key={day} className="flex gap-0.5 mb-0.5">
+                  <div className="w-8 text-[9px] text-zinc-500 flex items-center">{day}</div>
+                  {Array.from({length: 24}, (_, h) => {
+                    const cell = dayData[h];
+                    const intensity = cell?.intensity || 0;
+                    return (
+                      <div
+                        key={h}
+                        className="flex-1 aspect-square rounded-sm"
+                        style={{ backgroundColor: intensity > 0 ? `rgba(99,102,241,${0.15 + intensity * 0.85})` : 'rgba(255,255,255,0.03)' }}
+                        title={cell ? `${day} ${h}:00 - ${cell.count} messages` : `${day} ${h}:00 - 0`}
+                      />
+                    );
+                  })}
+                </div>
+              );
+            })}
+            <div className="flex items-center justify-end gap-1 mt-2">
+              <span className="text-[9px] text-zinc-600">Less</span>
+              {[0.1, 0.3, 0.5, 0.7, 1].map(v => (
+                <div key={v} className="w-3 h-3 rounded-sm" style={{ backgroundColor: `rgba(99,102,241,${0.15 + v * 0.85})` }} />
+              ))}
+              <span className="text-[9px] text-zinc-600">More</span>
+            </div>
+          </div>
+        </ChartCard>
+      )}
+
+      {/* Revenue Trends */}
+      {revTrends?.trends?.length > 0 && (
+        <ChartCard title="Revenue Trends (30d)" icon={TrendingUp} className="col-span-1 lg:col-span-2">
+          <div className="flex gap-4 mb-3" data-testid="revenue-trends-summary">
+            <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex-1 text-center">
+              <p className="text-lg font-bold text-white">${revTrends.summary?.total_revenue?.toFixed(2)}</p>
+              <p className="text-[10px] text-emerald-400">Total Revenue</p>
+            </div>
+            <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex-1 text-center">
+              <p className="text-lg font-bold text-white">${revTrends.summary?.avg_daily_revenue?.toFixed(2)}</p>
+              <p className="text-[10px] text-indigo-400">Avg Daily</p>
+            </div>
+            <div className="p-2 rounded-lg bg-violet-500/10 border border-violet-500/20 flex-1 text-center">
+              <p className="text-lg font-bold text-white">{revTrends.summary?.total_transactions}</p>
+              <p className="text-[10px] text-violet-400">Transactions</p>
+            </div>
+          </div>
+          <ResponsiveContainer width="100%" height={200}>
+            <AreaChart data={revTrends.trends} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+              <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 9 }} />
+              <YAxis tick={{ fill: '#71717a', fontSize: 10 }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Area type="monotone" dataKey="cumulative" name="$ Cumulative" stroke="#22c55e" fill="rgba(34,197,94,0.15)" />
+              <Area type="monotone" dataKey="revenue" name="$ Daily" stroke="#8b5cf6" fill="rgba(139,92,246,0.15)" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </ChartCard>
+      )}
+
+      {/* Export Section */}
+      <Card className="bg-zinc-900/50 border-white/10 col-span-1 lg:col-span-2" data-testid="analytics-export">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <p className="text-white font-medium text-sm">Export Analytics</p>
+              <p className="text-xs text-zinc-500">Download reports as CSV files</p>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {[{id: "overview", label: "Overview"}, {id: "users", label: "Users"}, {id: "revenue", label: "Revenue"}, {id: "agents", label: "Agents"}].map(r => (
+                <Button key={r.id} variant="outline" size="sm" className="border-white/10 text-zinc-300 text-xs" onClick={() => handleExport(r.id)} data-testid={`export-${r.id}`}>
+                  <Download className="w-3 h-3 mr-1" />{r.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

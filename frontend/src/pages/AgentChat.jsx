@@ -453,7 +453,10 @@ const AgentChat = () => {
           setSelectedAgent(agentsData[0]);
         }
       }
-      if (chatsRes.ok) setChats(await chatsRes.json());
+      if (chatsRes.ok) {
+        const data = await chatsRes.json();
+        setChats(data.chats || data);
+      }
     } catch (error) {
       toast.error("Failed to load data");
     } finally {
