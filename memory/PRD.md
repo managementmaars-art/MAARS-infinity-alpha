@@ -127,8 +127,17 @@ A commercial, production-ready AI team platform comparable to platforms like Sin
   - Milestone Tracking: Phase-based milestone progress with task decomposition
   - Executive Command Dashboard: Goal input, stat cards, project cards, autonomy slider
   - Project Detail View: Scores, strategy, success criteria, expandable milestones/tasks
-  - Self-correction: Milestone and project status auto-update on completion/failure
+  - Executive Summary: Compiled deliverables from all completed tasks
   - User Autonomy Settings: Manual / Approval / Autonomous global preference
+
+- **COMPLETED: Workspace Brain + Approval Workflows (Mar 2026)**
+  - Workspace Brain: 15-field business profile (company, industry, brand voice, products, target audience, competitors, UVP, pricing, regions, policies, website, timezone, working hours, writing style, custom instructions)
+  - Context Injection: Workspace brain auto-injected into every agent conversation
+  - Memory Boundaries: User-controlled deletion/export of profile data
+  - Approval Workflows: Full lifecycle (Draft → Approved → Published) with revision requests
+  - Approval Types: social_post, email_campaign, blog_post, general
+  - Tool Call Observability: Every tool invocation logged (tool name, input, result, duration, status)
+  - Tool Logs API: Users can view their tool call history for audit/transparency
 
 ## New API Endpoints
 - `/api/projects` (GET/POST): List and create strategic projects
