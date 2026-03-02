@@ -17,6 +17,8 @@ import Team from "./pages/Team";
 import InsightsPage from "./pages/InsightsPage";
 import ProductCatalog from "./pages/ProductCatalog";
 import Projects from "./pages/Projects";
+import WorkspaceBrain from "./pages/WorkspaceBrain";
+import Approvals from "./pages/Approvals";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -243,6 +245,8 @@ const AppRouter = () => {
       <Route path="/agents/create" element={<ProtectedRoute><CreateAgent /></ProtectedRoute>} />
       <Route path="/products" element={<ProtectedRoute><ProductCatalog /></ProtectedRoute>} />
       <Route path="/projects/*" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
+      <Route path="/workspace" element={<ProtectedRoute><WorkspaceBrain /></ProtectedRoute>} />
+      <Route path="/approvals" element={<ProtectedRoute><Approvals /></ProtectedRoute>} />
       <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
       <Route path="/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
       <Route path="/insights" element={<ProtectedRoute><InsightsPage /></ProtectedRoute>} />

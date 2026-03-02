@@ -275,6 +275,15 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         if workspace_ctx:
             enhanced_agent_prompt += workspace_ctx
         
+        # Inject Workspace Brain (business profile)
+        try:
+            from routes.workspace import get_workspace_context
+            brain_ctx = await get_workspace_context(current_user.user_id)
+            if brain_ctx:
+                enhanced_agent_prompt += brain_ctx
+        except Exception as brain_err:
+            logger.error(f"Workspace brain error: {brain_err}")
+        
         # RAG: Search agent's knowledge base and inject relevant context
         try:
             from services.rag_service import search_knowledge_base, build_rag_context

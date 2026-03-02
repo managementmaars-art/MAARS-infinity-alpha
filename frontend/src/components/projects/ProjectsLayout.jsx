@@ -2,7 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../App";
 import {
   LayoutDashboard, MessageSquare, Rocket, ListTodo, Users, Package,
-  Settings, LogOut, BarChart3, Shield, Menu, X
+  Settings, LogOut, BarChart3, Shield, Menu, X, Brain, FileCheck
 } from "lucide-react";
 import { useState } from "react";
 import { BrandFooter } from "../BrandFooter";
@@ -11,6 +11,8 @@ const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", to: "/dashboard" },
   { icon: Rocket, label: "Projects", to: "/projects" },
   { icon: MessageSquare, label: "Chat", to: "/chat" },
+  { icon: Brain, label: "Workspace Brain", to: "/workspace" },
+  { icon: FileCheck, label: "Approvals", to: "/approvals" },
   { icon: ListTodo, label: "Tasks", to: "/tasks" },
   { icon: Users, label: "Team", to: "/team" },
   { icon: Package, label: "Products", to: "/products" },

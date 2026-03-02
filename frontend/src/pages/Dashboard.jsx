@@ -4,7 +4,8 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import {
   Bot, MessageSquare, ListTodo, Sparkles, Plus, ChevronRight,
-  LayoutDashboard, Users, Settings, LogOut, Menu, X, Shield, Trash2, BarChart3, Package, Rocket
+  LayoutDashboard, Users, Settings, LogOut, Menu, X, Shield, Trash2, BarChart3, Package, Rocket,
+  Brain, FileCheck
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -92,6 +93,8 @@ const Dashboard = () => {
         <NavItem icon={LayoutDashboard} label="Dashboard" to="/dashboard" active />
         <NavItem icon={Rocket} label="Projects" to="/projects" />
         <NavItem icon={MessageSquare} label="Chat" to="/chat" />
+        <NavItem icon={Brain} label="Workspace Brain" to="/workspace" />
+        <NavItem icon={FileCheck} label="Approvals" to="/approvals" />
         <NavItem icon={Users} label="Agents" to="/agents" />
         <NavItem icon={Package} label="Products" to="/products" />
         <NavItem icon={ListTodo} label="Tasks" to="/tasks" />

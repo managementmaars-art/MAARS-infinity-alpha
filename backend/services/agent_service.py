@@ -153,8 +153,42 @@ async def build_workspace_context(user_id: str, current_agent_id: str) -> str:
     return "\n\n--- SHARED WORKSPACE CONTEXT ---\n" + "\n\n".join(context_parts) + "\n--- END WORKSPACE CONTEXT ---\n\nUse this context to understand what other team members are working on and what tasks exist. Reference tasks by their ID when relevant. Collaborate with the user's goals across agents.\n"
 
 
+async def log_tool_call(user_id: str, tool_name: str, tool_input: dict, result: str, duration_ms: int, status: str):
+    """Log a tool invocation for observability."""
+    try:
+        await db.tool_logs.insert_one({
+            "user_id": user_id,
+            "tool_name": tool_name,
+            "input_summary": {k: str(v)[:200] for k, v in tool_input.items()} if tool_input else {},
+            "result_preview": str(result)[:500] if result else "",
+            "duration_ms": duration_ms,
+            "status": status,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        })
+    except Exception:
+        pass
+
+
 async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
-    """Execute a tool and return the result as a string."""
+    """Execute a tool and return the result as a string. Logs the call for observability."""
+    import time
+    start = time.time()
+    status = "success"
+    result = ""
+    try:
+        result = await _execute_tool_inner(tool_name, tool_input, user_id)
+        return result
+    except Exception as e:
+        status = "error"
+        result = str(e)[:500]
+        raise
+    finally:
+        duration_ms = int((time.time() - start) * 1000)
+        await log_tool_call(user_id, tool_name, tool_input, result, duration_ms, status)
+
+
+async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) -> str:
+    """Internal tool execution logic."""
     try:
         if tool_name == "web_search":
             query = tool_input.get("query", "")
