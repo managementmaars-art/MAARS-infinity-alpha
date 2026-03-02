@@ -1207,26 +1207,35 @@ const AgentChat = () => {
         <div className="p-4 border-t border-white/10 shrink-0 bg-background">
           {/* Attachments Preview */}
           {attachments.length > 0 && (
-            <div className="max-w-3xl mx-auto mb-3 flex flex-wrap gap-2">
-              {attachments.map((att, idx) => (
-                <div key={idx} className="relative group">
-                  {att.type?.startsWith("image/") ? (
-                    <img src={att.preview} alt={att.filename} className="w-16 h-16 object-cover rounded-lg" />
-                  ) : (
-                    <div className="w-16 h-16 bg-zinc-800 rounded-lg flex items-center justify-center">
-                      <FileText className="w-6 h-6 text-zinc-400" />
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => removeAttachment(idx)}
-                    className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <X className="w-3 h-3 text-white" />
-                  </button>
-                  <p className="text-xs text-zinc-500 truncate w-16 mt-1">{att.filename}</p>
-                </div>
-              ))}
+            <div className="max-w-3xl mx-auto mb-3 p-3 bg-zinc-900/50 border border-white/10 rounded-xl">
+              <div className="flex items-center gap-2 mb-2">
+                <Image className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="text-xs text-indigo-400 font-medium">
+                  {attachments.length} file{attachments.length > 1 ? 's' : ''} attached — AI will analyze {attachments.some(a => a.type?.startsWith("image/")) ? 'images' : 'files'}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {attachments.map((att, idx) => (
+                  <div key={idx} className="relative group">
+                    {att.type?.startsWith("image/") ? (
+                      <img src={att.preview} alt={att.filename} className="w-20 h-20 object-cover rounded-lg border border-white/10" />
+                    ) : (
+                      <div className="w-20 h-20 bg-zinc-800 rounded-lg flex flex-col items-center justify-center border border-white/10">
+                        <FileText className="w-6 h-6 text-zinc-400" />
+                        <span className="text-[10px] text-zinc-500 mt-1">{att.filename?.split('.').pop()?.toUpperCase()}</span>
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeAttachment(idx)}
+                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="w-3 h-3 text-white" />
+                    </button>
+                    <p className="text-[10px] text-zinc-500 truncate w-20 mt-1 text-center">{att.filename}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
           
