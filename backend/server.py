@@ -1994,7 +1994,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
             from services.web_search import browse_web_for_message
             web_ctx = await browse_web_for_message(message_data.content)
             if web_ctx:
-                enhanced_agent_prompt += web_ctx
+                # Inject into user message content so LLM treats it as input to respond to
+                full_user_content = web_ctx + "\n\nUser's question: " + full_user_content
                 web_search_context = True
                 logger.info(f"Web browse: Injected web data for '{message_data.content[:60]}...'")
         except Exception as ws_err:
