@@ -79,13 +79,15 @@ const ProjectDetail = () => {
   const scores = project.scores || {};
   const tasks = project.tasks_detail || [];
   const taskMap = Object.fromEntries(tasks.map(t => [t.task_id, t]));
+  const completedTasks = tasks.filter(t => t.status === "completed" && t.result);
+  const failedTasks = tasks.filter(t => t.status === "failed");
   const pct = project.total_tasks > 0 ? Math.round((project.completed_tasks / project.total_tasks) * 100) : 0;
 
   return (
     <div className="space-y-6" data-testid="project-detail">
       {/* Header */}
       <div className="flex items-start gap-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate("/projects")} className="text-zinc-400 hover:text-white shrink-0 mt-1" data-testid="back-to-projects">
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="text-zinc-400 hover:text-white shrink-0 mt-1" data-testid="back-to-projects">
           <ArrowLeft className="w-4 h-4" />
         </Button>
         <div className="flex-1 min-w-0">
@@ -132,6 +134,62 @@ const ProjectDetail = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* EXECUTIVE SUMMARY — Final Results */}
+      {completedTasks.length > 0 && (
+        <Card className="bg-zinc-900/50 border-white/10 border-l-4 border-l-emerald-500" data-testid="executive-summary">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-white text-base font-['Outfit'] flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/15 flex items-center justify-center">
+                <CheckCircle className="w-4 h-4 text-emerald-400" />
+              </div>
+              Executive Summary — Deliverables
+              <Badge variant="outline" className="ml-auto border-emerald-500/20 text-emerald-400 text-[10px]">
+                {completedTasks.length} completed
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {completedTasks.map((task, i) => (
+                <div key={task.task_id} className="border-b border-white/5 last:border-0 pb-4 last:pb-0" data-testid={`result-${i}`}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-5 h-5 rounded-full bg-indigo-500/15 flex items-center justify-center">
+                      <span className="text-[9px] text-indigo-400 font-bold">{i + 1}</span>
+                    </div>
+                    <p className="text-sm text-white font-medium">{task.title}</p>
+                    {task.agent_name && (
+                      <Badge variant="outline" className="border-white/10 text-zinc-500 text-[9px] ml-auto">{task.agent_name}</Badge>
+                    )}
+                  </div>
+                  <div className="ml-7 p-3 bg-zinc-800/50 rounded-lg">
+                    <div className="text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed max-h-[400px] overflow-y-auto">
+                      {task.result || "No result available"}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Failed Tasks Warning */}
+      {failedTasks.length > 0 && (
+        <Card className="bg-zinc-900/50 border-white/10 border-l-4 border-l-red-500" data-testid="failed-tasks-warning">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertTriangle className="w-4 h-4 text-red-400" />
+              <p className="text-sm text-red-400 font-medium">{failedTasks.length} task(s) failed</p>
+            </div>
+            {failedTasks.map(task => (
+              <div key={task.task_id} className="ml-6 text-xs text-zinc-400 mb-1">
+                <span className="text-white">{task.title}</span>: {task.result || "Unknown error"}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Strategy */}
       {project.execution_strategy && (
