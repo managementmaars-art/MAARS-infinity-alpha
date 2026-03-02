@@ -1879,9 +1879,27 @@ async def call_llm_with_fallback(api_keys, model_provider, model_name, system_pr
             if extra_params:
                 llm_chat = llm_chat.with_params(**extra_params)
             message_content = content
+            # Build multimodal message with image attachments
+            file_contents = []
             if attachments:
-                message_content += f"\n\n[User attached {len(attachments)} file(s)]"
-            user_message = UserMessage(text=message_content)
+                from emergentintegrations.llm.chat import ImageContent
+                for att in attachments:
+                    if isinstance(att, str):
+                        if att.startswith("data:image"):
+                            b64data = att.split(",", 1)[1] if "," in att else att
+                            file_contents.append(ImageContent(b64data))
+                        elif att.startswith("/files/") or att.startswith("http"):
+                            # It's a URL — try to load the file and convert to base64
+                            try:
+                                img_path = UPLOAD_DIR / att.replace("/files/", "") if att.startswith("/files/") else None
+                                if img_path and img_path.exists():
+                                    import base64 as b64mod
+                                    with open(img_path, "rb") as f:
+                                        b64data = b64mod.b64encode(f.read()).decode()
+                                    file_contents.append(ImageContent(b64data))
+                            except Exception:
+                                pass
+            user_message = UserMessage(text=message_content, file_contents=file_contents if file_contents else None)
             result = await llm_chat.send_message(user_message)
             return result, fb_provider, fb_model
         except Exception as e:
