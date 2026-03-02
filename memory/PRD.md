@@ -1,185 +1,116 @@
-# MAARS Command by MAARS Global Corporation - PRD
+# MAARS Command by MAARS Global Corporation — PRD
 
-## Product Overview
-A commercial, production-ready AI team platform comparable to platforms like Sintra.ai and Emergent. Features a team of specialized AI agents led by a "Commander AI" that delegates tasks automatically, with support for multiple AI models, credit system, subscription management, and admin panel.
+## Original Problem Statement
+Build "MAARS Command," a commercial, production-ready AI business operating system that merges the capabilities of Sintra.ai (preset specialist business agents) and Emergent.sh (autonomous execution, memory, tool use, and app building). The system must be an "Autonomous AI Workforce Operating System" with multi-agent collaboration, real-world action execution, persistent memory, and enterprise-grade features.
 
-## Core Requirements
-1. **AI Team & Commander AI** - Team of 20+ specialized AI agents led by Commander Orion
-2. **Multi-Model Support** - OpenAI, Anthropic, Gemini, XAI, DeepSeek, Mistral, Perplexity, Cohere
-3. **Monetization** - Multi-tiered subscription model (Free, Starter, Pro, Business) with Stripe
-4. **Admin Section** - Full admin panel for pricing, users, agents, analytics, branding
-5. **Knowledge Base (RAG)** - Per-agent document upload and retrieval
-6. **Web Browsing** - DuckDuckGo integration for real-time web search
-7. **Image Analysis (Vision)** - Analyze uploaded images via multimodal models
-8. **Product Catalog** - Save, manage, and scan products; batch CSV/XLSX import
-9. **Team Collaboration** - Invite members, shared chat access
+## User Personas
+- **Business Executive**: Uses Commander to delegate high-level goals, monitors projects, reviews deliverables
+- **Team Lead**: Manages agents, configures brain profiles, reviews approval workflows
+- **Admin**: Configures pricing, manages users, views analytics and audit logs
 
-## Architecture
-
-### Backend (FastAPI + MongoDB)
+## Core Architecture
 ```
-/app/backend/
-├── server.py                 # Thin app shell (~91 lines)
-├── db.py                     # Shared MongoDB client
-├── auth.py                   # Auth helpers (JWT, admin check)
-├── config.py                 # Agent definitions, tools config
-├── shared/
-│   ├── constants.py          # SUBSCRIPTION_PLANS, STRIPE, UPLOAD_DIR, etc.
-│   └── utils.py              # send_email, get_api_keys, create_notification
-├── services/
-│   ├── llm_service.py        # Model selection, LLM calling, file generation
-│   ├── agent_service.py      # Tool execution, agent delegation, commander
-│   ├── rag_service.py        # Knowledge base search
-│   ├── web_search_service.py # DuckDuckGo search
-│   └── product_scanner.py    # Vision-based product identification
-└── routes/
-    ├── auth.py               # Registration, login, session
-    ├── agents.py             # Agent CRUD, user customization
-    ├── chats.py              # Chat CRUD, send_message, feedback
-    ├── tasks.py              # Task CRUD, execution
-    ├── teams.py              # Team collaboration
-    ├── subscriptions.py      # Plans, checkout, credits
-    ├── admin.py              # All admin endpoints (~1771 lines)
-    ├── generation.py         # Document/image/video generation
-    ├── media.py              # Upload, TTS, STT, models
-    ├── notifications_routes.py # Notification center
-    ├── user.py               # Stats, insights
-    ├── products.py           # Product catalog, batch import
-    └── knowledge_base.py     # Knowledge doc CRUD
-```
-
-### Frontend (React + Tailwind)
-```
-/app/frontend/src/
-├── App.js                    # Router, auth context
-├── pages/
-│   ├── AdminDashboard.jsx    # Thin shell (~498 lines)
-│   ├── AgentChat.jsx         # Chat interface
-│   └── ProductCatalog.jsx    # Product management
-└── components/
-    ├── admin/
-    │   ├── CustomPackagesTab.jsx
-    │   ├── IntegrationsTab.jsx
-    │   └── tabs/
-    │       ├── OverviewTab.jsx
-    │       ├── UsersTab.jsx
-    │       ├── AgentsTab.jsx
-    │       ├── TransactionsTab.jsx
-    │       ├── ApiKeysTab.jsx
-    │       ├── PricingManagerTab.jsx
-    │       ├── PaymentSetupTab.jsx
-    │       └── AuditLogTab.jsx
-    └── chat/
-        ├── ChatSearch.jsx
-        ├── CollaborationWorkflow.jsx
-        └── ProductScanCard.jsx
+/app/
+├── backend/
+│   ├── server.py (FastAPI app, CORS, startup, MongoDB indexes)
+│   ├── config.py (28 agents, tools, brain profiles, tool maps)
+│   ├── db.py (MongoDB connection)
+│   ├── auth.py (JWT authentication)
+│   ├── models/schemas.py (Pydantic models)
+│   ├── services/
+│   │   ├── agent_service.py (Agent execution, brain context, workspace context, tool logging)
+│   │   ├── orchestration_service.py (Goal decomposition, project execution, media generation, Commander→Secretary handoff)
+│   │   └── cache_service.py (Redis caching)
+│   ├── routes/ (agents, chats, projects, workspace, approvals, admin, tasks, products, teams, insights, settings)
+│   └── shared/ (utils, notifications)
+└── frontend/
+    └── src/
+        ├── App.js (Router, auth context, API URL)
+        ├── pages/ (Dashboard, AgentChat, Projects, ProjectDetail, BrainProfiles, Approvals, WorkspaceBrain, AdminDashboard, Settings, Tasks, Team, Products, Insights)
+        └── components/ (CommandCenter, ProjectsLayout, BrandFooter, admin wizards, UI components)
 ```
 
 ## What's Been Implemented
-- All 20+ AI agents with Commander AI delegation
-- Multi-provider LLM support with auto model selection
-- Credit system with model-aware costs
-- Stripe payment integration
-- Full admin panel with analytics, pricing, user/agent management
-- RAG knowledge base with document upload
-- Web browsing tool (DuckDuckGo)
-- Image analysis (vision) with drag-and-drop UX
-- Real-time agent collaboration view
-- Product scanning pipeline (vision + web search)
-- Full product catalog with batch CSV/XLSX import
-- Team collaboration with invites
-- Email notifications (SMTP)
-- Branding customization
-- **COMPLETED: Major codebase refactoring (Feb 2026)**
-  - Backend: server.py 6039 → 91 lines (14 route modules)
-  - Frontend: AdminDashboard.jsx 2032 → 498 lines (7 extracted tabs)
 
-- **COMPLETED: Enhancement Features (Feb 2026)**
-  - Chat Search: search across all user conversations
-  - Message Pin/Export: pin messages, export chat as text, share with team
-  - Enhanced Analytics: retention cohorts, revenue projections, credit burn analysis
-  - Admin Audit Log: tracks all admin actions with timestamps
-  - MongoDB performance indexes on all key collections
+### Phase 1 — Foundation (Previous sessions)
+- 21 preset AI agents with distinct personalities, roles, system prompts
+- Multi-provider LLM support via Emergent LLM Key (OpenAI, Gemini, Claude)
+- Credit-based billing system with Stripe integration
+- Full admin panel with analytics (leaderboards, engagement heatmaps)
+- RAG knowledge base for agent context
+- Web browsing, image analysis, document tools
+- Product catalog with batch import
+- Team collaboration with notifications and activity feed
 
-- **COMPLETED: Integration & Collaboration (Mar 2026)**
-  - Google Calendar: full implementation (list events, create events with attendees)
-  - Gmail: send emails via Google Suite service account with delegate email
-  - Integration Status Dashboard: admin view of all 17 tools with active/inactive status
-  - Google Suite test endpoint for validating service account credentials
-  - Team Activity Feed: recent shared chats and member activity
-  - Team Stats: member count, total chats, shared chats, per-member breakdown
+### Phase 2 — Autonomous Orchestration (Previous session)
+- Orchestration Engine: Goal → structured plan → milestones → tasks → auto-execution
+- Executive Command Dashboard with project overview
+- Workspace Brain: Persistent business context injected into all agent prompts
+- Approval Workflows for gating sensitive agent actions
+- Tool Call Observability: All agent tool calls logged for audit
+- Performance: API pagination + Redis caching
 
-- **COMPLETED: P1 Performance, Analytics, Wizard (Mar 2026)**
-  - Performance: Server-side pagination for chats, products, admin users, transactions
-  - Performance: In-memory TTL cache for agents list and frequently accessed data
-  - Analytics: Agent Performance Leaderboard with satisfaction scores
-  - Analytics: User Engagement Heatmap (activity by hour/day of week)
-  - Analytics: Revenue Trends with cumulative tracking and growth rates
-  - Analytics: CSV Export for users, revenue, agents, and overview reports
-  - Integration Quick Setup Wizard: Guided step-by-step modal for Slack, GitHub, Google Suite
-  - Team Notifications: Notifications for team invites, chat shares, member joins
+### Phase 3 — Custom Brain Profiles & Agent Expansion (March 2, 2026)
+- **7 New Agent Roles**: Cybersecurity Officer (Damien Voss), Automation Engineer (Serena Okafor), Growth Hacker (Axel Brennan), Compliance Officer (Victoria Harrington), AI Optimization Specialist (Dr. Luca Bernstein), Operations Manager (Diana Morales), Revenue Optimization Strategist (Maximilian Wolfe) — all with unique AI-generated avatars
+- **Custom Brain Profiles (MANDATORY per spec)**: Each agent has an isolated brain config with:
+  - Primary/fallback models
+  - Memory scopes (Working, Long-Term, Domain, Shared)
+  - Autonomy level (0-5 slider)
+  - Approval requirements
+  - Output templates
+  - KPIs
+  - Escalation rules
+  - Communication style
+  - Risk boundaries (budget authority, external comms approval)
+- **Brain Profiles UI**: Full management page at /brain-profiles with search, agent cards showing autonomy/approval status, and full brain editor
+- **Enhanced Agent Prompts**: Legal Assistant (country-specific law, business-favorable contracts), Social Media Manager (geographic boost, platform selection, scheduling), Sales (multi-channel outreach), Customer Service (multi-channel communication), Personal Secretary (Commander handoff, execution protocols)
+- **Commander → Personal Secretary Handoff**: Auto-creates secretary tasks with project deliverables when Commander completes a project
+- **Media Deliverable Rendering**: Project results can now display generated images and videos inline with dedicated media viewers
+- **Brain Context Injection**: All agents receive their Custom Brain Profile context in their system prompts during execution
 
-- **COMPLETED: Autonomous Orchestration Engine (Mar 2026)**
-  - Strategic Cognition Layer: Goal scoring (clarity, complexity, confidence, risk)
-  - Strategic Planning: LLM-powered milestone/task generation (gpt-5.2)
-  - Execution Modes: Draft / Approval / Autonomous per project
-  - Autonomous Execution: Background task execution through specialist agents
-  - Milestone Tracking: Phase-based milestone progress with task decomposition
-  - Executive Command Dashboard: Goal input, stat cards, project cards, autonomy slider
-  - Project Detail View: Scores, strategy, success criteria, expandable milestones/tasks
-  - Executive Summary: Compiled deliverables from all completed tasks
-  - User Autonomy Settings: Manual / Approval / Autonomous global preference
+## Key DB Collections
+- `agents` — Agent definitions (28 total)
+- `agent_brains` — User-specific brain profile customizations (indexed: user_id + agent_id, unique)
+- `projects` — Projects with milestones and tasks
+- `workspace_brain` — Persistent business context per user
+- `tool_calls` — Tool execution audit log
+- `approvals` — Pending approval workflows
+- `chats`, `tasks`, `products`, `teams`, `transactions`, `users`
 
-- **COMPLETED: Workspace Brain + Approval Workflows (Mar 2026)**
-  - Workspace Brain: 15-field business profile (company, industry, brand voice, products, target audience, competitors, UVP, pricing, regions, policies, website, timezone, working hours, writing style, custom instructions)
-  - Context Injection: Workspace brain auto-injected into every agent conversation
-  - Memory Boundaries: User-controlled deletion/export of profile data
-  - Approval Workflows: Full lifecycle (Draft → Approved → Published) with revision requests
-  - Approval Types: social_post, email_campaign, blog_post, general
-  - Tool Call Observability: Every tool invocation logged (tool name, input, result, duration, status)
-  - Tool Logs API: Users can view their tool call history for audit/transparency
+## Key API Endpoints
+- `GET /api/agents/public` — List all 28 agents
+- `GET /api/agents/{id}/brain` — Get agent brain profile
+- `PUT /api/agents/{id}/brain` — Update brain profile
+- `DELETE /api/agents/{id}/brain` — Reset to defaults
+- `GET /api/brain-profiles` — List all brain profiles
+- `POST /api/projects` — Create project from goal
+- `GET /api/projects/{id}` — Get project details
+- `GET/PUT /api/workspace` — Workspace brain CRUD
+- `GET/PUT /api/approvals` — Approval workflows
 
-## New API Endpoints
-- `/api/projects` (GET/POST): List and create strategic projects
-- `/api/projects/active-summary` (GET): Executive dashboard summary
-- `/api/projects/{id}` (GET/PATCH/DELETE): Project CRUD
-- `/api/projects/{id}/execute` (POST): Trigger project execution
-- `/api/user/autonomy` (GET/PUT): User autonomy level settings
+## Prioritized Backlog
 
-## New Architecture Components
-```
-/app/backend/
-  services/
-    orchestration_service.py  # Goal scoring, strategic planning, execution engine
-    cache_service.py          # In-memory TTL cache
-  routes/
-    projects.py               # Projects CRUD + autonomy endpoints
+### P0 — Critical
+- None currently blocked
 
-/app/frontend/
-  src/components/projects/
-    CommandCenter.jsx          # Executive command dashboard
-    ProjectDetail.jsx          # Full project view with milestones
-  src/pages/
-    Projects.jsx               # Projects page wrapper with routing
-```
+### P1 — High Priority
+- **Real-World Action Layer**: Wire agents to actually execute external API calls (Gmail, Calendar, social media posting, messaging) through the approvals system
+- **"Vibe Coding" App Builder**: Chat-based full-stack app building with GitHub integration
 
-## Remaining Tasks (Prioritized)
-### P2 - Further Enhancements
-- User onboarding improvements
-- Advanced search and filtering across all entities
-- Real-time collaboration (WebSocket for team activity)
-- Multi-language support
-- Multi-company workspaces
+### P2 — Medium Priority
+- **Model-Agnostic LLM Router**: Dynamic model selection based on task complexity, cost, privacy
+- **Enterprise Features**: Granular RBAC, enhanced audit logs, custom agent builder framework
+- **Advanced Integrations**: QuickBooks, CRMs, WhatsApp/Viber/Signal APIs, Meta Ads, TikTok Ads
+- **Inventory Manager Enhancements**: QR/barcode generation, SKU tracking, cost/revenue/profit margins
 
-## Credentials
-- **Admin:** management.maars@marsgc.net / admin123
-- **Test User:** test@test.com / test123
+### P3 — Future
+- Real-time agent activity visualizer
+- Workflow builder UI
+- Custom agent creation by users
+- Multi-tenant isolation
+- Advanced analytics dashboards
 
-## 3rd Party Integrations
-- **Stripe** - Payment processing (user API key)
-- **Image Gen** - Gemini Nano Banana 2, GPT Image 1, DALL-E 3
-- **Video Gen** - Sora 2
-- **TTS** - ElevenLabs, OpenAI TTS
-- **STT** - Whisper
-- **Web Search** - DuckDuckGo
-- **LLMs** - Multiple providers via Emergent LLM Key or direct keys
+## Testing
+- Iteration 52: 100% pass rate — 20/20 backend tests, all frontend tests passed
+- All previous iterations (5-8): Passed
+- Admin credentials: management.maars@marsgc.net / admin123
