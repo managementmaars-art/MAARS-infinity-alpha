@@ -269,6 +269,10 @@ api_router = APIRouter(prefix="/api")
 from routes.auth import router as auth_router
 api_router.include_router(auth_router)
 
+# Include product catalog routes
+from routes.products import router as products_router
+api_router.include_router(products_router)
+
 # Health check endpoint (must be on app directly, not api_router, for Kubernetes probes)
 @app.get("/health")
 async def health_check():

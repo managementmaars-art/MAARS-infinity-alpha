@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="14" time="332.154" timestamp="2026-03-02T16:35:11.310371+00:00" hostname="agent-env-98d78bce-570a-44e4-a3fc-5363f4d25a55"><testcase classname="backend.tests.test_product_catalog.TestHealthAndAuth" name="test_health_check" time="0.160"><failure message="requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">/root/.venv/lib/python3.11/site-packages/requests/models.py:976: in json
+    return complexjson.loads(self.text, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/json/decoder.py:355: in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+E   json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+backend/tests/test_product_catalog.py:48: in test_health_check
+    data = response.json()
+           ^^^^^^^^^^^^^^^
+/root/.venv/lib/python3.11/site-packages/requests/models.py:980: in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+E   requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</failure></testcase><testcase classname="backend.tests.test_product_catalog.TestHealthAndAuth" name="test_admin_login" time="0.284"><failure message="AssertionError: assert None == True&#10; +  where None = &lt;built-in method get of dict object at 0xfed9725dce80&gt;('is_admin')&#10; +    where &lt;built-in method get of dict object at 0xfed9725dce80&gt; = {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidXNlcl85YTA2NDNiMzgwOTQiLCJlbWFpbCI6Im1hbmFnZW1lbnQubWFhcnNAbWFyc2djLm5ldCIsImV4cCI6MTc3MjcyODUxMX0.CiI3_8Zo0gPK-ONSW3CV94-ODOGwRK4PwHXmmm4e3T8', 'user': {'email': 'management.maars@marsgc.net', 'is_admin': True, 'name': 'Mirza Arafat Abbas', 'user_id': 'user_9a0643b38094'}}.get">backend/tests/test_product_catalog.py:60: in test_admin_login
+    assert data.get("is_admin") == True
+E   AssertionError: assert None == True
+E    +  where None = &lt;built-in method get of dict object at 0xfed9725dce80&gt;('is_admin')
+E    +    where &lt;built-in method get of dict object at 0xfed9725dce80&gt; = {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidXNlcl85YTA2NDNiMzgwOTQiLCJlbWFpbCI6Im1hbmFnZW1lbnQubWFhcnNAbWFyc2djLm5ldCIsImV4cCI6MTc3MjcyODUxMX0.CiI3_8Zo0gPK-ONSW3CV94-ODOGwRK4PwHXmmm4e3T8', 'user': {'email': 'management.maars@marsgc.net', 'is_admin': True, 'name': 'Mirza Arafat Abbas', 'user_id': 'user_9a0643b38094'}}.get</failure></testcase><testcase classname="backend.tests.test_product_catalog.TestProductCRUD" name="test_create_product" time="0.363" /><testcase classname="backend.tests.test_product_catalog.TestProductCRUD" name="test_list_products" time="0.102" /><testcase classname="backend.tests.test_product_catalog.TestProductCRUD" name="test_get_product_detail" time="0.089" /><testcase classname="backend.tests.test_product_catalog.TestProductCRUD" name="test_update_product" time="0.070" /><testcase classname="backend.tests.test_product_catalog.TestProductCRUD" name="test_get_product_detail_after_update" time="0.059" /><testcase classname="backend.tests.test_product_catalog.TestProductCRUD" name="test_product_not_found" time="0.053" /><testcase classname="backend.tests.test_product_catalog.TestProductRescan" name="test_rescan_product" time="30.031"><failure message="requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='commander-ai-studio.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)">/root/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:534: in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+/root/.venv/lib/python3.11/site-packages/urllib3/connection.py:571: in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/http/client.py:1395: in getresponse
+    response.begin()
+/usr/local/lib/python3.11/http/client.py:325: in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/http/client.py:286: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/socket.py:718: in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/ssl.py:1314: in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/ssl.py:1166: in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+/root/.venv/lib/python3.11/site-packages/requests/adapters.py:644: in send
+    resp = conn.urlopen(
+/root/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:841: in urlopen
+    retries = retries.increment(
+/root/.venv/lib/python3.11/site-packages/urllib3/util/retry.py:490: in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.venv/lib/python3.11/site-packages/urllib3/util/util.py:39: in reraise
+    raise value
+/root/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:787: in urlopen
+    response = self._make_request(
+/root/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:536: in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+/root/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:367: in _raise_timeout
+    raise ReadTimeoutError(
+E   urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='commander-ai-studio.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
+
+During handling of the above exception, another exception occurred:
+backend/tests/test_product_catalog.py:172: in test_rescan_product
+    response = authenticated_client.post(
+/root/.venv/lib/python3.11/site-packages/requests/sessions.py:637: in post
+    return self.request("POST", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.venv/lib/python3.11/site-packages/requests/sessions.py:589: in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.venv/lib/python3.11/site-packages/requests/sessions.py:703: in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.venv/lib/python3.11/site-packages/requests/adapters.py:690: in send
+    raise ReadTimeout(e, request=request)
+E   requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='commander-ai-studio.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)</failure></testcase><testcase classname="backend.tests.test_product_catalog.TestProductGenerate" name="test_generate_content_no_api_key" time="60.184" /><testcase classname="backend.tests.test_product_catalog.TestAdminProducts" name="test_admin_list_all_products" time="60.109"><failure message="assert 502 == 200&#10; +  where 502 = &lt;Response [502]&gt;.status_code">backend/tests/test_product_catalog.py:228: in test_admin_list_all_products
+    assert response.status_code == 200
+E   assert 502 == 200
+E    +  where 502 = &lt;Response [502]&gt;.status_code</failure></testcase><testcase classname="backend.tests.test_product_catalog.TestProductDelete" name="test_delete_product" time="60.147"><failure message="assert 502 == 200&#10; +  where 502 = &lt;Response [502]&gt;.status_code">backend/tests/test_product_catalog.py:253: in test_delete_product
+    assert response.status_code == 200
+E   assert 502 == 200
+E    +  where 502 = &lt;Response [502]&gt;.status_code</failure></testcase><testcase classname="backend.tests.test_product_catalog.TestProductDelete" name="test_deleted_product_not_found" time="60.116"><failure message="assert 502 == 404&#10; +  where 502 = &lt;Response [502]&gt;.status_code">backend/tests/test_product_catalog.py:263: in test_deleted_product_not_found
+    assert response.status_code == 404
+E   assert 502 == 404
+E    +  where 502 = &lt;Response [502]&gt;.status_code</failure></testcase><testcase classname="backend.tests.test_product_catalog.TestExistingProductFromPreviousIterations" name="test_get_existing_test_product" time="60.126"><failure message="assert 502 == 200&#10; +  where 502 = &lt;Response [502]&gt;.status_code">backend/tests/test_product_catalog.py:273: in test_get_existing_test_product
+    assert response.status_code == 200
+E   assert 502 == 200
+E    +  where 502 = &lt;Response [502]&gt;.status_code</failure></testcase></testsuite></testsuites>

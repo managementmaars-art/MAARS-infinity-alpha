@@ -157,10 +157,16 @@ def build_product_context(product_name: str, details: Dict, images: List[Dict]) 
 
 async def scan_product(product_query: str, upload_dir=None) -> Dict:
     """Main entry: search for product details, images, and optionally download best reference image."""
-    # Run details and image searches in parallel
-    details_task = search_product_details(product_query)
-    images_task = search_product_images(product_query)
-    details, images = await asyncio.gather(details_task, images_task)
+    # Run details and image searches in parallel with timeout
+    try:
+        details_task = asyncio.wait_for(search_product_details(product_query), timeout=15)
+        images_task = asyncio.wait_for(search_product_images(product_query), timeout=15)
+        results = await asyncio.gather(details_task, images_task, return_exceptions=True)
+        details = results[0] if not isinstance(results[0], Exception) else {"sources": [], "snippets": [], "scraped_content": []}
+        images = results[1] if not isinstance(results[1], Exception) else []
+    except Exception:
+        details = {"sources": [], "snippets": [], "scraped_content": []}
+        images = []
 
     # Download the best reference image for video generation
     best_ref_path = None

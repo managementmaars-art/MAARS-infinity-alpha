@@ -15,6 +15,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import AdminDashboard from "./pages/AdminDashboard";
 import Team from "./pages/Team";
 import InsightsPage from "./pages/InsightsPage";
+import ProductCatalog from "./pages/ProductCatalog";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -239,6 +240,7 @@ const AppRouter = () => {
       <Route path="/chat/:agentId?" element={<ProtectedRoute><AgentChat /></ProtectedRoute>} />
       <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
       <Route path="/agents/create" element={<ProtectedRoute><CreateAgent /></ProtectedRoute>} />
+      <Route path="/products" element={<ProtectedRoute><ProductCatalog /></ProtectedRoute>} />
       <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
       <Route path="/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
       <Route path="/insights" element={<ProtectedRoute><InsightsPage /></ProtectedRoute>} />

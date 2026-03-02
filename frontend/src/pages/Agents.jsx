@@ -6,7 +6,7 @@ import { Badge } from "../components/ui/badge";
 import { Bot, Plus, MessageSquare, Trash2, ArrowLeft,
   LayoutDashboard, Users, ListTodo, Settings, LogOut, Menu, X, Sparkles,
   Search, Calculator, ClipboardList, BarChart3, Wrench,
-  Mail, MessageCircle, Phone, Github, Table, Image, Calendar, Send
+  Mail, MessageCircle, Phone, Github, Table, Image, Calendar, Send, Package
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -94,6 +94,7 @@ const Agents = () => {
         <NavItem icon={LayoutDashboard} label="Dashboard" to="/dashboard" />
         <NavItem icon={MessageSquare} label="Chat" to="/chat" />
         <NavItem icon={Users} label="Agents" to="/agents" active />
+        <NavItem icon={Package} label="Products" to="/products" />
         <NavItem icon={ListTodo} label="Tasks" to="/tasks" />
         <NavItem icon={Users} label="Team" to="/team" />
         <NavItem icon={Settings} label="Settings" to="/settings" />

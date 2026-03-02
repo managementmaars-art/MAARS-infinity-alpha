@@ -13,7 +13,7 @@ import {
   LayoutDashboard, ListTodo, Settings, LogOut, Menu, X,
   DollarSign, Activity, UserCheck, Plus, Trash2, ChevronDown, ChevronUp, Key,
   Plug, CheckCircle, XCircle, Loader2, ExternalLink, TestTube, Image, Film, FileText, File, Brain, Edit3,
-  BarChart3, Mail, ToggleLeft, ToggleRight, Thermometer, Hash, Paintbrush, BookOpen
+  BarChart3, Mail, ToggleLeft, ToggleRight, Thermometer, Hash, Paintbrush, BookOpen, Package
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -206,6 +206,7 @@ const AdminDashboard = () => {
     { id: "smtp", label: "Email (SMTP)", icon: Mail },
     { id: "branding", label: "Branding & Domain", icon: Paintbrush },
     { id: "knowledge", label: "Knowledge Base", icon: BookOpen },
+    { id: "products", label: "Product Catalog", icon: Package },
   ];
 
   const NavItem = ({ icon: Icon, label, to, active }) => (
@@ -1919,12 +1920,83 @@ const AdminDashboard = () => {
           {activeTab === "smtp" && <SmtpConfigTab />}
           {activeTab === "branding" && <BrandingTab />}
           {activeTab === "knowledge" && <KnowledgeBaseTab />}
+          {activeTab === "products" && <AdminProductsTab token={token} />}
         </div>
       </div>
       <div className="lg:ml-64"><BrandFooter /></div>
     </div>
   );
 };
+
+const AdminProductsTab = ({ token }) => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+  useEffect(() => {
+    fetch(`${API}/admin/products`, { headers }).then(r => r.json()).then(data => {
+      setProducts(data.products || []);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, [token]);
+
+  if (loading) return <div className="flex items-center justify-center h-32"><Loader2 className="w-8 h-8 animate-spin text-red-400" /></div>;
+
+  return (
+    <div className="space-y-6" data-testid="admin-products-tab">
+      <div>
+        <h2 className="text-xl font-bold text-white font-['Outfit']">Product Catalog (All Users)</h2>
+        <p className="text-zinc-400 text-sm mt-1">{products.length} products across all users</p>
+      </div>
+      <Card className="bg-zinc-900/50 border-white/10">
+        <CardContent className="p-0">
+          <table className="w-full text-sm">
+            <thead className="border-b border-white/10">
+              <tr className="text-zinc-500 text-xs">
+                <th className="text-left p-4">Product</th>
+                <th className="text-left p-4">User</th>
+                <th className="text-left p-4">Category</th>
+                <th className="text-right p-4">Generated</th>
+                <th className="text-right p-4">Scanned</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map(p => (
+                <tr key={p.product_id} className="border-b border-white/5 hover:bg-white/5">
+                  <td className="p-4">
+                    <div className="flex items-center gap-3">
+                      {p.images?.[0]?.thumbnail ? (
+                        <img src={p.images[0].thumbnail} alt="" className="w-10 h-10 rounded-lg object-cover" onError={e => { e.target.style.display = 'none'; }} />
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center"><Package className="w-5 h-5 text-zinc-600" /></div>
+                      )}
+                      <div>
+                        <p className="text-white font-medium">{p.name}</p>
+                        {p.brand && <p className="text-zinc-500 text-xs">{p.brand}</p>}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="p-4">
+                    <p className="text-zinc-300 text-xs">{p.user_name || "Unknown"}</p>
+                    <p className="text-zinc-600 text-[10px]">{p.user_email}</p>
+                  </td>
+                  <td className="p-4"><Badge className="bg-indigo-500/20 text-indigo-300 text-[9px]">{p.category || "Uncategorized"}</Badge></td>
+                  <td className="p-4 text-right text-zinc-400">{p.generated_count || 0}</td>
+                  <td className="p-4 text-right text-zinc-500 text-xs">{p.last_scanned ? new Date(p.last_scanned).toLocaleDateString() : "-"}</td>
+                </tr>
+              ))}
+              {products.length === 0 && (
+                <tr><td colSpan="5" className="p-8 text-center text-zinc-500">No products saved by any user yet</td></tr>
+              )}
+            </tbody>
+          </table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+
 
 const StatCard = ({ title, value, icon: Icon, color }) => {
   const colors = {

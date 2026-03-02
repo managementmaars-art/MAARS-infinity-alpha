@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { ScrollArea } from "../components/ui/scroll-area";
 import { Bot, Plus, Play, Trash2, CheckCircle, Clock, AlertCircle,
   LayoutDashboard, Users, MessageSquare, ListTodo, Settings, LogOut, Menu, X,
-  Shield
+  Shield, Package
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -171,6 +171,7 @@ const Tasks = () => {
         <NavItem icon={LayoutDashboard} label="Dashboard" to="/dashboard" />
         <NavItem icon={MessageSquare} label="Chat" to="/chat" />
         <NavItem icon={Users} label="Agents" to="/agents" />
+        <NavItem icon={Package} label="Products" to="/products" />
         <NavItem icon={ListTodo} label="Tasks" to="/tasks" active />
         <NavItem icon={Users} label="Team" to="/team" />
         <NavItem icon={Settings} label="Settings" to="/settings" />

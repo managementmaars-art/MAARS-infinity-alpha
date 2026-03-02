@@ -9,7 +9,7 @@ import { Label } from "../components/ui/label";
 import {
   Bot, Users, UserPlus, Crown, Shield, User, Mail, Trash2, LogOut,
   LayoutDashboard, MessageSquare, ListTodo, Settings, Menu, X, Plus,
-  CheckCircle, XCircle, Loader2, Share2, ChevronRight
+  CheckCircle, XCircle, Loader2, Share2, ChevronRight, Package
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -164,6 +164,7 @@ const Team = () => {
         <NavItem icon={LayoutDashboard} label="Dashboard" to="/dashboard" />
         <NavItem icon={MessageSquare} label="Chat" to="/chat" />
         <NavItem icon={Users} label="Agents" to="/agents" />
+        <NavItem icon={Package} label="Products" to="/products" />
         <NavItem icon={ListTodo} label="Tasks" to="/tasks" />
         <NavItem icon={Users} label="Team" to="/team" active />
         <NavItem icon={Settings} label="Settings" to="/settings" />

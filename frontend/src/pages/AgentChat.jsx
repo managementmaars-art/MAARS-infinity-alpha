@@ -9,7 +9,7 @@ import { Bot, Send, Plus, ArrowLeft, MessageSquare, Trash2,
   Paperclip, Image, FileText, Sparkles, Mic, MicOff, Loader2,
   Download, Film, FileSpreadsheet, File, Volume2, VolumeX,
   Search, Calculator, ClipboardList, BarChart3, Wrench, ChevronDown, ChevronRight, Brain, Zap,
-  Mail, MessageCircle, Phone, Github, Table, Calendar, Share2, ThumbsUp, ThumbsDown, Globe, Scan
+  Mail, MessageCircle, Phone, Github, Table, Calendar, Share2, ThumbsUp, ThumbsDown, Globe, Scan, Package
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -142,7 +142,7 @@ const CommanderGroupChat = ({ msg, msgIndex, generatedFiles, generateFile, gener
 };
 
 // Execution Steps Component - shows agent's reasoning and tool usage
-const ExecutionSteps = ({ steps }) => {
+const ExecutionSteps = ({ steps, onSaveProduct }) => {
   const [expanded, setExpanded] = useState(false);
   if (!steps || steps.length === 0) return null;
   
@@ -200,9 +200,20 @@ const ExecutionSteps = ({ steps }) => {
 
                 return (
                   <div key={idx} className="rounded-lg bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 p-3" data-testid={`product-scan-result-${idx}`}>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Scan className="w-4 h-4 text-indigo-400" />
-                      <span className="text-indigo-300 font-semibold text-xs">Product Identified: {productName}</span>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Scan className="w-4 h-4 text-indigo-400" />
+                        <span className="text-indigo-300 font-semibold text-xs">Product Identified: {productName}</span>
+                      </div>
+                      {onSaveProduct && (
+                        <button
+                          onClick={() => onSaveProduct(productName, imageUrls, step.content)}
+                          className="flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-500/20 text-emerald-400 text-[10px] font-medium hover:bg-emerald-500/30 transition-colors"
+                          data-testid="save-to-catalog-btn"
+                        >
+                          <Package className="w-3 h-3" />Save to Catalog
+                        </button>
+                      )}
                     </div>
                     {imageUrls.length > 0 && (
                       <div className="flex gap-2 mb-2 overflow-x-auto pb-1">
@@ -704,6 +715,28 @@ const AgentChat = () => {
     setUploading(false);
   };
 
+
+  const saveProductToCatalog = async (name, imageUrls, scanContent) => {
+    try {
+      const images = imageUrls.map(url => ({ url, thumbnail: url, title: name }));
+      const res = await fetch(`${API}/products`, {
+        method: "POST",
+        headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          images,
+          scan_data: { context: scanContent },
+          source_chat_id: currentChat?.chat_id,
+        })
+      });
+      if (res.ok) {
+        toast.success("Product saved to catalog!");
+      } else {
+        toast.error("Failed to save product");
+      }
+    } catch { toast.error("Failed to save product"); }
+  };
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -1191,7 +1224,7 @@ const AgentChat = () => {
                       </div>
                     )}
                     {msg.role === "assistant" && msg.execution_steps && (
-                      <ExecutionSteps steps={msg.execution_steps} />
+                      <ExecutionSteps steps={msg.execution_steps} onSaveProduct={saveProductToCatalog} />
                     )}
                     {msg.role === "assistant" ? (
                       <MarkdownRenderer content={msg.content} />
