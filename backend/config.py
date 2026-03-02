@@ -369,15 +369,15 @@ AGENT_TOOLS = {
     },
     "google_calendar": {
         "name": "google_calendar",
-        "description": "Create or list Google Calendar events.",
-        "parameters": "action (string): create_event/list_events, title (string): Event title, date (string): Date ISO format, time (string): Time, duration_minutes (int): Duration",
+        "description": "Create or list Google Calendar events. Can add attendees and set time/date.",
+        "parameters": "action (string): create_event/list_events, title (string): Event title, start (string): Start datetime ISO format, end (string): End datetime ISO format, description (string): Event description, attendees (string): Comma-separated emails, max_results (int): Number of events to list",
         "category": "integration",
         "requires": "google_suite"
     },
     "send_gmail": {
         "name": "send_gmail",
-        "description": "Send an email via Gmail. Use when the user specifically wants to use their Gmail.",
-        "parameters": "to (string): Recipient email, subject (string): Subject, body (string): Email body",
+        "description": "Send an email via Gmail using Google Suite service account. Use when the user specifically wants to send email through Gmail.",
+        "parameters": "to (string): Recipient email, subject (string): Subject, body (string): Email body (HTML supported)",
         "category": "integration",
         "requires": "google_suite"
     },

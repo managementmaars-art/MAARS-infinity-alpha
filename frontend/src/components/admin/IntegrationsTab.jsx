@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
-import { Plug, Loader2 } from "lucide-react";
+import { Plug, Loader2, CheckCircle, XCircle, Wrench } from "lucide-react";
 import { useAuth, API } from "../../App";
 import { toast } from "sonner";
 
@@ -16,6 +16,7 @@ const IntegrationsTab = () => {
   const [testResults, setTestResults] = useState({});
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [toolStatus, setToolStatus] = useState(null);
 
   const serviceIcons = {
     slack: "https://cdn.simpleicons.org/slack/E01E5A",
@@ -37,12 +38,17 @@ const IntegrationsTab = () => {
     auth_token: "Auth Token",
     phone_number: "Phone Number",
     service_account_json: "Service Account JSON",
+    delegate_email: "Delegate Email (sender)",
   };
 
   useEffect(() => {
     if (!token) return;
-    fetch(`${API}/admin/integrations`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()).then(data => {
-      setIntegrations(data);
+    Promise.all([
+      fetch(`${API}/admin/integrations`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()),
+      fetch(`${API}/admin/integration-status`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()).catch(() => null)
+    ]).then(([intData, statusData]) => {
+      setIntegrations(intData);
+      if (statusData) setToolStatus(statusData);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, [token]);
@@ -173,6 +179,50 @@ const IntegrationsTab = () => {
           </ul>
         </CardContent>
       </Card>
+
+      {toolStatus && (
+        <Card className="bg-zinc-900/50 border-white/10" data-testid="tool-status-dashboard">
+          <CardHeader>
+            <CardTitle className="text-white font-['Outfit'] flex items-center gap-3 text-base">
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                <Wrench className="w-5 h-5 text-emerald-400" />
+              </div>
+              Agent Tool Status
+              <Badge variant="outline" className="ml-auto border-white/10 text-zinc-400">
+                {toolStatus.active_count}/{toolStatus.total_count} active
+              </Badge>
+            </CardTitle>
+            <p className="text-zinc-400 text-sm">Real-time status of all tools available to AI agents</p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              {toolStatus.tools?.map(tool => (
+                <div
+                  key={tool.tool_name}
+                  className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
+                    tool.status === "active"
+                      ? "bg-emerald-500/5 border-emerald-500/20"
+                      : "bg-zinc-800/30 border-white/5"
+                  }`}
+                  data-testid={`tool-status-${tool.tool_name}`}
+                >
+                  {tool.status === "active" ? (
+                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                  ) : (
+                    <XCircle className="w-4 h-4 text-zinc-600 shrink-0" />
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className={`text-sm font-medium truncate ${tool.status === "active" ? "text-white" : "text-zinc-500"}`}>
+                      {tool.display_name}
+                    </p>
+                    <p className="text-[10px] text-zinc-600 truncate">{tool.reason}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

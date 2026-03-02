@@ -9,7 +9,8 @@ import { Label } from "../components/ui/label";
 import {
   Bot, Users, UserPlus, Crown, Shield, User, Mail, Trash2, LogOut,
   LayoutDashboard, MessageSquare, ListTodo, Settings, Menu, X, Plus,
-  CheckCircle, XCircle, Loader2, Share2, ChevronRight, Package
+  CheckCircle, XCircle, Loader2, Share2, ChevronRight, Package,
+  Activity, BarChart3
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -29,6 +30,8 @@ const Team = () => {
   const [inviteRole, setInviteRole] = useState("member");
   const [processing, setProcessing] = useState(false);
   const [sharedChats, setSharedChats] = useState([]);
+  const [teamActivity, setTeamActivity] = useState([]);
+  const [teamStats, setTeamStats] = useState(null);
 
   const headers = token ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } : {};
 
@@ -44,8 +47,14 @@ const Team = () => {
         const t = await teamsRes.json();
         setTeams(t);
         if (t.length > 0) {
-          const sharedRes = await fetch(`${API}/teams/${t[0].team_id}/shared-chats`, { headers }).catch(() => null);
+          const [sharedRes, activityRes, statsRes] = await Promise.all([
+            fetch(`${API}/teams/${t[0].team_id}/shared-chats`, { headers }).catch(() => null),
+            fetch(`${API}/teams/${t[0].team_id}/activity?limit=20`, { headers }).catch(() => null),
+            fetch(`${API}/teams/${t[0].team_id}/stats`, { headers }).catch(() => null),
+          ]);
           if (sharedRes?.ok) setSharedChats(await sharedRes.json());
+          if (activityRes?.ok) setTeamActivity(await activityRes.json());
+          if (statsRes?.ok) setTeamStats(await statsRes.json());
         }
       }
       if (invitesRes?.ok) setPendingInvites(await invitesRes.json());
@@ -340,6 +349,85 @@ const Team = () => {
                   )}
                 </CardContent>
               </Card>
+
+              {/* Team Stats */}
+              {teamStats && (
+                <Card className="bg-zinc-900/50 border-white/10" data-testid="team-stats-card">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-white text-base font-['Outfit'] flex items-center gap-2">
+                      <BarChart3 className="w-4 h-4 text-amber-400" />Team Stats
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-3 gap-3 mb-4">
+                      <div className="p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center">
+                        <p className="text-lg font-bold text-white">{teamStats.member_count}</p>
+                        <p className="text-[10px] text-indigo-400">Members</p>
+                      </div>
+                      <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-center">
+                        <p className="text-lg font-bold text-white">{teamStats.total_chats}</p>
+                        <p className="text-[10px] text-emerald-400">Total Chats</p>
+                      </div>
+                      <div className="p-3 rounded-lg bg-violet-500/10 border border-violet-500/20 text-center">
+                        <p className="text-lg font-bold text-white">{teamStats.shared_chats}</p>
+                        <p className="text-[10px] text-violet-400">Shared</p>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      {teamStats.members?.map(m => (
+                        <div key={m.user_id} className="flex items-center justify-between p-2 rounded-lg bg-white/5" data-testid={`stat-member-${m.user_id}`}>
+                          <div className="flex items-center gap-2 min-w-0">
+                            {getRoleIcon(m.role)}
+                            <span className="text-sm text-white truncate">{m.name}</span>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span className="text-xs text-zinc-400">{m.chats} chats</span>
+                            {getRoleBadge(m.role)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Team Activity Feed */}
+              {teamActivity.length > 0 && (
+                <Card className="bg-zinc-900/50 border-white/10" data-testid="team-activity-card">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-white text-base font-['Outfit'] flex items-center gap-2">
+                      <Activity className="w-4 h-4 text-cyan-400" />Recent Activity
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                      {teamActivity.map((item, i) => (
+                        <button
+                          key={`${item.chat_id}-${i}`}
+                          onClick={() => item.agent_id && navigate(`/chat/${item.agent_id}?chat=${item.chat_id}`)}
+                          className="w-full flex items-start gap-3 p-3 rounded-lg bg-zinc-800/30 hover:bg-zinc-800/50 transition-colors text-left"
+                          data-testid={`activity-item-${i}`}
+                        >
+                          <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
+                            item.type === "shared_chat" ? "bg-emerald-500/15" : "bg-indigo-500/15"
+                          }`}>
+                            {item.type === "shared_chat" ? (
+                              <Share2 className="w-3.5 h-3.5 text-emerald-400" />
+                            ) : (
+                              <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm text-white truncate">{item.title}</p>
+                            <p className="text-xs text-zinc-500">{item.user_name} {item.timestamp ? `- ${new Date(item.timestamp).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}` : ""}</p>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-zinc-600 shrink-0 mt-1" />
+                        </button>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </>
           ) : pendingInvites.length === 0 ? (
             <div className="p-12 rounded-xl border border-dashed border-white/10 text-center">

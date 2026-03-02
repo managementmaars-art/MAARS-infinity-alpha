@@ -110,5 +110,5 @@ INTEGRATION_SERVICES = {
     "airtable": {"name": "Airtable", "key_fields": ["api_key"], "description": "Read/write Airtable bases and records"},
     "calendly": {"name": "Calendly", "key_fields": ["api_key"], "description": "Schedule meetings and manage events"},
     "giphy": {"name": "Giphy", "key_fields": ["api_key"], "description": "Search and send GIFs"},
-    "google_suite": {"name": "Google Suite", "key_fields": ["service_account_json"], "description": "Gmail, Google Calendar, Google Drive"},
+    "google_suite": {"name": "Google Suite", "key_fields": ["service_account_json", "delegate_email"], "description": "Gmail, Google Calendar, Google Drive"},
 }

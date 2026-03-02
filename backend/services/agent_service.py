@@ -474,14 +474,88 @@ async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
             svc_json = await get_integration_key("google_suite", "service_account_json")
             if not svc_json:
                 return "Google Suite is not configured. Ask your admin to add Google Suite credentials in Integrations."
+            delegate_email = await get_integration_key("google_suite", "delegate_email")
             action = tool_input.get("action", "list_events")
-            return f"Google Calendar {action}: This feature requires Google Suite OAuth setup. Please configure in Admin > Integrations."
+            try:
+                import json as _json
+                from google.oauth2 import service_account as _sa
+                from googleapiclient.discovery import build as _build
+                scopes = ["https://www.googleapis.com/auth/calendar"]
+                info = _json.loads(svc_json) if isinstance(svc_json, str) else svc_json
+                creds = _sa.Credentials.from_service_account_info(info, scopes=scopes)
+                if delegate_email:
+                    creds = creds.with_subject(delegate_email)
+                service = _build("calendar", "v3", credentials=creds)
+                if action == "create_event":
+                    summary = tool_input.get("title", tool_input.get("summary", "New Event"))
+                    start = tool_input.get("start", "")
+                    end = tool_input.get("end", "")
+                    description = tool_input.get("description", "")
+                    attendees = tool_input.get("attendees", "")
+                    event_body = {"summary": summary, "description": description}
+                    if start:
+                        event_body["start"] = {"dateTime": start, "timeZone": "UTC"}
+                    if end:
+                        event_body["end"] = {"dateTime": end, "timeZone": "UTC"}
+                    elif start:
+                        event_body["end"] = event_body["start"]
+                    if attendees:
+                        emails = [e.strip() for e in attendees.split(",") if e.strip()]
+                        event_body["attendees"] = [{"email": e} for e in emails]
+                    result = service.events().insert(calendarId="primary", body=event_body).execute()
+                    return f"Event created: {result.get('summary')} on {result.get('start', {}).get('dateTime', 'N/A')}\nLink: {result.get('htmlLink', '')}"
+                else:
+                    from datetime import datetime as _dt, timezone as _tz
+                    now = _dt.now(_tz.utc).isoformat()
+                    max_results = int(tool_input.get("max_results", 10))
+                    results = service.events().list(
+                        calendarId="primary", timeMin=now,
+                        maxResults=max_results, singleEvents=True, orderBy="startTime"
+                    ).execute()
+                    events = results.get("items", [])
+                    if not events:
+                        return "No upcoming events found."
+                    lines = [f"Upcoming {len(events)} events:"]
+                    for ev in events:
+                        start_dt = ev["start"].get("dateTime", ev["start"].get("date", ""))
+                        lines.append(f"- {ev.get('summary', 'No title')} | {start_dt}")
+                    return "\n".join(lines)
+            except Exception as cal_err:
+                logger.error(f"Google Calendar error: {cal_err}")
+                return f"Google Calendar error: {str(cal_err)[:200]}"
 
         elif tool_name == "send_gmail":
             svc_json = await get_integration_key("google_suite", "service_account_json")
             if not svc_json:
                 return "Google Suite is not configured. Ask your admin to add Google Suite credentials in Integrations."
-            return "Gmail: This feature requires Google Suite OAuth setup. Please configure in Admin > Integrations."
+            delegate_email = await get_integration_key("google_suite", "delegate_email")
+            if not delegate_email:
+                return "Gmail requires a Delegate Email in Google Suite settings. Ask your admin to add the sender email in Admin > Integrations."
+            to_email = tool_input.get("to", "")
+            subject = tool_input.get("subject", "No Subject")
+            body = tool_input.get("body", "")
+            if not to_email:
+                return "Error: No recipient email provided."
+            try:
+                import json as _json, base64 as _b64
+                from email.mime.text import MIMEText as _MIMEText
+                from google.oauth2 import service_account as _sa
+                from googleapiclient.discovery import build as _build
+                scopes = ["https://www.googleapis.com/auth/gmail.send"]
+                info = _json.loads(svc_json) if isinstance(svc_json, str) else svc_json
+                creds = _sa.Credentials.from_service_account_info(info, scopes=scopes)
+                creds = creds.with_subject(delegate_email)
+                service = _build("gmail", "v1", credentials=creds)
+                message = _MIMEText(body, "html")
+                message["to"] = to_email
+                message["from"] = delegate_email
+                message["subject"] = subject
+                raw = _b64.urlsafe_b64encode(message.as_bytes()).decode()
+                result = service.users().messages().send(userId="me", body={"raw": raw}).execute()
+                return f"Email sent to {to_email} via Gmail. Message ID: {result.get('id', 'N/A')}"
+            except Exception as gmail_err:
+                logger.error(f"Gmail error: {gmail_err}")
+                return f"Gmail error: {str(gmail_err)[:200]}"
 
         elif tool_name == "product_scan":
             product_query = tool_input.get("product_query", "")

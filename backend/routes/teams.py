@@ -264,3 +264,89 @@ async def get_shared_chats(team_id: str, current_user: User = Depends(get_curren
     
     return chats
 
+
+@router.get("/teams/{team_id}/activity")
+async def get_team_activity(team_id: str, limit: int = 30, current_user: User = Depends(get_current_user)):
+    """Get recent activity for a team - chats, messages, member actions."""
+    team = await db.teams.find_one({"team_id": team_id, "members.user_id": current_user.user_id})
+    if not team:
+        raise HTTPException(404, "Team not found or you're not a member")
+    
+    member_ids = [m["user_id"] for m in team.get("members", [])]
+    member_map = {m["user_id"]: m.get("name", m.get("email", "Unknown")) for m in team["members"]}
+    
+    activity = []
+    
+    # Recent shared chats
+    shared_chats = await db.chats.find(
+        {"shared_with_team": team_id},
+        {"_id": 0, "chat_id": 1, "title": 1, "user_id": 1, "updated_at": 1, "agent_id": 1}
+    ).sort("updated_at", -1).to_list(10)
+    
+    for chat in shared_chats:
+        activity.append({
+            "type": "shared_chat",
+            "user_name": member_map.get(chat["user_id"], "Unknown"),
+            "title": f"Shared: {chat.get('title', 'Untitled chat')}",
+            "timestamp": chat.get("updated_at", ""),
+            "chat_id": chat["chat_id"],
+            "agent_id": chat.get("agent_id", ""),
+        })
+    
+    # Recent messages from team members (last N messages)
+    recent_chats = await db.chats.find(
+        {"user_id": {"$in": member_ids}},
+        {"_id": 0, "chat_id": 1, "title": 1, "user_id": 1, "agent_id": 1, "updated_at": 1}
+    ).sort("updated_at", -1).to_list(15)
+    
+    for chat in recent_chats:
+        if chat["chat_id"] not in [a.get("chat_id") for a in activity]:
+            activity.append({
+                "type": "member_chat",
+                "user_name": member_map.get(chat["user_id"], "Unknown"),
+                "title": chat.get("title", "Untitled chat"),
+                "timestamp": chat.get("updated_at", ""),
+                "chat_id": chat["chat_id"],
+                "agent_id": chat.get("agent_id", ""),
+            })
+    
+    # Sort by timestamp
+    activity.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
+    return activity[:limit]
+
+
+@router.get("/teams/{team_id}/stats")
+async def get_team_stats(team_id: str, current_user: User = Depends(get_current_user)):
+    """Get team usage statistics."""
+    team = await db.teams.find_one({"team_id": team_id, "members.user_id": current_user.user_id})
+    if not team:
+        raise HTTPException(404, "Team not found or you're not a member")
+    
+    member_ids = [m["user_id"] for m in team.get("members", [])]
+    
+    total_chats = await db.chats.count_documents({"user_id": {"$in": member_ids}})
+    shared_chats = await db.chats.count_documents({"shared_with_team": team_id})
+    
+    # Per-member stats
+    member_stats = []
+    for member in team.get("members", []):
+        uid = member["user_id"]
+        chat_count = await db.chats.count_documents({"user_id": uid})
+        member_stats.append({
+            "user_id": uid,
+            "name": member.get("name", "Unknown"),
+            "email": member.get("email", ""),
+            "role": member.get("role", "member"),
+            "chats": chat_count,
+            "joined_at": member.get("joined_at", ""),
+        })
+    
+    return {
+        "team_id": team_id,
+        "team_name": team.get("name", ""),
+        "member_count": len(member_ids),
+        "total_chats": total_chats,
+        "shared_chats": shared_chats,
+        "members": member_stats,
+    }
+

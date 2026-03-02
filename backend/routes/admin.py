@@ -1129,10 +1129,67 @@ async def admin_test_integration(service_id: str, admin: User = Depends(require_
                 auth = svc_config.get("auth_token", "")
                 resp = await client.get(f"https://api.twilio.com/2010-04-01/Accounts/{sid}.json", auth=(sid, auth))
                 return {"status": "active" if resp.status_code == 200 else "error", "message": "Connected" if resp.status_code == 200 else f"Error: {resp.status_code}"}
+            elif service_id == "google_suite":
+                svc_json = svc_config.get("service_account_json", "")
+                if not svc_json:
+                    return {"status": "not_configured", "message": "No Service Account JSON configured"}
+                try:
+                    import json as _json
+                    from google.oauth2 import service_account as _sa
+                    from googleapiclient.discovery import build as _build
+                    info = _json.loads(svc_json) if isinstance(svc_json, str) else svc_json
+                    creds = _sa.Credentials.from_service_account_info(info, scopes=["https://www.googleapis.com/auth/calendar.readonly"])
+                    service = _build("calendar", "v3", credentials=creds)
+                    service.calendarList().list(maxResults=1).execute()
+                    delegate_email = svc_config.get("delegate_email", "")
+                    msg = f"Service account authenticated ({info.get('client_email', 'OK')})"
+                    if delegate_email:
+                        msg += f". Delegate: {delegate_email}"
+                    return {"status": "active", "message": msg}
+                except Exception as gs_err:
+                    return {"status": "error", "message": str(gs_err)[:200]}
             else:
                 return {"status": "unknown", "message": "Test not available for this service"}
     except Exception as e:
         return {"status": "error", "message": str(e)[:200]}
+
+
+@router.get("/admin/integration-status")
+async def admin_integration_status(admin: User = Depends(require_admin)):
+    """Get status of all integration tools - which are active vs inactive."""
+    config = await get_integration_keys()
+    from config import AGENT_TOOLS
+    
+    tool_status = []
+    for tool_name, tool_def in AGENT_TOOLS.items():
+        requires = tool_def.get("requires")
+        status = "active"
+        reason = "No key required"
+        if requires:
+            svc_config = config.get(requires, {})
+            svc_def = INTEGRATION_SERVICES.get(requires, {})
+            has_key = any(svc_config.get(f) for f in svc_def.get("key_fields", []))
+            if has_key:
+                status = "active"
+                reason = f"{svc_def.get('name', requires)} configured"
+            else:
+                status = "inactive"
+                reason = f"Requires {svc_def.get('name', requires)} API key"
+        tool_status.append({
+            "tool_name": tool_name,
+            "display_name": tool_def.get("name", tool_name),
+            "description": tool_def.get("description", ""),
+            "status": status,
+            "reason": reason,
+            "requires_service": requires,
+        })
+    
+    active_count = sum(1 for t in tool_status if t["status"] == "active")
+    return {
+        "tools": tool_status,
+        "active_count": active_count,
+        "total_count": len(tool_status),
+    }
 
 
 # ============== CUSTOMER ANALYTICS DASHBOARD ==============
