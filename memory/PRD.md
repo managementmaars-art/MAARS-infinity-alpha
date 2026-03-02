@@ -1,92 +1,115 @@
 # MAARS Command by MAARS Global Corporation - PRD
 
-## Original Problem Statement
-Build a full-stack AI team platform ("MAARS Command") comparable to Sintra.ai and Emergent, ready for launch to sell subscriptions. Features include specialized AI agents, Commander AI delegation, multi-model support, Stripe subscriptions, admin dashboard, RAG knowledge base, web browsing, image analysis (vision), product scanning, product catalog, and commercial video generation.
+## Product Overview
+A commercial, production-ready AI team platform comparable to platforms like Sintra.ai and Emergent. Features a team of specialized AI agents led by a "Commander AI" that delegates tasks automatically, with support for multiple AI models, credit system, subscription management, and admin panel.
 
 ## Core Requirements
-1. AI Team & Commander AI with 21+ specialized agents
-2. Multi-model support with universal key + direct provider keys
-3. Stripe-integrated subscription tiers with dynamic credit system
-4. Admin dashboard for pricing, agent management, analytics
-5. RAG knowledge base (per-agent document uploads)
-6. Automatic web browsing for real-time information
-7. Image analysis (vision) for all agents
-8. Product scanning - identify products from images, search web for details/pricing/reviews
-9. Product Catalog - save products, track prices, one-click generate marketing content
-10. Video/image generation (Sora 2, DALL-E 3, Nano Banana 2) with product-aware pipeline
-11. TTS/STT (ElevenLabs, OpenAI, Whisper)
-12. Real-time Commander delegation with live collaboration workflow
+1. **AI Team & Commander AI** - Team of 20+ specialized AI agents led by Commander Orion
+2. **Multi-Model Support** - OpenAI, Anthropic, Gemini, XAI, DeepSeek, Mistral, Perplexity, Cohere
+3. **Monetization** - Multi-tiered subscription model (Free, Starter, Pro, Business) with Stripe
+4. **Admin Section** - Full admin panel for pricing, users, agents, analytics, branding
+5. **Knowledge Base (RAG)** - Per-agent document upload and retrieval
+6. **Web Browsing** - DuckDuckGo integration for real-time web search
+7. **Image Analysis (Vision)** - Analyze uploaded images via multimodal models
+8. **Product Catalog** - Save, manage, and scan products; batch CSV/XLSX import
+9. **Team Collaboration** - Invite members, shared chat access
 
 ## Architecture
-- **Backend:** FastAPI + MongoDB (Motor async driver)
-- **Frontend:** React + Tailwind CSS + Shadcn/UI
-- **Auth:** JWT + Emergent Google OAuth (extracted to auth.py + routes/auth.py)
-- **AI:** emergentintegrations library with Emergent LLM Key
-- **Search:** DuckDuckGo text + image search + BeautifulSoup4
-- **RAG:** scikit-learn TF-IDF local model
-- **Payments:** Stripe
-- **Database:** Shared via db.py module
 
-## What's Implemented (Complete Feature List)
-- [x] Full auth system (JWT + Google OAuth) - refactored
-- [x] 21+ specialized AI agents with Commander AI delegation
-- [x] Real-time Commander Collaboration Workflow (live progress)
-- [x] Multi-model LLM support with auto-selection
-- [x] Stripe subscription integration (multi-tier)
-- [x] Dynamic model-aware credit system with UI display
-- [x] Admin dashboard with full management capabilities
-- [x] RAG knowledge base (TF-IDF, per-agent documents)
-- [x] Automatic web browsing (DuckDuckGo + synthesis)
-- [x] Image analysis (vision) - all agents, drag-and-drop + clipboard paste
-- [x] Product Scanner - vision-based product ID + web details/images
-- [x] **Product Catalog** - save/manage products, re-scan, one-click content generation
-- [x] **Quick Generate** - Video prompts, Ad Copy, Social Posts, Full Campaigns from catalog
-- [x] **Admin Product View** - see all users' product catalogs
-- [x] **Save to Catalog** button in chat when product_scan results appear
-- [x] Product-aware video generation (Sora 2 uses product scan data)
-- [x] Video generation (Sora 2) with background processing
-- [x] Image generation (DALL-E 3, Nano Banana 2, GPT Image 1)
-- [x] TTS/STT (ElevenLabs, OpenAI TTS, Whisper)
-- [x] Agent customization panel
-- [x] Notification system
-- [x] Admin analytics, branding, SMTP config
-- [x] Integration tools (Slack, GitHub, SendGrid, etc.)
-- [x] Backend refactoring: auth.py, db.py, routes/auth.py, routes/products.py
-- [x] Frontend refactoring: CustomPackagesTab, IntegrationsTab extracted
+### Backend (FastAPI + MongoDB)
+```
+/app/backend/
+├── server.py                 # Thin app shell (~91 lines)
+├── db.py                     # Shared MongoDB client
+├── auth.py                   # Auth helpers (JWT, admin check)
+├── config.py                 # Agent definitions, tools config
+├── shared/
+│   ├── constants.py          # SUBSCRIPTION_PLANS, STRIPE, UPLOAD_DIR, etc.
+│   └── utils.py              # send_email, get_api_keys, create_notification
+├── services/
+│   ├── llm_service.py        # Model selection, LLM calling, file generation
+│   ├── agent_service.py      # Tool execution, agent delegation, commander
+│   ├── rag_service.py        # Knowledge base search
+│   ├── web_search_service.py # DuckDuckGo search
+│   └── product_scanner.py    # Vision-based product identification
+└── routes/
+    ├── auth.py               # Registration, login, session
+    ├── agents.py             # Agent CRUD, user customization
+    ├── chats.py              # Chat CRUD, send_message, feedback
+    ├── tasks.py              # Task CRUD, execution
+    ├── teams.py              # Team collaboration
+    ├── subscriptions.py      # Plans, checkout, credits
+    ├── admin.py              # All admin endpoints (~1771 lines)
+    ├── generation.py         # Document/image/video generation
+    ├── media.py              # Upload, TTS, STT, models
+    ├── notifications_routes.py # Notification center
+    ├── user.py               # Stats, insights
+    ├── products.py           # Product catalog, batch import
+    └── knowledge_base.py     # Knowledge doc CRUD
+```
 
-## Product Catalog Feature Details
-- **Save:** Users save scanned products from chat or manually
-- **Manage:** View, update, delete products from dedicated /products page
-- **Re-scan:** One-click re-scan fetches latest web data and price history
-- **Quick Generate:** 4 content types from any saved product:
-  - Video Prompt (Sora 2 ready)
-  - Ad Copy (Google/Facebook Ads)
-  - Social Posts (Instagram, Twitter, LinkedIn, TikTok, Facebook)
-  - Full Campaign (comprehensive marketing brief)
-- **Admin:** Admin sees all users' catalogs with user info and generation counts
-- **Integration:** "Save to Catalog" button in chat execution steps
+### Frontend (React + Tailwind)
+```
+/app/frontend/src/
+├── App.js                    # Router, auth context
+├── pages/
+│   ├── AdminDashboard.jsx    # Thin shell (~498 lines)
+│   ├── AgentChat.jsx         # Chat interface
+│   └── ProductCatalog.jsx    # Product management
+└── components/
+    ├── admin/
+    │   ├── CustomPackagesTab.jsx
+    │   ├── IntegrationsTab.jsx
+    │   └── tabs/
+    │       ├── OverviewTab.jsx
+    │       ├── UsersTab.jsx
+    │       ├── AgentsTab.jsx
+    │       ├── TransactionsTab.jsx
+    │       ├── ApiKeysTab.jsx
+    │       ├── PricingManagerTab.jsx
+    │       └── PaymentSetupTab.jsx
+    └── chat/
+        ├── CollaborationWorkflow.jsx
+        └── ProductScanCard.jsx
+```
 
-## Backlog
-### P2 - Remaining Refactoring
-- Extract agent, chat, admin, generation routes from server.py
-- Extract remaining AdminDashboard inline tabs
+## What's Been Implemented
+- All 20+ AI agents with Commander AI delegation
+- Multi-provider LLM support with auto model selection
+- Credit system with model-aware costs
+- Stripe payment integration
+- Full admin panel with analytics, pricing, user/agent management
+- RAG knowledge base with document upload
+- Web browsing tool (DuckDuckGo)
+- Image analysis (vision) with drag-and-drop UX
+- Real-time agent collaboration view
+- Product scanning pipeline (vision + web search)
+- Full product catalog with batch CSV/XLSX import
+- Team collaboration with invites
+- Email notifications (SMTP)
+- Branding customization
+- **COMPLETED: Major codebase refactoring (Feb 2026)**
+  - Backend: server.py 6039 → 91 lines (14 route modules)
+  - Frontend: AdminDashboard.jsx 2032 → 498 lines (7 extracted tabs)
 
-## Key Files
-- `/app/backend/server.py` - Main server
-- `/app/backend/auth.py` - Shared auth utilities
-- `/app/backend/db.py` - Shared database connection
-- `/app/backend/routes/auth.py` - Auth routes
-- `/app/backend/routes/products.py` - Product catalog routes
-- `/app/backend/services/product_scanner.py` - Product scanning service
-- `/app/backend/services/rag_service.py` - RAG TF-IDF service
-- `/app/backend/services/web_search.py` - Web search service
-- `/app/backend/config.py` - Agent definitions, tools, tool maps
-- `/app/frontend/src/pages/ProductCatalog.jsx` - Product catalog page
-- `/app/frontend/src/pages/AgentChat.jsx` - Main chat interface
-- `/app/frontend/src/pages/AdminDashboard.jsx` - Admin panel
-- `/app/frontend/src/components/chat/CollaborationWorkflow.jsx` - Commander view
+## Remaining Tasks (Prioritized)
+### P1 - Implement Integration Logic
+- Slack, Airtable, GitHub, Calendly etc. - keys can be saved but actual backend logic is placeholder
 
-## Test Reports
-- iterations 43-45: All passed 100%
-- Manual API testing: Product CRUD all verified (create, read, update, delete, admin list)
-- Frontend verified via screenshots: product grid, detail panel, generate buttons
+### P2 - Enhancements
+- Additional admin analytics features
+- Performance optimizations
+- Enhanced team collaboration features
+
+## Credentials
+- **Admin:** management.maars@marsgc.net / MaarsGlobal2024!
+- **Test User:** Register via UI
+
+## 3rd Party Integrations
+- **Stripe** - Payment processing (user API key)
+- **Image Gen** - Gemini Nano Banana 2, GPT Image 1, DALL-E 3
+- **Video Gen** - Sora 2
+- **TTS** - ElevenLabs, OpenAI TTS
+- **STT** - Whisper
+- **Web Search** - DuckDuckGo
+- **LLMs** - Multiple providers via Emergent LLM Key or direct keys
