@@ -72,12 +72,18 @@ const AnalyticsTab = () => {
   const [feed, setFeed] = useState([]);
   const [feedLoading, setFeedLoading] = useState(false);
   const [performance, setPerformance] = useState([]);
+  const [retention, setRetention] = useState([]);
+  const [projections, setProjections] = useState(null);
+  const [creditBurn, setCreditBurn] = useState(null);
   const feedRef = useRef([]);
 
   useEffect(() => {
     fetchAnalytics();
     fetchFeed();
     fetchPerformance();
+    fetchRetention();
+    fetchProjections();
+    fetchCreditBurn();
     const interval = setInterval(fetchFeed, 15000);
     return () => clearInterval(interval);
   }, []);
@@ -99,6 +105,27 @@ const AnalyticsTab = () => {
       const res = await fetch(`${API}/admin/agent-performance`, { headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) setPerformance(await res.json());
+    } catch {}
+  };
+
+  const fetchRetention = async () => {
+    try {
+      const res = await fetch(`${API}/admin/analytics/retention`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) setRetention(await res.json());
+    } catch {}
+  };
+
+  const fetchProjections = async () => {
+    try {
+      const res = await fetch(`${API}/admin/analytics/projections`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) setProjections(await res.json());
+    } catch {}
+  };
+
+  const fetchCreditBurn = async () => {
+    try {
+      const res = await fetch(`${API}/admin/analytics/credit-burn`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) setCreditBurn(await res.json());
     } catch {}
   };
 
@@ -501,6 +528,97 @@ const AnalyticsTab = () => {
           <p className="text-zinc-500 text-sm py-8 text-center">No performance data yet. Users will rate responses with thumbs up/down.</p>
         )}
       </ChartCard>
+
+      {/* Revenue Projections */}
+      {projections && (
+        <ChartCard title="Revenue Projections (6 Months)" icon={TrendingUp} className="col-span-2">
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+              <p className="text-xs text-emerald-400">Current MRR</p>
+              <p className="text-lg font-bold text-white">${projections.current?.mrr?.toLocaleString()}</p>
+            </div>
+            <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+              <p className="text-xs text-blue-400">30d Revenue</p>
+              <p className="text-lg font-bold text-white">${projections.current?.revenue_30d?.toLocaleString()}</p>
+            </div>
+            <div className="p-3 rounded-lg bg-violet-500/10 border border-violet-500/20">
+              <p className="text-xs text-violet-400">Profit Margin</p>
+              <p className="text-lg font-bold text-white">{projections.current?.profit_margin}%</p>
+            </div>
+          </div>
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={projections.projections} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+              <XAxis dataKey="month" tick={{ fill: '#71717a', fontSize: 11 }} />
+              <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar dataKey="projected_revenue" name="$ Revenue" fill="#22c55e" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="projected_cost" name="$ Cost" fill="#ef4444" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+      )}
+
+      {/* User Retention Cohorts */}
+      {retention.length > 0 && (
+        <ChartCard title="User Retention (Weekly Cohorts)" icon={UserPlus}>
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={retention} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+              <XAxis dataKey="week_start" tick={{ fill: '#71717a', fontSize: 11 }} />
+              <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar dataKey="signed_up" name="Signed Up" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="returned_week1" name="Returned W1" fill="#06b6d4" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="returned_week2" name="Returned W2" fill="#22c55e" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+      )}
+
+      {/* Credit Burn Rate */}
+      {creditBurn && (
+        <ChartCard title="Credit Burn - Daily (7d)" icon={Zap}>
+          <ResponsiveContainer width="100%" height={180}>
+            <AreaChart data={creditBurn.daily_burn} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+              <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 10 }} />
+              <YAxis tick={{ fill: '#71717a', fontSize: 10 }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Area type="monotone" dataKey="cost" name="$ Cost" stroke="#ef4444" fill="rgba(239,68,68,0.2)" />
+            </AreaChart>
+          </ResponsiveContainer>
+          {creditBurn.by_model?.length > 0 && (
+            <div className="mt-3 space-y-1.5">
+              <p className="text-xs text-zinc-400 font-medium mb-2">Top Models by Cost (30d)</p>
+              {creditBurn.by_model.slice(0, 5).map((m, i) => (
+                <div key={i} className="flex items-center justify-between text-xs">
+                  <span className="text-zinc-300 truncate">{m.model}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-zinc-500">{m.total_calls} calls</span>
+                    <span className="text-amber-400 font-medium">${m.total_cost.toFixed(4)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </ChartCard>
+      )}
+
+      {/* Top Agents by Cost */}
+      {creditBurn?.by_agent?.length > 0 && (
+        <ChartCard title="Agent Cost Efficiency (30d)" icon={Bot}>
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={creditBurn.by_agent.slice(0, 8)} layout="vertical" margin={{ top: 5, right: 10, left: 60, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+              <XAxis type="number" tick={{ fill: '#71717a', fontSize: 10 }} />
+              <YAxis dataKey="agent_name" type="category" tick={{ fill: '#a1a1aa', fontSize: 10 }} width={55} />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar dataKey="total_cost" name="$ Total Cost" fill="#f97316" radius={[0, 4, 4, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+      )}
     </div>
   );
 };

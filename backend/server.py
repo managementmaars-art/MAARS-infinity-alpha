@@ -61,6 +61,24 @@ async def startup():
     await seed_default_agents()
     await backfill_usage_logs()
 
+    # Create MongoDB indexes for performance
+    await db.chats.create_index([("user_id", 1), ("updated_at", -1)])
+    await db.chats.create_index([("agent_id", 1)])
+    await db.chats.create_index("created_at")
+    await db.tasks.create_index([("user_id", 1), ("status", 1)])
+    await db.tasks.create_index("created_at")
+    await db.usage_logs.create_index("created_at")
+    await db.usage_logs.create_index([("user_id", 1), ("created_at", -1)])
+    await db.usage_logs.create_index("model")
+    await db.notifications.create_index([("user_id", 1), ("read", 1)])
+    await db.products.create_index([("user_id", 1), ("status", 1)])
+    await db.payment_transactions.create_index([("user_id", 1), ("created_at", -1)])
+    await db.subscriptions.create_index("user_id", unique=True)
+    await db.users.create_index("email", unique=True)
+    await db.audit_log.create_index([("created_at", -1)])
+    await db.knowledge_docs.create_index([("agent_id", 1)])
+    logger.info("MongoDB indexes ensured")
+
     # Load admin-configured pricing from DB (overrides hardcoded defaults)
     saved_pricing = await db.platform_config.find_one({"config_type": "pricing"}, {"_id": 0})
     if saved_pricing and saved_pricing.get("plans"):

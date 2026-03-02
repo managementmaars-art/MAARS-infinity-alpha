@@ -8,7 +8,7 @@ import {
   Bot, Users, MessageSquare, CreditCard, TrendingUp, Shield,
   LayoutDashboard, ListTodo, Settings, LogOut, Menu, X,
   DollarSign, Activity, Key, Loader2,
-  BarChart3, Mail, Paintbrush, BookOpen, Package
+  BarChart3, Mail, Paintbrush, BookOpen, Package, ScrollText
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -26,6 +26,7 @@ import { TransactionsTab } from "../components/admin/tabs/TransactionsTab";
 import { ApiKeysTab } from "../components/admin/tabs/ApiKeysTab";
 import { PricingManagerTab } from "../components/admin/tabs/PricingManagerTab";
 import { PaymentSetupTab } from "../components/admin/tabs/PaymentSetupTab";
+import { AuditLogTab } from "../components/admin/tabs/AuditLogTab";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -209,6 +210,7 @@ const AdminDashboard = () => {
     { id: "branding", label: "Branding & Domain", icon: Paintbrush },
     { id: "knowledge", label: "Knowledge Base", icon: BookOpen },
     { id: "products", label: "Product Catalog", icon: Package },
+    { id: "audit", label: "Audit Log", icon: ScrollText },
   ];
 
   const NavItem = ({ icon: Icon, label, to, active }) => (
@@ -387,6 +389,7 @@ const AdminDashboard = () => {
           {activeTab === "branding" && <BrandingTab />}
           {activeTab === "knowledge" && <KnowledgeBaseTab />}
           {activeTab === "products" && <AdminProductsTab token={token} />}
+          {activeTab === "audit" && <AuditLogTab />}
         </div>
       </div>
       <div className="lg:ml-64"><BrandFooter /></div>

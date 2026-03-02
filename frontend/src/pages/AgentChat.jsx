@@ -52,6 +52,8 @@ const AVAILABLE_MODELS = [
 import NotificationCenter from "../components/NotificationCenter";
 import AgentCustomizePanel from "../components/AgentCustomizePanel";
 import MarkdownRenderer from "../components/MarkdownRenderer";
+import { ChatSearch } from "../components/chat/ChatSearch";
+import { Pin, Download as DownloadIcon, Copy, Check } from "lucide-react";
 
 // Commander Group Chat Component - renders delegation as individual agent chat bubbles
 const CommanderGroupChat = ({ msg, msgIndex, generatedFiles, generateFile, generatingFile, currentAgent }) => {
@@ -263,6 +265,7 @@ const AgentChat = () => {
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(320);
+  const [showSearch, setShowSearch] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [selectedModel, setSelectedModel] = useState("auto/auto");
   const [attachments, setAttachments] = useState([]);
@@ -1021,7 +1024,25 @@ const AgentChat = () => {
           >
             <Plus className="w-4 h-4 mr-2" /> New Chat
           </Button>
+          <Button
+            variant="outline"
+            onClick={() => setShowSearch(!showSearch)}
+            className="w-full border-white/10 text-zinc-400 hover:text-white mt-1"
+            data-testid="chat-search-btn"
+          >
+            <Search className="w-4 h-4 mr-2" /> Search Chats
+          </Button>
         </div>
+        {showSearch && (
+          <ChatSearch
+            onSelectChat={(chatId, agentId) => {
+              const agent = agents.find(a => a.agent_id === agentId);
+              if (agent) setSelectedAgent(agent);
+              loadChat(chatId);
+            }}
+            onClose={() => setShowSearch(false)}
+          />
+        )}
         <SidebarContent 
           agents={agents}
           chats={chats}
@@ -1085,9 +1106,32 @@ const AgentChat = () => {
             </div>
             <div className="flex items-center gap-2 mr-32">
               {currentChat && (
-                <Button variant="ghost" size="sm" onClick={shareChat} className="text-zinc-400 hover:text-indigo-400 h-8" data-testid="share-chat-btn">
-                  <Share2 className="w-4 h-4 mr-1" />Share
-                </Button>
+                <>
+                  <Button
+                    variant="ghost" size="sm"
+                    onClick={async () => {
+                      try {
+                        const res = await fetch(`${API}/chats/${currentChat.chat_id}/export`, { headers: { Authorization: `Bearer ${token}` } });
+                        const data = await res.json();
+                        const blob = new Blob([data.content], { type: "text/plain" });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = `${data.title || "chat"}_export.txt`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        toast.success("Chat exported");
+                      } catch { toast.error("Export failed"); }
+                    }}
+                    className="text-zinc-400 hover:text-indigo-400 h-8"
+                    data-testid="export-chat-btn"
+                  >
+                    <DownloadIcon className="w-4 h-4 mr-1" />Export
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={shareChat} className="text-zinc-400 hover:text-indigo-400 h-8" data-testid="share-chat-btn">
+                    <Share2 className="w-4 h-4 mr-1" />Share
+                  </Button>
+                </>
               )}
             </div>
           </div>
@@ -1262,6 +1306,35 @@ const AgentChat = () => {
                       )}
                       {msg.role === "assistant" && msg.message_id && (
                         <div className="flex items-center gap-1 ml-2 border-l border-white/10 pl-2">
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(msg.content);
+                              toast.success("Copied to clipboard");
+                            }}
+                            className="p-1 rounded text-zinc-600 hover:text-white hover:bg-white/10 transition-colors"
+                            data-testid={`copy-msg-${i}`}
+                            title="Copy message"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </button>
+                          <button
+                            onClick={async () => {
+                              try {
+                                await fetch(`${API}/chats/${currentChat?.chat_id}/messages/${msg.message_id}/pin`, {
+                                  method: "POST", headers: { Authorization: `Bearer ${token}` }
+                                });
+                                const msgs = [...messages];
+                                msgs[i] = { ...msgs[i], pinned: !msgs[i].pinned };
+                                setMessages(msgs);
+                                toast.success(msgs[i].pinned ? "Message pinned" : "Message unpinned");
+                              } catch {}
+                            }}
+                            className={`p-1 rounded transition-colors ${msg.pinned ? "text-amber-400 bg-amber-500/15" : "text-zinc-600 hover:text-amber-400 hover:bg-amber-500/10"}`}
+                            data-testid={`pin-msg-${i}`}
+                            title={msg.pinned ? "Unpin" : "Pin message"}
+                          >
+                            <Pin className="w-3 h-3" />
+                          </button>
                           <button
                             onClick={() => submitFeedback(currentChat?.chat_id, msg.message_id, "up")}
                             className={`p-1 rounded transition-colors ${feedbackState[msg.message_id] === "up" ? "text-emerald-400 bg-emerald-500/15" : "text-zinc-600 hover:text-emerald-400 hover:bg-emerald-500/10"}`}

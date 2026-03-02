@@ -390,6 +390,7 @@ async def admin_update_pricing(request: Request, admin: User = Depends(require_a
         upsert=True
     )
     
+    await log_admin_action(admin.email, "pricing_update", {"plans_updated": list(plans.keys()) if plans else []})
     return {"message": "Pricing updated successfully", "pricing": config_doc}
 
 @router.get("/admin/avg-cost")
@@ -1356,6 +1357,8 @@ async def admin_update_smtp_config(request: Request, admin: User = Depends(requi
     if new_password:
         shared_constants.SMTP_PASSWORD = new_password
 
+    await log_admin_action(admin.email, "smtp_update", {"email": new_email})
+
     # Persist to .env file
     env_path = ROOT_DIR / '.env'
     lines = env_path.read_text().splitlines()
@@ -1769,3 +1772,232 @@ async def admin_get_agent_detail(agent_id: str, admin: User = Depends(require_ad
     if not agent:
         raise HTTPException(404, "Agent not found")
     return agent
+
+
+
+# ============== ADMIN AUDIT LOG ==============
+
+@router.get("/admin/audit-log")
+async def admin_get_audit_log(limit: int = 50, admin: User = Depends(require_admin)):
+    """Get recent admin audit log entries."""
+    logs = await db.audit_log.find(
+        {}, {"_id": 0}
+    ).sort("created_at", -1).limit(limit).to_list(limit)
+    return logs
+
+
+async def log_admin_action(admin_email: str, action: str, details: dict = None):
+    """Record an admin action to the audit log."""
+    await db.audit_log.insert_one({
+        "admin_email": admin_email,
+        "action": action,
+        "details": details or {},
+        "created_at": datetime.now(timezone.utc).isoformat()
+    })
+
+
+# ============== ENHANCED ANALYTICS ==============
+
+@router.get("/admin/analytics/retention")
+async def admin_retention_analytics(admin: User = Depends(require_admin)):
+    """User retention cohort analysis - weekly cohorts for the last 8 weeks."""
+    now = datetime.now(timezone.utc)
+    cohorts = []
+
+    for week_offset in range(8):
+        cohort_start = now - timedelta(weeks=week_offset + 1)
+        cohort_end = now - timedelta(weeks=week_offset)
+        cohort_start_str = cohort_start.isoformat()
+        cohort_end_str = cohort_end.isoformat()
+
+        # Users who signed up in this week
+        signed_up = await db.users.find(
+            {"created_at": {"$gte": cohort_start_str, "$lt": cohort_end_str}},
+            {"_id": 0, "user_id": 1}
+        ).to_list(500)
+        signed_up_ids = [u["user_id"] for u in signed_up]
+
+        if not signed_up_ids:
+            cohorts.append({
+                "week": f"W-{week_offset + 1}",
+                "week_start": cohort_start.strftime("%b %d"),
+                "signed_up": 0,
+                "returned_week1": 0,
+                "returned_week2": 0,
+                "retention_rate": 0
+            })
+            continue
+
+        # How many returned (sent a message) in the following week
+        next_week_start = cohort_end.isoformat()
+        next_week_end = (cohort_end + timedelta(weeks=1)).isoformat()
+        returned_chats = await db.chats.distinct(
+            "user_id",
+            {"user_id": {"$in": signed_up_ids}, "created_at": {"$gte": next_week_start, "$lt": next_week_end}}
+        )
+
+        # Week 2 retention
+        week2_start = next_week_end
+        week2_end = (cohort_end + timedelta(weeks=2)).isoformat()
+        returned_w2 = await db.chats.distinct(
+            "user_id",
+            {"user_id": {"$in": signed_up_ids}, "created_at": {"$gte": week2_start, "$lt": week2_end}}
+        )
+
+        retention = round(len(returned_chats) / len(signed_up_ids) * 100) if signed_up_ids else 0
+        cohorts.append({
+            "week": f"W-{week_offset + 1}",
+            "week_start": cohort_start.strftime("%b %d"),
+            "signed_up": len(signed_up_ids),
+            "returned_week1": len(returned_chats),
+            "returned_week2": len(returned_w2),
+            "retention_rate": retention
+        })
+
+    cohorts.reverse()  # oldest first
+    return cohorts
+
+
+@router.get("/admin/analytics/projections")
+async def admin_revenue_projections(admin: User = Depends(require_admin)):
+    """Revenue projections based on current trends."""
+    now = datetime.now(timezone.utc)
+
+    # Get last 30 days revenue
+    thirty_days_ago = (now - timedelta(days=30)).isoformat()
+    recent_txns = await db.payment_transactions.find(
+        {"payment_status": "paid", "created_at": {"$gte": thirty_days_ago}},
+        {"_id": 0, "amount": 1, "created_at": 1}
+    ).to_list(5000)
+
+    total_30d = sum(t.get("amount", 0) for t in recent_txns)
+    daily_avg = total_30d / 30 if total_30d else 0
+
+    # Current MRR
+    from shared.constants import SUBSCRIPTION_PLANS
+    subs = await db.subscriptions.find({"status": "active"}, {"_id": 0, "plan_id": 1}).to_list(1000)
+    mrr = sum(SUBSCRIPTION_PLANS.get(s.get("plan_id", "free"), {}).get("price_usd", 0) for s in subs)
+
+    # Credit consumption rate
+    credit_logs = await db.usage_logs.find(
+        {"created_at": {"$gte": thirty_days_ago}},
+        {"_id": 0, "estimated_cost_usd": 1}
+    ).to_list(10000)
+    total_cost_30d = sum(l.get("estimated_cost_usd", 0) for l in credit_logs)
+    daily_cost_avg = total_cost_30d / 30 if total_cost_30d else 0
+
+    # Growth rate (users)
+    sixty_days_ago = (now - timedelta(days=60)).isoformat()
+    users_last_30d = await db.users.count_documents({"created_at": {"$gte": thirty_days_ago}})
+    users_prev_30d = await db.users.count_documents(
+        {"created_at": {"$gte": sixty_days_ago, "$lt": thirty_days_ago}}
+    )
+    growth_rate = ((users_last_30d - users_prev_30d) / max(users_prev_30d, 1)) * 100
+
+    # Projections
+    projections = []
+    for month in range(1, 7):
+        projected_users_growth = 1 + (growth_rate / 100) * month
+        proj_mrr = mrr * projected_users_growth
+        proj_revenue = (daily_avg * 30) * projected_users_growth
+        proj_cost = (daily_cost_avg * 30) * projected_users_growth
+        month_label = (now + timedelta(days=30 * month)).strftime("%b %Y")
+        projections.append({
+            "month": month_label,
+            "projected_mrr": round(proj_mrr, 2),
+            "projected_revenue": round(proj_revenue, 2),
+            "projected_cost": round(proj_cost, 2),
+            "projected_profit": round(proj_revenue - proj_cost, 2),
+        })
+
+    return {
+        "current": {
+            "mrr": round(mrr, 2),
+            "revenue_30d": round(total_30d, 2),
+            "cost_30d": round(total_cost_30d, 4),
+            "daily_revenue_avg": round(daily_avg, 2),
+            "daily_cost_avg": round(daily_cost_avg, 4),
+            "user_growth_rate": round(growth_rate, 1),
+            "profit_margin": round(((total_30d - total_cost_30d) / max(total_30d, 0.01)) * 100, 1)
+        },
+        "projections": projections
+    }
+
+
+@router.get("/admin/analytics/credit-burn")
+async def admin_credit_burn_rate(admin: User = Depends(require_admin)):
+    """Credit consumption trends by model and agent."""
+    now = datetime.now(timezone.utc)
+    seven_days_ago = (now - timedelta(days=7)).isoformat()
+    thirty_days_ago = (now - timedelta(days=30)).isoformat()
+
+    # By model (last 30d)
+    model_pipeline = [
+        {"$match": {"created_at": {"$gte": thirty_days_ago}}},
+        {"$group": {
+            "_id": "$model",
+            "total_cost": {"$sum": "$estimated_cost_usd"},
+            "total_calls": {"$sum": 1},
+            "total_input_tokens": {"$sum": "$input_tokens"},
+            "total_output_tokens": {"$sum": "$output_tokens"},
+        }},
+        {"$sort": {"total_cost": -1}},
+        {"$limit": 15}
+    ]
+    by_model = await db.usage_logs.aggregate(model_pipeline).to_list(15)
+
+    # By agent (last 30d)
+    agent_pipeline = [
+        {"$match": {"created_at": {"$gte": thirty_days_ago}}},
+        {"$group": {
+            "_id": "$agent_id",
+            "total_cost": {"$sum": "$estimated_cost_usd"},
+            "total_calls": {"$sum": 1},
+        }},
+        {"$sort": {"total_cost": -1}},
+        {"$limit": 15}
+    ]
+    by_agent_raw = await db.usage_logs.aggregate(agent_pipeline).to_list(15)
+
+    # Enrich with agent names
+    agent_map = {}
+    all_agents = await db.agents.find({}, {"_id": 0, "agent_id": 1, "name": 1}).to_list(100)
+    for a in all_agents:
+        agent_map[a["agent_id"]] = a.get("name", a["agent_id"])
+
+    by_agent = [{
+        "agent_id": a["_id"],
+        "agent_name": agent_map.get(a["_id"], a["_id"] or "Unknown"),
+        "total_cost": round(a["total_cost"], 4),
+        "total_calls": a["total_calls"],
+        "avg_cost_per_call": round(a["total_cost"] / max(a["total_calls"], 1), 6)
+    } for a in by_agent_raw]
+
+    # Daily burn rate (last 7d)
+    daily_pipeline = [
+        {"$match": {"created_at": {"$gte": seven_days_ago}}},
+        {"$group": {
+            "_id": {"$substr": ["$created_at", 0, 10]},
+            "cost": {"$sum": "$estimated_cost_usd"},
+            "calls": {"$sum": 1}
+        }},
+        {"$sort": {"_id": 1}}
+    ]
+    daily_burn = await db.usage_logs.aggregate(daily_pipeline).to_list(7)
+
+    return {
+        "by_model": [{
+            "model": m["_id"] or "unknown",
+            "total_cost": round(m["total_cost"], 4),
+            "total_calls": m["total_calls"],
+            "input_tokens": m.get("total_input_tokens", 0),
+            "output_tokens": m.get("total_output_tokens", 0),
+            "avg_cost_per_call": round(m["total_cost"] / max(m["total_calls"], 1), 6)
+        } for m in by_model],
+        "by_agent": by_agent,
+        "daily_burn": [{
+            "date": d["_id"],
+            "cost": round(d["cost"], 4),
+            "calls": d["calls"]
+        } for d in daily_burn]
+    }

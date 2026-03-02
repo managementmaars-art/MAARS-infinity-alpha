@@ -76,6 +76,50 @@ async def create_chat(chat_data: ChatCreate, current_user: User = Depends(get_cu
     chat_doc['updated_at'] = now
     return Chat(**chat_doc)
 
+# ============== CHAT SEARCH ==============
+
+@router.get("/chats/search")
+async def search_chats(q: str = "", current_user: User = Depends(get_current_user)):
+    """Search across all user's chats by message content."""
+    if not q or len(q) < 2:
+        raise HTTPException(400, "Search query must be at least 2 characters")
+
+    query_lower = q.lower()
+    user_chats = await db.chats.find(
+        {"user_id": current_user.user_id},
+        {"_id": 0, "chat_id": 1, "title": 1, "agent_id": 1, "messages": 1, "updated_at": 1}
+    ).sort("updated_at", -1).to_list(200)
+
+    results = []
+    for chat in user_chats:
+        matching_messages = []
+        for msg in chat.get("messages", []):
+            content = msg.get("content", "")
+            if query_lower in content.lower():
+                # Get a snippet around the match
+                idx = content.lower().find(query_lower)
+                start = max(0, idx - 50)
+                end = min(len(content), idx + len(q) + 50)
+                snippet = ("..." if start > 0 else "") + content[start:end] + ("..." if end < len(content) else "")
+                matching_messages.append({
+                    "message_id": msg.get("message_id", ""),
+                    "role": msg.get("role", ""),
+                    "snippet": snippet,
+                    "created_at": msg.get("created_at", "")
+                })
+
+        if matching_messages:
+            results.append({
+                "chat_id": chat["chat_id"],
+                "title": chat.get("title", "Untitled"),
+                "agent_id": chat.get("agent_id", ""),
+                "match_count": len(matching_messages),
+                "matches": matching_messages[:3],  # Top 3 matches per chat
+                "updated_at": chat.get("updated_at", "")
+            })
+
+    return {"results": results, "total_matches": sum(r["match_count"] for r in results), "query": q}
+
 @router.get("/chats/{chat_id}", response_model=Chat)
 async def get_chat(chat_id: str, current_user: User = Depends(get_current_user)):
     chat = await db.chats.find_one({"chat_id": chat_id, "user_id": current_user.user_id}, {"_id": 0})
@@ -738,3 +782,86 @@ async def submit_message_feedback(chat_id: str, message_id: str, request: Reques
     await db.chats.update_one({"chat_id": chat_id}, {"$set": {"messages": messages}})
     return {"success": True, "feedback": feedback}
 
+
+
+
+# ============== CHAT EXPORT ==============
+
+@router.get("/chats/{chat_id}/export")
+async def export_chat(chat_id: str, current_user: User = Depends(get_current_user)):
+    """Export a chat as a formatted text document."""
+    chat = await db.chats.find_one(
+        {"chat_id": chat_id, "user_id": current_user.user_id},
+        {"_id": 0}
+    )
+    if not chat:
+        raise HTTPException(404, "Chat not found")
+
+    # Get agent info
+    agent = await db.agents.find_one(
+        {"agent_id": chat.get("agent_id", "")},
+        {"_id": 0, "name": 1, "role": 1}
+    )
+    agent_name = agent.get("name", "AI Agent") if agent else "AI Agent"
+    agent_role = agent.get("role", "") if agent else ""
+
+    lines = [
+        f"Chat Export: {chat.get('title', 'Untitled')}",
+        f"Agent: {agent_name} ({agent_role})",
+        f"Date: {chat.get('created_at', 'Unknown')}",
+        "=" * 60,
+        "",
+    ]
+
+    for msg in chat.get("messages", []):
+        role = "You" if msg.get("role") == "user" else agent_name
+        timestamp = msg.get("created_at", "")
+        content = msg.get("content", "")
+        lines.append(f"[{role}] {timestamp}")
+        lines.append(content)
+        lines.append("")
+
+    return {"content": "\n".join(lines), "title": chat.get("title", "chat_export"), "message_count": len(chat.get("messages", []))}
+
+
+# ============== PIN MESSAGES ==============
+
+@router.post("/chats/{chat_id}/messages/{message_id}/pin")
+async def toggle_pin_message(chat_id: str, message_id: str, current_user: User = Depends(get_current_user)):
+    """Toggle pin status on a message."""
+    chat = await db.chats.find_one(
+        {"chat_id": chat_id, "user_id": current_user.user_id},
+        {"_id": 0, "messages": 1}
+    )
+    if not chat:
+        raise HTTPException(404, "Chat not found")
+
+    messages = chat.get("messages", [])
+    found = False
+    new_pinned = False
+    for msg in messages:
+        if msg.get("message_id") == message_id:
+            msg["pinned"] = not msg.get("pinned", False)
+            new_pinned = msg["pinned"]
+            found = True
+            break
+
+    if not found:
+        raise HTTPException(404, "Message not found")
+
+    await db.chats.update_one({"chat_id": chat_id}, {"$set": {"messages": messages}})
+    return {"success": True, "pinned": new_pinned, "message_id": message_id}
+
+
+@router.get("/chats/{chat_id}/pinned")
+async def get_pinned_messages(chat_id: str, current_user: User = Depends(get_current_user)):
+    """Get all pinned messages in a chat."""
+    chat = await db.chats.find_one(
+        {"chat_id": chat_id, "user_id": current_user.user_id},
+        {"_id": 0, "messages": 1}
+    )
+    if not chat:
+        raise HTTPException(404, "Chat not found")
+
+    pinned = [m for m in chat.get("messages", []) if m.get("pinned")]
+    return pinned
