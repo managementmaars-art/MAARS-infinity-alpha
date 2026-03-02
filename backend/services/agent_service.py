@@ -1,0 +1,872 @@
+"""Agent execution service - tools, workspace context, commander delegation."""
+import re
+import uuid
+import json
+import asyncio
+import logging
+import httpx
+from datetime import datetime, timezone
+
+from db import db
+from config import DEFAULT_AGENTS, AGENT_TOOLS, AGENT_TOOL_MAP
+from shared.constants import (
+    EMERGENT_LLM_KEY, UPLOAD_DIR, INTEGRATION_SERVICES
+)
+from shared.utils import get_integration_keys, get_integration_key
+from services.llm_service import call_llm_with_fallback
+
+logger = logging.getLogger(__name__)
+
+CLARIFICATION_INSTRUCTION = """
+
+IMPORTANT RESPONSE GUIDELINES:
+- If the user's request is clear and specific, respond directly with your best professional output. Do NOT ask questions.
+- Only ask a clarifying question if the request is genuinely ambiguous (e.g., "help me with marketing" with no details).
+- When you DO need clarification, ask ONE focused question, not multiple.
+- Default to action over clarification. When in doubt, give a comprehensive answer that covers likely interpretations.
+- For technical/creative tasks, just do the work. Don't ask "what style" or "what tone" — use your professional judgment.
+"""
+
+AGENT_ROLE_MAP = {
+    "marketing": "agent_marketing",
+    "strategy": "agent_strategist",
+    "business": "agent_strategist",
+    "web design": "agent_webdesigner",
+    "ui/ux": "agent_webdesigner",
+    "development": "agent_appdev",
+    "coding": "agent_appdev",
+    "copywriting": "agent_copywriter",
+    "copy": "agent_copywriter",
+    "seo": "agent_seo",
+    "sales": "agent_sales",
+    "social media": "agent_socialmedia",
+    "data": "agent_analyst",
+    "analytics": "agent_analyst",
+    "content": "agent_contentwriter",
+    "blog": "agent_contentwriter",
+    "customer service": "agent_customerservice",
+    "support": "agent_customerservice",
+    "project management": "agent_projectmanager",
+    "planning": "agent_projectmanager",
+    "research": "agent_researcher",
+    "finance": "agent_finance",
+    "budget": "agent_finance",
+    "hr": "agent_hr",
+    "hiring": "agent_hr",
+    "graphic design": "agent_graphics",
+    "design": "agent_graphics",
+    "legal": "agent_legal",
+    "contract": "agent_legal",
+    "email": "agent_email",
+    "newsletter": "agent_email",
+    "video": "agent_video",
+    "youtube": "agent_video",
+    "secretary": "agent_secretary",
+    "schedule": "agent_secretary",
+}
+
+
+async def seed_default_agents():
+    for agent_data in DEFAULT_AGENTS:
+        existing = await db.agents.find_one({"agent_id": agent_data["agent_id"]})
+        if not existing:
+            agent_data["created_at"] = datetime.now(timezone.utc).isoformat()
+            await db.agents.insert_one(agent_data)
+        else:
+            update_fields = {}
+            if existing.get("avatar") != agent_data["avatar"]:
+                update_fields["avatar"] = agent_data["avatar"]
+            if "tools" in agent_data and existing.get("tools") != agent_data.get("tools"):
+                update_fields["tools"] = agent_data["tools"]
+            if update_fields:
+                await db.agents.update_one(
+                    {"agent_id": agent_data["agent_id"]},
+                    {"$set": update_fields}
+                )
+    logger.info("Default agents seeded")
+
+    capability_defaults = {
+        "agent_graphics": {"can_generate_image": True, "can_generate_video": False, "can_generate_pdf": True, "can_generate_files": True},
+        "agent_video": {"can_generate_image": False, "can_generate_video": True, "can_generate_pdf": True, "can_generate_files": True},
+        "agent_socialmedia": {"can_generate_image": True, "can_generate_video": False, "can_generate_pdf": True, "can_generate_files": True},
+        "agent_contentwriter": {"can_generate_image": True, "can_generate_video": False, "can_generate_pdf": True, "can_generate_files": True},
+        "agent_webdesigner": {"can_generate_image": True, "can_generate_video": False, "can_generate_pdf": True, "can_generate_files": True},
+    }
+    for agent_id, caps in capability_defaults.items():
+        existing = await db.agents.find_one({"agent_id": agent_id})
+        if existing:
+            update = {}
+            for field, default_val in caps.items():
+                if field not in existing:
+                    update[field] = default_val
+            if update:
+                await db.agents.update_one({"agent_id": agent_id}, {"$set": update})
+
+    all_agents = await db.agents.find({}).to_list(50)
+    for agent in all_agents:
+        update = {}
+        for field in ["can_generate_image", "can_generate_video", "can_generate_pdf", "can_generate_files"]:
+            if field not in agent:
+                update[field] = field in ("can_generate_pdf", "can_generate_files")
+        if update:
+            await db.agents.update_one({"agent_id": agent["agent_id"]}, {"$set": update})
+
+
+async def build_workspace_context(user_id: str, current_agent_id: str) -> str:
+    context_parts = []
+    tasks_cursor = db.tasks.find(
+        {"user_id": user_id}, {"_id": 0, "task_id": 1, "title": 1, "description": 1, "status": 1, "priority": 1, "assigned_agents": 1, "created_at": 1, "result": 1}
+    ).sort("created_at", -1).limit(15)
+    tasks = await tasks_cursor.to_list(15)
+    if tasks:
+        task_lines = []
+        for t in tasks:
+            assigned = ", ".join(t.get("assigned_agents", [])) or "unassigned"
+            result_snippet = ""
+            if t.get("result"):
+                result_snippet = f" | Result: {str(t['result'])[:150]}..."
+            task_lines.append(f"- [{t.get('status','pending').upper()}] {t.get('title','')} (Priority: {t.get('priority','medium')}, Assigned: {assigned}, ID: {t.get('task_id','')}){result_snippet}")
+        context_parts.append("## WORKSPACE TASKS\n" + "\n".join(task_lines))
+
+    other_chats = db.chats.find(
+        {"user_id": user_id, "agent_id": {"$ne": current_agent_id, "$exists": True}},
+        {"_id": 0, "agent_id": 1, "messages": {"$slice": -2}}
+    ).sort("updated_at", -1).limit(8)
+    summaries = []
+    async for chat in other_chats:
+        agent_id = chat.get("agent_id", "")
+        agent_doc = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0, "name": 1, "role": 1})
+        agent_name = agent_doc.get("name", agent_id) if agent_doc else agent_id
+        agent_role = agent_doc.get("role", "") if agent_doc else ""
+        msgs = chat.get("messages", [])
+        if msgs:
+            last = msgs[-1]
+            content_preview = str(last.get("content", ""))[:300]
+            role = "User" if last.get("role") == "user" else agent_name
+            summaries.append(f"- {agent_name} ({agent_role}): {role} said: \"{content_preview}\"")
+    if summaries:
+        context_parts.append("## RECENT TEAM ACTIVITY (Other Agents)\n" + "\n".join(summaries))
+
+    if not context_parts:
+        return ""
+
+    return "\n\n--- SHARED WORKSPACE CONTEXT ---\n" + "\n\n".join(context_parts) + "\n--- END WORKSPACE CONTEXT ---\n\nUse this context to understand what other team members are working on and what tasks exist. Reference tasks by their ID when relevant. Collaborate with the user's goals across agents.\n"
+
+
+async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
+    """Execute a tool and return the result as a string."""
+    try:
+        if tool_name == "web_search":
+            query = tool_input.get("query", "")
+            if not query:
+                return "Error: No search query provided."
+            async with httpx.AsyncClient(timeout=15) as client:
+                resp = await client.get(
+                    "https://api.duckduckgo.com/",
+                    params={"q": query, "format": "json", "no_html": 1, "skip_disambig": 1}
+                )
+                data = resp.json()
+                results = []
+                if data.get("AbstractText"):
+                    results.append(f"Summary: {data['AbstractText']}")
+                    if data.get("AbstractSource"):
+                        results.append(f"Source: {data['AbstractSource']}")
+                for topic in (data.get("RelatedTopics", []))[:5]:
+                    if isinstance(topic, dict) and topic.get("Text"):
+                        results.append(f"- {topic['Text']}")
+                if not results:
+                    results.append(f"Web search for '{query}' returned no instant results. Based on general knowledge, I'll provide what I know.")
+                return "\n".join(results)
+
+        elif tool_name == "calculate":
+            expression = tool_input.get("expression", "")
+            if not expression:
+                return "Error: No expression provided."
+            import ast
+            import operator
+            allowed_ops = {
+                ast.Add: operator.add, ast.Sub: operator.sub,
+                ast.Mult: operator.mul, ast.Div: operator.truediv,
+                ast.Pow: operator.pow, ast.Mod: operator.mod,
+                ast.USub: operator.neg, ast.UAdd: operator.pos,
+            }
+            def safe_eval(node):
+                if isinstance(node, ast.Expression):
+                    return safe_eval(node.body)
+                elif isinstance(node, ast.Constant):
+                    if isinstance(node.value, (int, float)):
+                        return node.value
+                    raise ValueError("Only numbers allowed")
+                elif isinstance(node, ast.BinOp):
+                    op = allowed_ops.get(type(node.op))
+                    if not op:
+                        raise ValueError(f"Unsupported operator: {type(node.op).__name__}")
+                    return op(safe_eval(node.left), safe_eval(node.right))
+                elif isinstance(node, ast.UnaryOp):
+                    op = allowed_ops.get(type(node.op))
+                    if not op:
+                        raise ValueError(f"Unsupported operator: {type(node.op).__name__}")
+                    return op(safe_eval(node.operand))
+                raise ValueError(f"Unsupported expression: {ast.dump(node)}")
+            try:
+                tree = ast.parse(expression, mode='eval')
+                result = safe_eval(tree)
+                return f"Result: {result}"
+            except Exception as e:
+                return f"Calculation error: {e}. Expression: {expression}"
+
+        elif tool_name == "create_task":
+            title = tool_input.get("title", "Untitled Task")
+            description = tool_input.get("description", "")
+            priority = tool_input.get("priority", "medium")
+            if priority not in ("low", "medium", "high"):
+                priority = "medium"
+            task_doc = {
+                "task_id": f"task_{uuid.uuid4().hex[:12]}",
+                "user_id": user_id,
+                "title": title,
+                "description": description,
+                "status": "pending",
+                "priority": priority,
+                "assigned_agents": [],
+                "result": None,
+                "source": "agent_tool",
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.tasks.insert_one(task_doc)
+            return f"Task created successfully: '{title}' (Priority: {priority}, ID: {task_doc['task_id']})"
+
+        elif tool_name == "query_tasks":
+            status_filter = tool_input.get("status", "")
+            query = {"user_id": user_id}
+            if status_filter and status_filter in ("pending", "in_progress", "completed", "cancelled"):
+                query["status"] = status_filter
+            cursor = db.tasks.find(query, {"_id": 0}).sort("created_at", -1).limit(20)
+            tasks = await cursor.to_list(20)
+            if not tasks:
+                return "No tasks found."
+            lines = []
+            for t in tasks:
+                assigned = ", ".join(t.get("assigned_agents", [])) or "unassigned"
+                lines.append(f"[{t['status'].upper()}] {t['title']} | Priority: {t.get('priority','medium')} | Assigned: {assigned} | ID: {t['task_id']}\n  Description: {t.get('description','')[:200]}")
+                if t.get("result"):
+                    lines.append(f"  Result: {str(t['result'])[:300]}")
+            return f"Found {len(tasks)} tasks:\n" + "\n".join(lines)
+
+        elif tool_name == "update_task":
+            task_id = tool_input.get("task_id", "")
+            if not task_id:
+                return "Error: task_id is required"
+            task = await db.tasks.find_one({"task_id": task_id, "user_id": user_id}, {"_id": 0})
+            if not task:
+                return f"Task '{task_id}' not found."
+            update = {}
+            if tool_input.get("status") in ("pending", "in_progress", "completed", "cancelled"):
+                update["status"] = tool_input["status"]
+            if tool_input.get("result"):
+                update["result"] = tool_input["result"]
+            if tool_input.get("description"):
+                update["description"] = tool_input["description"]
+            if not update:
+                return f"Task '{task_id}' found but no valid updates provided. Current: [{task['status']}] {task['title']}"
+            update["updated_at"] = datetime.now(timezone.utc).isoformat()
+            await db.tasks.update_one({"task_id": task_id}, {"$set": update})
+            return f"Task '{task['title']}' updated: {', '.join(f'{k}={v}' for k, v in update.items() if k != 'updated_at')}"
+
+        elif tool_name == "query_agent_history":
+            target_agent = tool_input.get("agent_id", "")
+            if not target_agent:
+                return "Error: agent_id is required (e.g. 'agent_marketing', 'agent_projectmanager')"
+            chat = await db.chats.find_one(
+                {"user_id": user_id, "agent_id": target_agent},
+                {"_id": 0, "messages": {"$slice": -10}}
+            )
+            if not chat or not chat.get("messages"):
+                return f"No conversation history found with {target_agent}."
+            agent_doc = await db.agents.find_one({"agent_id": target_agent}, {"_id": 0, "name": 1, "role": 1})
+            agent_name = agent_doc.get("name", target_agent) if agent_doc else target_agent
+            lines = [f"Recent conversation with {agent_name}:"]
+            for msg in chat["messages"]:
+                role = "User" if msg.get("role") == "user" else agent_name
+                lines.append(f"  {role}: {str(msg.get('content',''))[:400]}")
+            return "\n".join(lines)
+
+        elif tool_name == "analyze_data":
+            data_str = tool_input.get("data", "")
+            question = tool_input.get("question", "Summarize the data")
+            if not data_str:
+                return "Error: No data provided to analyze."
+            lines = data_str.strip().split("\n")
+            numbers = []
+            for line in lines:
+                for part in line.replace(",", " ").split():
+                    try:
+                        numbers.append(float(part))
+                    except ValueError:
+                        pass
+            analysis = [f"Data has {len(lines)} lines."]
+            if numbers:
+                analysis.append(f"Found {len(numbers)} numbers: min={min(numbers)}, max={max(numbers)}, avg={sum(numbers)/len(numbers):.2f}, sum={sum(numbers):.2f}")
+            analysis.append(f"Analysis question: {question}")
+            return "\n".join(analysis)
+
+        elif tool_name == "send_slack":
+            token = await get_integration_key("slack", "bot_token")
+            if not token:
+                return "Slack is not configured. Ask your admin to add a Slack Bot Token in the Integrations panel."
+            channel = tool_input.get("channel", "#general").lstrip("#")
+            message = tool_input.get("message", "")
+            if not message:
+                return "Error: No message provided."
+            async with httpx.AsyncClient(timeout=10) as client:
+                resp = await client.post(
+                    "https://slack.com/api/chat.postMessage",
+                    headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+                    json={"channel": channel, "text": message}
+                )
+                data = resp.json()
+                if data.get("ok"):
+                    return f"Message sent to #{channel} successfully."
+                return f"Slack error: {data.get('error', 'Unknown error')}"
+
+        elif tool_name == "send_email":
+            sg_key = await get_integration_key("sendgrid", "api_key")
+            resend_key = await get_integration_key("resend", "api_key")
+            to_email = tool_input.get("to", "")
+            subject = tool_input.get("subject", "No Subject")
+            body = tool_input.get("body", "")
+            if not to_email:
+                return "Error: No recipient email provided."
+            if sg_key:
+                async with httpx.AsyncClient(timeout=10) as client:
+                    resp = await client.post(
+                        "https://api.sendgrid.com/v3/mail/send",
+                        headers={"Authorization": f"Bearer {sg_key}", "Content-Type": "application/json"},
+                        json={"personalizations": [{"to": [{"email": to_email}]}], "from": {"email": "noreply@maarsglobal.com"}, "subject": subject, "content": [{"type": "text/html", "value": body}]}
+                    )
+                    if resp.status_code in (200, 201, 202):
+                        return f"Email sent to {to_email} via SendGrid successfully."
+                    return f"SendGrid error: {resp.status_code} - {resp.text[:200]}"
+            elif resend_key:
+                async with httpx.AsyncClient(timeout=10) as client:
+                    resp = await client.post(
+                        "https://api.resend.com/emails",
+                        headers={"Authorization": f"Bearer {resend_key}", "Content-Type": "application/json"},
+                        json={"from": "noreply@maarsglobal.com", "to": [to_email], "subject": subject, "html": body}
+                    )
+                    if resp.status_code in (200, 201):
+                        return f"Email sent to {to_email} via Resend successfully."
+                    return f"Resend error: {resp.status_code} - {resp.text[:200]}"
+            return "Email service not configured. Ask your admin to add SendGrid or Resend API key in Integrations."
+
+        elif tool_name == "send_sms":
+            sid = await get_integration_key("twilio", "account_sid")
+            auth = await get_integration_key("twilio", "auth_token")
+            from_phone = await get_integration_key("twilio", "phone_number")
+            if not sid or not auth:
+                return "Twilio is not configured. Ask your admin to add Twilio credentials in the Integrations panel."
+            to_phone = tool_input.get("to", "")
+            sms_body = tool_input.get("message", "")
+            if not to_phone or not sms_body:
+                return "Error: Phone number and message are required."
+            async with httpx.AsyncClient(timeout=10) as client:
+                resp = await client.post(
+                    f"https://api.twilio.com/2010-04-01/Accounts/{sid}/Messages.json",
+                    auth=(sid, auth),
+                    data={"To": to_phone, "From": from_phone, "Body": sms_body[:160]}
+                )
+                data = resp.json()
+                if resp.status_code in (200, 201):
+                    return f"SMS sent to {to_phone} successfully. SID: {data.get('sid', 'N/A')}"
+                return f"Twilio error: {data.get('message', resp.text[:200])}"
+
+        elif tool_name == "github_action":
+            token = await get_integration_key("github", "personal_access_token")
+            if not token:
+                return "GitHub is not configured. Ask your admin to add a GitHub Personal Access Token in Integrations."
+            action = tool_input.get("action", "list_repos")
+            repo = tool_input.get("repo", "")
+            headers = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json"}
+            async with httpx.AsyncClient(timeout=10) as client:
+                if action == "create_issue":
+                    if not repo:
+                        return "Error: repo (owner/repo) is required."
+                    resp = await client.post(f"https://api.github.com/repos/{repo}/issues", headers=headers, json={"title": tool_input.get("title", "New Issue"), "body": tool_input.get("body", "")})
+                    if resp.status_code == 201:
+                        data = resp.json()
+                        return f"Issue created: #{data['number']} - {data['title']} ({data['html_url']})"
+                    return f"GitHub error: {resp.status_code} - {resp.text[:200]}"
+                elif action == "list_issues":
+                    if not repo:
+                        return "Error: repo (owner/repo) is required."
+                    resp = await client.get(f"https://api.github.com/repos/{repo}/issues?per_page=10", headers=headers)
+                    issues = resp.json()
+                    if isinstance(issues, list):
+                        return "\n".join([f"#{i['number']} [{i['state']}] {i['title']}" for i in issues[:10]])
+                    return f"GitHub error: {resp.text[:200]}"
+                elif action == "list_repos":
+                    resp = await client.get("https://api.github.com/user/repos?per_page=10&sort=updated", headers=headers)
+                    repos = resp.json()
+                    if isinstance(repos, list):
+                        return "\n".join([f"{r['full_name']} - {r.get('description', 'No description')}" for r in repos[:10]])
+                    return f"GitHub error: {resp.text[:200]}"
+                elif action == "search_code":
+                    q = tool_input.get("body", tool_input.get("title", ""))
+                    resp = await client.get(f"https://api.github.com/search/code?q={q}&per_page=5", headers=headers)
+                    data = resp.json()
+                    items = data.get("items", [])
+                    return "\n".join([f"{it['repository']['full_name']}/{it['path']}" for it in items[:5]]) or "No results found."
+            return "Unknown GitHub action."
+
+        elif tool_name == "airtable_action":
+            token = await get_integration_key("airtable", "api_key")
+            if not token:
+                return "Airtable is not configured. Ask your admin to add an Airtable API key in Integrations."
+            action = tool_input.get("action", "list_records")
+            base_id = tool_input.get("base_id", "")
+            table_name = tool_input.get("table_name", "")
+            if not base_id or not table_name:
+                return "Error: base_id and table_name are required."
+            headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+            async with httpx.AsyncClient(timeout=10) as client:
+                if action == "list_records":
+                    resp = await client.get(f"https://api.airtable.com/v0/{base_id}/{table_name}?maxRecords=10", headers=headers)
+                    data = resp.json()
+                    records = data.get("records", [])
+                    return "\n".join([str(r.get("fields", {})) for r in records[:10]]) or "No records found."
+                elif action == "create_record":
+                    fields = tool_input.get("fields", {})
+                    resp = await client.post(f"https://api.airtable.com/v0/{base_id}/{table_name}", headers=headers, json={"records": [{"fields": fields}]})
+                    if resp.status_code == 200:
+                        return "Record created successfully."
+                    return f"Airtable error: {resp.text[:200]}"
+            return "Unknown Airtable action."
+
+        elif tool_name == "search_gif":
+            token = await get_integration_key("giphy", "api_key")
+            if not token:
+                return "Giphy is not configured. Ask your admin to add a Giphy API key in Integrations."
+            query = tool_input.get("query", "")
+            if not query:
+                return "Error: No search query provided."
+            async with httpx.AsyncClient(timeout=10) as client:
+                resp = await client.get("https://api.giphy.com/v1/gifs/search", params={"api_key": token, "q": query, "limit": 3, "rating": "g"})
+                data = resp.json()
+                gifs = data.get("data", [])
+                if gifs:
+                    return "\n".join([f"![{g['title']}]({g['images']['fixed_height']['url']})" for g in gifs[:3]])
+                return "No GIFs found."
+
+        elif tool_name == "schedule_meeting":
+            token = await get_integration_key("calendly", "api_key")
+            if not token:
+                return "Calendly is not configured. Ask your admin to add a Calendly API key in Integrations."
+            async with httpx.AsyncClient(timeout=10) as client:
+                resp = await client.get("https://api.calendly.com/users/me", headers={"Authorization": f"Bearer {token}"})
+                if resp.status_code == 200:
+                    user_data = resp.json()
+                    scheduling_url = user_data.get("resource", {}).get("scheduling_url", "")
+                    return f"Calendly scheduling link: {scheduling_url}\nShare this with participants to schedule a meeting."
+                return f"Calendly error: {resp.text[:200]}"
+
+        elif tool_name == "google_calendar":
+            svc_json = await get_integration_key("google_suite", "service_account_json")
+            if not svc_json:
+                return "Google Suite is not configured. Ask your admin to add Google Suite credentials in Integrations."
+            action = tool_input.get("action", "list_events")
+            return f"Google Calendar {action}: This feature requires Google Suite OAuth setup. Please configure in Admin > Integrations."
+
+        elif tool_name == "send_gmail":
+            svc_json = await get_integration_key("google_suite", "service_account_json")
+            if not svc_json:
+                return "Google Suite is not configured. Ask your admin to add Google Suite credentials in Integrations."
+            return "Gmail: This feature requires Google Suite OAuth setup. Please configure in Admin > Integrations."
+
+        elif tool_name == "product_scan":
+            product_query = tool_input.get("product_query", "")
+            if not product_query:
+                return "Error: No product query provided. Specify the product name/brand/model to scan."
+            try:
+                from services.product_scanner import scan_product
+                result = await scan_product(product_query, UPLOAD_DIR)
+                context = result.get("context", "")
+                ref_path = result.get("reference_image_path")
+                images = result.get("images", [])
+                output_parts = [context]
+                if ref_path:
+                    output_parts.append(f"\n[Downloaded high-res reference image: {ref_path}]")
+                if images:
+                    output_parts.append(f"\nFound {len(images)} professional product images for reference.")
+                    for i, img in enumerate(images[:4], 1):
+                        output_parts.append(f"  Image {i}: {img['url']}")
+                return "\n".join(output_parts)
+            except Exception as scan_err:
+                logger.error(f"Product scan error: {scan_err}")
+                return f"Product scan failed: {str(scan_err)[:200]}. Try a web_search instead."
+
+        return f"Unknown tool: {tool_name}"
+    except Exception as e:
+        return f"Tool execution error ({tool_name}): {str(e)[:200]}"
+
+
+async def build_tool_prompt_async(tools: list) -> str:
+    if not tools:
+        return ""
+    integration_keys = await get_integration_keys()
+    tool_descriptions = []
+    available_tools = []
+    for tool_name in tools:
+        tool = AGENT_TOOLS.get(tool_name)
+        if not tool:
+            continue
+        requires = tool.get("requires")
+        if requires:
+            service_config = integration_keys.get(requires, {})
+            service_def = INTEGRATION_SERVICES.get(requires, {})
+            has_key = any(service_config.get(f) for f in service_def.get("key_fields", []))
+            if not has_key:
+                continue
+        tool_descriptions.append(f"  - {tool['name']}: {tool['description']} | Parameters: {tool['parameters']}")
+        available_tools.append(tool_name)
+    if not tool_descriptions:
+        return ""
+    return f"""
+
+You are an autonomous AI agent with access to tools. When a task requires real-time data, calculations, or actions, you MUST use your tools.
+
+AVAILABLE TOOLS:
+{chr(10).join(tool_descriptions)}
+
+HOW TO USE A TOOL — output this exact format on a single line:
+[TOOL_CALL] tool_name | {{"param1": "value1"}}
+
+RULES:
+1. When the user asks to search, look up, or find current info -> use web_search
+2. When the user needs math, percentages, or number crunching -> use calculate
+3. When the user asks to create, add, or track a task -> use create_task
+4. When data analysis is needed -> use analyze_data
+5. When the user asks to send a message to Slack -> use send_slack
+6. When the user asks to send an email -> use send_email
+7. When the user asks to send a text/SMS -> use send_sms
+8. When the user asks about GitHub repos/issues -> use github_action
+9. When the user references tasks, to-dos, or shared work -> use query_tasks first
+10. When the user asks about what another team member/agent discussed -> use query_agent_history
+11. When the user asks to update, complete, or change a task -> use update_task
+12. For questions you can fully answer from memory, respond directly
+13. After receiving a tool result, weave it naturally into your final answer"""
+
+
+async def agent_execute_with_tools(
+    agent: dict, user_content: str, chat_id: str, api_keys: dict,
+    model_provider: str, model_name: str, user_id: str, attachments: list = None
+) -> dict:
+    agent_tools = AGENT_TOOL_MAP.get(agent.get("agent_id", ""), [])
+    if not agent_tools:
+        return None
+
+    tool_prompt = await build_tool_prompt_async(agent_tools)
+    enhanced_system_prompt = agent["system_prompt"] + CLARIFICATION_INSTRUCTION + tool_prompt
+
+    workspace_ctx = await build_workspace_context(user_id, agent.get("agent_id", ""))
+    if workspace_ctx:
+        enhanced_system_prompt += workspace_ctx
+
+    user_override = await db.user_agent_overrides.find_one(
+        {"user_id": user_id, "agent_id": agent.get("agent_id")}, {"_id": 0}
+    )
+    if user_override:
+        override_parts = []
+        if user_override.get("personality_tone"):
+            override_parts.append(f"User-requested personality adjustment: {user_override['personality_tone']}")
+        if user_override.get("custom_instructions"):
+            override_parts.append(f"User-specific instructions: {user_override['custom_instructions']}")
+        if override_parts:
+            enhanced_system_prompt += "\n\n--- USER CUSTOMIZATION ---\n" + "\n".join(override_parts)
+
+    execution_steps = []
+    max_iterations = 4
+    accumulated_context = f"User: {user_content}"
+    if attachments:
+        accumulated_context += f"\n[User attached {len(attachments)} file(s)]"
+
+    final_response = ""
+
+    for iteration in range(max_iterations):
+        try:
+            llm_response, model_provider, model_name = await call_llm_with_fallback(
+                api_keys, model_provider, model_name,
+                enhanced_system_prompt, accumulated_context,
+                attachments if iteration == 0 else None,
+                f"{chat_id}_tool_{iteration}"
+            )
+        except Exception as e:
+            logger.error(f"Agent tool loop LLM error (iter {iteration}): {e}")
+            if not final_response:
+                final_response = f"I apologize, but I encountered an error: {str(e)}"
+            break
+
+        tool_match = re.search(r'\[TOOL_CALL\]\s*(\w+)\s*\|\s*(\{.*?\})', llm_response, re.DOTALL)
+        if not tool_match:
+            tool_match = re.search(r'TOOL_CALL:\s*(\w+)\s*\|\s*(\{.*?\})', llm_response, re.DOTALL)
+        if not tool_match:
+            tool_match = re.search(r'\[TOOL\]\s*(\w+)\s*\|\s*(\{.*?\})', llm_response, re.DOTALL)
+
+        if tool_match:
+            tool_name = tool_match.group(1).strip()
+            tool_input_str = tool_match.group(2).strip()
+            thinking_text = llm_response[:tool_match.start()].strip()
+            if thinking_text:
+                execution_steps.append({"step_type": "thinking", "content": thinking_text})
+            try:
+                tool_input = json.loads(tool_input_str)
+            except json.JSONDecodeError:
+                tool_input = {"query": tool_input_str}
+            if tool_name not in agent_tools:
+                execution_steps.append({"step_type": "tool_error", "tool_name": tool_name, "content": f"Tool '{tool_name}' is not available."})
+                accumulated_context += f"\n\nSystem: Tool '{tool_name}' is not available. Please use one of: {', '.join(agent_tools)}. Or respond directly."
+                continue
+            execution_steps.append({"step_type": "tool_call", "tool_name": tool_name, "tool_input": tool_input})
+            tool_result = await execute_tool(tool_name, tool_input, user_id)
+            execution_steps.append({"step_type": "tool_result", "tool_name": tool_name, "content": tool_result})
+            accumulated_context += f"\n\nAssistant: {thinking_text}\n[Used tool: {tool_name}]\n\nTool Result ({tool_name}):\n{tool_result}\n\nNow incorporate this tool result into your response to the user. Do NOT use another tool call unless absolutely necessary. Provide your final answer."
+        else:
+            final_response = llm_response
+            break
+
+    if not final_response and execution_steps:
+        final_response = "Based on my analysis, here's what I found:\n\n"
+        for step in execution_steps:
+            if step["step_type"] == "tool_result":
+                final_response += f"{step['content']}\n\n"
+
+    if not final_response:
+        final_response = "I encountered an issue while processing your request. Please try again."
+
+    return {"content": final_response, "execution_steps": execution_steps if execution_steps else None}
+
+
+async def background_commander_delegate(goal: str, chat_id: str, msg_id: str, api_keys: dict, user_id: str):
+    try:
+        result = await commander_delegate(goal, chat_id, api_keys, user_id, msg_id)
+        await db.chats.update_one(
+            {"chat_id": chat_id, "messages.message_id": msg_id},
+            {"$set": {
+                "messages.$.content": result["content"],
+                "messages.$.delegation_data": result.get("delegation_data"),
+                "messages.$.commander_status": "complete"
+            }}
+        )
+        logger.info(f"Commander delegation complete for chat {chat_id}")
+    except Exception as e:
+        logger.error(f"Background commander delegation failed: {e}")
+        await db.chats.update_one(
+            {"chat_id": chat_id, "messages.message_id": msg_id},
+            {"$set": {
+                "messages.$.content": f"I encountered an issue while coordinating the specialists. Please try again.\n\nError: {str(e)[:200]}",
+                "messages.$.commander_status": "error"
+            }}
+        )
+
+
+async def commander_delegate(goal: str, chat_id: str, api_keys: dict, user_id: str, msg_id: str = None) -> dict:
+    async def update_progress(phase, agents_progress=None, current_agent=None):
+        if not msg_id:
+            return
+        progress = {"phase": phase, "agents": agents_progress or [], "current_agent": current_agent}
+        await db.chats.update_one(
+            {"chat_id": chat_id, "messages.message_id": msg_id},
+            {"$set": {"messages.$.delegation_progress": progress}}
+        )
+
+    await update_progress("planning")
+
+    plan_prompt = f"""You are Commander Orion. A user has given you this goal:
+
+"{goal}"
+
+Analyze this goal and create a delegation plan. Return ONLY a JSON array of sub-tasks in this exact format:
+[
+  {{"task": "Brief task description", "agent_role": "one of: marketing, strategy, web design, development, copywriting, seo, sales, social media, data, content, customer service, project management, research, finance, hr, graphic design, legal, email, video, secretary", "priority": "high or medium or low", "title": "Short task title for tracking"}},
+  ...
+]
+
+Choose 2-4 most relevant specialists. Be specific about what each should do. Assign priority based on urgency and importance. Return ONLY the JSON array, no other text."""
+
+    try:
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        planner = LlmChat(
+            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
+            session_id=f"{chat_id}_commander_plan",
+            system_message="You are a task planning AI. Output only valid JSON arrays."
+        ).with_model("openai", "gpt-5.2")
+        plan_text = await planner.send_message(UserMessage(text=plan_prompt))
+        plan_text_clean = plan_text.strip()
+        if plan_text_clean.startswith("```"):
+            plan_text_clean = plan_text_clean.split("\n", 1)[1] if "\n" in plan_text_clean else plan_text_clean[3:]
+        if plan_text_clean.endswith("```"):
+            plan_text_clean = plan_text_clean[:-3]
+        plan_text_clean = plan_text_clean.strip()
+        tasks = json.loads(plan_text_clean)
+    except Exception as e:
+        logger.error(f"Commander planning error: {e}")
+        fallback = f"I analyzed your goal: \"{goal}\"\n\nI encountered an issue breaking this down automatically. Let me provide my strategic assessment instead:\n\nThis goal would benefit from a multi-disciplinary approach. I recommend starting with research and strategy, then moving to execution. Would you like me to try again, or shall I connect you with a specific specialist?"
+        return {"content": fallback, "delegation_data": None}
+
+    created_tasks = []
+    now = datetime.now(timezone.utc).isoformat()
+    agents_progress = []
+
+    for i, task_item in enumerate(tasks):
+        task_desc = task_item.get("task", "")
+        agent_role = task_item.get("agent_role", "").lower()
+        agent_id = AGENT_ROLE_MAP.get(agent_role, "agent_strategist")
+        priority = task_item.get("priority", "medium").lower()
+        if priority not in ("high", "medium", "low"):
+            priority = "medium"
+        title = task_item.get("title", task_desc[:60])
+
+        task_doc = {
+            "task_id": f"task_{uuid.uuid4().hex[:12]}",
+            "user_id": user_id,
+            "title": title,
+            "description": task_desc,
+            "status": "pending",
+            "priority": priority,
+            "assigned_agents": [agent_id],
+            "result": None,
+            "source": "commander",
+            "source_goal": goal[:200],
+            "created_at": now,
+            "updated_at": now,
+        }
+        await db.tasks.insert_one(task_doc)
+
+        agent_doc = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0, "agent_id": 1, "name": 1, "avatar": 1, "role": 1})
+        agents_progress.append({
+            "agent_id": agent_id,
+            "agent_name": agent_doc.get("name", "Agent") if agent_doc else "Agent",
+            "agent_avatar": agent_doc.get("avatar", "") if agent_doc else "",
+            "agent_role": agent_doc.get("role", "Specialist") if agent_doc else "Specialist",
+            "task_title": title,
+            "priority": priority,
+            "status": "pending"
+        })
+        created_tasks.append({"task_id": task_doc["task_id"], "title": title, "agent_id": agent_id, "priority": priority, "desc": task_desc})
+
+    await update_progress("delegating", agents_progress)
+    delegation_agents = []
+
+    for i, ct in enumerate(created_tasks):
+        agent = await db.agents.find_one({"agent_id": ct["agent_id"]}, {"_id": 0})
+        if not agent:
+            continue
+        if i < len(agents_progress):
+            agents_progress[i]["status"] = "working"
+            await update_progress("delegating", agents_progress, agents_progress[i]["agent_name"])
+
+        agent_entry = {
+            "agent_id": ct["agent_id"],
+            "agent_name": agent.get("name", "Agent"),
+            "agent_role": agent.get("role", "Specialist"),
+            "agent_avatar": agent.get("avatar", ""),
+            "task": ct["desc"],
+            "task_title": ct["title"],
+            "priority": ct["priority"],
+            "response": "",
+            "status": "completed"
+        }
+
+        try:
+            from emergentintegrations.llm.chat import LlmChat, UserMessage
+            specialist = LlmChat(
+                api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
+                session_id=f"{chat_id}_commander_{ct['agent_id']}",
+                system_message=agent["system_prompt"]
+            ).with_model(agent.get("model_provider", "openai"), agent.get("model_name", "gpt-5.2"))
+            specialist_prompt = f"The Commander has assigned you this task as part of a larger project. Do NOT ask clarifying questions — just execute the task directly with your best professional output.\n\nWrite in clean, conversational paragraphs. Avoid excessive markdown headers (## ###). Use bold sparingly. Be concise and professional.\n\nOverall Goal: {goal}\n\nYour specific task: {ct['desc']}\n\nProvide a concise but actionable response. Focus on deliverables and next steps."
+            response = await specialist.send_message(UserMessage(text=specialist_prompt))
+            agent_entry["response"] = response
+            await db.tasks.update_one(
+                {"task_id": ct["task_id"]},
+                {"$set": {"status": "completed", "result": response[:2000], "updated_at": datetime.now(timezone.utc).isoformat()}}
+            )
+        except Exception as e:
+            logger.error(f"Commander delegation error for {ct['agent_id']}: {e}")
+            agent_entry["response"] = "Unable to complete - task saved for manual execution."
+            agent_entry["status"] = "failed"
+
+        delegation_agents.append(agent_entry)
+        if i < len(agents_progress):
+            agents_progress[i]["status"] = agent_entry["status"]
+            await update_progress("delegating", agents_progress)
+
+    await update_progress("complete", agents_progress)
+
+    summary = f"Mission Report: {len(created_tasks)} specialists deployed for your goal. {len(created_tasks)} tasks auto-created. Check the Tasks page for tracking."
+    delegation_data = {
+        "type": "commander_delegation",
+        "goal": goal,
+        "task_count": len(created_tasks),
+        "agents": delegation_agents,
+        "summary": summary
+    }
+
+    text_parts = [f"Commander Orion's Mission Report\n\nGoal: {goal}\n\nDelegation Plan: {len(tasks)} specialists deployed | {len(created_tasks)} tasks created\n\n---\n"]
+    for i, a in enumerate(delegation_agents):
+        priority_label = {"high": "HIGH", "medium": "MED", "low": "LOW"}.get(a["priority"], "MED")
+        text_parts.append(f"{i+1}. {a['agent_name']} ({a['agent_role']}) [{priority_label}]\nTask: {a['task']}\n\n{a['response']}\n\n---\n")
+    text_parts.append(f"\nAll specialists have reported. {len(created_tasks)} tasks have been auto-created and can be found on your Tasks page. Let me know if you'd like any section expanded or revised.")
+
+    return {"content": "\n".join(text_parts), "delegation_data": delegation_data}
+
+
+async def backfill_usage_logs():
+    from services.llm_service import MODEL_COSTS_MAP
+    already_done = await db.platform_config.find_one({"config_type": "usage_backfill_done"})
+    if already_done:
+        return
+    logger.info("Backfilling usage logs from historical chats...")
+    count = 0
+    chats = await db.chats.find({}, {"_id": 0}).to_list(5000)
+    for chat in chats:
+        agent_id = chat.get("agent_id", "")
+        user_id = chat.get("user_id", "")
+        agent = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0})
+        default_model = agent.get("model_name", "gpt-5.2") if agent else "gpt-5.2"
+        default_provider = agent.get("model_provider", "openai") if agent else "openai"
+        messages = chat.get("messages", [])
+        for i, msg in enumerate(messages):
+            if msg.get("role") != "assistant":
+                continue
+            content = msg.get("content", "")
+            model_used = msg.get("model_used", default_model)
+            user_content = ""
+            if i > 0 and messages[i-1].get("role") == "user":
+                user_content = messages[i-1].get("content", "")
+            system_prompt = agent.get("system_prompt", "") if agent else ""
+            input_text = user_content + system_prompt
+            est_input_tokens = max(len(input_text) // 4, 50)
+            est_output_tokens = max(len(content) // 4, 50)
+            model_clean = model_used.split("/")[-1] if "/" in model_used else model_used
+            costs = MODEL_COSTS_MAP.get(model_clean, {"input": 2.50, "output": 10.00, "provider": default_provider})
+            est_cost = (est_input_tokens * costs["input"] / 1_000_000) + (est_output_tokens * costs["output"] / 1_000_000)
+            created_at = msg.get("timestamp") or chat.get("created_at") or datetime.now(timezone.utc).isoformat()
+            usage_log = {
+                "log_id": f"backfill_{uuid.uuid4().hex[:10]}",
+                "user_id": user_id,
+                "chat_id": chat.get("chat_id", ""),
+                "agent_id": agent_id,
+                "model": model_used,
+                "provider": costs.get("provider", default_provider),
+                "input_tokens": est_input_tokens,
+                "output_tokens": est_output_tokens,
+                "estimated_cost_usd": round(est_cost, 6),
+                "key_source": "emergent",
+                "created_at": created_at,
+                "backfilled": True
+            }
+            await db.usage_logs.insert_one(usage_log)
+            count += 1
+    await db.platform_config.insert_one({"config_type": "usage_backfill_done", "count": count, "done_at": datetime.now(timezone.utc).isoformat()})
+    logger.info(f"Backfilled {count} usage log entries from historical chats")

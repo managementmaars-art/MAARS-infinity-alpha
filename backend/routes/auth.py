@@ -81,7 +81,7 @@ async def exchange_session(request: Request, response: Response):
                 raise HTTPException(status_code=401, detail="Invalid session")
 
             data = resp.json()
-        except Exception as e:
+        except Exception:
             raise HTTPException(status_code=401, detail="Authentication failed")
 
     user = await db.users.find_one({"email": data["email"]}, {"_id": 0})
