@@ -25,6 +25,10 @@ export default function ProductCatalog() {
   const [generatedContent, setGeneratedContent] = useState(null);
   const [rescanning, setRescanning] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [importFile, setImportFile] = useState(null);
+  const [importing, setImporting] = useState(false);
+  const [batchProgress, setBatchProgress] = useState(null);
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -83,6 +87,49 @@ export default function ProductCatalog() {
       }
     } catch { toast.error("Generation failed"); }
     setGenerating(null);
+  };
+
+  const handleBatchImport = async () => {
+    if (!importFile) return;
+    setImporting(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", importFile);
+      const res = await fetch(`${API}/products/batch-import`, {
+        method: "POST",
+        headers,
+        body: formData,
+      });
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(`Batch import started: ${data.total} products`);
+        setBatchProgress({ batch_id: data.batch_id, total: data.total, status: "processing", items: [] });
+        setShowImport(false);
+        setImportFile(null);
+        pollBatch(data.batch_id);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        toast.error(err.detail || "Import failed");
+      }
+    } catch { toast.error("Import failed"); }
+    setImporting(false);
+  };
+
+  const pollBatch = (batchId) => {
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`${API}/products/batch/${batchId}`, { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setBatchProgress(data);
+          if (data.status === "complete") {
+            clearInterval(interval);
+            fetchProducts();
+            toast.success(`Import complete: ${data.completed} products scanned`);
+          }
+        }
+      } catch {}
+    }, 3000);
   };
 
   const filtered = products.filter(p =>
@@ -167,9 +214,14 @@ export default function ProductCatalog() {
               <h1 className="text-2xl font-bold text-white font-['Outfit']" data-testid="products-title">Product Catalog</h1>
               <p className="text-zinc-400 text-sm mt-1">{products.length} product{products.length !== 1 ? "s" : ""} saved</p>
             </div>
-            <Button onClick={() => navigate("/chat")} className="bg-gradient-to-r from-indigo-500 to-violet-500" data-testid="scan-new-btn">
-              <Scan className="w-4 h-4 mr-2" />Scan New Product
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => setShowImport(true)} variant="outline" className="border-white/10 text-zinc-300" data-testid="import-btn">
+                <Plus className="w-4 h-4 mr-2" />Import CSV
+              </Button>
+              <Button onClick={() => navigate("/chat")} className="bg-gradient-to-r from-indigo-500 to-violet-500" data-testid="scan-new-btn">
+                <Scan className="w-4 h-4 mr-2" />Scan New Product
+              </Button>
+            </div>
           </div>
 
           {/* Search */}
@@ -356,8 +408,120 @@ export default function ProductCatalog() {
               </div>
             )}
           </div>
+
+          {/* Batch Progress Tracker */}
+          {batchProgress && batchProgress.status === "processing" && (
+            <Card className="mt-6 bg-zinc-900/50 border-indigo-500/20" data-testid="batch-progress">
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
+                    <h3 className="text-white font-semibold text-sm">Batch Import in Progress</h3>
+                  </div>
+                  <span className="text-zinc-400 text-xs">
+                    {(batchProgress.completed || 0) + (batchProgress.failed || 0)}/{batchProgress.total} processed
+                  </span>
+                </div>
+                <div className="h-2 rounded-full bg-zinc-800 overflow-hidden mb-3">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-emerald-500 transition-all duration-500"
+                    style={{ width: `${Math.max(((batchProgress.completed || 0) + (batchProgress.failed || 0)) / batchProgress.total * 100, 3)}%` }}
+                  />
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 max-h-48 overflow-y-auto">
+                  {(batchProgress.items || []).map((item, i) => (
+                    <div key={i} className={`p-2 rounded-lg text-[10px] border ${
+                      item.status === "done" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" :
+                      item.status === "scanning" ? "bg-amber-500/10 border-amber-500/20 text-amber-400" :
+                      item.status === "failed" ? "bg-red-500/10 border-red-500/20 text-red-400" :
+                      "bg-zinc-800/50 border-white/5 text-zinc-500"
+                    }`} data-testid={`batch-item-${i}`}>
+                      <p className="font-medium truncate">{item.name}</p>
+                      <p className="capitalize mt-0.5">
+                        {item.status === "scanning" && <Loader2 className="w-2.5 h-2.5 inline animate-spin mr-1" />}
+                        {item.status}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Completed batch summary */}
+          {batchProgress && batchProgress.status === "complete" && (
+            <Card className="mt-6 bg-zinc-900/50 border-emerald-500/20" data-testid="batch-complete">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                    <Package className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-medium">Batch Import Complete</p>
+                    <p className="text-zinc-500 text-xs">{batchProgress.completed} scanned, {batchProgress.failed} failed</p>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="border-white/10 text-zinc-400" onClick={() => setBatchProgress(null)}>Dismiss</Button>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
+
+      {/* Import Modal */}
+      {showImport && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" data-testid="import-modal">
+          <Card className="w-full max-w-md bg-zinc-900 border-white/10">
+            <CardContent className="p-6">
+              <h2 className="text-lg font-bold text-white font-['Outfit'] mb-1">Batch Product Import</h2>
+              <p className="text-zinc-400 text-sm mb-4">Upload a CSV or XLSX file with product data. Required column: <code className="text-indigo-400">name</code>. Optional: <code className="text-indigo-400">brand</code>, <code className="text-indigo-400">category</code>.</p>
+
+              <div
+                className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${importFile ? "border-emerald-500/40 bg-emerald-500/5" : "border-white/10 hover:border-indigo-500/30"}`}
+                onDragOver={e => e.preventDefault()}
+                onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) setImportFile(f); }}
+              >
+                {importFile ? (
+                  <div>
+                    <Package className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+                    <p className="text-white text-sm font-medium">{importFile.name}</p>
+                    <p className="text-zinc-500 text-xs mt-1">{(importFile.size / 1024).toFixed(1)} KB</p>
+                    <button className="text-red-400 text-xs mt-2 hover:underline" onClick={() => setImportFile(null)}>Remove</button>
+                  </div>
+                ) : (
+                  <div>
+                    <Plus className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
+                    <p className="text-zinc-400 text-sm">Drag & drop your file here</p>
+                    <p className="text-zinc-600 text-xs mt-1">or</p>
+                    <label className="inline-block mt-2 px-4 py-1.5 rounded-lg bg-white/10 text-white text-sm cursor-pointer hover:bg-white/20 transition-colors">
+                      Browse Files
+                      <input type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={e => { if (e.target.files[0]) setImportFile(e.target.files[0]); }} />
+                    </label>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-3 rounded-lg bg-white/5 mt-4">
+                <p className="text-[10px] text-zinc-500 font-medium mb-1">EXAMPLE CSV FORMAT</p>
+                <code className="text-[11px] text-zinc-400 block">name,brand,category<br/>iPhone 16 Pro,Apple,Smartphone<br/>Air Max 90,Nike,Footwear<br/>Model Y,Tesla,Electric Vehicle</code>
+              </div>
+
+              <div className="flex gap-3 mt-5">
+                <Button variant="outline" className="flex-1 border-white/10 text-zinc-400" onClick={() => { setShowImport(false); setImportFile(null); }}>Cancel</Button>
+                <Button
+                  className="flex-1 bg-gradient-to-r from-indigo-500 to-violet-500"
+                  disabled={!importFile || importing}
+                  onClick={handleBatchImport}
+                  data-testid="start-import-btn"
+                >
+                  {importing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Scan className="w-4 h-4 mr-2" />}
+                  {importing ? "Importing..." : `Import ${importFile ? "& Scan" : ""}`}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

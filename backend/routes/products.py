@@ -242,3 +242,208 @@ async def admin_list_all_products(admin: User = Depends(require_admin)):
     ]
     products = await db.product_catalog.aggregate(pipeline).to_list(200)
     return {"products": products}
+
+
+# ============== BATCH IMPORT ==============
+
+import asyncio
+import io
+import csv
+import logging
+from fastapi import UploadFile, File
+
+logger = logging.getLogger(__name__)
+
+
+@router.post("/products/batch-import")
+async def batch_import(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
+):
+    """Upload CSV/XLSX with products to batch-scan and import."""
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="No file provided")
+
+    ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
+    if ext not in ("csv", "xlsx", "xls"):
+        raise HTTPException(status_code=400, detail="Only CSV and XLSX files are supported")
+
+    content = await file.read()
+    rows = []
+
+    try:
+        if ext == "csv":
+            text = content.decode("utf-8", errors="ignore")
+            reader = csv.DictReader(io.StringIO(text))
+            for row in reader:
+                name = row.get("name", row.get("Name", row.get("product", row.get("Product", "")))).strip()
+                if name:
+                    rows.append({
+                        "name": name,
+                        "brand": row.get("brand", row.get("Brand", "")).strip(),
+                        "category": row.get("category", row.get("Category", "")).strip(),
+                    })
+        else:
+            import openpyxl
+            wb = openpyxl.load_workbook(io.BytesIO(content), read_only=True)
+            ws = wb.active
+            headers = []
+            for i, row in enumerate(ws.iter_rows(values_only=True)):
+                if i == 0:
+                    headers = [str(c).strip().lower() if c else "" for c in row]
+                    continue
+                row_dict = dict(zip(headers, row))
+                name = str(row_dict.get("name", row_dict.get("product", "")) or "").strip()
+                if name:
+                    rows.append({
+                        "name": name,
+                        "brand": str(row_dict.get("brand", "") or "").strip(),
+                        "category": str(row_dict.get("category", "") or "").strip(),
+                    })
+            wb.close()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to parse file: {str(e)[:200]}")
+
+    if not rows:
+        raise HTTPException(status_code=400, detail="No valid product rows found. Ensure columns: name, brand, category")
+
+    if len(rows) > 50:
+        rows = rows[:50]
+
+    batch_id = f"batch_{uuid.uuid4().hex[:12]}"
+    now = datetime.now(timezone.utc).isoformat()
+
+    items = []
+    for i, row in enumerate(rows):
+        items.append({
+            "index": i,
+            "name": row["name"],
+            "brand": row.get("brand", ""),
+            "category": row.get("category", ""),
+            "status": "pending",
+            "product_id": None,
+            "error": None,
+        })
+
+    batch_doc = {
+        "batch_id": batch_id,
+        "user_id": current_user.user_id,
+        "filename": file.filename,
+        "total": len(items),
+        "completed": 0,
+        "failed": 0,
+        "status": "processing",
+        "items": items,
+        "created_at": now,
+        "updated_at": now,
+    }
+    await db.batch_imports.insert_one(batch_doc)
+
+    asyncio.create_task(_process_batch(batch_id, current_user.user_id, items))
+
+    return {"batch_id": batch_id, "total": len(items), "status": "processing"}
+
+
+@router.get("/products/batch/{batch_id}")
+async def get_batch_status(batch_id: str, current_user: User = Depends(get_current_user)):
+    batch = await db.batch_imports.find_one(
+        {"batch_id": batch_id, "user_id": current_user.user_id},
+        {"_id": 0}
+    )
+    if not batch:
+        raise HTTPException(status_code=404, detail="Batch not found")
+    return batch
+
+
+@router.get("/products/batches")
+async def list_batches(current_user: User = Depends(get_current_user)):
+    cursor = db.batch_imports.find(
+        {"user_id": current_user.user_id},
+        {"_id": 0, "items": 0}
+    ).sort("created_at", -1).limit(20)
+    batches = await cursor.to_list(20)
+    return {"batches": batches}
+
+
+async def _process_batch(batch_id: str, user_id: str, items: list):
+    """Background task: scan each product and save to catalog."""
+    from services.product_scanner import scan_product_light
+
+    completed = 0
+    failed = 0
+
+    for item in items:
+        idx = item["index"]
+        query = f"{item['brand']} {item['name']}".strip() or item["name"]
+
+        try:
+            await db.batch_imports.update_one(
+                {"batch_id": batch_id, "items.index": idx},
+                {"$set": {"items.$.status": "scanning", "updated_at": datetime.now(timezone.utc).isoformat()}}
+            )
+
+            result = await scan_product_light(query)
+
+            product_id = f"prod_{uuid.uuid4().hex[:12]}"
+            now = datetime.now(timezone.utc).isoformat()
+            product_doc = {
+                "product_id": product_id,
+                "user_id": user_id,
+                "name": item["name"],
+                "brand": item.get("brand", ""),
+                "category": item.get("category", ""),
+                "description": "",
+                "images": result.get("images", [])[:10],
+                "reference_image_path": result.get("reference_image_path"),
+                "specs": "\n".join(result.get("details", {}).get("snippets", [])[:3]),
+                "price_info": "",
+                "scan_data": result,
+                "price_history": [],
+                "generated_content": [],
+                "source_chat_id": None,
+                "created_at": now,
+                "updated_at": now,
+                "last_scanned": now,
+            }
+            await db.product_catalog.insert_one(product_doc)
+
+            await db.batch_imports.update_one(
+                {"batch_id": batch_id, "items.index": idx},
+                {"$set": {
+                    "items.$.status": "done",
+                    "items.$.product_id": product_id,
+                    "updated_at": datetime.now(timezone.utc).isoformat()
+                }}
+            )
+            completed += 1
+            logger.info(f"Batch {batch_id}: scanned {item['name']} -> {product_id}")
+
+        except Exception as e:
+            logger.error(f"Batch {batch_id}: failed {item['name']}: {e}")
+            await db.batch_imports.update_one(
+                {"batch_id": batch_id, "items.index": idx},
+                {"$set": {
+                    "items.$.status": "failed",
+                    "items.$.error": str(e)[:200],
+                    "updated_at": datetime.now(timezone.utc).isoformat()
+                }}
+            )
+            failed += 1
+
+        await db.batch_imports.update_one(
+            {"batch_id": batch_id},
+            {"$set": {"completed": completed, "failed": failed}}
+        )
+
+        await asyncio.sleep(1)
+
+    await db.batch_imports.update_one(
+        {"batch_id": batch_id},
+        {"$set": {
+            "status": "complete",
+            "completed": completed,
+            "failed": failed,
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }}
+    )
+    logger.info(f"Batch {batch_id} complete: {completed} done, {failed} failed")

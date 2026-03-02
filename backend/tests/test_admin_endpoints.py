@@ -8,7 +8,7 @@ import pytest
 import requests
 import os
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://commander-ai-studio.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://commander-platform.preview.emergentagent.com')
 
 # Admin credentials
 ADMIN_EMAIL = "management.maars@marsgc.net"

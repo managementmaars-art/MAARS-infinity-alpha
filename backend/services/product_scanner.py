@@ -71,7 +71,7 @@ async def search_product_details(query: str) -> Dict:
                     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
                     "Accept": "text/html,application/xhtml+xml",
                 }
-                async with httpx.AsyncClient(follow_redirects=True, timeout=8, headers=headers) as client:
+                async with httpx.AsyncClient(follow_redirects=True, timeout=5, headers=headers) as client:
                     resp = await client.get(url)
                     if resp.status_code == 200 and "text/html" in resp.headers.get("content-type", ""):
                         soup = BeautifulSoup(resp.text, "html.parser")
@@ -155,12 +155,39 @@ def build_product_context(product_name: str, details: Dict, images: List[Dict]) 
     return "\n".join(lines)
 
 
-async def scan_product(product_query: str, upload_dir=None) -> Dict:
+async def scan_product_light(product_query: str) -> Dict:
+    """Lightweight scan for batch imports - text search + images only, no scraping."""
+    try:
+        from ddgs import DDGS
+        
+        def _quick_search():
+            results = {"sources": [], "snippets": [], "scraped_content": []}
+            images = []
+            with DDGS() as ddgs:
+                for r in ddgs.text(f"{product_query} specs price", max_results=3):
+                    results["sources"].append({"title": r.get("title",""), "url": r.get("href",""), "snippet": r.get("body","")})
+                    results["snippets"].append(r.get("body",""))
+                for r in ddgs.images(f"{product_query} product photo", max_results=4):
+                    if r.get("image"):
+                        images.append({"url": r["image"], "thumbnail": r.get("thumbnail", r["image"]), "title": r.get("title",""), "source": r.get("source",""), "width": r.get("width",0), "height": r.get("height",0)})
+            return results, images
+        
+        details, images = await asyncio.wait_for(asyncio.to_thread(_quick_search), timeout=20)
+    except Exception as e:
+        logger.warning(f"Light scan failed for {product_query}: {e}")
+        details = {"sources": [], "snippets": [], "scraped_content": []}
+        images = []
+
+    context = build_product_context(product_query, details, images)
+    return {"product_query": product_query, "details": details, "images": images, "reference_image_path": None, "context": context}
+
+
+
     """Main entry: search for product details, images, and optionally download best reference image."""
     # Run details and image searches in parallel with timeout
     try:
-        details_task = asyncio.wait_for(search_product_details(product_query), timeout=15)
-        images_task = asyncio.wait_for(search_product_images(product_query), timeout=15)
+        details_task = asyncio.wait_for(search_product_details(product_query), timeout=10)
+        images_task = asyncio.wait_for(search_product_images(product_query), timeout=10)
         results = await asyncio.gather(details_task, images_task, return_exceptions=True)
         details = results[0] if not isinstance(results[0], Exception) else {"sources": [], "snippets": [], "scraped_content": []}
         images = results[1] if not isinstance(results[1], Exception) else []
