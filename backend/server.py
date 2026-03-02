@@ -2003,6 +2003,20 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
         
         full_user_content = conversation_context + message_data.content
         
+        # Image Analysis: When user uploads images, add vision instructions
+        has_images = bool(message_data.attachments and any(
+            att.startswith("data:image") or att.startswith("/files/") 
+            for att in (message_data.attachments or []) if isinstance(att, str)
+        ))
+        if has_images:
+            image_instruction = (
+                "\n\n[The user has attached image(s). Analyze the image(s) carefully and thoroughly. "
+                "Describe what you see, identify products/objects/text/people/locations if relevant. "
+                "If the user asked a question about the image, answer it using both your analysis and any web data provided. "
+                "Be specific and detailed in your visual analysis.]"
+            )
+            full_user_content += image_instruction
+        
         # Build enhanced system prompt with clarification instruction
         enhanced_agent_prompt = agent["system_prompt"] + CLARIFICATION_INSTRUCTION
         
