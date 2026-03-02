@@ -119,12 +119,48 @@ A commercial, production-ready AI team platform comparable to platforms like Sin
   - Integration Quick Setup Wizard: Guided step-by-step modal for Slack, GitHub, Google Suite
   - Team Notifications: Notifications for team invites, chat shares, member joins
 
+- **COMPLETED: Autonomous Orchestration Engine (Mar 2026)**
+  - Strategic Cognition Layer: Goal scoring (clarity, complexity, confidence, risk)
+  - Strategic Planning: LLM-powered milestone/task generation (gpt-5.2)
+  - Execution Modes: Draft / Approval / Autonomous per project
+  - Autonomous Execution: Background task execution through specialist agents
+  - Milestone Tracking: Phase-based milestone progress with task decomposition
+  - Executive Command Dashboard: Goal input, stat cards, project cards, autonomy slider
+  - Project Detail View: Scores, strategy, success criteria, expandable milestones/tasks
+  - Self-correction: Milestone and project status auto-update on completion/failure
+  - User Autonomy Settings: Manual / Approval / Autonomous global preference
+
+## New API Endpoints
+- `/api/projects` (GET/POST): List and create strategic projects
+- `/api/projects/active-summary` (GET): Executive dashboard summary
+- `/api/projects/{id}` (GET/PATCH/DELETE): Project CRUD
+- `/api/projects/{id}/execute` (POST): Trigger project execution
+- `/api/user/autonomy` (GET/PUT): User autonomy level settings
+
+## New Architecture Components
+```
+/app/backend/
+  services/
+    orchestration_service.py  # Goal scoring, strategic planning, execution engine
+    cache_service.py          # In-memory TTL cache
+  routes/
+    projects.py               # Projects CRUD + autonomy endpoints
+
+/app/frontend/
+  src/components/projects/
+    CommandCenter.jsx          # Executive command dashboard
+    ProjectDetail.jsx          # Full project view with milestones
+  src/pages/
+    Projects.jsx               # Projects page wrapper with routing
+```
+
 ## Remaining Tasks (Prioritized)
 ### P2 - Further Enhancements
 - User onboarding improvements
 - Advanced search and filtering across all entities
 - Real-time collaboration (WebSocket for team activity)
 - Multi-language support
+- Multi-company workspaces
 
 ## Credentials
 - **Admin:** management.maars@marsgc.net / admin123
