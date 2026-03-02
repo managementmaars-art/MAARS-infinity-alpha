@@ -8,7 +8,7 @@ from db import db
 from auth import get_current_user, require_admin, User, ADMIN_EMAIL
 from models.schemas import Agent, AgentCreate
 from shared.constants import SUBSCRIPTION_PLANS, CUSTOM_AGENT_CREDIT_COST
-from config import AGENT_TOOL_MAP, AGENT_TOOLS
+from config import AGENT_TOOL_MAP, AGENT_TOOLS, DEFAULT_BRAIN_PROFILES
 from services.cache_service import cache
 
 logger = logging.getLogger(__name__)
@@ -217,3 +217,109 @@ async def reset_user_agent_settings(agent_id: str, current_user: User = Depends(
     """Reset user's agent customization back to defaults."""
     await db.user_agent_overrides.delete_one({"user_id": current_user.user_id, "agent_id": agent_id})
     return {"success": True, "agent_id": agent_id}
+
+
+# ============== CUSTOM BRAIN PROFILES ==============
+
+@router.get("/agents/{agent_id}/brain")
+async def get_agent_brain(agent_id: str, current_user: User = Depends(get_current_user)):
+    """Get an agent's Custom Brain Profile."""
+    # Check user-specific override first
+    user_brain = await db.agent_brains.find_one(
+        {"user_id": current_user.user_id, "agent_id": agent_id}, {"_id": 0}
+    )
+    if user_brain:
+        user_brain["is_custom"] = True
+        return user_brain
+
+    # Fall back to default brain profile
+    default = DEFAULT_BRAIN_PROFILES.get(agent_id, {})
+    if not default:
+        # Generate a generic default for agents without predefined profiles
+        default = {
+            "primary_model": {"provider": "openai", "model": "gpt-5.2"},
+            "fallback_models": [{"provider": "openai", "model": "gpt-4o"}],
+            "memory_scopes": ["working", "shared"],
+            "autonomy_level": 3,
+            "approval_required": False,
+            "output_templates": [],
+            "kpis": [],
+            "escalation_rules": [],
+            "communication_style": "Professional and helpful",
+            "risk_boundaries": {"max_budget_authority": 0, "can_approve_external_comms": False},
+        }
+    return {"agent_id": agent_id, "is_custom": False, **default}
+
+
+@router.put("/agents/{agent_id}/brain")
+async def update_agent_brain(agent_id: str, request: Request, current_user: User = Depends(get_current_user)):
+    """Update an agent's Custom Brain Profile for the current user."""
+    data = await request.json()
+    allowed_fields = {
+        "primary_model", "fallback_models", "memory_scopes", "autonomy_level",
+        "approval_required", "output_templates", "kpis", "escalation_rules",
+        "communication_style", "risk_boundaries"
+    }
+    update = {k: v for k, v in data.items() if k in allowed_fields}
+    if not update:
+        raise HTTPException(400, "No valid fields to update")
+
+    # Validate autonomy_level
+    if "autonomy_level" in update:
+        update["autonomy_level"] = max(0, min(5, int(update["autonomy_level"])))
+
+    await db.agent_brains.update_one(
+        {"user_id": current_user.user_id, "agent_id": agent_id},
+        {"$set": {
+            **update,
+            "user_id": current_user.user_id,
+            "agent_id": agent_id,
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }},
+        upsert=True
+    )
+    result = await db.agent_brains.find_one(
+        {"user_id": current_user.user_id, "agent_id": agent_id}, {"_id": 0}
+    )
+    result["is_custom"] = True
+    return result
+
+
+@router.delete("/agents/{agent_id}/brain")
+async def reset_agent_brain(agent_id: str, current_user: User = Depends(get_current_user)):
+    """Reset an agent's brain profile to defaults."""
+    await db.agent_brains.delete_one({"user_id": current_user.user_id, "agent_id": agent_id})
+    return {"success": True, "agent_id": agent_id}
+
+
+@router.get("/brain-profiles")
+async def list_brain_profiles(current_user: User = Depends(get_current_user)):
+    """Get all brain profiles (defaults + user customizations)."""
+    user_brains = await db.agent_brains.find(
+        {"user_id": current_user.user_id}, {"_id": 0}
+    ).to_list(100)
+    user_brain_map = {b["agent_id"]: b for b in user_brains}
+
+    all_agents = await db.agents.find(
+        {"$or": [{"is_custom": False}, {"creator_id": current_user.user_id}], "is_active": {"$ne": False}},
+        {"_id": 0, "agent_id": 1, "name": 1, "avatar": 1, "role": 1}
+    ).to_list(100)
+
+    profiles = []
+    for agent in all_agents:
+        aid = agent["agent_id"]
+        brain = user_brain_map.get(aid, DEFAULT_BRAIN_PROFILES.get(aid, {}))
+        profiles.append({
+            "agent_id": aid,
+            "agent_name": agent.get("name", ""),
+            "agent_avatar": agent.get("avatar", ""),
+            "agent_role": agent.get("role", ""),
+            "is_custom": aid in user_brain_map,
+            "autonomy_level": brain.get("autonomy_level", 3),
+            "primary_model": brain.get("primary_model", {"provider": "openai", "model": "gpt-5.2"}),
+            "memory_scopes": brain.get("memory_scopes", ["working"]),
+            "approval_required": brain.get("approval_required", False),
+            "communication_style": brain.get("communication_style", "Professional"),
+            "kpis": brain.get("kpis", []),
+        })
+    return {"profiles": profiles}

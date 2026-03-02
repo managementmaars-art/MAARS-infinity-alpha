@@ -7,7 +7,7 @@ import { Badge } from "../ui/badge";
 import {
   ArrowLeft, Play, CheckCircle, Clock, AlertTriangle, Brain,
   Target, Gauge, Shield, Users, Zap, ChevronDown, ChevronUp,
-  Trash2, Loader2
+  Trash2, Loader2, Image, Video, FileText
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,6 +23,75 @@ const STATUS_COLORS = {
   in_progress: "text-indigo-400",
   completed: "text-emerald-400",
   failed: "text-red-400",
+};
+
+// Helper to render task result with media support
+const TaskResultRenderer = ({ result }) => {
+  if (!result) return <span className="text-zinc-500">No result available</span>;
+
+  const parts = [];
+  let textContent = result;
+
+  // Extract generated images
+  const imageMatches = [...result.matchAll(/\[GENERATED_IMAGE\](.*?)\[\/GENERATED_IMAGE\]/gs)];
+  for (const match of imageMatches) {
+    textContent = textContent.replace(match[0], "");
+    parts.push({ type: "image", url: match[1].trim() });
+  }
+
+  // Extract generated videos
+  const videoMatches = [...result.matchAll(/\[GENERATED_VIDEO\](.*?)\[\/GENERATED_VIDEO\]/gs)];
+  for (const match of videoMatches) {
+    textContent = textContent.replace(match[0], "");
+    parts.push({ type: "video", url: match[1].trim() });
+  }
+
+  // Also detect inline image/video URLs
+  const urlRegex = /(https?:\/\/[^\s]+\.(png|jpg|jpeg|gif|webp|mp4|mov|webm)(\?[^\s]*)?)/gi;
+  const urlMatches = [...textContent.matchAll(urlRegex)];
+  for (const match of urlMatches) {
+    const url = match[1];
+    const ext = match[2].toLowerCase();
+    if (["mp4", "mov", "webm"].includes(ext)) {
+      parts.push({ type: "video", url });
+    } else {
+      parts.push({ type: "image", url });
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      {textContent.trim() && (
+        <div className="text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed">
+          {textContent.trim()}
+        </div>
+      )}
+      {parts.map((part, i) => (
+        <div key={i} className="rounded-lg overflow-hidden border border-white/10">
+          {part.type === "image" && (
+            <div className="relative group">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-zinc-800/80 border-b border-white/5">
+                <Image className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="text-[10px] text-zinc-400 uppercase tracking-wider">Generated Image</span>
+                <a href={part.url} target="_blank" rel="noopener noreferrer" className="ml-auto text-[10px] text-indigo-400 hover:text-indigo-300">Open Full Size</a>
+              </div>
+              <img src={part.url} alt="Generated deliverable" className="w-full max-h-[500px] object-contain bg-zinc-900" loading="lazy" />
+            </div>
+          )}
+          {part.type === "video" && (
+            <div className="relative">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-zinc-800/80 border-b border-white/5">
+                <Video className="w-3.5 h-3.5 text-violet-400" />
+                <span className="text-[10px] text-zinc-400 uppercase tracking-wider">Generated Video</span>
+                <a href={part.url} target="_blank" rel="noopener noreferrer" className="ml-auto text-[10px] text-violet-400 hover:text-violet-300">Download</a>
+              </div>
+              <video src={part.url} controls className="w-full max-h-[500px] bg-black" preload="metadata" />
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
 };
 
 const ProjectDetail = () => {
@@ -163,9 +232,7 @@ const ProjectDetail = () => {
                     )}
                   </div>
                   <div className="ml-7 p-3 bg-zinc-800/50 rounded-lg">
-                    <div className="text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed max-h-[400px] overflow-y-auto">
-                      {task.result || "No result available"}
-                    </div>
+                    <TaskResultRenderer result={task.result} />
                   </div>
                 </div>
               ))}
@@ -262,7 +329,7 @@ const ProjectDetail = () => {
                             {task.result && (
                               <div className="p-3 bg-zinc-800/50 rounded-lg mt-2">
                                 <p className="text-[10px] text-zinc-500 mb-1 uppercase tracking-wider">Agent Result</p>
-                                <div className="text-xs text-zinc-300 whitespace-pre-wrap max-h-[300px] overflow-y-auto">{task.result}</div>
+                                <TaskResultRenderer result={task.result} />
                               </div>
                             )}
                           </div>

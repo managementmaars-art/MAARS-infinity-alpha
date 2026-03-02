@@ -8,7 +8,7 @@ import httpx
 from datetime import datetime, timezone
 
 from db import db
-from config import DEFAULT_AGENTS, AGENT_TOOLS, AGENT_TOOL_MAP
+from config import DEFAULT_AGENTS, AGENT_TOOLS, AGENT_TOOL_MAP, DEFAULT_BRAIN_PROFILES
 from shared.constants import (
     EMERGENT_LLM_KEY, UPLOAD_DIR, INTEGRATION_SERVICES
 )
@@ -63,6 +63,28 @@ AGENT_ROLE_MAP = {
     "youtube": "agent_video",
     "secretary": "agent_secretary",
     "schedule": "agent_secretary",
+    # New agent role mappings
+    "cybersecurity": "agent_cybersecurity",
+    "security": "agent_cybersecurity",
+    "infosec": "agent_cybersecurity",
+    "automation": "agent_automation",
+    "workflow": "agent_automation",
+    "integration": "agent_automation",
+    "growth": "agent_growthhacker",
+    "growth hacking": "agent_growthhacker",
+    "acquisition": "agent_growthhacker",
+    "compliance": "agent_compliance",
+    "regulatory": "agent_compliance",
+    "audit": "agent_compliance",
+    "ai optimization": "agent_aioptimizer",
+    "ai": "agent_aioptimizer",
+    "prompt engineering": "agent_aioptimizer",
+    "operations": "agent_operations",
+    "supply chain": "agent_operations",
+    "logistics": "agent_operations",
+    "revenue": "agent_revenue",
+    "pricing": "agent_revenue",
+    "monetization": "agent_revenue",
 }
 
 
@@ -571,7 +593,8 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
             if not to_email:
                 return "Error: No recipient email provided."
             try:
-                import json as _json, base64 as _b64
+                import json as _json
+                import base64 as _b64
                 from email.mime.text import MIMEText as _MIMEText
                 from google.oauth2 import service_account as _sa
                 from googleapiclient.discovery import build as _build
@@ -665,6 +688,45 @@ RULES:
 13. After receiving a tool result, weave it naturally into your final answer"""
 
 
+async def build_brain_context(user_id: str, agent_id: str) -> str:
+    """Build context from the agent's Custom Brain Profile."""
+    # Check user-specific brain first
+    brain = await db.agent_brains.find_one(
+        {"user_id": user_id, "agent_id": agent_id}, {"_id": 0}
+    )
+    if not brain:
+        brain = DEFAULT_BRAIN_PROFILES.get(agent_id, {})
+    if not brain:
+        return ""
+
+    parts = []
+    if brain.get("communication_style"):
+        parts.append(f"Communication Style: {brain['communication_style']}")
+    if brain.get("kpis"):
+        parts.append(f"Your KPIs: {', '.join(brain['kpis'])}")
+    if brain.get("escalation_rules"):
+        parts.append(f"Escalation Rules: {'; '.join(brain['escalation_rules'])}")
+    if brain.get("risk_boundaries"):
+        rb = brain["risk_boundaries"]
+        if rb.get("max_budget_authority"):
+            parts.append(f"Budget Authority: Up to ${rb['max_budget_authority']:,}")
+        if rb.get("can_approve_external_comms"):
+            parts.append("You CAN approve and send external communications")
+        else:
+            parts.append("External communications require user approval")
+    if brain.get("output_templates"):
+        parts.append(f"Preferred Output Formats: {', '.join(brain['output_templates'])}")
+    autonomy = brain.get("autonomy_level", 3)
+    autonomy_desc = {0: "No autonomy - ask before every action", 1: "Minimal - ask before most actions",
+                     2: "Low - ask before important actions", 3: "Medium - act on routine, ask on important",
+                     4: "High - act independently, report results", 5: "Full autonomy - execute without asking"}
+    parts.append(f"Autonomy Level: {autonomy}/5 ({autonomy_desc.get(autonomy, 'Medium')})")
+
+    if not parts:
+        return ""
+    return "\n\n--- CUSTOM BRAIN PROFILE ---\n" + "\n".join(parts) + "\n--- END BRAIN PROFILE ---\n"
+
+
 async def agent_execute_with_tools(
     agent: dict, user_content: str, chat_id: str, api_keys: dict,
     model_provider: str, model_name: str, user_id: str, attachments: list = None
@@ -679,6 +741,10 @@ async def agent_execute_with_tools(
     workspace_ctx = await build_workspace_context(user_id, agent.get("agent_id", ""))
     if workspace_ctx:
         enhanced_system_prompt += workspace_ctx
+
+    brain_ctx = await build_brain_context(user_id, agent.get("agent_id", ""))
+    if brain_ctx:
+        enhanced_system_prompt += brain_ctx
 
     user_override = await db.user_agent_overrides.find_one(
         {"user_id": user_id, "agent_id": agent.get("agent_id")}, {"_id": 0}

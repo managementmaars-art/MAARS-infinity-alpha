@@ -313,6 +313,40 @@ async def execute_project(project_id: str, user_id: str, api_keys: dict):
             "/projects"
         )
 
+        # Commander → Personal Secretary Handoff
+        # Auto-create a task for the secretary to execute real-world actions
+        try:
+            completed_results = []
+            all_tasks = await db.tasks.find(
+                {"project_id": project_id, "status": "completed"}, {"_id": 0, "title": 1, "result": 1, "agent_role": 1}
+            ).to_list(50)
+            for t in all_tasks:
+                if t.get("result"):
+                    completed_results.append(f"- {t['title']}: {t['result'][:500]}")
+
+            if completed_results:
+                secretary_task = {
+                    "task_id": f"task_{uuid.uuid4().hex[:12]}",
+                    "user_id": user_id,
+                    "project_id": project_id,
+                    "title": f"Execute deliverables for: {project.get('title', 'Project')}",
+                    "description": f"The Commander has completed project '{project.get('title')}'. Review the following deliverables and identify any real-world actions needed (emails to send, meetings to schedule, content to post, messages to deliver):\n\n" + "\n".join(completed_results[:10]),
+                    "status": "pending",
+                    "priority": "high",
+                    "assigned_agents": ["agent_secretary"],
+                    "agent_name": "Nadia Kessler",
+                    "agent_role": "Personal Secretary",
+                    "result": None,
+                    "source": "commander_handoff",
+                    "source_goal": project.get("goal", "")[:200],
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": datetime.now(timezone.utc).isoformat(),
+                }
+                await db.tasks.insert_one(secretary_task)
+                logger.info(f"Commander→Secretary handoff created for project {project_id}")
+        except Exception as handoff_err:
+            logger.error(f"Secretary handoff failed: {handoff_err}")
+
     except Exception as e:
         logger.error(f"Project execution failed {project_id}: {e}")
         await db.projects.update_one(
@@ -322,13 +356,31 @@ async def execute_project(project_id: str, user_id: str, api_keys: dict):
 
 
 async def execute_agent_task(agent: dict, task_description: str, goal: str, api_keys: dict, user_id: str, project_id: str) -> str:
-    """Execute a single task using the assigned agent."""
+    """Execute a single task using the assigned agent. Supports media generation for image/video tasks."""
     try:
         from emergentintegrations.llm.chat import LlmChat, UserMessage
+        from services.agent_service import build_brain_context
+
+        brain_ctx = await build_brain_context(user_id, agent["agent_id"])
+        system_msg = agent.get("system_prompt", "You are a helpful specialist.")
+        if brain_ctx:
+            system_msg += brain_ctx
+
+        # Check if this is a media generation task
+        agent_id = agent.get("agent_id", "")
+        is_graphics_agent = agent_id == "agent_graphics"
+        is_video_agent = agent_id == "agent_video"
+
+        if is_graphics_agent:
+            system_msg += "\n\nIMPORTANT: When creating visual content, describe your creative concept in detail (style, colors, composition). The system will automatically generate the image."
+
+        if is_video_agent:
+            system_msg += "\n\nIMPORTANT: When creating video content, describe your creative vision in detail (scenes, camera angles, mood, pacing). The system will automatically generate the video."
+
         chat = LlmChat(
             api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
             session_id=f"project_{project_id}_{agent['agent_id']}_{uuid.uuid4().hex[:6]}",
-            system_message=agent.get("system_prompt", "You are a helpful specialist.")
+            system_message=system_msg
         ).with_model(agent.get("model_provider", "openai"), agent.get("model_name", "gpt-5.2"))
 
         prompt = f"""You are executing a task as part of an autonomous project.
@@ -339,6 +391,92 @@ YOUR TASK: {task_description}
 Execute this task NOW. Provide a complete, actionable deliverable. Do NOT ask questions — use your professional judgment. Be concise, specific, and deliver real value. Write in clean paragraphs, avoid excessive formatting."""
 
         response = await chat.send_message(UserMessage(text=prompt))
+
+        # For graphics agent, attempt to generate an image based on the response
+        if is_graphics_agent and response:
+            try:
+                image_result = await _generate_project_image(response, api_keys, project_id, agent_id)
+                if image_result:
+                    response += f"\n\n[GENERATED_IMAGE]{image_result}[/GENERATED_IMAGE]"
+            except Exception as img_err:
+                logger.error(f"Project image generation error: {img_err}")
+
+        # For video agent, attempt to generate a video
+        if is_video_agent and response:
+            try:
+                video_result = await _generate_project_video(response, api_keys, project_id, agent_id)
+                if video_result:
+                    response += f"\n\n[GENERATED_VIDEO]{video_result}[/GENERATED_VIDEO]"
+            except Exception as vid_err:
+                logger.error(f"Project video generation error: {vid_err}")
+
         return response
     except Exception as e:
         raise Exception(f"Agent {agent.get('name', 'Unknown')} execution failed: {str(e)[:200]}")
+
+
+async def _generate_project_image(agent_response: str, api_keys: dict, project_id: str, agent_id: str) -> str:
+    """Generate an image based on the agent's creative description."""
+    try:
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
+
+        # Extract a concise image prompt from the agent's response
+        prompter = LlmChat(
+            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
+            session_id=f"img_prompt_{project_id}_{uuid.uuid4().hex[:6]}",
+            system_message="Extract a concise image generation prompt from the creative description. Return ONLY the prompt text, nothing else. Max 200 characters."
+        ).with_model("openai", "gpt-4o-mini")
+
+        img_prompt = await prompter.send_message(UserMessage(text=f"Extract image prompt from:\n{agent_response[:1500]}"))
+        img_prompt = img_prompt.strip()[:200]
+
+        if not img_prompt:
+            return ""
+
+        from emergentintegrations.llm.image import ImageChat
+        image_chat = ImageChat(
+            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
+            session_id=f"project_img_{project_id}_{uuid.uuid4().hex[:6]}"
+        )
+        result = await image_chat.generate_image(img_prompt)
+        if result and hasattr(result, 'url'):
+            return result.url
+        elif result and isinstance(result, str):
+            return result
+        return ""
+    except Exception as e:
+        logger.error(f"Image generation in project failed: {e}")
+        return ""
+
+
+async def _generate_project_video(agent_response: str, api_keys: dict, project_id: str, agent_id: str) -> str:
+    """Generate a video based on the agent's creative description."""
+    try:
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
+
+        prompter = LlmChat(
+            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
+            session_id=f"vid_prompt_{project_id}_{uuid.uuid4().hex[:6]}",
+            system_message="Extract a concise video generation prompt from the creative description. Return ONLY the prompt text, nothing else. Max 200 characters."
+        ).with_model("openai", "gpt-4o-mini")
+
+        vid_prompt = await prompter.send_message(UserMessage(text=f"Extract video prompt from:\n{agent_response[:1500]}"))
+        vid_prompt = vid_prompt.strip()[:200]
+
+        if not vid_prompt:
+            return ""
+
+        from emergentintegrations.llm.video import VideoChat
+        video_chat = VideoChat(
+            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
+            session_id=f"project_vid_{project_id}_{uuid.uuid4().hex[:6]}"
+        )
+        result = await video_chat.generate_video(vid_prompt)
+        if result and hasattr(result, 'url'):
+            return result.url
+        elif result and isinstance(result, str):
+            return result
+        return ""
+    except Exception as e:
+        logger.error(f"Video generation in project failed: {e}")
+        return ""

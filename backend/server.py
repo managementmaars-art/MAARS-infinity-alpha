@@ -89,6 +89,7 @@ async def startup():
     await db.approvals.create_index([("user_id", 1), ("status", 1)])
     await db.tool_logs.create_index([("user_id", 1), ("created_at", -1)])
     await db.knowledge_docs.create_index([("agent_id", 1)])
+    await db.agent_brains.create_index([("user_id", 1), ("agent_id", 1)], unique=True)
     logger.info("MongoDB indexes ensured")
 
     # Load admin-configured pricing from DB (overrides hardcoded defaults)
