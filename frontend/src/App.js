@@ -20,6 +20,7 @@ import Projects from "./pages/Projects";
 import WorkspaceBrain from "./pages/WorkspaceBrain";
 import Approvals from "./pages/Approvals";
 import BrainProfiles from "./pages/BrainProfiles";
+import DashboardLayout from "./components/layout/DashboardLayout";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -246,12 +247,12 @@ const AppRouter = () => {
       <Route path="/agents/create" element={<ProtectedRoute><CreateAgent /></ProtectedRoute>} />
       <Route path="/products" element={<ProtectedRoute><ProductCatalog /></ProtectedRoute>} />
       <Route path="/projects/*" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
-      <Route path="/workspace" element={<ProtectedRoute><WorkspaceBrain /></ProtectedRoute>} />
-      <Route path="/approvals" element={<ProtectedRoute><Approvals /></ProtectedRoute>} />
-      <Route path="/brain-profiles" element={<ProtectedRoute><BrainProfiles /></ProtectedRoute>} />
+      <Route path="/workspace" element={<ProtectedRoute><DashboardLayout><WorkspaceBrain /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/approvals" element={<ProtectedRoute><DashboardLayout><Approvals /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/brain-profiles" element={<ProtectedRoute><DashboardLayout><BrainProfiles /></DashboardLayout></ProtectedRoute>} />
       <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
       <Route path="/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
-      <Route path="/insights" element={<ProtectedRoute><InsightsPage /></ProtectedRoute>} />
+      <Route path="/insights" element={<ProtectedRoute><DashboardLayout><InsightsPage /></DashboardLayout></ProtectedRoute>} />
       <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />

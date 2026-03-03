@@ -112,5 +112,6 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
 
 ## Testing
 - Iteration 52: 100% pass rate — 20/20 backend tests, all frontend tests passed
+- Bug fixes verified: Navigation on Workspace Brain/Approvals, agent visibility on landing+dashboard, count updates
 - All previous iterations (5-8): Passed
 - Admin credentials: management.maars@marsgc.net / admin123

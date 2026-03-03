@@ -28,7 +28,14 @@ const LandingPage = () => {
     { name: "Felix Romano", role: "Graphic Designer", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/96d5c274e3657d527a5a8c4bf869dcfdb08530445029e0df555139dba990b2cc.png", capabilities: ["Logos", "Illustrations", "Branding"] },
     { name: "Alexandra Reid", role: "Legal Assistant", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/5173ff78c8d19fc7d2e4cea3f7068c8f31edb314bbb9211a14a7196dc3465f9a.png", capabilities: ["Contracts", "Compliance", "Legal Docs"] },
     { name: "Jasper Wells", role: "Email Marketing", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/4227fcd5613d5f75952dc16c7342647a701d8e9b29d70a0a99fd16932db94a85.png", capabilities: ["Campaigns", "Newsletters", "A/B Testing"] },
-    { name: "Riley Chen", role: "Video Content", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/0a2a672b36a390684ba6cf87b46621f3169e140edd6a7a8cff09df93200e921b.png", capabilities: ["Scripts", "Storyboards", "Editing"] }
+    { name: "Riley Chen", role: "Video Content", avatar: "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/0a2a672b36a390684ba6cf87b46621f3169e140edd6a7a8cff09df93200e921b.png", capabilities: ["Scripts", "Storyboards", "Editing"] },
+    { name: "Damien Voss", role: "Cybersecurity Officer", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/621036b72eea0187899c12b8b89fe69da97d01b45fc2c01d9f5731a3fe22696f.png", capabilities: ["Security Audits", "Threat Analysis", "Compliance"] },
+    { name: "Serena Okafor", role: "Automation Engineer", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/e27b11a21e750ca86de668f034d30d308ae3be01b41a220f56af6728243ace0b.png", capabilities: ["Workflows", "Integrations", "Automation"] },
+    { name: "Axel Brennan", role: "Growth Hacker", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/3386393ec93fa0d43793e1ab7f8f9f1c9608cac9b400cc4f3db2555f5db23388.png", capabilities: ["Growth Experiments", "A/B Testing", "Funnels"] },
+    { name: "Victoria Harrington", role: "Compliance Officer", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/225277b243f8d5e7f099e1eb4d9d5171d4e5ae227d5382bfbf8758212ef5f8cb.png", capabilities: ["Regulatory", "Audits", "GDPR"] },
+    { name: "Dr. Luca Bernstein", role: "AI Optimizer", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/0b7dcb1447875df4bb789b3e75420ec1ce91d3c3076d2f2ad76a89a137766a1b.png", capabilities: ["AI Tuning", "Cost Reduction", "Prompts"] },
+    { name: "Diana Morales", role: "Operations Manager", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/e7859d6ce4d064b10aec7c9dc0d4bd871fc542a8c157db237439e643f3e09e0c.png", capabilities: ["Process", "Supply Chain", "KPIs"] },
+    { name: "Maximilian Wolfe", role: "Revenue Strategist", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/69e78daa465dab826192b2095f7ee240c9fbe75c22bedb40e03fa070486b7f0c.png", capabilities: ["Pricing", "Revenue Models", "Monetization"] }
   ];
 
   const features = [
@@ -212,7 +219,7 @@ const LandingPage = () => {
               Meet Your AI Team
             </h2>
             <p className="text-lg text-zinc-400 max-w-2xl">
-              20 specialized AI employees ready to work for you - from secretaries to developers, marketers to analysts.
+              28 specialized AI employees ready to work for you - from secretaries to developers, marketers to analysts.
             </p>
           </div>
 
@@ -403,7 +410,7 @@ const LandingPage = () => {
           </div>
           <div className="flex items-center gap-6 text-sm text-zinc-500">
             <a href="#models" className="hover:text-zinc-300 transition-colors">10 AI Models</a>
-            <a href="#agents" className="hover:text-zinc-300 transition-colors">20 AI Agents</a>
+            <a href="#agents" className="hover:text-zinc-300 transition-colors">28 AI Agents</a>
             <Link to="/pricing" className="hover:text-zinc-300 transition-colors">Pricing</Link>
           </div>
         </div>
