@@ -3,115 +3,99 @@
 ## Original Problem Statement
 Build "MAARS Command," a commercial, production-ready AI business operating system that merges the capabilities of Sintra.ai (preset specialist business agents) and Emergent.sh (autonomous execution, memory, tool use, and app building). The system must be an "Autonomous AI Workforce Operating System" with multi-agent collaboration, real-world action execution, persistent memory, and enterprise-grade features.
 
-## User Personas
-- **Business Executive**: Uses Commander to delegate high-level goals, monitors projects, reviews deliverables
-- **Team Lead**: Manages agents, configures brain profiles, reviews approval workflows
-- **Admin**: Configures pricing, manages users, views analytics and audit logs
-
 ## Core Architecture
 ```
 /app/
 ├── backend/
-│   ├── server.py (FastAPI app, CORS, startup, MongoDB indexes)
-│   ├── config.py (28 agents, tools, brain profiles, tool maps)
-│   ├── db.py (MongoDB connection)
-│   ├── auth.py (JWT authentication)
-│   ├── models/schemas.py (Pydantic models)
+│   ├── server.py (FastAPI, CORS, MongoDB indexes for 10+ collections)
+│   ├── config.py (41 agents, tools, brain profiles, tool maps)
 │   ├── services/
-│   │   ├── agent_service.py (Agent execution, brain context, workspace context, tool logging)
-│   │   ├── orchestration_service.py (Goal decomposition, project execution, media generation, Commander→Secretary handoff)
+│   │   ├── agent_service.py (Execution, brain context, workspace context, simulation mode, tool logging)
+│   │   ├── orchestration_service.py (Goal decomposition, project execution, media gen, collaboration logging, Secretary handoff)
 │   │   └── cache_service.py (Redis caching)
-│   ├── routes/ (agents, chats, projects, workspace, approvals, admin, tasks, products, teams, insights, settings)
-│   └── shared/ (utils, notifications)
+│   ├── routes/
+│   │   ├── enterprise.py (Collaboration Engine, KPI Framework, System Mode, Cost Governance, Quality Control)
+│   │   ├── agents.py (CRUD + Custom Brain Profiles)
+│   │   ├── projects.py, workspace.py, approvals.py, chats.py, admin.py, tasks.py, products.py, teams.py, insights.py, settings.py
+│   └── shared/, models/
 └── frontend/
     └── src/
-        ├── App.js (Router, auth context, API URL)
-        ├── pages/ (Dashboard, AgentChat, Projects, ProjectDetail, BrainProfiles, Approvals, WorkspaceBrain, AdminDashboard, Settings, Tasks, Team, Products, Insights)
-        └── components/ (CommandCenter, ProjectsLayout, BrandFooter, admin wizards, UI components)
+        ├── App.js (Router, auth, 15+ routes)
+        ├── pages/ (Dashboard, AgentChat, Projects, ProjectDetail, BrainProfiles, KPIDashboard, CollaborationEngine, Approvals, WorkspaceBrain, Agents, Tasks, Team, Products, Settings, InsightsPage, AdminDashboard, LandingPage)
+        └── components/ (DashboardLayout, ProjectsLayout, CommandCenter, BrandFooter, UI components)
 ```
 
 ## What's Been Implemented
 
-### Phase 1 — Foundation (Previous sessions)
-- 21 preset AI agents with distinct personalities, roles, system prompts
-- Multi-provider LLM support via Emergent LLM Key (OpenAI, Gemini, Claude)
-- Credit-based billing system with Stripe integration
-- Full admin panel with analytics (leaderboards, engagement heatmaps)
-- RAG knowledge base for agent context
-- Web browsing, image analysis, document tools
-- Product catalog with batch import
-- Team collaboration with notifications and activity feed
+### Phase 1 — Foundation
+- Multi-provider LLM support via Emergent LLM Key
+- Credit-based billing with Stripe, full admin panel, RAG knowledge base
+- Web browsing, image analysis, document tools, product catalog, team collaboration
 
-### Phase 2 — Autonomous Orchestration (Previous session)
-- Orchestration Engine: Goal → structured plan → milestones → tasks → auto-execution
-- Executive Command Dashboard with project overview
-- Workspace Brain: Persistent business context injected into all agent prompts
-- Approval Workflows for gating sensitive agent actions
-- Tool Call Observability: All agent tool calls logged for audit
-- Performance: API pagination + Redis caching
+### Phase 2 — Autonomous Orchestration
+- Orchestration Engine: Goal → plan → milestones → tasks → auto-execution
+- Executive Command Dashboard, Workspace Brain, Approval Workflows
+- Tool Call Observability, API pagination + Redis caching
 
 ### Phase 3 — Custom Brain Profiles & Agent Expansion (March 2, 2026)
-- **7 New Agent Roles**: Cybersecurity Officer (Damien Voss), Automation Engineer (Serena Okafor), Growth Hacker (Axel Brennan), Compliance Officer (Victoria Harrington), AI Optimization Specialist (Dr. Luca Bernstein), Operations Manager (Diana Morales), Revenue Optimization Strategist (Maximilian Wolfe) — all with unique AI-generated avatars
-- **Custom Brain Profiles (MANDATORY per spec)**: Each agent has an isolated brain config with:
-  - Primary/fallback models
-  - Memory scopes (Working, Long-Term, Domain, Shared)
-  - Autonomy level (0-5 slider)
-  - Approval requirements
-  - Output templates
-  - KPIs
-  - Escalation rules
-  - Communication style
-  - Risk boundaries (budget authority, external comms approval)
-- **Brain Profiles UI**: Full management page at /brain-profiles with search, agent cards showing autonomy/approval status, and full brain editor
-- **Enhanced Agent Prompts**: Legal Assistant (country-specific law, business-favorable contracts), Social Media Manager (geographic boost, platform selection, scheduling), Sales (multi-channel outreach), Customer Service (multi-channel communication), Personal Secretary (Commander handoff, execution protocols)
-- **Commander → Personal Secretary Handoff**: Auto-creates secretary tasks with project deliverables when Commander completes a project
-- **Media Deliverable Rendering**: Project results can now display generated images and videos inline with dedicated media viewers
-- **Brain Context Injection**: All agents receive their Custom Brain Profile context in their system prompts during execution
+- 7 new agents (28 total), Custom Brain Profiles system, enhanced prompts
+- Commander → Personal Secretary handoff, media deliverable rendering
+- Navigation fixes, consistent professional corporate avatars for all agents
+
+### Phase 4 — Enterprise Operating System (March 3, 2026)
+- **13 NEW Agents (41 total):** Chief Strategy Officer (Cassandra Steele), Investor Relations (Richard Ashworth), Product Manager (Priya Kapoor), Data Engineer (Nikolai Volkov), Brand Architect (Valentina Cruz), UX Researcher (Yuki Tanaka), 3D Visualization Specialist (Marco De Luca), PR Manager (Catherine Blake), Procurement Manager (Arjun Mehta), CX Architect (Sofia Reyes), Ethics Officer (Prof. James Whitfield), Knowledge Architect (Dr. Eleanor Shaw), Localization Specialist (Layla Mansouri)
+- **Collaboration Engine:** Inter-agent messaging with structured schema (sender, receivers, objective, context, risk level, dependencies, status). Auto-logged during project task execution. Frontend at /collaborations with status filters.
+- **KPI Command Center:** Real-time dashboard aggregating operational (projects, tasks, chats), governance (approvals, tool calls, risk incidents), and cost metrics. Custom KPI creation with targets and progress tracking. Frontend at /kpi-dashboard.
+- **System Mode Toggle:** Simulation (blocks real-world API calls) vs Execution (live). Persists per user. Enforced in tool execution layer.
+- **Cost Governance:** Per-agent cost breakdown, budget caps (monthly cap + alert threshold). API endpoints for monitoring and configuration.
+- **Quality Control Protocol:** Quality review records for agent outputs (self-check, peer review, compliance). API for creation and listing.
+- **Enhanced Autonomy Enforcement:** Simulation mode blocks send_email, send_gmail, send_sms, send_slack, schedule_meeting, google_calendar, github_action in non-execution mode.
+
+## 41 Agent Organizational Structure
+**Executive:** Commander, Chief Strategy Officer, Revenue Strategist, Investor Relations
+**Product & Technical:** Product Manager, App Developer, Automation Engineer, AI Optimizer, Data Engineer, Cybersecurity Officer
+**Creative & Brand:** Brand Architect, Graphics Designer, Video Specialist, Copywriter, Web Designer, UX Researcher, 3D Specialist
+**Growth & Marketing:** Marketing Specialist, Growth Hacker, SEO Specialist, Social Media Manager, Email Marketing, Sales Rep, PR Manager
+**Operations:** Operations Manager, Inventory Manager, Procurement Manager, HR Specialist, Customer Service, CX Architect
+**Finance:** Financial Analyst, Data Analyst
+**Governance:** Legal Assistant, Compliance Officer, Ethics Officer
+**Intelligence:** Research Specialist, Knowledge Architect, Localization Specialist, Personal Secretary
 
 ## Key DB Collections
-- `agents` — Agent definitions (28 total)
-- `agent_brains` — User-specific brain profile customizations (indexed: user_id + agent_id, unique)
-- `projects` — Projects with milestones and tasks
-- `workspace_brain` — Persistent business context per user
-- `tool_calls` — Tool execution audit log
-- `approvals` — Pending approval workflows
-- `chats`, `tasks`, `products`, `teams`, `transactions`, `users`
+agents, agent_brains, projects, workspace_brain, tool_calls, approvals, collaborations, kpi_store, quality_reviews, system_config, chats, tasks, products, teams, transactions, users
 
 ## Key API Endpoints
-- `GET /api/agents/public` — List all 28 agents
-- `GET /api/agents/{id}/brain` — Get agent brain profile
-- `PUT /api/agents/{id}/brain` — Update brain profile
-- `DELETE /api/agents/{id}/brain` — Reset to defaults
-- `GET /api/brain-profiles` — List all brain profiles
-- `POST /api/projects` — Create project from goal
-- `GET /api/projects/{id}` — Get project details
-- `GET/PUT /api/workspace` — Workspace brain CRUD
-- `GET/PUT /api/approvals` — Approval workflows
+- `/api/agents/public` — 41 agents
+- `/api/agents/{id}/brain` — CRUD brain profiles
+- `/api/brain-profiles` — All 41 brain profiles
+- `/api/collaborations` — Collaboration engine CRUD
+- `/api/kpis` — KPI dashboard data
+- `/api/kpis/custom` — Custom KPIs
+- `/api/system/mode` — Simulation/Execution toggle
+- `/api/cost-governance` — Cost tracking + budget caps
+- `/api/quality-review(s)` — Quality control
+- `/api/projects`, `/api/workspace`, `/api/approvals`
 
 ## Prioritized Backlog
 
-### P0 — Critical
-- None currently blocked
-
 ### P1 — High Priority
-- **Real-World Action Layer**: Wire agents to actually execute external API calls (Gmail, Calendar, social media posting, messaging) through the approvals system
+- **Real-World Action Layer**: Wire agents to actually execute external API calls (Gmail, Calendar, social posting)
 - **"Vibe Coding" App Builder**: Chat-based full-stack app building with GitHub integration
+- **Universal Reference Intelligence**: Image analysis, brand detection, style blueprints
 
 ### P2 — Medium Priority
-- **Model-Agnostic LLM Router**: Dynamic model selection based on task complexity, cost, privacy
-- **Enterprise Features**: Granular RBAC, enhanced audit logs, custom agent builder framework
-- **Advanced Integrations**: QuickBooks, CRMs, WhatsApp/Viber/Signal APIs, Meta Ads, TikTok Ads
-- **Inventory Manager Enhancements**: QR/barcode generation, SKU tracking, cost/revenue/profit margins
+- **Model-Agnostic LLM Router**: Dynamic model selection based on task complexity/cost/privacy
+- **Memory Governance**: Versioning, tenant isolation, pruning, relevance scoring
+- **Failure Recovery Protocol**: Auto-retry, fallback models, escalation chain
+- **Advanced Integrations**: WhatsApp, Meta Ads, TikTok Ads, Google Ads, Shopify, ERP
 
 ### P3 — Future
-- Real-time agent activity visualizer
-- Workflow builder UI
-- Custom agent creation by users
-- Multi-tenant isolation
-- Advanced analytics dashboards
+- Real-time agent activity visualizer, Workflow builder UI
+- Custom agent creation by users, Multi-tenant isolation
+- Enterprise org chart visualization, Architecture diagrams
+- QR/Barcode generation for Inventory Manager
 
 ## Testing
-- Iteration 52: 100% pass rate — 20/20 backend tests, all frontend tests passed
-- Bug fixes verified: Navigation on Workspace Brain/Approvals, agent visibility on landing+dashboard, count updates
-- All previous iterations (5-8): Passed
-- Admin credentials: management.maars@marsgc.net / admin123
+- Iteration 53: 100% pass rate — 26/26 backend, all frontend passed
+- Iteration 52: 100% — 20/20 backend, all frontend passed
+- Admin: management.maars@marsgc.net / admin123
