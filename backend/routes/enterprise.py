@@ -1,0 +1,294 @@
+"""Collaboration Engine, KPI Framework, Cost Governance, and System Controls API."""
+from fastapi import APIRouter, Depends, HTTPException, Request
+from datetime import datetime, timezone
+import uuid
+from db import db
+from auth import get_current_user
+from models.schemas import User
+
+router = APIRouter()
+
+
+# ============== COLLABORATION ENGINE ==============
+
+@router.post("/collaborations")
+async def create_collaboration(request: Request, current_user: User = Depends(get_current_user)):
+    """Create an inter-agent collaboration message."""
+    data = await request.json()
+    collab = {
+        "collab_id": f"collab_{uuid.uuid4().hex[:12]}",
+        "user_id": current_user.user_id,
+        "task_id": data.get("task_id", ""),
+        "project_id": data.get("project_id", ""),
+        "sender": data.get("sender", ""),
+        "receivers": data.get("receivers", []),
+        "objective": data.get("objective", ""),
+        "context": data.get("context", ""),
+        "required_output": data.get("required_output", ""),
+        "deadline": data.get("deadline", ""),
+        "risk_level": data.get("risk_level", "low"),
+        "dependencies": data.get("dependencies", []),
+        "approval_required": data.get("approval_required", False),
+        "status": "pending",
+        "response": None,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.collaborations.insert_one(collab)
+    collab.pop("_id", None)
+    return collab
+
+
+@router.get("/collaborations")
+async def list_collaborations(
+    project_id: str = None, status: str = None,
+    page: int = 1, limit: int = 20,
+    current_user: User = Depends(get_current_user)
+):
+    """List collaboration messages with optional filters."""
+    query = {"user_id": current_user.user_id}
+    if project_id:
+        query["project_id"] = project_id
+    if status:
+        query["status"] = status
+
+    total = await db.collaborations.count_documents(query)
+    items = await db.collaborations.find(query, {"_id": 0}).sort("created_at", -1).skip((page - 1) * limit).limit(limit).to_list(limit)
+    return {"items": items, "total": total, "page": page, "pages": max(1, (total + limit - 1) // limit)}
+
+
+@router.put("/collaborations/{collab_id}")
+async def update_collaboration(collab_id: str, request: Request, current_user: User = Depends(get_current_user)):
+    """Update a collaboration status or response."""
+    data = await request.json()
+    update = {"updated_at": datetime.now(timezone.utc).isoformat()}
+    for field in ["status", "response", "risk_level"]:
+        if field in data:
+            update[field] = data[field]
+
+    result = await db.collaborations.find_one_and_update(
+        {"collab_id": collab_id, "user_id": current_user.user_id},
+        {"$set": update}, return_document=True, projection={"_id": 0}
+    )
+    if not result:
+        raise HTTPException(404, "Collaboration not found")
+    return result
+
+
+# ============== KPI FRAMEWORK ==============
+
+@router.get("/kpis")
+async def get_kpis(current_user: User = Depends(get_current_user)):
+    """Get the KPI dashboard for the current user."""
+    user_id = current_user.user_id
+
+    # Aggregate KPIs from various sources
+    total_projects = await db.projects.count_documents({"user_id": user_id})
+    completed_projects = await db.projects.count_documents({"user_id": user_id, "status": "completed"})
+    total_tasks = await db.tasks.count_documents({"user_id": user_id})
+    completed_tasks = await db.tasks.count_documents({"user_id": user_id, "status": "completed"})
+    total_chats = await db.chats.count_documents({"user_id": user_id})
+    total_collabs = await db.collaborations.count_documents({"user_id": user_id})
+    total_approvals = await db.approvals.count_documents({"user_id": user_id})
+    pending_approvals = await db.approvals.count_documents({"user_id": user_id, "status": "pending"})
+    total_tool_calls = await db.tool_calls.count_documents({"user_id": user_id})
+
+    # Usage/cost from transactions
+    pipeline = [
+        {"$match": {"user_id": user_id, "type": "usage"}},
+        {"$group": {"_id": None, "total_cost": {"$sum": "$amount"}, "count": {"$sum": 1}}}
+    ]
+    usage_agg = await db.transactions.aggregate(pipeline).to_list(1)
+    total_ai_cost = abs(usage_agg[0]["total_cost"]) if usage_agg else 0
+    total_ai_calls = usage_agg[0]["count"] if usage_agg else 0
+
+    # Risk incidents (from tool_calls with errors)
+    risk_incidents = await db.tool_calls.count_documents({"user_id": user_id, "status": "error"})
+
+    # Custom KPIs stored by user
+    custom_kpis = await db.kpi_store.find({"user_id": user_id}, {"_id": 0}).to_list(50)
+
+    return {
+        "operational": {
+            "total_projects": total_projects,
+            "completed_projects": completed_projects,
+            "project_completion_rate": round(completed_projects / max(total_projects, 1) * 100, 1),
+            "total_tasks": total_tasks,
+            "completed_tasks": completed_tasks,
+            "task_completion_rate": round(completed_tasks / max(total_tasks, 1) * 100, 1),
+            "total_chats": total_chats,
+            "total_collaborations": total_collabs,
+        },
+        "governance": {
+            "total_approvals": total_approvals,
+            "pending_approvals": pending_approvals,
+            "total_tool_calls": total_tool_calls,
+            "risk_incidents": risk_incidents,
+        },
+        "cost": {
+            "total_ai_cost": round(total_ai_cost, 2),
+            "total_ai_calls": total_ai_calls,
+            "avg_cost_per_call": round(total_ai_cost / max(total_ai_calls, 1), 4),
+        },
+        "custom_kpis": custom_kpis,
+    }
+
+
+@router.post("/kpis/custom")
+async def add_custom_kpi(request: Request, current_user: User = Depends(get_current_user)):
+    """Add a custom KPI metric."""
+    data = await request.json()
+    kpi = {
+        "kpi_id": f"kpi_{uuid.uuid4().hex[:8]}",
+        "user_id": current_user.user_id,
+        "name": data.get("name", ""),
+        "value": data.get("value", 0),
+        "target": data.get("target", 0),
+        "unit": data.get("unit", ""),
+        "category": data.get("category", "business"),
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.kpi_store.insert_one(kpi)
+    kpi.pop("_id", None)
+    return kpi
+
+
+@router.put("/kpis/custom/{kpi_id}")
+async def update_custom_kpi(kpi_id: str, request: Request, current_user: User = Depends(get_current_user)):
+    """Update a custom KPI."""
+    data = await request.json()
+    update = {"updated_at": datetime.now(timezone.utc).isoformat()}
+    for field in ["name", "value", "target", "unit", "category"]:
+        if field in data:
+            update[field] = data[field]
+    result = await db.kpi_store.find_one_and_update(
+        {"kpi_id": kpi_id, "user_id": current_user.user_id},
+        {"$set": update}, return_document=True, projection={"_id": 0}
+    )
+    if not result:
+        raise HTTPException(404, "KPI not found")
+    return result
+
+
+# ============== SYSTEM MODE (Simulation vs Execution) ==============
+
+@router.get("/system/mode")
+async def get_system_mode(current_user: User = Depends(get_current_user)):
+    """Get the current system mode (simulation or execution)."""
+    config = await db.system_config.find_one(
+        {"user_id": current_user.user_id}, {"_id": 0}
+    )
+    if not config:
+        return {"mode": "simulation", "description": "Simulation mode — no real API calls"}
+    return {"mode": config.get("mode", "simulation"), "description": config.get("description", "")}
+
+
+@router.put("/system/mode")
+async def set_system_mode(request: Request, current_user: User = Depends(get_current_user)):
+    """Toggle between simulation and execution mode."""
+    data = await request.json()
+    mode = data.get("mode", "simulation")
+    if mode not in ("simulation", "execution"):
+        raise HTTPException(400, "Mode must be 'simulation' or 'execution'")
+
+    descriptions = {
+        "simulation": "Simulation mode — no real API calls, safe for testing",
+        "execution": "Execution mode — live API calls, real-world actions enabled"
+    }
+    await db.system_config.update_one(
+        {"user_id": current_user.user_id},
+        {"$set": {
+            "user_id": current_user.user_id,
+            "mode": mode,
+            "description": descriptions[mode],
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }},
+        upsert=True
+    )
+    return {"mode": mode, "description": descriptions[mode]}
+
+
+# ============== QUALITY CONTROL ==============
+
+@router.post("/quality-review")
+async def create_quality_review(request: Request, current_user: User = Depends(get_current_user)):
+    """Submit an output for quality review (self-check + peer review)."""
+    data = await request.json()
+    review = {
+        "review_id": f"qc_{uuid.uuid4().hex[:10]}",
+        "user_id": current_user.user_id,
+        "project_id": data.get("project_id", ""),
+        "task_id": data.get("task_id", ""),
+        "agent_id": data.get("agent_id", ""),
+        "content": data.get("content", ""),
+        "review_type": data.get("review_type", "self_check"),
+        "reviewer_agent": data.get("reviewer_agent", ""),
+        "score": None,
+        "feedback": None,
+        "status": "pending",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.quality_reviews.insert_one(review)
+    review.pop("_id", None)
+    return review
+
+
+@router.get("/quality-reviews")
+async def list_quality_reviews(
+    project_id: str = None, status: str = None,
+    page: int = 1, limit: int = 20,
+    current_user: User = Depends(get_current_user)
+):
+    """List quality reviews."""
+    query = {"user_id": current_user.user_id}
+    if project_id:
+        query["project_id"] = project_id
+    if status:
+        query["status"] = status
+    total = await db.quality_reviews.count_documents(query)
+    items = await db.quality_reviews.find(query, {"_id": 0}).sort("created_at", -1).skip((page - 1) * limit).limit(limit).to_list(limit)
+    return {"items": items, "total": total, "page": page, "pages": max(1, (total + limit - 1) // limit)}
+
+
+# ============== COST GOVERNANCE ==============
+
+@router.get("/cost-governance")
+async def get_cost_governance(current_user: User = Depends(get_current_user)):
+    """Get cost governance dashboard with per-agent cost breakdowns."""
+    user_id = current_user.user_id
+
+    # Per-agent cost breakdown
+    pipeline = [
+        {"$match": {"user_id": user_id, "type": "usage"}},
+        {"$group": {"_id": "$agent_name", "total_cost": {"$sum": {"$abs": "$amount"}}, "call_count": {"$sum": 1}}},
+        {"$sort": {"total_cost": -1}}
+    ]
+    agent_costs = await db.transactions.aggregate(pipeline).to_list(50)
+
+    # Budget config
+    budget = await db.system_config.find_one(
+        {"user_id": user_id, "config_type": "budget"}, {"_id": 0}
+    )
+
+    return {
+        "agent_costs": [{"agent": c["_id"] or "Unknown", "total_cost": round(c["total_cost"], 2), "call_count": c["call_count"]} for c in agent_costs],
+        "budget": budget or {"monthly_cap": None, "alert_threshold": None},
+    }
+
+
+@router.put("/cost-governance/budget")
+async def set_budget(request: Request, current_user: User = Depends(get_current_user)):
+    """Set cost governance budget caps."""
+    data = await request.json()
+    await db.system_config.update_one(
+        {"user_id": current_user.user_id, "config_type": "budget"},
+        {"$set": {
+            "user_id": current_user.user_id,
+            "config_type": "budget",
+            "monthly_cap": data.get("monthly_cap"),
+            "alert_threshold": data.get("alert_threshold"),
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }},
+        upsert=True
+    )
+    return {"success": True}

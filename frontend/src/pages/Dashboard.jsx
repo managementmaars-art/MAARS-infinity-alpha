@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import {
   Bot, MessageSquare, ListTodo, Sparkles, Plus, ChevronRight,
   LayoutDashboard, Users, Settings, LogOut, Menu, X, Shield, Trash2, BarChart3, Package, Rocket,
-  Brain, FileCheck, Cpu
+  Brain, FileCheck, Cpu, Activity, Gauge
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -95,6 +95,8 @@ const Dashboard = () => {
         <NavItem icon={MessageSquare} label="Chat" to="/chat" />
         <NavItem icon={Brain} label="Workspace Brain" to="/workspace" />
         <NavItem icon={Cpu} label="Brain Profiles" to="/brain-profiles" />
+        <NavItem icon={Activity} label="Collaborations" to="/collaborations" />
+        <NavItem icon={Gauge} label="KPI Dashboard" to="/kpi-dashboard" />
         <NavItem icon={FileCheck} label="Approvals" to="/approvals" />
         <NavItem icon={Users} label="Agents" to="/agents" />
         <NavItem icon={Package} label="Products" to="/products" />

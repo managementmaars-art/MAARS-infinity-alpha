@@ -85,6 +85,49 @@ AGENT_ROLE_MAP = {
     "revenue": "agent_revenue",
     "pricing": "agent_revenue",
     "monetization": "agent_revenue",
+    # Phase 2 agent role mappings
+    "chief strategy": "agent_cso",
+    "corporate strategy": "agent_cso",
+    "strategic planning": "agent_cso",
+    "investor relations": "agent_investor",
+    "fundraising": "agent_investor",
+    "pitch deck": "agent_investor",
+    "product management": "agent_productmgr",
+    "product": "agent_productmgr",
+    "roadmap": "agent_productmgr",
+    "user stories": "agent_productmgr",
+    "data engineering": "agent_dataengineer",
+    "pipeline": "agent_dataengineer",
+    "etl": "agent_dataengineer",
+    "brand": "agent_brand",
+    "brand identity": "agent_brand",
+    "brand guidelines": "agent_brand",
+    "ux research": "agent_uxresearch",
+    "user research": "agent_uxresearch",
+    "usability": "agent_uxresearch",
+    "3d": "agent_3d",
+    "3d visualization": "agent_3d",
+    "rendering": "agent_3d",
+    "pr": "agent_pr",
+    "public relations": "agent_pr",
+    "crisis management": "agent_pr",
+    "media relations": "agent_pr",
+    "procurement": "agent_procurement",
+    "vendor": "agent_procurement",
+    "purchasing": "agent_procurement",
+    "customer experience": "agent_cx",
+    "cx": "agent_cx",
+    "loyalty": "agent_cx",
+    "ethics": "agent_ethics",
+    "governance": "agent_ethics",
+    "risk": "agent_ethics",
+    "knowledge": "agent_knowledge",
+    "documentation": "agent_knowledge",
+    "wiki": "agent_knowledge",
+    "localization": "agent_localization",
+    "translation": "agent_localization",
+    "internationalization": "agent_localization",
+    "global expansion": "agent_localization",
 }
 
 
@@ -194,6 +237,14 @@ async def log_tool_call(user_id: str, tool_name: str, tool_input: dict, result: 
 async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
     """Execute a tool and return the result as a string. Logs the call for observability."""
     import time
+
+    # Check system mode - simulation mode blocks real-world actions
+    REAL_WORLD_TOOLS = {"send_email", "send_gmail", "send_sms", "send_slack", "schedule_meeting", "google_calendar", "github_action"}
+    if tool_name in REAL_WORLD_TOOLS:
+        mode_config = await db.system_config.find_one({"user_id": user_id, "mode": {"$exists": True}}, {"_id": 0})
+        if not mode_config or mode_config.get("mode") != "execution":
+            return f"[SIMULATION MODE] Would execute '{tool_name}' with parameters: {str(tool_input)[:300]}. Switch to Execution Mode in KPI Dashboard to enable real API calls."
+
     start = time.time()
     status = "success"
     result = ""

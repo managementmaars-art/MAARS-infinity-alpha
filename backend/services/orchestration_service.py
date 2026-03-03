@@ -272,6 +272,31 @@ async def execute_project(project_id: str, user_id: str, api_keys: dict):
                         }}
                     )
                     completed += 1
+
+                    # Log collaboration if task involves cross-agent work
+                    try:
+                        collab_doc = {
+                            "collab_id": f"collab_{uuid.uuid4().hex[:12]}",
+                            "user_id": user_id,
+                            "task_id": task_id,
+                            "project_id": project_id,
+                            "sender": agent.get("name", "Agent"),
+                            "receivers": ["Commander Orion", "Project Manager"],
+                            "objective": task.get("title", ""),
+                            "context": task.get("description", "")[:300],
+                            "required_output": "Task deliverable",
+                            "deadline": "",
+                            "risk_level": task.get("priority", "medium"),
+                            "dependencies": [],
+                            "approval_required": False,
+                            "status": "completed",
+                            "response": f"Completed: {result[:200]}",
+                            "created_at": datetime.now(timezone.utc).isoformat(),
+                            "updated_at": datetime.now(timezone.utc).isoformat(),
+                        }
+                        await db.collaborations.insert_one(collab_doc)
+                    except Exception as collab_err:
+                        logger.error(f"Collab log error: {collab_err}")
                 except Exception as e:
                     logger.error(f"Task execution failed {task_id}: {e}")
                     await db.tasks.update_one(

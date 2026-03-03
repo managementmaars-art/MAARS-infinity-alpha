@@ -35,7 +35,20 @@ const LandingPage = () => {
     { name: "Victoria Harrington", role: "Compliance Officer", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/23f2f01a9c55a73c9e199bce775bc74541dc0311694e5fd12987682886041616.png", capabilities: ["Regulatory", "Audits", "GDPR"] },
     { name: "Dr. Luca Bernstein", role: "AI Optimizer", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/d888a9a6ab8bd8a3afe850ddbf31e706fc38e011b454a3e8acf4a8ebe0e9f165.png", capabilities: ["AI Tuning", "Cost Reduction", "Prompts"] },
     { name: "Diana Morales", role: "Operations Manager", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/d974fde36e8b923670637ccaa3babac5b46cc28fade0c0033c96ba86b4d66091.png", capabilities: ["Process", "Supply Chain", "KPIs"] },
-    { name: "Maximilian Wolfe", role: "Revenue Strategist", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/707cf99fa483834d42b8825e48537bbd3351e4e3f465e88bdd0c577d54e6b92c.png", capabilities: ["Pricing", "Revenue Models", "Monetization"] }
+    { name: "Maximilian Wolfe", role: "Revenue Strategist", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/707cf99fa483834d42b8825e48537bbd3351e4e3f465e88bdd0c577d54e6b92c.png", capabilities: ["Pricing", "Revenue Models", "Monetization"] },
+    { name: "Cassandra Steele", role: "Chief Strategy Officer", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/e5ef1d410dcd7e499baa4089564365be54806a20a1946170f4a53d7b43e976a4.png", capabilities: ["Corporate Strategy", "Market Expansion", "OKRs"] },
+    { name: "Richard Ashworth", role: "Investor Relations", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/da0d3b9c51198fe0df21bc3c98f064839f81dea915c88e590cf7b8d9380dd8c2.png", capabilities: ["Pitch Decks", "Fundraising", "Valuations"] },
+    { name: "Priya Kapoor", role: "Product Manager", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/3de9f03d7891c8833bf377ba7f45efad1b78b195066710674ef4d8ea83a3bce1.png", capabilities: ["Roadmaps", "User Stories", "Sprints"] },
+    { name: "Nikolai Volkov", role: "Data Engineer", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/c565764f7f90fc78fc100d2f4b4ff43c8baf755ace694139c1c54ee96a0429e4.png", capabilities: ["Pipelines", "ETL", "Databases"] },
+    { name: "Valentina Cruz", role: "Brand Architect", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/19d90fd5dc3ea2d4ce4d9916762a4ebead00fdfdad82397a879c59099a3d516f.png", capabilities: ["Brand Identity", "Guidelines", "Visual Systems"] },
+    { name: "Yuki Tanaka", role: "UX Researcher", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/db0fa9edc51497eef8627fe55936a764657127f3627fff193b6a09571c8885bb.png", capabilities: ["User Research", "Usability", "Personas"] },
+    { name: "Marco De Luca", role: "3D Specialist", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/8ec4b4a27946e20891cca2de789d559338c6ab2f18a63b0ecebfa6eaa013fd8a.png", capabilities: ["3D Rendering", "Motion Graphics", "AR/VR"] },
+    { name: "Catherine Blake", role: "PR Manager", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/706aaf93ddbb0793256c82bd6389048070877ee8dee4e69b64b4abb02d8420c8.png", capabilities: ["PR Strategy", "Crisis Mgmt", "Media"] },
+    { name: "Arjun Mehta", role: "Procurement Manager", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/84eae30d456323c117055f6217e22dead13c792020daf9019af55c745f44a344.png", capabilities: ["Vendor Mgmt", "Contracts", "Supply Chain"] },
+    { name: "Sofia Reyes", role: "CX Architect", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/c2715d85ace40876df7f859d06f00275e4a34ca06d90436090bfd9569e6c6b24.png", capabilities: ["Journey Maps", "Loyalty", "NPS"] },
+    { name: "Prof. James Whitfield", role: "Ethics Officer", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/5ab58f9fabff5a03e86596e12c555d71e72d4821271702c03f48eddc4cbef804.png", capabilities: ["Ethics", "Risk", "Governance"] },
+    { name: "Dr. Eleanor Shaw", role: "Knowledge Architect", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/ea78ac11ca9f7675017f9311b0f4dcc70a5fb2f4344f8701aceab4b9dc242718.png", capabilities: ["Knowledge Mgmt", "Documentation", "Taxonomies"] },
+    { name: "Layla Mansouri", role: "Localization Specialist", avatar: "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/d4c51d4c86045d6d0d1d9dccec55d81792f448d8734452de56f90e029c602ed5.png", capabilities: ["Localization", "Translation", "Global Markets"] }
   ];
 
   const features = [
@@ -219,7 +232,7 @@ const LandingPage = () => {
               Meet Your AI Team
             </h2>
             <p className="text-lg text-zinc-400 max-w-2xl">
-              28 specialized AI employees ready to work for you - from secretaries to developers, marketers to analysts.
+              41 specialized AI employees ready to work for you - from secretaries to developers, marketers to analysts.
             </p>
           </div>
 
@@ -410,7 +423,7 @@ const LandingPage = () => {
           </div>
           <div className="flex items-center gap-6 text-sm text-zinc-500">
             <a href="#models" className="hover:text-zinc-300 transition-colors">10 AI Models</a>
-            <a href="#agents" className="hover:text-zinc-300 transition-colors">28 AI Agents</a>
+            <a href="#agents" className="hover:text-zinc-300 transition-colors">41 AI Agents</a>
             <Link to="/pricing" className="hover:text-zinc-300 transition-colors">Pricing</Link>
           </div>
         </div>

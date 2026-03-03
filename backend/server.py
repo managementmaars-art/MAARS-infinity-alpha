@@ -32,6 +32,7 @@ from routes.knowledge_base import router as knowledge_base_router
 from routes.projects import router as projects_router
 from routes.workspace import router as workspace_router
 from routes.approvals import router as approvals_router
+from routes.enterprise import router as enterprise_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -58,6 +59,7 @@ api_router.include_router(knowledge_base_router)
 api_router.include_router(projects_router)
 api_router.include_router(workspace_router)
 api_router.include_router(approvals_router)
+api_router.include_router(enterprise_router)
 
 app.include_router(api_router)
 
@@ -90,6 +92,10 @@ async def startup():
     await db.tool_logs.create_index([("user_id", 1), ("created_at", -1)])
     await db.knowledge_docs.create_index([("agent_id", 1)])
     await db.agent_brains.create_index([("user_id", 1), ("agent_id", 1)], unique=True)
+    await db.collaborations.create_index([("user_id", 1), ("project_id", 1)])
+    await db.kpi_store.create_index([("user_id", 1)])
+    await db.quality_reviews.create_index([("user_id", 1), ("project_id", 1)])
+    await db.system_config.create_index([("user_id", 1)])
     logger.info("MongoDB indexes ensured")
 
     # Load admin-configured pricing from DB (overrides hardcoded defaults)

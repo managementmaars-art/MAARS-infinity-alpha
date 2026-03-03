@@ -2,7 +2,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../App";
 import {
   Bot, MessageSquare, ListTodo, Users, Settings, LogOut, Menu, X,
-  Shield, BarChart3, Package, Rocket, Brain, FileCheck, Cpu, LayoutDashboard
+  Shield, BarChart3, Package, Rocket, Brain, FileCheck, Cpu, LayoutDashboard,
+  Activity, Gauge
 } from "lucide-react";
 import { useState } from "react";
 import { BrandFooter } from "../BrandFooter";
@@ -14,6 +15,8 @@ const navItems = [
   { icon: Users, label: "Agents", to: "/agents" },
   { icon: Brain, label: "Workspace Brain", to: "/workspace" },
   { icon: Cpu, label: "Brain Profiles", to: "/brain-profiles" },
+  { icon: Activity, label: "Collaborations", to: "/collaborations" },
+  { icon: Gauge, label: "KPI Dashboard", to: "/kpi-dashboard" },
   { icon: FileCheck, label: "Approvals", to: "/approvals" },
   { icon: Package, label: "Products", to: "/products" },
   { icon: ListTodo, label: "Tasks", to: "/tasks" },
