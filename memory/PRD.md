@@ -84,6 +84,14 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
   - Frontend: Cyan "Auto-learned" badge with Zap icon on auto-learned entries
   - New "AUTO-LEARNED" stat card in Memory Governance (5 cards total)
   - Async execution — doesn't block task completion flow
+- **About Page Update & PDF Export**: Comprehensive system summary with PDF download
+  - Updated from 12 to 17 core systems in About page
+  - Added 5 new system entries: Voice Commands, Code Explorer, Memory Governance, Auto-Learning, Command Palette
+  - GET /api/summary/pdf generates ~10KB professional PDF with all systems, agents, architecture, API endpoints
+  - PDF includes live stats from MongoDB (agent count, task count, memory entries)
+  - "Download PDF" button in About page header
+  - Updated hero badges (8 total), stat cards (5 total: 41 agents, 8 layers, 17 systems, 3 providers, 50+ endpoints)
+  - Updated Technical Architecture section with WebSocket, Command Palette, PDF export mentions
 
 ## Testing Status
 - Iteration 53: 26/26 (100%)
@@ -93,6 +101,7 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
 - Iteration 57: Frontend 100% — Command Palette all 13 scenarios passed
 - Iteration 58: 24/24 backend + all frontend UI verified (Voice + Code Explorer)
 - Iteration 60: 10/10 backend + all frontend UI verified (Agent Memory Auto-Learning)
+- Iteration 61: 10/10 backend + all frontend verified (About Page PDF Export + 17 Core Systems)
 
 ## Credentials
 - Admin: management.maars@marsgc.net / admin123
