@@ -193,6 +193,149 @@ const SYSTEMS = [
   },
 ];
 
+const TIER_COLORS = {
+  "Flagship": "bg-amber-500/20 text-amber-400",
+  "Fast": "bg-cyan-500/20 text-cyan-400",
+  "Economy": "bg-emerald-500/20 text-emerald-400",
+  "Premium": "bg-violet-500/20 text-violet-400",
+  "Reasoning": "bg-rose-500/20 text-rose-400",
+  "Search": "bg-blue-500/20 text-blue-400",
+  "Research": "bg-indigo-500/20 text-indigo-400",
+  "Image Gen": "bg-pink-500/20 text-pink-400",
+  "Video Gen": "bg-red-500/20 text-red-400",
+  "Voice": "bg-orange-500/20 text-orange-400",
+  "STT": "bg-teal-500/20 text-teal-400",
+};
+
+const AI_PROVIDERS = [
+  {
+    name: "OpenAI", color: "text-emerald-400", dotColor: "bg-emerald-400",
+    models: [
+      { name: "GPT-5.2", tier: "Flagship", desc: "Most capable for coding, analysis & complex tasks" },
+      { name: "GPT-4o", tier: "Fast", desc: "Balanced speed and quality" },
+      { name: "GPT-4o Mini", tier: "Economy", desc: "Cost-efficient for quick answers" },
+      { name: "O3", tier: "Reasoning", desc: "Advanced reasoning for math & logic" },
+      { name: "O3 Mini", tier: "Reasoning", desc: "Lightweight analytical tasks" },
+    ],
+  },
+  {
+    name: "Anthropic", color: "text-orange-400", dotColor: "bg-orange-400",
+    models: [
+      { name: "Claude Sonnet 4.5", tier: "Flagship", desc: "Creative writing, analysis & nuanced tasks" },
+      { name: "Claude Opus 4.5", tier: "Premium", desc: "Deep research & complex analysis" },
+      { name: "Claude Haiku 4.5", tier: "Economy", desc: "Fast responses & summaries" },
+    ],
+  },
+  {
+    name: "Google", color: "text-blue-400", dotColor: "bg-blue-400",
+    models: [
+      { name: "Gemini 3 Flash", tier: "Fast", desc: "Lightning-fast responses" },
+      { name: "Gemini 3 Pro", tier: "Flagship", desc: "Multimodal research & analysis" },
+    ],
+  },
+  {
+    name: "xAI (Grok)", color: "text-sky-400", dotColor: "bg-sky-400",
+    models: [
+      { name: "Grok 3", tier: "Flagship", desc: "1M context, reasoning & analysis" },
+      { name: "Grok 3 Mini", tier: "Economy", desc: "Cost-efficient reasoning" },
+      { name: "Grok 2", tier: "Fast", desc: "Competitive with GPT-4o" },
+    ],
+  },
+  {
+    name: "DeepSeek", color: "text-teal-400", dotColor: "bg-teal-400",
+    models: [
+      { name: "DeepSeek Chat", tier: "Economy", desc: "128K context, ultra-affordable" },
+      { name: "DeepSeek Reasoner", tier: "Reasoning", desc: "Deep math & logic reasoning" },
+    ],
+  },
+  {
+    name: "Mistral AI", color: "text-violet-400", dotColor: "bg-violet-400",
+    models: [
+      { name: "Mistral Large", tier: "Flagship", desc: "Complex reasoning, enterprise-grade" },
+      { name: "Mistral Medium", tier: "Fast", desc: "Balanced performance" },
+      { name: "Mistral Small", tier: "Economy", desc: "Ultra-fast, simple tasks" },
+    ],
+  },
+  {
+    name: "Perplexity", color: "text-cyan-400", dotColor: "bg-cyan-400",
+    models: [
+      { name: "Sonar", tier: "Search", desc: "Web-grounded real-time answers" },
+      { name: "Sonar Pro", tier: "Research", desc: "Deep web research with citations" },
+    ],
+  },
+  {
+    name: "Cohere", color: "text-amber-400", dotColor: "bg-amber-400",
+    models: [
+      { name: "Command R+", tier: "Flagship", desc: "RAG & enterprise tasks" },
+      { name: "Command R", tier: "Economy", desc: "Cost-efficient summaries" },
+    ],
+  },
+  {
+    name: "AI Generation + Voice", color: "text-pink-400", dotColor: "bg-pink-400",
+    models: [
+      { name: "Nano Banana 2", tier: "Image Gen", desc: "Gemini 3.1 Flash image generation" },
+      { name: "GPT Image 1", tier: "Image Gen", desc: "Generate images from text" },
+      { name: "DALL-E 3", tier: "Image Gen", desc: "Creative image generation" },
+      { name: "Sora 2", tier: "Video Gen", desc: "AI video from text prompts" },
+      { name: "ElevenLabs", tier: "Voice", desc: "Multilingual TTS (Bangla, English, etc.)" },
+      { name: "Whisper", tier: "STT", desc: "Speech-to-text in 50+ languages" },
+    ],
+  },
+];
+
+const COST_DATA = [
+  { name: "OpenAI", unit: "per 1M tokens (text) / per image or second (gen)", models: [
+    { name: "GPT-5.2", input: "$2.50", output: "$10.00" },
+    { name: "GPT-4o", input: "$2.50", output: "$10.00" },
+    { name: "GPT-4o Mini", input: "$0.15", output: "$0.60" },
+    { name: "O3", input: "$10.00", output: "$40.00" },
+    { name: "O3 Mini", input: "$1.10", output: "$4.40" },
+    { name: "GPT Image 1", input: "$0.02/img", output: "1024x1024" },
+    { name: "Sora 2", input: "$0.10/sec", output: "4-12 sec video" },
+  ]},
+  { name: "Anthropic", unit: "per 1M tokens", models: [
+    { name: "Claude Sonnet 4.5", input: "$3.00", output: "$15.00" },
+    { name: "Claude Opus 4.5", input: "$15.00", output: "$75.00" },
+    { name: "Claude Haiku 4.5", input: "$0.80", output: "$4.00" },
+  ]},
+  { name: "Gemini", unit: "per 1M tokens", models: [
+    { name: "Gemini 3 Flash", input: "$0.075", output: "$0.30" },
+    { name: "Gemini 3 Pro", input: "$1.25", output: "$5.00" },
+    { name: "Nano Banana 2", input: "$0.02/img", output: "1024x1024" },
+  ]},
+  { name: "xAI", unit: "per 1M tokens", models: [
+    { name: "Grok 3", input: "$3.00", output: "$15.00" },
+    { name: "Grok 3 Mini", input: "$0.30", output: "$0.50" },
+    { name: "Grok 2", input: "$2.00", output: "$10.00" },
+  ]},
+  { name: "DeepSeek", unit: "per 1M tokens", models: [
+    { name: "DeepSeek Chat", input: "$0.14", output: "$0.28" },
+    { name: "DeepSeek Reasoner", input: "$0.55", output: "$2.19" },
+  ]},
+  { name: "Mistral", unit: "per 1M tokens", models: [
+    { name: "Mistral Large", input: "$2.00", output: "$6.00" },
+    { name: "Mistral Medium", input: "$0.40", output: "$2.00" },
+    { name: "Mistral Small", input: "$0.10", output: "$0.30" },
+  ]},
+  { name: "Perplexity", unit: "per 1M tokens + $5/1K search", models: [
+    { name: "Sonar", input: "$1.00", output: "$1.00" },
+    { name: "Sonar Pro", input: "$3.00", output: "$15.00" },
+  ]},
+  { name: "Cohere", unit: "per 1M tokens", models: [
+    { name: "Command R+", input: "$2.50", output: "$10.00" },
+    { name: "Command R", input: "$0.15", output: "$0.60" },
+  ]},
+  { name: "ElevenLabs", unit: "per 1K characters", models: [
+    { name: "Multilingual v2", input: "$0.30/1K chars", output: "TTS audio" },
+    { name: "Turbo v2.5", input: "$0.18/1K chars", output: "Fast TTS" },
+  ]},
+  { name: "Google Suite", unit: "Free with service account", models: [
+    { name: "Gmail Send", input: "Free", output: "per email" },
+    { name: "Calendar Event", input: "Free", output: "per event" },
+    { name: "Drive Read/Write", input: "Free", output: "per file" },
+  ]},
+];
+
 const Section = ({ title, icon: Icon, color, children }) => (
   <div className="mb-10">
     <div className="flex items-center gap-3 mb-4">
@@ -444,6 +587,66 @@ const AboutPage = () => {
             </CardContent>
           </Card>
         </div>
+      </Section>
+
+      {/* AI Models & Providers */}
+      <Section title="AI Models & Providers" icon={Sparkles} color="bg-amber-500/15">
+        <p className="text-xs text-zinc-400 mb-4">9 AI providers with 30+ models across text generation, reasoning, search, image generation, video, voice, and speech-to-text.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {AI_PROVIDERS.map(provider => (
+            <Card key={provider.name} className="bg-zinc-900/50 border-white/5" data-testid={`provider-${provider.name}`}>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Sparkles className={`w-4 h-4 ${provider.color}`} />
+                  <p className="text-sm font-bold text-white">{provider.name}</p>
+                </div>
+                <div className="space-y-2">
+                  {provider.models.map(m => (
+                    <div key={m.name} className="flex items-start gap-2">
+                      <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${provider.dotColor}`} />
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-medium text-zinc-200">{m.name}</span>
+                          <Badge className={`text-[8px] px-1.5 py-0 border-0 ${TIER_COLORS[m.tier] || "bg-zinc-700 text-zinc-400"}`}>{m.tier}</Badge>
+                        </div>
+                        <p className="text-[10px] text-zinc-500">{m.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      {/* Provider Costs */}
+      <Section title="Direct Provider Costs" icon={BarChart3} color="bg-green-500/15">
+        <p className="text-xs text-zinc-400 mb-4">Reference pricing when using your own API keys. Prices are from provider websites and may change.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {COST_DATA.map(provider => (
+            <Card key={provider.name} className="bg-zinc-900/50 border-white/5">
+              <CardContent className="p-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xs font-bold text-white">{provider.name}</span>
+                  <span className="text-[9px] text-zinc-600">{provider.unit}</span>
+                </div>
+                <div className="space-y-1">
+                  {provider.models.map(m => (
+                    <div key={m.name} className="flex items-center justify-between text-[11px]">
+                      <span className="text-zinc-400">{m.name}</span>
+                      <div className="flex gap-3">
+                        <span className="text-zinc-500">In: <span className="text-emerald-400 font-medium">{m.input}</span></span>
+                        <span className="text-zinc-500">Out: <span className="text-amber-400 font-medium">{m.output}</span></span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <p className="text-[10px] text-zinc-600 mt-3 italic">* Emergent Universal Key includes a small markup over direct pricing for convenience and unified billing.</p>
       </Section>
 
       {/* Footer */}
