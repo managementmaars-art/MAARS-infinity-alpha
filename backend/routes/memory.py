@@ -231,4 +231,6 @@ async def _memory_stats(user_id: str) -> dict:
         "low_relevance_count": low_relevance,
         "categories": categories,
         "agents": agents,
+        "auto_learned": await db.memory_entries.count_documents({"user_id": user_id, "source": "auto_learn"}),
+        "manual": await db.memory_entries.count_documents({"user_id": user_id, "source": "manual"}),
     }

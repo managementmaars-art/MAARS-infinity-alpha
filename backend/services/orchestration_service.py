@@ -297,6 +297,23 @@ async def execute_project(project_id: str, user_id: str, api_keys: dict):
                     )
                     completed += 1
 
+                    # Memory Auto-Learning: Extract learnings from completed task
+                    try:
+                        from services.memory_learning_service import extract_learnings_from_task
+                        asyncio.create_task(extract_learnings_from_task(
+                            task_result=result[:2000],
+                            task_description=task["description"],
+                            task_title=task.get("title", "Untitled"),
+                            agent_name=agent.get("name", "Agent"),
+                            agent_id=agent.get("agent_id", ""),
+                            user_id=user_id,
+                            project_id=project_id,
+                            quality_score=quality_review.get("score") if quality_review else None,
+                            api_keys=api_keys,
+                        ))
+                    except Exception as learn_err:
+                        logger.error(f"Auto-learn error: {learn_err}")
+
                     # Autonomous Collaboration: Detect cross-domain dependencies
                     await _detect_and_create_collaborations(
                         task=task, agent=agent, result=result,

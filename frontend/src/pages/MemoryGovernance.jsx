@@ -140,12 +140,19 @@ export default function MemoryGovernance() {
 
       {/* Stats Cards */}
       {stats && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" data-testid="memory-stats">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3" data-testid="memory-stats">
           <Card className="bg-zinc-900/50 border-white/5">
             <CardContent className="p-3">
               <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Total Entries</p>
               <p className="text-xl font-bold text-white">{stats.total_entries}</p>
               <p className="text-[10px] text-zinc-600">{stats.usage_pct}% of {stats.max_entries} limit</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-zinc-900/50 border-white/5">
+            <CardContent className="p-3">
+              <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Auto-Learned</p>
+              <p className="text-xl font-bold text-cyan-400">{stats.auto_learned || 0}</p>
+              <p className="text-[10px] text-zinc-600">{stats.manual || 0} manual</p>
             </CardContent>
           </Card>
           <Card className="bg-zinc-900/50 border-white/5">
@@ -235,11 +242,18 @@ export default function MemoryGovernance() {
                     <Badge variant="outline" className={`text-[9px] ${CATEGORY_COLORS[entry.category] || CATEGORY_COLORS.general}`}>
                       {entry.category}
                     </Badge>
+                    {entry.source === "auto_learn" && (
+                      <Badge variant="outline" className="text-[9px] border-cyan-500/30 text-cyan-400" data-testid={`auto-learn-badge-${entry.memory_id}`}>
+                        <Zap className="w-2.5 h-2.5 mr-0.5" />Auto-learned
+                      </Badge>
+                    )}
                     {entry.agent_name && (
                       <span className="text-[10px] text-indigo-400">{entry.agent_name}</span>
                     )}
                     <span className="text-[10px] text-zinc-600">v{entry.version}</span>
-                    <span className="text-[10px] text-zinc-700">{entry.source}</span>
+                    {entry.source_task_title && (
+                      <span className="text-[10px] text-zinc-700 truncate max-w-[120px]" title={entry.source_task_title}>from: {entry.source_task_title}</span>
+                    )}
                   </div>
                   <p className="text-sm text-zinc-300 mb-1">{entry.content?.substring(0, 200)}{entry.content?.length > 200 ? "..." : ""}</p>
                   {entry.summary && <p className="text-xs text-zinc-500 italic">{entry.summary}</p>}

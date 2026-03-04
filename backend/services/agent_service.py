@@ -1016,6 +1016,20 @@ Choose 2-4 most relevant specialists. Be specific about what each should do. Ass
                 {"task_id": ct["task_id"]},
                 {"$set": {"status": "completed", "result": response[:2000], "updated_at": datetime.now(timezone.utc).isoformat()}}
             )
+            # Memory Auto-Learning from commander delegation
+            try:
+                from services.memory_learning_service import extract_learnings_from_task
+                asyncio.create_task(extract_learnings_from_task(
+                    task_result=response[:2000],
+                    task_description=ct["desc"],
+                    task_title=ct["title"],
+                    agent_name=agent.get("name", "Agent"),
+                    agent_id=ct["agent_id"],
+                    user_id=user_id,
+                    api_keys=api_keys,
+                ))
+            except Exception as learn_err:
+                logger.error(f"Auto-learn error (commander): {learn_err}")
         except Exception as e:
             logger.error(f"Commander delegation error for {ct['agent_id']}: {e}")
             agent_entry["response"] = "Unable to complete - task saved for manual execution."
