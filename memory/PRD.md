@@ -34,10 +34,26 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
 - About Page (comprehensive system docs, all 41 agents, 12 systems)
 - **Command Palette**: VS Code/Notion-style quick search (press `/` or `Cmd+K`)
   - Search across pages (20+), agents (41), and quick actions (4)
-  - Keyboard navigation (↑↓ arrows, Enter, Escape)
+  - Keyboard navigation (arrows, Enter, Escape)
   - Recent searches in localStorage
   - Grouped results: Recent, Pages, Agents, Quick Actions
   - Sidebar search button with `/` hint + mobile search icon
+
+### Phase 8 (March 4, 2026 — Session 4)
+- **Voice Command Interface**: Microphone button in Command Palette
+  - Records audio via browser MediaRecorder API (WebM format)
+  - Sends to POST /api/voice/transcribe (OpenAI Whisper via Emergent SDK)
+  - Transcribed text auto-fills search input for navigation/actions
+  - Visual states: idle, recording (pulse), transcribing (spinner)
+  - "Voice" hint in Command Palette footer
+- **Admin Code Explorer**: Full codebase browser at /admin/code-explorer
+  - GET /api/admin/code/tree — recursive file tree (backend/, frontend/src/)
+  - GET /api/admin/code/file?path=... — file content with language detection
+  - GET /api/admin/code/search?q=... — file name search (max 50 results)
+  - File tree panel with expand/collapse, file sizes, language-colored icons
+  - Code viewer panel with line numbers, copy button, language badge
+  - Path traversal protection, admin-only access (403 for non-admin)
+  - Sidebar nav item + Command Palette entry for admin users
 
 ## Testing Status
 - Iteration 53: 26/26 (100%)
@@ -45,11 +61,16 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
 - Iteration 55: 27/27 (100%)
 - Iteration 56: Frontend 100%
 - Iteration 57: Frontend 100% — Command Palette all 13 scenarios passed
+- Iteration 58: 24/24 backend + all frontend UI verified (Voice + Code Explorer)
 
 ## Credentials
 - Admin: management.maars@marsgc.net / admin123
 
 ## Prioritized Backlog
+
+### P0 (Completed)
+- Voice Command Interface
+- Admin Code Explorer
 
 ### P1
 - Memory Governance (versioning, pruning, relevance scoring)
@@ -60,7 +81,7 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
 - Advanced integrations (WhatsApp, Meta Ads, Shopify, ERP)
 - Cost Governance active monitoring
 - Custom agent creation by users
-- Campaign Builder (Reference Intel → Content Gen → Social scheduling)
+- Campaign Builder (Reference Intel -> Content Gen -> Social scheduling)
 
 ### P3
 - Multi-tenant isolation, Mobile app wrapper
