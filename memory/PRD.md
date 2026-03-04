@@ -7,22 +7,24 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
 ```
 /app/
 ├── backend/
-│   ├── server.py (FastAPI, CORS, MongoDB indexes for 10+ collections)
+│   ├── server.py (FastAPI, CORS, MongoDB indexes for 15+ collections)
 │   ├── config.py (41 agents, tools, brain profiles, tool maps)
 │   ├── services/
 │   │   ├── agent_service.py (Execution, brain context, workspace context, simulation mode, tool logging)
-│   │   ├── orchestration_service.py (Goal decomposition, project execution, media gen, collaboration logging, Secretary handoff)
-│   │   └── cache_service.py (Redis caching)
+│   │   ├── orchestration_service.py (Goal decomposition, project execution, media gen, collaboration logging)
+│   │   └── llm_service.py (LLM fallback chain)
 │   ├── routes/
-│   │   ├── enterprise.py (Collaboration Engine, KPI Framework, System Mode, Cost Governance, Quality Control)
+│   │   ├── enterprise.py (Collaboration, KPI, System Mode, Cost Governance, Quality Control, Activity Monitor, Reference Intelligence, LLM Config)
+│   │   ├── vibe_coding.py (Vibe Coding App Builder - project CRUD + chat + preview)
+│   │   ├── actions.py (Real-world actions: Google OAuth, Gmail, Calendar, integrations listing)
 │   │   ├── agents.py (CRUD + Custom Brain Profiles)
-│   │   ├── projects.py, workspace.py, approvals.py, chats.py, admin.py, tasks.py, products.py, teams.py, insights.py, settings.py
+│   │   └── auth.py, chats.py, projects.py, workspace.py, approvals.py, tasks.py, products.py, teams.py, admin.py, etc.
 │   └── shared/, models/
 └── frontend/
     └── src/
-        ├── App.js (Router, auth, 15+ routes)
-        ├── pages/ (Dashboard, AgentChat, Projects, ProjectDetail, BrainProfiles, KPIDashboard, CollaborationEngine, Approvals, WorkspaceBrain, Agents, Tasks, Team, Products, Settings, InsightsPage, AdminDashboard, LandingPage)
-        └── components/ (DashboardLayout, ProjectsLayout, CommandCenter, BrandFooter, UI components)
+        ├── App.js (Router, auth, 18+ routes)
+        ├── pages/ (Dashboard, AgentChat, Projects, BrainProfiles, KPIDashboard, CollaborationEngine, ActivityMonitor, VibeCoding, ReferenceIntelligence, Approvals, WorkspaceBrain, Agents, Tasks, Team, Products, Settings, InsightsPage, AdminDashboard, LandingPage)
+        └── components/ (DashboardLayout with sidebar, ProjectsLayout, CommandCenter, BrandFooter, UI components)
 ```
 
 ## What's Been Implemented
@@ -43,13 +45,18 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
 - Navigation fixes, consistent professional corporate avatars for all agents
 
 ### Phase 4 — Enterprise Operating System (March 3, 2026)
-- **13 NEW Agents (41 total):** Chief Strategy Officer (Cassandra Steele), Investor Relations (Richard Ashworth), Product Manager (Priya Kapoor), Data Engineer (Nikolai Volkov), Brand Architect (Valentina Cruz), UX Researcher (Yuki Tanaka), 3D Visualization Specialist (Marco De Luca), PR Manager (Catherine Blake), Procurement Manager (Arjun Mehta), CX Architect (Sofia Reyes), Ethics Officer (Prof. James Whitfield), Knowledge Architect (Dr. Eleanor Shaw), Localization Specialist (Layla Mansouri)
-- **Collaboration Engine:** Inter-agent messaging with structured schema (sender, receivers, objective, context, risk level, dependencies, status). Auto-logged during project task execution. Frontend at /collaborations with status filters.
-- **KPI Command Center:** Real-time dashboard aggregating operational (projects, tasks, chats), governance (approvals, tool calls, risk incidents), and cost metrics. Custom KPI creation with targets and progress tracking. Frontend at /kpi-dashboard.
-- **System Mode Toggle:** Simulation (blocks real-world API calls) vs Execution (live). Persists per user. Enforced in tool execution layer.
-- **Cost Governance:** Per-agent cost breakdown, budget caps (monthly cap + alert threshold). API endpoints for monitoring and configuration.
-- **Quality Control Protocol:** Quality review records for agent outputs (self-check, peer review, compliance). API for creation and listing.
-- **Enhanced Autonomy Enforcement:** Simulation mode blocks send_email, send_gmail, send_sms, send_slack, schedule_meeting, google_calendar, github_action in non-execution mode.
+- 13 NEW Agents (41 total) across all organizational layers
+- Collaboration Engine, KPI Command Center, System Mode Toggle
+- Cost Governance, Quality Control Protocol
+
+### Phase 5 — P0/P1 Features Complete (March 4, 2026)
+- **Agent Activity Monitor**: Real-time dashboard at /activity-monitor showing agent workforce status, inter-agent communication flows, task dependency graph, and recent tool executions. Auto-refresh with live/paused toggle.
+- **Vibe Coding App Builder**: Chat-based full-stack app generation at /vibe-coding. Creates single-page HTML/CSS/JS apps from text prompts using LLM. Supports iterative modifications via chat, live preview in iframe, code view, file download.
+- **Universal Reference Intelligence**: Style Blueprint extraction at /reference-intelligence. Analyzes text (marketing copy, brand voice) and images (visual style, brand detection) using LLM. Creates structured style blueprints for content generation.
+- **Flexible LLM Configuration**: Model-agnostic system supporting OpenAI (gpt-5.2, gpt-5.1, gpt-4.1, etc.), Anthropic (Claude Sonnet/Haiku), and Google Gemini (gemini-3-flash, gemini-2.5-pro). User-configurable in Settings.
+- **Real-World Action Layer**: Google OAuth integration for Gmail/Calendar. Simulation mode gates all real-world actions. Integrations management in Settings with connect/disconnect UI.
+- **Enhanced Settings**: LLM Model Configuration card (provider/model selection), Integrations & Actions card (Google Suite, system mode status).
+- **Updated Navigation**: Sidebar includes Activity Monitor, Vibe Coding, Reference Intel links.
 
 ## 41 Agent Organizational Structure
 **Executive:** Commander, Chief Strategy Officer, Revenue Strategist, Investor Relations
@@ -62,7 +69,7 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
 **Intelligence:** Research Specialist, Knowledge Architect, Localization Specialist, Personal Secretary
 
 ## Key DB Collections
-agents, agent_brains, projects, workspace_brain, tool_calls, approvals, collaborations, kpi_store, quality_reviews, system_config, chats, tasks, products, teams, transactions, users
+agents, agent_brains, projects, workspace_brain, tool_calls, tool_logs, approvals, collaborations, kpi_store, quality_reviews, system_config, chats, tasks, products, teams, transactions, users, vibe_projects, reference_analyses, google_tokens, oauth_states
 
 ## Key API Endpoints
 - `/api/agents/public` — 41 agents
@@ -74,28 +81,37 @@ agents, agent_brains, projects, workspace_brain, tool_calls, approvals, collabor
 - `/api/system/mode` — Simulation/Execution toggle
 - `/api/cost-governance` — Cost tracking + budget caps
 - `/api/quality-review(s)` — Quality control
-- `/api/projects`, `/api/workspace`, `/api/approvals`
+- `/api/activity/live` — Real-time agent activity monitor
+- `/api/reference/analyze` — Reference Intelligence analysis
+- `/api/reference/history` — Analysis history
+- `/api/llm/config` — LLM provider/model configuration (GET/PUT)
+- `/api/vibe/projects` — Vibe Coding project CRUD
+- `/api/vibe/projects/{id}/chat` — Vibe Coding chat modifications
+- `/api/vibe/projects/{id}/preview` — Vibe project HTML preview
+- `/api/actions/integrations` — List action integrations
+- `/api/actions/send-email` — Send email (simulation/execution mode)
+- `/api/actions/create-event` — Create calendar event (simulation/execution mode)
+- `/api/oauth/gmail/status|login|callback|disconnect` — Google OAuth flow
 
 ## Prioritized Backlog
 
 ### P1 — High Priority
-- **Real-World Action Layer**: Wire agents to actually execute external API calls (Gmail, Calendar, social posting)
-- **"Vibe Coding" App Builder**: Chat-based full-stack app building with GitHub integration
-- **Universal Reference Intelligence**: Image analysis, brand detection, style blueprints
+- **Collaboration Engine Autonomous Logic**: Agents autonomously initiate collaboration based on task dependencies
+- **Quality Control & Failure Recovery**: Critic module, auto-retry, fallback models, escalation chain
+- **Model-Agnostic LLM Router**: Dynamic model selection based on task complexity/cost/privacy
 
 ### P2 — Medium Priority
-- **Model-Agnostic LLM Router**: Dynamic model selection based on task complexity/cost/privacy
 - **Memory Governance**: Versioning, tenant isolation, pruning, relevance scoring
-- **Failure Recovery Protocol**: Auto-retry, fallback models, escalation chain
 - **Advanced Integrations**: WhatsApp, Meta Ads, TikTok Ads, Google Ads, Shopify, ERP
+- **Enterprise RBAC System**: Granular role-based access control with permissions UI
 
 ### P3 — Future
-- Real-time agent activity visualizer, Workflow builder UI
+- Real-time agent activity visualizer with WebSocket, Workflow builder UI
 - Custom agent creation by users, Multi-tenant isolation
 - Enterprise org chart visualization, Architecture diagrams
 - QR/Barcode generation for Inventory Manager
 
 ## Testing
+- Iteration 54: 100% pass rate — 20/20 backend, all frontend passed (Activity Monitor, Vibe Coding, Reference Intelligence, LLM Config, Actions Integrations)
 - Iteration 53: 100% pass rate — 26/26 backend, all frontend passed
-- Iteration 52: 100% — 20/20 backend, all frontend passed
 - Admin: management.maars@marsgc.net / admin123
