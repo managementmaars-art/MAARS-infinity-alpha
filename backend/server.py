@@ -39,6 +39,7 @@ from routes.content import router as content_router
 from routes.voice import router as voice_router
 from routes.admin_code import router as admin_code_router
 from routes.memory import router as memory_router
+from routes.summary import router as summary_router
 from routes.websocket import router as ws_router
 
 logging.basicConfig(level=logging.INFO)
@@ -73,6 +74,7 @@ api_router.include_router(content_router)
 api_router.include_router(voice_router)
 api_router.include_router(admin_code_router)
 api_router.include_router(memory_router)
+api_router.include_router(summary_router)
 
 app.include_router(api_router)
 
