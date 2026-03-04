@@ -75,6 +75,15 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
   - Frontend: Connection status indicator (WebSocket Live / Polling / Paused)
   - Live/Paused toggle, manual refresh button
   - REST fallback polling at 10s intervals when WebSocket unavailable
+- **Agent Memory Auto-Learning**: Automatic knowledge extraction from completed tasks
+  - `services/memory_learning_service.py` uses GPT-4o-mini to extract 1-3 learnings per task
+  - Hooked into `orchestration_service.py` (project task completion) and `agent_service.py` (commander delegation)
+  - Extracts: facts, preferences, instructions, context, decisions with importance scoring
+  - Near-duplicate detection (first 40 chars match)
+  - Entries tagged with source='auto_learn', source_task_title, quality_score
+  - Frontend: Cyan "Auto-learned" badge with Zap icon on auto-learned entries
+  - New "AUTO-LEARNED" stat card in Memory Governance (5 cards total)
+  - Async execution — doesn't block task completion flow
 
 ## Testing Status
 - Iteration 53: 26/26 (100%)
@@ -83,7 +92,7 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
 - Iteration 56: Frontend 100%
 - Iteration 57: Frontend 100% — Command Palette all 13 scenarios passed
 - Iteration 58: 24/24 backend + all frontend UI verified (Voice + Code Explorer)
-- Iteration 59: 18/18 backend + all frontend UI verified (Code Export + Memory Governance + WebSocket Activity)
+- Iteration 60: 10/10 backend + all frontend UI verified (Agent Memory Auto-Learning)
 
 ## Credentials
 - Admin: management.maars@marsgc.net / admin123
