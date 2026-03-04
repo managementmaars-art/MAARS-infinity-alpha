@@ -29,6 +29,7 @@ import ReferenceIntelligence from "./pages/ReferenceIntelligence";
 import ContentGenerator from "./pages/ContentGenerator";
 import AboutPage from "./pages/AboutPage";
 import CodeExplorer from "./pages/CodeExplorer";
+import MemoryGovernance from "./pages/MemoryGovernance";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -269,6 +270,7 @@ const AppRouter = () => {
       <Route path="/insights" element={<ProtectedRoute><DashboardLayout><InsightsPage /></DashboardLayout></ProtectedRoute>} />
       <Route path="/settings" element={<ProtectedRoute><DashboardLayout><Settings /></DashboardLayout></ProtectedRoute>} />
       <Route path="/about" element={<ProtectedRoute><DashboardLayout><AboutPage /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/memory" element={<ProtectedRoute><DashboardLayout><MemoryGovernance /></DashboardLayout></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminDashboard /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/code-explorer" element={<AdminRoute><DashboardLayout><CodeExplorer /></DashboardLayout></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />

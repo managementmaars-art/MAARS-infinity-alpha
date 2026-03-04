@@ -38,6 +38,8 @@ from routes.actions import router as actions_router
 from routes.content import router as content_router
 from routes.voice import router as voice_router
 from routes.admin_code import router as admin_code_router
+from routes.memory import router as memory_router
+from routes.websocket import router as ws_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -70,8 +72,12 @@ api_router.include_router(actions_router)
 api_router.include_router(content_router)
 api_router.include_router(voice_router)
 api_router.include_router(admin_code_router)
+api_router.include_router(memory_router)
 
 app.include_router(api_router)
+
+# WebSocket routes (outside /api prefix — ingress handles /ws differently)
+app.include_router(ws_router, prefix="/api")
 
 
 @app.on_event("startup")
@@ -111,6 +117,8 @@ async def startup():
     await db.google_tokens.create_index([("user_id", 1)], unique=True)
     await db.generated_content.create_index([("user_id", 1), ("created_at", -1)])
     await db.routing_logs.create_index([("user_id", 1), ("created_at", -1)])
+    await db.memory_entries.create_index([("user_id", 1), ("created_at", -1)])
+    await db.memory_entries.create_index([("user_id", 1), ("agent_id", 1)])
     logger.info("MongoDB indexes ensured")
 
     # Load admin-configured pricing from DB (overrides hardcoded defaults)

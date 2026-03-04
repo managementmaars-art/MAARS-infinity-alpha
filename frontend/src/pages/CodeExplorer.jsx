@@ -149,12 +149,31 @@ export default function CodeExplorer() {
     }, 300);
   }, [token]);
 
+  const [downloading, setDownloading] = useState(false);
+
   const handleCopy = () => {
     if (fileContent?.content) {
       navigator.clipboard.writeText(fileContent.content);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
+  };
+
+  const handleDownloadZip = async () => {
+    setDownloading(true);
+    try {
+      const res = await fetch(`${API}/admin/code/export`, { headers });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "maars-command-codebase.zip";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    } catch {}
+    setDownloading(false);
   };
 
   const totalFiles = tree.reduce((sum, node) =>
@@ -173,6 +192,15 @@ export default function CodeExplorer() {
             Browse the entire MAARS Command codebase ({totalFiles} files)
           </p>
         </div>
+        <button
+          onClick={handleDownloadZip}
+          disabled={downloading}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition-colors disabled:opacity-50"
+          data-testid="download-code-btn"
+        >
+          {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+          {downloading ? "Packaging..." : "Download Code"}
+        </button>
       </div>
 
       <div className="flex gap-4 h-[calc(100vh-180px)]">

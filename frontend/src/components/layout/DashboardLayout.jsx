@@ -4,7 +4,7 @@ import {
   Bot, MessageSquare, ListTodo, Users, Settings, LogOut, Menu, X,
   Shield, BarChart3, Package, Rocket, Brain, FileCheck, Cpu, LayoutDashboard,
   Activity, Gauge, Radio, Code, Palette, PenTool, Info,
-  PanelLeftClose, PanelLeftOpen, Search, FileCode
+  PanelLeftClose, PanelLeftOpen, Search, FileCode, Database
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { BrandFooter } from "../BrandFooter";
@@ -23,6 +23,7 @@ const navItems = [
   { icon: Code, label: "Vibe Coding", to: "/vibe-coding" },
   { icon: Palette, label: "Reference Intel", to: "/reference-intelligence" },
   { icon: PenTool, label: "Content Generator", to: "/content-generator" },
+  { icon: Database, label: "Memory", to: "/memory" },
   { icon: FileCheck, label: "Approvals", to: "/approvals" },
   { icon: Package, label: "Products", to: "/products" },
   { icon: ListTodo, label: "Tasks", to: "/tasks" },

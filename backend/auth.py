@@ -73,3 +73,18 @@ async def require_admin(current_user: User = Depends(get_current_user)) -> User:
     if not current_user.is_admin:
         raise HTTPException(status_code=403, detail="Admin access required")
     return current_user
+
+
+async def verify_token(token: str):
+    """Verify a JWT token and return the User (for WebSocket auth)."""
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        user = await db.users.find_one({"user_id": payload["user_id"]}, {"_id": 0})
+        if user:
+            if isinstance(user.get('created_at'), str):
+                user['created_at'] = datetime.fromisoformat(user['created_at'])
+            user['is_admin'] = user.get('email') == ADMIN_EMAIL
+            return User(**user)
+    except Exception:
+        pass
+    return None

@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth, API } from "../App";
 import { Card, CardContent } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import {
   Activity, Zap, ArrowRight, CheckCircle, Clock, AlertTriangle,
-  Radio, Users, GitBranch, Terminal, RefreshCw
+  Radio, Users, GitBranch, Terminal, RefreshCw, Wifi, WifiOff
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 
@@ -19,10 +19,14 @@ const ActivityMonitor = () => {
   const { token } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [wsConnected, setWsConnected] = useState(false);
+  const [liveMode, setLiveMode] = useState(true);
+  const wsRef = useRef(null);
+  const reconnectRef = useRef(null);
 
   const headers = { Authorization: `Bearer ${token}` };
 
+  // Fallback: fetch via REST
   const fetchActivity = useCallback(async () => {
     try {
       const res = await fetch(`${API}/activity/live`, { headers });
@@ -30,13 +34,97 @@ const ActivityMonitor = () => {
     } catch {} finally { setLoading(false); }
   }, [token]);
 
-  useEffect(() => { fetchActivity(); }, [fetchActivity]);
+  // WebSocket connection
+  const connectWs = useCallback(() => {
+    if (!token || !liveMode) return;
+
+    // Build WS URL from API URL
+    const apiUrl = API.replace(/\/api$/, "");
+    const wsProtocol = apiUrl.startsWith("https") ? "wss" : "ws";
+    const wsHost = apiUrl.replace(/^https?:\/\//, "");
+    const wsUrl = `${wsProtocol}://${wsHost}/api/ws/activity?token=${token}`;
+
+    try {
+      const ws = new WebSocket(wsUrl);
+      wsRef.current = ws;
+
+      ws.onopen = () => {
+        setWsConnected(true);
+        setLoading(false);
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          if (msg.type === "pong") return;
+          if (msg.type === "snapshot" || msg.agent_activity) {
+            setData(msg);
+            setLoading(false);
+          }
+        } catch {}
+      };
+
+      ws.onclose = () => {
+        setWsConnected(false);
+        wsRef.current = null;
+        // Reconnect after 3 seconds
+        if (liveMode) {
+          reconnectRef.current = setTimeout(connectWs, 3000);
+        }
+      };
+
+      ws.onerror = () => {
+        ws.close();
+      };
+    } catch {
+      // Fallback to polling
+      setWsConnected(false);
+      fetchActivity();
+    }
+  }, [token, liveMode]);
 
   useEffect(() => {
-    if (!autoRefresh) return;
+    if (liveMode) {
+      connectWs();
+    } else {
+      // Disconnect WS and use polling
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
+      fetchActivity();
+    }
+
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
+      if (reconnectRef.current) {
+        clearTimeout(reconnectRef.current);
+      }
+    };
+  }, [liveMode, connectWs, fetchActivity]);
+
+  // Polling fallback when WS is not connected
+  useEffect(() => {
+    if (wsConnected || !liveMode) return;
     const interval = setInterval(fetchActivity, 10000);
     return () => clearInterval(interval);
-  }, [autoRefresh, fetchActivity]);
+  }, [wsConnected, liveMode, fetchActivity]);
+
+  // Initial REST fetch as fallback
+  useEffect(() => {
+    fetchActivity();
+  }, []);
+
+  const handleRefresh = () => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send("refresh");
+    } else {
+      fetchActivity();
+    }
+  };
 
   if (loading) return <div className="flex items-center justify-center py-20"><div className="w-6 h-6 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" /></div>;
 
@@ -44,7 +132,6 @@ const ActivityMonitor = () => {
   const flows = data?.communication_flows || [];
   const tasks = data?.task_graph || [];
   const tools = data?.recent_tool_calls || [];
-  const collabs = data?.recent_collabs || [];
 
   return (
     <div className="space-y-6" data-testid="activity-monitor">
@@ -59,11 +146,31 @@ const ActivityMonitor = () => {
             <p className="text-xs text-zinc-500">Real-time agent execution, communication flows & task dependencies</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${autoRefresh ? "bg-emerald-400 animate-pulse" : "bg-zinc-600"}`} />
-          <span className="text-[10px] text-zinc-500">{autoRefresh ? "Live" : "Paused"}</span>
-          <Button size="sm" variant="ghost" onClick={() => setAutoRefresh(!autoRefresh)} className="text-zinc-400" data-testid="toggle-refresh">
-            <RefreshCw className={`w-3.5 h-3.5 ${autoRefresh ? "animate-spin" : ""}`} />
+        <div className="flex items-center gap-3">
+          {/* Connection status */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900/50 border border-white/5" data-testid="ws-status">
+            {wsConnected ? (
+              <>
+                <Wifi className="w-3 h-3 text-emerald-400" />
+                <span className="text-[10px] text-emerald-400 font-medium">WebSocket Live</span>
+              </>
+            ) : liveMode ? (
+              <>
+                <WifiOff className="w-3 h-3 text-amber-400" />
+                <span className="text-[10px] text-amber-400">Polling (10s)</span>
+              </>
+            ) : (
+              <>
+                <WifiOff className="w-3 h-3 text-zinc-500" />
+                <span className="text-[10px] text-zinc-500">Paused</span>
+              </>
+            )}
+          </div>
+          <Button size="sm" variant={liveMode ? "default" : "ghost"} onClick={() => setLiveMode(!liveMode)} className={liveMode ? "bg-emerald-600 hover:bg-emerald-700 text-white text-xs" : "text-zinc-400 text-xs"} data-testid="toggle-live">
+            {liveMode ? "Live" : "Paused"}
+          </Button>
+          <Button size="sm" variant="ghost" onClick={handleRefresh} className="text-zinc-400" data-testid="refresh-btn">
+            <RefreshCw className="w-3.5 h-3.5" />
           </Button>
         </div>
       </div>

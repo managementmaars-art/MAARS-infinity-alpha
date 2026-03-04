@@ -6,7 +6,7 @@ import {
   Activity, Gauge, Radio, Code, Palette, PenTool, FileCheck, Package,
   ListTodo, BarChart3, Settings, Info, Shield, Bot, ArrowRight,
   CornerDownLeft, ChevronUp, ChevronDown, X, Zap, Plus, Command,
-  Mic, MicOff, Loader2, FileCode
+  Mic, MicOff, Loader2, FileCode, Database
 } from "lucide-react";
 
 const PAGE_ITEMS = [
@@ -22,6 +22,7 @@ const PAGE_ITEMS = [
   { id: "vibe", label: "Vibe Coding", desc: "Build apps with AI", icon: Code, to: "/vibe-coding", category: "pages" },
   { id: "reference", label: "Reference Intelligence", desc: "Extract style blueprints", icon: Palette, to: "/reference-intelligence", category: "pages" },
   { id: "content", label: "Content Generator", desc: "Generate on-brand content", icon: PenTool, to: "/content-generator", category: "pages" },
+  { id: "memory", label: "Memory Governance", desc: "Versioning, pruning, relevance scoring", icon: Database, to: "/memory", category: "pages" },
   { id: "approvals", label: "Approvals", desc: "Task approval workflows", icon: FileCheck, to: "/approvals", category: "pages" },
   { id: "products", label: "Products", desc: "Product catalog", icon: Package, to: "/products", category: "pages" },
   { id: "tasks", label: "Tasks", desc: "Task management", icon: ListTodo, to: "/tasks", category: "pages" },

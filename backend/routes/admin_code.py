@@ -1,8 +1,11 @@
 """Admin code viewer API — browse and read the full system codebase."""
 import os
+import io
+import zipfile
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from starlette.responses import StreamingResponse
 from auth import get_current_user, User
 
 logger = logging.getLogger(__name__)
@@ -190,3 +193,47 @@ async def search_code_files(
                 break
 
     return {"results": results[:50]}
+
+
+@router.get("/admin/code/export")
+async def export_code_zip(current_user: User = Depends(get_current_user)):
+    """Download the entire codebase as a zip file (admin only)."""
+    if not current_user.is_admin:
+        raise HTTPException(403, "Admin access required")
+
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+        for allowed in ALLOWED_DIRS:
+            dir_path = os.path.join(BASE_DIR, allowed)
+            if not os.path.isdir(dir_path):
+                continue
+            for root, dirs, files in os.walk(dir_path):
+                dirs[:] = [d for d in dirs if d not in EXCLUDED_DIRS and not d.startswith(".")]
+                for fname in files:
+                    ext = os.path.splitext(fname)[1].lower()
+                    if ext in EXCLUDED_FILES:
+                        continue
+                    full = os.path.join(root, fname)
+                    rel = os.path.relpath(full, BASE_DIR)
+                    try:
+                        zf.write(full, rel)
+                    except Exception:
+                        pass
+
+        # Add root-level files
+        for entry in os.listdir(BASE_DIR):
+            full = os.path.join(BASE_DIR, entry)
+            if os.path.isfile(full) and not entry.startswith("."):
+                ext = os.path.splitext(entry)[1].lower()
+                if ext not in EXCLUDED_FILES:
+                    try:
+                        zf.write(full, entry)
+                    except Exception:
+                        pass
+
+    buf.seek(0)
+    return StreamingResponse(
+        buf,
+        media_type="application/zip",
+        headers={"Content-Disposition": "attachment; filename=maars-command-codebase.zip"},
+    )
