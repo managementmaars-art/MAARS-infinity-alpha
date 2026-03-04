@@ -55,6 +55,27 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
   - Path traversal protection, admin-only access (403 for non-admin)
   - Sidebar nav item + Command Palette entry for admin users
 
+### Phase 9 (March 4, 2026 — Session 4 continued)
+- **Code Export/Download**: GET /api/admin/code/export returns zip of entire codebase
+  - Streams ZIP_DEFLATED archive (>500KB)
+  - Excludes node_modules, __pycache__, .git, uploads
+  - "Download Code" button in Code Explorer header with loading state
+- **Memory Governance**: Full memory management system at /memory
+  - CRUD: POST/GET/PUT/DELETE /api/memory/entries
+  - Versioning: Each update creates a new version, tracked in versions array
+  - Relevance scoring: Time-decay (30-day half-life) + access frequency + importance weight
+  - Auto-pruning: POST /api/memory/prune with dry_run option and threshold
+  - Stats: GET /api/memory/stats (usage %, avg relevance, categories, agents)
+  - Frontend: Stats cards, entry list with relevance bars, create/edit modals, version history modal
+  - Sidebar nav + Command Palette entry
+- **WebSocket Real-Time Activity Monitor**: Live agent activity streaming
+  - WebSocket at /api/ws/activity with token authentication
+  - 8-second periodic updates with snapshot data
+  - Client can send "ping" (pong response) or "refresh" (immediate snapshot)
+  - Frontend: Connection status indicator (WebSocket Live / Polling / Paused)
+  - Live/Paused toggle, manual refresh button
+  - REST fallback polling at 10s intervals when WebSocket unavailable
+
 ## Testing Status
 - Iteration 53: 26/26 (100%)
 - Iteration 54: 20/20 (100%)
@@ -62,6 +83,7 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
 - Iteration 56: Frontend 100%
 - Iteration 57: Frontend 100% — Command Palette all 13 scenarios passed
 - Iteration 58: 24/24 backend + all frontend UI verified (Voice + Code Explorer)
+- Iteration 59: 18/18 backend + all frontend UI verified (Code Export + Memory Governance + WebSocket Activity)
 
 ## Credentials
 - Admin: management.maars@marsgc.net / admin123
@@ -71,10 +93,12 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
 ### P0 (Completed)
 - Voice Command Interface
 - Admin Code Explorer
+- Code Export/Download
+- Memory Governance (versioning, pruning, relevance scoring)
+- WebSocket Real-Time Activity Monitor
 
 ### P1
-- Memory Governance (versioning, pruning, relevance scoring)
-- WebSocket real-time updates for Activity Monitor
+- WebSocket real-time updates for other pages (Collaboration Log, etc.)
 
 ### P2
 - Enterprise RBAC with permissions UI
