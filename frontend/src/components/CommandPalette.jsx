@@ -5,7 +5,8 @@ import {
   Search, LayoutDashboard, Rocket, MessageSquare, Users, Brain, Cpu,
   Activity, Gauge, Radio, Code, Palette, PenTool, FileCheck, Package,
   ListTodo, BarChart3, Settings, Info, Shield, Bot, ArrowRight,
-  CornerDownLeft, ChevronUp, ChevronDown, X, Zap, Plus, Command
+  CornerDownLeft, ChevronUp, ChevronDown, X, Zap, Plus, Command,
+  Mic, MicOff, Loader2, FileCode
 } from "lucide-react";
 
 const PAGE_ITEMS = [
@@ -29,6 +30,7 @@ const PAGE_ITEMS = [
   { id: "settings", label: "Settings", desc: "Account, LLM config, integrations", icon: Settings, to: "/settings", category: "pages" },
   { id: "about", label: "About", desc: "System documentation", icon: Info, to: "/about", category: "pages" },
   { id: "admin", label: "Admin Panel", desc: "Admin dashboard", icon: Shield, to: "/admin", category: "pages" },
+  { id: "code-explorer", label: "Code Explorer", desc: "Browse system codebase", icon: FileCode, to: "/admin/code-explorer", category: "pages" },
 ];
 
 const ACTION_ITEMS = [
@@ -49,6 +51,10 @@ const CommandPalette = ({ open, onClose }) => {
   const [query, setQuery] = useState("");
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [agents, setAgents] = useState([]);
+  const [recording, setRecording] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const chunksRef = useRef([]);
   const [recents, setRecents] = useState(() => {
     try { return JSON.parse(localStorage.getItem("maars_cmd_recents") || "[]"); } catch { return []; }
   });
@@ -145,6 +151,61 @@ const CommandPalette = ({ open, onClose }) => {
     if (item.to) navigate(item.to);
   }, [navigate, onClose, recents]);
 
+  // Voice recording
+  const startRecording = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+      chunksRef.current = [];
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunksRef.current.push(e.data);
+      };
+      mediaRecorder.onstop = async () => {
+        stream.getTracks().forEach(t => t.stop());
+        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        if (blob.size < 100) return;
+        setTranscribing(true);
+        try {
+          const formData = new FormData();
+          formData.append("file", blob, "voice.webm");
+          const res = await fetch(`${API}/voice/transcribe`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: formData,
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.text) {
+              setQuery(data.text);
+              setSelectedIdx(0);
+            }
+          }
+        } catch {}
+        setTranscribing(false);
+      };
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.start();
+      setRecording(true);
+    } catch {
+      // Mic permission denied or not available
+    }
+  }, [token]);
+
+  const stopRecording = useCallback(() => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+    setRecording(false);
+  }, []);
+
+  const toggleVoice = useCallback(() => {
+    if (recording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  }, [recording, startRecording, stopRecording]);
+
   const handleKeyDown = useCallback((e) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -179,10 +240,33 @@ const CommandPalette = ({ open, onClose }) => {
             value={query}
             onChange={e => { setQuery(e.target.value); setSelectedIdx(0); }}
             onKeyDown={handleKeyDown}
-            placeholder="Search pages, agents, actions..."
+            placeholder={recording ? "Listening..." : transcribing ? "Transcribing..." : "Search pages, agents, actions..."}
             className="flex-1 bg-transparent text-sm text-white placeholder-zinc-500 outline-none"
             data-testid="cmd-search-input"
+            disabled={recording || transcribing}
           />
+          {/* Voice button */}
+          <button
+            onClick={toggleVoice}
+            disabled={transcribing}
+            className={`p-1.5 rounded-lg transition-all ${
+              recording
+                ? "bg-red-500/20 text-red-400 animate-pulse"
+                : transcribing
+                  ? "text-amber-400 cursor-wait"
+                  : "text-zinc-500 hover:text-white hover:bg-white/10"
+            }`}
+            title={recording ? "Stop recording" : "Voice command"}
+            data-testid="voice-cmd-btn"
+          >
+            {transcribing ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : recording ? (
+              <MicOff className="w-4 h-4" />
+            ) : (
+              <Mic className="w-4 h-4" />
+            )}
+          </button>
           <kbd className="hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded bg-zinc-800 border border-white/10 text-[10px] text-zinc-500">
             ESC
           </kbd>
@@ -252,6 +336,7 @@ const CommandPalette = ({ open, onClose }) => {
         <div className="px-4 py-2 border-t border-white/5 flex items-center gap-4 text-[10px] text-zinc-600">
           <span className="flex items-center gap-1"><ChevronUp className="w-3 h-3" /><ChevronDown className="w-3 h-3" /> Navigate</span>
           <span className="flex items-center gap-1"><CornerDownLeft className="w-3 h-3" /> Open</span>
+          <span className="flex items-center gap-1"><Mic className="w-3 h-3" /> Voice</span>
           <span className="flex items-center gap-1"><span className="font-mono">ESC</span> Close</span>
           <span className="ml-auto flex items-center gap-1"><Command className="w-3 h-3" /> MAARS Command</span>
         </div>

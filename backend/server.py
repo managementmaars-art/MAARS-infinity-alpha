@@ -36,6 +36,8 @@ from routes.enterprise import router as enterprise_router
 from routes.vibe_coding import router as vibe_router
 from routes.actions import router as actions_router
 from routes.content import router as content_router
+from routes.voice import router as voice_router
+from routes.admin_code import router as admin_code_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -66,6 +68,8 @@ api_router.include_router(enterprise_router)
 api_router.include_router(vibe_router)
 api_router.include_router(actions_router)
 api_router.include_router(content_router)
+api_router.include_router(voice_router)
+api_router.include_router(admin_code_router)
 
 app.include_router(api_router)
 

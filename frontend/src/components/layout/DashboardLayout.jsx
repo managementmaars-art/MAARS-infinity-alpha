@@ -4,7 +4,7 @@ import {
   Bot, MessageSquare, ListTodo, Users, Settings, LogOut, Menu, X,
   Shield, BarChart3, Package, Rocket, Brain, FileCheck, Cpu, LayoutDashboard,
   Activity, Gauge, Radio, Code, Palette, PenTool, Info,
-  PanelLeftClose, PanelLeftOpen, Search
+  PanelLeftClose, PanelLeftOpen, Search, FileCode
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { BrandFooter } from "../BrandFooter";
@@ -149,15 +149,30 @@ const DashboardLayout = ({ children }) => {
             );
           })}
           {user?.is_admin && (
-            <button
-              onClick={() => navigate("/admin")}
-              title={collapsed ? "Admin Panel" : undefined}
-              className={`w-full flex items-center ${collapsed ? "justify-center" : ""} gap-2.5 px-2.5 py-2 rounded-lg text-[13px] text-zinc-400 hover:bg-white/5 hover:text-white`}
-              data-testid="nav-admin"
-            >
-              <Shield className="w-4 h-4 shrink-0" />
-              {!collapsed && <span className="truncate">Admin Panel</span>}
-            </button>
+            <>
+              <button
+                onClick={() => navigate("/admin")}
+                title={collapsed ? "Admin Panel" : undefined}
+                className={`w-full flex items-center ${collapsed ? "justify-center" : ""} gap-2.5 px-2.5 py-2 rounded-lg text-[13px] ${
+                  location.pathname === "/admin" ? "bg-indigo-500/15 text-indigo-400" : "text-zinc-400 hover:bg-white/5 hover:text-white"
+                }`}
+                data-testid="nav-admin"
+              >
+                <Shield className="w-4 h-4 shrink-0" />
+                {!collapsed && <span className="truncate">Admin Panel</span>}
+              </button>
+              <button
+                onClick={() => navigate("/admin/code-explorer")}
+                title={collapsed ? "Code Explorer" : undefined}
+                className={`w-full flex items-center ${collapsed ? "justify-center" : ""} gap-2.5 px-2.5 py-2 rounded-lg text-[13px] ${
+                  location.pathname === "/admin/code-explorer" ? "bg-indigo-500/15 text-indigo-400" : "text-zinc-400 hover:bg-white/5 hover:text-white"
+                }`}
+                data-testid="nav-code-explorer"
+              >
+                <FileCode className="w-4 h-4 shrink-0" />
+                {!collapsed && <span className="truncate">Code Explorer</span>}
+              </button>
+            </>
           )}
         </nav>
 
