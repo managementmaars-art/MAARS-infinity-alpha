@@ -373,7 +373,7 @@ const AboutPage = () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "MAARS-Command-Summary.pdf";
+        a.download = "MAARS-Command-Documentation.pdf";
         a.click();
         URL.revokeObjectURL(url);
       }
@@ -405,7 +405,7 @@ const AboutPage = () => {
             data-testid="download-pdf-btn"
           >
             {downloading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Download className="w-4 h-4 mr-2" />}
-            {downloading ? "Generating..." : "Download PDF"}
+            {downloading ? "Generating..." : "Download Full Documentation"}
           </Button>
         </div>
         <p className="text-sm text-zinc-300 leading-relaxed max-w-3xl">
