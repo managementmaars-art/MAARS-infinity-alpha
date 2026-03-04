@@ -4,10 +4,11 @@ import {
   Bot, MessageSquare, ListTodo, Users, Settings, LogOut, Menu, X,
   Shield, BarChart3, Package, Rocket, Brain, FileCheck, Cpu, LayoutDashboard,
   Activity, Gauge, Radio, Code, Palette, PenTool, Info,
-  PanelLeftClose, PanelLeftOpen
+  PanelLeftClose, PanelLeftOpen, Search
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { BrandFooter } from "../BrandFooter";
+import CommandPalette from "../CommandPalette";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", to: "/dashboard" },
@@ -36,6 +37,7 @@ const DashboardLayout = ({ children }) => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [cmdOpen, setCmdOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(() => {
     try { return localStorage.getItem("maars_sidebar_collapsed") === "true"; } catch { return false; }
   });
@@ -43,6 +45,25 @@ const DashboardLayout = ({ children }) => {
   useEffect(() => {
     try { localStorage.setItem("maars_sidebar_collapsed", String(collapsed)); } catch {}
   }, [collapsed]);
+
+  // Global keyboard shortcut: `/` to open command palette
+  useEffect(() => {
+    const handler = (e) => {
+      // Don't trigger if user is typing in an input/textarea
+      const tag = e.target.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || e.target.isContentEditable) return;
+      if (e.key === "/" && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        setCmdOpen(true);
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setCmdOpen(true);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -65,6 +86,9 @@ const DashboardLayout = ({ children }) => {
           </div>
           <span className="text-white font-semibold font-['Outfit'] text-sm">MAARS Command</span>
         </Link>
+        <button onClick={() => setCmdOpen(true)} className="ml-auto mr-2 p-2 rounded-lg hover:bg-white/10 text-zinc-400" data-testid="mobile-search-btn">
+          <Search className="w-4 h-4" />
+        </button>
       </div>
 
       {/* Sidebar — Desktop */}
@@ -82,6 +106,24 @@ const DashboardLayout = ({ children }) => {
               </div>
             )}
           </Link>
+        </div>
+
+        {/* Search trigger */}
+        <div className="px-2 pt-2">
+          <button
+            onClick={() => setCmdOpen(true)}
+            className={`w-full flex items-center ${collapsed ? "justify-center" : ""} gap-2.5 px-2.5 py-2 rounded-lg text-[12px] transition-colors bg-zinc-800/40 border border-white/5 hover:border-white/10 text-zinc-500 hover:text-zinc-300`}
+            title={collapsed ? "Search (press /)" : undefined}
+            data-testid="sidebar-search-btn"
+          >
+            <Search className="w-3.5 h-3.5 shrink-0" />
+            {!collapsed && (
+              <>
+                <span className="flex-1 text-left">Search...</span>
+                <kbd className="text-[9px] px-1 py-0.5 rounded bg-zinc-700/50 border border-white/5 text-zinc-600 font-mono">/</kbd>
+              </>
+            )}
+          </button>
         </div>
 
         {/* Nav */}
@@ -206,6 +248,9 @@ const DashboardLayout = ({ children }) => {
           {children}
         </div>
       </div>
+
+      {/* Command Palette */}
+      <CommandPalette open={cmdOpen} onClose={() => setCmdOpen(false)} />
     </div>
   );
 };
