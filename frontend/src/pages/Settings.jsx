@@ -9,7 +9,7 @@ import { Badge } from "../components/ui/badge";
 import { Progress } from "../components/ui/progress";
 import { Bot, User, Mail, Shield, LogOut, CreditCard, Sparkles, Crown, Zap,
   LayoutDashboard, Users, MessageSquare, ListTodo, Settings, Menu, X,
-  Check, Save, Loader2
+  Check, Save, Loader2, Cpu, Link2, Unlink
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -24,6 +24,9 @@ const SettingsPage = () => {
   const [selectedAgents, setSelectedAgents] = useState([]);
   const [agentConfig, setAgentConfig] = useState(null);
   const [savingAgents, setSavingAgents] = useState(false);
+  const [llmConfig, setLlmConfig] = useState(null);
+  const [savingLlm, setSavingLlm] = useState(false);
+  const [actionIntegrations, setActionIntegrations] = useState(null);
 
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
@@ -31,6 +34,8 @@ const SettingsPage = () => {
     fetchSubscription();
     fetchAgents();
     fetchSelectedAgents();
+    fetchLlmConfig();
+    fetchActionIntegrations();
   }, []);
 
   const fetchSubscription = async () => {
@@ -67,6 +72,58 @@ const SettingsPage = () => {
     setSelectedAgents(prev =>
       prev.includes(agentId) ? prev.filter(id => id !== agentId) : [...prev, agentId]
     );
+  };
+
+  const fetchLlmConfig = async () => {
+    try {
+      const res = await fetch(`${API}/llm/config`, { headers });
+      if (res.ok) setLlmConfig(await res.json());
+    } catch {}
+  };
+
+  const saveLlmConfig = async (provider, model) => {
+    setSavingLlm(true);
+    try {
+      const res = await fetch(`${API}/llm/config`, {
+        method: "PUT",
+        headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify({ provider, model }),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setLlmConfig(prev => ({ ...prev, ...updated }));
+        toast.success(`Model updated to ${provider}/${model}`);
+      }
+    } catch { toast.error("Failed to save model config"); }
+    finally { setSavingLlm(false); }
+  };
+
+  const fetchActionIntegrations = async () => {
+    try {
+      const res = await fetch(`${API}/actions/integrations`, { headers });
+      if (res.ok) setActionIntegrations(await res.json());
+    } catch {}
+  };
+
+  const connectGoogle = async () => {
+    try {
+      const res = await fetch(`${API}/oauth/gmail/login`, { headers });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.auth_url) window.location.href = data.auth_url;
+      } else {
+        const err = await res.json().catch(() => ({}));
+        toast.error(err.detail || "Google OAuth not configured");
+      }
+    } catch { toast.error("Failed to start Google connection"); }
+  };
+
+  const disconnectGoogle = async () => {
+    try {
+      await fetch(`${API}/oauth/gmail/disconnect`, { headers });
+      toast.success("Google disconnected");
+      fetchActionIntegrations();
+    } catch {}
   };
 
   const saveAgentSelection = async () => {
@@ -335,6 +392,127 @@ const SettingsPage = () => {
                 <Sparkles className="w-4 h-4 mr-2" />
                 Buy More Credits
               </Button>
+            </CardContent>
+          </Card>
+
+          {/* LLM Model Configuration */}
+          {llmConfig && (
+            <Card className="bg-zinc-900/50 border-white/10 mb-6" data-testid="llm-config-card">
+              <CardHeader>
+                <CardTitle className="text-white font-['Outfit'] flex items-center gap-2">
+                  <Cpu className="w-5 h-5 text-indigo-400" />
+                  AI Model Configuration
+                </CardTitle>
+                <p className="text-xs text-zinc-400 mt-1">Choose your preferred LLM provider and model for Vibe Coding, Reference Intelligence, and other AI features</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {llmConfig.available_providers?.map(p => (
+                    <button
+                      key={p.id}
+                      onClick={() => saveLlmConfig(p.id, p.models[0])}
+                      className={`p-3 rounded-lg border transition-all text-left ${
+                        llmConfig.provider === p.id
+                          ? "border-indigo-500 bg-indigo-500/10"
+                          : "border-white/10 bg-zinc-800/30 hover:border-white/20"
+                      }`}
+                      disabled={savingLlm}
+                      data-testid={`llm-provider-${p.id}`}
+                    >
+                      <p className="text-sm font-medium text-white">{p.name}</p>
+                      <p className="text-[10px] text-zinc-500 mt-1">{p.models.length} models</p>
+                      {llmConfig.provider === p.id && (
+                        <div className="mt-2 flex items-center gap-1">
+                          <Check className="w-3 h-3 text-indigo-400" />
+                          <span className="text-[10px] text-indigo-400">Active</span>
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Model Selector */}
+                {llmConfig.available_providers?.filter(p => p.id === llmConfig.provider).map(p => (
+                  <div key={p.id}>
+                    <p className="text-xs text-zinc-400 mb-2">Select model for {p.name}:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {p.models.map(m => (
+                        <button
+                          key={m}
+                          onClick={() => saveLlmConfig(p.id, m)}
+                          className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
+                            llmConfig.model === m
+                              ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/40"
+                              : "bg-zinc-800/50 text-zinc-400 border border-white/5 hover:border-white/15"
+                          }`}
+                          disabled={savingLlm}
+                          data-testid={`llm-model-${m}`}
+                        >
+                          {m}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+                <div className="p-3 rounded-lg bg-zinc-800/30 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-white">Current Model</p>
+                    <p className="text-[10px] text-zinc-500 font-mono">{llmConfig.provider}/{llmConfig.model}</p>
+                  </div>
+                  <Badge className="bg-emerald-500/20 text-emerald-400 border-0 text-[10px]">Active</Badge>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Integrations / Action Layer */}
+          <Card className="bg-zinc-900/50 border-white/10 mb-6" data-testid="integrations-card">
+            <CardHeader>
+              <CardTitle className="text-white font-['Outfit'] flex items-center gap-2">
+                <Link2 className="w-5 h-5 text-indigo-400" />
+                Integrations & Actions
+              </CardTitle>
+              <p className="text-xs text-zinc-400 mt-1">Connect external services for real-world agent actions</p>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {/* Google Suite */}
+              <div className="p-4 rounded-lg bg-zinc-800/30">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-blue-500/15 flex items-center justify-center">
+                      <Mail className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">Google Suite</p>
+                      <p className="text-[10px] text-zinc-500">Gmail, Calendar integration</p>
+                      {actionIntegrations?.integrations?.[0]?.email && (
+                        <p className="text-[10px] text-emerald-400">{actionIntegrations.integrations[0].email}</p>
+                      )}
+                    </div>
+                  </div>
+                  {actionIntegrations?.integrations?.[0]?.connected ? (
+                    <Button size="sm" variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10" onClick={disconnectGoogle} data-testid="disconnect-google-btn">
+                      <Unlink className="w-3.5 h-3.5 mr-1" />Disconnect
+                    </Button>
+                  ) : (
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-500 text-white" onClick={connectGoogle} data-testid="connect-google-btn">
+                      <Link2 className="w-3.5 h-3.5 mr-1" />Connect
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              {/* System Mode Info */}
+              <div className="p-3 rounded-lg bg-zinc-800/20 flex items-center gap-3">
+                <div className={`w-2 h-2 rounded-full ${actionIntegrations?.system_mode === "execution" ? "bg-emerald-400" : "bg-amber-400 animate-pulse"}`} />
+                <p className="text-xs text-zinc-400">
+                  System Mode: <span className={actionIntegrations?.system_mode === "execution" ? "text-emerald-400" : "text-amber-400"}>
+                    {actionIntegrations?.system_mode === "execution" ? "Execution (Live)" : "Simulation (Safe)"}
+                  </span>
+                  <span className="text-zinc-600 ml-2">Toggle in KPI Dashboard</span>
+                </p>
+              </div>
             </CardContent>
           </Card>
 

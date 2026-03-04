@@ -292,3 +292,192 @@ async def set_budget(request: Request, current_user: User = Depends(get_current_
         upsert=True
     )
     return {"success": True}
+
+
+
+# ============== AGENT ACTIVITY MONITOR ==============
+
+@router.get("/activity/live")
+async def get_live_activity(current_user: User = Depends(get_current_user)):
+    """Get real-time agent activity data for the activity monitor."""
+    user_id = current_user.user_id
+
+    # Active projects (in_progress)
+    active_projects = await db.projects.find(
+        {"user_id": user_id, "status": "in_progress"}, {"_id": 0, "project_id": 1, "title": 1, "goal": 1, "status": 1}
+    ).to_list(10)
+
+    # Recent tasks (last 50)
+    recent_tasks = await db.tasks.find(
+        {"user_id": user_id}, {"_id": 0, "task_id": 1, "title": 1, "status": 1, "agent_name": 1, "agent_role": 1, "project_id": 1, "created_at": 1, "updated_at": 1}
+    ).sort("updated_at", -1).limit(50).to_list(50)
+
+    # Recent collaborations (last 30)
+    recent_collabs = await db.collaborations.find(
+        {"user_id": user_id}, {"_id": 0}
+    ).sort("created_at", -1).limit(30).to_list(30)
+
+    # Recent tool calls (last 30)
+    recent_tools = await db.tool_calls.find(
+        {"user_id": user_id}, {"_id": 0, "tool_name": 1, "agent_name": 1, "status": 1, "timestamp": 1, "parameters": 1}
+    ).sort("timestamp", -1).limit(30).to_list(30)
+
+    # Agent activity summary
+    pipeline = [
+        {"$match": {"user_id": user_id}},
+        {"$group": {"_id": "$agent_name", "task_count": {"$sum": 1}, "completed": {"$sum": {"$cond": [{"$eq": ["$status", "completed"]}, 1, 0]}}, "latest": {"$max": "$updated_at"}}},
+        {"$sort": {"task_count": -1}}
+    ]
+    agent_activity = await db.tasks.aggregate(pipeline).to_list(50)
+
+    # Build communication flow data (edges between agents)
+    comm_flows = []
+    seen_flows = set()
+    for c in recent_collabs:
+        sender = c.get("sender", "")
+        for r in c.get("receivers", []):
+            key = f"{sender}->{r}"
+            if key not in seen_flows:
+                seen_flows.add(key)
+                comm_flows.append({"from": sender, "to": r, "objective": c.get("objective", "")[:80], "status": c.get("status", "pending")})
+
+    # Build task dependency graph
+    dependencies = []
+    for t in recent_tasks:
+        if t.get("project_id"):
+            dependencies.append({
+                "task_id": t.get("task_id", ""),
+                "title": t.get("title", "")[:60],
+                "agent": t.get("agent_name", ""),
+                "status": t.get("status", ""),
+                "project_id": t.get("project_id", ""),
+            })
+
+    return {
+        "active_projects": active_projects,
+        "agent_activity": [{"agent": a["_id"] or "Unknown", "task_count": a["task_count"], "completed": a["completed"], "latest": a.get("latest", "")} for a in agent_activity],
+        "communication_flows": comm_flows,
+        "task_graph": dependencies[:30],
+        "recent_tool_calls": recent_tools[:15],
+        "recent_collabs": recent_collabs[:10],
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+# ============== UNIVERSAL REFERENCE INTELLIGENCE ==============
+
+async def _get_user_llm_config(user_id: str):
+    """Get user's preferred LLM provider and model, with fallback to defaults."""
+    config = await db.system_config.find_one(
+        {"user_id": user_id, "config_type": "llm_preference"}, {"_id": 0}
+    )
+    if config:
+        return config.get("provider", "openai"), config.get("model", "gpt-5.2")
+    return "openai", "gpt-5.2"
+
+
+@router.get("/llm/config")
+async def get_llm_config(current_user: User = Depends(get_current_user)):
+    """Get the user's LLM provider/model preference."""
+    provider, model = await _get_user_llm_config(current_user.user_id)
+    return {
+        "provider": provider,
+        "model": model,
+        "available_providers": [
+            {"id": "openai", "name": "OpenAI", "models": ["gpt-5.2", "gpt-5.1", "gpt-4.1", "gpt-4o", "o3", "o4-mini"]},
+            {"id": "anthropic", "name": "Anthropic", "models": ["claude-sonnet-4-5-20250929", "claude-4-sonnet-20250514", "claude-haiku-4-5-20251001"]},
+            {"id": "gemini", "name": "Google Gemini", "models": ["gemini-3-flash-preview", "gemini-2.5-pro", "gemini-2.5-flash"]},
+        ]
+    }
+
+
+@router.put("/llm/config")
+async def set_llm_config(request: Request, current_user: User = Depends(get_current_user)):
+    """Set the user's preferred LLM provider/model."""
+    data = await request.json()
+    provider = data.get("provider", "openai")
+    model = data.get("model", "gpt-5.2")
+    await db.system_config.update_one(
+        {"user_id": current_user.user_id, "config_type": "llm_preference"},
+        {"$set": {
+            "user_id": current_user.user_id,
+            "config_type": "llm_preference",
+            "provider": provider,
+            "model": model,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+        }},
+        upsert=True
+    )
+    return {"provider": provider, "model": model}
+
+
+@router.post("/reference/analyze")
+async def analyze_reference(request: Request, current_user: User = Depends(get_current_user)):
+    """Analyze an image or text reference to extract style, tone, brand elements."""
+    import os
+    data = await request.json()
+    ref_type = data.get("type", "text")
+    content = data.get("content", "")
+    image_url = data.get("image_url", "")
+
+    EMERGENT_KEY = os.environ.get("EMERGENT_LLM_KEY", "")
+    provider, model = await _get_user_llm_config(current_user.user_id)
+
+    if ref_type == "image" and image_url:
+        try:
+            from emergentintegrations.llm.chat import LlmChat, UserMessage
+            chat = LlmChat(
+                api_key=EMERGENT_KEY,
+                session_id=f"ref_analyze_{uuid.uuid4().hex[:8]}",
+                system_message="You are a brand and visual intelligence analyst. Analyze the image and extract: 1) Brand/product identification (if recognizable), 2) Visual style elements (colors, typography, composition), 3) Emotional tone and mood, 4) Target audience impression, 5) Key design patterns. Return structured JSON."
+            ).with_model(provider, model)
+
+            analysis = await chat.send_message(UserMessage(text=f"Analyze this image: {image_url}\n\nProvide a structured analysis including brand detection, visual style, tone, and key elements. Return as clear sections."))
+
+            result = {
+                "ref_id": f"ref_{uuid.uuid4().hex[:8]}",
+                "type": "image",
+                "source": image_url,
+                "analysis": analysis,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+            }
+            await db.reference_analyses.insert_one({**result, "user_id": current_user.user_id})
+            result.pop("_id", None)
+            return result
+        except Exception as e:
+            raise HTTPException(500, f"Image analysis failed: {str(e)[:200]}")
+
+    elif ref_type == "text" and content:
+        try:
+            from emergentintegrations.llm.chat import LlmChat, UserMessage
+            chat = LlmChat(
+                api_key=EMERGENT_KEY,
+                session_id=f"ref_text_{uuid.uuid4().hex[:8]}",
+                system_message="You are a brand and content intelligence analyst. Analyze the text reference to extract: 1) Writing style and tone, 2) Target audience, 3) Key messaging patterns, 4) Brand voice characteristics, 5) Structural elements. Create a Style Blueprint that can guide content creation."
+            ).with_model(provider, model)
+
+            analysis = await chat.send_message(UserMessage(text=f"Analyze this reference content and create a Style Blueprint:\n\n{content[:3000]}"))
+
+            result = {
+                "ref_id": f"ref_{uuid.uuid4().hex[:8]}",
+                "type": "text",
+                "source": content[:500],
+                "analysis": analysis,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+            }
+            await db.reference_analyses.insert_one({**result, "user_id": current_user.user_id})
+            result.pop("_id", None)
+            return result
+        except Exception as e:
+            raise HTTPException(500, f"Text analysis failed: {str(e)[:200]}")
+    else:
+        raise HTTPException(400, "Provide image_url (for image type) or content (for text type)")
+
+
+@router.get("/reference/history")
+async def get_reference_history(current_user: User = Depends(get_current_user)):
+    """Get history of reference analyses."""
+    items = await db.reference_analyses.find(
+        {"user_id": current_user.user_id}, {"_id": 0}
+    ).sort("created_at", -1).limit(20).to_list(20)
+    return {"items": items}

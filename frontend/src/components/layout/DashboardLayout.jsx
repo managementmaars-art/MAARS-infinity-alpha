@@ -3,7 +3,7 @@ import { useAuth } from "../../App";
 import {
   Bot, MessageSquare, ListTodo, Users, Settings, LogOut, Menu, X,
   Shield, BarChart3, Package, Rocket, Brain, FileCheck, Cpu, LayoutDashboard,
-  Activity, Gauge
+  Activity, Gauge, Radio, Code, Palette
 } from "lucide-react";
 import { useState } from "react";
 import { BrandFooter } from "../BrandFooter";
@@ -17,6 +17,9 @@ const navItems = [
   { icon: Cpu, label: "Brain Profiles", to: "/brain-profiles" },
   { icon: Activity, label: "Collaborations", to: "/collaborations" },
   { icon: Gauge, label: "KPI Dashboard", to: "/kpi-dashboard" },
+  { icon: Radio, label: "Activity Monitor", to: "/activity-monitor" },
+  { icon: Code, label: "Vibe Coding", to: "/vibe-coding" },
+  { icon: Palette, label: "Reference Intel", to: "/reference-intelligence" },
   { icon: FileCheck, label: "Approvals", to: "/approvals" },
   { icon: Package, label: "Products", to: "/products" },
   { icon: ListTodo, label: "Tasks", to: "/tasks" },

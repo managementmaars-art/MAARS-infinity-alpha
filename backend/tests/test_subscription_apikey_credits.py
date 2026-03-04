@@ -218,7 +218,7 @@ class TestCheckoutFlow:
                 "type": "subscription",
                 "plan_id": "starter",
                 "currency": "usd",
-                "origin_url": "https://agent-orchestrate-1.preview.emergentagent.com"
+                "origin_url": "https://multi-agent-business.preview.emergentagent.com"
             }
         )
         
@@ -253,7 +253,7 @@ class TestCheckoutFlow:
                 "type": "credits",
                 "package_id": package_id,
                 "currency": "usd",
-                "origin_url": "https://agent-orchestrate-1.preview.emergentagent.com"
+                "origin_url": "https://multi-agent-business.preview.emergentagent.com"
             }
         )
         
@@ -313,7 +313,7 @@ class TestCustomPackageCheckout:
                 "selected_agents": agent_ids,
                 "credit_preset_id": credit_preset_id,
                 "include_commander": False,
-                "origin_url": "https://agent-orchestrate-1.preview.emergentagent.com",
+                "origin_url": "https://multi-agent-business.preview.emergentagent.com",
                 "currency": "usd"
             }
         )

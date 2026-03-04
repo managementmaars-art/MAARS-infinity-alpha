@@ -23,6 +23,9 @@ import BrainProfiles from "./pages/BrainProfiles";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import KPIDashboard from "./pages/KPIDashboard";
 import CollaborationEngine from "./pages/CollaborationEngine";
+import ActivityMonitor from "./pages/ActivityMonitor";
+import VibeCoding from "./pages/VibeCoding";
+import ReferenceIntelligence from "./pages/ReferenceIntelligence";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -254,6 +257,9 @@ const AppRouter = () => {
       <Route path="/brain-profiles" element={<ProtectedRoute><DashboardLayout><BrainProfiles /></DashboardLayout></ProtectedRoute>} />
       <Route path="/kpi-dashboard" element={<ProtectedRoute><DashboardLayout><KPIDashboard /></DashboardLayout></ProtectedRoute>} />
       <Route path="/collaborations" element={<ProtectedRoute><DashboardLayout><CollaborationEngine /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/activity-monitor" element={<ProtectedRoute><DashboardLayout><ActivityMonitor /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/vibe-coding" element={<ProtectedRoute><DashboardLayout><VibeCoding /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/reference-intelligence" element={<ProtectedRoute><DashboardLayout><ReferenceIntelligence /></DashboardLayout></ProtectedRoute>} />
       <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
       <Route path="/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
       <Route path="/insights" element={<ProtectedRoute><DashboardLayout><InsightsPage /></DashboardLayout></ProtectedRoute>} />
