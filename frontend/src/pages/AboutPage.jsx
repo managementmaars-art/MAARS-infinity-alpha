@@ -434,8 +434,8 @@ const AboutPage = () => {
           { label: "AI Agents", value: totalAgents, color: "text-indigo-400" },
           { label: "Org Layers", value: "8", color: "text-amber-400" },
           { label: "Core Systems", value: SYSTEMS.length, color: "text-emerald-400" },
-          { label: "LLM Providers", value: "3", color: "text-violet-400" },
-          { label: "API Endpoints", value: "50+", color: "text-cyan-400" },
+          { label: "LLM Providers", value: "9", color: "text-violet-400" },
+          { label: "API Endpoints", value: "212+", color: "text-cyan-400" },
         ].map(s => (
           <Card key={s.label} className="bg-zinc-900/50 border-white/5">
             <CardContent className="p-4 text-center">
