@@ -35,6 +35,7 @@ from routes.approvals import router as approvals_router
 from routes.enterprise import router as enterprise_router
 from routes.vibe_coding import router as vibe_router
 from routes.actions import router as actions_router
+from routes.content import router as content_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -64,6 +65,7 @@ api_router.include_router(approvals_router)
 api_router.include_router(enterprise_router)
 api_router.include_router(vibe_router)
 api_router.include_router(actions_router)
+api_router.include_router(content_router)
 
 app.include_router(api_router)
 
@@ -103,6 +105,8 @@ async def startup():
     await db.reference_analyses.create_index([("user_id", 1), ("created_at", -1)])
     await db.vibe_projects.create_index([("user_id", 1), ("created_at", -1)])
     await db.google_tokens.create_index([("user_id", 1)], unique=True)
+    await db.generated_content.create_index([("user_id", 1), ("created_at", -1)])
+    await db.routing_logs.create_index([("user_id", 1), ("created_at", -1)])
     logger.info("MongoDB indexes ensured")
 
     # Load admin-configured pricing from DB (overrides hardcoded defaults)

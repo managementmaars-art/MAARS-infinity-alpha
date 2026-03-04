@@ -26,6 +26,7 @@ import CollaborationEngine from "./pages/CollaborationEngine";
 import ActivityMonitor from "./pages/ActivityMonitor";
 import VibeCoding from "./pages/VibeCoding";
 import ReferenceIntelligence from "./pages/ReferenceIntelligence";
+import ContentGenerator from "./pages/ContentGenerator";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -260,6 +261,7 @@ const AppRouter = () => {
       <Route path="/activity-monitor" element={<ProtectedRoute><DashboardLayout><ActivityMonitor /></DashboardLayout></ProtectedRoute>} />
       <Route path="/vibe-coding" element={<ProtectedRoute><DashboardLayout><VibeCoding /></DashboardLayout></ProtectedRoute>} />
       <Route path="/reference-intelligence" element={<ProtectedRoute><DashboardLayout><ReferenceIntelligence /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/content-generator" element={<ProtectedRoute><DashboardLayout><ContentGenerator /></DashboardLayout></ProtectedRoute>} />
       <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
       <Route path="/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
       <Route path="/insights" element={<ProtectedRoute><DashboardLayout><InsightsPage /></DashboardLayout></ProtectedRoute>} />

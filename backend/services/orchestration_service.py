@@ -229,6 +229,11 @@ async def execute_project(project_id: str, user_id: str, api_keys: dict):
             {"$set": {"status": "executing", "updated_at": datetime.now(timezone.utc).isoformat()}}
         )
 
+        # Fetch all project tasks for collaboration detection
+        all_project_tasks = await db.tasks.find(
+            {"project_id": project_id}, {"_id": 0}
+        ).to_list(100)
+
         completed = 0
         for ms in project.get("milestones", []):
             ms_id = ms["milestone_id"]
@@ -263,46 +268,63 @@ async def execute_project(project_id: str, user_id: str, api_keys: dict):
                         user_id=user_id,
                         project_id=project_id,
                     )
+
+                    # Quality Control: Auto-review task result
+                    quality_review = None
+                    try:
+                        from services.quality_service import critic_review
+                        quality_review = await critic_review(
+                            task_result=result[:2000],
+                            task_description=task["description"],
+                            agent_name=agent.get("name", "Agent"),
+                            user_id=user_id,
+                            project_id=project_id,
+                            task_id=task_id,
+                            api_keys=api_keys,
+                        )
+                    except Exception as qc_err:
+                        logger.error(f"Quality review error: {qc_err}")
+
                     await db.tasks.update_one(
                         {"task_id": task_id},
                         {"$set": {
                             "status": "completed",
                             "result": result[:3000],
+                            "quality_score": quality_review.get("score") if quality_review else None,
+                            "quality_verdict": quality_review.get("verdict") if quality_review else None,
                             "updated_at": datetime.now(timezone.utc).isoformat(),
                         }}
                     )
                     completed += 1
 
-                    # Log collaboration if task involves cross-agent work
-                    try:
-                        collab_doc = {
-                            "collab_id": f"collab_{uuid.uuid4().hex[:12]}",
-                            "user_id": user_id,
-                            "task_id": task_id,
-                            "project_id": project_id,
-                            "sender": agent.get("name", "Agent"),
-                            "receivers": ["Commander Orion", "Project Manager"],
-                            "objective": task.get("title", ""),
-                            "context": task.get("description", "")[:300],
-                            "required_output": "Task deliverable",
-                            "deadline": "",
-                            "risk_level": task.get("priority", "medium"),
-                            "dependencies": [],
-                            "approval_required": False,
-                            "status": "completed",
-                            "response": f"Completed: {result[:200]}",
-                            "created_at": datetime.now(timezone.utc).isoformat(),
-                            "updated_at": datetime.now(timezone.utc).isoformat(),
-                        }
-                        await db.collaborations.insert_one(collab_doc)
-                    except Exception as collab_err:
-                        logger.error(f"Collab log error: {collab_err}")
+                    # Autonomous Collaboration: Detect cross-domain dependencies
+                    await _detect_and_create_collaborations(
+                        task=task, agent=agent, result=result,
+                        project=project, user_id=user_id, all_tasks=all_project_tasks
+                    )
                 except Exception as e:
                     logger.error(f"Task execution failed {task_id}: {e}")
-                    await db.tasks.update_one(
-                        {"task_id": task_id},
-                        {"$set": {"status": "failed", "result": str(e)[:500], "updated_at": datetime.now(timezone.utc).isoformat()}}
-                    )
+                    # Failure Recovery: Retry with fallback models
+                    try:
+                        from services.quality_service import retry_with_fallback
+                        recovery = await retry_with_fallback(
+                            task_id=task_id,
+                            user_id=user_id,
+                            project_id=project_id,
+                            original_error=str(e)[:500],
+                            api_keys=api_keys,
+                        )
+                        if recovery.get("status") == "recovered":
+                            completed += 1
+                            logger.info(f"Task {task_id} recovered via {recovery.get('fallback_model')}")
+                        else:
+                            logger.warning(f"Task {task_id} escalated: {recovery.get('message', '')}")
+                    except Exception as retry_err:
+                        logger.error(f"Retry failed for {task_id}: {retry_err}")
+                        await db.tasks.update_one(
+                            {"task_id": task_id},
+                            {"$set": {"status": "failed", "result": str(e)[:500], "updated_at": datetime.now(timezone.utc).isoformat()}}
+                        )
 
                 # Update project progress
                 await db.projects.update_one(
@@ -391,6 +413,18 @@ async def execute_agent_task(agent: dict, task_description: str, goal: str, api_
         if brain_ctx:
             system_msg += brain_ctx
 
+        # LLM Router: Select optimal model
+        model_provider = agent.get("model_provider", "openai")
+        model_name = agent.get("model_name", "gpt-5.2")
+        try:
+            from services.llm_router import route_to_model
+            routing = await route_to_model(task_description, agent.get("role", ""), user_id)
+            model_provider = routing["provider"]
+            model_name = routing["model"]
+            logger.info(f"Router selected {model_provider}/{model_name}: {routing.get('reason', '')}")
+        except Exception as route_err:
+            logger.warning(f"Router fallback to default: {route_err}")
+
         # Check if this is a media generation task
         agent_id = agent.get("agent_id", "")
         is_graphics_agent = agent_id == "agent_graphics"
@@ -406,7 +440,7 @@ async def execute_agent_task(agent: dict, task_description: str, goal: str, api_
             api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
             session_id=f"project_{project_id}_{agent['agent_id']}_{uuid.uuid4().hex[:6]}",
             system_message=system_msg
-        ).with_model(agent.get("model_provider", "openai"), agent.get("model_name", "gpt-5.2"))
+        ).with_model(model_provider, model_name)
 
         prompt = f"""You are executing a task as part of an autonomous project.
 
@@ -505,3 +539,108 @@ async def _generate_project_video(agent_response: str, api_keys: dict, project_i
     except Exception as e:
         logger.error(f"Video generation in project failed: {e}")
         return ""
+
+
+# Domain mapping for autonomous collaboration detection
+AGENT_DOMAIN_MAP = {
+    "agent_commander": "executive", "agent_strategist": "executive",
+    "agent_revenue": "executive", "agent_investor": "executive",
+    "agent_pm": "product", "agent_developer": "technical",
+    "agent_automation": "technical", "agent_ai_optimizer": "technical",
+    "agent_data_engineer": "technical", "agent_cybersecurity": "technical",
+    "agent_brand_architect": "creative", "agent_graphics": "creative",
+    "agent_video": "creative", "agent_copywriter": "creative",
+    "agent_web_designer": "creative", "agent_ux_researcher": "creative",
+    "agent_3d_specialist": "creative",
+    "agent_marketing": "marketing", "agent_growth_hacker": "marketing",
+    "agent_seo": "marketing", "agent_social_media": "marketing",
+    "agent_email_marketing": "marketing", "agent_sales": "marketing",
+    "agent_pr_manager": "marketing",
+    "agent_ops": "operations", "agent_inventory": "operations",
+    "agent_procurement": "operations", "agent_hr": "operations",
+    "agent_customer_service": "operations", "agent_cx_architect": "operations",
+    "agent_finance": "finance", "agent_data_analyst": "finance",
+    "agent_legal": "governance", "agent_compliance": "governance", "agent_ethics": "governance",
+    "agent_research": "intelligence", "agent_knowledge": "intelligence",
+    "agent_localization": "intelligence", "agent_secretary": "operations",
+}
+
+CROSS_DOMAIN_TRIGGERS = {
+    "marketing": {"creative", "technical"},
+    "creative": {"marketing", "product"},
+    "technical": {"product", "operations"},
+    "product": {"technical", "creative", "marketing"},
+    "finance": {"executive", "operations"},
+    "executive": {"finance", "product", "marketing"},
+    "governance": {"executive", "operations"},
+    "operations": {"technical", "finance"},
+    "intelligence": {"marketing", "product", "executive"},
+}
+
+
+async def _detect_and_create_collaborations(task: dict, agent: dict, result: str,
+                                            project: dict, user_id: str, all_tasks: list):
+    """Detect cross-domain dependencies and auto-create collaboration entries."""
+    try:
+        agent_id = agent.get("agent_id", "")
+        agent_domain = AGENT_DOMAIN_MAP.get(agent_id, "general")
+        task_desc_lower = task.get("description", "").lower()
+
+        # Find other agents in this project from different domains
+        collaborators = []
+        for t in all_tasks:
+            other_agent_id = (t.get("assigned_agents") or [""])[0]
+            if other_agent_id == agent_id:
+                continue
+            other_domain = AGENT_DOMAIN_MAP.get(other_agent_id, "general")
+
+            # Create collaboration if domains trigger each other
+            related_domains = CROSS_DOMAIN_TRIGGERS.get(agent_domain, set())
+            if other_domain in related_domains:
+                collaborators.append({
+                    "agent_id": other_agent_id,
+                    "name": t.get("agent_name", "Agent"),
+                    "domain": other_domain,
+                    "task_title": t.get("title", ""),
+                })
+
+        if not collaborators:
+            return
+
+        # Determine collaboration type based on content
+        collab_type = "information_sharing"
+        if any(kw in task_desc_lower for kw in ["review", "approve", "validate", "check"]):
+            collab_type = "review_request"
+        elif any(kw in task_desc_lower for kw in ["data", "input", "provide", "send", "share"]):
+            collab_type = "data_handoff"
+        elif any(kw in task_desc_lower for kw in ["coordinate", "align", "sync", "together"]):
+            collab_type = "coordination"
+
+        # Create collaboration entries (max 3 per task to avoid spam)
+        for collab_agent in collaborators[:3]:
+            collab_doc = {
+                "collab_id": f"collab_{uuid.uuid4().hex[:12]}",
+                "user_id": user_id,
+                "task_id": task.get("task_id", ""),
+                "project_id": project.get("project_id", ""),
+                "sender": agent.get("name", "Agent"),
+                "sender_domain": agent_domain,
+                "receivers": [collab_agent["name"]],
+                "receiver_domain": collab_agent["domain"],
+                "objective": f"Cross-domain collaboration: {task.get('title', '')}",
+                "context": f"Agent '{agent.get('name')}' ({agent_domain}) completed '{task.get('title')}' which impacts {collab_agent['name']} ({collab_agent['domain']}) working on '{collab_agent['task_title']}'.",
+                "collaboration_type": collab_type,
+                "required_output": f"Review and integrate output from {agent.get('name')}",
+                "auto_generated": True,
+                "risk_level": task.get("priority", "medium"),
+                "dependencies": [task.get("task_id", "")],
+                "status": "pending",
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat(),
+            }
+            await db.collaborations.insert_one(collab_doc)
+
+        logger.info(f"Auto-created {len(collaborators[:3])} collaborations for task {task.get('task_id')}")
+
+    except Exception as e:
+        logger.error(f"Auto-collaboration detection error: {e}")
