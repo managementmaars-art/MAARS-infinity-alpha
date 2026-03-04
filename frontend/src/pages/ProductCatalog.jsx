@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 export default function ProductCatalog() {
-  const { user, token, logout } = useAuth();
+  const { user, token } = useAuth();
   const navigate = useNavigate();
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const [products, setProducts] = useState([]);
@@ -24,8 +24,7 @@ export default function ProductCatalog() {
   const [generating, setGenerating] = useState(null);
   const [generatedContent, setGeneratedContent] = useState(null);
   const [rescanning, setRescanning] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showImport, setShowImport] = useState(false);
+    const [showImport, setShowImport] = useState(false);
   const [importFile, setImportFile] = useState(null);
   const [importing, setImporting] = useState(false);
   const [batchProgress, setBatchProgress] = useState(null);
@@ -136,46 +135,6 @@ export default function ProductCatalog() {
     !searchQuery || p.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     p.brand?.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const NavItem = ({ icon: Icon, label, to, active }) => (
-    <Link to={to} className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all ${active ? "bg-white/10 text-white font-medium" : "text-zinc-400 hover:text-white hover:bg-white/5"}`} onClick={() => setSidebarOpen(false)}>
-      <Icon className="w-5 h-5" />{label}
-    </Link>
-  );
-
-  const Sidebar = () => (
-    <div className="h-full flex flex-col">
-      <div className="p-6">
-        <Link to="/dashboard" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center"><Bot className="w-5 h-5 text-white" /></div>
-          <div><span className="text-lg font-bold text-white font-['Outfit']">MAARS Command</span><p className="text-[9px] text-zinc-500 -mt-1">by MAARS Global Corp</p></div>
-        </Link>
-      </div>
-      <nav className="flex-1 px-4 space-y-1">
-        <NavItem icon={LayoutDashboard} label="Dashboard" to="/dashboard" />
-        <NavItem icon={MessageSquare} label="Chat" to="/chat" />
-        <NavItem icon={Users} label="Agents" to="/agents" />
-        <NavItem icon={Package} label="Products" to="/products" active />
-        <NavItem icon={ListTodo} label="Tasks" to="/tasks" />
-        <NavItem icon={BarChart3} label="My Insights" to="/insights" />
-        <NavItem icon={Settings} label="Settings" to="/settings" />
-        {user?.is_admin && <NavItem icon={Shield} label="Admin Panel" to="/admin" />}
-      </nav>
-      <div className="p-4 border-t border-white/10">
-        <div className="flex items-center gap-3 px-4 py-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
-            {user?.picture ? <img src={user.picture} alt="" className="w-full h-full rounded-full object-cover" /> : <span className="text-white font-semibold">{user?.name?.charAt(0) || "U"}</span>}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">{user?.name}</p>
-            <p className="text-xs text-zinc-500 truncate">{user?.email}</p>
-          </div>
-        </div>
-        <Button variant="ghost" className="w-full justify-start text-zinc-400 hover:text-white hover:bg-white/5 mt-2" onClick={logout}><LogOut className="w-5 h-5 mr-3" />Sign Out</Button>
-      </div>
-    </div>
-  );
-
   const contentTypes = [
     { key: "video", label: "Video Prompt", icon: Video, color: "from-red-500 to-rose-500" },
     { key: "ad_copy", label: "Ad Copy", icon: FileText, color: "from-blue-500 to-indigo-500" },
@@ -184,30 +143,8 @@ export default function ProductCatalog() {
   ];
 
   return (
-    <div className="min-h-screen bg-background" data-testid="products-page">
-      {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
-        <div className="flex items-center justify-between h-16 px-4">
-          <Link to="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center"><Bot className="w-5 h-5 text-white" /></div>
-            <span className="text-lg font-bold text-white font-['Outfit']">MAARS Command</span>
-          </Link>
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-zinc-400 hover:text-white p-2">{sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}</button>
-        </div>
-      </div>
-
-      {sidebarOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 flex">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
-          <div className="relative w-72 glass border-r border-white/10"><Sidebar /></div>
-        </div>
-      )}
-
-      <div className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 glass border-r border-white/10 z-40"><Sidebar /></div>
-
-      {/* Main */}
-      <div className="lg:ml-64 pt-16 lg:pt-0">
-        <div className="max-w-7xl mx-auto p-6">
+    <div data-testid="products-page">
+        <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -466,7 +403,6 @@ export default function ProductCatalog() {
             </Card>
           )}
         </div>
-      </div>
 
       {/* Import Modal */}
       {showImport && (

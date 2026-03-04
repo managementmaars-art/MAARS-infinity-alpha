@@ -27,6 +27,7 @@ import ActivityMonitor from "./pages/ActivityMonitor";
 import VibeCoding from "./pages/VibeCoding";
 import ReferenceIntelligence from "./pages/ReferenceIntelligence";
 import ContentGenerator from "./pages/ContentGenerator";
+import AboutPage from "./pages/AboutPage";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -247,12 +248,12 @@ const AppRouter = () => {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/payment/success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
-      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route path="/chat/:agentId?" element={<ProtectedRoute><AgentChat /></ProtectedRoute>} />
-      <Route path="/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
-      <Route path="/agents/create" element={<ProtectedRoute><CreateAgent /></ProtectedRoute>} />
-      <Route path="/products" element={<ProtectedRoute><ProductCatalog /></ProtectedRoute>} />
-      <Route path="/projects/*" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
+      <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout><Dashboard /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/chat/:agentId?" element={<ProtectedRoute><DashboardLayout><AgentChat /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/agents" element={<ProtectedRoute><DashboardLayout><Agents /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/agents/create" element={<ProtectedRoute><DashboardLayout><CreateAgent /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/products" element={<ProtectedRoute><DashboardLayout><ProductCatalog /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/projects/*" element={<ProtectedRoute><DashboardLayout><Projects /></DashboardLayout></ProtectedRoute>} />
       <Route path="/workspace" element={<ProtectedRoute><DashboardLayout><WorkspaceBrain /></DashboardLayout></ProtectedRoute>} />
       <Route path="/approvals" element={<ProtectedRoute><DashboardLayout><Approvals /></DashboardLayout></ProtectedRoute>} />
       <Route path="/brain-profiles" element={<ProtectedRoute><DashboardLayout><BrainProfiles /></DashboardLayout></ProtectedRoute>} />
@@ -262,11 +263,12 @@ const AppRouter = () => {
       <Route path="/vibe-coding" element={<ProtectedRoute><DashboardLayout><VibeCoding /></DashboardLayout></ProtectedRoute>} />
       <Route path="/reference-intelligence" element={<ProtectedRoute><DashboardLayout><ReferenceIntelligence /></DashboardLayout></ProtectedRoute>} />
       <Route path="/content-generator" element={<ProtectedRoute><DashboardLayout><ContentGenerator /></DashboardLayout></ProtectedRoute>} />
-      <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
-      <Route path="/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
+      <Route path="/tasks" element={<ProtectedRoute><DashboardLayout><Tasks /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/team" element={<ProtectedRoute><DashboardLayout><Team /></DashboardLayout></ProtectedRoute>} />
       <Route path="/insights" element={<ProtectedRoute><DashboardLayout><InsightsPage /></DashboardLayout></ProtectedRoute>} />
-      <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-      <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+      <Route path="/settings" element={<ProtectedRoute><DashboardLayout><Settings /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/about" element={<ProtectedRoute><DashboardLayout><AboutPage /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminDashboard /></DashboardLayout></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
