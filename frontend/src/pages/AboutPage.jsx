@@ -27,12 +27,14 @@ const AGENT_LAYERS = [
       { name: "Chief Strategy Officer", role: "Strategist", desc: "Long-term strategy, market analysis, competitive intelligence, and strategic roadmapping." },
       { name: "Revenue Strategist", role: "Revenue", desc: "Revenue optimization, pricing strategy, monetization modeling, and growth forecasting." },
       { name: "Investor Relations", role: "Investor Relations", desc: "Investor communications, fundraising support, financial reporting, and stakeholder management." },
+      { name: "Business Strategist", role: "Business Strategy", desc: "Market positioning, business model innovation, go-to-market strategy, and competitive landscape analysis." },
     ]
   },
   {
     id: "technical", label: "Product & Technical Layer", icon: Cpu,
     agents: [
       { name: "Product Manager", role: "PM", desc: "Product roadmaps, feature prioritization, user stories, sprint planning, and cross-functional alignment." },
+      { name: "Project Manager", role: "Project Management", desc: "Timeline management, resource allocation, milestone tracking, risk mitigation, and stakeholder communication." },
       { name: "App Developer", role: "Developer", desc: "Full-stack development, code generation, debugging, API design, and architecture decisions." },
       { name: "Automation Engineer", role: "Automation", desc: "Workflow automation, CI/CD pipelines, process optimization, and integration scripting." },
       { name: "AI Optimizer", role: "AI Specialist", desc: "ML model tuning, AI performance monitoring, cost optimization, and model selection strategy." },
