@@ -955,7 +955,7 @@ const AgentChat = () => {
   }
 
   return (
-    <div className="h-screen bg-background flex overflow-hidden" data-testid="chat-page">
+    <div className="h-[100vh] lg:h-screen bg-background flex overflow-hidden" data-testid="chat-page">
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
         <div className="flex items-center justify-between h-16 px-4">
@@ -981,16 +981,11 @@ const AgentChat = () => {
       {sidebarOpen && (
         <div className="lg:hidden fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
-          <div className="absolute left-0 top-0 bottom-0 w-80 bg-zinc-900 border-r border-white/10 flex flex-col">
-            <div className="flex items-center justify-between p-4 border-b border-white/10">
-              <Link to="/dashboard" className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
-                  <Bot className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-lg font-bold text-white font-['Outfit']">MAARS Command</span>
-              </Link>
-              <button onClick={() => setSidebarOpen(false)} className="p-2 text-zinc-400">
-                <X className="w-5 h-5" />
+          <div className="absolute left-0 top-0 bottom-0 w-72 bg-zinc-900 border-r border-white/[0.08] flex flex-col">
+            <div className="flex items-center justify-between p-3 border-b border-white/[0.06]">
+              <span className="text-sm font-semibold text-white">Chats</span>
+              <button onClick={() => setSidebarOpen(false)} className="p-1.5 text-zinc-500 hover:text-white rounded-lg hover:bg-white/[0.04]">
+                <X className="w-4 h-4" />
               </button>
             </div>
             <SidebarContent 
@@ -1009,20 +1004,11 @@ const AgentChat = () => {
       )}
 
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex flex-col bg-zinc-900/50 border-r border-white/10 relative" style={{ width: sidebarWidth, minWidth: 200, maxWidth: 600 }}>
-        <div className="p-4 border-b border-white/10">
-          <div className="flex items-center justify-between mb-4">
-            <Link to="/dashboard" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
-                <Bot className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-lg font-bold text-white font-['Outfit']">MAARS Command</span>
-            </Link>
-            <NotificationCenter />
-          </div>
+      <div className="hidden lg:flex flex-col bg-zinc-900/50 border-r border-white/[0.08] relative" style={{ width: sidebarWidth, minWidth: 200, maxWidth: 600 }}>
+        <div className="p-3 border-b border-white/[0.06]">
           <Button
             onClick={startNewChat}
-            className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
+            className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 h-9 text-sm"
             data-testid="new-chat-btn"
           >
             <Plus className="w-4 h-4 mr-2" /> New Chat
@@ -1030,10 +1016,10 @@ const AgentChat = () => {
           <Button
             variant="outline"
             onClick={() => setShowSearch(!showSearch)}
-            className="w-full border-white/10 text-zinc-400 hover:text-white mt-1"
+            className="w-full border-white/[0.08] text-zinc-500 hover:text-white mt-1.5 h-8 text-xs"
             data-testid="chat-search-btn"
           >
-            <Search className="w-4 h-4 mr-2" /> Search Chats
+            <Search className="w-3.5 h-3.5 mr-2" /> Search Chats
           </Button>
         </div>
         {showSearch && (
@@ -1086,28 +1072,28 @@ const AgentChat = () => {
         )}
         {/* Agent Header */}
         {selectedAgent && (
-          <div className="hidden lg:flex items-center justify-between p-4 border-b border-white/10 shrink-0">
-            <div className="flex items-center gap-4">
+          <div className="hidden lg:flex items-center justify-between px-4 py-3 border-b border-white/[0.06] shrink-0">
+            <div className="flex items-center gap-3">
               <img
                 src={selectedAgent.avatar}
                 alt={selectedAgent.name}
-                className="w-10 h-10 rounded-lg object-cover"
+                className="w-9 h-9 rounded-lg object-cover"
               />
               <div>
-                <h2 className="font-semibold text-white">{selectedAgent.name}</h2>
-                <p className="text-sm text-zinc-400">{selectedAgent.role}</p>
+                <h2 className="font-semibold text-white text-sm">{selectedAgent.name}</h2>
+                <p className="text-xs text-zinc-500">{selectedAgent.role}</p>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowCustomize(!showCustomize)}
-                className={`text-zinc-400 hover:text-indigo-400 h-8 ml-2 ${showCustomize ? 'text-indigo-400 bg-indigo-500/10' : ''}`}
+                className={`text-zinc-500 hover:text-indigo-400 h-7 text-xs ml-1 ${showCustomize ? 'text-indigo-400 bg-indigo-500/10' : ''}`}
                 data-testid="customize-agent-btn"
               >
-                <Settings className="w-4 h-4 mr-1" />Customize
+                <Settings className="w-3.5 h-3.5 mr-1" />Customize
               </Button>
             </div>
-            <div className="flex items-center gap-2 mr-32">
+            <div className="flex items-center gap-1.5">
               {currentChat && (
                 <>
                   <Button
@@ -1152,34 +1138,37 @@ const AgentChat = () => {
                   <img
                     src={selectedAgent.avatar}
                     alt={selectedAgent.name}
-                    className="w-20 h-20 rounded-xl object-cover mb-4"
+                    className="w-16 h-16 rounded-xl object-cover mb-4"
                   />
-                  <h3 className="text-xl font-semibold text-white mb-2 font-['Outfit']">
+                  <h3 className="text-lg font-semibold text-white mb-1 font-['Outfit']">
                     Chat with {selectedAgent.name}
                   </h3>
-                  <p className="text-zinc-400 max-w-md mb-4">{selectedAgent.description}</p>
-                  <div className="flex flex-wrap gap-2 justify-center">
+                  <p className="text-sm text-zinc-500 max-w-sm mb-5">{selectedAgent.description}</p>
+                  <div className="flex flex-wrap gap-1.5 justify-center max-w-md">
                     {selectedAgent.capabilities?.map((cap, i) => (
-                      <span key={i} className="px-3 py-1 text-sm rounded-full bg-white/10 text-zinc-300">
+                      <span key={i} className="px-2.5 py-1 text-xs rounded-md bg-white/[0.06] text-zinc-400 border border-white/[0.06]">
                         {cap}
                       </span>
                     ))}
                   </div>
                   {selectedAgent.tools?.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 justify-center mt-3" data-testid="agent-chat-tools">
-                      <span className="flex items-center gap-1 text-xs text-amber-400 mr-1">
+                    <div className="flex flex-wrap gap-1.5 justify-center mt-3 max-w-md" data-testid="agent-chat-tools">
+                      <span className="flex items-center gap-1 text-[11px] text-zinc-600 mr-0.5">
                         <Wrench className="w-3 h-3" /> Tools:
                       </span>
-                      {selectedAgent.tools.map((tool, i) => {
+                      {selectedAgent.tools.slice(0, 8).map((tool, i) => {
                         const icons = { web_search: Search, calculate: Calculator, create_task: ClipboardList, analyze_data: BarChart3, send_slack: MessageCircle, send_email: Mail, send_sms: Phone, github_action: Github, airtable_action: Table, search_gif: Image, schedule_meeting: Calendar, google_calendar: Calendar, send_gmail: Mail };
                         const labels = { web_search: "Web Search", calculate: "Calculator", create_task: "Task Creator", analyze_data: "Data Analyzer", send_slack: "Slack", send_email: "Email", send_sms: "SMS", github_action: "GitHub", airtable_action: "Airtable", search_gif: "GIFs", schedule_meeting: "Calendly", google_calendar: "Calendar", send_gmail: "Gmail" };
                         const Icon = icons[tool] || Wrench;
                         return (
-                          <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                            <Icon className="w-3 h-3" /> {labels[tool] || tool}
+                          <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] rounded-md bg-amber-500/8 text-amber-500/70 border border-amber-500/10">
+                            <Icon className="w-2.5 h-2.5" /> {labels[tool] || tool}
                           </span>
                         );
                       })}
+                      {selectedAgent.tools.length > 8 && (
+                        <span className="text-[11px] text-zinc-600 px-2 py-0.5">+{selectedAgent.tools.length - 8} more</span>
+                      )}
                     </div>
                   )}
                 </>
@@ -1636,46 +1625,10 @@ const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent,
   currentChat, loadChat, deleteChat, startNewChat, navigate 
 }) => (
   <div className="flex-1 flex flex-col overflow-hidden">
-    {/* Navigation - at the top */}
-    <div className="px-4 pt-3 pb-2 space-y-0.5 border-b border-white/10">
-      <Link
-        to="/dashboard"
-        className="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
-        data-testid="nav-dashboard"
-      >
-        <LayoutDashboard className="w-4 h-4" />
-        <span className="text-sm font-medium">Dashboard</span>
-      </Link>
-      <Link
-        to="/agents"
-        className="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
-        data-testid="nav-agents"
-      >
-        <Users className="w-4 h-4" />
-        <span className="text-sm font-medium">All Agents</span>
-      </Link>
-      <Link
-        to="/tasks"
-        className="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
-        data-testid="nav-tasks"
-      >
-        <ListTodo className="w-4 h-4" />
-        <span className="text-sm font-medium">Tasks</span>
-      </Link>
-      <Link
-        to="/team"
-        className="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:bg-white/5 hover:text-white transition-colors"
-        data-testid="nav-team"
-      >
-        <Users className="w-4 h-4" />
-        <span className="text-sm font-medium">Team</span>
-      </Link>
-    </div>
-
     {/* Agents */}
-    <div className="p-4 border-b border-white/10">
-      <p className="text-xs font-semibold text-zinc-500 uppercase mb-2">Agents</p>
-      <div className="flex gap-2 overflow-x-auto pb-2">
+    <div className="px-3 pt-3 pb-2 border-b border-white/[0.06]">
+      <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-2 px-1">Agents</p>
+      <div className="flex gap-1.5 overflow-x-auto pb-1">
         {agents.slice(0, 6).map((agent) => (
           <button
             key={agent.agent_id}
@@ -1684,10 +1637,10 @@ const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent,
               navigate(`/chat/${agent.agent_id}`);
               toast.success(`Switched to ${agent.name}`);
             }}
-            className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
+            className={`flex-shrink-0 p-1.5 rounded-lg transition-all ${
               selectedAgent?.agent_id === agent.agent_id
-                ? "bg-indigo-500/20 ring-1 ring-indigo-500"
-                : "bg-zinc-800/50 hover:bg-zinc-800"
+                ? "bg-indigo-500/15 ring-1 ring-indigo-500/40"
+                : "bg-zinc-800/40 hover:bg-zinc-800"
             }`}
             title={agent.name}
             data-testid={`agent-btn-${agent.agent_id}`}
@@ -1695,7 +1648,7 @@ const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent,
             <img
               src={agent.avatar}
               alt={agent.name}
-              className="w-8 h-8 rounded object-cover"
+              className="w-8 h-8 rounded-md object-cover"
             />
           </button>
         ))}
@@ -1704,16 +1657,16 @@ const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent,
 
     {/* Chat History */}
     <ScrollArea className="flex-1">
-      <div className="p-4">
-        <p className="text-xs font-semibold text-zinc-500 uppercase mb-2">Recent Chats</p>
-        <div className="space-y-1">
+      <div className="px-3 pt-3">
+        <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-2 px-1">Recent Chats</p>
+        <div className="space-y-0.5">
           {chats.map((chat) => (
             <div
               key={chat.chat_id}
-              className={`group flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-colors ${
+              className={`group flex items-center gap-2 px-2.5 py-2 rounded-lg cursor-pointer transition-all ${
                 currentChat?.chat_id === chat.chat_id
-                  ? "bg-indigo-500/20"
-                  : "hover:bg-white/5"
+                  ? "bg-indigo-500/12 text-indigo-400"
+                  : "hover:bg-white/[0.04] text-zinc-400 hover:text-zinc-300"
               }`}
               onClick={() => {
                 loadChat(chat.chat_id);
@@ -1721,22 +1674,22 @@ const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent,
               }}
               data-testid={`chat-item-${chat.chat_id}`}
             >
-              <MessageSquare className="w-4 h-4 text-zinc-500 flex-shrink-0" />
-              <span className="flex-1 text-sm text-zinc-300 truncate">{chat.title}</span>
+              <MessageSquare className="w-3.5 h-3.5 flex-shrink-0 opacity-50" />
+              <span className="flex-1 text-[13px] truncate">{chat.title}</span>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   deleteChat(chat.chat_id);
                 }}
-                className="opacity-0 group-hover:opacity-100 p-1 text-zinc-500 hover:text-red-400 transition-opacity"
+                className="opacity-0 group-hover:opacity-100 p-1 text-zinc-600 hover:text-red-400 transition-opacity"
                 data-testid={`delete-chat-${chat.chat_id}`}
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-3.5 h-3.5" />
               </button>
             </div>
           ))}
           {chats.length === 0 && (
-            <p className="text-sm text-zinc-500 text-center py-4">No chats yet</p>
+            <p className="text-xs text-zinc-600 text-center py-6">No chats yet</p>
           )}
         </div>
       </div>
