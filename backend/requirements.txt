@@ -32,7 +32,7 @@ fastuuid==0.14.0
 filelock==3.24.3
 flake8==7.3.0
 fonttools==4.61.1
-fpdf2==2.8.6
+fpdf2==2.8.7
 frozenlist==1.8.0
 fsspec==2026.2.0
 google-ai-generativelanguage==0.6.15
@@ -104,6 +104,7 @@ PyJWT==2.11.0
 pymongo==4.5.0
 PyMuPDF==1.27.1
 pyparsing==3.3.2
+pypdf==6.7.5
 PyPDF2==3.0.1
 pytest==9.0.2
 python-dateutil==2.9.0.post0
