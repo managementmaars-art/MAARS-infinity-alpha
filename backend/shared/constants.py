@@ -34,44 +34,44 @@ SUBSCRIPTION_PLANS = {
         "price_usd": 0.0,
         "price_bdt": 0.0,
         "credits": 50,
-        "max_agents": 1,
+        "max_agents": 3,
         "max_custom_agents": 0,
         "includes_commander": False,
         "max_team_members": 1,
-        "features": ["1 AI employee", "50 credits/month", "Basic support"]
+        "features": ["3 AI agents", "50 credits/month", "Basic chat & tasks", "1 LLM provider", "Community support"]
     },
     "starter": {
         "name": "Starter",
         "price_usd": 29.0,
         "price_bdt": 3100.0,
         "credits": 500,
-        "max_agents": 5,
+        "max_agents": 10,
         "max_custom_agents": 2,
         "includes_commander": False,
         "max_team_members": 3,
-        "features": ["5 AI employees", "500 credits/month", "2 custom agents", "Team (up to 3)", "Priority support", "File uploads"]
+        "features": ["10 AI agents", "500 credits/month", "2 custom agents", "5 LLM providers", "Vibe Coding & Content Generator", "Voice commands", "Team (up to 3)", "Priority support", "File uploads"]
     },
     "pro": {
         "name": "Pro",
         "price_usd": 79.0,
         "price_bdt": 8400.0,
         "credits": 2000,
-        "max_agents": 10,
+        "max_agents": 25,
         "max_custom_agents": 5,
         "includes_commander": True,
         "max_team_members": 10,
-        "features": ["10 AI employees + Commander AI", "2,000 credits/month", "5 custom agents", "Team (up to 10)", "Priority support", "Unlimited uploads"]
+        "features": ["25 AI agents + Commander Orion", "2,000 credits/month", "5 custom agents", "All 9 LLM providers (30+ models)", "Autonomous orchestration", "Quality control & auto-learning", "Memory governance", "Real-time activity monitor", "Reference intelligence", "Team (up to 10)", "Unlimited uploads"]
     },
     "business": {
         "name": "Business",
         "price_usd": 199.0,
         "price_bdt": 21100.0,
         "credits": 6000,
-        "max_agents": 20,
+        "max_agents": 41,
         "max_custom_agents": -1,
         "includes_commander": True,
         "max_team_members": -1,
-        "features": ["All 20 AI employees + Commander AI", "6,000 credits/month", "Unlimited custom agents", "Unlimited team members", "Dedicated support", "Unlimited everything", "API access"]
+        "features": ["All 41 AI agents + Commander Orion", "6,000 credits/month", "Unlimited custom agents", "All 9 LLM providers (30+ models)", "Full autonomous orchestration", "All 17 core systems", "KPI dashboard & collaboration engine", "Admin code explorer", "Unlimited team members", "Dedicated support", "API access"]
     }
 }
 

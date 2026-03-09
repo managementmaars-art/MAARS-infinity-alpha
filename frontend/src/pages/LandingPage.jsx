@@ -232,7 +232,7 @@ const LandingPage = () => {
               Meet Your AI Team
             </h2>
             <p className="text-lg text-zinc-400 max-w-2xl">
-              41 specialized AI employees ready to work for you - from secretaries to developers, marketers to analysts.
+              41 specialized AI agents ready to work for you - from strategists to developers, marketers to analysts.
             </p>
           </div>
 

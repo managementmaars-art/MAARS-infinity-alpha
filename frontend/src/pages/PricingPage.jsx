@@ -42,7 +42,7 @@ const PricingPage = () => {
       price_bdt: 0,
       credits: 50,
       icon: <Sparkles className="w-6 h-6" />,
-      features: ["50 credits/month", "1 AI employee", "Basic support", "No custom agents"],
+      features: ["3 AI agents", "50 credits/month", "Basic chat & tasks", "1 LLM provider", "Community support"],
       popular: false
     },
     {
@@ -52,7 +52,7 @@ const PricingPage = () => {
       price_bdt: 3100,
       credits: 500,
       icon: <Zap className="w-6 h-6" />,
-      features: ["500 credits/month", "5 AI employees", "2 custom agents (20 credits each)", "Priority support", "File uploads"],
+      features: ["10 AI agents", "500 credits/month", "2 custom agents", "5 LLM providers", "Vibe Coding & Content Generator", "Voice commands", "Team (up to 3)", "Priority support", "File uploads"],
       popular: false
     },
     {
@@ -62,7 +62,7 @@ const PricingPage = () => {
       price_bdt: 8400,
       credits: 2000,
       icon: <Crown className="w-6 h-6" />,
-      features: ["2,000 credits/month", "10 AI employees + Commander AI", "5 custom agents (20 credits each)", "Priority support", "Unlimited uploads"],
+      features: ["25 AI agents + Commander Orion", "2,000 credits/month", "5 custom agents", "All 9 LLM providers (30+ models)", "Autonomous orchestration", "Quality control & auto-learning", "Memory governance", "Real-time activity monitor", "Reference intelligence", "Team (up to 10)", "Unlimited uploads"],
       popular: true
     },
     {
@@ -72,7 +72,7 @@ const PricingPage = () => {
       price_bdt: 21100,
       credits: 6000,
       icon: <Building className="w-6 h-6" />,
-      features: ["6,000 credits/month", "All 20 AI employees + Commander AI", "Unlimited custom agents", "Dedicated support", "Unlimited everything", "API access"],
+      features: ["All 41 AI agents + Commander Orion", "6,000 credits/month", "Unlimited custom agents", "All 9 LLM providers (30+ models)", "Full autonomous orchestration", "All 17 core systems", "KPI dashboard & collaboration engine", "Admin code explorer", "Unlimited team members", "Dedicated support", "API access"],
       popular: false
     }
   ];
@@ -638,7 +638,7 @@ const PricingPage = () => {
 
         {/* FAQ or Note */}
         <div className="text-center text-zinc-500 text-sm">
-          <p>Fixed plans include agent selection up to plan limits. Commander AI included in Pro and Business only.</p>
+          <p>41 specialized AI agents across 8 organizational layers. Commander Orion included in Pro and Business plans.</p>
           <p className="mt-2">Questions? Contact support@maarsglobal.com</p>
         </div>
         <BrandFooter className="mt-8" />
