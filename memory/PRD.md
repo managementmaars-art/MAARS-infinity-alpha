@@ -135,6 +135,14 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
   - Tighter spacing and proportions in chat header and sidebar
   - Full-bleed layout (no padding wrapper) for immersive chat experience
 
+- **Pricing Plans Update**: Aligned all plan tiers with current system capabilities
+  - Free: 3 AI agents (was 1), 1 LLM provider, basic chat & tasks
+  - Starter ($29): 10 AI agents (was 5), 5 LLM providers, Vibe Coding, Voice commands
+  - Pro ($79): 25 AI agents + Commander Orion (was 10), All 9 LLM providers, autonomous orchestration, quality control, memory governance, activity monitor, reference intelligence
+  - Business ($199): All 41 AI agents + Commander Orion (was 20), All 17 core systems, KPI dashboard, admin code explorer, API access
+  - Updated backend constants, MongoDB platform_config, and frontend defaultPlans
+  - Fixed terminology: "AI agents" replaces "AI employees" throughout
+
 ## Testing Status
 - Iteration 53: 26/26 (100%)
 - Iteration 54: 20/20 (100%)
@@ -148,6 +156,7 @@ Build "MAARS Command," a commercial, production-ready AI business operating syst
 - Iteration 63: 100% — 42KB/20-page PDF verified via pypdf (17 systems x 5 sections, 41 agents, 9 providers, 212+ endpoints)
 - Iteration 64: 100% — Premium dark-themed PDF redesign: 27/27 backend + all frontend UI verified (31KB, 14 pages, dark theme with colored accents)
 - Iteration 65: 100% — Sidebar UI cleanup + Chat page cleanup: All frontend tests pass (section groups, active accent, no redundant nav, tool truncation)
+- Iteration 66: 100% — Pricing page update: 26/26 backend + all frontend verified (41 agents, 9 LLM providers, 17 core systems, Commander Orion, updated features)
 
 ## Credentials
 - Admin: management.maars@marsgc.net / admin123
