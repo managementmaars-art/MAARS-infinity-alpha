@@ -269,13 +269,17 @@ code, pre {
     margin-bottom: 0 !important;
   }
 
-  /* ─── ARCHITECTURE: keep 3-col grid like the web view ─── */
+  /* ─── ARCHITECTURE: stacked, evenly spaced on 1 page ─── */
   #architecture .grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
   }
   #architecture .grid > * { margin-bottom: 0 !important; }
+  #architecture .print-card [class*="CardContent"] { padding: 8px 10px !important; }
+  #architecture .print-card p { font-size: 7pt !important; line-height: 1.3 !important; }
+  #architecture .print-card .text-sm { font-size: 8pt !important; }
+  #architecture .print-card .space-y-1 > * { margin-bottom: 1px !important; }
 
   /* ─── CORE SYSTEMS: 3 per page ─── */
   .print-systems-group {
@@ -291,45 +295,45 @@ code, pre {
     break-inside: avoid !important;
   }
 
-  /* ─── AI PROVIDERS: fit all in 1 page ─── */
+  /* ─── AI PROVIDERS: 1 page, 2-col, evenly spaced ─── */
   #providers .grid {
     display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 3px !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
   }
   #providers .grid > * { margin-bottom: 0 !important; }
-  #providers .print-card { padding: 2px !important; }
-  #providers .print-card [class*="CardContent"] { padding: 4px !important; }
-  #providers .print-card p { font-size: 5.5pt !important; line-height: 1.15 !important; }
-  #providers .print-card span { font-size: 5.5pt !important; line-height: 1.15 !important; }
-  #providers .print-card .text-sm { font-size: 6.5pt !important; }
-  #providers .print-card .space-y-2 { gap: 0px !important; }
+  #providers .print-card [class*="CardContent"] { padding: 5px 6px !important; }
+  #providers .print-card p { font-size: 5.5pt !important; line-height: 1.2 !important; }
+  #providers .print-card span { font-size: 5.5pt !important; line-height: 1.2 !important; }
+  #providers .print-card .text-sm { font-size: 7pt !important; }
   #providers .print-card .space-y-2 > * { margin-top: 1px !important; margin-bottom: 0 !important; }
   #providers .print-card [class*="Badge"] { font-size: 4.5pt !important; padding: 0 2px !important; }
+  /* Hide verbose model descriptions in print — keep just name + tier */
+  #providers .print-card .text-\[10px\].text-zinc-500 { display: none !important; }
 
-  /* ─── SECURITY: fit all in 1 page ─── */
+  /* ─── SECURITY: 1 page, 2-col, evenly spaced ─── */
   #security .grid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 4px !important;
+    gap: 8px !important;
   }
   #security .grid > * { margin-bottom: 0 !important; }
-  #security .print-card [class*="CardContent"] { padding: 5px !important; }
-  #security .print-card .text-sm { font-size: 7pt !important; }
-  #security .print-card .text-xs { font-size: 5.5pt !important; line-height: 1.2 !important; }
+  #security .print-card [class*="CardContent"] { padding: 6px 8px !important; }
+  #security .print-card .text-sm { font-size: 7.5pt !important; }
+  #security .print-card .text-xs { font-size: 6pt !important; line-height: 1.25 !important; }
 
-  /* ─── COSTS: fit all in 1 page ─── */
+  /* ─── COSTS: 1 page, 2-col, evenly spaced ─── */
   #costs .grid {
     display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 3px !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 5px !important;
   }
   #costs .grid > * { margin-bottom: 0 !important; }
-  #costs .print-card [class*="CardContent"] { padding: 3px !important; }
-  #costs .print-card span { font-size: 5pt !important; line-height: 1.15 !important; }
-  #costs .print-card .text-xs { font-size: 5.5pt !important; }
+  #costs .print-card [class*="CardContent"] { padding: 4px 6px !important; }
+  #costs .print-card span { font-size: 5.5pt !important; line-height: 1.2 !important; }
+  #costs .print-card .text-xs { font-size: 6pt !important; }
   #costs .print-card .space-y-1 > * { margin-top: 0 !important; margin-bottom: 0 !important; }
-  #costs .print-card .flex.gap-3 { gap: 4px !important; }
+  #costs .print-card .flex.gap-3 { gap: 6px !important; }
 
   /* Agent cards don't split */
   .print-agent-card {
