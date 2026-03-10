@@ -234,6 +234,7 @@ code, pre {
     break-before: page !important;
     margin-bottom: 0 !important;
     padding-top: 8px !important;
+    min-height: 130mm !important;
   }
 
   /* Hero does NOT force a page break */

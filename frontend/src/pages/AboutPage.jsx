@@ -719,47 +719,53 @@ const AboutPage = () => {
 
       {/* Architecture */}
       <Section title="How MAARS Command Is Built" subtitle="The technology behind the scenes" icon={Database} color="bg-cyan-500/15" id="architecture">
-        <p className="text-xs text-zinc-400 mb-3">MAARS Command is built with three main layers that work together, like a three-layer cake.</p>
+        <p className="text-xs text-zinc-400 mb-3">MAARS Command is built with three main layers that work together, like a three-layer cake. Each layer has a specific job and they communicate constantly to deliver a seamless experience.</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Card className="bg-zinc-900/50 border-white/5 print-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2"><Server className="w-4 h-4 text-cyan-400" /><p className="text-sm font-medium text-white">Backend (The Engine)</p></div>
-              <p className="text-[10px] text-zinc-500 mb-2">This is the part that runs on the server and does all the heavy work behind the scenes.</p>
+              <p className="text-[10px] text-zinc-500 mb-2">This is the part that runs on the server and does all the heavy work behind the scenes. It processes every request, manages data, and coordinates all 458+ agents.</p>
               <div className="space-y-1">
-                <p className="text-xs text-zinc-400">FastAPI (Python) -- the programming framework that handles all requests</p>
-                <p className="text-xs text-zinc-400">MongoDB -- the database that stores all agents, teams, memories, and user data (27+ collections)</p>
-                <p className="text-xs text-zinc-400">212+ API endpoints -- connection points that the frontend uses to get and send data</p>
-                <p className="text-xs text-zinc-400">WebSocket -- a real-time connection for live updates (like the Agent Activity Monitor)</p>
-                <p className="text-xs text-zinc-400">Emergent Integrations SDK -- the library that connects to all 13 AI providers</p>
-                <p className="text-xs text-zinc-400">Stripe -- handles credit card payments and billing</p>
+                <p className="text-xs text-zinc-400">FastAPI (Python) -- the programming framework that handles all requests at high speed with async processing</p>
+                <p className="text-xs text-zinc-400">MongoDB -- the database that stores all agents, teams, memories, and user data across 27+ collections</p>
+                <p className="text-xs text-zinc-400">212+ API endpoints -- connection points that the frontend uses to get and send data for every feature</p>
+                <p className="text-xs text-zinc-400">WebSocket -- a real-time connection for live updates like the Agent Activity Monitor and collaboration feeds</p>
+                <p className="text-xs text-zinc-400">Emergent Integrations SDK -- the unified library that connects to all 13 AI providers through a single interface</p>
+                <p className="text-xs text-zinc-400">Stripe Integration -- handles credit card payments, subscription billing, and cost tracking</p>
+                <p className="text-xs text-zinc-400">Background Task Queue -- manages long-running operations like batch agent deployments and report generation</p>
+                <p className="text-xs text-zinc-400">Circuit Breaker System -- automatically detects and isolates failing services to prevent cascade failures</p>
               </div>
             </CardContent>
           </Card>
           <Card className="bg-zinc-900/50 border-white/5 print-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2"><Eye className="w-4 h-4 text-pink-400" /><p className="text-sm font-medium text-white">Frontend (What You See)</p></div>
-              <p className="text-[10px] text-zinc-500 mb-2">This is the part that runs in your web browser -- all the pages, buttons, and visuals.</p>
+              <p className="text-[10px] text-zinc-500 mb-2">This is the part that runs in your web browser -- all the pages, buttons, charts, and visuals that you interact with every day.</p>
               <div className="space-y-1">
-                <p className="text-xs text-zinc-400">React 18 -- the framework that builds the user interface</p>
-                <p className="text-xs text-zinc-400">Tailwind CSS -- makes everything look beautiful with modern design</p>
-                <p className="text-xs text-zinc-400">Shadcn/UI -- pre-built components like buttons, cards, and menus</p>
-                <p className="text-xs text-zinc-400">50+ pages & dashboards -- every feature has its own page</p>
-                <p className="text-xs text-zinc-400">Progressive Web App (PWA) -- can be installed on your phone like a native app</p>
-                <p className="text-xs text-zinc-400">Command Palette + Voice -- search and navigate by typing or speaking</p>
+                <p className="text-xs text-zinc-400">React 18 -- the framework that builds the interactive user interface with real-time state management</p>
+                <p className="text-xs text-zinc-400">Tailwind CSS -- makes everything look beautiful with a modern, consistent dark-themed design system</p>
+                <p className="text-xs text-zinc-400">Shadcn/UI -- pre-built, accessible components like buttons, cards, menus, dialogs, and data tables</p>
+                <p className="text-xs text-zinc-400">50+ pages & dashboards -- every feature has its own dedicated page with custom layouts and interactions</p>
+                <p className="text-xs text-zinc-400">Progressive Web App (PWA) -- can be installed on your phone or desktop like a native app with offline support</p>
+                <p className="text-xs text-zinc-400">Command Palette + Voice -- search and navigate instantly by typing keyboard shortcuts or speaking commands</p>
+                <p className="text-xs text-zinc-400">Real-Time Charts & Visualizations -- live data rendered using Recharts for trust analytics and cost tracking</p>
+                <p className="text-xs text-zinc-400">Print-Ready Documentation -- the entire system documentation can be exported as a formatted document</p>
               </div>
             </CardContent>
           </Card>
           <Card className="bg-zinc-900/50 border-white/5 print-card">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2"><Sparkles className="w-4 h-4 text-amber-400" /><p className="text-sm font-medium text-white">AI Layer (The Brains)</p></div>
-              <p className="text-[10px] text-zinc-500 mb-2">This connects MAARS Command to all the AI providers that power the agents.</p>
+              <p className="text-[10px] text-zinc-500 mb-2">This connects MAARS Command to all the AI providers that power the agents. It routes tasks to the best model automatically.</p>
               <div className="space-y-1">
-                <p className="text-xs text-zinc-400">OpenAI -- GPT-5.2, GPT-4o, o3, Whisper (speech), GPT Image 1, Sora 2 (video)</p>
-                <p className="text-xs text-zinc-400">Anthropic -- Claude Sonnet 4.5, Opus 4.5, Haiku 4.5</p>
-                <p className="text-xs text-zinc-400">Google -- Gemini 3 Flash, Gemini 3 Pro, Nano Banana 2 (images)</p>
-                <p className="text-xs text-zinc-400">Groq, Together AI, Fireworks AI -- fast open-source model hosting</p>
-                <p className="text-xs text-zinc-400">xAI Grok, DeepSeek, Mistral, Perplexity, Cohere, AI21</p>
-                <p className="text-xs text-zinc-400">ElevenLabs -- text-to-speech (voice generation)</p>
+                <p className="text-xs text-zinc-400">OpenAI -- GPT-5.2, GPT-4o, o3, Whisper (speech-to-text), GPT Image 1 (images), Sora 2 (video generation)</p>
+                <p className="text-xs text-zinc-400">Anthropic -- Claude Sonnet 4.5, Opus 4.5, Haiku 4.5 for safe, thoughtful responses</p>
+                <p className="text-xs text-zinc-400">Google -- Gemini 3 Flash, Gemini 3 Pro, Nano Banana 2 for fast image generation</p>
+                <p className="text-xs text-zinc-400">Groq, Together AI, Fireworks AI -- ultra-fast open-source model hosting with Llama 4 variants</p>
+                <p className="text-xs text-zinc-400">xAI Grok 3 -- 1M token context for massive document understanding and analysis</p>
+                <p className="text-xs text-zinc-400">DeepSeek, Mistral, Perplexity, Cohere, AI21 -- specialized models for search, multilingual, and enterprise use</p>
+                <p className="text-xs text-zinc-400">ElevenLabs -- text-to-speech with natural-sounding multilingual voice generation</p>
+                <p className="text-xs text-zinc-400">Model-Agnostic Router -- automatically picks the best and cheapest model for each specific task</p>
               </div>
             </CardContent>
           </Card>
@@ -805,16 +811,17 @@ const AboutPage = () => {
       {/* Security & Governance */}
       <Section title="Security & Governance" subtitle="How MAARS Command keeps everything safe and controlled" icon={Shield} color="bg-red-500/15" id="security">
         <p className="text-xs text-zinc-400 mb-3">
-          Running 458+ AI agents requires strong safety controls. Here are the security systems that keep everything safe, fair, and auditable.
+          Running 458+ AI agents requires strong safety controls. Without proper governance, agents could overspend, leak data, or take unintended actions.
+          Here are the six security systems that keep everything safe, fair, and auditable at all times.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
-            { title: "Role-Based Access Control (RBAC)", icon: Lock, desc: "Not everyone should have access to everything. RBAC lets you set different permission levels for different users. Admins can do anything. Managers can manage agents and view reports. Regular users can chat and use tools. Every page and every API endpoint checks permissions before allowing access." },
-            { title: "Circuit Breakers", icon: Shield, desc: "If an AI model or service starts failing repeatedly, the circuit breaker automatically stops sending requests to it. This prevents one broken thing from crashing the entire system. Once the service recovers, the circuit breaker automatically re-enables it. It's like a fuse box in your house that trips to protect your appliances." },
-            { title: "Cost Governance", icon: DollarSign, desc: "AI models cost money every time they're used. Cost Governance tracks every single API call and its cost in real-time. You can set spending limits per user and per agent. When limits are approached, the system sends alerts. When limits are reached, it automatically stops spending. This prevents surprise bills." },
-            { title: "Audit Logging", icon: FileCheck, desc: "Every action in MAARS Command is recorded in an audit log -- who did what, when, and what happened. This includes agent task completions, user logins, configuration changes, and API calls. These logs cannot be edited or deleted (they're immutable), making them suitable for compliance and legal requirements." },
-            { title: "Trust Scoring", icon: Gauge, desc: "Every agent gets a trust score from 0 to 100 based on its performance history. Agents that consistently deliver good, fast results get high scores. Agents that fail often or produce low-quality work get low scores. Low-trust agents can be automatically restricted or flagged for review. This ensures your best agents get the most important work." },
-            { title: "Simulation Mode", icon: Eye, desc: "A system-wide safety switch. When ON (default), all real-world actions (emails, calendar events, API calls) return fake responses -- nothing actually happens. This lets you safely test and review agent behavior before going live. Flip to Execution Mode only when you're confident everything works correctly." },
+            { title: "Role-Based Access Control (RBAC)", icon: Lock, desc: "Not everyone should have access to everything. RBAC lets you set different permission levels for different users. Admins can do anything -- manage all agents, change settings, and view billing. Managers can manage agents and view reports but cannot change system settings. Regular users can chat with agents and use tools but cannot modify configurations. Every page and every API endpoint checks permissions before allowing access. This prevents unauthorized users from accidentally (or intentionally) changing critical settings or accessing sensitive data." },
+            { title: "Circuit Breakers", icon: Shield, desc: "If an AI model or service starts failing repeatedly, the circuit breaker automatically stops sending requests to it. This prevents one broken service from crashing the entire system -- like a fuse box in your house that trips to protect your appliances. The system monitors error rates in real-time. When failures exceed the threshold, the circuit 'opens' and redirects traffic to backup models. Once the original service recovers and passes health checks, the circuit breaker automatically re-enables it. All transitions are logged for review." },
+            { title: "Cost Governance", icon: DollarSign, desc: "AI models cost money every time they're used -- some models cost just $0.10 per million tokens, while others cost $75 per million. Cost Governance tracks every single API call and its exact cost in real-time with per-agent and per-user breakdowns. You can set daily, weekly, or monthly spending limits for individual users and for the entire organization. When spending approaches the limit (80%), the system sends warning alerts. When limits are reached (100%), it automatically stops sending requests to paid models. This prevents surprise bills and ensures your AI budget is always under control." },
+            { title: "Audit Logging", icon: FileCheck, desc: "Every action in MAARS Command is recorded in an immutable audit log -- who did what, when they did it, and what the result was. This includes agent task completions, user logins, configuration changes, permission modifications, and API calls to external services. These logs cannot be edited or deleted after creation, making them tamper-proof and suitable for compliance audits, legal requirements, and internal investigations. Logs can be searched, filtered, and exported for reporting. Retention policies ensure logs are kept for the required duration." },
+            { title: "Trust Scoring", icon: Gauge, desc: "Every agent gets a trust score from 0 to 100 based on its complete performance history. The score factors in task completion rate, response quality, speed, error frequency, and user feedback. Agents that consistently deliver accurate, fast results earn higher scores over time. Agents that fail often, produce low-quality work, or generate errors get lower scores. Low-trust agents can be automatically restricted to simulation-only mode or flagged for human review. High-trust agents get priority assignment for critical tasks. The scoring algorithm is transparent -- you can see exactly why an agent has its current score." },
+            { title: "Simulation Mode", icon: Eye, desc: "A system-wide safety switch that controls whether agents can take real-world actions. When Simulation Mode is ON (the default), all external actions -- sending emails, creating calendar events, making API calls, posting content -- return realistic fake responses instead of actually executing. This lets you safely test and review exactly what agents would do before going live. You can review simulated results, adjust agent configurations, and only flip to Execution Mode when you're confident everything works correctly. Individual agents can also be toggled independently between simulation and execution modes." },
           ].map(item => (
             <Card key={item.title} className="bg-zinc-900/50 border-white/5 print-card">
               <CardContent className="p-4">
