@@ -91,9 +91,7 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2" data-testid="logo-link">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
-                <Bot className="w-5 h-5 text-white" />
-              </div>
+              <img src="/branding/maars-logo.jpeg" alt="MAARS" className="w-8 h-8 rounded-lg object-cover" />
               <span className="text-xl font-bold text-white font-['Outfit']">MAARS ∞</span>
             </Link>
 
@@ -105,7 +103,7 @@ const LandingPage = () => {
               <Link to="/login" className="text-zinc-400 hover:text-white transition-colors" data-testid="login-link">Login</Link>
               <Button 
                 onClick={() => navigate("/register")} 
-                className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 glow-primary"
+                className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 glow-primary"
                 data-testid="get-started-btn"
               >
                 Get Started
@@ -133,7 +131,7 @@ const LandingPage = () => {
               <Link to="/login" className="block text-zinc-400 hover:text-white">Login</Link>
               <Button 
                 onClick={() => navigate("/register")} 
-                className="w-full bg-gradient-to-r from-indigo-500 to-violet-500"
+                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600"
               >
                 Get Started
               </Button>
@@ -157,7 +155,7 @@ const LandingPage = () => {
         <div className="relative max-w-7xl mx-auto text-left">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 animate-fade-in">
-              <Sparkles className="w-4 h-4 text-indigo-400" />
+              <Sparkles className="w-4 h-4 text-blue-400" />
               <span className="text-sm text-zinc-300">Powered by GPT-5.2, Claude, Gemini, Sora 2, DALL-E 3 & Whisper</span>
             </div>
             
@@ -174,7 +172,7 @@ const LandingPage = () => {
               <Button 
                 size="lg"
                 onClick={() => navigate("/register")}
-                className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 glow-primary text-lg px-8"
+                className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 glow-primary text-lg px-8"
                 data-testid="hero-get-started-btn"
               >
                 Start Building <ChevronRight className="w-5 h-5 ml-2" />
@@ -213,7 +211,7 @@ const LandingPage = () => {
                 style={{ animationDelay: `${index * 0.1}s`, opacity: 0 }}
                 data-testid={`feature-card-${index}`}
               >
-                <div className="w-12 h-12 rounded-lg bg-indigo-500/20 flex items-center justify-center mb-4 text-indigo-400 group-hover:bg-indigo-500/30 transition-colors">
+                <div className="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center mb-4 text-blue-400 group-hover:bg-blue-500/30 transition-colors">
                   {feature.icon}
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2 font-['Outfit']">{feature.title}</h3>
@@ -259,7 +257,7 @@ const LandingPage = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent" />
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <p className="text-indigo-400 text-[10px] sm:text-xs">{agent.role}</p>
+                  <p className="text-blue-400 text-[10px] sm:text-xs">{agent.role}</p>
                   <h3 className="text-sm sm:text-base font-bold text-white font-['Outfit'] truncate">{agent.name}</h3>
                   <div className="hidden sm:flex flex-wrap gap-1 mt-1.5">
                     {agent.capabilities.slice(0, 2).map((cap, i) => (
@@ -277,7 +275,7 @@ const LandingPage = () => {
             <Button
               size="lg"
               onClick={() => navigate("/register")}
-              className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 glow-primary"
+              className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 glow-primary"
               data-testid="agents-cta-btn"
             >
               Access All Agents <ChevronRight className="w-5 h-5 ml-2" />
@@ -373,9 +371,9 @@ const LandingPage = () => {
 
             {/* Smart Auto-Selection card */}
             <div className="p-5 rounded-xl glass animate-slide-up flex flex-col justify-center" style={{ animationDelay: '0.45s', opacity: 0 }}>
-              <div className="p-4 rounded-lg bg-gradient-to-r from-indigo-500/10 to-violet-500/10 border border-indigo-500/20 mb-4">
+              <div className="p-4 rounded-lg bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 mb-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Zap className="w-4 h-4 text-indigo-400" />
+                  <Zap className="w-4 h-4 text-blue-400" />
                   <span className="text-sm font-semibold text-white">Smart Auto-Selection</span>
                 </div>
                 <p className="text-xs text-zinc-400">Each agent picks the best model for the task automatically — coding, writing, research, or analysis.</p>
@@ -403,7 +401,7 @@ const LandingPage = () => {
             <Button
               size="lg"
               onClick={() => navigate("/register")}
-              className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 glow-primary text-lg px-8"
+              className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 glow-primary text-lg px-8"
               data-testid="cta-get-started-btn"
             >
               Get Started Free
@@ -416,9 +414,7 @@ const LandingPage = () => {
       <footer className="py-8 px-4 border-t border-white/10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
-              <Bot className="w-4 h-4 text-white" />
-            </div>
+            <img src="/branding/maars-logo.jpeg" alt="MAARS" className="w-6 h-6 rounded object-cover" />
             <span className="text-zinc-400">MAARS ∞ by MAARS Global Corporation © 2026</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-zinc-500">

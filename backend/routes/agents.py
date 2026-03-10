@@ -296,6 +296,23 @@ async def reset_agent_brain(agent_id: str, current_user: User = Depends(get_curr
     return {"success": True, "agent_id": agent_id}
 
 
+@router.put("/agents/{agent_id}/visibility")
+async def toggle_agent_visibility(agent_id: str, request: Request, current_user: User = Depends(get_current_user)):
+    """Toggle agent visibility (admin only)."""
+    if not current_user.is_admin:
+        raise HTTPException(403, "Admin access required")
+    data = await request.json()
+    hidden = data.get("hidden", False)
+    result = await db.agents.update_one(
+        {"agent_id": agent_id},
+        {"$set": {"hidden": hidden}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(404, "Agent not found")
+    return {"agent_id": agent_id, "hidden": hidden}
+
+
+
 @router.get("/brain-profiles")
 async def list_brain_profiles(current_user: User = Depends(get_current_user)):
     """Get all brain profiles (defaults + user customizations)."""

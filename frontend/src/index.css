@@ -13,29 +13,30 @@
 
 @layer base {
     :root {
-        --background: 240 10% 3.9%;
-        --foreground: 0 0% 98%;
-        --card: 240 10% 7%;
-        --card-foreground: 0 0% 98%;
-        --popover: 240 10% 3.9%;
-        --popover-foreground: 0 0% 98%;
-        --primary: 239 84% 67%;
+        /* MAARS GC Brand Palette — Deep Space Navy + Electric Blue/Cyan + Magenta */
+        --background: 235 60% 5%;
+        --foreground: 210 40% 96%;
+        --card: 235 45% 9%;
+        --card-foreground: 210 40% 96%;
+        --popover: 235 50% 7%;
+        --popover-foreground: 210 40% 96%;
+        --primary: 215 90% 55%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 240 5% 16%;
-        --secondary-foreground: 0 0% 98%;
-        --muted: 240 5% 16%;
-        --muted-foreground: 240 5% 65%;
-        --accent: 240 5% 16%;
-        --accent-foreground: 0 0% 98%;
+        --secondary: 235 30% 15%;
+        --secondary-foreground: 210 40% 96%;
+        --muted: 235 25% 14%;
+        --muted-foreground: 215 20% 55%;
+        --accent: 190 85% 45%;
+        --accent-foreground: 0 0% 100%;
         --destructive: 0 84% 60%;
         --destructive-foreground: 0 0% 98%;
-        --border: 240 5% 16%;
-        --input: 240 5% 16%;
-        --ring: 239 84% 67%;
-        --chart-1: 220 70% 50%;
-        --chart-2: 160 60% 45%;
-        --chart-3: 30 80% 55%;
-        --chart-4: 280 65% 60%;
+        --border: 235 25% 16%;
+        --input: 235 25% 16%;
+        --ring: 215 90% 55%;
+        --chart-1: 215 90% 55%;
+        --chart-2: 190 85% 45%;
+        --chart-3: 290 70% 60%;
+        --chart-4: 170 60% 45%;
         --chart-5: 340 75% 55%;
         --radius: 0.5rem;
     }
@@ -73,10 +74,10 @@ code, pre {
     }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar — brand colors */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -84,41 +85,41 @@ code, pre {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted));
-    border-radius: 4px;
+    background: hsl(235 25% 20%);
+    border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground));
+    background: hsl(215 50% 40%);
 }
 
-/* Glass effect utilities */
+/* Glass effect — brand deep navy */
 .glass {
-    background: rgba(24, 24, 27, 0.6);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(10, 10, 40, 0.65);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(100, 160, 255, 0.08);
 }
 
 .glass-hover:hover {
-    background: rgba(24, 24, 27, 0.8);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(10, 10, 40, 0.85);
+    border-color: rgba(100, 160, 255, 0.18);
 }
 
-/* Gradient text */
+/* Brand gradient text — electric blue to cyan to magenta */
 .gradient-text {
-    background: linear-gradient(to right, #818cf8, #22d3ee);
+    background: linear-gradient(135deg, #3b82f6, #06b6d4, #d946ef);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-/* Glow effects */
+/* Glow effects — brand blue */
 .glow-primary {
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.25), 0 0 40px rgba(6, 182, 212, 0.1);
 }
 
 .glow-primary-hover:hover {
-    box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.4), 0 0 60px rgba(6, 182, 212, 0.15);
 }
 
 /* Animation keyframes */
@@ -128,8 +129,8 @@ code, pre {
 }
 
 @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
-    50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.5); }
+    0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.2), 0 0 40px rgba(6, 182, 212, 0.08); }
+    50% { box-shadow: 0 0 35px rgba(59, 130, 246, 0.4), 0 0 70px rgba(217, 70, 239, 0.12); }
 }
 
 @keyframes slide-up {
@@ -140,6 +141,11 @@ code, pre {
 @keyframes fade-in {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }
 
 .animate-float {
@@ -156,6 +162,12 @@ code, pre {
 
 .animate-fade-in {
     animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
 }
 
 /* Staggered animations */
