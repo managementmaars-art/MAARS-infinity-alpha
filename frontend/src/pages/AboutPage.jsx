@@ -486,7 +486,7 @@ const AboutPage = () => {
           { label: "AI Agents", value: "458+", color: "text-indigo-400" },
           { label: "Networks", value: "27", color: "text-emerald-400" },
           { label: "Core Systems", value: SYSTEMS.length, color: "text-amber-400" },
-          { label: "LLM Providers", value: "9", color: "text-violet-400" },
+          { label: "LLM Providers", value: "13", color: "text-violet-400" },
           { label: "System Layers", value: "16", color: "text-cyan-400" },
           { label: "API Endpoints", value: "212+", color: "text-rose-400" },
         ].map(s => (

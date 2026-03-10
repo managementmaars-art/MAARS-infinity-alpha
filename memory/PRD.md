@@ -11,6 +11,7 @@ Build "MAARS Command by MAARS Global Corporation," a commercial, production-read
 - **Cost Governance** with budget controls, **Workflow Builder** with drag-and-drop + execution engine
 - **Environment Segregation** (sandbox/staging/production)
 - **7-Layer Memory Hierarchy** (L1 Working → L7 Archival)
+- **13 LLM Providers** with **45+ models** across text, reasoning, search, image, video, voice, STT
 
 ## Implementation History
 
@@ -30,10 +31,16 @@ Build "MAARS Command by MAARS Global Corporation," a commercial, production-read
 - Enterprise RBAC, Circuit Breakers, Cost Governance, Workflow Builder
 
 ### Phase 5 — Execution & Memory (Completed: March 10, 2026)
-- **Agent Naming**: Renamed 417 infinity agents from functional names to diverse personal names (Western, European, Latin, African, East Asian — no Indian names). Regenerated SVG avatars. Fixed 2 Indian-origin names in originals.
-- **Workflow Execution Engine**: POST /run triggers step-by-step execution, topological ordering with dependency resolution, background async simulation, real-time node status tracking (pending→running→completed/failed), run history
-- **Environment Segregation** (`/environments`): 3 environments (Sandbox: dry-run $0.01 limit; Staging: limited $1.00; Production: full $100), active environment banner, switch buttons, comparison table, MongoDB-persisted selection
-- **Memory Hierarchy** (`/memory-hierarchy`): Interactive 7-layer pyramid (L1 Working Memory → L7 Archival), color-coded layers, clickable detail panels (TTL, capacity, access speed), real-time usage stats from DB
+- Agent Naming, Workflow Execution Engine, Environment Segregation, Memory Hierarchy
+
+### Phase 6 — LLM Provider Expansion (Completed: March 10, 2026)
+- **Groq (Llama 4)**: Llama 4 Scout, Llama 4 Maverick, Llama 3.3 70B — ultra-fast open-source inference
+- **Together AI**: Llama 4 Maverick FP8, Llama 3.3 70B Turbo, DeepSeek R1 — open-model hosting
+- **Fireworks AI**: Llama 4 Scout, Llama 4 Maverick, DeepSeek V3 — serverless inference
+- **AI21 (Jamba)**: Jamba Large 1.7, Jamba Mini 1.7 — SSM+Transformer hybrid, 256K context
+- Updated all cost sheets (MODEL_COSTS_MAP, MODEL_CREDIT_COSTS), LLM Router tiers, admin API key management, Settings provider selector, About page, Pricing page, Landing page
+- All 4 new providers use OpenAI-compatible chat completions format via _call_openai_compatible
+- Total: 13 providers, 45+ models
 
 ## Key API Endpoints (40+ total)
 - Kernel: `/status`, `/architecture`, `/networks`, `/task-graphs`
@@ -45,6 +52,8 @@ Build "MAARS Command by MAARS Global Corporation," a commercial, production-read
 - Workflows: CRUD + `/workflows/{id}/run`, `/workflow-runs/{id}`
 - Environments: `/environments`, `/environments/active`
 - Memory: `/memory/layers`, `/memory/stats`
+- LLM Config: `/llm/config` (GET/PUT — 12 providers)
+- Admin API Keys: `/admin/api-keys` (GET/PUT/POST test — 13 providers)
 
 ## P0 — Next Priority Tasks
 - Campaign Builder for multi-step automated workflows
