@@ -39,22 +39,26 @@ async def get_available_tools():
     }
 
 @router.get("/agents", response_model=List[Agent])
-async def get_agents(current_user: User = Depends(get_current_user)):
+async def get_agents(current_user: User = Depends(get_current_user), network: str = None):
     # Get default agents and user's custom agents, filter out deactivated ones
-    agents = await db.agents.find(
-        {"$or": [{"is_custom": False}, {"creator_id": current_user.user_id}], "is_active": {"$ne": False}},
-        {"_id": 0}
-    ).to_list(100)
+    query = {"$or": [{"is_custom": False}, {"creator_id": current_user.user_id}], "is_active": {"$ne": False}}
+    if network:
+        query["network"] = network
+    agents = await db.agents.find(query, {"_id": 0}).to_list(500)
     
     for agent in agents:
         if isinstance(agent.get('created_at'), str):
             agent['created_at'] = datetime.fromisoformat(agent['created_at'])
-        # Inject tools info from AGENT_TOOL_MAP
+        # Inject tools info from AGENT_TOOL_MAP or infinity tools
         if not agent.get("tools"):
             agent["tools"] = AGENT_TOOL_MAP.get(agent.get("agent_id", ""), [])
     
-    # Sort: Commander first, then others
-    agents.sort(key=lambda a: (0 if a.get("agent_id") == "agent_commander" else 1, a.get("name", "")))
+    # Sort: Commander first, then original agents, then infinity agents
+    agents.sort(key=lambda a: (
+        0 if a.get("agent_id") == "agent_commander" else
+        1 if not a.get("is_infinity") else 2,
+        a.get("name", "")
+    ))
     
     return agents
 

@@ -27,17 +27,23 @@ class Agent(BaseModel):
     agent_id: str
     name: str
     description: str
-    avatar: str
+    avatar: str = ""
     role: str
-    system_prompt: str
+    system_prompt: str = ""
     model_provider: str = "openai"
     model_name: str = "gpt-5.2"
     is_custom: bool = False
     is_commander: bool = False
+    is_infinity: bool = False
+    network: Optional[str] = None
+    autonomy_tier: int = 1
+    authority_tier: str = "department"
+    lifecycle_state: str = "active"
+    sector: Optional[str] = None
     creator_id: Optional[str] = None
     capabilities: List[str] = []
     tools: List[str] = []
-    created_at: datetime
+    created_at: Optional[datetime] = None
 
 class AgentCreate(BaseModel):
     name: str

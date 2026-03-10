@@ -4,7 +4,8 @@ import {
   Bot, MessageSquare, ListTodo, Users, Settings, LogOut, Menu, X,
   Shield, BarChart3, Package, Rocket, Brain, FileCheck, Cpu, LayoutDashboard,
   Activity, Gauge, Radio, Code, Palette, PenTool, Info,
-  PanelLeftClose, PanelLeftOpen, Search, FileCode, Database
+  PanelLeftClose, PanelLeftOpen, Search, FileCode, Database,
+  Network, GitBranch, Layers
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import CommandPalette from "../CommandPalette";
@@ -39,6 +40,9 @@ const navSections = [
   {
     label: "Intelligence",
     items: [
+      { icon: Layers, label: "Kernel", to: "/kernel" },
+      { icon: Network, label: "Agent Networks", to: "/networks" },
+      { icon: GitBranch, label: "Task Graphs", to: "/task-graphs" },
       { icon: Database, label: "Memory", to: "/memory" },
       { icon: Activity, label: "Collaborations", to: "/collaborations" },
       { icon: Gauge, label: "KPI Dashboard", to: "/kpi-dashboard" },
@@ -171,7 +175,7 @@ const DashboardLayout = ({ children }) => {
           <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center">
             <Rocket className="w-4 h-4 text-white" />
           </div>
-          <span className="text-white font-semibold font-['Outfit'] text-sm">MAARS Command</span>
+          <span className="text-white font-semibold font-['Outfit'] text-sm">MAARS ∞</span>
         </Link>
         <button onClick={() => setCmdOpen(true)} className="ml-auto mr-2 p-2 rounded-lg hover:bg-white/10 text-zinc-400" data-testid="mobile-search-btn">
           <Search className="w-4 h-4" />
@@ -188,7 +192,7 @@ const DashboardLayout = ({ children }) => {
             </div>
             {!collapsed && (
               <div className="min-w-0">
-                <h1 className="text-white font-bold text-[13px] font-['Outfit'] truncate leading-tight">MAARS Command</h1>
+                <h1 className="text-white font-bold text-[13px] font-['Outfit'] truncate leading-tight">MAARS ∞</h1>
                 <p className="text-[9px] text-zinc-600 truncate leading-tight">{user?.name || "AI Workforce"}</p>
               </div>
             )}
@@ -267,7 +271,7 @@ const DashboardLayout = ({ children }) => {
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center">
                 <Rocket className="w-4 h-4 text-white" />
               </div>
-              <h1 className="text-white font-bold text-[13px] font-['Outfit']">MAARS Command</h1>
+              <h1 className="text-white font-bold text-[13px] font-['Outfit']">MAARS ∞</h1>
               <button onClick={() => setMobileOpen(false)} className="ml-auto text-zinc-400 hover:text-white">
                 <X className="w-5 h-5" />
               </button>

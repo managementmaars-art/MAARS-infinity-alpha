@@ -72,7 +72,7 @@ const PricingPage = () => {
       price_bdt: 21100,
       credits: 6000,
       icon: <Building className="w-6 h-6" />,
-      features: ["All 41 AI agents + Commander Orion", "6,000 credits/month", "Unlimited custom agents", "All 9 LLM providers (30+ models)", "Full autonomous orchestration", "All 17 core systems", "KPI dashboard & collaboration engine", "Admin code explorer", "Unlimited team members", "Dedicated support", "API access"],
+      features: ["All 458+ AI agents + Commander Orion ∞", "6,000 credits/month", "Unlimited custom agents", "All 9 LLM providers (30+ models)", "Full autonomous orchestration", "All 27 agent networks", "MAARS Kernel & Task Graphs", "KPI dashboard & collaboration engine", "Admin code explorer", "Unlimited team members", "Dedicated support", "API access"],
       popular: false
     }
   ];
@@ -291,7 +291,7 @@ const PricingPage = () => {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
                 <Bot className="w-5 h-5 text-white" />
               </div>
-              <span className="text-lg font-bold text-white font-['Outfit']">MAARS Command</span>
+              <span className="text-lg font-bold text-white font-['Outfit']">MAARS ∞</span>
             </Link>
             {user ? (
               <Button onClick={() => navigate("/dashboard")} variant="outline" className="border-white/10">
@@ -638,7 +638,7 @@ const PricingPage = () => {
 
         {/* FAQ or Note */}
         <div className="text-center text-zinc-500 text-sm">
-          <p>41 specialized AI agents across 8 organizational layers. Commander Orion included in Pro and Business plans.</p>
+          <p>458+ specialized AI agents across 27 network categories and 16 system layers. Commander Orion ∞ included in Pro and Business plans.</p>
           <p className="mt-2">Questions? Contact support@maarsglobal.com</p>
         </div>
         <BrandFooter className="mt-8" />

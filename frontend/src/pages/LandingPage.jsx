@@ -94,7 +94,7 @@ const LandingPage = () => {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
                 <Bot className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white font-['Outfit']">MAARS Command</span>
+              <span className="text-xl font-bold text-white font-['Outfit']">MAARS ∞</span>
             </Link>
 
             {/* Desktop Menu */}
@@ -232,7 +232,7 @@ const LandingPage = () => {
               Meet Your AI Team
             </h2>
             <p className="text-lg text-zinc-400 max-w-2xl">
-              41 specialized AI agents ready to work for you - from strategists to developers, marketers to analysts.
+              458+ specialized AI agents ready to work for you - from strategists to developers, marketers to analysts.
             </p>
           </div>
 
@@ -419,11 +419,11 @@ const LandingPage = () => {
             <div className="w-6 h-6 rounded bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
               <Bot className="w-4 h-4 text-white" />
             </div>
-            <span className="text-zinc-400">MAARS Command by MAARS Global Corporation © 2026</span>
+            <span className="text-zinc-400">MAARS ∞ by MAARS Global Corporation © 2026</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-zinc-500">
             <a href="#models" className="hover:text-zinc-300 transition-colors">10 AI Models</a>
-            <a href="#agents" className="hover:text-zinc-300 transition-colors">41 AI Agents</a>
+            <a href="#agents" className="hover:text-zinc-300 transition-colors">458+ AI Agents</a>
             <Link to="/pricing" className="hover:text-zinc-300 transition-colors">Pricing</Link>
           </div>
         </div>

@@ -132,6 +132,7 @@ AGENT_ROLE_MAP = {
 
 
 async def seed_default_agents():
+    # Seed original 41 agents
     for agent_data in DEFAULT_AGENTS:
         existing = await db.agents.find_one({"agent_id": agent_data["agent_id"]})
         if not existing:
@@ -149,6 +150,30 @@ async def seed_default_agents():
                     {"$set": update_fields}
                 )
     logger.info("Default agents seeded")
+
+    # Seed MAARS Infinity agents (370+ agents across 27 networks)
+    from infinity_catalog import get_all_infinity_agents, get_tools_for_agent, NETWORK_TOOL_MAP
+    infinity_agents = get_all_infinity_agents()
+    seeded_count = 0
+    for agent_data in infinity_agents:
+        existing = await db.agents.find_one({"agent_id": agent_data["agent_id"]})
+        if not existing:
+            agent_data["created_at"] = datetime.now(timezone.utc).isoformat()
+            await db.agents.insert_one(agent_data)
+            seeded_count += 1
+        else:
+            # Update existing infinity agents with any new fields
+            update_fields = {}
+            for field in ["network", "autonomy_tier", "authority_tier", "is_infinity", "lifecycle_state"]:
+                if field in agent_data and existing.get(field) != agent_data[field]:
+                    update_fields[field] = agent_data[field]
+            if update_fields:
+                await db.agents.update_one(
+                    {"agent_id": agent_data["agent_id"]},
+                    {"$set": update_fields}
+                )
+    if seeded_count > 0:
+        logger.info(f"Seeded {seeded_count} new MAARS Infinity agents")
 
     capability_defaults = {
         "agent_graphics": {"can_generate_image": True, "can_generate_video": False, "can_generate_pdf": True, "can_generate_files": True},

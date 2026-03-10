@@ -3,7 +3,7 @@ import { useBranding } from "./BrandingProvider";
 
 export const BrandFooter = ({ className = "" }) => {
   const branding = useBranding();
-  const name = branding.platform_name || "MAARS Command";
+  const name = branding.platform_name || "MAARS ∞";
   const footer = branding.footer_text || "MAARS Global Corporation";
 
   return (

@@ -30,6 +30,9 @@ import ContentGenerator from "./pages/ContentGenerator";
 import AboutPage from "./pages/AboutPage";
 import CodeExplorer from "./pages/CodeExplorer";
 import MemoryGovernance from "./pages/MemoryGovernance";
+import KernelDashboard from "./pages/KernelDashboard";
+import AgentNetworks from "./pages/AgentNetworks";
+import TaskGraphs from "./pages/TaskGraphs";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -271,6 +274,9 @@ const AppRouter = () => {
       <Route path="/settings" element={<ProtectedRoute><DashboardLayout><Settings /></DashboardLayout></ProtectedRoute>} />
       <Route path="/about" element={<ProtectedRoute><DashboardLayout><AboutPage /></DashboardLayout></ProtectedRoute>} />
       <Route path="/memory" element={<ProtectedRoute><DashboardLayout><MemoryGovernance /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/kernel" element={<ProtectedRoute><DashboardLayout><KernelDashboard /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/networks" element={<ProtectedRoute><DashboardLayout><AgentNetworks /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/task-graphs" element={<ProtectedRoute><DashboardLayout><TaskGraphs /></DashboardLayout></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminDashboard /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/code-explorer" element={<AdminRoute><DashboardLayout><CodeExplorer /></DashboardLayout></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />

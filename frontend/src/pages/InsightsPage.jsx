@@ -85,7 +85,7 @@ const InsightsPage = () => {
           </button>
           <div>
             <h1 className="text-xl font-bold text-white font-['Outfit']">Your Insights</h1>
-            <p className="text-sm text-zinc-500">See how you're using MAARS Command</p>
+            <p className="text-sm text-zinc-500">See how you're using MAARS ∞</p>
           </div>
           <Badge className="ml-auto bg-white/5 text-zinc-300 capitalize">{stats.plan} plan</Badge>
         </div>

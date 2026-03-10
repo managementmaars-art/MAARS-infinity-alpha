@@ -10,7 +10,7 @@ import { Button } from "../components/ui/button";
 const steps = [
   {
     id: "welcome",
-    title: "Welcome to MAARS Command",
+    title: "Welcome to MAARS ∞",
     subtitle: "Your AI-powered team is ready",
   },
   {
@@ -116,7 +116,7 @@ const OnboardingFlow = ({ onComplete }) => {
                     <Sparkles className="w-10 h-10 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-bold text-white font-['Outfit']">Welcome to MAARS Command</h2>
+                    <h2 className="text-3xl font-bold text-white font-['Outfit']">Welcome to MAARS ∞</h2>
                     <p className="text-zinc-400 mt-2 text-lg">{user?.name ? `Hey ${user.name.split(" ")[0]}!` : "Hey!"} Your AI-powered team is ready to work.</p>
                   </div>
                   <div className="grid grid-cols-3 gap-4 pt-4">

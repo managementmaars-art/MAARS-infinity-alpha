@@ -38,7 +38,7 @@ const ProjectsLayout = ({ children }) => {
         <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-lg hover:bg-white/10 text-zinc-400">
           {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
-        <span className="ml-3 text-white font-semibold font-['Outfit'] text-sm">MAARS Command</span>
+        <span className="ml-3 text-white font-semibold font-['Outfit'] text-sm">MAARS ∞</span>
       </div>
 
       {/* Sidebar */}
@@ -49,7 +49,7 @@ const ProjectsLayout = ({ children }) => {
               <Rocket className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-white font-bold text-sm font-['Outfit']">MAARS Command</h1>
+              <h1 className="text-white font-bold text-sm font-['Outfit']">MAARS ∞</h1>
               <p className="text-[10px] text-zinc-500">{user?.name || "AI Workforce"}</p>
             </div>
           </div>

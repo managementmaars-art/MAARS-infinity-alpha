@@ -14,6 +14,7 @@ from starlette.middleware.cors import CORSMiddleware
 from db import db, client
 import shared.constants as constants
 from services.agent_service import seed_default_agents, backfill_usage_logs
+from services.kernel_service import seed_default_tools
 
 # Route imports
 from routes.auth import router as auth_router
@@ -41,6 +42,7 @@ from routes.admin_code import router as admin_code_router
 from routes.memory import router as memory_router
 from routes.summary import router as summary_router
 from routes.websocket import router as ws_router
+from routes.kernel import router as kernel_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -75,6 +77,7 @@ api_router.include_router(voice_router)
 api_router.include_router(admin_code_router)
 api_router.include_router(memory_router)
 api_router.include_router(summary_router)
+api_router.include_router(kernel_router)
 
 app.include_router(api_router)
 
@@ -86,6 +89,7 @@ app.include_router(ws_router, prefix="/api")
 async def startup():
     await seed_default_agents()
     await backfill_usage_logs()
+    await seed_default_tools()
 
     # Create MongoDB indexes for performance
     await db.chats.create_index([("user_id", 1), ("updated_at", -1)])
@@ -121,6 +125,14 @@ async def startup():
     await db.routing_logs.create_index([("user_id", 1), ("created_at", -1)])
     await db.memory_entries.create_index([("user_id", 1), ("created_at", -1)])
     await db.memory_entries.create_index([("user_id", 1), ("agent_id", 1)])
+    # MAARS Infinity indexes
+    await db.task_graphs.create_index([("user_id", 1), ("status", 1)])
+    await db.task_graphs.create_index([("user_id", 1), ("updated_at", -1)])
+    await db.execution_logs.create_index([("user_id", 1), ("created_at", -1)])
+    await db.execution_logs.create_index([("agent_id", 1)])
+    await db.tool_registry.create_index("tool_id", unique=True)
+    await db.agents.create_index("network")
+    await db.agents.create_index("is_infinity")
     logger.info("MongoDB indexes ensured")
 
     # Load admin-configured pricing from DB (overrides hardcoded defaults)
@@ -141,7 +153,7 @@ async def shutdown_db_client():
 
 @app.get("/api/health")
 async def health_check():
-    return {"status": "ok", "service": "MAARS Command"}
+    return {"status": "ok", "service": "MAARS Infinity"}
 
 
 app.add_middleware(
