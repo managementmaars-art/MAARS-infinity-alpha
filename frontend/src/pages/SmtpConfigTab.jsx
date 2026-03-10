@@ -209,7 +209,7 @@ const SmtpConfigTab = () => {
             { step: "1", text: "Go to your Google Account security settings", link: "https://myaccount.google.com/security" },
             { step: "2", text: "Ensure 2-Step Verification is enabled" },
             { step: "3", text: 'Search for "App Passwords" in Google Account settings' },
-            { step: "4", text: 'Select "Other (Custom name)" and enter "MAARS ∞"' },
+            { step: "4", text: 'Select "Other (Custom name)" and enter "MAARS Command"' },
             { step: "5", text: "Google will generate a 16-character password — paste it above" },
           ].map(item => (
             <div key={item.step} className="flex items-start gap-3 p-3 rounded-lg bg-white/5">

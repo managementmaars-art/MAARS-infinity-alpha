@@ -339,7 +339,7 @@ const CommandPalette = ({ open, onClose }) => {
           <span className="flex items-center gap-1"><CornerDownLeft className="w-3 h-3" /> Open</span>
           <span className="flex items-center gap-1"><Mic className="w-3 h-3" /> Voice</span>
           <span className="flex items-center gap-1"><span className="font-mono">ESC</span> Close</span>
-          <span className="ml-auto flex items-center gap-1"><Command className="w-3 h-3" /> MAARS ∞</span>
+          <span className="ml-auto flex items-center gap-1"><Command className="w-3 h-3" /> MAARS Command</span>
         </div>
       </div>
     </div>

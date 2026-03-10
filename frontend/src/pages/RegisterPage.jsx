@@ -64,11 +64,9 @@ const RegisterPage = () => {
         />
         <div className="absolute inset-0 bg-background/70" />
         <div className="relative z-10 flex flex-col justify-center p-12">
-          <Link to="/" className="flex items-center gap-2 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
-              <Bot className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-white font-['Outfit']">MAARS ∞</span>
+          <Link to="/" className="flex items-center gap-3 mb-8">
+            <img src="/branding/maars-logo.jpeg" alt="MAARS" className="w-10 h-10 rounded-xl object-cover ring-1 ring-indigo-500/20" />
+            <span className="text-2xl font-bold text-white font-['Outfit']">MAARS Command</span>
           </Link>
           <h2 className="text-3xl font-bold text-white mb-4 font-['Outfit']">
             Build Your AI Team
@@ -91,10 +89,8 @@ const RegisterPage = () => {
         </Link>
 
         <div className="lg:hidden flex items-center gap-2 mb-8">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
-            <Bot className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-lg font-bold text-white font-['Outfit']">MAARS ∞</span>
+          <img src="/branding/maars-logo.jpeg" alt="MAARS" className="w-8 h-8 rounded-lg object-cover ring-1 ring-indigo-500/20" />
+          <span className="text-lg font-bold text-white font-['Outfit']">MAARS Command</span>
         </div>
 
         <div className="max-w-sm w-full">

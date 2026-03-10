@@ -4,16 +4,13 @@ export const Watermark = () => {
   const branding = useBranding();
   
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none select-none flex justify-center pb-2">
-      <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#070721]/70 backdrop-blur-sm border border-blue-500/[0.06]">
-        <img 
-          src="/branding/maars-logo.jpeg" 
-          alt="MAARS GC" 
-          className="w-4 h-4 rounded-full object-cover"
-        />
-        <span className="text-[10px] text-blue-300/50 font-medium tracking-wider font-['Outfit']">
-          MAARS GLOBAL CORPORATION
-        </span>
+    <div className="fixed bottom-3 right-4 z-30 pointer-events-none select-none">
+      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-950/70 backdrop-blur-sm border border-white/[0.04]">
+        <img src="/branding/maars-logo.jpeg" alt="MAARS GC" className="w-5 h-5 rounded object-cover" />
+        <div className="flex flex-col">
+          <span className="text-[9px] text-zinc-500 font-semibold tracking-wider font-['Outfit'] leading-tight">MAARS COMMAND</span>
+          <span className="text-[7px] text-zinc-600 tracking-wide leading-tight">by MAARS Global Corporation</span>
+        </div>
       </div>
     </div>
   );

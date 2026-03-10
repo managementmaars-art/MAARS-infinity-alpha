@@ -83,7 +83,7 @@ export default function RBAC() {
     <div className="space-y-6" data-testid="rbac-page">
       <div>
         <h1 className="text-2xl font-bold text-white font-['Outfit']">Access Control (RBAC)</h1>
-        <p className="text-sm text-zinc-400 mt-1">Manage roles, permissions, and user access across the MAARS ∞ system</p>
+        <p className="text-sm text-zinc-400 mt-1">Manage roles, permissions, and user access across the MAARS Command system</p>
       </div>
 
       {/* Role Cards */}

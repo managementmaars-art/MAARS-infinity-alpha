@@ -132,7 +132,7 @@ const BrandingTab = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="text-zinc-300 text-sm flex items-center gap-1.5"><Type className="w-3 h-3" /> Platform Name</Label>
-              <Input value={config.platform_name || ""} onChange={e => updateField("platform_name", e.target.value)} placeholder="MAARS ∞" className="bg-zinc-800/50 border-white/10" data-testid="brand-name-input" />
+              <Input value={config.platform_name || ""} onChange={e => updateField("platform_name", e.target.value)} placeholder="MAARS Command" className="bg-zinc-800/50 border-white/10" data-testid="brand-name-input" />
             </div>
             <div className="space-y-2">
               <Label className="text-zinc-300 text-sm">Tagline</Label>

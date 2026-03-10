@@ -13,31 +13,30 @@
 
 @layer base {
     :root {
-        /* MAARS GC Brand Palette — Deep Space Navy + Electric Blue/Cyan + Magenta */
-        --background: 235 60% 5%;
+        --background: 240 10% 4%;
         --foreground: 210 40% 96%;
-        --card: 235 45% 9%;
+        --card: 240 6% 8%;
         --card-foreground: 210 40% 96%;
-        --popover: 235 50% 7%;
+        --popover: 240 10% 6%;
         --popover-foreground: 210 40% 96%;
-        --primary: 215 90% 55%;
+        --primary: 239 84% 67%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 235 30% 15%;
+        --secondary: 240 4% 14%;
         --secondary-foreground: 210 40% 96%;
-        --muted: 235 25% 14%;
+        --muted: 240 4% 14%;
         --muted-foreground: 215 20% 55%;
-        --accent: 190 85% 45%;
+        --accent: 263 70% 58%;
         --accent-foreground: 0 0% 100%;
         --destructive: 0 84% 60%;
         --destructive-foreground: 0 0% 98%;
-        --border: 235 25% 16%;
-        --input: 235 25% 16%;
-        --ring: 215 90% 55%;
-        --chart-1: 215 90% 55%;
-        --chart-2: 190 85% 45%;
-        --chart-3: 290 70% 60%;
-        --chart-4: 170 60% 45%;
-        --chart-5: 340 75% 55%;
+        --border: 240 4% 16%;
+        --input: 240 4% 16%;
+        --ring: 239 84% 67%;
+        --chart-1: 239 84% 67%;
+        --chart-2: 263 70% 58%;
+        --chart-3: 170 60% 45%;
+        --chart-4: 340 75% 55%;
+        --chart-5: 45 93% 47%;
         --radius: 0.5rem;
     }
 }
@@ -74,63 +73,45 @@ code, pre {
     }
 }
 
-/* Custom scrollbar — brand colors */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: hsl(var(--background)); }
+::-webkit-scrollbar-thumb { background: hsl(240 4% 18%); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(240 4% 28%); }
 
-::-webkit-scrollbar-track {
-    background: hsl(var(--background));
-}
-
-::-webkit-scrollbar-thumb {
-    background: hsl(235 25% 20%);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: hsl(215 50% 40%);
-}
-
-/* Glass effect — brand deep navy */
 .glass {
-    background: rgba(10, 10, 40, 0.65);
+    background: rgba(15, 15, 25, 0.65);
     backdrop-filter: blur(16px);
-    border: 1px solid rgba(100, 160, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .glass-hover:hover {
-    background: rgba(10, 10, 40, 0.85);
-    border-color: rgba(100, 160, 255, 0.18);
+    background: rgba(15, 15, 25, 0.85);
+    border-color: rgba(255, 255, 255, 0.12);
 }
 
-/* Brand gradient text — electric blue to cyan to magenta */
 .gradient-text {
-    background: linear-gradient(135deg, #3b82f6, #06b6d4, #d946ef);
+    background: linear-gradient(135deg, #818cf8, #a78bfa, #c084fc);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-/* Glow effects — brand blue */
 .glow-primary {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.25), 0 0 40px rgba(6, 182, 212, 0.1);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.25), 0 0 40px rgba(139, 92, 246, 0.1);
 }
 
 .glow-primary-hover:hover {
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.4), 0 0 60px rgba(6, 182, 212, 0.15);
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.4), 0 0 60px rgba(139, 92, 246, 0.15);
 }
 
-/* Animation keyframes */
 @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
 }
 
 @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.2), 0 0 40px rgba(6, 182, 212, 0.08); }
-    50% { box-shadow: 0 0 35px rgba(59, 130, 246, 0.4), 0 0 70px rgba(217, 70, 239, 0.12); }
+    0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
+    50% { box-shadow: 0 0 35px rgba(139, 92, 246, 0.4); }
 }
 
 @keyframes slide-up {
@@ -148,29 +129,16 @@ code, pre {
     100% { background-position: 200% 0; }
 }
 
-.animate-float {
-    animation: float 6s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-    animation: pulse-glow 3s ease-in-out infinite;
-}
-
-.animate-slide-up {
-    animation: slide-up 0.5s ease-out forwards;
-}
-
-.animate-fade-in {
-    animation: fade-in 0.3s ease-out forwards;
-}
-
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-slide-up { animation: slide-up 0.5s ease-out forwards; }
+.animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
 .animate-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.05), transparent);
     background-size: 200% 100%;
     animation: shimmer 3s ease-in-out infinite;
 }
 
-/* Staggered animations */
 .stagger-1 { animation-delay: 0.1s; }
 .stagger-2 { animation-delay: 0.2s; }
 .stagger-3 { animation-delay: 0.3s; }

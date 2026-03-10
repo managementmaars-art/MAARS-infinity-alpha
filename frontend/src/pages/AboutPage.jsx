@@ -108,7 +108,7 @@ const AGENT_LAYERS = [
 const SYSTEMS = [
   {
     icon: Rocket, title: "Autonomous Orchestration Engine", color: "text-red-400",
-    desc: "The core brain of MAARS ∞. When you set a high-level business goal, Commander Orion analyzes it, scores its clarity and complexity, then creates a structured strategic plan with milestones and tasks. Each task is automatically assigned to the most qualified specialist agent. The system executes tasks in parallel across milestones, with built-in quality control and failure recovery.",
+    desc: "The core brain of MAARS Command. When you set a high-level business goal, Commander Orion analyzes it, scores its clarity and complexity, then creates a structured strategic plan with milestones and tasks. Each task is automatically assigned to the most qualified specialist agent. The system executes tasks in parallel across milestones, with built-in quality control and failure recovery.",
     details: ["Goal Scoring: clarity, complexity, risk, confidence metrics", "Strategic plan generation with milestones and tasks", "Auto-assignment based on agent specialization", "Parallel execution with progress tracking", "Media generation (images via GPT Image 1, videos via Sora 2)", "Commander to Personal Secretary handoff for real-world actions"]
   },
   {
@@ -168,7 +168,7 @@ const SYSTEMS = [
   },
   {
     icon: Mic, title: "Voice Command Interface", color: "text-rose-400",
-    desc: "Enables hands-free interaction with the entire MAARS ∞ platform. A microphone button in the Command Palette records audio, transcribes it using OpenAI Whisper, and automatically fills the search input for instant navigation and actions.",
+    desc: "Enables hands-free interaction with the entire MAARS Command platform. A microphone button in the Command Palette records audio, transcribes it using OpenAI Whisper, and automatically fills the search input for instant navigation and actions.",
     details: ["Browser MediaRecorder API captures audio in WebM format", "OpenAI Whisper transcription via Emergent SDK", "Auto-fills Command Palette search for voice-based navigation", "Visual states: idle, recording (pulse), transcribing (spinner)", "Voice hint displayed in Command Palette footer"]
   },
   {
@@ -443,7 +443,7 @@ const AboutPage = () => {
               <Rocket className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl lg:text-3xl font-bold text-white font-['Outfit']">MAARS ∞</h1>
+              <h1 className="text-2xl lg:text-3xl font-bold text-white font-['Outfit']">MAARS Command</h1>
               <p className="text-sm text-zinc-400">Autonomous AI Enterprise Operating System</p>
               <p className="text-[10px] text-zinc-600">by MAARS Global Corporation</p>
             </div>
@@ -460,11 +460,11 @@ const AboutPage = () => {
           </Button>
         </div>
         <p className="text-sm text-zinc-300 leading-relaxed max-w-3xl">
-          MAARS ∞ is a <span className="text-white font-medium">governed, hierarchical, multi-agent intelligence and execution architecture</span> designed for enterprise-grade autonomous operations. It 
+          MAARS Command is a <span className="text-white font-medium">governed, hierarchical, multi-agent intelligence and execution architecture</span> designed for enterprise-grade autonomous operations. It 
           deploys <span className="text-indigo-400 font-medium">458+ specialized AI agents</span> across 
           <span className="text-emerald-400 font-medium"> 27 network categories</span> and 
           <span className="text-cyan-400 font-medium"> 16 system layers</span>, powered by <span className="text-amber-400 font-medium">13 LLM providers with 45+ models</span>. 
-          From strategic planning and content creation to financial analysis and compliance — MAARS ∞ converts high-level human intent into reliable, 
+          From strategic planning and content creation to financial analysis and compliance — MAARS Command converts high-level human intent into reliable, 
           measurable, auditable, and strategically useful execution at scale.
         </p>
         <div className="flex gap-2 mt-4 flex-wrap">
@@ -707,7 +707,7 @@ const AboutPage = () => {
 
       {/* Footer */}
       <div className="text-center py-6 border-t border-white/5">
-        <p className="text-xs text-zinc-500">MAARS ∞ v1.0 — Autonomous AI Enterprise Operating System</p>
+        <p className="text-xs text-zinc-500">MAARS Command v1.0 — Autonomous AI Enterprise Operating System</p>
         <p className="text-[10px] text-zinc-600 mt-1">458+ Agents | 27 Networks | 13 LLM Providers | 45+ Models</p>
         <p className="text-[10px] text-zinc-600 mt-1">Built by MAARS Global Corporation | support@maarsglobal.com</p>
       </div>

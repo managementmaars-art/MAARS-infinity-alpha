@@ -189,7 +189,7 @@ export default function CodeExplorer() {
             Code Explorer
           </h1>
           <p className="text-sm text-zinc-500 mt-0.5">
-            Browse the entire MAARS ∞ codebase ({totalFiles} files)
+            Browse the entire MAARS Command codebase ({totalFiles} files)
           </p>
         </div>
         <button

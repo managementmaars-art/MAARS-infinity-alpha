@@ -53,7 +53,7 @@ export default function CircuitBreakers() {
     <div className="space-y-6" data-testid="circuit-breakers-page">
       <div>
         <h1 className="text-2xl font-bold text-white font-['Outfit']">Circuit Breakers</h1>
-        <p className="text-sm text-zinc-400 mt-1">Monitor and configure service protection circuits across the MAARS ∞ infrastructure</p>
+        <p className="text-sm text-zinc-400 mt-1">Monitor and configure service protection circuits across the MAARS Command infrastructure</p>
       </div>
 
       {/* Summary */}

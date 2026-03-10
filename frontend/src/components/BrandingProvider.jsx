@@ -3,7 +3,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const defaults = {
-  platform_name: "MAARS ∞",
+  platform_name: "MAARS Command",
   tagline: "AI-Powered Team Platform",
   logo_url: "",
   favicon_url: "",

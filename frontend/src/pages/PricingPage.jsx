@@ -343,11 +343,9 @@ const PricingPage = () => {
       <nav className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
-                <Bot className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-lg font-bold text-white font-['Outfit']">MAARS ∞</span>
+            <Link to="/" className="flex items-center gap-2.5">
+              <img src="/branding/maars-logo.jpeg" alt="MAARS" className="w-8 h-8 rounded-lg object-cover ring-1 ring-indigo-500/20" />
+              <span className="text-lg font-bold text-white font-['Outfit']">MAARS Command</span>
             </Link>
             {user ? (
               <Button onClick={() => navigate("/dashboard")} variant="outline" className="border-white/10">
