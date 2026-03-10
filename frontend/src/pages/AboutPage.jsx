@@ -640,13 +640,27 @@ const AboutPage = () => {
                             <div className="flex items-center gap-2 flex-wrap">
                               <p className="text-xs font-medium text-white">{agent.name}</p>
                               <Badge className={`${colors.badge} border-0 text-[8px]`}>{agent.role}</Badge>
+                              {agent.autonomy_tier && <Badge className="bg-white/5 text-zinc-500 border-0 text-[8px]">Autonomy {agent.autonomy_tier}/10</Badge>}
                             </div>
-                            {agent.description && <p className="text-[10px] text-zinc-400 leading-relaxed mt-0.5 print-no-clamp">{agent.description}</p>}
+                            {agent.description && <p className="text-[10px] text-zinc-400 leading-relaxed mt-1 print-no-clamp">{agent.description}</p>}
                             {agent.capabilities?.length > 0 && (
-                              <div className="flex gap-1 mt-1 flex-wrap">
-                                {agent.capabilities.map(c => (
-                                  <span key={c} className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-zinc-500">{c}</span>
-                                ))}
+                              <div className="mt-1.5">
+                                <p className="text-[8px] text-zinc-600 mb-0.5 uppercase tracking-wider">Skills:</p>
+                                <div className="flex gap-1 flex-wrap">
+                                  {agent.capabilities.map(c => (
+                                    <span key={c} className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-zinc-500">{c}</span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {agent.tools?.length > 0 && (
+                              <div className="mt-1">
+                                <p className="text-[8px] text-zinc-600 mb-0.5 uppercase tracking-wider">Tools:</p>
+                                <div className="flex gap-1 flex-wrap">
+                                  {agent.tools.map(t => (
+                                    <span key={t} className="text-[8px] px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400">{t}</span>
+                                  ))}
+                                </div>
                               </div>
                             )}
                           </div>
