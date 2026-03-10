@@ -444,7 +444,8 @@ const AboutPage = () => {
             </div>
             <div>
               <h1 className="text-2xl lg:text-3xl font-bold text-white font-['Outfit']">MAARS ∞</h1>
-              <p className="text-sm text-zinc-400">by MAARS Global Corporation</p>
+              <p className="text-sm text-zinc-400">Autonomous AI Enterprise Operating System</p>
+              <p className="text-[10px] text-zinc-600">by MAARS Global Corporation</p>
             </div>
           </div>
           <Button
@@ -455,15 +456,16 @@ const AboutPage = () => {
             data-testid="download-pdf-btn"
           >
             {downloading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Download className="w-4 h-4 mr-2" />}
-            {downloading ? "Generating..." : "Download Full Documentation"}
+            {downloading ? "Generating..." : "Download Docs"}
           </Button>
         </div>
         <p className="text-sm text-zinc-300 leading-relaxed max-w-3xl">
-          MAARS ∞ is a <span className="text-white font-medium">governed, hierarchical, multi-agent intelligence and execution architecture</span> that 
-          deploys <span className="text-indigo-400 font-medium">{totalAgents} specialized AI agents</span> across 
+          MAARS ∞ is a <span className="text-white font-medium">governed, hierarchical, multi-agent intelligence and execution architecture</span> designed for enterprise-grade autonomous operations. It 
+          deploys <span className="text-indigo-400 font-medium">458+ specialized AI agents</span> across 
           <span className="text-emerald-400 font-medium"> 27 network categories</span> and 
-          <span className="text-cyan-400 font-medium"> 16 system layers</span>. It converts high-level human intent into reliable, 
-          measurable, auditable, safe, and strategically useful execution — from ventures and products to research, operations, and economic coordination.
+          <span className="text-cyan-400 font-medium"> 16 system layers</span>, powered by <span className="text-amber-400 font-medium">13 LLM providers with 45+ models</span>. 
+          From strategic planning and content creation to financial analysis and compliance — MAARS ∞ converts high-level human intent into reliable, 
+          measurable, auditable, and strategically useful execution at scale.
         </p>
         <div className="flex gap-2 mt-4 flex-wrap">
           <Badge className="bg-indigo-500/20 text-indigo-400 border-0">Multi-Agent Orchestration</Badge>
@@ -475,8 +477,9 @@ const AboutPage = () => {
           <Badge className="bg-rose-500/20 text-rose-400 border-0">Voice Commands</Badge>
           <Badge className="bg-sky-500/20 text-sky-400 border-0">Code Explorer</Badge>
           <Badge className="bg-blue-500/20 text-blue-400 border-0">Knowledge Graph</Badge>
-          <Badge className="bg-teal-500/20 text-teal-400 border-0">Trust Scores</Badge>
-          <Badge className="bg-orange-500/20 text-orange-400 border-0">Execution Gateway</Badge>
+          <Badge className="bg-teal-500/20 text-teal-400 border-0">Workflow Builder</Badge>
+          <Badge className="bg-orange-500/20 text-orange-400 border-0">Campaign Builder</Badge>
+          <Badge className="bg-red-500/20 text-red-400 border-0">Integration Hub</Badge>
         </div>
       </div>
 
@@ -487,7 +490,7 @@ const AboutPage = () => {
           { label: "Networks", value: "27", color: "text-emerald-400" },
           { label: "Core Systems", value: SYSTEMS.length, color: "text-amber-400" },
           { label: "LLM Providers", value: "13", color: "text-violet-400" },
-          { label: "System Layers", value: "16", color: "text-cyan-400" },
+          { label: "AI Models", value: "45+", color: "text-cyan-400" },
           { label: "API Endpoints", value: "212+", color: "text-rose-400" },
         ].map(s => (
           <Card key={s.label} className="bg-zinc-900/50 border-white/5">
@@ -598,12 +601,12 @@ const AboutPage = () => {
                 <p className="text-sm font-medium text-white">Backend</p>
               </div>
               <div className="space-y-1">
-                <p className="text-xs text-zinc-400">FastAPI (Python)</p>
-                <p className="text-xs text-zinc-400">MongoDB database</p>
-                <p className="text-xs text-zinc-400">27+ DB collections</p>
-                <p className="text-xs text-zinc-400">50+ API endpoints</p>
+                <p className="text-xs text-zinc-400">FastAPI (Python) with async I/O</p>
+                <p className="text-xs text-zinc-400">MongoDB with 27+ collections</p>
+                <p className="text-xs text-zinc-400">212+ REST API endpoints</p>
                 <p className="text-xs text-zinc-400">WebSocket real-time streaming</p>
                 <p className="text-xs text-zinc-400">Emergent Integrations SDK</p>
+                <p className="text-xs text-zinc-400">Stripe payment processing</p>
               </div>
             </CardContent>
           </Card>
@@ -615,11 +618,11 @@ const AboutPage = () => {
               </div>
               <div className="space-y-1">
                 <p className="text-xs text-zinc-400">React 18 + Tailwind CSS</p>
-                <p className="text-xs text-zinc-400">Shadcn/UI components</p>
-                <p className="text-xs text-zinc-400">20+ pages</p>
-                <p className="text-xs text-zinc-400">Responsive dashboard layout</p>
+                <p className="text-xs text-zinc-400">Shadcn/UI component library</p>
+                <p className="text-xs text-zinc-400">50+ pages & dashboards</p>
+                <p className="text-xs text-zinc-400">Drag-and-drop workflow builder</p>
                 <p className="text-xs text-zinc-400">Command Palette + Voice</p>
-                <p className="text-xs text-zinc-400">PDF export capabilities</p>
+                <p className="text-xs text-zinc-400">PDF & ZIP export capabilities</p>
               </div>
             </CardContent>
           </Card>
@@ -632,10 +635,10 @@ const AboutPage = () => {
               <div className="space-y-1">
                 <p className="text-xs text-zinc-400">OpenAI (GPT-5.2, 4o, o3, Whisper)</p>
                 <p className="text-xs text-zinc-400">Anthropic (Claude Sonnet 4.5)</p>
-                <p className="text-xs text-zinc-400">Google (Gemini 3 Flash, 2.5 Pro)</p>
+                <p className="text-xs text-zinc-400">Google (Gemini 3 Flash, Pro)</p>
                 <p className="text-xs text-zinc-400">Groq, Together AI, Fireworks, AI21</p>
-                <p className="text-xs text-zinc-400">Universal Emergent LLM Key</p>
-                <p className="text-xs text-zinc-400">Smart model routing (13 providers)</p>
+                <p className="text-xs text-zinc-400">xAI Grok, DeepSeek, Mistral, Perplexity</p>
+                <p className="text-xs text-zinc-400">ElevenLabs TTS + Image/Video Gen</p>
               </div>
             </CardContent>
           </Card>
@@ -705,7 +708,8 @@ const AboutPage = () => {
       {/* Footer */}
       <div className="text-center py-6 border-t border-white/5">
         <p className="text-xs text-zinc-500">MAARS ∞ v1.0 — Autonomous AI Enterprise Operating System</p>
-        <p className="text-[10px] text-zinc-600 mt-1">Built by MAARS Global Corporation</p>
+        <p className="text-[10px] text-zinc-600 mt-1">458+ Agents | 27 Networks | 13 LLM Providers | 45+ Models</p>
+        <p className="text-[10px] text-zinc-600 mt-1">Built by MAARS Global Corporation | support@maarsglobal.com</p>
       </div>
     </div>
   );

@@ -171,6 +171,7 @@ const DashboardLayout = ({ children }) => {
           )}
           <NavItem icon={Shield} label="Admin Panel" to="/admin" onClick={closeMobile ? () => { navigate("/admin"); closeMobile(); } : undefined} />
           <NavItem icon={FileCode} label="Code Explorer" to="/admin/code-explorer" onClick={closeMobile ? () => { navigate("/admin/code-explorer"); closeMobile(); } : undefined} />
+          <NavItem icon={Package} label="Pricing Manager" to="/admin/pricing" onClick={closeMobile ? () => { navigate("/admin/pricing"); closeMobile(); } : undefined} />
           <NavItem icon={Lock} label="Access Control" to="/rbac" onClick={closeMobile ? () => { navigate("/rbac"); closeMobile(); } : undefined} />
           <NavItem icon={CircuitBoard} label="Circuit Breakers" to="/circuit-breakers" onClick={closeMobile ? () => { navigate("/circuit-breakers"); closeMobile(); } : undefined} />
           <NavItem icon={DollarSign} label="Cost Governance" to="/cost-governance" onClick={closeMobile ? () => { navigate("/cost-governance"); closeMobile(); } : undefined} />

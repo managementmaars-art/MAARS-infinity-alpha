@@ -47,6 +47,7 @@ import IntegrationHub from "./pages/IntegrationHub";
 import Organization from "./pages/Organization";
 import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 import AgentSuggestions from "./pages/AgentSuggestions";
+import PricingAdmin from "./pages/PricingAdmin";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -307,6 +308,7 @@ const AppRouter = () => {
       <Route path="/agent-suggestions" element={<ProtectedRoute><DashboardLayout><AgentSuggestions /></DashboardLayout></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminDashboard /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/code-explorer" element={<AdminRoute><DashboardLayout><CodeExplorer /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/pricing" element={<AdminRoute><DashboardLayout><PricingAdmin /></DashboardLayout></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

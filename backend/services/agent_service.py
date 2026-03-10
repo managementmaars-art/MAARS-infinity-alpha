@@ -162,9 +162,9 @@ async def seed_default_agents():
             await db.agents.insert_one(agent_data)
             seeded_count += 1
         else:
-            # Update existing infinity agents with any new fields
+            # Update existing infinity agents with any new fields including avatar
             update_fields = {}
-            for field in ["network", "autonomy_tier", "authority_tier", "is_infinity", "lifecycle_state"]:
+            for field in ["network", "autonomy_tier", "authority_tier", "is_infinity", "lifecycle_state", "avatar"]:
                 if field in agent_data and existing.get(field) != agent_data[field]:
                     update_fields[field] = agent_data[field]
             if update_fields:
