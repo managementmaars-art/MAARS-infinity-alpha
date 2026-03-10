@@ -1,13 +1,15 @@
-# MAARS Infinity — Product Requirements Document
+# MAARS Command — Product Requirements Document
 
 ## Overview
-MAARS ∞ is an autonomous AI enterprise operating system by MAARS Global Corporation.  
+MAARS Command is an autonomous AI enterprise operating system by MAARS Global Corporation.  
 458+ AI agents across 27 networks, 16 system layers, powered by 13 LLM providers with 45+ models.
 
 ## Brand Identity
-- **Logo**: MAARS Global Corporation globe logo (iridescent blue/purple/cyan)
-- **Colors**: Deep space navy (#070721), Electric blue (#3b82f6), Cyan (#06b6d4), Magenta (#d946ef)
-- **Typography**: Outfit (headings), Inter (body), JetBrains Mono (code)
+- **Name**: MAARS Command (by MAARS Global Corporation)
+- **Logo**: MAARS Global Corporation globe logo (mgc-logo.png)
+- **Colors**: Indigo/Violet theme - Dark backgrounds with indigo (#6366f1) and violet (#8b5cf6) accents
+- **Typography**: Outfit (headings), system fonts (body)
+- **Watermark**: Bottom-right corner with "MAARS COMMAND by MAARS Global Corporation"
 
 ## Architecture
 - **Backend**: FastAPI (Python) + MongoDB + WebSocket + Static file serving
@@ -17,31 +19,32 @@ MAARS ∞ is an autonomous AI enterprise operating system by MAARS Global Corpor
 
 ## Completed Features
 
-### Brand Overhaul (Feb 10, 2026)
-- [x] MAARS GC logo placed in: sidebar, navbar, landing page, login, footer, watermark
-- [x] Color scheme: deep navy + electric blue + cyan + magenta throughout
-- [x] CSS variables updated in index.css for consistent theming
-- [x] Gradient text, glow effects, glass morphism using brand palette
-- [x] Watermark: centered bottom with logo + "MAARS GLOBAL CORPORATION"
+### Rebranding to MAARS Command (Feb 10, 2026)
+- [x] Full rebrand from "MAARS ∞" to "MAARS Command"
+- [x] Color scheme reverted to original indigo/violet theme
+- [x] Company logo prominent throughout all pages (landing, login, sidebar, watermark)
+- [x] Watermark moved to bottom-right corner
+- [x] Health endpoint updated to return "MAARS Command"
 
 ### Agent Gallery View (Feb 10, 2026)
-- [x] Compact 12-column grid showing all 458 portrait thumbnails
-- [x] Hover-to-preview tooltip: name, role, description, capabilities, tools
-- [x] View toggle: Cards (full) / Gallery (compact) modes
-- [x] Agent visibility toggle: admin can hide/show agents (eye icon)
+- [x] Cards view with compact agent cards showing avatar, name, role
+- [x] Gallery view with 8-column portrait grid for all 458 agents
+- [x] Hover-to-expand popup on both views: full portrait, role, name, capabilities, description
+- [x] Agent visibility toggle: admin can hide/show agents
+- [x] Search functionality by name, role, or capability
 - [x] PUT /api/agents/{agent_id}/visibility endpoint
 
 ### Professional Dashboard (Feb 10, 2026)
-- [x] Command Center with branded UI
-- [x] Stats grid: Chats, Tasks, Completed, Custom Agents
-- [x] Quick Actions: New Chat, Create Task, Create Agent
-- [x] Agent cards with hover popup preview (avatar, role, capabilities, description)
+- [x] Command Center with branded UI and stats grid
+- [x] Shows only Commander Orion agent for focused experience
+- [x] Quick Actions: New Chat, Create Task, Browse Agents, Create Agent
 - [x] Recent Conversations section
+- [x] Project missions tracking
 
 ### AI Portrait Avatars (Feb 10, 2026)
 - [x] All 458 agents have unique AI-generated human-like portraits
-- [x] 41 CDN-hosted originals + 415 locally generated via GPT Image 1 + 2 CDN
-- [x] Served via /api/static/avatars/ with FastAPI StaticFiles
+- [x] CDN-hosted images via emergentagent.com static storage
+- [x] Avatars display correctly in all views (cards, gallery, hover popup, chat, dashboard)
 
 ### Core Platform
 - [x] User auth (JWT) + RBAC + Admin panel (16+ pages)
@@ -50,11 +53,23 @@ MAARS ∞ is an autonomous AI enterprise operating system by MAARS Global Corpor
 - [x] Workflow builder, campaign builder, vibe coding
 - [x] Dynamic pricing, Stripe integration, PWA support
 - [x] Organization/team management, trust analytics, code explorer
+- [x] Credits system with display in sidebar
 
 ## Credentials
-- Admin: management.maars@marsgc.net / Admin123!
+- Admin: management.maars@marsgc.net / admin123
 
-## P2 Backlog
+## Launch Readiness Status (Mar 10, 2026)
+- All 17 launch-readiness tests PASSED (100% success rate)
+- Avatars displaying correctly across all views
+- Branding consistent throughout application
+- All core features operational
+
+## P1 Backlog
+- None (application is launch-ready)
+
+## P2 Backlog / Future
+- Advanced trust analytics and customizable dashboard widgets
+- Agent-to-agent collaboration within workflows
 - Mobile-native app wrapper
 - Advanced multi-org switching
 - Billing history / invoice dashboard

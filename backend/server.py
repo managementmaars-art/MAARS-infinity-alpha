@@ -159,7 +159,7 @@ async def shutdown_db_client():
 
 @app.get("/api/health")
 async def health_check():
-    return {"status": "ok", "service": "MAARS Infinity"}
+    return {"status": "ok", "service": "MAARS Command"}
 
 
 app.add_middleware(
