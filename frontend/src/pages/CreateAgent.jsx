@@ -354,6 +354,10 @@ const CreateAgent = () => {
                   <SelectItem value="mistral">Mistral AI</SelectItem>
                   <SelectItem value="perplexity">Perplexity</SelectItem>
                   <SelectItem value="cohere">Cohere</SelectItem>
+                  <SelectItem value="groq">Groq (Llama 4)</SelectItem>
+                  <SelectItem value="together">Together AI</SelectItem>
+                  <SelectItem value="fireworks">Fireworks AI</SelectItem>
+                  <SelectItem value="ai21">AI21 (Jamba)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
