@@ -19,32 +19,33 @@ MAARS Command is an autonomous AI enterprise operating system by MAARS Global Co
 
 ## Completed Features
 
+### Avatar Fix & Persistence (Mar 10, 2026)
+- [x] Fixed root cause: seed_default_agents() was overwriting photo avatars with SVG data URIs on every restart
+- [x] Modified agent_service.py to preserve non-SVG avatar URLs during seeding
+- [x] Updated 417 infinity agents from SVG data URIs to /api/static/avatars/{agent_id}.png
+- [x] Generated 2 missing avatar images for agent_10r_discovery and agent_10aa_quality_mfg
+- [x] All 458 agents now have real AI-generated human portrait photos
+
+### About Page & PDF Branding Update (Mar 10, 2026)
+- [x] Updated summary.py: all "MAARS Infinity" / "MAARS ∞" references changed to "MAARS Command"
+- [x] PDF cover, header, and description now say "MAARS Command"
+- [x] Frontend download filename: "MAARS-Command-Documentation.pdf"
+- [x] Health endpoint returns "MAARS Command"
+
 ### Rebranding to MAARS Command (Feb 10, 2026)
 - [x] Full rebrand from "MAARS ∞" to "MAARS Command"
-- [x] Color scheme reverted to original indigo/violet theme
-- [x] Company logo prominent throughout all pages (landing, login, sidebar, watermark)
-- [x] Watermark moved to bottom-right corner
-- [x] Health endpoint updated to return "MAARS Command"
+- [x] Color scheme: original indigo/violet theme
+- [x] Company logo prominent throughout all pages
+- [x] Watermark in bottom-right corner
 
 ### Agent Gallery View (Feb 10, 2026)
-- [x] Cards view with compact agent cards showing avatar, name, role
-- [x] Gallery view with 8-column portrait grid for all 458 agents
-- [x] Hover-to-expand popup on both views: full portrait, role, name, capabilities, description
-- [x] Agent visibility toggle: admin can hide/show agents
-- [x] Search functionality by name, role, or capability
-- [x] PUT /api/agents/{agent_id}/visibility endpoint
+- [x] Cards view with hover-to-expand popup
+- [x] Gallery view with 8-column portrait grid
+- [x] Search, agent visibility toggle, view mode switching
 
 ### Professional Dashboard (Feb 10, 2026)
-- [x] Command Center with branded UI and stats grid
-- [x] Shows only Commander Orion agent for focused experience
-- [x] Quick Actions: New Chat, Create Task, Browse Agents, Create Agent
-- [x] Recent Conversations section
-- [x] Project missions tracking
-
-### AI Portrait Avatars (Feb 10, 2026)
-- [x] All 458 agents have unique AI-generated human-like portraits
-- [x] CDN-hosted images via emergentagent.com static storage
-- [x] Avatars display correctly in all views (cards, gallery, hover popup, chat, dashboard)
+- [x] Command Center with stats, Commander Orion only, Quick Actions
+- [x] Credits display in sidebar
 
 ### Core Platform
 - [x] User auth (JWT) + RBAC + Admin panel (16+ pages)
@@ -53,24 +54,18 @@ MAARS Command is an autonomous AI enterprise operating system by MAARS Global Co
 - [x] Workflow builder, campaign builder, vibe coding
 - [x] Dynamic pricing, Stripe integration, PWA support
 - [x] Organization/team management, trust analytics, code explorer
-- [x] Credits system with display in sidebar
 
 ## Credentials
 - Admin: management.maars@marsgc.net / admin123
 
 ## Launch Readiness Status (Mar 10, 2026)
-- All 17 launch-readiness tests PASSED (100% success rate)
-- Avatars displaying correctly across all views
+- Iteration 85: 11/11 tests PASSED (100%)
+- All 458 agents with real portrait photos
+- PDF download working with MAARS Command branding
 - Branding consistent throughout application
-- All core features operational
-
-## P1 Backlog
-- None (application is launch-ready)
 
 ## P2 Backlog / Future
 - Advanced trust analytics and customizable dashboard widgets
 - Agent-to-agent collaboration within workflows
 - Mobile-native app wrapper
-- Advanced multi-org switching
 - Billing history / invoice dashboard
-- Custom branded login pages per org
