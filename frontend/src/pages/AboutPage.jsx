@@ -522,12 +522,23 @@ const AboutPage = () => {
     });
   };
 
-  /* Print-ready PDF download */
-  const handlePrint = () => {
+  /* Direct PDF download from backend */
+  const handlePrint = async () => {
     setPrinting(true);
-    setExpandedNetworks(new Set(sortedNetworks.map(([k]) => k)));
-    setExpandedSystems(new Set(SYSTEMS.map((_, i) => i)));
-    setTimeout(() => { window.print(); setPrinting(false); }, 500);
+    try {
+      const res = await fetch(`${API}/summary/pdf`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "MAARS-Command-Documentation.pdf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+    } catch {} finally { setPrinting(false); }
   };
 
   const getNetworkMeta = (netId) => {
@@ -555,7 +566,7 @@ const AboutPage = () => {
             </div>
           </div>
           <Button onClick={handlePrint} variant="outline" className="border-white/10 text-zinc-300 hover:bg-white/5 no-print" data-testid="download-pdf-btn">
-            <Printer className="w-4 h-4 mr-2" />{printing ? "Preparing..." : "Download Docs"}
+            <Download className="w-4 h-4 mr-2" />{printing ? "Generating..." : "Save as PDF"}
           </Button>
         </div>
 
