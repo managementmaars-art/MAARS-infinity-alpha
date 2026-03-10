@@ -43,6 +43,7 @@ from routes.memory import router as memory_router
 from routes.summary import router as summary_router
 from routes.websocket import router as ws_router
 from routes.kernel import router as kernel_router
+from routes.agent_teams import router as agent_teams_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -84,6 +85,7 @@ api_router.include_router(admin_code_router)
 api_router.include_router(memory_router)
 api_router.include_router(summary_router)
 api_router.include_router(kernel_router)
+api_router.include_router(agent_teams_router)
 
 app.include_router(api_router)
 

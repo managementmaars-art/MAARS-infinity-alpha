@@ -97,26 +97,44 @@ const CollabCard = ({ collab }) => {
 const CollaborationEngine = () => {
   const { token } = useAuth();
   const [collabs, setCollabs] = useState([]);
+  const [agents, setAgents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [total, setTotal] = useState(0);
+  const [showCreate, setShowCreate] = useState(false);
+  const [newCollab, setNewCollab] = useState({ sender: "", receivers: [], objective: "", collab_type: "information_sharing" });
+  const [creating, setCreating] = useState(false);
 
   const headers = { Authorization: `Bearer ${token}` };
 
   const fetchCollabs = useCallback(async () => {
     try {
-      const params = new URLSearchParams({ page: "1", limit: "50" });
-      if (filter !== "all") params.set("status", filter);
-      const res = await fetch(`${API}/collaborations?${params}`, { headers });
-      if (res.ok) {
-        const data = await res.json();
-        setCollabs(data.items || []);
-        setTotal(data.total || 0);
-      }
+      const [collabRes, agentsRes] = await Promise.all([
+        fetch(`${API}/collaborations?page=1&limit=50${filter !== "all" ? `&status=${filter}` : ""}`, { headers }),
+        fetch(`${API}/agents`, { headers }),
+      ]);
+      if (collabRes.ok) { const data = await collabRes.json(); setCollabs(data.items || []); setTotal(data.total || 0); }
+      if (agentsRes.ok) setAgents(await agentsRes.json());
     } catch {} finally { setLoading(false); }
   }, [token, filter]);
 
   useEffect(() => { fetchCollabs(); }, [fetchCollabs]);
+
+  const handleCreateCollab = async () => {
+    if (!newCollab.sender || newCollab.receivers.length === 0 || !newCollab.objective) return;
+    setCreating(true);
+    try {
+      const res = await fetch(`${API}/collaborations`, {
+        method: "POST", headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify(newCollab),
+      });
+      if (res.ok) { setShowCreate(false); setNewCollab({ sender: "", receivers: [], objective: "", collab_type: "information_sharing" }); fetchCollabs(); }
+    } catch {} finally { setCreating(false); }
+  };
+
+  /* Stats */
+  const statusCounts = collabs.reduce((acc, c) => { acc[c.status] = (acc[c.status] || 0) + 1; return acc; }, {});
+  const uniqueAgents = new Set([...collabs.map(c => c.sender), ...collabs.flatMap(c => c.receivers || [])]);
 
   const statusFilters = ["all", "pending", "in_progress", "completed", "failed"];
 
@@ -127,28 +145,95 @@ const CollaborationEngine = () => {
           <Users className="w-5 h-5 text-violet-400" />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-white font-['Outfit']">Collaboration Engine</h1>
-          <p className="text-xs text-zinc-500">Inter-agent communication logs & task collaboration</p>
+          <h1 className="text-xl font-bold text-white font-['Outfit']">Agent-to-Agent Collaboration</h1>
+          <p className="text-xs text-zinc-500">Inter-agent communication, task handoff & cross-domain coordination</p>
         </div>
         <Badge variant="outline" className="ml-auto border-white/10 text-zinc-400">{total} total</Badge>
       </div>
 
-      {/* Filters */}
-      <div className="flex items-center gap-2">
+      {/* Collaboration Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" data-testid="collab-stats">
+        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-3">
+          <div className="flex items-center gap-2 mb-1"><MessageSquare className="w-3.5 h-3.5 text-violet-400" /><span className="text-[10px] text-zinc-500">Total Collabs</span></div>
+          <p className="text-lg font-bold text-white">{total}</p>
+        </div>
+        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-3">
+          <div className="flex items-center gap-2 mb-1"><Users className="w-3.5 h-3.5 text-indigo-400" /><span className="text-[10px] text-zinc-500">Agents Involved</span></div>
+          <p className="text-lg font-bold text-white">{uniqueAgents.size}</p>
+        </div>
+        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-3">
+          <div className="flex items-center gap-2 mb-1"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /><span className="text-[10px] text-zinc-500">Completed</span></div>
+          <p className="text-lg font-bold text-white">{statusCounts.completed || 0}</p>
+        </div>
+        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-3">
+          <div className="flex items-center gap-2 mb-1"><Clock className="w-3.5 h-3.5 text-amber-400" /><span className="text-[10px] text-zinc-500">Pending</span></div>
+          <p className="text-lg font-bold text-white">{statusCounts.pending || 0}</p>
+        </div>
+      </div>
+
+      {/* Filters + Create Button */}
+      <div className="flex items-center gap-2 flex-wrap">
         <Filter className="w-4 h-4 text-zinc-500" />
         {statusFilters.map(s => (
-          <button
-            key={s}
-            onClick={() => setFilter(s)}
-            className={`px-3 py-1.5 rounded-lg text-xs transition-colors ${
-              filter === s ? "bg-indigo-500/15 text-indigo-400" : "bg-zinc-800/50 text-zinc-500 hover:text-zinc-300"
-            }`}
-            data-testid={`filter-${s}`}
-          >
+          <button key={s} onClick={() => setFilter(s)}
+            className={`px-3 py-1.5 rounded-lg text-xs transition-colors ${filter === s ? "bg-indigo-500/15 text-indigo-400" : "bg-zinc-800/50 text-zinc-500 hover:text-zinc-300"}`}
+            data-testid={`filter-${s}`}>
             {s === "all" ? "All" : s.replace("_", " ")}
           </button>
         ))}
+        <button onClick={() => setShowCreate(!showCreate)}
+          className="ml-auto px-3 py-1.5 rounded-lg text-xs bg-violet-500/15 text-violet-400 hover:bg-violet-500/25 transition-colors"
+          data-testid="initiate-collab-btn">
+          <Zap className="w-3 h-3 inline mr-1" />Initiate Collaboration
+        </button>
       </div>
+
+      {/* Create Collaboration Form */}
+      {showCreate && (
+        <Card className="bg-zinc-900/50 border-violet-500/20" data-testid="create-collab-form">
+          <CardContent className="p-4 space-y-3">
+            <p className="text-sm font-bold text-white">Initiate Agent-to-Agent Collaboration</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <select value={newCollab.sender} onChange={e => setNewCollab(p => ({ ...p, sender: e.target.value }))}
+                className="bg-zinc-800 border border-white/10 rounded-md px-3 py-2 text-xs text-zinc-300" data-testid="collab-sender">
+                <option value="">Select sender agent...</option>
+                {agents.slice(0, 50).map(a => <option key={a.agent_id} value={a.name}>{a.name} ({a.role})</option>)}
+              </select>
+              <select value="" onChange={e => {
+                if (e.target.value && !newCollab.receivers.includes(e.target.value))
+                  setNewCollab(p => ({ ...p, receivers: [...p.receivers, e.target.value] }));
+              }}
+                className="bg-zinc-800 border border-white/10 rounded-md px-3 py-2 text-xs text-zinc-300" data-testid="collab-receiver">
+                <option value="">Add receiver agent...</option>
+                {agents.slice(0, 50).filter(a => a.name !== newCollab.sender).map(a => <option key={a.agent_id} value={a.name}>{a.name} ({a.role})</option>)}
+              </select>
+            </div>
+            {newCollab.receivers.length > 0 && (
+              <div className="flex gap-1 flex-wrap">
+                {newCollab.receivers.map(r => (
+                  <Badge key={r} className="bg-violet-500/15 text-violet-300 border border-violet-500/20 text-[10px] gap-1">
+                    {r}<button onClick={() => setNewCollab(p => ({ ...p, receivers: p.receivers.filter(x => x !== r) }))} className="hover:text-white">&times;</button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <input value={newCollab.objective} onChange={e => setNewCollab(p => ({ ...p, objective: e.target.value }))}
+                placeholder="Collaboration objective..." className="sm:col-span-3 bg-zinc-800 border border-white/10 rounded-md px-3 py-2 text-xs text-zinc-300 placeholder:text-zinc-600" data-testid="collab-objective" />
+              <select value={newCollab.collab_type} onChange={e => setNewCollab(p => ({ ...p, collab_type: e.target.value }))}
+                className="bg-zinc-800 border border-white/10 rounded-md px-3 py-2 text-xs text-zinc-300" data-testid="collab-type">
+                <option value="information_sharing">Info Sharing</option>
+                <option value="review_request">Review Request</option>
+                <option value="data_handoff">Data Handoff</option>
+                <option value="coordination">Coordination</option>
+              </select>
+            </div>
+            <Button onClick={handleCreateCollab} disabled={creating} size="sm" className="bg-violet-600 hover:bg-violet-700 text-xs" data-testid="submit-collab-btn">
+              {creating ? "Creating..." : "Create Collaboration"}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {loading ? (
         <div className="flex items-center justify-center py-20">

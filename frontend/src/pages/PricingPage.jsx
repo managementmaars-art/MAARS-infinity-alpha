@@ -789,7 +789,7 @@ const PricingPage = () => {
         {/* FAQ or Note */}
         <div className="text-center text-zinc-500 text-sm">
           <p>458+ specialized AI agents across 27 network categories and 16 system layers. Commander Orion ∞ included in Pro and Business plans.</p>
-          <p className="mt-2">Questions? Contact support@maarsglobal.com</p>
+          <p className="mt-2">Questions? Contact support.maars@marsgc.net</p>
         </div>
         <BrandFooter className="mt-8" />
       </div>

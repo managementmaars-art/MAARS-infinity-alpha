@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth, API } from "../App";
 import { Card, CardContent } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
@@ -7,104 +7,47 @@ import {
   Rocket, Bot, Brain, Shield, Sparkles, Cpu, Activity, Radio, Code, Palette,
   PenTool, Gauge, Users, FileCheck, Zap, Mail, BarChart3, ChevronDown,
   ChevronRight, Globe, Lock, Eye, Target, Layers, Network, Server, Database,
-  Download, Loader2, Mic, FileCode, Archive, Terminal
+  Download, Loader2, Mic, FileCode, Archive, Terminal, Search, Heart,
+  Wrench, MessageSquare, RefreshCw, Briefcase, Building, TrendingUp,
+  CheckCircle, Package, DollarSign, Printer
 } from "lucide-react";
 
-const LAYER_COLORS = {
-  executive: { bg: "bg-amber-500/10", border: "border-amber-500/20", text: "text-amber-400", badge: "bg-amber-500/20 text-amber-400" },
-  technical: { bg: "bg-cyan-500/10", border: "border-cyan-500/20", text: "text-cyan-400", badge: "bg-cyan-500/20 text-cyan-400" },
-  creative: { bg: "bg-pink-500/10", border: "border-pink-500/20", text: "text-pink-400", badge: "bg-pink-500/20 text-pink-400" },
-  marketing: { bg: "bg-green-500/10", border: "border-green-500/20", text: "text-green-400", badge: "bg-green-500/20 text-green-400" },
-  operations: { bg: "bg-indigo-500/10", border: "border-indigo-500/20", text: "text-indigo-400", badge: "bg-indigo-500/20 text-indigo-400" },
-  finance: { bg: "bg-emerald-500/10", border: "border-emerald-500/20", text: "text-emerald-400", badge: "bg-emerald-500/20 text-emerald-400" },
-  governance: { bg: "bg-red-500/10", border: "border-red-500/20", text: "text-red-400", badge: "bg-red-500/20 text-red-400" },
-  intelligence: { bg: "bg-violet-500/10", border: "border-violet-500/20", text: "text-violet-400", badge: "bg-violet-500/20 text-violet-400" },
+/* ── network label mapping ── */
+const NETWORK_META = {
+  strategic_executive: { label: "Strategic & Executive", icon: Target, color: "amber" },
+  product_development: { label: "Product Development", icon: Package, color: "cyan" },
+  engineering: { label: "Engineering", icon: Code, color: "emerald" },
+  creative_brand: { label: "Creative & Brand", icon: Palette, color: "pink" },
+  growth_distribution: { label: "Growth & Distribution", icon: TrendingUp, color: "green" },
+  sales_revenue: { label: "Sales & Revenue", icon: DollarSign, color: "yellow" },
+  operations: { label: "Operations", icon: Layers, color: "indigo" },
+  finance_capital: { label: "Finance & Capital", icon: BarChart3, color: "emerald" },
+  legal_governance: { label: "Legal & Governance", icon: Shield, color: "red" },
+  research_intelligence: { label: "Research & Intelligence", icon: Search, color: "violet" },
+  customer_experience: { label: "Customer Experience", icon: Heart, color: "rose" },
+  security: { label: "Security", icon: Lock, color: "orange" },
+  core_platform: { label: "Core Platform", icon: Server, color: "blue" },
+  memory_knowledge: { label: "Memory & Knowledge", icon: Database, color: "violet" },
+  tooling_capability: { label: "Tooling & Capability", icon: Wrench, color: "lime" },
+  observability_incident: { label: "Observability & Incident", icon: Activity, color: "amber" },
+  verification: { label: "Verification", icon: CheckCircle, color: "emerald" },
+  execution: { label: "Execution", icon: Zap, color: "yellow" },
+  simulation_foresight: { label: "Simulation & Foresight", icon: Eye, color: "purple" },
+  experimentation: { label: "Experimentation", icon: Sparkles, color: "teal" },
+  communication_reporting: { label: "Communication & Reporting", icon: MessageSquare, color: "sky" },
+  conflict_resolution: { label: "Conflict Resolution", icon: Shield, color: "orange" },
+  recovery_resilience: { label: "Recovery & Resilience", icon: RefreshCw, color: "green" },
+  investment_portfolio: { label: "Investment & Portfolio", icon: Briefcase, color: "amber" },
+  venture_creation: { label: "Venture Creation", icon: Rocket, color: "red" },
+  web_search_intelligence: { label: "Web Search Intelligence", icon: Globe, color: "cyan" },
+  industry_specific: { label: "Industry Specific", icon: Building, color: "slate" },
 };
 
-const AGENT_LAYERS = [
-  {
-    id: "executive", label: "Executive Layer", icon: Target,
-    agents: [
-      { name: "Commander Orion", role: "Commander", desc: "Strategic planning, goal decomposition, workforce orchestration. Receives high-level business goals and decomposes them into structured projects with milestones and tasks." },
-      { name: "Chief Strategy Officer", role: "Strategist", desc: "Long-term strategy, market analysis, competitive intelligence, and strategic roadmapping." },
-      { name: "Revenue Strategist", role: "Revenue", desc: "Revenue optimization, pricing strategy, monetization modeling, and growth forecasting." },
-      { name: "Investor Relations", role: "Investor Relations", desc: "Investor communications, fundraising support, financial reporting, and stakeholder management." },
-      { name: "Business Strategist", role: "Business Strategy", desc: "Market positioning, business model innovation, go-to-market strategy, and competitive landscape analysis." },
-    ]
-  },
-  {
-    id: "technical", label: "Product & Technical Layer", icon: Cpu,
-    agents: [
-      { name: "Product Manager", role: "PM", desc: "Product roadmaps, feature prioritization, user stories, sprint planning, and cross-functional alignment." },
-      { name: "Project Manager", role: "Project Management", desc: "Timeline management, resource allocation, milestone tracking, risk mitigation, and stakeholder communication." },
-      { name: "App Developer", role: "Developer", desc: "Full-stack development, code generation, debugging, API design, and architecture decisions." },
-      { name: "Automation Engineer", role: "Automation", desc: "Workflow automation, CI/CD pipelines, process optimization, and integration scripting." },
-      { name: "AI Optimizer", role: "AI Specialist", desc: "ML model tuning, AI performance monitoring, cost optimization, and model selection strategy." },
-      { name: "Data Engineer", role: "Data Engineering", desc: "Data pipelines, ETL processes, database architecture, and data quality governance." },
-      { name: "Cybersecurity Officer", role: "Security", desc: "Security audits, vulnerability assessments, compliance verification, and incident response planning." },
-    ]
-  },
-  {
-    id: "creative", label: "Creative & Brand Layer", icon: Palette,
-    agents: [
-      { name: "Brand Architect", role: "Brand Strategy", desc: "Brand identity design, positioning strategy, visual language systems, and brand guidelines." },
-      { name: "Graphics Designer", role: "Visual Design", desc: "Image creation, visual assets, marketing materials, infographics, and design systems." },
-      { name: "Video Specialist", role: "Video Production", desc: "Video content creation, animation, motion graphics, storyboarding, and post-production." },
-      { name: "Copywriter", role: "Content Writing", desc: "Marketing copy, brand voice development, storytelling, headlines, and editorial content." },
-      { name: "Web Designer", role: "Web Design", desc: "UI/UX design, landing pages, web experiences, responsive layouts, and interaction design." },
-      { name: "UX Researcher", role: "User Research", desc: "User testing, journey mapping, usability analysis, persona development, and experience audits." },
-      { name: "3D Specialist", role: "3D Design", desc: "3D modeling, product visualization, immersive content, AR/VR assets, and spatial design." },
-    ]
-  },
-  {
-    id: "marketing", label: "Growth & Marketing Layer", icon: Zap,
-    agents: [
-      { name: "Marketing Specialist", role: "Marketing", desc: "Campaign strategy, channel planning, performance marketing, attribution, and marketing analytics." },
-      { name: "Growth Hacker", role: "Growth", desc: "Viral loops, A/B testing, conversion optimization, growth experiments, and user acquisition." },
-      { name: "SEO Specialist", role: "SEO", desc: "Search optimization, keyword strategy, technical SEO, link building, and SERP analysis." },
-      { name: "Social Media Manager", role: "Social Media", desc: "Platform strategy, community management, content scheduling, engagement, and social analytics." },
-      { name: "Email Marketing Specialist", role: "Email", desc: "Drip campaigns, newsletters, segmentation, deliverability, and email automation." },
-      { name: "Sales Representative", role: "Sales", desc: "Lead qualification, outreach sequences, deal management, pipeline analysis, and CRM optimization." },
-      { name: "PR Manager", role: "Public Relations", desc: "Media relations, press releases, crisis communications, thought leadership, and brand reputation." },
-    ]
-  },
-  {
-    id: "operations", label: "Operations Layer", icon: Layers,
-    agents: [
-      { name: "Operations Manager", role: "Operations", desc: "Process optimization, resource allocation, efficiency metrics, and operational excellence." },
-      { name: "Inventory Manager", role: "Inventory", desc: "Stock management, supply chain optimization, demand forecasting, and warehouse logistics." },
-      { name: "Procurement Manager", role: "Procurement", desc: "Vendor management, cost negotiation, sourcing strategy, and supplier evaluation." },
-      { name: "HR Specialist", role: "Human Resources", desc: "Recruitment, onboarding, culture development, policy creation, and employee engagement." },
-      { name: "Customer Service Agent", role: "Support", desc: "Ticket resolution, FAQ management, customer satisfaction, and support escalation." },
-      { name: "CX Architect", role: "Customer Experience", desc: "Journey optimization, NPS improvement, experience design, and customer loyalty programs." },
-    ]
-  },
-  {
-    id: "finance", label: "Finance Layer", icon: BarChart3,
-    agents: [
-      { name: "Financial Analyst", role: "Finance", desc: "Financial modeling, forecasting, budgeting, P&L analysis, and investment evaluation." },
-      { name: "Data Analyst", role: "Analytics", desc: "Business intelligence, dashboard creation, trend analysis, statistical modeling, and reporting." },
-    ]
-  },
-  {
-    id: "governance", label: "Governance Layer", icon: Shield,
-    agents: [
-      { name: "Legal Assistant", role: "Legal", desc: "Contract review, legal research, compliance checks, regulatory guidance, and risk assessment." },
-      { name: "Compliance Officer", role: "Compliance", desc: "Regulatory adherence, audit preparation, policy enforcement, and compliance training." },
-      { name: "Ethics Officer", role: "Ethics", desc: "Ethical AI governance, bias detection, responsible practices, and ethical review protocols." },
-    ]
-  },
-  {
-    id: "intelligence", label: "Intelligence Layer", icon: Globe,
-    agents: [
-      { name: "Research Specialist", role: "Research", desc: "Deep research, competitive analysis, academic papers, market intelligence, and trend forecasting." },
-      { name: "Knowledge Architect", role: "Knowledge Management", desc: "Knowledge base curation, taxonomy design, information architecture, and organizational learning." },
-      { name: "Localization Specialist", role: "Localization", desc: "Translation, cultural adaptation, market-specific content, and international go-to-market." },
-      { name: "Personal Secretary", role: "Executive Assistant", desc: "Scheduling, email drafting, meeting preparation, and real-world action execution bridge." },
-    ]
-  },
-];
+const colorMap = (c) => ({
+  bg: `bg-${c}-500/10`, border: `border-${c}-500/20`, text: `text-${c}-400`, badge: `bg-${c}-500/20 text-${c}-400`,
+});
 
+/* ── systems ── */
 const SYSTEMS = [
   {
     icon: Rocket, title: "Autonomous Orchestration Engine", color: "text-red-400",
@@ -119,7 +62,7 @@ const SYSTEMS = [
   {
     icon: Shield, title: "Quality Control & Failure Recovery", color: "text-emerald-400",
     desc: "After every task completion, an automated Critic Module (powered by GPT-4o) reviews the output and scores it on a 1-10 scale for completeness, accuracy, actionability, and professionalism. If a task fails, the system automatically retries with fallback models. If all retries fail, it escalates to the user.",
-    details: ["Critic Module: GPT-4o auto-reviews every task output", "Scoring: 1-10 on multiple quality dimensions", "Retry chain: GPT-5.2 → Claude Sonnet → Gemini Pro → GPT-4o", "Escalation: Failed tasks notify the user for manual review", "Quality Dashboard: pass rates, average scores, recovery metrics"]
+    details: ["Critic Module: GPT-4o auto-reviews every task output", "Scoring: 1-10 on multiple quality dimensions", "Retry chain: GPT-5.2 \u2192 Claude Sonnet \u2192 Gemini Pro \u2192 GPT-4o", "Escalation: Failed tasks notify the user for manual review", "Quality Dashboard: pass rates, average scores, recovery metrics"]
   },
   {
     icon: Network, title: "Model-Agnostic LLM Router", color: "text-cyan-400",
@@ -129,7 +72,7 @@ const SYSTEMS = [
   {
     icon: Activity, title: "Autonomous Collaboration Engine", color: "text-indigo-400",
     desc: "When an agent completes a task, the system automatically detects if the work impacts agents in related domains and creates collaboration entries. All 458+ agents are mapped to 27 network categories with cross-domain trigger rules. This ensures seamless coordination without manual intervention.",
-    details: ["9 domains: executive, product, technical, creative, marketing, operations, finance, governance, intelligence", "Auto-detection: marketing → creative + technical, product → technical + creative + marketing", "Collaboration types: information sharing, review request, data handoff, coordination", "Up to 3 auto-collaborations per task to avoid noise"]
+    details: ["9 domains: executive, product, technical, creative, marketing, operations, finance, governance, intelligence", "Auto-detection: marketing \u2192 creative + technical, product \u2192 technical + creative + marketing", "Collaboration types: information sharing, review request, data handoff, coordination", "Up to 3 auto-collaborations per task to avoid noise"]
   },
   {
     icon: Palette, title: "Universal Reference Intelligence", color: "text-pink-400",
@@ -153,7 +96,7 @@ const SYSTEMS = [
   },
   {
     icon: Lock, title: "Simulation vs. Execution Mode", color: "text-orange-400",
-    desc: "A system-wide toggle that controls whether agents can perform real-world actions. In Simulation Mode (default), all external actions return simulated responses — safe for testing and review. In Execution Mode, agents send real emails, create actual calendar events, and post to live platforms.",
+    desc: "A system-wide toggle that controls whether agents can perform real-world actions. In Simulation Mode (default), all external actions return simulated responses \u2014 safe for testing and review. In Execution Mode, agents send real emails, create actual calendar events, and post to live platforms.",
     details: ["System-wide toggle accessible from KPI Dashboard", "Simulation: all actions return safe, simulated responses", "Execution: real Gmail sends, real Calendar events, real API calls", "Visual indicators throughout the UI for current mode"]
   },
   {
@@ -191,8 +134,29 @@ const SYSTEMS = [
     desc: "A VS Code/Notion-style quick search interface for instant navigation. Press / or Cmd+K to open a modal that searches across all pages, agents, and quick actions with keyboard navigation and recent search history.",
     details: ["Searches 50+ pages, 458+ agents, and quick actions", "Keyboard navigation with arrow keys, Enter, and Escape", "Recent searches stored in localStorage", "Grouped results: Recent, Pages, Agents, Quick Actions", "Voice command integration via microphone button", "Accessible from sidebar search button or / keyboard shortcut"]
   },
+  {
+    icon: Users, title: "Agent Team Builder", color: "text-indigo-400",
+    desc: "Assemble custom teams of agents for specific projects and workflows. Select agents from the full 458+ agent pool, organized by network category. Each team can have a defined purpose and mission, making it easy to deploy specialized groups for targeted business objectives.",
+    details: ["Search and filter agents by name, role, network, or capability", "Create unlimited teams with custom names and mission descriptions", "Drag-and-drop agent selection from the full workforce pool", "Team overview with member count, capabilities, and network coverage", "Reusable teams for recurring project types"]
+  },
+  {
+    icon: Gauge, title: "Trust Analytics & Scoring", color: "text-emerald-400",
+    desc: "A comprehensive trust scoring system that evaluates every agent's reliability based on execution history, success rate, latency, and anomaly detection. Provides real-time dashboards with trend analysis, comparisons, and alerts for trust score degradation.",
+    details: ["Per-agent trust scores (0-100) based on execution history", "Multi-dimensional scoring: success rate, latency, quality, consistency", "Trend analysis with historical graphs", "Anomaly detection for sudden performance drops", "Agent comparison and ranking", "Configurable alert thresholds for trust degradation"]
+  },
+  {
+    icon: Zap, title: "Workflow Builder", color: "text-amber-400",
+    desc: "A visual drag-and-drop workflow builder for creating multi-step automated processes. Connect agents, tools, and decision nodes into executable workflows. Supports conditional branching, parallel execution, and scheduled triggers.",
+    details: ["Visual canvas with drag-and-drop node placement", "Node types: Agent Task, Decision, Parallel Split, Merge, Trigger", "Conditional branching based on task output or data", "Workflow templates for common business processes", "Execution history and performance tracking", "Scheduled and event-driven triggers"]
+  },
+  {
+    icon: Briefcase, title: "Campaign Builder", color: "text-pink-400",
+    desc: "Build and manage multi-channel marketing campaigns with AI agents. Define campaign goals, select channels, create content variations, and track performance \u2014 all orchestrated by specialized marketing agents.",
+    details: ["Multi-channel campaigns: email, social, web, ads", "AI-generated content variations per channel", "Performance tracking and A/B testing", "Budget allocation and spend optimization", "Campaign templates and scheduling", "Integration with Content Generator and Reference Intelligence"]
+  },
 ];
 
+/* ── AI providers ── */
 const TIER_COLORS = {
   "Flagship": "bg-amber-500/20 text-amber-400",
   "Fast": "bg-cyan-500/20 text-cyan-400",
@@ -208,110 +172,71 @@ const TIER_COLORS = {
 };
 
 const AI_PROVIDERS = [
-  {
-    name: "OpenAI", color: "text-emerald-400", dotColor: "bg-emerald-400",
-    models: [
-      { name: "GPT-5.2", tier: "Flagship", desc: "Most capable for coding, analysis & complex tasks" },
-      { name: "GPT-4o", tier: "Fast", desc: "Balanced speed and quality" },
-      { name: "GPT-4o Mini", tier: "Economy", desc: "Cost-efficient for quick answers" },
-      { name: "O3", tier: "Reasoning", desc: "Advanced reasoning for math & logic" },
-      { name: "O3 Mini", tier: "Reasoning", desc: "Lightweight analytical tasks" },
-    ],
-  },
-  {
-    name: "Anthropic", color: "text-orange-400", dotColor: "bg-orange-400",
-    models: [
-      { name: "Claude Sonnet 4.5", tier: "Flagship", desc: "Creative writing, analysis & nuanced tasks" },
-      { name: "Claude Opus 4.5", tier: "Premium", desc: "Deep research & complex analysis" },
-      { name: "Claude Haiku 4.5", tier: "Economy", desc: "Fast responses & summaries" },
-    ],
-  },
-  {
-    name: "Google", color: "text-blue-400", dotColor: "bg-blue-400",
-    models: [
-      { name: "Gemini 3 Flash", tier: "Fast", desc: "Lightning-fast responses" },
-      { name: "Gemini 3 Pro", tier: "Flagship", desc: "Multimodal research & analysis" },
-    ],
-  },
-  {
-    name: "xAI (Grok)", color: "text-sky-400", dotColor: "bg-sky-400",
-    models: [
-      { name: "Grok 3", tier: "Flagship", desc: "1M context, reasoning & analysis" },
-      { name: "Grok 3 Mini", tier: "Economy", desc: "Cost-efficient reasoning" },
-      { name: "Grok 2", tier: "Fast", desc: "Competitive with GPT-4o" },
-    ],
-  },
-  {
-    name: "DeepSeek", color: "text-teal-400", dotColor: "bg-teal-400",
-    models: [
-      { name: "DeepSeek Chat", tier: "Economy", desc: "128K context, ultra-affordable" },
-      { name: "DeepSeek Reasoner", tier: "Reasoning", desc: "Deep math & logic reasoning" },
-    ],
-  },
-  {
-    name: "Mistral AI", color: "text-violet-400", dotColor: "bg-violet-400",
-    models: [
-      { name: "Mistral Large", tier: "Flagship", desc: "Complex reasoning, enterprise-grade" },
-      { name: "Mistral Medium", tier: "Fast", desc: "Balanced performance" },
-      { name: "Mistral Small", tier: "Economy", desc: "Ultra-fast, simple tasks" },
-    ],
-  },
-  {
-    name: "Perplexity", color: "text-cyan-400", dotColor: "bg-cyan-400",
-    models: [
-      { name: "Sonar", tier: "Search", desc: "Web-grounded real-time answers" },
-      { name: "Sonar Pro", tier: "Research", desc: "Deep web research with citations" },
-    ],
-  },
-  {
-    name: "Cohere", color: "text-amber-400", dotColor: "bg-amber-400",
-    models: [
-      { name: "Command R+", tier: "Flagship", desc: "RAG & enterprise tasks" },
-      { name: "Command R", tier: "Economy", desc: "Cost-efficient summaries" },
-    ],
-  },
-  {
-    name: "Groq (Llama 4)", color: "text-amber-300", dotColor: "bg-amber-300",
-    models: [
-      { name: "Llama 4 Scout", tier: "Economy", desc: "Ultra-fast 128K context, lowest cost" },
-      { name: "Llama 4 Maverick", tier: "Fast", desc: "128E MoE architecture, balanced" },
-      { name: "Llama 3.3 70B", tier: "Fast", desc: "Versatile open-source powerhouse" },
-    ],
-  },
-  {
-    name: "Together AI", color: "text-lime-400", dotColor: "bg-lime-400",
-    models: [
-      { name: "Llama 4 Maverick FP8", tier: "Fast", desc: "FP8 optimized Llama 4 inference" },
-      { name: "Llama 3.3 70B Turbo", tier: "Fast", desc: "Turbo-optimized open-source" },
-      { name: "DeepSeek R1", tier: "Reasoning", desc: "Open-source deep reasoning" },
-    ],
-  },
-  {
-    name: "Fireworks AI", color: "text-red-400", dotColor: "bg-red-400",
-    models: [
-      { name: "Llama 4 Scout", tier: "Economy", desc: "Serverless Llama 4 inference" },
-      { name: "Llama 4 Maverick", tier: "Fast", desc: "High-throughput Llama 4" },
-      { name: "DeepSeek V3", tier: "Fast", desc: "Cost-efficient DeepSeek hosting" },
-    ],
-  },
-  {
-    name: "AI21 (Jamba)", color: "text-indigo-300", dotColor: "bg-indigo-300",
-    models: [
-      { name: "Jamba Large 1.7", tier: "Flagship", desc: "256K context, SSM+Transformer hybrid" },
-      { name: "Jamba Mini 1.7", tier: "Economy", desc: "Lightweight enterprise tasks" },
-    ],
-  },
-  {
-    name: "AI Generation + Voice", color: "text-pink-400", dotColor: "bg-pink-400",
-    models: [
-      { name: "Nano Banana 2", tier: "Image Gen", desc: "Gemini 3.1 Flash image generation" },
-      { name: "GPT Image 1", tier: "Image Gen", desc: "Generate images from text" },
-      { name: "DALL-E 3", tier: "Image Gen", desc: "Creative image generation" },
-      { name: "Sora 2", tier: "Video Gen", desc: "AI video from text prompts" },
-      { name: "ElevenLabs", tier: "Voice", desc: "Multilingual TTS (Bangla, English, etc.)" },
-      { name: "Whisper", tier: "STT", desc: "Speech-to-text in 50+ languages" },
-    ],
-  },
+  { name: "OpenAI", color: "text-emerald-400", dotColor: "bg-emerald-400", models: [
+    { name: "GPT-5.2", tier: "Flagship", desc: "Most capable for coding, analysis & complex tasks" },
+    { name: "GPT-4o", tier: "Fast", desc: "Balanced speed and quality" },
+    { name: "GPT-4o Mini", tier: "Economy", desc: "Cost-efficient for quick answers" },
+    { name: "O3", tier: "Reasoning", desc: "Advanced reasoning for math & logic" },
+    { name: "O3 Mini", tier: "Reasoning", desc: "Lightweight analytical tasks" },
+  ]},
+  { name: "Anthropic", color: "text-orange-400", dotColor: "bg-orange-400", models: [
+    { name: "Claude Sonnet 4.5", tier: "Flagship", desc: "Creative writing, analysis & nuanced tasks" },
+    { name: "Claude Opus 4.5", tier: "Premium", desc: "Deep research & complex analysis" },
+    { name: "Claude Haiku 4.5", tier: "Economy", desc: "Fast responses & summaries" },
+  ]},
+  { name: "Google", color: "text-blue-400", dotColor: "bg-blue-400", models: [
+    { name: "Gemini 3 Flash", tier: "Fast", desc: "Lightning-fast responses" },
+    { name: "Gemini 3 Pro", tier: "Flagship", desc: "Multimodal research & analysis" },
+  ]},
+  { name: "xAI (Grok)", color: "text-sky-400", dotColor: "bg-sky-400", models: [
+    { name: "Grok 3", tier: "Flagship", desc: "1M context, reasoning & analysis" },
+    { name: "Grok 3 Mini", tier: "Economy", desc: "Cost-efficient reasoning" },
+    { name: "Grok 2", tier: "Fast", desc: "Competitive with GPT-4o" },
+  ]},
+  { name: "DeepSeek", color: "text-teal-400", dotColor: "bg-teal-400", models: [
+    { name: "DeepSeek Chat", tier: "Economy", desc: "128K context, ultra-affordable" },
+    { name: "DeepSeek Reasoner", tier: "Reasoning", desc: "Deep math & logic reasoning" },
+  ]},
+  { name: "Mistral AI", color: "text-violet-400", dotColor: "bg-violet-400", models: [
+    { name: "Mistral Large", tier: "Flagship", desc: "Complex reasoning, enterprise-grade" },
+    { name: "Mistral Medium", tier: "Fast", desc: "Balanced performance" },
+    { name: "Mistral Small", tier: "Economy", desc: "Ultra-fast, simple tasks" },
+  ]},
+  { name: "Perplexity", color: "text-cyan-400", dotColor: "bg-cyan-400", models: [
+    { name: "Sonar", tier: "Search", desc: "Web-grounded real-time answers" },
+    { name: "Sonar Pro", tier: "Research", desc: "Deep web research with citations" },
+  ]},
+  { name: "Cohere", color: "text-amber-400", dotColor: "bg-amber-400", models: [
+    { name: "Command R+", tier: "Flagship", desc: "RAG & enterprise tasks" },
+    { name: "Command R", tier: "Economy", desc: "Cost-efficient summaries" },
+  ]},
+  { name: "Groq (Llama 4)", color: "text-amber-300", dotColor: "bg-amber-300", models: [
+    { name: "Llama 4 Scout", tier: "Economy", desc: "Ultra-fast 128K context, lowest cost" },
+    { name: "Llama 4 Maverick", tier: "Fast", desc: "128E MoE architecture, balanced" },
+    { name: "Llama 3.3 70B", tier: "Fast", desc: "Versatile open-source powerhouse" },
+  ]},
+  { name: "Together AI", color: "text-lime-400", dotColor: "bg-lime-400", models: [
+    { name: "Llama 4 Maverick FP8", tier: "Fast", desc: "FP8 optimized Llama 4 inference" },
+    { name: "Llama 3.3 70B Turbo", tier: "Fast", desc: "Turbo-optimized open-source" },
+    { name: "DeepSeek R1", tier: "Reasoning", desc: "Open-source deep reasoning" },
+  ]},
+  { name: "Fireworks AI", color: "text-red-400", dotColor: "bg-red-400", models: [
+    { name: "Llama 4 Scout", tier: "Economy", desc: "Serverless Llama 4 inference" },
+    { name: "Llama 4 Maverick", tier: "Fast", desc: "High-throughput Llama 4" },
+    { name: "DeepSeek V3", tier: "Fast", desc: "Cost-efficient DeepSeek hosting" },
+  ]},
+  { name: "AI21 (Jamba)", color: "text-indigo-300", dotColor: "bg-indigo-300", models: [
+    { name: "Jamba Large 1.7", tier: "Flagship", desc: "256K context, SSM+Transformer hybrid" },
+    { name: "Jamba Mini 1.7", tier: "Economy", desc: "Lightweight enterprise tasks" },
+  ]},
+  { name: "AI Generation + Voice", color: "text-pink-400", dotColor: "bg-pink-400", models: [
+    { name: "Nano Banana 2", tier: "Image Gen", desc: "Gemini 3.1 Flash image generation" },
+    { name: "GPT Image 1", tier: "Image Gen", desc: "Generate images from text" },
+    { name: "DALL-E 3", tier: "Image Gen", desc: "Creative image generation" },
+    { name: "Sora 2", tier: "Video Gen", desc: "AI video from text prompts" },
+    { name: "ElevenLabs", tier: "Voice", desc: "Multilingual TTS (Bangla, English, etc.)" },
+    { name: "Whisper", tier: "STT", desc: "Speech-to-text in 50+ languages" },
+  ]},
 ];
 
 const COST_DATA = [
@@ -386,55 +311,91 @@ const COST_DATA = [
   ]},
 ];
 
-const Section = ({ title, icon: Icon, color, children }) => (
-  <div className="mb-10">
+/* ── shared components ── */
+const Section = ({ title, icon: Icon, color, children, id }) => (
+  <div className="mb-10 about-section" id={id}>
     <div className="flex items-center gap-3 mb-4">
-      <div className={`w-9 h-9 rounded-xl ${color || "bg-indigo-500/15"} flex items-center justify-center`}>
+      <div className={`w-9 h-9 rounded-xl ${color || "bg-indigo-500/15"} flex items-center justify-center print-icon`}>
         {Icon && <Icon className="w-5 h-5 text-white" />}
       </div>
-      <h2 className="text-lg font-bold text-white font-['Outfit']">{title}</h2>
+      <h2 className="text-lg font-bold text-white font-['Outfit'] print-heading">{title}</h2>
     </div>
     {children}
   </div>
 );
 
+/* ── main component ── */
 const AboutPage = () => {
   const { token } = useAuth();
   const [agents, setAgents] = useState([]);
-  const [expandedLayer, setExpandedLayer] = useState(null);
-  const [expandedSystem, setExpandedSystem] = useState(null);
-  const [downloading, setDownloading] = useState(false);
+  const [expandedNetworks, setExpandedNetworks] = useState(new Set());
+  const [expandedSystems, setExpandedSystems] = useState(new Set());
+  const [loading, setLoading] = useState(true);
+  const [printing, setPrinting] = useState(false);
+  const printRef = useRef(null);
 
   const fetchAgents = useCallback(async () => {
     try {
-      const res = await fetch(`${API}/agents/public`, { headers: { Authorization: `Bearer ${token}` } });
-      if (res.ok) setAgents(await res.json());
-    } catch {}
+      const res = await fetch(`${API}/agents`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) { setAgents(await res.json()); }
+    } catch {} finally { setLoading(false); }
   }, [token]);
 
   useEffect(() => { fetchAgents(); }, [fetchAgents]);
 
-  const handleDownloadPDF = async () => {
-    setDownloading(true);
-    try {
-      const res = await fetch(`${API}/summary/pdf`, { headers: { Authorization: `Bearer ${token}` } });
-      if (res.ok) {
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "MAARS-Command-Documentation.pdf";
-        a.click();
-        URL.revokeObjectURL(url);
-      }
-    } catch {}
-    setDownloading(false);
+  /* Group agents by network */
+  const networkGroups = agents.reduce((acc, agent) => {
+    const net = agent.network || "core_team";
+    if (!acc[net]) acc[net] = [];
+    acc[net].push(agent);
+    return acc;
+  }, {});
+
+  const sortedNetworks = Object.entries(networkGroups).sort((a, b) => b[1].length - a[1].length);
+  const uniqueNetworks = Object.keys(networkGroups).length;
+
+  const toggleNetwork = (id) => {
+    setExpandedNetworks(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
   };
 
-  const totalAgents = AGENT_LAYERS.reduce((sum, l) => sum + l.agents.length, 0);
+  const toggleSystem = (i) => {
+    setExpandedSystems(prev => {
+      const next = new Set(prev);
+      next.has(i) ? next.delete(i) : next.add(i);
+      return next;
+    });
+  };
+
+  /* Print-ready PDF download */
+  const handlePrint = () => {
+    setPrinting(true);
+    /* expand all sections for print */
+    setExpandedNetworks(new Set(sortedNetworks.map(([k]) => k)));
+    setExpandedSystems(new Set(SYSTEMS.map((_, i) => i)));
+    setTimeout(() => {
+      window.print();
+      setPrinting(false);
+    }, 500);
+  };
+
+  const getNetworkMeta = (netId) => {
+    const meta = NETWORK_META[netId];
+    if (meta) return meta;
+    return { label: netId === "core_team" ? "Core Team" : netId.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()), icon: Bot, color: "zinc" };
+  };
+
+  const getNetColors = (netId) => {
+    const m = getNetworkMeta(netId);
+    const c = m.color;
+    return { bg: `bg-${c}-500/10`, border: `border-${c}-500/20`, text: `text-${c}-400`, badge: `bg-${c}-500/20 text-${c}-400` };
+  };
 
   return (
-    <div className="space-y-8 max-w-4xl" data-testid="about-page">
+    <div className="space-y-8 max-w-4xl print-container" data-testid="about-page" ref={printRef}>
       {/* Hero */}
       <div>
         <div className="flex items-center justify-between mb-4">
@@ -449,51 +410,42 @@ const AboutPage = () => {
             </div>
           </div>
           <Button
-            onClick={handleDownloadPDF}
-            disabled={downloading}
+            onClick={handlePrint}
             variant="outline"
-            className="border-white/10 text-zinc-300 hover:bg-white/5"
+            className="border-white/10 text-zinc-300 hover:bg-white/5 no-print"
             data-testid="download-pdf-btn"
           >
-            {downloading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Download className="w-4 h-4 mr-2" />}
-            {downloading ? "Generating..." : "Download Docs"}
+            <Printer className="w-4 h-4 mr-2" />
+            {printing ? "Preparing..." : "Download Docs"}
           </Button>
         </div>
         <p className="text-sm text-zinc-300 leading-relaxed max-w-3xl">
-          MAARS Command is a <span className="text-white font-medium">governed, hierarchical, multi-agent intelligence and execution architecture</span> designed for enterprise-grade autonomous operations. It 
-          deploys <span className="text-indigo-400 font-medium">458+ specialized AI agents</span> across 
-          <span className="text-emerald-400 font-medium"> 27 network categories</span> and 
-          <span className="text-cyan-400 font-medium"> 16 system layers</span>, powered by <span className="text-amber-400 font-medium">13 LLM providers with 45+ models</span>. 
-          From strategic planning and content creation to financial analysis and compliance — MAARS Command converts high-level human intent into reliable, 
+          MAARS Command is a <span className="text-white font-medium">governed, hierarchical, multi-agent intelligence and execution architecture</span> designed for enterprise-grade autonomous operations. It
+          deploys <span className="text-indigo-400 font-medium"> {agents.length || "458"}+ specialized AI agents</span> across
+          <span className="text-emerald-400 font-medium"> {uniqueNetworks || 27} network categories</span> and
+          <span className="text-cyan-400 font-medium"> 16 system layers</span>, powered by <span className="text-amber-400 font-medium">13 LLM providers with 45+ models</span>.
+          From strategic planning and content creation to financial analysis and compliance -- MAARS Command converts high-level human intent into reliable,
           measurable, auditable, and strategically useful execution at scale.
         </p>
         <div className="flex gap-2 mt-4 flex-wrap">
-          <Badge className="bg-indigo-500/20 text-indigo-400 border-0">Multi-Agent Orchestration</Badge>
-          <Badge className="bg-emerald-500/20 text-emerald-400 border-0">Quality Control</Badge>
-          <Badge className="bg-amber-500/20 text-amber-400 border-0">LLM Router</Badge>
-          <Badge className="bg-pink-500/20 text-pink-400 border-0">Content Generation</Badge>
-          <Badge className="bg-cyan-500/20 text-cyan-400 border-0">Vibe Coding</Badge>
-          <Badge className="bg-violet-500/20 text-violet-400 border-0">Memory Governance</Badge>
-          <Badge className="bg-rose-500/20 text-rose-400 border-0">Voice Commands</Badge>
-          <Badge className="bg-sky-500/20 text-sky-400 border-0">Code Explorer</Badge>
-          <Badge className="bg-blue-500/20 text-blue-400 border-0">Knowledge Graph</Badge>
-          <Badge className="bg-teal-500/20 text-teal-400 border-0">Workflow Builder</Badge>
-          <Badge className="bg-orange-500/20 text-orange-400 border-0">Campaign Builder</Badge>
-          <Badge className="bg-red-500/20 text-red-400 border-0">Integration Hub</Badge>
+          {["Multi-Agent Orchestration","Quality Control","LLM Router","Content Generation","Vibe Coding","Memory Governance","Voice Commands","Code Explorer","Knowledge Graph","Workflow Builder","Campaign Builder","Integration Hub","Team Builder","Trust Analytics"].map((b, i) => {
+            const colors = ["indigo","emerald","amber","pink","cyan","violet","rose","sky","blue","teal","orange","red","green","purple"];
+            return <Badge key={b} className={`bg-${colors[i % colors.length]}-500/20 text-${colors[i % colors.length]}-400 border-0`}>{b}</Badge>;
+          })}
         </div>
       </div>
 
-      {/* Platform Stats */}
+      {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
         {[
-          { label: "AI Agents", value: "458+", color: "text-indigo-400" },
-          { label: "Networks", value: "27", color: "text-emerald-400" },
+          { label: "AI Agents", value: `${agents.length || "458"}+`, color: "text-indigo-400" },
+          { label: "Networks", value: uniqueNetworks || 27, color: "text-emerald-400" },
           { label: "Core Systems", value: SYSTEMS.length, color: "text-amber-400" },
           { label: "LLM Providers", value: "13", color: "text-violet-400" },
           { label: "AI Models", value: "45+", color: "text-cyan-400" },
           { label: "API Endpoints", value: "212+", color: "text-rose-400" },
         ].map(s => (
-          <Card key={s.label} className="bg-zinc-900/50 border-white/5">
+          <Card key={s.label} className="bg-zinc-900/50 border-white/5 print-card">
             <CardContent className="p-4 text-center">
               <p className={`text-2xl font-bold ${s.color} font-['Outfit']`}>{s.value}</p>
               <p className="text-[11px] text-zinc-500">{s.label}</p>
@@ -502,67 +454,82 @@ const AboutPage = () => {
         ))}
       </div>
 
-      {/* Agent Workforce */}
-      <Section title="The 458-Agent AI Workforce" icon={Users} color="bg-indigo-500/15">
-        <p className="text-xs text-zinc-400 mb-4">Each agent has a unique Custom Brain Profile defining its LLM model, tools, autonomy level, and communication style. Click a layer to expand.</p>
-        <div className="space-y-2">
-          {AGENT_LAYERS.map(layer => {
-            const colors = LAYER_COLORS[layer.id];
-            const Icon = layer.icon;
-            const isExpanded = expandedLayer === layer.id;
-            return (
-              <div key={layer.id}>
-                <button
-                  onClick={() => setExpandedLayer(isExpanded ? null : layer.id)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all ${
-                    isExpanded ? `${colors.bg} ${colors.border}` : "bg-zinc-900/30 border-white/5 hover:border-white/10"
-                  }`}
-                  data-testid={`layer-${layer.id}`}
-                >
-                  <Icon className={`w-4 h-4 ${colors.text}`} />
-                  <span className="text-sm font-medium text-white flex-1 text-left">{layer.label}</span>
-                  <Badge className={`${colors.badge} border-0 text-[10px]`}>{layer.agents.length} agents</Badge>
-                  {isExpanded ? <ChevronDown className="w-4 h-4 text-zinc-500" /> : <ChevronRight className="w-4 h-4 text-zinc-500" />}
-                </button>
-                {isExpanded && (
-                  <div className="mt-1 ml-4 space-y-1.5 py-2">
-                    {layer.agents.map(agent => {
-                      const avatarAgent = agents.find(a => a.name === agent.name);
-                      return (
-                        <div key={agent.name} className={`flex items-start gap-3 p-3 rounded-lg ${colors.bg} border ${colors.border}`}>
-                          {avatarAgent?.avatar ? (
-                            <img src={avatarAgent.avatar} alt="" className="w-9 h-9 rounded-lg object-cover shrink-0" />
+      {/* Dynamic Agent Workforce */}
+      <Section title={`The ${agents.length || 458}-Agent AI Workforce`} icon={Users} color="bg-indigo-500/15" id="agents">
+        <p className="text-xs text-zinc-400 mb-4">
+          Every agent has a unique Custom Brain Profile defining its LLM model, tools, autonomy level, and communication style.
+          Agents are organized into {uniqueNetworks || 27} specialized network categories. {printing ? "" : "Click a network to expand."}
+        </p>
+        {loading ? (
+          <div className="flex items-center justify-center h-20"><Loader2 className="w-5 h-5 animate-spin text-indigo-400" /></div>
+        ) : (
+          <div className="space-y-2">
+            {sortedNetworks.map(([netId, netAgents]) => {
+              const meta = getNetworkMeta(netId);
+              const colors = getNetColors(netId);
+              const Icon = meta.icon;
+              const isExpanded = expandedNetworks.has(netId) || printing;
+              return (
+                <div key={netId}>
+                  <button
+                    onClick={() => toggleNetwork(netId)}
+                    className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all ${
+                      isExpanded ? `${colors.bg} ${colors.border}` : "bg-zinc-900/30 border-white/5 hover:border-white/10"
+                    }`}
+                    data-testid={`network-${netId}`}
+                  >
+                    <Icon className={`w-4 h-4 ${colors.text}`} />
+                    <span className="text-sm font-medium text-white flex-1 text-left">{meta.label}</span>
+                    <Badge className={`${colors.badge} border-0 text-[10px]`}>{netAgents.length} agents</Badge>
+                    {isExpanded ? <ChevronDown className="w-4 h-4 text-zinc-500 no-print" /> : <ChevronRight className="w-4 h-4 text-zinc-500 no-print" />}
+                  </button>
+                  {isExpanded && (
+                    <div className="mt-1 ml-4 space-y-1 py-2">
+                      {netAgents.map(agent => (
+                        <div key={agent.agent_id} className={`flex items-start gap-3 p-2.5 rounded-lg ${colors.bg} border ${colors.border}`}>
+                          {agent.avatar && !agent.avatar.startsWith("data:") ? (
+                            <img src={agent.avatar.startsWith("/") ? `${API.replace("/api", "")}${agent.avatar}` : agent.avatar} alt="" className="w-8 h-8 rounded-lg object-cover shrink-0" loading="lazy" />
                           ) : (
-                            <div className={`w-9 h-9 rounded-lg ${colors.bg} flex items-center justify-center shrink-0`}>
-                              <Bot className={`w-4 h-4 ${colors.text}`} />
+                            <div className={`w-8 h-8 rounded-lg ${colors.bg} flex items-center justify-center shrink-0`}>
+                              <Bot className={`w-3.5 h-3.5 ${colors.text}`} />
                             </div>
                           )}
-                          <div>
-                            <p className="text-sm font-medium text-white">{agent.name}</p>
-                            <Badge className={`${colors.badge} border-0 text-[9px] mb-1`}>{agent.role}</Badge>
-                            <p className="text-xs text-zinc-400 leading-relaxed">{agent.desc}</p>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <p className="text-xs font-medium text-white">{agent.name}</p>
+                              <Badge className={`${colors.badge} border-0 text-[8px]`}>{agent.role}</Badge>
+                            </div>
+                            {agent.description && <p className="text-[10px] text-zinc-400 leading-relaxed mt-0.5 line-clamp-2 print-no-clamp">{agent.description}</p>}
+                            {agent.capabilities?.length > 0 && (
+                              <div className="flex gap-1 mt-1 flex-wrap">
+                                {agent.capabilities.slice(0, 5).map(c => (
+                                  <span key={c} className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-zinc-500">{c}</span>
+                                ))}
+                                {agent.capabilities.length > 5 && <span className="text-[8px] text-zinc-600">+{agent.capabilities.length - 5} more</span>}
+                              </div>
+                            )}
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </Section>
 
       {/* Core Systems */}
-      <Section title="Core Systems & Capabilities" icon={Layers} color="bg-emerald-500/15">
-        <p className="text-xs text-zinc-400 mb-4">The platform is built on {SYSTEMS.length} interconnected systems that work together to deliver autonomous business operations.</p>
+      <Section title={`${SYSTEMS.length} Core Systems & Capabilities`} icon={Layers} color="bg-emerald-500/15" id="systems">
+        <p className="text-xs text-zinc-400 mb-4">The platform is built on {SYSTEMS.length} interconnected systems that work together to deliver autonomous business operations. {printing ? "" : "Click to expand each system."}</p>
         <div className="space-y-2">
           {SYSTEMS.map((sys, i) => {
-            const isExpanded = expandedSystem === i;
+            const isExpanded = expandedSystems.has(i) || printing;
             return (
               <div key={i}>
                 <button
-                  onClick={() => setExpandedSystem(isExpanded ? null : i)}
+                  onClick={() => toggleSystem(i)}
                   className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all ${
                     isExpanded ? "bg-zinc-800/60 border-white/10" : "bg-zinc-900/30 border-white/5 hover:border-white/10"
                   }`}
@@ -570,7 +537,7 @@ const AboutPage = () => {
                 >
                   <sys.icon className={`w-4 h-4 ${sys.color} shrink-0`} />
                   <span className="text-sm font-medium text-white flex-1 text-left">{sys.title}</span>
-                  {isExpanded ? <ChevronDown className="w-4 h-4 text-zinc-500" /> : <ChevronRight className="w-4 h-4 text-zinc-500" />}
+                  {isExpanded ? <ChevronDown className="w-4 h-4 text-zinc-500 no-print" /> : <ChevronRight className="w-4 h-4 text-zinc-500 no-print" />}
                 </button>
                 {isExpanded && (
                   <div className="mt-1 ml-4 p-4 rounded-lg bg-zinc-800/30 border border-white/5">
@@ -591,15 +558,12 @@ const AboutPage = () => {
         </div>
       </Section>
 
-      {/* Architecture Overview */}
-      <Section title="Technical Architecture" icon={Database} color="bg-cyan-500/15">
+      {/* Architecture */}
+      <Section title="Technical Architecture" icon={Database} color="bg-cyan-500/15" id="architecture">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <Card className="bg-zinc-900/50 border-white/5">
+          <Card className="bg-zinc-900/50 border-white/5 print-card">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Server className="w-4 h-4 text-cyan-400" />
-                <p className="text-sm font-medium text-white">Backend</p>
-              </div>
+              <div className="flex items-center gap-2 mb-2"><Server className="w-4 h-4 text-cyan-400" /><p className="text-sm font-medium text-white">Backend</p></div>
               <div className="space-y-1">
                 <p className="text-xs text-zinc-400">FastAPI (Python) with async I/O</p>
                 <p className="text-xs text-zinc-400">MongoDB with 27+ collections</p>
@@ -610,12 +574,9 @@ const AboutPage = () => {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-zinc-900/50 border-white/5">
+          <Card className="bg-zinc-900/50 border-white/5 print-card">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Eye className="w-4 h-4 text-pink-400" />
-                <p className="text-sm font-medium text-white">Frontend</p>
-              </div>
+              <div className="flex items-center gap-2 mb-2"><Eye className="w-4 h-4 text-pink-400" /><p className="text-sm font-medium text-white">Frontend</p></div>
               <div className="space-y-1">
                 <p className="text-xs text-zinc-400">React 18 + Tailwind CSS</p>
                 <p className="text-xs text-zinc-400">Shadcn/UI component library</p>
@@ -626,12 +587,9 @@ const AboutPage = () => {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-zinc-900/50 border-white/5">
+          <Card className="bg-zinc-900/50 border-white/5 print-card">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="w-4 h-4 text-amber-400" />
-                <p className="text-sm font-medium text-white">AI Layer</p>
-              </div>
+              <div className="flex items-center gap-2 mb-2"><Sparkles className="w-4 h-4 text-amber-400" /><p className="text-sm font-medium text-white">AI Layer</p></div>
               <div className="space-y-1">
                 <p className="text-xs text-zinc-400">OpenAI (GPT-5.2, 4o, o3, Whisper)</p>
                 <p className="text-xs text-zinc-400">Anthropic (Claude Sonnet 4.5)</p>
@@ -646,11 +604,11 @@ const AboutPage = () => {
       </Section>
 
       {/* AI Models & Providers */}
-      <Section title="AI Models & Providers" icon={Sparkles} color="bg-amber-500/15">
+      <Section title="AI Models & Providers" icon={Sparkles} color="bg-amber-500/15" id="providers">
         <p className="text-xs text-zinc-400 mb-4">13 AI providers with 45+ models across text generation, reasoning, search, image generation, video, voice, and speech-to-text.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {AI_PROVIDERS.map(provider => (
-            <Card key={provider.name} className="bg-zinc-900/50 border-white/5" data-testid={`provider-${provider.name}`}>
+            <Card key={provider.name} className="bg-zinc-900/50 border-white/5 print-card" data-testid={`provider-${provider.name}`}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Sparkles className={`w-4 h-4 ${provider.color}`} />
@@ -676,12 +634,36 @@ const AboutPage = () => {
         </div>
       </Section>
 
+      {/* Security & Governance */}
+      <Section title="Security & Governance" icon={Shield} color="bg-red-500/15" id="security">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {[
+            { title: "Role-Based Access Control (RBAC)", icon: Lock, desc: "Granular permissions for users, agents, and resources. Admin, Manager, and User roles with configurable access levels for every feature and API endpoint." },
+            { title: "Circuit Breakers", icon: Shield, desc: "Automatic protection against cascading failures. When an agent or service exceeds error thresholds, the circuit breaker trips to prevent system-wide degradation." },
+            { title: "Cost Governance", icon: DollarSign, desc: "Real-time spending controls with per-user and per-agent cost limits. Budget alerts, spending dashboards, and automatic throttling when limits are reached." },
+            { title: "Audit Logging", icon: FileCheck, desc: "Complete audit trail of every action, decision, and API call. Immutable logs for compliance, debugging, and forensic analysis." },
+            { title: "Trust Scoring", icon: Gauge, desc: "Every agent has a dynamic trust score based on execution history, success rate, latency, and anomaly detection. Low-trust agents are flagged or restricted automatically." },
+            { title: "Simulation Mode", icon: Eye, desc: "System-wide safety toggle. In Simulation Mode, all external actions return safe, simulated responses. Flip to Execution Mode only when ready for real-world operations." },
+          ].map(item => (
+            <Card key={item.title} className="bg-zinc-900/50 border-white/5 print-card">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <item.icon className="w-4 h-4 text-red-400" />
+                  <p className="text-sm font-medium text-white">{item.title}</p>
+                </div>
+                <p className="text-xs text-zinc-400 leading-relaxed">{item.desc}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
       {/* Provider Costs */}
-      <Section title="Direct Provider Costs" icon={BarChart3} color="bg-green-500/15">
+      <Section title="Direct Provider Costs" icon={BarChart3} color="bg-green-500/15" id="costs">
         <p className="text-xs text-zinc-400 mb-4">Reference pricing when using your own API keys. Prices are from provider websites and may change.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {COST_DATA.map(provider => (
-            <Card key={provider.name} className="bg-zinc-900/50 border-white/5">
+            <Card key={provider.name} className="bg-zinc-900/50 border-white/5 print-card">
               <CardContent className="p-3">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xs font-bold text-white">{provider.name}</span>
@@ -707,9 +689,9 @@ const AboutPage = () => {
 
       {/* Footer */}
       <div className="text-center py-6 border-t border-white/5">
-        <p className="text-xs text-zinc-500">MAARS Command v1.0 — Autonomous AI Enterprise Operating System</p>
-        <p className="text-[10px] text-zinc-600 mt-1">458+ Agents | 27 Networks | 13 LLM Providers | 45+ Models</p>
-        <p className="text-[10px] text-zinc-600 mt-1">Built by MAARS Global Corporation | support@maarsglobal.com</p>
+        <p className="text-xs text-zinc-500">MAARS Command v1.0 -- Autonomous AI Enterprise Operating System</p>
+        <p className="text-[10px] text-zinc-600 mt-1">{agents.length || 458}+ Agents | {uniqueNetworks || 27} Networks | 13 LLM Providers | 45+ Models</p>
+        <p className="text-[10px] text-zinc-600 mt-1">Built by MAARS Global Corporation | support.maars@marsgc.net</p>
       </div>
     </div>
   );

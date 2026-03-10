@@ -47,6 +47,7 @@ import IntegrationHub from "./pages/IntegrationHub";
 import Organization from "./pages/Organization";
 import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 import AgentSuggestions from "./pages/AgentSuggestions";
+import TeamBuilder from "./pages/TeamBuilder";
 import {
   AdminOverviewPage, AdminAnalyticsPage, AdminUsersPage, AdminAgentsPage,
   AdminTransactionsPage, AdminPricingManagerPage, AdminApiKeysPage,
@@ -297,6 +298,7 @@ const AppRouter = () => {
       <Route path="/organization" element={<ProtectedRoute><DashboardLayout><Organization /></DashboardLayout></ProtectedRoute>} />
       <Route path="/analytics" element={<ProtectedRoute><DashboardLayout><AnalyticsDashboard /></DashboardLayout></ProtectedRoute>} />
       <Route path="/agent-suggestions" element={<ProtectedRoute><DashboardLayout><AgentSuggestions /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/team-builder" element={<ProtectedRoute><DashboardLayout><TeamBuilder /></DashboardLayout></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminOverviewPage /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/overview" element={<AdminRoute><DashboardLayout><AdminOverviewPage /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/analytics" element={<AdminRoute><DashboardLayout><AdminAnalyticsPage /></DashboardLayout></AdminRoute>} />

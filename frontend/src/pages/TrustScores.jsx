@@ -126,6 +126,68 @@ export default function TrustScores() {
         </div>
       )}
 
+      {/* Trust Distribution + Top/Bottom Performers */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3" data-testid="trust-distribution">
+        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-4">
+          <p className="text-xs font-semibold text-zinc-400 mb-3">Trust Distribution</p>
+          <div className="space-y-2">
+            {[
+              { label: "Excellent (90-100)", min: 90, max: 100, color: "bg-emerald-500" },
+              { label: "Good (70-89)", min: 70, max: 89, color: "bg-blue-500" },
+              { label: "Fair (50-69)", min: 50, max: 69, color: "bg-amber-500" },
+              { label: "Poor (<50)", min: 0, max: 49, color: "bg-red-500" },
+            ].map(range => {
+              const count = scores.filter(s => s.trust_score >= range.min && s.trust_score <= range.max).length;
+              const pct = scores.length ? Math.round((count / scores.length) * 100) : 0;
+              return (
+                <div key={range.label}>
+                  <div className="flex justify-between text-[10px] mb-0.5">
+                    <span className="text-zinc-400">{range.label}</span>
+                    <span className="text-zinc-500">{count} ({pct}%)</span>
+                  </div>
+                  <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full ${range.color}`} style={{ width: `${pct}%` }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-4">
+          <p className="text-xs font-semibold text-emerald-400 mb-3">Top Performers</p>
+          <div className="space-y-1.5">
+            {scores.slice(0, 5).sort((a, b) => b.trust_score - a.trust_score).map((s, i) => {
+              const agent = getAgent(s.agent_id);
+              return (
+                <div key={s.agent_id} className="flex items-center gap-2">
+                  <span className="text-[10px] text-zinc-600 w-4">{i + 1}.</span>
+                  <span className="text-xs text-white truncate flex-1">{agent?.name || s.agent_id}</span>
+                  <span className="text-xs font-bold text-emerald-400">{Math.round(s.trust_score)}</span>
+                </div>
+              );
+            })}
+            {scores.length === 0 && <p className="text-[10px] text-zinc-600">No data yet</p>}
+          </div>
+        </div>
+        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-4">
+          <p className="text-xs font-semibold text-amber-400 mb-3">Needs Improvement</p>
+          <div className="space-y-1.5">
+            {scores.slice().sort((a, b) => a.trust_score - b.trust_score).slice(0, 5).map((s, i) => {
+              const agent = getAgent(s.agent_id);
+              const c = getTrustColor(s.trust_score);
+              return (
+                <div key={s.agent_id} className="flex items-center gap-2">
+                  <span className="text-[10px] text-zinc-600 w-4">{i + 1}.</span>
+                  <span className="text-xs text-white truncate flex-1">{agent?.name || s.agent_id}</span>
+                  <span className={`text-xs font-bold ${c.text}`}>{Math.round(s.trust_score)}</span>
+                </div>
+              );
+            })}
+            {scores.length === 0 && <p className="text-[10px] text-zinc-600">No data yet</p>}
+          </div>
+        </div>
+      </div>
+
       {/* Anomalies */}
       {anomalies.length > 0 && (
         <div className="bg-red-950/20 border border-red-500/10 rounded-xl p-4" data-testid="trust-anomalies">

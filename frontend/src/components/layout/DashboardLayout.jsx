@@ -169,6 +169,7 @@ const navSections = [
     label: "AI Tools",
     items: [
       { icon: Users, label: "Agents", to: "/agents" },
+      { icon: Users, label: "Team Builder", to: "/team-builder" },
       { icon: Brain, label: "Workspace Brain", to: "/workspace" },
       { icon: Cpu, label: "Brain Profiles", to: "/brain-profiles" },
       { icon: Code, label: "Vibe Coding", to: "/vibe-coding" },
