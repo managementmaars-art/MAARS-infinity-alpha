@@ -5,7 +5,7 @@ import {
   Shield, BarChart3, Package, Rocket, Brain, FileCheck, Cpu, LayoutDashboard,
   Activity, Gauge, Radio, Code, Palette, PenTool, Info,
   PanelLeftClose, PanelLeftOpen, Search, FileCode, Database,
-  Network, GitBranch, Layers, Share2, Zap
+  Network, GitBranch, Layers, Share2, Zap, Lock, CircuitBoard, DollarSign, Workflow
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import CommandPalette from "../CommandPalette";
@@ -46,6 +46,7 @@ const navSections = [
       { icon: Share2, label: "Knowledge Graph", to: "/knowledge-graph" },
       { icon: Shield, label: "Trust Scores", to: "/trust-scores" },
       { icon: Zap, label: "Execution Gateway", to: "/execution-gateway" },
+      { icon: Workflow, label: "Workflow Builder", to: "/workflow-builder" },
       { icon: Database, label: "Memory", to: "/memory" },
       { icon: Activity, label: "Collaborations", to: "/collaborations" },
       { icon: Gauge, label: "KPI Dashboard", to: "/kpi-dashboard" },
@@ -162,6 +163,9 @@ const DashboardLayout = ({ children }) => {
           )}
           <NavItem icon={Shield} label="Admin Panel" to="/admin" onClick={closeMobile ? () => { navigate("/admin"); closeMobile(); } : undefined} />
           <NavItem icon={FileCode} label="Code Explorer" to="/admin/code-explorer" onClick={closeMobile ? () => { navigate("/admin/code-explorer"); closeMobile(); } : undefined} />
+          <NavItem icon={Lock} label="Access Control" to="/rbac" onClick={closeMobile ? () => { navigate("/rbac"); closeMobile(); } : undefined} />
+          <NavItem icon={CircuitBoard} label="Circuit Breakers" to="/circuit-breakers" onClick={closeMobile ? () => { navigate("/circuit-breakers"); closeMobile(); } : undefined} />
+          <NavItem icon={DollarSign} label="Cost Governance" to="/cost-governance" onClick={closeMobile ? () => { navigate("/cost-governance"); closeMobile(); } : undefined} />
         </>
       )}
     </>

@@ -384,3 +384,269 @@ async def seed_knowledge_graph(user_id):
             "relationship": rel,
             "weight": 0.8,
         })
+
+
+
+# ---------- RBAC ----------
+
+RBAC_ROLES = {
+    "admin": {
+        "label": "Administrator",
+        "permissions": ["*"],
+        "description": "Full system access",
+    },
+    "manager": {
+        "label": "Manager",
+        "permissions": [
+            "agents:read", "agents:write", "agents:chat",
+            "kernel:read", "task_graphs:read", "task_graphs:write",
+            "knowledge_graph:read", "knowledge_graph:write",
+            "trust_scores:read", "execution_logs:read",
+            "workflows:read", "workflows:write",
+            "cost:read", "users:read",
+        ],
+        "description": "Manage agents, workflows, and view analytics",
+    },
+    "analyst": {
+        "label": "Analyst",
+        "permissions": [
+            "agents:read", "agents:chat",
+            "kernel:read", "task_graphs:read",
+            "knowledge_graph:read", "trust_scores:read",
+            "execution_logs:read", "workflows:read", "cost:read",
+        ],
+        "description": "Read-only analytics and agent chat access",
+    },
+    "viewer": {
+        "label": "Viewer",
+        "permissions": [
+            "agents:read", "kernel:read",
+            "trust_scores:read", "cost:read",
+        ],
+        "description": "View-only access to dashboards",
+    },
+}
+
+RESOURCES = [
+    "agents", "kernel", "task_graphs", "knowledge_graph",
+    "trust_scores", "execution_logs", "workflows",
+    "cost", "users", "circuit_breakers",
+]
+ACTIONS = ["read", "write", "chat", "delete", "admin"]
+
+
+async def get_rbac_roles():
+    return RBAC_ROLES
+
+
+async def get_rbac_config():
+    return {"roles": RBAC_ROLES, "resources": RESOURCES, "actions": ACTIONS}
+
+
+async def get_user_roles():
+    """Get all user role assignments."""
+    users = []
+    async for u in db.users.find({}, {"_id": 0, "user_id": 1, "email": 1, "name": 1, "role": 1}):
+        u["role"] = u.get("role", "viewer")
+        users.append(u)
+    return users
+
+
+async def set_user_role(user_id, role):
+    if role not in RBAC_ROLES:
+        return None
+    await db.users.update_one({"user_id": user_id}, {"$set": {"role": role}})
+    return {"user_id": user_id, "role": role}
+
+
+# ---------- Circuit Breakers (Full CRUD) ----------
+
+DEFAULT_CIRCUIT_BREAKERS = {
+    "llm_gateway": {"name": "LLM Gateway", "state": "closed", "failure_threshold": 5, "reset_timeout_s": 60, "failures": 0, "last_failure": None, "description": "Circuit for all LLM API calls"},
+    "tool_execution": {"name": "Tool Execution", "state": "closed", "failure_threshold": 3, "reset_timeout_s": 30, "failures": 0, "last_failure": None, "description": "Circuit for external tool invocations"},
+    "memory_store": {"name": "Memory Store", "state": "closed", "failure_threshold": 10, "reset_timeout_s": 120, "failures": 0, "last_failure": None, "description": "Circuit for memory persistence layer"},
+    "web_search": {"name": "Web Search", "state": "closed", "failure_threshold": 5, "reset_timeout_s": 45, "failures": 0, "last_failure": None, "description": "Circuit for web search provider"},
+    "email_service": {"name": "Email Service", "state": "closed", "failure_threshold": 3, "reset_timeout_s": 90, "failures": 0, "last_failure": None, "description": "Circuit for email/SMTP integration"},
+    "calendar_service": {"name": "Calendar Service", "state": "closed", "failure_threshold": 3, "reset_timeout_s": 60, "failures": 0, "last_failure": None, "description": "Circuit for calendar API"},
+    "stripe_payments": {"name": "Stripe Payments", "state": "closed", "failure_threshold": 2, "reset_timeout_s": 120, "failures": 0, "last_failure": None, "description": "Circuit for payment processing"},
+    "file_processing": {"name": "File Processing", "state": "closed", "failure_threshold": 5, "reset_timeout_s": 30, "failures": 0, "last_failure": None, "description": "Circuit for file upload/processing"},
+}
+
+
+async def get_circuit_breakers_full():
+    """Get all circuit breakers with full config from DB."""
+    breakers = []
+    async for cb in db.circuit_breakers.find({}, {"_id": 0}):
+        breakers.append(cb)
+    if not breakers:
+        # Seed defaults
+        for key, config in DEFAULT_CIRCUIT_BREAKERS.items():
+            doc = {"breaker_id": key, **config, "created_at": datetime.now(timezone.utc).isoformat()}
+            await db.circuit_breakers.insert_one(doc)
+            breakers.append({k: v for k, v in doc.items() if k != "_id"})
+    return breakers
+
+
+async def update_circuit_breaker(breaker_id, data):
+    now = datetime.now(timezone.utc).isoformat()
+    update = {"$set": {"updated_at": now}}
+    for field in ["state", "failure_threshold", "reset_timeout_s", "failures", "name", "description"]:
+        if field in data:
+            update["$set"][field] = data[field]
+    result = await db.circuit_breakers.update_one({"breaker_id": breaker_id}, update)
+    if result.matched_count == 0:
+        return None
+    cb = await db.circuit_breakers.find_one({"breaker_id": breaker_id}, {"_id": 0})
+    return cb
+
+
+async def reset_circuit_breaker(breaker_id):
+    return await update_circuit_breaker(breaker_id, {"state": "closed", "failures": 0})
+
+
+# ---------- Cost Governance ----------
+
+async def get_cost_overview(user_id=None):
+    """Aggregate cost data from execution logs."""
+    match = {}
+    if user_id:
+        match["user_id"] = user_id
+
+    pipeline = [
+        {"$match": match},
+        {"$group": {
+            "_id": None,
+            "total_cost": {"$sum": "$cost"},
+            "total_executions": {"$sum": 1},
+            "avg_cost": {"$avg": "$cost"},
+            "max_cost": {"$max": "$cost"},
+        }},
+    ]
+    result = await db.execution_logs.aggregate(pipeline).to_list(1)
+    overview = result[0] if result else {"total_cost": 0, "total_executions": 0, "avg_cost": 0, "max_cost": 0}
+    overview.pop("_id", None)
+    return overview
+
+
+async def get_cost_by_model(user_id=None):
+    match = {}
+    if user_id:
+        match["user_id"] = user_id
+    pipeline = [
+        {"$match": match},
+        {"$group": {
+            "_id": "$model_used",
+            "total_cost": {"$sum": "$cost"},
+            "count": {"$sum": 1},
+            "avg_cost": {"$avg": "$cost"},
+        }},
+        {"$sort": {"total_cost": -1}},
+    ]
+    results = []
+    async for doc in db.execution_logs.aggregate(pipeline):
+        results.append({
+            "model": doc["_id"] or "unknown",
+            "total_cost": round(doc["total_cost"], 6),
+            "count": doc["count"],
+            "avg_cost": round(doc["avg_cost"], 6),
+        })
+    return results
+
+
+async def get_cost_by_agent(user_id=None):
+    match = {}
+    if user_id:
+        match["user_id"] = user_id
+    pipeline = [
+        {"$match": match},
+        {"$group": {
+            "_id": "$agent_id",
+            "total_cost": {"$sum": "$cost"},
+            "count": {"$sum": 1},
+            "avg_cost": {"$avg": "$cost"},
+        }},
+        {"$sort": {"total_cost": -1}},
+        {"$limit": 50},
+    ]
+    results = []
+    async for doc in db.execution_logs.aggregate(pipeline):
+        results.append({
+            "agent_id": doc["_id"] or "unknown",
+            "total_cost": round(doc["total_cost"], 6),
+            "count": doc["count"],
+            "avg_cost": round(doc["avg_cost"], 6),
+        })
+    return results
+
+
+async def get_cost_budget():
+    """Get or create budget configuration."""
+    budget = await db.cost_budgets.find_one({}, {"_id": 0})
+    if not budget:
+        budget = {
+            "monthly_limit": 100.0,
+            "daily_limit": 10.0,
+            "alert_threshold": 0.8,
+            "auto_pause": False,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        }
+        await db.cost_budgets.insert_one(budget)
+        budget.pop("_id", None)
+    return budget
+
+
+async def update_cost_budget(data):
+    now = datetime.now(timezone.utc).isoformat()
+    update = {"$set": {"updated_at": now}}
+    for field in ["monthly_limit", "daily_limit", "alert_threshold", "auto_pause"]:
+        if field in data:
+            update["$set"][field] = data[field]
+    await db.cost_budgets.update_one({}, update, upsert=True)
+    return await get_cost_budget()
+
+
+# ---------- Workflows ----------
+
+async def create_workflow(user_id, data):
+    now = datetime.now(timezone.utc).isoformat()
+    wf = {
+        "workflow_id": f"wf_{ObjectId()}",
+        "user_id": user_id,
+        "name": data.get("name", "Untitled Workflow"),
+        "description": data.get("description", ""),
+        "nodes": data.get("nodes", []),
+        "edges": data.get("edges", []),
+        "status": "draft",
+        "created_at": now,
+        "updated_at": now,
+    }
+    await db.workflows.insert_one(wf)
+    wf.pop("_id", None)
+    return wf
+
+
+async def get_workflows(user_id):
+    results = []
+    async for wf in db.workflows.find({"user_id": user_id}, {"_id": 0}).sort("updated_at", -1):
+        results.append(wf)
+    return results
+
+
+async def get_workflow(user_id, workflow_id):
+    wf = await db.workflows.find_one({"user_id": user_id, "workflow_id": workflow_id}, {"_id": 0})
+    return wf
+
+
+async def update_workflow(user_id, workflow_id, data):
+    now = datetime.now(timezone.utc).isoformat()
+    update = {"$set": {"updated_at": now}}
+    for field in ["name", "description", "nodes", "edges", "status"]:
+        if field in data:
+            update["$set"][field] = data[field]
+    await db.workflows.update_one({"user_id": user_id, "workflow_id": workflow_id}, update)
+    return await get_workflow(user_id, workflow_id)
+
+
+async def delete_workflow(user_id, workflow_id):
+    await db.workflows.delete_one({"user_id": user_id, "workflow_id": workflow_id})
+    return True

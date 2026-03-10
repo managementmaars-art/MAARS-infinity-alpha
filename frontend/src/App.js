@@ -36,6 +36,10 @@ import TaskGraphs from "./pages/TaskGraphs";
 import KnowledgeGraph from "./pages/KnowledgeGraph";
 import TrustScores from "./pages/TrustScores";
 import ExecutionGateway from "./pages/ExecutionGateway";
+import RBAC from "./pages/RBAC";
+import CircuitBreakers from "./pages/CircuitBreakers";
+import CostGovernance from "./pages/CostGovernance";
+import WorkflowBuilder from "./pages/WorkflowBuilder";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -283,6 +287,10 @@ const AppRouter = () => {
       <Route path="/knowledge-graph" element={<ProtectedRoute><DashboardLayout><KnowledgeGraph /></DashboardLayout></ProtectedRoute>} />
       <Route path="/trust-scores" element={<ProtectedRoute><DashboardLayout><TrustScores /></DashboardLayout></ProtectedRoute>} />
       <Route path="/execution-gateway" element={<ProtectedRoute><DashboardLayout><ExecutionGateway /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/rbac" element={<ProtectedRoute><DashboardLayout><RBAC /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/circuit-breakers" element={<ProtectedRoute><DashboardLayout><CircuitBreakers /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/cost-governance" element={<ProtectedRoute><DashboardLayout><CostGovernance /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/workflow-builder" element={<ProtectedRoute><DashboardLayout><WorkflowBuilder /></DashboardLayout></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminDashboard /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/code-explorer" element={<AdminRoute><DashboardLayout><CodeExplorer /></DashboardLayout></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />

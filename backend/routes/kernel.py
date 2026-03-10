@@ -10,6 +10,11 @@ from services.kernel_service import (
     register_tool, get_tool_registry, get_circuit_breakers,
     create_kg_node, create_kg_edge, get_knowledge_graph,
     delete_kg_node, seed_knowledge_graph,
+    get_rbac_config, get_user_roles, set_user_role,
+    get_circuit_breakers_full, update_circuit_breaker, reset_circuit_breaker,
+    get_cost_overview, get_cost_by_model, get_cost_by_agent,
+    get_cost_budget, update_cost_budget,
+    create_workflow, get_workflows, get_workflow, update_workflow, delete_workflow,
 )
 from infinity_catalog import (
     NETWORK_DEFINITIONS, AUTONOMY_TIERS, AGENT_LIFECYCLE_STATES,
@@ -240,4 +245,143 @@ async def add_kg_edge(data: KGEdgeCreate, user=Depends(get_current_user)):
 @router.delete("/knowledge-graph/nodes/{node_id}")
 async def remove_kg_node(node_id: str, user=Depends(get_current_user)):
     await delete_kg_node(user.user_id, node_id)
+    return {"status": "deleted"}
+
+
+# ---------- RBAC ----------
+
+class UserRoleUpdate(BaseModel):
+    role: str
+
+
+@router.get("/rbac/config")
+async def rbac_config(user=Depends(get_current_user)):
+    return await get_rbac_config()
+
+
+@router.get("/rbac/users")
+async def rbac_users(user=Depends(get_current_user)):
+    return await get_user_roles()
+
+
+@router.put("/rbac/users/{user_id}/role")
+async def rbac_set_role(user_id: str, data: UserRoleUpdate, user=Depends(get_current_user)):
+    result = await set_user_role(user_id, data.role)
+    if not result:
+        raise HTTPException(status_code=400, detail="Invalid role")
+    return result
+
+
+# ---------- Circuit Breakers (Full CRUD) ----------
+
+class CBUpdate(BaseModel):
+    state: str = None
+    failure_threshold: int = None
+    reset_timeout_s: int = None
+    failures: int = None
+    name: str = None
+    description: str = None
+
+
+@router.get("/circuit-breakers/full")
+async def list_circuit_breakers_full(user=Depends(get_current_user)):
+    return await get_circuit_breakers_full()
+
+
+@router.put("/circuit-breakers/{breaker_id}")
+async def update_cb(breaker_id: str, data: CBUpdate, user=Depends(get_current_user)):
+    result = await update_circuit_breaker(breaker_id, data.dict(exclude_none=True))
+    if not result:
+        raise HTTPException(status_code=404, detail="Circuit breaker not found")
+    return result
+
+
+@router.post("/circuit-breakers/{breaker_id}/reset")
+async def reset_cb(breaker_id: str, user=Depends(get_current_user)):
+    result = await reset_circuit_breaker(breaker_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="Circuit breaker not found")
+    return result
+
+
+# ---------- Cost Governance ----------
+
+class BudgetUpdate(BaseModel):
+    monthly_limit: float = None
+    daily_limit: float = None
+    alert_threshold: float = None
+    auto_pause: bool = None
+
+
+@router.get("/cost/overview")
+async def cost_overview(user=Depends(get_current_user)):
+    return await get_cost_overview()
+
+
+@router.get("/cost/by-model")
+async def cost_by_model(user=Depends(get_current_user)):
+    return await get_cost_by_model()
+
+
+@router.get("/cost/by-agent")
+async def cost_by_agent(user=Depends(get_current_user)):
+    return await get_cost_by_agent()
+
+
+@router.get("/cost/budget")
+async def cost_budget(user=Depends(get_current_user)):
+    return await get_cost_budget()
+
+
+@router.put("/cost/budget")
+async def update_budget(data: BudgetUpdate, user=Depends(get_current_user)):
+    return await update_cost_budget(data.dict(exclude_none=True))
+
+
+# ---------- Workflows ----------
+
+class WorkflowCreate(BaseModel):
+    name: str = "Untitled Workflow"
+    description: str = ""
+    nodes: list = []
+    edges: list = []
+
+
+class WorkflowUpdate(BaseModel):
+    name: str = None
+    description: str = None
+    nodes: list = None
+    edges: list = None
+    status: str = None
+
+
+@router.get("/workflows")
+async def list_workflows(user=Depends(get_current_user)):
+    return await get_workflows(user.user_id)
+
+
+@router.post("/workflows")
+async def create_wf(data: WorkflowCreate, user=Depends(get_current_user)):
+    return await create_workflow(user.user_id, data.dict())
+
+
+@router.get("/workflows/{workflow_id}")
+async def get_wf(workflow_id: str, user=Depends(get_current_user)):
+    wf = await get_workflow(user.user_id, workflow_id)
+    if not wf:
+        raise HTTPException(status_code=404, detail="Workflow not found")
+    return wf
+
+
+@router.put("/workflows/{workflow_id}")
+async def update_wf(workflow_id: str, data: WorkflowUpdate, user=Depends(get_current_user)):
+    result = await update_workflow(user.user_id, workflow_id, data.dict(exclude_none=True))
+    if not result:
+        raise HTTPException(status_code=404, detail="Workflow not found")
+    return result
+
+
+@router.delete("/workflows/{workflow_id}")
+async def delete_wf(workflow_id: str, user=Depends(get_current_user)):
+    await delete_workflow(user.user_id, workflow_id)
     return {"status": "deleted"}
