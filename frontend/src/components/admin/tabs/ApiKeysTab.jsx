@@ -23,7 +23,7 @@ export const ApiKeysTab = ({ apiKeysConfig, apiKeyInputs, setApiKeyInputs, apiUs
         const data = await res.json();
         toast.success(`API keys saved! Using: ${data.active_provider === 'direct' ? 'Direct Provider Keys' : 'Emergent Universal Key'}`);
         fetchAdminData();
-        setApiKeyInputs(prev => ({...prev, openai_key: "", anthropic_key: "", gemini_key: "", xai_key: "", deepseek_key: "", mistral_key: "", perplexity_key: "", cohere_key: "", elevenlabs_key: ""}));
+        setApiKeyInputs(prev => ({...prev, openai_key: "", anthropic_key: "", gemini_key: "", xai_key: "", deepseek_key: "", mistral_key: "", perplexity_key: "", cohere_key: "", elevenlabs_key: "", groq_key: "", together_key: "", fireworks_key: "", ai21_key: ""}));
       } else {
         toast.error("Failed to save API keys");
       }
@@ -77,10 +77,10 @@ export const ApiKeysTab = ({ apiKeysConfig, apiKeyInputs, setApiKeyInputs, apiUs
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs"].map(provider => {
+            {["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs", "groq", "together", "fireworks", "ai21"].map(provider => {
               const status = usage.providers?.[provider];
               const tracked = usage.tracked_usage?.[provider];
-              const providerLabels = { openai: "OpenAI", anthropic: "Anthropic", gemini: "Google Gemini", xai: "xAI (Grok)", deepseek: "DeepSeek", mistral: "Mistral AI", perplexity: "Perplexity", cohere: "Cohere", elevenlabs: "ElevenLabs" };
+              const providerLabels = { openai: "OpenAI", anthropic: "Anthropic", gemini: "Google Gemini", xai: "xAI (Grok)", deepseek: "DeepSeek", mistral: "Mistral AI", perplexity: "Perplexity", cohere: "Cohere", elevenlabs: "ElevenLabs", groq: "Groq (Llama 4)", together: "Together AI", fireworks: "Fireworks AI", ai21: "AI21 (Jamba)" };
               const hasKey = status?.status === 'active' || status?.status === 'error';
               return (
                 <div key={provider} className="p-3 rounded-lg bg-white/5 border border-white/10" data-testid={`api-status-${provider}`}>
@@ -242,6 +242,10 @@ export const ApiKeysTab = ({ apiKeysConfig, apiKeyInputs, setApiKeyInputs, apiUs
             { id: "mistral", name: "Mistral AI", url: "https://console.mistral.ai/api-keys/", color: "violet", set: apiKeysConfig?.mistral_key_set, masked: apiKeysConfig?.mistral_key },
             { id: "perplexity", name: "Perplexity", url: "https://www.perplexity.ai/settings/api", color: "teal", set: apiKeysConfig?.perplexity_key_set, masked: apiKeysConfig?.perplexity_key },
             { id: "cohere", name: "Cohere", url: "https://dashboard.cohere.com/api-keys", color: "pink", set: apiKeysConfig?.cohere_key_set, masked: apiKeysConfig?.cohere_key },
+            { id: "groq", name: "Groq (Llama 4)", url: "https://console.groq.com/keys", color: "amber", set: apiKeysConfig?.groq_key_set, masked: apiKeysConfig?.groq_key },
+            { id: "together", name: "Together AI", url: "https://api.together.ai/settings/api-keys", color: "lime", set: apiKeysConfig?.together_key_set, masked: apiKeysConfig?.together_key },
+            { id: "fireworks", name: "Fireworks AI", url: "https://fireworks.ai/account/api-keys", color: "red", set: apiKeysConfig?.fireworks_key_set, masked: apiKeysConfig?.fireworks_key },
+            { id: "ai21", name: "AI21 (Jamba)", url: "https://studio.ai21.com/account/api-key", color: "indigo", set: apiKeysConfig?.ai21_key_set, masked: apiKeysConfig?.ai21_key },
             { id: "elevenlabs", name: "ElevenLabs (TTS)", url: "https://elevenlabs.io/app/settings/api-keys", color: "yellow", set: apiKeysConfig?.elevenlabs_key_set, masked: apiKeysConfig?.elevenlabs_key },
           ].map((provider) => (
             <div key={provider.id} className="p-4 rounded-lg bg-white/5 space-y-3">

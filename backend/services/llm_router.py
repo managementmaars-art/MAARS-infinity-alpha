@@ -19,18 +19,24 @@ TIER_PREMIUM = [
     {"provider": "openai", "model": "gpt-5.2", "strengths": ["coding", "reasoning", "creative", "long_form"], "cost_tier": "high", "speed": "medium"},
     {"provider": "anthropic", "model": "claude-sonnet-4-5-20250929", "strengths": ["reasoning", "creative", "legal", "long_form"], "cost_tier": "high", "speed": "medium"},
     {"provider": "gemini", "model": "gemini-2.5-pro", "strengths": ["reasoning", "data", "coding"], "cost_tier": "medium", "speed": "fast"},
+    {"provider": "ai21", "model": "jamba-large-1.7", "strengths": ["reasoning", "long_form", "data"], "cost_tier": "medium", "speed": "medium"},
+    {"provider": "together", "model": "deepseek-ai/DeepSeek-R1", "strengths": ["reasoning", "coding"], "cost_tier": "medium", "speed": "medium"},
 ]
 
 TIER_STANDARD = [
     {"provider": "openai", "model": "gpt-4o", "strengths": ["data", "coding", "multimodal"], "cost_tier": "medium", "speed": "fast"},
     {"provider": "openai", "model": "gpt-4.1", "strengths": ["coding", "reasoning"], "cost_tier": "medium", "speed": "fast"},
     {"provider": "gemini", "model": "gemini-3-flash-preview", "strengths": ["quick", "creative", "data"], "cost_tier": "low", "speed": "very_fast"},
+    {"provider": "together", "model": "meta-llama/Llama-3.3-70B-Instruct-Turbo", "strengths": ["coding", "reasoning"], "cost_tier": "low", "speed": "fast"},
+    {"provider": "fireworks", "model": "accounts/fireworks/models/llama4-maverick-instruct-basic", "strengths": ["coding", "reasoning", "creative"], "cost_tier": "low", "speed": "very_fast"},
 ]
 
 TIER_ECONOMY = [
     {"provider": "openai", "model": "gpt-4o-mini", "strengths": ["quick", "simple"], "cost_tier": "low", "speed": "very_fast"},
     {"provider": "gemini", "model": "gemini-2.5-flash", "strengths": ["quick", "simple", "data"], "cost_tier": "low", "speed": "very_fast"},
     {"provider": "anthropic", "model": "claude-haiku-4-5-20251001", "strengths": ["quick", "simple", "creative"], "cost_tier": "low", "speed": "very_fast"},
+    {"provider": "groq", "model": "llama-4-scout-17b-16e-instruct", "strengths": ["quick", "coding", "creative"], "cost_tier": "low", "speed": "very_fast"},
+    {"provider": "ai21", "model": "jamba-mini-1.7", "strengths": ["quick", "simple", "data"], "cost_tier": "low", "speed": "fast"},
 ]
 
 

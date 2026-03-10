@@ -389,6 +389,15 @@ async def get_llm_config(current_user: User = Depends(get_current_user)):
             {"id": "openai", "name": "OpenAI", "models": ["gpt-5.2", "gpt-5.1", "gpt-4.1", "gpt-4o", "o3", "o4-mini"]},
             {"id": "anthropic", "name": "Anthropic", "models": ["claude-sonnet-4-5-20250929", "claude-4-sonnet-20250514", "claude-haiku-4-5-20251001"]},
             {"id": "gemini", "name": "Google Gemini", "models": ["gemini-3-flash-preview", "gemini-2.5-pro", "gemini-2.5-flash"]},
+            {"id": "xai", "name": "xAI (Grok)", "models": ["grok-3", "grok-3-mini", "grok-2"]},
+            {"id": "deepseek", "name": "DeepSeek", "models": ["deepseek-chat", "deepseek-reasoner"]},
+            {"id": "mistral", "name": "Mistral AI", "models": ["mistral-large-latest", "mistral-medium-latest", "mistral-small-latest"]},
+            {"id": "perplexity", "name": "Perplexity", "models": ["sonar-pro", "sonar"]},
+            {"id": "cohere", "name": "Cohere", "models": ["command-r-plus", "command-r"]},
+            {"id": "groq", "name": "Groq (Llama 4)", "models": ["llama-4-scout-17b-16e-instruct", "llama-4-maverick-17b-128e-instruct", "llama-3.3-70b-versatile"]},
+            {"id": "together", "name": "Together AI", "models": ["meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", "meta-llama/Llama-3.3-70B-Instruct-Turbo", "deepseek-ai/DeepSeek-R1"]},
+            {"id": "fireworks", "name": "Fireworks AI", "models": ["accounts/fireworks/models/llama4-scout-instruct-basic", "accounts/fireworks/models/llama4-maverick-instruct-basic", "accounts/fireworks/models/deepseek-v3"]},
+            {"id": "ai21", "name": "AI21 (Jamba)", "models": ["jamba-large-1.7", "jamba-mini-1.7"]},
         ]
     }
 

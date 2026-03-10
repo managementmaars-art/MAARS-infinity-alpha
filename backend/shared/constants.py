@@ -21,6 +21,10 @@ DIRECT_API_KEYS = {
     "openai": os.environ.get('OPENAI_API_KEY', ''),
     "anthropic": os.environ.get('ANTHROPIC_API_KEY', ''),
     "gemini": os.environ.get('GOOGLE_API_KEY', ''),
+    "groq": os.environ.get('GROQ_API_KEY', ''),
+    "together": os.environ.get('TOGETHER_API_KEY', ''),
+    "fireworks": os.environ.get('FIREWORKS_API_KEY', ''),
+    "ai21": os.environ.get('AI21_API_KEY', ''),
 }
 
 # Upload directory
@@ -60,7 +64,7 @@ SUBSCRIPTION_PLANS = {
         "max_custom_agents": 5,
         "includes_commander": True,
         "max_team_members": 10,
-        "features": ["25 AI agents + Commander Orion", "2,000 credits/month", "5 custom agents", "All 9 LLM providers (30+ models)", "Autonomous orchestration", "Quality control & auto-learning", "Memory governance", "Real-time activity monitor", "Reference intelligence", "Team (up to 10)", "Unlimited uploads"]
+        "features": ["25 AI agents + Commander Orion", "2,000 credits/month", "5 custom agents", "All 13 LLM providers (45+ models)", "Autonomous orchestration", "Quality control & auto-learning", "Memory governance", "Real-time activity monitor", "Reference intelligence", "Team (up to 10)", "Unlimited uploads"]
     },
     "business": {
         "name": "Business",
@@ -71,7 +75,7 @@ SUBSCRIPTION_PLANS = {
         "max_custom_agents": -1,
         "includes_commander": True,
         "max_team_members": -1,
-        "features": ["All 41 AI agents + Commander Orion", "6,000 credits/month", "Unlimited custom agents", "All 9 LLM providers (30+ models)", "Full autonomous orchestration", "All 17 core systems", "KPI dashboard & collaboration engine", "Admin code explorer", "Unlimited team members", "Dedicated support", "API access"]
+        "features": ["All 41 AI agents + Commander Orion", "6,000 credits/month", "Unlimited custom agents", "All 13 LLM providers (45+ models)", "Full autonomous orchestration", "All 17 core systems", "KPI dashboard & collaboration engine", "Admin code explorer", "Unlimited team members", "Dedicated support", "API access"]
     }
 }
 

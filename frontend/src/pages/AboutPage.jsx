@@ -164,7 +164,7 @@ const SYSTEMS = [
   {
     icon: Server, title: "Flexible LLM Configuration", color: "text-purple-400",
     desc: "Users can choose their preferred AI model provider and model from Settings. The selection applies to all AI features including Content Generator, Vibe Coding, Reference Intelligence, and agent task execution (unless the LLM Router auto-selects).",
-    details: ["OpenAI: GPT-5.2, GPT-5.1, GPT-4.1, GPT-4o, o3, o4-mini", "Anthropic: Claude Sonnet 4.5, Claude 4 Sonnet, Claude Haiku 4.5", "Google Gemini: Gemini 3 Flash, Gemini 2.5 Pro, Gemini 2.5 Flash", "Powered by Emergent LLM Key (universal key across all providers)"]
+    details: ["OpenAI: GPT-5.2, GPT-5.1, GPT-4.1, GPT-4o, o3, o4-mini", "Anthropic: Claude Sonnet 4.5, Claude 4 Sonnet, Claude Haiku 4.5", "Google Gemini: Gemini 3 Flash, Gemini 2.5 Pro, Gemini 2.5 Flash", "Groq: Llama 4 Scout, Llama 4 Maverick, Llama 3.3 70B", "Together AI: Llama 4 Maverick FP8, Llama 3.3 70B Turbo, DeepSeek R1", "Fireworks AI: Llama 4 Scout, Llama 4 Maverick, DeepSeek V3", "AI21: Jamba Large 1.7, Jamba Mini 1.7", "xAI (Grok), DeepSeek, Mistral, Perplexity, Cohere, ElevenLabs", "Powered by Emergent LLM Key (universal key across all providers)"]
   },
   {
     icon: Mic, title: "Voice Command Interface", color: "text-rose-400",
@@ -271,6 +271,37 @@ const AI_PROVIDERS = [
     ],
   },
   {
+    name: "Groq (Llama 4)", color: "text-amber-300", dotColor: "bg-amber-300",
+    models: [
+      { name: "Llama 4 Scout", tier: "Economy", desc: "Ultra-fast 128K context, lowest cost" },
+      { name: "Llama 4 Maverick", tier: "Fast", desc: "128E MoE architecture, balanced" },
+      { name: "Llama 3.3 70B", tier: "Fast", desc: "Versatile open-source powerhouse" },
+    ],
+  },
+  {
+    name: "Together AI", color: "text-lime-400", dotColor: "bg-lime-400",
+    models: [
+      { name: "Llama 4 Maverick FP8", tier: "Fast", desc: "FP8 optimized Llama 4 inference" },
+      { name: "Llama 3.3 70B Turbo", tier: "Fast", desc: "Turbo-optimized open-source" },
+      { name: "DeepSeek R1", tier: "Reasoning", desc: "Open-source deep reasoning" },
+    ],
+  },
+  {
+    name: "Fireworks AI", color: "text-red-400", dotColor: "bg-red-400",
+    models: [
+      { name: "Llama 4 Scout", tier: "Economy", desc: "Serverless Llama 4 inference" },
+      { name: "Llama 4 Maverick", tier: "Fast", desc: "High-throughput Llama 4" },
+      { name: "DeepSeek V3", tier: "Fast", desc: "Cost-efficient DeepSeek hosting" },
+    ],
+  },
+  {
+    name: "AI21 (Jamba)", color: "text-indigo-300", dotColor: "bg-indigo-300",
+    models: [
+      { name: "Jamba Large 1.7", tier: "Flagship", desc: "256K context, SSM+Transformer hybrid" },
+      { name: "Jamba Mini 1.7", tier: "Economy", desc: "Lightweight enterprise tasks" },
+    ],
+  },
+  {
     name: "AI Generation + Voice", color: "text-pink-400", dotColor: "bg-pink-400",
     models: [
       { name: "Nano Banana 2", tier: "Image Gen", desc: "Gemini 3.1 Flash image generation" },
@@ -324,6 +355,25 @@ const COST_DATA = [
   { name: "Cohere", unit: "per 1M tokens", models: [
     { name: "Command R+", input: "$2.50", output: "$10.00" },
     { name: "Command R", input: "$0.15", output: "$0.60" },
+  ]},
+  { name: "Groq (Llama 4)", unit: "per 1M tokens", models: [
+    { name: "Llama 4 Scout", input: "$0.11", output: "$0.34" },
+    { name: "Llama 4 Maverick", input: "$0.50", output: "$0.77" },
+    { name: "Llama 3.3 70B", input: "$0.59", output: "$0.79" },
+  ]},
+  { name: "Together AI", unit: "per 1M tokens", models: [
+    { name: "Llama 4 Maverick FP8", input: "$0.27", output: "$0.85" },
+    { name: "Llama 3.3 70B Turbo", input: "$0.88", output: "$0.88" },
+    { name: "DeepSeek R1", input: "$3.00", output: "$7.00" },
+  ]},
+  { name: "Fireworks AI", unit: "per 1M tokens", models: [
+    { name: "Llama 4 Scout", input: "$0.15", output: "$0.60" },
+    { name: "Llama 4 Maverick", input: "$0.50", output: "$0.77" },
+    { name: "DeepSeek V3", input: "$0.56", output: "$1.68" },
+  ]},
+  { name: "AI21 (Jamba)", unit: "per 1M tokens", models: [
+    { name: "Jamba Large 1.7", input: "$2.00", output: "$8.00" },
+    { name: "Jamba Mini 1.7", input: "$0.20", output: "$0.40" },
   ]},
   { name: "ElevenLabs", unit: "per 1K characters", models: [
     { name: "Multilingual v2", input: "$0.30/1K chars", output: "TTS audio" },
@@ -583,9 +633,9 @@ const AboutPage = () => {
                 <p className="text-xs text-zinc-400">OpenAI (GPT-5.2, 4o, o3, Whisper)</p>
                 <p className="text-xs text-zinc-400">Anthropic (Claude Sonnet 4.5)</p>
                 <p className="text-xs text-zinc-400">Google (Gemini 3 Flash, 2.5 Pro)</p>
+                <p className="text-xs text-zinc-400">Groq, Together AI, Fireworks, AI21</p>
                 <p className="text-xs text-zinc-400">Universal Emergent LLM Key</p>
-                <p className="text-xs text-zinc-400">Smart model routing</p>
-                <p className="text-xs text-zinc-400">Auto-learning from task results</p>
+                <p className="text-xs text-zinc-400">Smart model routing (13 providers)</p>
               </div>
             </CardContent>
           </Card>
@@ -594,7 +644,7 @@ const AboutPage = () => {
 
       {/* AI Models & Providers */}
       <Section title="AI Models & Providers" icon={Sparkles} color="bg-amber-500/15">
-        <p className="text-xs text-zinc-400 mb-4">9 AI providers with 30+ models across text generation, reasoning, search, image generation, video, voice, and speech-to-text.</p>
+        <p className="text-xs text-zinc-400 mb-4">13 AI providers with 45+ models across text generation, reasoning, search, image generation, video, voice, and speech-to-text.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {AI_PROVIDERS.map(provider => (
             <Card key={provider.name} className="bg-zinc-900/50 border-white/5" data-testid={`provider-${provider.name}`}>

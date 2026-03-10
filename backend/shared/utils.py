@@ -50,21 +50,12 @@ async def send_email_notification(to_email: str, subject: str, html_body: str):
 async def get_api_keys():
     """Get API keys - prioritize DB-stored keys, then env vars, then Emergent key"""
     config = await db.platform_config.find_one({"config_type": "api_keys"}, {"_id": 0})
-    keys = {
-        "openai": "",
-        "anthropic": "",
-        "gemini": "",
-        "xai": "",
-        "deepseek": "",
-        "mistral": "",
-        "perplexity": "",
-        "cohere": "",
-        "elevenlabs": "",
-        "emergent": EMERGENT_LLM_KEY,
-        "active_provider": "emergent"
-    }
+    all_providers = ["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs", "groq", "together", "fireworks", "ai21"]
+    keys = {p: "" for p in all_providers}
+    keys["emergent"] = EMERGENT_LLM_KEY
+    keys["active_provider"] = "emergent"
     if config:
-        for p in ["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs"]:
+        for p in all_providers:
             keys[p] = config.get(f"{p}_key", "") or DIRECT_API_KEYS.get(p, "")
         keys["active_provider"] = config.get("active_provider", "emergent")
     return keys

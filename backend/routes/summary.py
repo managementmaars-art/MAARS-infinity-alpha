@@ -344,7 +344,7 @@ AGENT_LAYERS = [
 
 SYSTEMS = [
     ("Autonomous Orchestration Engine", "Commander Orion receives a business goal, scores complexity (1-10), decomposes into 3-7 milestones with tasks, assigns to optimal specialists, executes in parallel where dependencies allow, applies quality control, and compiles a unified deliverable. Supports failure recovery and escalation.", "POST /api/projects, POST /api/projects/{id}/execute, GET /api/projects/{id}"),
-    ("Custom Brain Profiles", "Every agent has a configurable brain: LLM model selection (9 providers), autonomy level (1-10), communication style (formal/casual/technical/creative), creativity temperature (0.0-1.0), tool permissions (web search, code execution, email), and context window size. Profiles persist per-user.", "GET/PUT/DELETE /api/agents/{id}/brain, GET /api/brain-profiles"),
+    ("Custom Brain Profiles", "Every agent has a configurable brain: LLM model selection (13 providers), autonomy level (1-10), communication style (formal/casual/technical/creative), creativity temperature (0.0-1.0), tool permissions (web search, code execution, email), and context window size. Profiles persist per-user.", "GET/PUT/DELETE /api/agents/{id}/brain, GET /api/brain-profiles"),
     ("Quality Control & Failure Recovery", "Critic Module (GPT-4o) auto-reviews every output on a 1-10 scale (accuracy, completeness, relevance). Failed tasks auto-retry with fallback chain: GPT-5.2 -> Claude Sonnet -> Gemini Pro -> GPT-4o. If all fail, escalates to Commander then user.", "POST /api/enterprise/quality/review, GET /api/enterprise/quality/history"),
     ("Model-Agnostic LLM Router", "Analyzes task content for complexity signals (coding, reasoning, creative, data, legal, simple). Maps to tiers: Premium (GPT-5.2, Claude), Standard (GPT-4o, Gemini Flash), Economy (GPT-4o Mini, Haiku). Logs all decisions. User preference can override.", "POST /api/enterprise/router/route-task, GET /api/enterprise/router/history"),
     ("Autonomous Collaboration Engine", "After each task, maps agent to 1 of 9 domains. Scans result for cross-domain keywords. Auto-creates collaboration requests to relevant agents. 41 agents across 9 domains with trigger rules for seamless coordination.", "POST/GET/PATCH /api/collaborations, GET /api/enterprise/collaboration/log"),
@@ -354,7 +354,7 @@ SYSTEMS = [
     ("Agent Activity Monitor (WebSocket)", "Real-time dashboard via WebSocket (/api/ws/activity, 8s updates). Shows: agent status with completion rates, inter-agent communication flows, task dependency graph, recent tool executions. REST fallback polling at 10s.", "WS /api/ws/activity, GET /api/enterprise/activity/live"),
     ("Simulation vs. Execution Mode", "System-wide toggle. Simulation (default): agents return descriptive responses, no external APIs called. Execution: real Gmail sends, Calendar events, API calls. Confirmation prompt before mode switch.", "GET/PUT /api/enterprise/system/mode"),
     ("Real-World Action Layer", "Google Suite integration (Gmail + Calendar) via OAuth 2.0. All actions gated by system mode. Personal Secretary as execution bridge. Full action logging.", "GET /api/oauth/gmail/login, POST /api/actions/send-email, POST /api/actions/create-event"),
-    ("Flexible LLM Configuration", "9 providers, 30+ models. Users choose preferred model in Settings. Override priority: Agent brain profile > User default > LLM Router auto-selection.", "PUT /api/users/me/config"),
+    ("Flexible LLM Configuration", "13 providers, 45+ models. Users choose preferred model in Settings. Override priority: Agent brain profile > User default > LLM Router auto-selection.", "PUT /api/users/me/config"),
     ("Voice Command Interface", "Mic button in Command Palette captures audio (WebM via MediaRecorder), transcribes via OpenAI Whisper, auto-fills search for hands-free navigation across pages, agents, and actions.", "POST /api/voice/transcribe"),
     ("Admin Code Explorer", "Full codebase browser: recursive file tree, code viewer with line numbers and language detection, file search, copy-to-clipboard, ZIP download of entire codebase. Admin-only with path traversal protection.", "GET /api/admin/code/tree, /file, /search, /export"),
     ("Memory Governance", "CRUD with versioning (every update creates version). Relevance scoring: time-decay (30-day half-life) + access frequency + importance weight. Auto-pruning with dry-run preview. 500-entry limit. Stats dashboard.", "POST/GET/PUT/DELETE /api/memory/entries, POST /api/memory/prune, GET /api/memory/stats"),
@@ -640,7 +640,7 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
     # ===== SECTION 4: AI PROVIDERS =====
     pdf.add_page()
     pdf.section_title(f"4. AI Models & Providers ({len(PROVIDERS)} Providers)", VIOLET)
-    pdf.body("9 AI providers with 30+ models for text, reasoning, search, image generation, video, voice, and speech-to-text. All accessible via Emergent Universal LLM Key or direct API keys.")
+    pdf.body("13 AI providers with 45+ models for text, reasoning, search, image generation, video, voice, and speech-to-text. All accessible via Emergent Universal LLM Key or direct API keys.")
     pdf.ln(2)
 
     for prov_name, prov_color, models in PROVIDERS:
@@ -718,8 +718,8 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
             "WebSocket client with REST fallback",
         ]),
         ("AI & LLM Layer", VIOLET, [
-            "9 providers: OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Perplexity, Cohere, ElevenLabs",
-            "30+ models: text, reasoning, search, image, video, voice, STT",
+            "13 providers: OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Perplexity, Cohere, ElevenLabs, Groq, Together AI, Fireworks AI, AI21",
+            "45+ models: text, reasoning, search, image, video, voice, STT",
             "Model-Agnostic LLM Router (auto-selects optimal model)",
             "Quality Control Critic Module (GPT-4o, 1-10 scoring)",
             "Failure Recovery (GPT-5.2 -> Claude -> Gemini -> GPT-4o)",

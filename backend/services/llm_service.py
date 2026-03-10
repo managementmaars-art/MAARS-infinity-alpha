@@ -42,6 +42,21 @@ MODEL_COSTS_MAP = {
     "gpt-image-1": {"input": 0.02, "output": 0.0, "provider": "openai", "per_unit": "image"},
     "dall-e-3": {"input": 0.04, "output": 0.0, "provider": "openai", "per_unit": "image"},
     "sora-2": {"input": 0.10, "output": 0.0, "provider": "openai", "per_unit": "second"},
+    # Groq (Meta Llama 4)
+    "llama-4-scout-17b-16e-instruct": {"input": 0.11, "output": 0.34, "provider": "groq"},
+    "llama-4-maverick-17b-128e-instruct": {"input": 0.50, "output": 0.77, "provider": "groq"},
+    "llama-3.3-70b-versatile": {"input": 0.59, "output": 0.79, "provider": "groq"},
+    # Together AI
+    "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8": {"input": 0.27, "output": 0.85, "provider": "together"},
+    "meta-llama/Llama-3.3-70B-Instruct-Turbo": {"input": 0.88, "output": 0.88, "provider": "together"},
+    "deepseek-ai/DeepSeek-R1": {"input": 3.00, "output": 7.00, "provider": "together"},
+    # Fireworks AI
+    "accounts/fireworks/models/llama4-scout-instruct-basic": {"input": 0.15, "output": 0.60, "provider": "fireworks"},
+    "accounts/fireworks/models/llama4-maverick-instruct-basic": {"input": 0.50, "output": 0.77, "provider": "fireworks"},
+    "accounts/fireworks/models/deepseek-v3": {"input": 0.56, "output": 1.68, "provider": "fireworks"},
+    # AI21 Jamba
+    "jamba-large-1.7": {"input": 2.00, "output": 8.00, "provider": "ai21"},
+    "jamba-mini-1.7": {"input": 0.20, "output": 0.40, "provider": "ai21"},
 }
 
 MODEL_CREDIT_COSTS = {
@@ -56,6 +71,19 @@ MODEL_CREDIT_COSTS = {
     "gemini-3-pro-image-preview": 5, "gemini-nano-banana-2": 5,
     "gpt-image-1": 5, "dall-e-3": 5,
     "sora-2": 10,
+    # Groq (Meta Llama 4)
+    "llama-4-scout-17b-16e-instruct": 1, "llama-4-maverick-17b-128e-instruct": 1,
+    "llama-3.3-70b-versatile": 1,
+    # Together AI
+    "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8": 1,
+    "meta-llama/Llama-3.3-70B-Instruct-Turbo": 2,
+    "deepseek-ai/DeepSeek-R1": 3,
+    # Fireworks AI
+    "accounts/fireworks/models/llama4-scout-instruct-basic": 1,
+    "accounts/fireworks/models/llama4-maverick-instruct-basic": 1,
+    "accounts/fireworks/models/deepseek-v3": 2,
+    # AI21 Jamba
+    "jamba-large-1.7": 3, "jamba-mini-1.7": 1,
 }
 
 
@@ -387,6 +415,14 @@ async def call_direct_llm(provider: str, model_name: str, system_prompt: str, co
             data = resp.json()
             parts = data.get("message", {}).get("content", [])
             return parts[0].get("text", "") if parts else ""
+    elif provider == "groq":
+        return await _call_openai_compatible("https://api.groq.com/openai/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "together":
+        return await _call_openai_compatible("https://api.together.xyz/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "fireworks":
+        return await _call_openai_compatible("https://api.fireworks.ai/inference/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "ai21":
+        return await _call_openai_compatible("https://api.ai21.com/studio/v1/chat/completions", model_name, system_prompt, content, api_key)
     raise ValueError(f"Unsupported provider: {provider}")
 
 

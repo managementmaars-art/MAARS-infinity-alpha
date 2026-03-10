@@ -62,7 +62,7 @@ const PricingPage = () => {
       price_bdt: 8400,
       credits: 2000,
       icon: <Crown className="w-6 h-6" />,
-      features: ["25 AI agents + Commander Orion", "2,000 credits/month", "5 custom agents", "All 9 LLM providers (30+ models)", "Autonomous orchestration", "Quality control & auto-learning", "Memory governance", "Real-time activity monitor", "Reference intelligence", "Team (up to 10)", "Unlimited uploads"],
+      features: ["25 AI agents + Commander Orion", "2,000 credits/month", "5 custom agents", "All 13 LLM providers (45+ models)", "Autonomous orchestration", "Quality control & auto-learning", "Memory governance", "Real-time activity monitor", "Reference intelligence", "Team (up to 10)", "Unlimited uploads"],
       popular: true
     },
     {
@@ -72,7 +72,7 @@ const PricingPage = () => {
       price_bdt: 21100,
       credits: 6000,
       icon: <Building className="w-6 h-6" />,
-      features: ["All 458+ AI agents + Commander Orion ∞", "6,000 credits/month", "Unlimited custom agents", "All 9 LLM providers (30+ models)", "Full autonomous orchestration", "All 27 agent networks", "MAARS Kernel & Task Graphs", "KPI dashboard & collaboration engine", "Admin code explorer", "Unlimited team members", "Dedicated support", "API access"],
+      features: ["All 458+ AI agents + Commander Orion ∞", "6,000 credits/month", "Unlimited custom agents", "All 13 LLM providers (45+ models)", "Full autonomous orchestration", "All 27 agent networks", "MAARS Kernel & Task Graphs", "KPI dashboard & collaboration engine", "Admin code explorer", "Unlimited team members", "Dedicated support", "API access"],
       popular: false
     }
   ];

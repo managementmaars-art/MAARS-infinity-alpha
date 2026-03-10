@@ -120,6 +120,37 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
             ],
             "unit": "per 1K characters"
         },
+        "groq": {
+            "models": [
+                {"name": "Llama 4 Scout", "input": "$0.11", "output": "$0.34"},
+                {"name": "Llama 4 Maverick", "input": "$0.50", "output": "$0.77"},
+                {"name": "Llama 3.3 70B", "input": "$0.59", "output": "$0.79"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "together": {
+            "models": [
+                {"name": "Llama 4 Maverick FP8", "input": "$0.27", "output": "$0.85"},
+                {"name": "Llama 3.3 70B Turbo", "input": "$0.88", "output": "$0.88"},
+                {"name": "DeepSeek R1", "input": "$3.00", "output": "$7.00"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "fireworks": {
+            "models": [
+                {"name": "Llama 4 Scout", "input": "$0.15", "output": "$0.60"},
+                {"name": "Llama 4 Maverick", "input": "$0.50", "output": "$0.77"},
+                {"name": "DeepSeek V3", "input": "$0.56", "output": "$1.68"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "ai21": {
+            "models": [
+                {"name": "Jamba Large 1.7", "input": "$2.00", "output": "$8.00"},
+                {"name": "Jamba Mini 1.7", "input": "$0.20", "output": "$0.40"},
+            ],
+            "unit": "per 1M tokens"
+        },
         "slack": {
             "models": [
                 {"name": "Post Message", "input": "Free", "output": "per message"},
@@ -187,7 +218,7 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
         },
     }
     
-    all_providers = ["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs"]
+    all_providers = ["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs", "groq", "together", "fireworks", "ai21"]
     result = {
         "active_provider": config.get("active_provider", "emergent"),
         "emergent_key_set": bool(EMERGENT_LLM_KEY),
@@ -212,7 +243,7 @@ async def admin_update_api_keys(request: Request, admin: User = Depends(require_
     }
     
     # Only update keys that are provided (non-empty)
-    all_providers = ["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs"]
+    all_providers = ["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs", "groq", "together", "fireworks", "ai21"]
     for p in all_providers:
         if key_data.get(f"{p}_key"):
             update_doc[f"{p}_key"] = key_data[f"{p}_key"]
@@ -301,6 +332,30 @@ async def admin_test_api_key(request: Request, admin: User = Depends(require_adm
             "headers": {"xi-api-key": api_key},
             "success_msg": lambda r: "Key verified! ElevenLabs API access confirmed.",
             "help": "Get your key at https://elevenlabs.io/app/settings/api-keys"
+        },
+        "groq": {
+            "url": "https://api.groq.com/openai/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: f"Key verified! Access to {len(r.json().get('data', []))} Groq models.",
+            "help": "Get your key at https://console.groq.com/keys"
+        },
+        "together": {
+            "url": "https://api.together.xyz/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: "Key verified! Together AI API access confirmed.",
+            "help": "Get your key at https://api.together.ai/settings/api-keys"
+        },
+        "fireworks": {
+            "url": "https://api.fireworks.ai/inference/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: "Key verified! Fireworks AI API access confirmed.",
+            "help": "Get your key at https://fireworks.ai/account/api-keys"
+        },
+        "ai21": {
+            "url": "https://api.ai21.com/studio/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: "Key verified! AI21 API access confirmed.",
+            "help": "Get your key at https://studio.ai21.com/account/api-key"
         },
     }
     
