@@ -149,29 +149,27 @@ code, pre {
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
   
-  /* Hide everything that isn't content */
-  .no-print,
+  /* Hide sidebar, watermark, mobile header, and all fixed overlays */
+  aside, .no-print,
   [data-testid="mobile-sidebar-toggle"],
   [data-testid="sidebar-nav"],
   [data-testid="sidebar-collapse-btn"],
   [data-testid="download-pdf-btn"],
-  aside, nav, header,
-  .watermark-container,
-  [class*="GlobalWatermark"],
-  [class*="watermark"],
-  [style*="position: fixed"],
-  [style*="position:fixed"] { display: none !important; visibility: hidden !important; }
+  [data-testid="mobile-search-btn"] { display: none !important; height: 0 !important; width: 0 !important; overflow: hidden !important; }
   
-  /* Remove sidebar offset, full width */
-  main, [class*="ml-"], [class*="pl-"] { margin-left: 0 !important; padding-left: 0 !important; }
-  main { width: 100% !important; max-width: 100% !important; }
-  .print-container { max-width: 100% !important; margin: 0 !important; padding: 12px !important; }
+  /* Kill the mobile top bar */
+  .lg\:hidden { display: none !important; }
+  
+  /* Remove sidebar margin from main content */
+  .lg\:ml-56, .lg\:ml-\[68px\], [class*="lg:ml-"] { margin-left: 0 !important; }
+  .pt-14 { padding-top: 0 !important; }
+  main, div[class*="min-h-screen"] { margin-left: 0 !important; padding-left: 0 !important; width: 100% !important; }
+  
+  .print-container { max-width: 100% !important; margin: 0 !important; padding: 10px !important; }
   .print-no-clamp { -webkit-line-clamp: unset !important; display: block !important; }
   
-  /* Prevent cards/sections from splitting across pages */
-  .about-section { page-break-inside: auto; }
-  .about-section > button { page-break-after: avoid; }
-  .about-section > div > div { page-break-inside: avoid; break-inside: avoid; }
+  /* Agent cards should not break across pages */
+  [data-testid^="network-"] + div > div { break-inside: avoid !important; page-break-inside: avoid !important; }
   
   img { max-width: 32px !important; max-height: 32px !important; }
 }

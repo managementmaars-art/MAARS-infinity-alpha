@@ -332,7 +332,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="min-h-screen bg-zinc-950" data-testid="dashboard-layout">
       {/* Mobile header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 h-13 bg-zinc-900/95 backdrop-blur-xl border-b border-white/[0.06] z-40 flex items-center px-4">
+      <div className="lg:hidden fixed top-0 left-0 right-0 h-13 bg-zinc-900/95 backdrop-blur-xl border-b border-white/[0.06] z-40 flex items-center px-4 no-print">
         <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 rounded-lg hover:bg-white/10 text-zinc-400" data-testid="mobile-sidebar-toggle">
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
