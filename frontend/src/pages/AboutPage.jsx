@@ -683,37 +683,45 @@ const AboutPage = () => {
           {printing ? "" : " Click any system to read the full explanation."}
         </p>
         <div className="space-y-2">
-          {SYSTEMS.map((sys, i) => {
-            const isExpanded = expandedSystems.has(i) || printing;
-            return (
-              <div key={i} className="">
-                <button onClick={() => toggleSystem(i)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all print-no-break ${isExpanded ? "bg-zinc-800/60 border-white/10" : "bg-zinc-900/30 border-white/5 hover:border-white/10"}`}
-                  data-testid={`system-${i}`}>
-                  <sys.icon className={`w-4 h-4 ${sys.color} shrink-0`} />
-                  <div className="flex-1 text-left">
-                    <span className="text-sm font-medium text-white">{sys.title}</span>
-                    {sys.subtitle && <span className="text-[10px] text-zinc-500 ml-2">-- {sys.subtitle}</span>}
-                  </div>
-                  {isExpanded ? <ChevronDown className="w-4 h-4 text-zinc-500 no-print" /> : <ChevronRight className="w-4 h-4 text-zinc-500 no-print" />}
-                </button>
-                {isExpanded && (
-                  <div className="mt-1 ml-4 p-4 rounded-lg bg-zinc-800/30 border border-white/5">
-                    <p className="text-sm text-zinc-300 leading-relaxed mb-3">{sys.desc}</p>
-                    <p className="text-[10px] text-zinc-500 font-medium mb-2 uppercase tracking-wide">How it works step by step:</p>
-                    <div className="space-y-1.5">
-                      {sys.details.map((d, j) => (
-                        <div key={j} className="flex items-start gap-2">
-                          <div className="w-1 h-1 rounded-full bg-zinc-500 mt-2 shrink-0" />
-                          <p className="text-xs text-zinc-400 leading-relaxed">{d}</p>
+          {SYSTEMS.reduce((groups, sys, i) => {
+            if (i % 3 === 0) groups.push([]);
+            groups[groups.length - 1].push({ sys, i });
+            return groups;
+          }, []).map((group, gi) => (
+            <div key={gi} className={gi > 0 ? "print-systems-group" : ""}>
+              {group.map(({ sys, i }) => {
+                const isExpanded = expandedSystems.has(i) || printing;
+                return (
+                  <div key={i} className="mb-2">
+                    <button onClick={() => toggleSystem(i)}
+                      className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all print-no-break ${isExpanded ? "bg-zinc-800/60 border-white/10" : "bg-zinc-900/30 border-white/5 hover:border-white/10"}`}
+                      data-testid={`system-${i}`}>
+                      <sys.icon className={`w-4 h-4 ${sys.color} shrink-0`} />
+                      <div className="flex-1 text-left">
+                        <span className="text-sm font-medium text-white">{sys.title}</span>
+                        {sys.subtitle && <span className="text-[10px] text-zinc-500 ml-2">-- {sys.subtitle}</span>}
+                      </div>
+                      {isExpanded ? <ChevronDown className="w-4 h-4 text-zinc-500 no-print" /> : <ChevronRight className="w-4 h-4 text-zinc-500 no-print" />}
+                    </button>
+                    {isExpanded && (
+                      <div className="mt-1 ml-4 p-4 rounded-lg bg-zinc-800/30 border border-white/5">
+                        <p className="text-sm text-zinc-300 leading-relaxed mb-3">{sys.desc}</p>
+                        <p className="text-[10px] text-zinc-500 font-medium mb-2 uppercase tracking-wide">How it works step by step:</p>
+                        <div className="space-y-1.5">
+                          {sys.details.map((d, j) => (
+                            <div key={j} className="flex items-start gap-2">
+                              <div className="w-1 h-1 rounded-full bg-zinc-500 mt-2 shrink-0" />
+                              <p className="text-xs text-zinc-400 leading-relaxed">{d}</p>
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+          ))}
         </div>
       </Section>
 

@@ -254,9 +254,9 @@ code, pre {
   img { max-width: 28px !important; max-height: 28px !important; }
   .print-logo { max-width: 48px !important; max-height: 48px !important; }
 
-  /* ─── GRID → stacked for print ─── */
+  /* ─── GRID → stacked for print (general) ─── */
   .grid { display: block !important; }
-  .grid > * { margin-bottom: 8px !important; }
+  .grid > * { margin-bottom: 6px !important; }
 
   /* Stats row stays inline */
   .print-stats-row {
@@ -268,6 +268,68 @@ code, pre {
     flex: 1 1 15% !important;
     margin-bottom: 0 !important;
   }
+
+  /* ─── ARCHITECTURE: keep 3-col grid like the web view ─── */
+  #architecture .grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+  #architecture .grid > * { margin-bottom: 0 !important; }
+
+  /* ─── CORE SYSTEMS: 3 per page ─── */
+  .print-systems-group {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+  .print-systems-group:first-child {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+  }
+  #systems .about-section-inner .space-y-2 > div {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* ─── AI PROVIDERS: fit all in 1 page ─── */
+  #providers .grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 3px !important;
+  }
+  #providers .grid > * { margin-bottom: 0 !important; }
+  #providers .print-card { padding: 2px !important; }
+  #providers .print-card [class*="CardContent"] { padding: 4px !important; }
+  #providers .print-card p { font-size: 5.5pt !important; line-height: 1.15 !important; }
+  #providers .print-card span { font-size: 5.5pt !important; line-height: 1.15 !important; }
+  #providers .print-card .text-sm { font-size: 6.5pt !important; }
+  #providers .print-card .space-y-2 { gap: 0px !important; }
+  #providers .print-card .space-y-2 > * { margin-top: 1px !important; margin-bottom: 0 !important; }
+  #providers .print-card [class*="Badge"] { font-size: 4.5pt !important; padding: 0 2px !important; }
+
+  /* ─── SECURITY: fit all in 1 page ─── */
+  #security .grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 4px !important;
+  }
+  #security .grid > * { margin-bottom: 0 !important; }
+  #security .print-card [class*="CardContent"] { padding: 5px !important; }
+  #security .print-card .text-sm { font-size: 7pt !important; }
+  #security .print-card .text-xs { font-size: 5.5pt !important; line-height: 1.2 !important; }
+
+  /* ─── COSTS: fit all in 1 page ─── */
+  #costs .grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 3px !important;
+  }
+  #costs .grid > * { margin-bottom: 0 !important; }
+  #costs .print-card [class*="CardContent"] { padding: 3px !important; }
+  #costs .print-card span { font-size: 5pt !important; line-height: 1.15 !important; }
+  #costs .print-card .text-xs { font-size: 5.5pt !important; }
+  #costs .print-card .space-y-1 > * { margin-top: 0 !important; margin-bottom: 0 !important; }
+  #costs .print-card .flex.gap-3 { gap: 4px !important; }
 
   /* Agent cards don't split */
   .print-agent-card {
