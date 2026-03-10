@@ -6,7 +6,7 @@ import {
   Activity, Gauge, Radio, Code, Palette, PenTool, Info,
   PanelLeftClose, PanelLeftOpen, Search, FileCode, Database,
   Network, GitBranch, Layers, Share2, Zap, Lock, CircuitBoard, DollarSign, Workflow,
-  Globe, HardDrive, Megaphone, Plug
+  Globe, HardDrive, Megaphone, Plug, Building2, PieChart, Sparkles
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import CommandPalette from "../CommandPalette";
@@ -50,6 +50,8 @@ const navSections = [
       { icon: Workflow, label: "Workflow Builder", to: "/workflow-builder" },
       { icon: Megaphone, label: "Campaign Builder", to: "/campaigns" },
       { icon: Plug, label: "Integrations", to: "/integrations" },
+      { icon: PieChart, label: "Analytics", to: "/analytics" },
+      { icon: Sparkles, label: "Agent Suggestions", to: "/agent-suggestions" },
       { icon: Globe, label: "Environments", to: "/environments" },
       { icon: HardDrive, label: "Memory Hierarchy", to: "/memory-hierarchy" },
       { icon: Database, label: "Memory", to: "/memory" },
@@ -64,6 +66,7 @@ const navSections = [
     items: [
       { icon: Package, label: "Products", to: "/products" },
       { icon: Users, label: "Team", to: "/team" },
+      { icon: Building2, label: "Organization", to: "/organization" },
       { icon: Settings, label: "Settings", to: "/settings" },
       { icon: Info, label: "About", to: "/about" },
     ],

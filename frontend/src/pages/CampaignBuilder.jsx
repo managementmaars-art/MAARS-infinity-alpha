@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../App";
-import { Play, Plus, Trash2, Clock, CheckCircle, AlertCircle, ChevronRight, ChevronDown, FileText, Zap, ArrowLeft } from "lucide-react";
+import { Play, Plus, Trash2, Clock, CheckCircle, AlertCircle, ChevronRight, ChevronDown, FileText, Zap, ArrowLeft, Download, CalendarClock } from "lucide-react";
 import { Button } from "../components/ui/button";
 
 const API = process.env.REACT_APP_BACKEND_URL;
@@ -15,6 +15,8 @@ export default function CampaignBuilder() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [pollTimer, setPollTimer] = useState(null);
+  const [showSchedule, setShowSchedule] = useState(false);
+  const [scheduleData, setScheduleData] = useState({ frequency: "weekly", day_of_week: 1, hour: 9 });
 
   const h = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 
@@ -76,6 +78,34 @@ export default function CampaignBuilder() {
     if (selected?.campaign_id === campId) { setSelected(null); setView("list"); }
   };
 
+  const downloadReport = (campId) => {
+    window.open(`${API}/api/kernel/campaigns/${campId}/report?token=${token}`, "_blank");
+  };
+
+  const saveCampaignSchedule = async (campId) => {
+    await fetch(`${API}/api/kernel/campaigns/${campId}/schedule`, {
+      method: "POST", headers: h,
+      body: JSON.stringify(scheduleData),
+    });
+    setShowSchedule(false);
+    const res = await fetch(`${API}/api/kernel/campaigns/${campId}`, { headers: h });
+    if (res.ok) {
+      const data = await res.json();
+      setSelected(data);
+      setCampaigns(prev => prev.map(c => c.campaign_id === campId ? data : c));
+    }
+  };
+
+  const removeSchedule = async (campId) => {
+    await fetch(`${API}/api/kernel/campaigns/${campId}/schedule`, { method: "DELETE", headers: h });
+    const res = await fetch(`${API}/api/kernel/campaigns/${campId}`, { headers: h });
+    if (res.ok) {
+      const data = await res.json();
+      setSelected(data);
+      setCampaigns(prev => prev.map(c => c.campaign_id === campId ? data : c));
+    }
+  };
+
   if (loading) return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>;
 
   // Detail view
@@ -94,6 +124,16 @@ export default function CampaignBuilder() {
             <p className="text-xs text-zinc-500">{selected.description} &middot; {selected.category}</p>
           </div>
           <StatusBadge status={selected.status} />
+          {selected.status === "completed" && (
+            <Button size="sm" variant="outline" className="h-8 text-xs border-white/10" onClick={() => downloadReport(selected.campaign_id)}
+              data-testid="campaign-download-btn">
+              <Download className="w-3.5 h-3.5 mr-1" /> PDF Report
+            </Button>
+          )}
+          <Button size="sm" variant="outline" className="h-8 text-xs border-white/10" onClick={() => setShowSchedule(!showSchedule)}
+            data-testid="campaign-schedule-btn">
+            <CalendarClock className="w-3.5 h-3.5 mr-1" /> Schedule
+          </Button>
           {(selected.status === "draft" || selected.status === "completed" || selected.status === "failed") && (
             <Button size="sm" className="h-8 text-xs bg-emerald-600 hover:bg-emerald-700" onClick={() => runCampaign(selected.campaign_id)}
               data-testid="campaign-run-btn">
@@ -111,6 +151,40 @@ export default function CampaignBuilder() {
           <div className="bg-zinc-900/50 border border-white/5 rounded-lg p-4">
             <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Campaign Context</p>
             <p className="text-sm text-zinc-300">{selected.context}</p>
+          </div>
+        )}
+
+        {/* Schedule Panel */}
+        {showSchedule && (
+          <div className="bg-zinc-900/50 border border-indigo-500/10 rounded-lg p-4" data-testid="schedule-panel">
+            <p className="text-xs font-semibold text-indigo-400 mb-3">Auto-Schedule</p>
+            {selected.schedule?.enabled ? (
+              <div className="flex items-center gap-3">
+                <p className="text-xs text-zinc-300 flex-1">
+                  Scheduled: <span className="text-white font-medium">{selected.schedule.frequency}</span> at {String(selected.schedule.hour).padStart(2,"0")}:{String(selected.schedule.minute || 0).padStart(2,"0")} UTC
+                </p>
+                <Button size="sm" variant="ghost" className="h-7 text-[10px] text-red-400" onClick={() => removeSchedule(selected.campaign_id)} data-testid="remove-schedule-btn">Remove Schedule</Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <select value={scheduleData.frequency} onChange={e => setScheduleData(p => ({...p, frequency: e.target.value}))}
+                  className="bg-zinc-800/50 border border-white/5 rounded px-2 py-1.5 text-[10px] text-zinc-300" data-testid="schedule-frequency">
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+                {scheduleData.frequency === "weekly" && (
+                  <select value={scheduleData.day_of_week} onChange={e => setScheduleData(p => ({...p, day_of_week: +e.target.value}))}
+                    className="bg-zinc-800/50 border border-white/5 rounded px-2 py-1.5 text-[10px] text-zinc-300">
+                    {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map((d,i) => <option key={i} value={i}>{d}</option>)}
+                  </select>
+                )}
+                <input type="number" min={0} max={23} value={scheduleData.hour} onChange={e => setScheduleData(p => ({...p, hour: +e.target.value}))}
+                  className="w-14 bg-zinc-800/50 border border-white/5 rounded px-2 py-1.5 text-[10px] text-zinc-300" placeholder="Hour" />
+                <span className="text-[9px] text-zinc-500">UTC</span>
+                <Button size="sm" className="h-7 text-[10px] bg-indigo-600 hover:bg-indigo-700" onClick={() => saveCampaignSchedule(selected.campaign_id)} data-testid="save-schedule-btn">Save</Button>
+              </div>
+            )}
           </div>
         )}
 

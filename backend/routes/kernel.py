@@ -23,6 +23,13 @@ from services.kernel_service import (
     create_campaign, update_campaign, delete_campaign, execute_campaign,
     get_integrations, get_user_integrations, save_user_integration,
     disconnect_integration, toggle_integration,
+    generate_campaign_pdf,
+    get_trust_analytics,
+    schedule_campaign, get_scheduled_campaigns, remove_schedule,
+    create_organization, get_organization, invite_member, get_org_members,
+    update_member_role, remove_member,
+    get_widget_catalog, get_user_dashboard, save_user_dashboard, get_widget_data,
+    analyze_agent_gaps, auto_create_agent,
 )
 from infinity_catalog import (
     NETWORK_DEFINITIONS, AUTONOMY_TIERS, AGENT_LIFECYCLE_STATES,
@@ -567,3 +574,148 @@ async def toggle_int(integration_id: str, data: IntegrationToggle, user=Depends(
     if not result:
         raise HTTPException(status_code=404, detail="Integration not found")
     return result
+
+
+# ---------- Campaign PDF Report ----------
+
+@router.get("/campaigns/{campaign_id}/report")
+async def campaign_report(campaign_id: str, token: Optional[str] = None, user=Depends(get_current_user)):
+    """Generate and download a PDF report for a campaign."""
+    from fastapi.responses import FileResponse
+    path = await generate_campaign_pdf(user.user_id, campaign_id)
+    if not path:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+    return FileResponse(path, media_type="application/pdf", filename=f"campaign_{campaign_id}.pdf")
+
+
+# ---------- Trust Analytics ----------
+
+@router.get("/trust-analytics")
+async def trust_analytics(user=Depends(get_current_user)):
+    return await get_trust_analytics(user.user_id)
+
+
+# ---------- Campaign Scheduling ----------
+
+class ScheduleData(BaseModel):
+    frequency: str = "weekly"
+    day_of_week: Optional[int] = None
+    day_of_month: Optional[int] = None
+    hour: int = 9
+    minute: int = 0
+    enabled: bool = True
+
+
+@router.post("/campaigns/{campaign_id}/schedule")
+async def set_schedule(campaign_id: str, data: ScheduleData, user=Depends(get_current_user)):
+    result = await schedule_campaign(user.user_id, campaign_id, data.dict())
+    if not result:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+    return result
+
+
+@router.delete("/campaigns/{campaign_id}/schedule")
+async def unset_schedule(campaign_id: str, user=Depends(get_current_user)):
+    return await remove_schedule(user.user_id, campaign_id)
+
+
+@router.get("/scheduled-campaigns")
+async def list_scheduled(user=Depends(get_current_user)):
+    return await get_scheduled_campaigns(user.user_id)
+
+
+# ---------- Multi-Tenancy / Organizations ----------
+
+class OrgCreate(BaseModel):
+    name: str
+    slug: Optional[str] = None
+
+class InviteData(BaseModel):
+    email: str
+    role: str = "member"
+
+class MemberRoleUpdate(BaseModel):
+    role: str
+
+
+@router.post("/organizations")
+async def create_org(data: OrgCreate, user=Depends(get_current_user)):
+    return await create_organization(user.user_id, data.dict())
+
+
+@router.get("/organizations/me")
+async def my_org(user=Depends(get_current_user)):
+    org = await get_organization(user.user_id)
+    if not org:
+        return {"org": None, "members": []}
+    members = org.get("members", [])
+    # Enrich members with user info
+    enriched = []
+    for m in members:
+        from db import db as _db
+        u = await _db.users.find_one({"user_id": m["user_id"]}, {"_id": 0, "name": 1, "email": 1})
+        enriched.append({**m, "name": u.get("name", "Unknown") if u else "Unknown", "email": u.get("email", "") if u else ""})
+    return {"org": org, "members": enriched}
+
+
+@router.post("/organizations/{org_id}/invite")
+async def invite(org_id: str, data: InviteData, user=Depends(get_current_user)):
+    result = await invite_member(user.user_id, org_id, data.dict())
+    if not result:
+        raise HTTPException(status_code=403, detail="Not authorized or org not found")
+    return result
+
+
+@router.put("/organizations/{org_id}/members/{target_user_id}/role")
+async def set_member_role(org_id: str, target_user_id: str, data: MemberRoleUpdate, user=Depends(get_current_user)):
+    return await update_member_role(user.user_id, org_id, target_user_id, data.role)
+
+
+@router.delete("/organizations/{org_id}/members/{target_user_id}")
+async def kick_member(org_id: str, target_user_id: str, user=Depends(get_current_user)):
+    await remove_member(user.user_id, org_id, target_user_id)
+    return {"status": "removed"}
+
+
+# ---------- Custom Analytics Widgets ----------
+
+class DashboardSave(BaseModel):
+    widgets: list
+
+class AutoCreateAgent(BaseModel):
+    name: str
+    role: str
+    network: str = "operations"
+    description: str = ""
+
+
+@router.get("/widgets/catalog")
+async def widget_cat(user=Depends(get_current_user)):
+    return await get_widget_catalog()
+
+
+@router.get("/dashboard/custom")
+async def get_dash(user=Depends(get_current_user)):
+    return await get_user_dashboard(user.user_id)
+
+
+@router.put("/dashboard/custom")
+async def save_dash(data: DashboardSave, user=Depends(get_current_user)):
+    return await save_user_dashboard(user.user_id, data.dict())
+
+
+@router.get("/widgets/{widget_id}/data")
+async def widget_data(widget_id: str, user=Depends(get_current_user)):
+    return await get_widget_data(user.user_id, widget_id)
+
+
+# ---------- Self-Expanding Agent Creation ----------
+
+@router.get("/agent-suggestions")
+async def agent_gaps(user=Depends(get_current_user)):
+    return await analyze_agent_gaps(user.user_id)
+
+
+@router.post("/agent-suggestions/create")
+async def create_suggested(data: AutoCreateAgent, user=Depends(get_current_user)):
+    return await auto_create_agent(user.user_id, data.dict())

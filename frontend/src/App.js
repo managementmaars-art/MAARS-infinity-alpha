@@ -44,6 +44,9 @@ import Environments from "./pages/Environments";
 import MemoryHierarchy from "./pages/MemoryHierarchy";
 import CampaignBuilder from "./pages/CampaignBuilder";
 import IntegrationHub from "./pages/IntegrationHub";
+import Organization from "./pages/Organization";
+import AnalyticsDashboard from "./pages/AnalyticsDashboard";
+import AgentSuggestions from "./pages/AgentSuggestions";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -299,6 +302,9 @@ const AppRouter = () => {
       <Route path="/memory-hierarchy" element={<ProtectedRoute><DashboardLayout><MemoryHierarchy /></DashboardLayout></ProtectedRoute>} />
       <Route path="/campaigns" element={<ProtectedRoute><DashboardLayout><CampaignBuilder /></DashboardLayout></ProtectedRoute>} />
       <Route path="/integrations" element={<ProtectedRoute><DashboardLayout><IntegrationHub /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/organization" element={<ProtectedRoute><DashboardLayout><Organization /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/analytics" element={<ProtectedRoute><DashboardLayout><AnalyticsDashboard /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/agent-suggestions" element={<ProtectedRoute><DashboardLayout><AgentSuggestions /></DashboardLayout></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminDashboard /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/code-explorer" element={<AdminRoute><DashboardLayout><CodeExplorer /></DashboardLayout></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
