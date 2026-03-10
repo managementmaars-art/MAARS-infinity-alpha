@@ -6,10 +6,83 @@ import {
   Activity, Gauge, Radio, Code, Palette, PenTool, Info,
   PanelLeftClose, PanelLeftOpen, Search, FileCode, Database,
   Network, GitBranch, Layers, Share2, Zap, Lock, CircuitBoard, DollarSign, Workflow,
-  Globe, HardDrive, Megaphone, Plug, Building2, PieChart, Sparkles
+  Globe, HardDrive, Megaphone, Plug, Building2, PieChart, Sparkles,
+  CreditCard, Key, Mail, Paintbrush, BookOpen, ScrollText, TrendingUp
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import CommandPalette from "../CommandPalette";
+
+const API = process.env.REACT_APP_BACKEND_URL;
+
+function OrgSwitcher() {
+  const { token, user } = useAuth();
+  const [org, setOrg] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [newName, setNewName] = useState("");
+
+  useEffect(() => {
+    if (!token) return;
+    fetch(`${API}/api/kernel/organization`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.ok ? r.json() : null).then(d => { if (d) setOrg(d); }).catch(() => {});
+  }, [token]);
+
+  const createOrg = async () => {
+    if (!newName.trim()) return;
+    const res = await fetch(`${API}/api/kernel/organization`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ name: newName.trim() }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setOrg(data);
+      setCreating(false);
+      setNewName("");
+    }
+  };
+
+  return (
+    <div className="px-2 pt-2" data-testid="org-switcher">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left hover:bg-white/[0.04] border border-white/[0.04] transition-colors"
+      >
+        <div className="w-5 h-5 rounded bg-indigo-500/20 flex items-center justify-center shrink-0">
+          <Building2 className="w-3 h-3 text-indigo-400" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-medium text-zinc-300 truncate">{org?.name || "Personal Workspace"}</p>
+          <p className="text-[8px] text-zinc-600 truncate">{org ? `${org.members?.length || 1} members` : "Click to create org"}</p>
+        </div>
+        <svg className={`w-3 h-3 text-zinc-600 transition-transform ${open ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      {open && (
+        <div className="mt-1 p-2 rounded-lg bg-zinc-900/80 border border-white/[0.06]">
+          {org ? (
+            <div className="space-y-1">
+              <div className="px-2 py-1 rounded bg-indigo-500/10 text-[10px] text-indigo-400">{org.name}</div>
+              <div className="text-[9px] text-zinc-600 px-2">ID: {org.org_id?.slice(0, 12)}...</div>
+              <div className="text-[9px] text-zinc-600 px-2">Members: {org.members?.length || 1}</div>
+            </div>
+          ) : creating ? (
+            <div className="space-y-1">
+              <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Organization name..." className="w-full bg-zinc-800 border border-white/10 rounded px-2 py-1 text-xs text-white" autoFocus onKeyDown={e => e.key === "Enter" && createOrg()} data-testid="org-name-input" />
+              <div className="flex gap-1">
+                <button onClick={createOrg} className="flex-1 px-2 py-1 bg-indigo-600 rounded text-[10px] text-white" data-testid="create-org-btn">Create</button>
+                <button onClick={() => setCreating(false)} className="px-2 py-1 bg-zinc-800 rounded text-[10px] text-zinc-400">Cancel</button>
+              </div>
+            </div>
+          ) : (
+            <button onClick={() => setCreating(true)} className="w-full px-2 py-1.5 rounded text-[10px] text-indigo-400 hover:bg-indigo-500/10 text-left" data-testid="new-org-btn">
+              + Create Organization
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 const navSections = [
   {
@@ -169,12 +242,23 @@ const DashboardLayout = ({ children }) => {
               <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">Admin</span>
             </div>
           )}
-          <NavItem icon={Shield} label="Admin Panel" to="/admin" onClick={closeMobile ? () => { navigate("/admin"); closeMobile(); } : undefined} />
+          <NavItem icon={Activity} label="Overview" to="/admin/overview" onClick={closeMobile ? () => { navigate("/admin/overview"); closeMobile(); } : undefined} />
+          <NavItem icon={BarChart3} label="Analytics" to="/admin/analytics" onClick={closeMobile ? () => { navigate("/admin/analytics"); closeMobile(); } : undefined} />
+          <NavItem icon={Users} label="Users" to="/admin/users" onClick={closeMobile ? () => { navigate("/admin/users"); closeMobile(); } : undefined} />
+          <NavItem icon={Bot} label="Agents" to="/admin/agents" onClick={closeMobile ? () => { navigate("/admin/agents"); closeMobile(); } : undefined} />
+          <NavItem icon={DollarSign} label="Transactions" to="/admin/transactions" onClick={closeMobile ? () => { navigate("/admin/transactions"); closeMobile(); } : undefined} />
+          <NavItem icon={TrendingUp} label="Pricing & Packages" to="/admin/pricing-manager" onClick={closeMobile ? () => { navigate("/admin/pricing-manager"); closeMobile(); } : undefined} />
+          <NavItem icon={Package} label="Plan Editor" to="/admin/pricing" onClick={closeMobile ? () => { navigate("/admin/pricing"); closeMobile(); } : undefined} />
+          <NavItem icon={Key} label="API Keys" to="/admin/api-keys" onClick={closeMobile ? () => { navigate("/admin/api-keys"); closeMobile(); } : undefined} />
+          <NavItem icon={CreditCard} label="Payment Setup" to="/admin/payments" onClick={closeMobile ? () => { navigate("/admin/payments"); closeMobile(); } : undefined} />
+          <NavItem icon={Mail} label="Email (SMTP)" to="/admin/smtp" onClick={closeMobile ? () => { navigate("/admin/smtp"); closeMobile(); } : undefined} />
+          <NavItem icon={Paintbrush} label="Branding" to="/admin/branding" onClick={closeMobile ? () => { navigate("/admin/branding"); closeMobile(); } : undefined} />
+          <NavItem icon={BookOpen} label="Knowledge Base" to="/admin/knowledge" onClick={closeMobile ? () => { navigate("/admin/knowledge"); closeMobile(); } : undefined} />
+          <NavItem icon={ScrollText} label="Audit Log" to="/admin/audit" onClick={closeMobile ? () => { navigate("/admin/audit"); closeMobile(); } : undefined} />
           <NavItem icon={FileCode} label="Code Explorer" to="/admin/code-explorer" onClick={closeMobile ? () => { navigate("/admin/code-explorer"); closeMobile(); } : undefined} />
-          <NavItem icon={Package} label="Pricing Manager" to="/admin/pricing" onClick={closeMobile ? () => { navigate("/admin/pricing"); closeMobile(); } : undefined} />
           <NavItem icon={Lock} label="Access Control" to="/rbac" onClick={closeMobile ? () => { navigate("/rbac"); closeMobile(); } : undefined} />
           <NavItem icon={CircuitBoard} label="Circuit Breakers" to="/circuit-breakers" onClick={closeMobile ? () => { navigate("/circuit-breakers"); closeMobile(); } : undefined} />
-          <NavItem icon={DollarSign} label="Cost Governance" to="/cost-governance" onClick={closeMobile ? () => { navigate("/cost-governance"); closeMobile(); } : undefined} />
+          <NavItem icon={Gauge} label="Cost Governance" to="/cost-governance" onClick={closeMobile ? () => { navigate("/cost-governance"); closeMobile(); } : undefined} />
         </>
       )}
     </>
@@ -214,6 +298,11 @@ const DashboardLayout = ({ children }) => {
             )}
           </Link>
         </div>
+
+        {/* Org Switcher */}
+        {!collapsed && (
+          <OrgSwitcher />
+        )}
 
         {/* Search trigger */}
         <div className="px-2 pt-3 pb-1">

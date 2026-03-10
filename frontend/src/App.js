@@ -48,6 +48,12 @@ import Organization from "./pages/Organization";
 import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 import AgentSuggestions from "./pages/AgentSuggestions";
 import PricingAdmin from "./pages/PricingAdmin";
+import {
+  AdminOverviewPage, AdminAnalyticsPage, AdminUsersPage, AdminAgentsPage,
+  AdminTransactionsPage, AdminPricingManagerPage, AdminApiKeysPage,
+  AdminPaymentSetupPage, AdminSmtpPage, AdminBrandingPage,
+  AdminKnowledgeBasePage, AdminAuditLogPage
+} from "./pages/AdminPages";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -306,7 +312,19 @@ const AppRouter = () => {
       <Route path="/organization" element={<ProtectedRoute><DashboardLayout><Organization /></DashboardLayout></ProtectedRoute>} />
       <Route path="/analytics" element={<ProtectedRoute><DashboardLayout><AnalyticsDashboard /></DashboardLayout></ProtectedRoute>} />
       <Route path="/agent-suggestions" element={<ProtectedRoute><DashboardLayout><AgentSuggestions /></DashboardLayout></ProtectedRoute>} />
-      <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminDashboard /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminOverviewPage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/overview" element={<AdminRoute><DashboardLayout><AdminOverviewPage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/analytics" element={<AdminRoute><DashboardLayout><AdminAnalyticsPage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/users" element={<AdminRoute><DashboardLayout><AdminUsersPage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/agents" element={<AdminRoute><DashboardLayout><AdminAgentsPage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/transactions" element={<AdminRoute><DashboardLayout><AdminTransactionsPage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/pricing-manager" element={<AdminRoute><DashboardLayout><AdminPricingManagerPage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/api-keys" element={<AdminRoute><DashboardLayout><AdminApiKeysPage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/payments" element={<AdminRoute><DashboardLayout><AdminPaymentSetupPage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/smtp" element={<AdminRoute><DashboardLayout><AdminSmtpPage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/branding" element={<AdminRoute><DashboardLayout><AdminBrandingPage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/knowledge" element={<AdminRoute><DashboardLayout><AdminKnowledgeBasePage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/audit" element={<AdminRoute><DashboardLayout><AdminAuditLogPage /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/code-explorer" element={<AdminRoute><DashboardLayout><CodeExplorer /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/pricing" element={<AdminRoute><DashboardLayout><PricingAdmin /></DashboardLayout></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,0 +1,6 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
+<rect width='512' height='512' rx='128' fill='#09090b'/>
+<rect x='32' y='32' width='448' height='448' rx='96' fill='#18181b'/>
+<text x='256' y='200' text-anchor='middle' font-family='system-ui' font-weight='bold' font-size='120' fill='#6366f1'>MAARS</text>
+<text x='256' y='340' text-anchor='middle' font-family='system-ui' font-weight='bold' font-size='160' fill='#ec4899'>∞</text>
+</svg>

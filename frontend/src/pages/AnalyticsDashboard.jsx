@@ -21,10 +21,14 @@ export default function AnalyticsDashboard() {
   const [widgetData, setWidgetData] = useState({});
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastRefresh, setLastRefresh] = useState(null);
+  const [autoRefresh, setAutoRefresh] = useState(false);
 
   const h = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 
-  const fetchData = async () => {
+  const fetchData = async (silent = false) => {
+    if (!silent) setRefreshing(true);
     try {
       const [catRes, dashRes] = await Promise.all([
         fetch(`${API}/api/kernel/widgets/catalog`, { headers: h }),
@@ -34,7 +38,6 @@ export default function AnalyticsDashboard() {
       if (dashRes.ok) {
         const d = await dashRes.json();
         setDashboard(d);
-        // Fetch data for each widget
         const widgets = d.widgets || [];
         const dataPromises = widgets.map(w =>
           fetch(`${API}/api/kernel/widgets/${w.widget_id}/data`, { headers: h }).then(r => r.json()).then(data => ({ id: w.widget_id, data }))
@@ -44,11 +47,20 @@ export default function AnalyticsDashboard() {
         results.forEach(r => { dataMap[r.id] = r.data; });
         setWidgetData(dataMap);
       }
+      setLastRefresh(new Date());
     } catch {}
     setLoading(false);
+    setRefreshing(false);
   };
 
   useEffect(() => { fetchData(); }, [token]);
+
+  // Auto-refresh every 30 seconds when enabled
+  useEffect(() => {
+    if (!autoRefresh) return;
+    const interval = setInterval(() => fetchData(true), 30000);
+    return () => clearInterval(interval);
+  }, [autoRefresh, token]);
 
   const addWidget = async (widgetId) => {
     const widgets = [...(dashboard.widgets || []), { widget_id: widgetId, x: 0, y: dashboard.widgets.length }];
@@ -74,15 +86,28 @@ export default function AnalyticsDashboard() {
   const activeWidgetIds = new Set((dashboard.widgets || []).map(w => w.widget_id));
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6" data-testid="analytics-dashboard">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6" data-testid="analytics-dashboard">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl font-bold text-white">Analytics Dashboard</h1>
+          <h1 className="text-2xl font-bold text-white font-['Outfit']">Analytics Dashboard</h1>
           <p className="text-sm text-zinc-500">Custom widgets for real-time platform insights</p>
         </div>
-        <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 h-8 text-xs" onClick={() => setShowAdd(!showAdd)} data-testid="add-widget-btn">
-          <Plus className="w-3.5 h-3.5 mr-1" /> Add Widget
-        </Button>
+        <div className="flex items-center gap-2">
+          {lastRefresh && (
+            <span className="text-[9px] text-zinc-600">
+              {refreshing ? "Refreshing..." : `Updated ${lastRefresh.toLocaleTimeString()}`}
+            </span>
+          )}
+          <button onClick={() => setAutoRefresh(!autoRefresh)} className={`px-2 py-1 rounded text-[10px] border transition-colors ${autoRefresh ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" : "border-white/10 text-zinc-500"}`} data-testid="auto-refresh-toggle">
+            {autoRefresh ? "Auto-refresh ON" : "Auto-refresh"}
+          </button>
+          <Button size="sm" variant="outline" className="border-white/10 h-8 text-xs" onClick={() => fetchData()} disabled={refreshing} data-testid="refresh-btn">
+            <Activity className={`w-3.5 h-3.5 mr-1 ${refreshing ? "animate-spin" : ""}`} /> Refresh
+          </Button>
+          <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 h-8 text-xs" onClick={() => setShowAdd(!showAdd)} data-testid="add-widget-btn">
+            <Plus className="w-3.5 h-3.5 mr-1" /> Add Widget
+          </Button>
+        </div>
       </div>
 
       {/* Add widget panel */}
