@@ -12,7 +12,7 @@ from services.kernel_service import (
     delete_kg_node, seed_knowledge_graph,
     get_rbac_config, get_user_roles, set_user_role,
     get_circuit_breakers_full, update_circuit_breaker, reset_circuit_breaker,
-    get_cost_overview, get_cost_by_model, get_cost_by_agent,
+    get_cost_overview, get_cost_by_model, get_cost_by_agent, get_cost_by_provider,
     get_cost_budget, update_cost_budget,
     create_workflow, get_workflows, get_workflow, update_workflow, delete_workflow,
     execute_workflow, get_workflow_runs, get_workflow_run,
@@ -341,6 +341,11 @@ async def cost_by_model(user=Depends(get_current_user)):
 @router.get("/cost/by-agent")
 async def cost_by_agent(user=Depends(get_current_user)):
     return await get_cost_by_agent()
+
+
+@router.get("/cost/by-provider")
+async def cost_by_provider(user=Depends(get_current_user)):
+    return await get_cost_by_provider()
 
 
 @router.get("/cost/budget")

@@ -6,11 +6,12 @@ import { Badge } from "../components/ui/badge";
 import { Switch } from "../components/ui/switch";
 import { Label } from "../components/ui/label";
 import { Bot, Check, Sparkles, Zap, Crown, Building, CreditCard,
-  ArrowLeft, Loader2, Globe, Package, Plus, X, Shield
+  ArrowLeft, Loader2, Globe, Package, Plus, X, Shield, Edit2, Save
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
 import { BrandFooter } from "../components/BrandFooter";
+import { Input } from "../components/ui/input";
 
 const PricingPage = () => {
   const navigate = useNavigate();
@@ -21,6 +22,13 @@ const PricingPage = () => {
   const [processingPlan, setProcessingPlan] = useState(null);
   const [currency, setCurrency] = useState("usd");
   const [dynamicPlans, setDynamicPlans] = useState(null);
+  const [adminEditing, setAdminEditing] = useState(false);
+  const [editingPlanId, setEditingPlanId] = useState(null);
+  const [editData, setEditData] = useState(null);
+  const [savingPlan, setSavingPlan] = useState(false);
+  const [showNewPlan, setShowNewPlan] = useState(false);
+  const [newPlan, setNewPlan] = useState({ plan_id: "", name: "", price_usd: 0, price_bdt: 0, credits: 0, max_agents: 0, max_custom_agents: 0, includes_commander: false, max_team_members: 1, features: [] });
+  const [newFeatureText, setNewFeatureText] = useState("");
 
   // Custom package state
   const [agents, setAgents] = useState([]);
@@ -31,6 +39,54 @@ const PricingPage = () => {
   const [customLoading, setCustomLoading] = useState(false);
 
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  const isAdmin = user?.is_admin;
+
+  const startEdit = (planId, plan) => {
+    setEditingPlanId(planId);
+    setEditData({ ...plan });
+  };
+
+  const cancelEdit = () => { setEditingPlanId(null); setEditData(null); };
+
+  const saveEdit = async () => {
+    setSavingPlan(true);
+    try {
+      const updatedPlans = { ...dynamicPlans, [editingPlanId]: editData };
+      const res = await fetch(`${API}/admin/pricing`, {
+        method: "PUT", headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify({ plans: updatedPlans })
+      });
+      if (res.ok) { toast.success("Plan updated"); fetchPlans(); cancelEdit(); }
+      else toast.error("Failed to update");
+    } catch { toast.error("Failed to update"); }
+    setSavingPlan(false);
+  };
+
+  const deletePlan = async (planId) => {
+    if (planId === "free") { toast.error("Cannot delete free plan"); return; }
+    if (!window.confirm(`Delete "${dynamicPlans[planId]?.name}" plan?`)) return;
+    setSavingPlan(true);
+    try {
+      const res = await fetch(`${API}/admin/pricing/plans/${planId}`, { method: "DELETE", headers });
+      if (res.ok) { toast.success("Plan deleted"); fetchPlans(); }
+      else toast.error("Failed to delete");
+    } catch { toast.error("Failed"); }
+    setSavingPlan(false);
+  };
+
+  const createNewPlan = async () => {
+    if (!newPlan.plan_id || !newPlan.name) { toast.error("ID and name required"); return; }
+    setSavingPlan(true);
+    try {
+      const res = await fetch(`${API}/admin/pricing/plans`, {
+        method: "POST", headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify(newPlan)
+      });
+      if (res.ok) { toast.success(`Plan "${newPlan.name}" created`); setShowNewPlan(false); setNewPlan({ plan_id: "", name: "", price_usd: 0, price_bdt: 0, credits: 0, max_agents: 0, max_custom_agents: 0, includes_commander: false, max_team_members: 1, features: [] }); fetchPlans(); }
+      else { const err = await res.json(); toast.error(err.detail || "Failed"); }
+    } catch { toast.error("Failed"); }
+    setSavingPlan(false);
+  };
 
   const icons = { free: <Sparkles className="w-6 h-6" />, starter: <Zap className="w-6 h-6" />, pro: <Crown className="w-6 h-6" />, business: <Building className="w-6 h-6" /> };
 
@@ -349,30 +405,123 @@ const PricingPage = () => {
               <span>Current: <strong>{currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1)}</strong> • {credits} credits remaining</span>
             </div>
           )}
+
+          {/* Admin Controls */}
+          {isAdmin && (
+            <div className="mt-4 flex items-center justify-center gap-3" data-testid="admin-pricing-controls">
+              <Button
+                size="sm"
+                variant={adminEditing ? "default" : "outline"}
+                className={adminEditing ? "bg-amber-600 hover:bg-amber-700" : "border-white/10 text-zinc-400"}
+                onClick={() => { setAdminEditing(!adminEditing); cancelEdit(); setShowNewPlan(false); }}
+                data-testid="toggle-admin-edit"
+              >
+                <Edit2 className="w-3 h-3 mr-1" /> {adminEditing ? "Exit Edit Mode" : "Admin Edit"}
+              </Button>
+              {adminEditing && (
+                <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700" onClick={() => setShowNewPlan(true)} data-testid="add-plan-btn">
+                  <Plus className="w-3 h-3 mr-1" /> Add Plan
+                </Button>
+              )}
+            </div>
+          )}
         </div>
+
+        {/* New Plan Form (Admin) */}
+        {showNewPlan && adminEditing && (
+          <div className="mb-8 max-w-2xl mx-auto bg-zinc-900/70 border border-indigo-500/30 rounded-xl p-6" data-testid="new-plan-inline-form">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white">Create New Plan</h3>
+              <Button size="sm" variant="ghost" onClick={() => setShowNewPlan(false)}><X className="w-4 h-4" /></Button>
+            </div>
+            <div className="grid grid-cols-2 gap-3 mb-3">
+              <div><label className="text-[10px] text-zinc-500">Plan ID</label><Input value={newPlan.plan_id} onChange={e => setNewPlan(p => ({ ...p, plan_id: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') }))} className="bg-zinc-800/50 border-white/10 h-8 text-sm" placeholder="enterprise" data-testid="inline-new-plan-id" /></div>
+              <div><label className="text-[10px] text-zinc-500">Name</label><Input value={newPlan.name} onChange={e => setNewPlan(p => ({ ...p, name: e.target.value }))} className="bg-zinc-800/50 border-white/10 h-8 text-sm" placeholder="Enterprise" data-testid="inline-new-plan-name" /></div>
+            </div>
+            <div className="grid grid-cols-4 gap-3 mb-3">
+              <div><label className="text-[10px] text-zinc-500">USD/mo</label><Input type="number" value={newPlan.price_usd} onChange={e => setNewPlan(p => ({ ...p, price_usd: parseFloat(e.target.value) || 0 }))} className="bg-zinc-800/50 border-white/10 h-8 text-sm" /></div>
+              <div><label className="text-[10px] text-zinc-500">BDT/mo</label><Input type="number" value={newPlan.price_bdt} onChange={e => setNewPlan(p => ({ ...p, price_bdt: parseFloat(e.target.value) || 0 }))} className="bg-zinc-800/50 border-white/10 h-8 text-sm" /></div>
+              <div><label className="text-[10px] text-zinc-500">Credits</label><Input type="number" value={newPlan.credits} onChange={e => setNewPlan(p => ({ ...p, credits: parseInt(e.target.value) || 0 }))} className="bg-zinc-800/50 border-white/10 h-8 text-sm" /></div>
+              <div><label className="text-[10px] text-zinc-500">Agents (-1=all)</label><Input type="number" value={newPlan.max_agents} onChange={e => setNewPlan(p => ({ ...p, max_agents: parseInt(e.target.value) || 0 }))} className="bg-zinc-800/50 border-white/10 h-8 text-sm" /></div>
+            </div>
+            <div className="mb-3">
+              <label className="text-[10px] text-zinc-500">Features (comma-separated)</label>
+              <Input value={newPlan.features.join(", ")} onChange={e => setNewPlan(p => ({ ...p, features: e.target.value.split(",").map(f => f.trim()).filter(Boolean) }))} className="bg-zinc-800/50 border-white/10 h-8 text-sm" placeholder="Feature 1, Feature 2, Feature 3" />
+            </div>
+            <Button onClick={createNewPlan} disabled={savingPlan} className="bg-emerald-600 hover:bg-emerald-700" data-testid="inline-save-new-plan">
+              {savingPlan ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Check className="w-4 h-4 mr-1" />} Create Plan
+            </Button>
+          </div>
+        )}
 
         {/* Subscription Plans */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {plans.map((plan) => (
+          {plans.map((plan) => {
+            const isEditingThis = editingPlanId === plan.id && editData;
+            return (
             <Card
               key={plan.id}
               className={`bg-zinc-900/50 border-white/10 relative ${
                 plan.popular ? "ring-2 ring-indigo-500" : ""
-              } ${currentPlan === plan.id ? "border-emerald-500" : ""}`}
+              } ${currentPlan === plan.id ? "border-emerald-500" : ""} ${isEditingThis ? "ring-2 ring-amber-500" : ""}`}
               data-testid={`plan-${plan.id}`}
             >
-              {plan.popular && (
+              {plan.popular && !isEditingThis && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <Badge className="bg-gradient-to-r from-indigo-500 to-violet-500 text-white border-0">
                     Most Popular
                   </Badge>
                 </div>
               )}
-              {currentPlan === plan.id && (
+              {currentPlan === plan.id && !isEditingThis && (
                 <div className="absolute -top-3 right-4">
                   <Badge className="bg-emerald-500 text-white border-0">Current Plan</Badge>
                 </div>
               )}
+              {/* Admin edit/delete icons */}
+              {adminEditing && !isEditingThis && (
+                <div className="absolute top-2 right-2 flex gap-1 z-10">
+                  <button onClick={() => startEdit(plan.id, dynamicPlans?.[plan.id] || {})} className="w-6 h-6 rounded bg-amber-500/20 flex items-center justify-center text-amber-400 hover:bg-amber-500/30" data-testid={`edit-plan-inline-${plan.id}`}>
+                    <Edit2 className="w-3 h-3" />
+                  </button>
+                  {plan.id !== "free" && (
+                    <button onClick={() => deletePlan(plan.id)} className="w-6 h-6 rounded bg-red-500/20 flex items-center justify-center text-red-400 hover:bg-red-500/30" data-testid={`delete-plan-inline-${plan.id}`}>
+                      <X className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {isEditingThis ? (
+                /* Inline Edit Form */
+                <CardContent className="p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-amber-400">Editing: {plan.name}</span>
+                    <button onClick={cancelEdit} className="text-zinc-500 hover:text-white"><X className="w-4 h-4" /></button>
+                  </div>
+                  <div><label className="text-[9px] text-zinc-500">Name</label><Input value={editData.name || ""} onChange={e => setEditData(d => ({ ...d, name: e.target.value }))} className="bg-zinc-800/50 border-white/10 h-7 text-xs" /></div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div><label className="text-[9px] text-zinc-500">USD/mo</label><Input type="number" value={editData.price_usd || 0} onChange={e => setEditData(d => ({ ...d, price_usd: parseFloat(e.target.value) || 0 }))} className="bg-zinc-800/50 border-white/10 h-7 text-xs" /></div>
+                    <div><label className="text-[9px] text-zinc-500">BDT/mo</label><Input type="number" value={editData.price_bdt || 0} onChange={e => setEditData(d => ({ ...d, price_bdt: parseFloat(e.target.value) || 0 }))} className="bg-zinc-800/50 border-white/10 h-7 text-xs" /></div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div><label className="text-[9px] text-zinc-500">Credits</label><Input type="number" value={editData.credits || 0} onChange={e => setEditData(d => ({ ...d, credits: parseInt(e.target.value) || 0 }))} className="bg-zinc-800/50 border-white/10 h-7 text-xs" /></div>
+                    <div><label className="text-[9px] text-zinc-500">Max Agents</label><Input type="number" value={editData.max_agents || 0} onChange={e => setEditData(d => ({ ...d, max_agents: parseInt(e.target.value) || 0 }))} className="bg-zinc-800/50 border-white/10 h-7 text-xs" /></div>
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-zinc-500">Features (one per line)</label>
+                    <textarea value={(editData.features || []).join("\n")} onChange={e => setEditData(d => ({ ...d, features: e.target.value.split("\n").filter(Boolean) }))} className="w-full bg-zinc-800/50 border border-white/10 rounded px-2 py-1 text-xs text-white min-h-[80px] resize-y" />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" onClick={saveEdit} disabled={savingPlan} className="bg-emerald-600 hover:bg-emerald-700 flex-1" data-testid={`save-edit-${plan.id}`}>
+                      {savingPlan ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3 mr-1" />} Save
+                    </Button>
+                    <Button size="sm" variant="outline" className="border-white/10" onClick={cancelEdit}>Cancel</Button>
+                  </div>
+                </CardContent>
+              ) : (
+                /* Normal Plan Display */
+                <>
               <CardHeader className="text-center pb-2">
                 <div className="w-12 h-12 rounded-lg bg-indigo-500/20 flex items-center justify-center mx-auto mb-3 text-indigo-400">
                   {plan.icon}
@@ -414,8 +563,11 @@ const PricingPage = () => {
                   )}
                 </Button>
               </CardContent>
+                </>
+              )}
             </Card>
-          ))}
+            );
+          })}
         </div>
 
         {/* ====== BUILD YOUR OWN PACKAGE ====== */}

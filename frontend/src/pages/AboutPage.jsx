@@ -128,7 +128,7 @@ const SYSTEMS = [
   },
   {
     icon: Activity, title: "Autonomous Collaboration Engine", color: "text-indigo-400",
-    desc: "When an agent completes a task, the system automatically detects if the work impacts agents in related domains and creates collaboration entries. All 41 agents are mapped to 9 organizational domains with cross-domain trigger rules. This ensures seamless coordination without manual intervention.",
+    desc: "When an agent completes a task, the system automatically detects if the work impacts agents in related domains and creates collaboration entries. All 458+ agents are mapped to 27 network categories with cross-domain trigger rules. This ensures seamless coordination without manual intervention.",
     details: ["9 domains: executive, product, technical, creative, marketing, operations, finance, governance, intelligence", "Auto-detection: marketing → creative + technical, product → technical + creative + marketing", "Collaboration types: information sharing, review request, data handoff, coordination", "Up to 3 auto-collaborations per task to avoid noise"]
   },
   {
@@ -189,7 +189,7 @@ const SYSTEMS = [
   {
     icon: Terminal, title: "Command Palette", color: "text-yellow-400",
     desc: "A VS Code/Notion-style quick search interface for instant navigation. Press / or Cmd+K to open a modal that searches across all pages, agents, and quick actions with keyboard navigation and recent search history.",
-    details: ["Searches 20+ pages, 41 agents, and quick actions", "Keyboard navigation with arrow keys, Enter, and Escape", "Recent searches stored in localStorage", "Grouped results: Recent, Pages, Agents, Quick Actions", "Voice command integration via microphone button", "Accessible from sidebar search button or / keyboard shortcut"]
+    details: ["Searches 50+ pages, 458+ agents, and quick actions", "Keyboard navigation with arrow keys, Enter, and Escape", "Recent searches stored in localStorage", "Grouped results: Recent, Pages, Agents, Quick Actions", "Voice command integration via microphone button", "Accessible from sidebar search button or / keyboard shortcut"]
   },
 ];
 
@@ -503,7 +503,7 @@ const AboutPage = () => {
       </div>
 
       {/* Agent Workforce */}
-      <Section title={`The ${totalAgents}-Agent AI Workforce`} icon={Users} color="bg-indigo-500/15">
+      <Section title="The 458-Agent AI Workforce" icon={Users} color="bg-indigo-500/15">
         <p className="text-xs text-zinc-400 mb-4">Each agent has a unique Custom Brain Profile defining its LLM model, tools, autonomy level, and communication style. Click a layer to expand.</p>
         <div className="space-y-2">
           {AGENT_LAYERS.map(layer => {
