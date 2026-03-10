@@ -140,7 +140,9 @@ async def seed_default_agents():
             await db.agents.insert_one(agent_data)
         else:
             update_fields = {}
-            if existing.get("avatar") != agent_data["avatar"]:
+            # Only update avatar if existing one is SVG or missing (preserve CDN/photo avatars)
+            existing_avatar = existing.get("avatar", "")
+            if existing_avatar != agent_data["avatar"] and (not existing_avatar or existing_avatar.startswith("data:image/svg")):
                 update_fields["avatar"] = agent_data["avatar"]
             if "tools" in agent_data and existing.get("tools") != agent_data.get("tools"):
                 update_fields["tools"] = agent_data["tools"]
@@ -162,11 +164,16 @@ async def seed_default_agents():
             await db.agents.insert_one(agent_data)
             seeded_count += 1
         else:
-            # Update existing infinity agents with any new fields including avatar
+            # Update existing infinity agents with any new fields, but preserve upgraded avatars
             update_fields = {}
-            for field in ["network", "autonomy_tier", "authority_tier", "is_infinity", "lifecycle_state", "avatar"]:
+            for field in ["network", "autonomy_tier", "authority_tier", "is_infinity", "lifecycle_state"]:
                 if field in agent_data and existing.get(field) != agent_data[field]:
                     update_fields[field] = agent_data[field]
+            # Only update avatar if existing one is SVG or missing (don't overwrite photo avatars)
+            if "avatar" in agent_data and existing.get(field) != agent_data.get("avatar"):
+                existing_avatar = existing.get("avatar", "")
+                if not existing_avatar or existing_avatar.startswith("data:image/svg"):
+                    update_fields["avatar"] = agent_data["avatar"]
             if update_fields:
                 await db.agents.update_one(
                     {"agent_id": agent_data["agent_id"]},

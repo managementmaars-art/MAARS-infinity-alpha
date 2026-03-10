@@ -423,7 +423,7 @@ const AboutPage = () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "MAARS-Infinity-Documentation.pdf";
+        a.download = "MAARS-Command-Documentation.pdf";
         a.click();
         URL.revokeObjectURL(url);
       }

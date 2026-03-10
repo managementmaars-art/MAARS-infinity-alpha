@@ -1,4 +1,4 @@
-"""MAARS Infinity -- Premium dark-themed PDF documentation generator.
+"""MAARS Command -- Premium dark-themed PDF documentation generator.
 
 Matches the About page aesthetic: dark background, colored accents,
 card-based stats, badge pills, and professional typography.
@@ -88,7 +88,7 @@ SYSTEM_COLORS = [
 
 
 class DarkPDF(FPDF):
-    """Dark-themed PDF matching the MAARS Infinity About page aesthetic."""
+    """Dark-themed PDF matching the MAARS Command About page aesthetic."""
 
     def __init__(self):
         super().__init__()
@@ -115,7 +115,7 @@ class DarkPDF(FPDF):
         self.set_font(FN, "B", 7)
         self.set_text_color(*INDIGO)
         self.set_x(self.l_margin)
-        self.cell(0, 5, _s("MAARS \u221e"))
+        self.cell(0, 5, _s("MAARS Command"))
         self.set_font(FN, "", 6.5)
         self.set_text_color(*DIM)
         self.cell(0, 5, "Comprehensive System Documentation", align="R")
@@ -428,7 +428,7 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
     pdf.set_font(FN, "B", 36)
     pdf.set_text_color(*WHITE)
     pdf.set_x(pdf.l_margin + 8)
-    pdf.cell(0, 16, _s("MAARS \u221e"))
+    pdf.cell(0, 16, _s("MAARS Command"))
     pdf.ln(14)
 
     pdf.set_font(FN, "", 12)
@@ -454,7 +454,7 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
     pdf.set_text_color(*LIGHT)
     pdf.set_x(pdf.l_margin + 2)
     pdf.multi_cell(pdf.w - pdf.l_margin - pdf.r_margin - 4, 4.5, _s(
-        "MAARS Infinity deploys a workforce of 458+ specialized AI agents organized across 27 network categories "
+        "MAARS Command deploys a workforce of 458+ specialized AI agents organized across 27 network categories "
         "and 16 system layers, powered by 13 LLM providers with 45+ models. It merges the power of preset "
         "specialist business agents with autonomous execution, persistent memory, and real-world action capabilities. "
         "Users set high-level business goals, and the AI workforce autonomously plans, delegates, executes, "
