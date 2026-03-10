@@ -8,7 +8,9 @@ Build "MAARS Command by MAARS Global Corporation," a commercial, production-read
 - **16 system layers** from Human Governance to Infrastructure
 - **6 Autonomy Tiers** (T0: Advisory → T5: Propose structural changes)
 - **MAARS Kernel** with 15 subsystems (Agent Scheduler, Task Graph Runtime, Resource Manager, etc.)
-- **Execution Gateway** for governed action routing
+- **Execution Gateway** for governed action routing with cost metering
+- **Knowledge Graph** for entity/relationship visualization
+- **Trust Score System** for agent reliability metrics
 - **Tool Registry** for centralized tool management
 - **Task Graph System** for structured workflow decomposition
 
@@ -17,36 +19,33 @@ Build "MAARS Command by MAARS Global Corporation," a commercial, production-read
 ### Phase 0 — Foundation (Previously Completed)
 - 41 original AI agents with full chat capabilities
 - Multi-LLM support (9 providers, 30+ models)
-- Voice commands (OpenAI Whisper)
-- Google Suite integration
-- Stripe integration
-- Knowledge base & web search
-- KPI dashboard, collaboration engine, activity monitor
-- Vibe Coding (app builder)
-- Admin dashboard with code explorer
-- PDF documentation export (aesthetic dark theme)
-- About page, Pricing page, Landing page
+- Voice commands (OpenAI Whisper), Google Suite integration, Stripe
+- Knowledge base & web search, KPI dashboard, collaboration engine
+- Vibe Coding (app builder), Admin dashboard with code explorer
+- PDF documentation export, About page, Pricing page, Landing page
 
-### Phase 1 — MAARS ∞ Infrastructure (Completed: March 10, 2026)
-- **Agent Catalog Expansion**: 41 → 458+ agents (417 new infinity agents)
-  - 27 network categories
-  - Each agent has: name, role, description, capabilities, network, autonomy_tier, authority_tier, system_prompt
-- **MAARS Kernel Backend**: Kernel status, architecture, networks, task graphs, execution gateway, trust scores, tool registry, circuit breakers
-- **New Frontend Pages**: Kernel Dashboard, Agent Networks Browser, Task Graphs
-- **UI/Branding**: Rebranded from "MAARS Command" to "MAARS ∞"
+### Phase 1 — MAARS ∞ Infrastructure (Completed)
+- Agent Catalog: 41 → 458+ agents (417 new infinity agents across 27 networks)
+- MAARS Kernel Backend with all 15 subsystems
+- New Pages: Kernel Dashboard, Agent Networks Browser, Task Graphs
+- Full rebrand from "MAARS Command" to "MAARS ∞"
 
 ### Phase 2 — Chat & Agent Integration (Completed: March 10, 2026)
-- **Enhanced Chat Agent Selector**: Refactored SidebarContent with:
-  - Quick access row showing 10 original agents with avatars
-  - Unified search across all 458+ agents (original + infinity)
-  - "Browse 27 Networks" expandable panel with network-grouped agent browsing
-  - Fallback initials avatar for infinity agents (no images)
-- **All Agents Chattable**: Both original and infinity agents can be selected and chatted with
-- **"Chat with Agent" from Networks**: AgentNetworks page has Chat button on each agent that navigates to /chat/:agentId
-- **Fallback Avatar System**: Initials-based avatar displays in header, empty state, message bubbles, sidebar, and network browser
+- Enhanced Chat Agent Selector with network-grouped browsing, unified search, Browse 27 Networks panel
+- All 458+ agents chattable with fallback initials avatar
+
+### Phase 3 — Dashboards & Intelligence Layer (Completed: March 10, 2026)
+- **All Agent Avatars**: Generated unique SVG data URL avatars for all 417 infinity agents with network-specific color gradients
+- **Knowledge Graph** (`/knowledge-graph`): Interactive visualization with 108 nodes (27 networks + 81 agents), 91 edges, HTML/Canvas hybrid rendering, zoom/pan/search/filter, detail panel with connections
+- **Trust Score Dashboard** (`/trust-scores`): Agent reliability metrics with summary cards, search, sorting, execution history tracking
+- **Execution Gateway** (`/execution-gateway`): Governed execution logging with cost metering, success rate, latency tracking, audit trails
+- **Execution Gateway Integration**: All chat messages now log to execution gateway for trust scoring and audit
+- **Updated Landing Page**: 458+ agents, 27 networks, Knowledge Graph, Trust Scores, Execution Gateway featured
+- **Updated About Page**: Stats grid (458+, 27 networks, 16 layers, 9 providers, 212+ endpoints), new badges for KG, Trust, Gateway
+- **Updated Navigation**: Intelligence section includes Knowledge Graph, Trust Scores, Execution Gateway
 
 ## Tech Stack
-- **Frontend**: React 18, Tailwind CSS, Shadcn/UI, Lucide Icons
+- **Frontend**: React 18, Tailwind CSS, Shadcn/UI, Lucide Icons, Canvas 2D (for graph edges)
 - **Backend**: FastAPI, Python 3.11
 - **Database**: MongoDB (Motor async driver)
 - **LLM Providers**: OpenAI, Anthropic, Google, Groq, Mistral, Cohere, Together, Fireworks, Perplexity
@@ -58,35 +57,39 @@ Build "MAARS Command by MAARS Global Corporation," a commercial, production-read
 - `GET /api/kernel/networks` — List all 27 networks
 - `GET /api/kernel/networks/{key}/agents` — Agents in a network
 - `POST/GET /api/kernel/task-graphs` — Task graph CRUD
+- `GET /api/kernel/knowledge-graph` — Knowledge graph nodes + edges (auto-seeds on first call)
+- `POST /api/kernel/knowledge-graph/nodes` — Add knowledge graph node
+- `POST /api/kernel/knowledge-graph/edges` — Add knowledge graph edge
+- `DELETE /api/kernel/knowledge-graph/nodes/{id}` — Delete node + connected edges
 - `POST /api/kernel/execute` — Execution gateway logging
+- `GET /api/kernel/execution-logs` — Execution audit trail
 - `GET /api/kernel/trust-scores` — Agent trust scores
 - `GET /api/kernel/tools` — Tool registry
 - `GET /api/kernel/circuit-breakers` — Circuit breaker status
 - `GET /api/agents` — All 458 agents (authenticated)
 
 ## Database Collections
-- `agents` (458+ documents), `users`, `tasks`, `conversations`, `messages`
+- `agents` (458+), `users`, `tasks`, `conversations`, `messages`
 - `task_graphs`, `execution_logs`, `tool_registry`
+- `knowledge_graph_nodes`, `knowledge_graph_edges`
 - `memories`, `memory_entries`, `pricing_plans`, `workspace_profiles`
-- `knowledge_base`, `collaborations`, `vibe_projects`
+- `knowledge_base`, `collaborations`, `vibe_projects`, `usage_logs`
 
 ## P0 — Next Priority Tasks
-1. **Knowledge Graph**: Backend API + frontend visualization for entity/relationship knowledge graph
-2. **Trust Score Dashboard**: Visual trust score display per agent based on execution history
-3. **Execution Gateway Integration**: Wire task execution through gateway with cost metering and approval routing
-
-## P1 — Upcoming Tasks
 - Enterprise RBAC with permissions management UI
 - Circuit Breaker configuration UI
-- Environment Segregation (sandbox/staging/production)
 - Cost Governance active monitoring dashboard
+
+## P1 — Upcoming Tasks
+- Environment Segregation (sandbox/staging/production)
 - Memory Hierarchy visualization (7 layers)
+- Advanced Agent Trust analytics (trend charts, anomaly detection)
+- Workflow Builder UI (visual drag-and-drop task graph creation)
 
 ## P2 — Future Tasks
 - Advanced Integrations (WhatsApp, Shopify, CRM, ERP)
 - Multi-tenant isolation
 - Mobile wrapper app
-- Workflow builder UI
 - Campaign Builder
 - Grep-style content search in Code Explorer
 - Custom agent creation by users
