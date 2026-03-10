@@ -18,8 +18,8 @@ Make the "MAARS Command" application absolutely market ready/ready for official 
 - Support email updated to support.maars@marsgc.net
 - Print-ready output via `window.print()` with comprehensive `@media print` CSS
 - **Dark-themed** print output matching the web page aesthetic (user-requested)
-- Clean page breaks: each major section starts on new page (84-page PDF verified)
-- Print CSS: dark background preserved with `print-color-adjust: exact`, no sidebar/watermark, proper margins
+- Clean page breaks: **every sub-topic starts on its own page** (144-page PDF verified)
+- Each network group, each system, each provider, each security item, each cost entry = new page
 
 ### P1 - Agent Team Builder (COMPLETE)
 - UI: `frontend/src/pages/TeamBuilder.jsx`

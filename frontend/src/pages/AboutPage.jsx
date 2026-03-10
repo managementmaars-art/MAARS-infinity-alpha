@@ -616,7 +616,7 @@ const AboutPage = () => {
               const Icon = meta.icon;
               const isExpanded = expandedNetworks.has(netId) || printing;
               return (
-                <div key={netId}>
+                <div key={netId} className="print-page-break">
                   <button onClick={() => toggleNetwork(netId)}
                     className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all ${isExpanded ? `${colors.bg} ${colors.border}` : "bg-zinc-900/30 border-white/5 hover:border-white/10"}`}
                     data-testid={`network-${netId}`}>
@@ -686,7 +686,7 @@ const AboutPage = () => {
           {SYSTEMS.map((sys, i) => {
             const isExpanded = expandedSystems.has(i) || printing;
             return (
-              <div key={i}>
+              <div key={i} className="print-page-break">
                 <button onClick={() => toggleSystem(i)}
                   className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-all print-no-break ${isExpanded ? "bg-zinc-800/60 border-white/10" : "bg-zinc-900/30 border-white/5 hover:border-white/10"}`}
                   data-testid={`system-${i}`}>
@@ -721,7 +721,7 @@ const AboutPage = () => {
       <Section title="How MAARS Command Is Built" subtitle="The technology behind the scenes" icon={Database} color="bg-cyan-500/15" id="architecture">
         <p className="text-xs text-zinc-400 mb-3">MAARS Command is built with three main layers that work together, like a three-layer cake.</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <Card className="bg-zinc-900/50 border-white/5 print-card">
+          <Card className="bg-zinc-900/50 border-white/5 print-card print-page-break">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2"><Server className="w-4 h-4 text-cyan-400" /><p className="text-sm font-medium text-white">Backend (The Engine)</p></div>
               <p className="text-[10px] text-zinc-500 mb-2">This is the part that runs on the server and does all the heavy work behind the scenes.</p>
@@ -735,7 +735,7 @@ const AboutPage = () => {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-zinc-900/50 border-white/5 print-card">
+          <Card className="bg-zinc-900/50 border-white/5 print-card print-page-break">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2"><Eye className="w-4 h-4 text-pink-400" /><p className="text-sm font-medium text-white">Frontend (What You See)</p></div>
               <p className="text-[10px] text-zinc-500 mb-2">This is the part that runs in your web browser -- all the pages, buttons, and visuals.</p>
@@ -749,7 +749,7 @@ const AboutPage = () => {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-zinc-900/50 border-white/5 print-card">
+          <Card className="bg-zinc-900/50 border-white/5 print-card print-page-break">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2"><Sparkles className="w-4 h-4 text-amber-400" /><p className="text-sm font-medium text-white">AI Layer (The Brains)</p></div>
               <p className="text-[10px] text-zinc-500 mb-2">This connects MAARS Command to all the AI providers that power the agents.</p>
@@ -775,7 +775,7 @@ const AboutPage = () => {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {AI_PROVIDERS.map(provider => (
-            <Card key={provider.name} className="bg-zinc-900/50 border-white/5 print-card" data-testid={`provider-${provider.name}`}>
+            <Card key={provider.name} className="bg-zinc-900/50 border-white/5 print-card print-page-break" data-testid={`provider-${provider.name}`}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-1">
                   <Sparkles className={`w-4 h-4 ${provider.color}`} />
@@ -816,7 +816,7 @@ const AboutPage = () => {
             { title: "Trust Scoring", icon: Gauge, desc: "Every agent gets a trust score from 0 to 100 based on its performance history. Agents that consistently deliver good, fast results get high scores. Agents that fail often or produce low-quality work get low scores. Low-trust agents can be automatically restricted or flagged for review. This ensures your best agents get the most important work." },
             { title: "Simulation Mode", icon: Eye, desc: "A system-wide safety switch. When ON (default), all real-world actions (emails, calendar events, API calls) return fake responses -- nothing actually happens. This lets you safely test and review agent behavior before going live. Flip to Execution Mode only when you're confident everything works correctly." },
           ].map(item => (
-            <Card key={item.title} className="bg-zinc-900/50 border-white/5 print-card">
+            <Card key={item.title} className="bg-zinc-900/50 border-white/5 print-card print-page-break">
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <item.icon className="w-4 h-4 text-red-400" />
@@ -838,7 +838,7 @@ const AboutPage = () => {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {COST_DATA.map(provider => (
-            <Card key={provider.name} className="bg-zinc-900/50 border-white/5 print-card">
+            <Card key={provider.name} className="bg-zinc-900/50 border-white/5 print-card print-page-break">
               <CardContent className="p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-bold text-white">{provider.name}</span>
