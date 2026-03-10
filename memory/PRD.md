@@ -50,14 +50,13 @@ backend/services/
 - [x] Agent suggestions / self-expanding agents
 - [x] Stripe payment integration
 
-### Admin Control Panel — Sidebar Breakdown (Feb 10, 2026)
+### Admin Control Panel — Sidebar Breakdown
 - [x] Overview (/admin/overview)
 - [x] Analytics (/admin/analytics)
 - [x] Users (/admin/users)
 - [x] Agents (/admin/agents)
 - [x] Transactions (/admin/transactions)
-- [x] Pricing & Packages (/admin/pricing-manager)
-- [x] Plan Editor (/admin/pricing)
+- [x] Pricing & Packages (/admin/pricing-manager) — **UNIFIED** (merged Plan Editor + Pricing Manager + Custom Packages)
 - [x] API Keys & Integrations (/admin/api-keys)
 - [x] Payment Setup (/admin/payments)
 - [x] Email SMTP (/admin/smtp)
@@ -69,23 +68,35 @@ backend/services/
 - [x] Circuit Breakers (/circuit-breakers)
 - [x] Cost Governance (/cost-governance)
 
-### PWA / Mobile (Feb 10, 2026)
+### PWA / Mobile
 - [x] manifest.json with MAARS metadata
 - [x] Service worker (sw.js) with cache-first strategy
 - [x] PWA icons (192x192, 512x512)
 - [x] Apple mobile web app meta tags
 - [x] Installable on mobile via "Add to Home Screen"
 
-### Multi-Org Switching (Feb 10, 2026)
+### Multi-Org Switching
 - [x] Org Switcher in sidebar (above search)
 - [x] Create Organization flow
 - [x] Personal Workspace default
 
-### Advanced Dashboard Widgets (Feb 10, 2026)
+### Advanced Dashboard Widgets
 - [x] Auto-refresh toggle (30s interval)
 - [x] Last refresh timestamp
 - [x] Manual refresh button
 - [x] Widget catalog with 8 types
+
+### Unified Pricing Admin (Feb 10, 2026)
+- [x] Consolidated Plan Editor + Pricing Manager into single page
+- [x] Create new plans with full fields (ID, name, pricing, credits, agents, commander, team, features)
+- [x] Delete plans (except Free)
+- [x] Per-plan margin controls (100%, 200%, 500%, 1000%, custom)
+- [x] Features editor with badge display and inline add/remove
+- [x] Commander toggle and Team Members per plan
+- [x] Profit Margin Calculator with live AI cost sync
+- [x] Custom Packages (Credit Presets, Extra Credit Packs)
+- [x] Publish Pricing Changes
+- [x] No overlapping/duplicate UI components
 
 ## Credentials
 - Admin: management.maars@marsgc.net / Admin123!
@@ -95,3 +106,7 @@ backend/services/
 - Advanced multi-org switching with shared resources
 - Custom branded login pages per org
 - Billing history / invoice dashboard
+- Advanced trust analytics and customizable dashboard widgets
+- Agent-to-agent collaboration within workflows (further enhancements)
+- Further multi-tenancy enhancements (org-switcher improvements)
+- Align backend route files to import directly from new services instead of kernel_service.py shim
