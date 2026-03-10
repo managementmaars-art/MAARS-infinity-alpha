@@ -55,7 +55,6 @@ import {
 } from "./pages/AdminPages";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
-import { CreditsDisplay } from "./components/CreditsDisplay";
 import { BrandingProvider } from "./components/BrandingProvider";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -242,20 +241,7 @@ const AdminRoute = ({ children }) => {
   return children;
 };
 
-// Global floating credits display for authenticated users
-const GlobalCreditsDisplay = () => {
-  const { user, loading } = useAuth();
-  const location = useLocation();
-
-  const publicPaths = ["/", "/login", "/register", "/pricing"];
-  if (loading || !user || publicPaths.includes(location.pathname)) return null;
-
-  return (
-    <div className="fixed top-4 right-4 z-[55]" data-testid="global-credits-display">
-      <CreditsDisplay />
-    </div>
-  );
-};
+// Global floating credits display removed — credits are now in the sidebar
 
 // App Router with session_id detection
 const AppRouter = () => {
@@ -335,7 +321,6 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <BrandingProvider>
-          <GlobalCreditsDisplay />
           <AppRouter />
           <Watermark />
           <Toaster position="top-right" richColors />

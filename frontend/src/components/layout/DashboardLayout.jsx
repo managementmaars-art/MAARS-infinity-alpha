@@ -7,9 +7,10 @@ import {
   PanelLeftClose, PanelLeftOpen, Search, FileCode, Database,
   Network, GitBranch, Layers, Share2, Zap, Lock, CircuitBoard, DollarSign, Workflow,
   Globe, HardDrive, Megaphone, Plug, Building2, PieChart, Sparkles,
-  CreditCard, Key, Mail, Paintbrush, BookOpen, ScrollText, TrendingUp
+  CreditCard, Key, Mail, Paintbrush, BookOpen, ScrollText, TrendingUp,
+  Diamond, Plus
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import CommandPalette from "../CommandPalette";
 
 const API = process.env.REACT_APP_BACKEND_URL;
@@ -80,6 +81,70 @@ function OrgSwitcher() {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+function SidebarCredits({ collapsed }) {
+  const { token } = useAuth();
+  const [credits, setCredits] = useState(null);
+  const [planName, setPlanName] = useState("Free");
+
+  const fetchCredits = useCallback(async () => {
+    if (!token) return;
+    try {
+      const res = await fetch(`${API}/api/subscription`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        const data = await res.json();
+        setCredits(data.credits ?? 0);
+        setPlanName(data.plan_info?.name ?? "Free");
+      }
+    } catch {}
+  }, [token]);
+
+  useEffect(() => {
+    fetchCredits();
+    const interval = setInterval(fetchCredits, 30000);
+    return () => clearInterval(interval);
+  }, [fetchCredits]);
+
+  const navigate = useNavigate();
+
+  if (collapsed) {
+    return (
+      <div className="px-2 pt-2">
+        <button
+          onClick={() => navigate("/pricing")}
+          title={credits !== null ? `${credits.toFixed(0)} credits` : "Credits"}
+          className="w-full flex items-center justify-center py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 hover:border-amber-500/40 transition-colors"
+          data-testid="sidebar-credits-btn"
+        >
+          <Diamond className="w-4 h-4 text-amber-400" />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-2 pt-2" data-testid="sidebar-credits">
+      <div className="rounded-lg bg-amber-500/[0.06] border border-amber-500/15 px-3 py-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <Diamond className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-[12px] font-bold text-amber-400 tabular-nums">
+              {credits !== null ? credits.toFixed(2) : "..."}
+            </span>
+          </div>
+          <span className="text-[9px] font-medium text-amber-500/60 px-1.5 py-0.5 rounded bg-amber-500/10">{planName}</span>
+        </div>
+        <button
+          onClick={() => navigate("/pricing")}
+          className="mt-1.5 w-full flex items-center justify-center gap-1 py-1 rounded-md bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 text-[10px] font-semibold transition-colors"
+          data-testid="sidebar-buy-credits-btn"
+        >
+          <Plus className="w-3 h-3" /> Buy Credits
+        </button>
+      </div>
     </div>
   );
 }
@@ -298,6 +363,9 @@ const DashboardLayout = ({ children }) => {
           </Link>
         </div>
 
+        {/* Credits Display */}
+        <SidebarCredits collapsed={collapsed} />
+
         {/* Org Switcher */}
         {!collapsed && (
           <OrgSwitcher />
@@ -380,6 +448,7 @@ const DashboardLayout = ({ children }) => {
                 <X className="w-5 h-5" />
               </button>
             </div>
+            <SidebarCredits collapsed={false} />
             <nav className="flex-1 overflow-y-auto py-1 px-2">
               {renderNav(() => setMobileOpen(false))}
             </nav>
