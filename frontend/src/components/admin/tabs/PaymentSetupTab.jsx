@@ -4,7 +4,7 @@ import { Badge } from "../../ui/badge";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
-import { CreditCard, ExternalLink } from "lucide-react";
+import { CreditCard, ExternalLink, DollarSign } from "lucide-react";
 import { API } from "../../../App";
 import { toast } from "sonner";
 
