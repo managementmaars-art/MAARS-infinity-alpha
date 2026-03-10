@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../App";
-import { Network, ChevronRight, Users, Layers, Search, Bot } from "lucide-react";
+import { Network, ChevronRight, Users, Layers, Search, Bot, MessageSquare } from "lucide-react";
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
@@ -17,6 +18,7 @@ const LAYER_COLORS = {
 
 export default function AgentNetworks() {
   const { token } = useAuth();
+  const navigate = useNavigate();
   const [networks, setNetworks] = useState([]);
   const [selected, setSelected] = useState(null);
   const [agents, setAgents] = useState([]);
@@ -114,7 +116,7 @@ export default function AgentNetworks() {
               </div>
               <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-2">
                 {filteredAgents.map(agent => (
-                  <div key={agent.agent_id} className="bg-zinc-800/40 border border-white/5 rounded-lg p-3 hover:border-white/10 transition-colors" data-testid={`agent-${agent.agent_id}`}>
+                  <div key={agent.agent_id} className="bg-zinc-800/40 border border-white/5 rounded-lg p-3 hover:border-white/10 transition-colors group" data-testid={`agent-${agent.agent_id}`}>
                     <div className="flex items-start gap-3">
                       <div className="w-8 h-8 rounded-lg bg-zinc-700/50 flex items-center justify-center shrink-0">
                         <Bot className="w-4 h-4 text-zinc-400" />
@@ -133,7 +135,17 @@ export default function AgentNetworks() {
                           </div>
                         )}
                       </div>
-                      <span className="text-[9px] font-mono text-emerald-500/60 bg-emerald-500/5 px-1.5 py-0.5 rounded">T{agent.autonomy_tier}</span>
+                      <div className="flex flex-col items-end gap-1.5 shrink-0">
+                        <span className="text-[9px] font-mono text-emerald-500/60 bg-emerald-500/5 px-1.5 py-0.5 rounded">T{agent.autonomy_tier}</span>
+                        <button
+                          onClick={() => navigate(`/chat/${agent.agent_id}`)}
+                          className="flex items-center gap-1 px-2 py-1 rounded-md bg-indigo-500/10 text-indigo-400 text-[10px] font-medium hover:bg-indigo-500/20 transition-colors opacity-0 group-hover:opacity-100"
+                          data-testid={`chat-agent-${agent.agent_id}`}
+                        >
+                          <MessageSquare className="w-3 h-3" />
+                          Chat
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}

@@ -1074,11 +1074,17 @@ const AgentChat = () => {
         {selectedAgent && (
           <div className="hidden lg:flex items-center justify-between px-4 py-3 border-b border-white/[0.06] shrink-0">
             <div className="flex items-center gap-3">
-              <img
-                src={selectedAgent.avatar}
-                alt={selectedAgent.name}
-                className="w-9 h-9 rounded-lg object-cover"
-              />
+              {selectedAgent.avatar ? (
+                <img
+                  src={selectedAgent.avatar}
+                  alt={selectedAgent.name}
+                  className="w-9 h-9 rounded-lg object-cover"
+                />
+              ) : (
+                <div className="w-9 h-9 rounded-lg bg-indigo-500/20 flex items-center justify-center text-xs font-bold text-indigo-400">
+                  {selectedAgent.name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
+                </div>
+              )}
               <div>
                 <h2 className="font-semibold text-white text-sm">{selectedAgent.name}</h2>
                 <p className="text-xs text-zinc-500">{selectedAgent.role}</p>
@@ -1135,11 +1141,17 @@ const AgentChat = () => {
             <div className="h-full flex flex-col items-center justify-center text-center p-8">
               {selectedAgent && (
                 <>
-                  <img
-                    src={selectedAgent.avatar}
-                    alt={selectedAgent.name}
-                    className="w-16 h-16 rounded-xl object-cover mb-4"
-                  />
+                  {selectedAgent.avatar ? (
+                    <img
+                      src={selectedAgent.avatar}
+                      alt={selectedAgent.name}
+                      className="w-16 h-16 rounded-xl object-cover mb-4"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-4 text-xl font-bold text-indigo-400">
+                      {selectedAgent.name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
+                    </div>
+                  )}
                   <h3 className="text-lg font-semibold text-white mb-1 font-['Outfit']">
                     Chat with {selectedAgent.name}
                   </h3>
@@ -1225,11 +1237,17 @@ const AgentChat = () => {
                   data-testid={`message-${i}`}
                 >
                   {msg.role === "assistant" && (
-                    <img
-                      src={msg.agent_avatar || selectedAgent?.avatar}
-                      alt=""
-                      className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
-                    />
+                    (msg.agent_avatar || selectedAgent?.avatar) ? (
+                      <img
+                        src={msg.agent_avatar || selectedAgent?.avatar}
+                        alt=""
+                        className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-indigo-400">
+                        {(selectedAgent?.name || "AI").split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
+                      </div>
+                    )
                   )}
                   <div
                     className={`max-w-[80%] p-4 rounded-xl ${
@@ -1621,60 +1639,80 @@ const AgentChat = () => {
 };
 
 // Sidebar Content Component
+const NETWORK_LABELS = {
+  core_platform: "Core Platform", strategic_executive: "Strategic", venture_creation: "Venture",
+  product_development: "Product", engineering: "Engineering", creative_brand: "Creative",
+  growth_distribution: "Growth", sales_revenue: "Sales", customer_experience: "Customer",
+  operations: "Operations", finance_capital: "Finance", investment_portfolio: "Investment",
+  research_intelligence: "Research", simulation_foresight: "Simulation", legal_governance: "Legal",
+  security: "Security", memory_knowledge: "Memory", tooling_capability: "Tooling",
+  execution: "Execution", verification: "Verification", experimentation: "Experimentation",
+  conflict_resolution: "Conflict", observability_incident: "Observability", recovery_resilience: "Recovery",
+  communication_reporting: "Communication", web_search_intelligence: "Web Intel", industry_specific: "Industry",
+};
+
+const NET_COLORS = {
+  core_platform: "#10b981", strategic_executive: "#a855f7", venture_creation: "#3b82f6",
+  product_development: "#06b6d4", engineering: "#f59e0b", creative_brand: "#ec4899",
+  growth_distribution: "#22c55e", sales_revenue: "#f97316", customer_experience: "#14b8a6",
+  operations: "#6366f1", finance_capital: "#eab308", investment_portfolio: "#8b5cf6",
+  research_intelligence: "#0ea5e9", simulation_foresight: "#d946ef", legal_governance: "#f43f5e",
+  security: "#ef4444", memory_knowledge: "#06b6d4", tooling_capability: "#84cc16",
+  execution: "#f97316", verification: "#6366f1", experimentation: "#a855f7",
+  conflict_resolution: "#f43f5e", observability_incident: "#22d3ee", recovery_resilience: "#10b981",
+  communication_reporting: "#3b82f6", web_search_intelligence: "#0ea5e9", industry_specific: "#f59e0b",
+};
+
+const getInitials = (name) => name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || '??';
+
 const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent, 
   currentChat, loadChat, deleteChat, startNewChat, navigate 
 }) => {
   const [agentSearch, setAgentSearch] = useState("");
-  const [showAllAgents, setShowAllAgents] = useState(false);
+  const [browseOpen, setBrowseOpen] = useState(false);
+  const [expandedNet, setExpandedNet] = useState(null);
   
-  // Group agents by network
-  const groupedAgents = {};
-  agents.forEach(a => {
-    const net = a.network || "ungrouped";
-    if (!groupedAgents[net]) groupedAgents[net] = [];
-    groupedAgents[net].push(a);
-  });
-  
-  // Original 41 agents (not infinity)
   const originalAgents = agents.filter(a => !a.is_infinity);
-  // Infinity agents filtered by search
-  const filteredInfinity = agentSearch
-    ? agents.filter(a => a.is_infinity && (
+  const infinityAgents = agents.filter(a => a.is_infinity);
+  
+  // Build network groups for browsing
+  const networkGroups = {};
+  infinityAgents.forEach(a => {
+    const net = a.network || "ungrouped";
+    if (!networkGroups[net]) networkGroups[net] = [];
+    networkGroups[net].push(a);
+  });
+  const sortedNetworks = Object.keys(networkGroups).sort((a, b) => 
+    (NETWORK_LABELS[a] || a).localeCompare(NETWORK_LABELS[b] || b)
+  );
+  
+  // Unified search across ALL agents
+  const searchResults = agentSearch.trim().length > 0
+    ? agents.filter(a =>
         a.name.toLowerCase().includes(agentSearch.toLowerCase()) ||
         a.role.toLowerCase().includes(agentSearch.toLowerCase()) ||
-        (a.network || "").toLowerCase().includes(agentSearch.toLowerCase())
-      ))
+        (a.network || "").toLowerCase().includes(agentSearch.toLowerCase()) ||
+        (NETWORK_LABELS[a.network] || "").toLowerCase().includes(agentSearch.toLowerCase())
+      ).slice(0, 30)
     : [];
 
-  const NETWORK_LABELS = {
-    core_platform: "Core Platform", strategic_executive: "Strategic", venture_creation: "Venture",
-    product_development: "Product", engineering: "Engineering", creative_brand: "Creative",
-    growth_distribution: "Growth", sales_revenue: "Sales", customer_experience: "Customer",
-    operations: "Operations", finance_capital: "Finance", investment_portfolio: "Investment",
-    research_intelligence: "Research", simulation_foresight: "Simulation", legal_governance: "Legal",
-    security: "Security", memory_knowledge: "Memory", tooling_capability: "Tooling",
-    execution: "Execution", verification: "Verification", experimentation: "Experimentation",
-    conflict_resolution: "Conflict", observability_incident: "Observability", recovery_resilience: "Recovery",
-    communication_reporting: "Communication", web_search_intelligence: "Web Intel", industry_specific: "Industry",
+  const selectAgent = (agent) => {
+    setSelectedAgent(agent);
+    navigate(`/chat/${agent.agent_id}`);
+    setAgentSearch("");
+    setBrowseOpen(false);
   };
 
-  const getInitials = (name) => name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-  const NET_COLORS = ["emerald", "blue", "purple", "amber", "cyan", "rose", "indigo", "orange", "teal", "pink"];
-  const getNetColor = (net) => NET_COLORS[Math.abs([...net].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 0)) % NET_COLORS.length];
-
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
-      {/* Original Agents Quick Access */}
+    <div className="flex-1 flex flex-col overflow-hidden" data-testid="chat-sidebar">
+      {/* Quick Access: Original Agents */}
       <div className="px-3 pt-3 pb-2 border-b border-white/[0.06]">
         <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-2 px-1">Agents</p>
-        <div className="flex gap-1.5 overflow-x-auto pb-1">
-          {originalAgents.slice(0, 8).map((agent) => (
+        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
+          {originalAgents.slice(0, 10).map((agent) => (
             <button
               key={agent.agent_id}
-              onClick={() => {
-                setSelectedAgent(agent);
-                navigate(`/chat/${agent.agent_id}`);
-              }}
+              onClick={() => selectAgent(agent)}
               className={`flex-shrink-0 p-1.5 rounded-lg transition-all ${
                 selectedAgent?.agent_id === agent.agent_id
                   ? "bg-indigo-500/15 ring-1 ring-indigo-500/40"
@@ -1693,49 +1731,128 @@ const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent,
             </button>
           ))}
         </div>
-        {/* Infinity Agent Search */}
-        <div className="mt-2">
-          <div className="relative">
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-zinc-500" />
-            <input
-              type="text"
-              placeholder="Search 458+ agents..."
-              value={agentSearch}
-              onChange={e => setAgentSearch(e.target.value)}
-              onFocus={() => setShowAllAgents(true)}
-              className="w-full bg-zinc-800/50 border border-white/5 rounded-md pl-7 pr-2 py-1.5 text-[11px] text-white placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/30"
-              data-testid="agent-search-input"
-            />
-          </div>
-          {agentSearch && filteredInfinity.length > 0 && (
-            <div className="mt-1 max-h-48 overflow-y-auto space-y-0.5 bg-zinc-900/90 rounded-md border border-white/5 p-1">
-              {filteredInfinity.slice(0, 20).map(agent => (
-                <button
-                  key={agent.agent_id}
-                  onClick={() => {
-                    setSelectedAgent(agent);
-                    navigate(`/chat/${agent.agent_id}`);
-                    setAgentSearch("");
-                  }}
-                  className="w-full text-left flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/5 transition-colors"
-                  data-testid={`search-agent-${agent.agent_id}`}
-                >
-                  <div className={`w-6 h-6 rounded bg-${getNetColor(agent.network || '')}-500/20 flex items-center justify-center`}>
-                    <span className={`text-[8px] font-bold text-${getNetColor(agent.network || '')}-400`}>{getInitials(agent.name)}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[11px] text-white truncate">{agent.name}</p>
-                    <p className="text-[9px] text-zinc-500 truncate">{NETWORK_LABELS[agent.network] || agent.network}</p>
-                  </div>
-                </button>
-              ))}
-              {filteredInfinity.length > 20 && (
-                <p className="text-[9px] text-zinc-600 text-center py-1">+{filteredInfinity.length - 20} more</p>
-              )}
-            </div>
+
+        {/* Search */}
+        <div className="mt-2 relative">
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-zinc-500" />
+          <input
+            type="text"
+            placeholder="Search 458+ agents..."
+            value={agentSearch}
+            onChange={e => setAgentSearch(e.target.value)}
+            className="w-full bg-zinc-800/50 border border-white/5 rounded-md pl-7 pr-8 py-1.5 text-[11px] text-white placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/30"
+            data-testid="agent-search-input"
+          />
+          {agentSearch && (
+            <button onClick={() => setAgentSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white">
+              <X className="w-3 h-3" />
+            </button>
           )}
         </div>
+
+        {/* Search Results */}
+        {agentSearch && searchResults.length > 0 && (
+          <div className="mt-1.5 max-h-56 overflow-y-auto space-y-0.5 bg-zinc-900/95 rounded-lg border border-white/10 p-1 shadow-xl" data-testid="search-results">
+            {searchResults.map(agent => {
+              const netColor = NET_COLORS[agent.network] || "#6366f1";
+              return (
+                <button
+                  key={agent.agent_id}
+                  onClick={() => selectAgent(agent)}
+                  className="w-full text-left flex items-center gap-2.5 px-2 py-1.5 rounded-md hover:bg-white/5 transition-colors"
+                  data-testid={`search-agent-${agent.agent_id}`}
+                >
+                  {agent.avatar ? (
+                    <img src={agent.avatar} alt="" className="w-6 h-6 rounded object-cover" />
+                  ) : (
+                    <div className="w-6 h-6 rounded flex items-center justify-center text-[8px] font-bold" style={{ backgroundColor: `${netColor}20`, color: netColor }}>
+                      {getInitials(agent.name)}
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] text-white truncate">{agent.name}</p>
+                    <p className="text-[9px] text-zinc-500 truncate">{agent.role} — {NETWORK_LABELS[agent.network] || agent.network || "General"}</p>
+                  </div>
+                  {agent.is_infinity && <span className="text-[8px] text-zinc-600 shrink-0">∞</span>}
+                </button>
+              );
+            })}
+            {searchResults.length >= 30 && (
+              <p className="text-[9px] text-zinc-600 text-center py-1">Showing top 30 results</p>
+            )}
+          </div>
+        )}
+        {agentSearch && searchResults.length === 0 && (
+          <p className="text-[10px] text-zinc-600 text-center py-3 mt-1">No agents match "{agentSearch}"</p>
+        )}
+
+        {/* Browse Networks Button */}
+        <button
+          onClick={() => setBrowseOpen(!browseOpen)}
+          className={`w-full mt-2 flex items-center justify-between px-2.5 py-1.5 rounded-md text-[11px] transition-colors ${
+            browseOpen ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20" : "bg-zinc-800/30 text-zinc-500 hover:text-zinc-300 border border-transparent hover:border-white/5"
+          }`}
+          data-testid="browse-networks-btn"
+        >
+          <span className="flex items-center gap-1.5">
+            <Users className="w-3 h-3" />
+            Browse {sortedNetworks.length} Networks
+          </span>
+          <ChevronDown className={`w-3 h-3 transition-transform ${browseOpen ? "rotate-180" : ""}`} />
+        </button>
       </div>
+
+      {/* Network Browser Panel */}
+      {browseOpen && (
+        <div className="border-b border-white/[0.06] max-h-64 overflow-y-auto" data-testid="network-browser">
+          {sortedNetworks.map(netKey => {
+            const isExpanded = expandedNet === netKey;
+            const netAgents = networkGroups[netKey];
+            const netColor = NET_COLORS[netKey] || "#6366f1";
+            return (
+              <div key={netKey}>
+                <button
+                  onClick={() => setExpandedNet(isExpanded ? null : netKey)}
+                  className="w-full flex items-center gap-2 px-3 py-2 hover:bg-white/[0.03] transition-colors"
+                  data-testid={`network-group-${netKey}`}
+                >
+                  <div className="w-5 h-5 rounded flex items-center justify-center shrink-0" style={{ backgroundColor: `${netColor}15` }}>
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: netColor }} />
+                  </div>
+                  <span className="text-[11px] text-zinc-300 flex-1 text-left truncate">{NETWORK_LABELS[netKey] || netKey}</span>
+                  <span className="text-[9px] text-zinc-600 mr-1">{netAgents.length}</span>
+                  <ChevronRight className={`w-3 h-3 text-zinc-600 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
+                </button>
+                {isExpanded && (
+                  <div className="pl-4 pr-2 pb-1 space-y-0.5">
+                    {netAgents.map(agent => (
+                      <button
+                        key={agent.agent_id}
+                        onClick={() => selectAgent(agent)}
+                        className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-md transition-colors ${
+                          selectedAgent?.agent_id === agent.agent_id ? "bg-indigo-500/10 text-indigo-300" : "hover:bg-white/[0.04] text-zinc-400"
+                        }`}
+                        data-testid={`net-agent-${agent.agent_id}`}
+                      >
+                        {agent.avatar ? (
+                          <img src={agent.avatar} alt="" className="w-5 h-5 rounded object-cover" />
+                        ) : (
+                          <div className="w-5 h-5 rounded flex items-center justify-center text-[7px] font-bold" style={{ backgroundColor: `${netColor}20`, color: netColor }}>
+                            {getInitials(agent.name)}
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[10px] truncate">{agent.name}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Chat History */}
       <ScrollArea className="flex-1">
