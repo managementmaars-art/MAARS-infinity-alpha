@@ -21,6 +21,8 @@ from services.kernel_service import (
     get_memory_layers, get_memory_stats,
     get_campaign_templates, get_campaigns, get_campaign,
     create_campaign, update_campaign, delete_campaign, execute_campaign,
+    get_integrations, get_user_integrations, save_user_integration,
+    disconnect_integration, toggle_integration,
 )
 from infinity_catalog import (
     NETWORK_DEFINITIONS, AUTONOMY_TIERS, AGENT_LIFECYCLE_STATES,
@@ -520,3 +522,48 @@ async def run_campaign(campaign_id: str, user=Depends(get_current_user)):
     import asyncio
     asyncio.create_task(execute_campaign(user.user_id, campaign_id))
     return {"status": "started", "campaign_id": campaign_id}
+
+
+# ---------- Integration Hub ----------
+
+class IntegrationConnect(BaseModel):
+    integration_id: str
+    config: dict = {}
+    enabled: bool = True
+
+class IntegrationToggle(BaseModel):
+    enabled: bool
+
+
+@router.get("/integrations/available")
+async def list_available_integrations(user=Depends(get_current_user)):
+    available = await get_integrations()
+    user_integrations = await get_user_integrations(user.user_id)
+    connected_ids = {i["integration_id"] for i in user_integrations}
+    return {
+        "available": available,
+        "connected": user_integrations,
+        "connected_ids": list(connected_ids),
+    }
+
+
+@router.post("/integrations/connect")
+async def connect_integration(data: IntegrationConnect, user=Depends(get_current_user)):
+    result = await save_user_integration(user.user_id, data.dict())
+    if not result:
+        raise HTTPException(status_code=400, detail="Invalid integration")
+    return result
+
+
+@router.delete("/integrations/{integration_id}")
+async def remove_integration(integration_id: str, user=Depends(get_current_user)):
+    await disconnect_integration(user.user_id, integration_id)
+    return {"status": "disconnected"}
+
+
+@router.put("/integrations/{integration_id}/toggle")
+async def toggle_int(integration_id: str, data: IntegrationToggle, user=Depends(get_current_user)):
+    result = await toggle_integration(user.user_id, integration_id, data.enabled)
+    if not result:
+        raise HTTPException(status_code=404, detail="Integration not found")
+    return result

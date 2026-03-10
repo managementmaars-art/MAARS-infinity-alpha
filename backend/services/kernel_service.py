@@ -988,6 +988,160 @@ async def get_memory_stats(user_id):
     return stats
 
 
+# ---------- Integration Hub ----------
+
+AVAILABLE_INTEGRATIONS = [
+    {
+        "integration_id": "whatsapp",
+        "name": "WhatsApp Business",
+        "description": "Send and receive messages via WhatsApp Business API. Enable AI agents to respond to customer queries on WhatsApp.",
+        "category": "Messaging",
+        "color": "#25d366",
+        "icon": "message-circle",
+        "config_fields": [
+            {"key": "phone_number_id", "label": "Phone Number ID", "type": "text", "required": True},
+            {"key": "access_token", "label": "Access Token", "type": "password", "required": True},
+            {"key": "verify_token", "label": "Webhook Verify Token", "type": "text", "required": True},
+            {"key": "business_account_id", "label": "Business Account ID", "type": "text", "required": False},
+        ],
+        "docs_url": "https://developers.facebook.com/docs/whatsapp/cloud-api",
+        "features": ["Inbound messaging", "Outbound messaging", "Media support", "Template messages", "Webhook events"],
+    },
+    {
+        "integration_id": "shopify",
+        "name": "Shopify",
+        "description": "Connect your Shopify store for AI-powered inventory management, order processing, and customer insights.",
+        "category": "E-Commerce",
+        "color": "#96bf48",
+        "icon": "shopping-bag",
+        "config_fields": [
+            {"key": "shop_domain", "label": "Shop Domain", "type": "text", "required": True, "placeholder": "your-store.myshopify.com"},
+            {"key": "access_token", "label": "Admin API Access Token", "type": "password", "required": True},
+            {"key": "api_version", "label": "API Version", "type": "text", "required": False, "placeholder": "2025-01"},
+        ],
+        "docs_url": "https://shopify.dev/docs/api/admin-rest",
+        "features": ["Product management", "Order tracking", "Customer data", "Inventory sync", "Webhook events"],
+    },
+    {
+        "integration_id": "hubspot",
+        "name": "HubSpot CRM",
+        "description": "Sync contacts, deals, and companies with HubSpot. Automate CRM workflows with AI agents.",
+        "category": "CRM",
+        "color": "#ff7a59",
+        "icon": "users",
+        "config_fields": [
+            {"key": "api_key", "label": "Private App Token", "type": "password", "required": True},
+            {"key": "portal_id", "label": "Portal ID", "type": "text", "required": False},
+        ],
+        "docs_url": "https://developers.hubspot.com/docs/api/overview",
+        "features": ["Contact management", "Deal pipeline", "Company records", "Task automation", "Email tracking"],
+    },
+    {
+        "integration_id": "salesforce",
+        "name": "Salesforce",
+        "description": "Enterprise CRM integration for lead management, opportunity tracking, and customer 360 views.",
+        "category": "CRM",
+        "color": "#00a1e0",
+        "icon": "cloud",
+        "config_fields": [
+            {"key": "instance_url", "label": "Instance URL", "type": "text", "required": True, "placeholder": "https://your-org.salesforce.com"},
+            {"key": "client_id", "label": "Client ID", "type": "text", "required": True},
+            {"key": "client_secret", "label": "Client Secret", "type": "password", "required": True},
+            {"key": "refresh_token", "label": "Refresh Token", "type": "password", "required": True},
+        ],
+        "docs_url": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/",
+        "features": ["Lead management", "Opportunity tracking", "Account data", "Reports", "Custom objects"],
+    },
+    {
+        "integration_id": "slack",
+        "name": "Slack",
+        "description": "Connect Slack workspaces for AI-powered notifications, channel management, and team automation.",
+        "category": "Communication",
+        "color": "#4a154b",
+        "icon": "hash",
+        "config_fields": [
+            {"key": "bot_token", "label": "Bot Token", "type": "password", "required": True},
+            {"key": "signing_secret", "label": "Signing Secret", "type": "password", "required": True},
+            {"key": "channel_id", "label": "Default Channel ID", "type": "text", "required": False},
+        ],
+        "docs_url": "https://api.slack.com/",
+        "features": ["Send messages", "Channel management", "File sharing", "Slash commands", "Event subscriptions"],
+    },
+    {
+        "integration_id": "zapier",
+        "name": "Zapier",
+        "description": "Connect 6,000+ apps through Zapier. Trigger AI agent workflows from any connected service.",
+        "category": "Automation",
+        "color": "#ff4a00",
+        "icon": "zap",
+        "config_fields": [
+            {"key": "webhook_url", "label": "Zapier Webhook URL", "type": "text", "required": True},
+            {"key": "api_key", "label": "Zapier API Key", "type": "password", "required": False},
+        ],
+        "docs_url": "https://zapier.com/developer",
+        "features": ["Trigger workflows", "Send data", "Receive webhooks", "Multi-step zaps", "Custom actions"],
+    },
+]
+
+
+async def get_integrations():
+    return AVAILABLE_INTEGRATIONS
+
+
+async def get_user_integrations(user_id):
+    results = []
+    async for i in db.user_integrations.find({"user_id": user_id}, {"_id": 0}):
+        results.append(i)
+    return results
+
+
+async def save_user_integration(user_id, data):
+    now = datetime.now(timezone.utc).isoformat()
+    integration_id = data.get("integration_id")
+
+    # Validate integration exists
+    template = next((i for i in AVAILABLE_INTEGRATIONS if i["integration_id"] == integration_id), None)
+    if not template:
+        return None
+
+    doc = {
+        "user_id": user_id,
+        "integration_id": integration_id,
+        "name": template["name"],
+        "category": template["category"],
+        "color": template["color"],
+        "config": data.get("config", {}),
+        "enabled": data.get("enabled", True),
+        "status": "connected",
+        "connected_at": now,
+        "updated_at": now,
+    }
+
+    await db.user_integrations.update_one(
+        {"user_id": user_id, "integration_id": integration_id},
+        {"$set": doc},
+        upsert=True,
+    )
+    doc.pop("_id", None)
+    return doc
+
+
+async def disconnect_integration(user_id, integration_id):
+    await db.user_integrations.delete_one({"user_id": user_id, "integration_id": integration_id})
+    return True
+
+
+async def toggle_integration(user_id, integration_id, enabled):
+    now = datetime.now(timezone.utc).isoformat()
+    await db.user_integrations.update_one(
+        {"user_id": user_id, "integration_id": integration_id},
+        {"$set": {"enabled": enabled, "updated_at": now}}
+    )
+    return await db.user_integrations.find_one(
+        {"user_id": user_id, "integration_id": integration_id}, {"_id": 0}
+    )
+
+
 # ---------- Campaign Builder ----------
 
 CAMPAIGN_TEMPLATES = [

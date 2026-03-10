@@ -85,6 +85,25 @@ const CreateAgent = () => {
     cohere: [
       { value: "command-r-plus", label: "Command R+ (Flagship)" },
       { value: "command-r", label: "Command R (Standard)" }
+    ],
+    groq: [
+      { value: "llama-4-scout-17b-16e-instruct", label: "Llama 4 Scout (Economy)" },
+      { value: "llama-4-maverick-17b-128e-instruct", label: "Llama 4 Maverick (Fast)" },
+      { value: "llama-3.3-70b-versatile", label: "Llama 3.3 70B (Versatile)" }
+    ],
+    together: [
+      { value: "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", label: "Llama 4 Maverick FP8 (Fast)" },
+      { value: "meta-llama/Llama-3.3-70B-Instruct-Turbo", label: "Llama 3.3 70B Turbo (Fast)" },
+      { value: "deepseek-ai/DeepSeek-R1", label: "DeepSeek R1 (Reasoning)" }
+    ],
+    fireworks: [
+      { value: "accounts/fireworks/models/llama4-scout-instruct-basic", label: "Llama 4 Scout (Economy)" },
+      { value: "accounts/fireworks/models/llama4-maverick-instruct-basic", label: "Llama 4 Maverick (Fast)" },
+      { value: "accounts/fireworks/models/deepseek-v3", label: "DeepSeek V3 (Standard)" }
+    ],
+    ai21: [
+      { value: "jamba-large-1.7", label: "Jamba Large 1.7 (Flagship)" },
+      { value: "jamba-mini-1.7", label: "Jamba Mini 1.7 (Economy)" }
     ]
   };
 
