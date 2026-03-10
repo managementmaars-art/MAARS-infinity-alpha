@@ -370,23 +370,17 @@ export const PricingManagerTab = ({ pricingConfig, setPricingConfig, pricingEdit
                     </div>
                   )}
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
                     <div className="space-y-1">
-                      <Label className="text-zinc-400 text-xs">AI Cost/Credit</Label>
-                      <div className="flex items-center h-9 px-3 rounded-md bg-zinc-800/80 border border-white/5 text-sm text-amber-400 font-mono" data-testid={`ai-cost-${planId}`}>
-                        ${(calcInputs.ai_cost_per_credit || 0).toFixed(6)}
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <Label className="text-zinc-400 text-xs">Sell Price USD</Label>
+                      <Label className="text-zinc-400 text-xs">Price USD</Label>
                       <Input type="number" step="0.01" value={plan.price_usd} onChange={(e) => updatePlanField(planId, 'price_usd', e.target.value)} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid={`edit-${planId}-usd`} />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-zinc-400 text-xs">Sell Price BDT</Label>
+                      <Label className="text-zinc-400 text-xs">Price BDT</Label>
                       <Input type="number" value={plan.price_bdt} onChange={(e) => updatePlanField(planId, 'price_bdt', e.target.value)} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid={`edit-${planId}-bdt`} />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-zinc-400 text-xs">Credits</Label>
+                      <Label className="text-zinc-400 text-xs">Credits/mo</Label>
                       <Input type="number" value={plan.credits} onChange={(e) => updatePlanField(planId, 'credits', e.target.value)} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid={`edit-${planId}-credits`} />
                     </div>
                     <div className="space-y-1">
@@ -396,16 +390,16 @@ export const PricingManagerTab = ({ pricingConfig, setPricingConfig, pricingEdit
                     <div className="space-y-1">
                       <Label className="text-zinc-400 text-xs">Custom Agents</Label>
                       <Input type="number" value={plan.max_custom_agents} onChange={(e) => updatePlanField(planId, 'max_custom_agents', e.target.value)} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid={`edit-${planId}-custom`} />
-                      <p className="text-[10px] text-zinc-500">-1 = unlimited</p>
+                      <p className="text-[9px] text-zinc-600">-1 = unlimited</p>
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-zinc-400 text-xs">Team Members</Label>
+                      <Label className="text-zinc-400 text-xs">Team Size</Label>
                       <Input type="number" value={plan.max_team_members || 1} onChange={(e) => updatePlanField(planId, 'max_team_members', e.target.value)} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid={`edit-${planId}-team`} />
-                      <p className="text-[10px] text-zinc-500">-1 = unlimited</p>
+                      <p className="text-[9px] text-zinc-600">-1 = unlimited</p>
                     </div>
-                    <div className="space-y-1 flex flex-col justify-center">
-                      <label className="flex items-center gap-2 cursor-pointer mt-5">
-                        <input type="checkbox" checked={plan.includes_commander || false} onChange={(e) => updatePlanField(planId, 'includes_commander', e.target.checked)} className="w-4 h-4 rounded border-white/20 bg-zinc-800" data-testid={`edit-${planId}-commander`} />
+                    <div className="space-y-1 flex flex-col justify-end">
+                      <label className="flex items-center gap-2 cursor-pointer h-9 px-2 rounded-md bg-zinc-800/30 border border-white/5">
+                        <input type="checkbox" checked={plan.includes_commander || false} onChange={(e) => updatePlanField(planId, 'includes_commander', e.target.checked)} className="w-3.5 h-3.5 rounded border-white/20 bg-zinc-800 accent-indigo-500" data-testid={`edit-${planId}-commander`} />
                         <span className="text-xs text-zinc-300">Commander</span>
                       </label>
                     </div>

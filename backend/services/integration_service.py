@@ -12,6 +12,8 @@ AVAILABLE_INTEGRATIONS = [
         "category": "Messaging",
         "icon": "message-circle",
         "color": "#25D366",
+        "features": ["Send messages", "Receive webhooks", "Template messages", "Media support"],
+        "docs_url": "https://developers.facebook.com/docs/whatsapp",
         "config_fields": [
             {"key": "phone_number_id", "label": "Phone Number ID", "type": "text", "required": True},
             {"key": "access_token", "label": "Access Token", "type": "password", "required": True},
@@ -25,6 +27,8 @@ AVAILABLE_INTEGRATIONS = [
         "category": "E-Commerce",
         "icon": "shopping-bag",
         "color": "#96BF48",
+        "features": ["Product sync", "Order management", "Customer data", "Inventory tracking"],
+        "docs_url": "https://shopify.dev/docs/api",
         "config_fields": [
             {"key": "store_url", "label": "Store URL", "type": "text", "required": True},
             {"key": "api_key", "label": "API Key", "type": "text", "required": True},
@@ -39,6 +43,8 @@ AVAILABLE_INTEGRATIONS = [
         "category": "CRM",
         "icon": "users",
         "color": "#FF7A59",
+        "features": ["Contact sync", "Deal tracking", "Marketing automation", "Email campaigns"],
+        "docs_url": "https://developers.hubspot.com/docs/api",
         "config_fields": [
             {"key": "api_key", "label": "API Key", "type": "password", "required": True},
             {"key": "portal_id", "label": "Portal ID", "type": "text", "required": True},
@@ -51,6 +57,8 @@ AVAILABLE_INTEGRATIONS = [
         "category": "CRM",
         "icon": "cloud",
         "color": "#00A1E0",
+        "features": ["Lead management", "Opportunity tracking", "Custom objects", "Reporting"],
+        "docs_url": "https://developer.salesforce.com/docs",
         "config_fields": [
             {"key": "client_id", "label": "Client ID", "type": "text", "required": True},
             {"key": "client_secret", "label": "Client Secret", "type": "password", "required": True},
@@ -66,6 +74,8 @@ AVAILABLE_INTEGRATIONS = [
         "category": "Messaging",
         "icon": "hash",
         "color": "#4A154B",
+        "features": ["Channel notifications", "Bot interactions", "Slash commands", "File sharing"],
+        "docs_url": "https://api.slack.com/docs",
         "config_fields": [
             {"key": "bot_token", "label": "Bot Token", "type": "password", "required": True},
             {"key": "signing_secret", "label": "Signing Secret", "type": "password", "required": True},
@@ -77,8 +87,10 @@ AVAILABLE_INTEGRATIONS = [
         "name": "Google Workspace",
         "description": "Gmail, Google Calendar, Google Drive",
         "category": "Productivity",
-        "icon": "mail",
+        "icon": "zap",
         "color": "#4285F4",
+        "features": ["Gmail access", "Calendar events", "Drive files", "Contacts sync"],
+        "docs_url": "https://developers.google.com/workspace",
         "config_fields": [
             {"key": "client_id", "label": "Client ID", "type": "text", "required": True},
             {"key": "client_secret", "label": "Client Secret", "type": "password", "required": True},

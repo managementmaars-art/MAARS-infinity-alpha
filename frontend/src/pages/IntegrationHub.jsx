@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../App";
-import { Link2, Unlink, Check, ExternalLink, Settings, ToggleLeft, ToggleRight, MessageCircle, ShoppingBag, Users, Cloud, Hash, Zap } from "lucide-react";
+import { Link2, Unlink, Check, ExternalLink, Settings, ToggleLeft, ToggleRight, MessageCircle, ShoppingBag, Users, Cloud, Hash, Zap, Mail } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { toast } from "sonner";
 
@@ -8,7 +8,7 @@ const API = process.env.REACT_APP_BACKEND_URL;
 
 const ICONS = {
   "message-circle": MessageCircle, "shopping-bag": ShoppingBag,
-  "users": Users, "cloud": Cloud, "hash": Hash, "zap": Zap,
+  "users": Users, "cloud": Cloud, "hash": Hash, "zap": Zap, "mail": Mail,
 };
 
 export default function IntegrationHub() {
@@ -144,10 +144,10 @@ export default function IntegrationHub() {
 
                   {/* Features */}
                   <div className="flex flex-wrap gap-1 mb-3">
-                    {integ.features.slice(0, 3).map(f => (
+                    {(integ.features || []).slice(0, 3).map(f => (
                       <span key={f} className="text-[8px] px-1.5 py-0.5 rounded bg-zinc-800/50 text-zinc-500">{f}</span>
                     ))}
-                    {integ.features.length > 3 && (
+                    {(integ.features || []).length > 3 && (
                       <span className="text-[8px] px-1.5 py-0.5 rounded bg-zinc-800/50 text-zinc-500">+{integ.features.length - 3}</span>
                     )}
                   </div>
@@ -155,7 +155,7 @@ export default function IntegrationHub() {
                   {/* Config form */}
                   {isConfiguring && (
                     <div className="space-y-2 mb-3 p-2 bg-zinc-800/30 rounded-lg" data-testid={`config-form-${integ.integration_id}`}>
-                      {integ.config_fields.map(field => (
+                      {(integ.config_fields || []).map(field => (
                         <div key={field.key}>
                           <label className="text-[9px] text-zinc-400 font-medium">{field.label}{field.required && " *"}</label>
                           <input

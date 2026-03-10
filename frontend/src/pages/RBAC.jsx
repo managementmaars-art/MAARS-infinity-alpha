@@ -14,7 +14,7 @@ const ROLE_COLORS = {
 
 export default function RBAC() {
   const { token } = useAuth();
-  const [config, setConfig] = useState({ roles: {}, resources: [], actions: [] });
+  const [config, setConfig] = useState({ roles: [], permissions: {} });
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedRole, setSelectedRole] = useState("admin");
@@ -22,8 +22,8 @@ export default function RBAC() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API}/api/kernel/rbac/config`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()),
-      fetch(`${API}/api/kernel/rbac/users`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()),
+      fetch(`${API}/api/kernel/rbac/config`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.ok ? r.json() : { roles: [], permissions: {} }),
+      fetch(`${API}/api/kernel/rbac/users`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.ok ? r.json() : []),
     ]).then(([cfg, usrs]) => {
       setConfig(cfg);
       setUsers(Array.isArray(usrs) ? usrs : []);
@@ -42,9 +42,40 @@ export default function RBAC() {
     }
   };
 
-  const roles = config.roles || {};
-  const resources = config.resources || [];
-  const actions = config.actions || [];
+  // Normalize API data: roles can be array of strings OR object
+  const roleNames = Array.isArray(config.roles) ? config.roles : Object.keys(config.roles || {});
+  const permissionsMap = config.permissions || {};
+
+  // Build normalized role objects
+  const ROLE_META = {
+    admin: { label: "Admin", description: "Full system access with all permissions" },
+    manager: { label: "Manager", description: "Manage agents, workflows, and campaigns" },
+    operator: { label: "Operator", description: "Execute workflows and campaigns" },
+    viewer: { label: "Viewer", description: "Read-only access across the platform" },
+  };
+
+  const roles = {};
+  roleNames.forEach(name => {
+    roles[name] = {
+      label: ROLE_META[name]?.label || name.charAt(0).toUpperCase() + name.slice(1),
+      description: ROLE_META[name]?.description || `${name} role`,
+      permissions: permissionsMap[name] || [],
+    };
+  });
+
+  // Extract unique resources and actions from permissions
+  const resourceSet = new Set();
+  const actionSet = new Set();
+  Object.values(permissionsMap).forEach(perms => {
+    (perms || []).forEach(p => {
+      if (p === "*") return;
+      const [resource, action] = p.split(":");
+      if (resource) resourceSet.add(resource);
+      if (action && action !== "*") actionSet.add(action);
+    });
+  });
+  const resources = Array.from(resourceSet);
+  const actions = Array.from(actionSet).length > 0 ? Array.from(actionSet) : ["read", "write", "execute"];
 
   if (loading) return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-red-500 border-t-transparent rounded-full animate-spin" /></div>;
 
@@ -71,7 +102,7 @@ export default function RBAC() {
               </div>
               <p className="text-[11px] text-zinc-500 mb-2">{role.description}</p>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] text-zinc-600">{role.permissions.length === 1 && role.permissions[0] === "*" ? "All" : role.permissions.length} permissions</span>
+                <span className="text-[10px] text-zinc-600">{(role.permissions || []).length === 1 && (role.permissions || [])[0] === "*" ? "All" : (role.permissions || []).length} permissions</span>
                 <span className="text-[10px] text-zinc-600">{userCount} users</span>
               </div>
             </button>
