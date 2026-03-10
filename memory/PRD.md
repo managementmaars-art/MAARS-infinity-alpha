@@ -29,27 +29,21 @@ Build "MAARS Command by MAARS Global Corporation," a commercial, production-read
 
 ### Phase 1 — MAARS ∞ Infrastructure (Completed: March 10, 2026)
 - **Agent Catalog Expansion**: 41 → 458+ agents (417 new infinity agents)
-  - 27 network categories: Core Platform, Strategic, Venture, Product, Engineering, Creative, Growth, Sales, Customer, Operations, Finance, Investment, Research, Simulation, Legal, Security, Memory, Tooling, Execution, Verification, Experimentation, Conflict Resolution, Observability, Recovery, Communication, Web Intelligence, Industry-Specific
+  - 27 network categories
   - Each agent has: name, role, description, capabilities, network, autonomy_tier, authority_tier, system_prompt
-- **MAARS Kernel Backend**:
-  - Kernel status API with 15 subsystem monitoring
-  - System architecture endpoint (16 layers, 6 autonomy tiers)
-  - Agent networks CRUD with per-network agent listing
-  - Task Graph system (full CRUD with nodes, edges, dependencies)
-  - Execution Gateway logging
-  - Trust Score aggregation from execution history
-  - Tool Registry (17 tools seeded)
-  - Circuit Breaker status monitoring
-- **New Frontend Pages**:
-  - Kernel Dashboard (`/kernel`) — subsystem status, metrics, layers, autonomy tiers
-  - Agent Networks Browser (`/networks`) — 27 networks with agent detail panel and search
-  - Task Graphs (`/task-graphs`) — create and manage structured task workflows
-- **UI/Branding Updates**:
-  - Rebranded from "MAARS Command" to "MAARS ∞" throughout
-  - Commander Orion → Commander Orion ∞ with updated system prompt
-  - Updated sidebar navigation with Intelligence section
-  - Updated pricing page stats (458+ agents, 27 networks)
-  - Updated landing page references
+- **MAARS Kernel Backend**: Kernel status, architecture, networks, task graphs, execution gateway, trust scores, tool registry, circuit breakers
+- **New Frontend Pages**: Kernel Dashboard, Agent Networks Browser, Task Graphs
+- **UI/Branding**: Rebranded from "MAARS Command" to "MAARS ∞"
+
+### Phase 2 — Chat & Agent Integration (Completed: March 10, 2026)
+- **Enhanced Chat Agent Selector**: Refactored SidebarContent with:
+  - Quick access row showing 10 original agents with avatars
+  - Unified search across all 458+ agents (original + infinity)
+  - "Browse 27 Networks" expandable panel with network-grouped agent browsing
+  - Fallback initials avatar for infinity agents (no images)
+- **All Agents Chattable**: Both original and infinity agents can be selected and chatted with
+- **"Chat with Agent" from Networks**: AgentNetworks page has Chat button on each agent that navigates to /chat/:agentId
+- **Fallback Avatar System**: Initials-based avatar displays in header, empty state, message bubbles, sidebar, and network browser
 
 ## Tech Stack
 - **Frontend**: React 18, Tailwind CSS, Shadcn/UI, Lucide Icons
@@ -68,18 +62,18 @@ Build "MAARS Command by MAARS Global Corporation," a commercial, production-read
 - `GET /api/kernel/trust-scores` — Agent trust scores
 - `GET /api/kernel/tools` — Tool registry
 - `GET /api/kernel/circuit-breakers` — Circuit breaker status
+- `GET /api/agents` — All 458 agents (authenticated)
 
 ## Database Collections
 - `agents` (458+ documents), `users`, `tasks`, `conversations`, `messages`
-- `task_graphs` (NEW), `execution_logs` (NEW), `tool_registry` (NEW)
+- `task_graphs`, `execution_logs`, `tool_registry`
 - `memories`, `memory_entries`, `pricing_plans`, `workspace_profiles`
 - `knowledge_base`, `collaborations`, `vibe_projects`
 
 ## P0 — Next Priority Tasks
-1. **Execution Gateway Integration**: Wire task execution through the gateway with actual cost metering and approval routing
-2. **Knowledge Graph**: Implement the node/edge knowledge graph per spec (agents, ventures, products, markets)
-3. **Agent Chat Integration**: Enable chatting with any of the 417 new infinity agents
-4. **Trust Score Dashboard**: Visual trust score display per agent based on execution history
+1. **Knowledge Graph**: Backend API + frontend visualization for entity/relationship knowledge graph
+2. **Trust Score Dashboard**: Visual trust score display per agent based on execution history
+3. **Execution Gateway Integration**: Wire task execution through gateway with cost metering and approval routing
 
 ## P1 — Upcoming Tasks
 - Enterprise RBAC with permissions management UI
@@ -93,9 +87,9 @@ Build "MAARS Command by MAARS Global Corporation," a commercial, production-read
 - Multi-tenant isolation
 - Mobile wrapper app
 - Workflow builder UI
-- Campaign Builder (Reference Intel → Content Gen → Social scheduling)
+- Campaign Builder
 - Grep-style content search in Code Explorer
-- Custom agent creation by users through lifecycle workflow
+- Custom agent creation by users
 - Self-expanding agent creation (governed, sandboxed)
 
 ## Credentials

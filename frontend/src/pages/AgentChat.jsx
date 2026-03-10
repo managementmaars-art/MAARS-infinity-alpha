@@ -1208,7 +1208,13 @@ const AgentChat = () => {
                 if (msg.role === "assistant" && msg.commander_status === "processing") {
                   return (
                     <div key={msg.message_id || i} className="flex gap-3" data-testid={`message-${i}`}>
-                      <img src={msg.agent_avatar || selectedAgent?.avatar} alt="" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+                      {(msg.agent_avatar || selectedAgent?.avatar) ? (
+                        <img src={msg.agent_avatar || selectedAgent?.avatar} alt="" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+                      ) : (
+                        <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-indigo-400">
+                          {(selectedAgent?.name || "AI").split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
+                        </div>
+                      )}
                       <div className="flex-1 max-w-[85%]">
                         {msg.delegation_progress ? (
                           <CollaborationWorkflow
