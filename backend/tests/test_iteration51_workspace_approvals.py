@@ -10,7 +10,7 @@ import uuid
 # Get the API URL from environment, same as frontend uses
 BASE_URL = os.environ.get("REACT_APP_BACKEND_URL", "").rstrip("/")
 if not BASE_URL:
-    BASE_URL = "https://ai-coordination.preview.emergentagent.com"
+    BASE_URL = "https://agent-infinity.preview.emergentagent.com"
 
 # Test credentials
 TEST_USER_EMAIL = "test@test.com"

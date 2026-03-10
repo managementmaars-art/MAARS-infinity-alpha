@@ -2007,15 +2007,99 @@ INFINITY_AGENTS = [
 ]
 
 
+NETWORK_COLORS = {
+    "strategic_executive": ("#6366f1", "#818cf8"),
+    "finance_capital": ("#10b981", "#34d399"),
+    "engineering": ("#3b82f6", "#60a5fa"),
+    "creative_brand": ("#ec4899", "#f472b6"),
+    "sales_revenue": ("#f97316", "#fb923c"),
+    "customer_experience": ("#14b8a6", "#2dd4bf"),
+    "legal_governance": ("#8b5cf6", "#a78bfa"),
+    "research_intelligence": ("#06b6d4", "#22d3ee"),
+    "operations": ("#eab308", "#facc15"),
+    "growth_distribution": ("#ef4444", "#f87171"),
+    "security": ("#dc2626", "#f87171"),
+    "hr_culture": ("#d946ef", "#e879f9"),
+    "supply_chain": ("#0ea5e9", "#38bdf8"),
+    "data_analytics": ("#6366f1", "#818cf8"),
+    "product_development": ("#f59e0b", "#fbbf24"),
+    "quality_assurance": ("#059669", "#34d399"),
+    "sustainability": ("#22c55e", "#4ade80"),
+    "communications": ("#a855f7", "#c084fc"),
+    "innovation_lab": ("#f43f5e", "#fb7185"),
+    "risk_management": ("#b91c1c", "#f87171"),
+    "partnerships": ("#7c3aed", "#a78bfa"),
+    "facilities": ("#78716c", "#a8a29e"),
+    "training": ("#0284c7", "#38bdf8"),
+    "compliance": ("#4f46e5", "#818cf8"),
+    "procurement": ("#ca8a04", "#facc15"),
+    "digital_transformation": ("#2563eb", "#60a5fa"),
+    "customer_success": ("#0d9488", "#2dd4bf"),
+}
+
+SHAPE_PATTERNS = [
+    # Circle with cross
+    '<circle cx="24" cy="24" r="14" fill="{c1}" opacity="0.3"/><line x1="17" y1="17" x2="31" y2="31" stroke="{c2}" stroke-width="2" opacity="0.5"/><line x1="31" y1="17" x2="17" y2="31" stroke="{c2}" stroke-width="2" opacity="0.5"/>',
+    # Diamond
+    '<polygon points="24,10 38,24 24,38 10,24" fill="{c1}" opacity="0.25"/><polygon points="24,16 32,24 24,32 16,24" fill="{c2}" opacity="0.3"/>',
+    # Hexagon
+    '<polygon points="24,10 36,17 36,31 24,38 12,31 12,17" fill="{c1}" opacity="0.25"/><polygon points="24,15 32,19 32,29 24,33 16,29 16,19" fill="{c2}" opacity="0.2"/>',
+    # Triangle up
+    '<polygon points="24,10 40,38 8,38" fill="{c1}" opacity="0.2"/><polygon points="24,18 33,34 15,34" fill="{c2}" opacity="0.2"/>',
+    # Concentric circles
+    '<circle cx="24" cy="24" r="16" fill="none" stroke="{c1}" stroke-width="2" opacity="0.3"/><circle cx="24" cy="24" r="10" fill="none" stroke="{c2}" stroke-width="2" opacity="0.4"/><circle cx="24" cy="24" r="4" fill="{c2}" opacity="0.5"/>',
+    # Square rotated
+    '<rect x="12" y="12" width="24" height="24" rx="3" fill="{c1}" opacity="0.2" transform="rotate(45 24 24)"/><rect x="17" y="17" width="14" height="14" rx="2" fill="{c2}" opacity="0.2" transform="rotate(45 24 24)"/>',
+    # Star
+    '<polygon points="24,8 27,20 40,20 30,27 33,40 24,31 15,40 18,27 8,20 21,20" fill="{c1}" opacity="0.2"/><circle cx="24" cy="24" r="5" fill="{c2}" opacity="0.4"/>',
+    # Bars
+    '<rect x="10" y="20" width="6" height="18" rx="2" fill="{c1}" opacity="0.3"/><rect x="21" y="14" width="6" height="24" rx="2" fill="{c2}" opacity="0.35"/><rect x="32" y="18" width="6" height="20" rx="2" fill="{c1}" opacity="0.3"/>',
+]
+
+
+def generate_rich_svg_avatar(name, network, index):
+    """Generate a unique geometric SVG avatar for an agent."""
+    import hashlib
+    h = hashlib.md5(f"{name}{network}{index}".encode()).hexdigest()
+    colors = NETWORK_COLORS.get(network, ("#6366f1", "#818cf8"))
+    c1, c2 = colors
+
+    # Deterministic pattern selection based on hash
+    pattern_idx = int(h[:2], 16) % len(SHAPE_PATTERNS)
+    pattern = SHAPE_PATTERNS[pattern_idx].format(c1=c1, c2=c2)
+
+    # Initials
+    parts = name.split()
+    initials = (parts[0][0] + parts[-1][0]).upper() if len(parts) > 1 else name[:2].upper()
+
+    # Background gradient angle based on hash
+    angle = int(h[2:4], 16) % 360
+
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+<defs><linearGradient id="g{h[:6]}" x1="0%" y1="0%" x2="100%" y2="100%" gradientTransform="rotate({angle})">
+<stop offset="0%" stop-color="{c1}" stop-opacity="0.15"/>
+<stop offset="100%" stop-color="{c2}" stop-opacity="0.08"/>
+</linearGradient></defs>
+<rect width="48" height="48" rx="10" fill="url(#g{h[:6]})"/>
+{pattern}
+<text x="24" y="26" text-anchor="middle" dominant-baseline="central" fill="{c1}" font-family="system-ui,sans-serif" font-size="12" font-weight="700" opacity="0.9">{initials}</text>
+</svg>'''
+
+    import base64
+    encoded = base64.b64encode(svg.encode()).decode()
+    return f"data:image/svg+xml;base64,{encoded}"
+
+
 def get_all_infinity_agents():
-    """Return all infinity agents with generated system prompts."""
+    """Return all infinity agents with generated system prompts and avatars."""
     agents = []
-    for agent_def in INFINITY_AGENTS:
+    for i, agent_def in enumerate(INFINITY_AGENTS):
         agent = {
             **agent_def,
             "system_prompt": generate_system_prompt(agent_def),
             "model_provider": agent_def.get("model_provider", "openai"),
             "model_name": agent_def.get("model_name", "gpt-5.2"),
+            "avatar": generate_rich_svg_avatar(agent_def["name"], agent_def.get("network", ""), i),
             "is_custom": False,
             "is_infinity": True,
             "lifecycle_state": "active",

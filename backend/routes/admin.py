@@ -399,7 +399,6 @@ async def admin_get_pricing(admin: User = Depends(require_admin)):
     """Get current pricing configuration from DB or default"""
     pricing = await db.platform_config.find_one({"config_type": "pricing"}, {"_id": 0})
     if not pricing:
-        # Return default pricing
         pricing = {
             "config_type": "pricing",
             "plans": SUBSCRIPTION_PLANS,
@@ -414,20 +413,16 @@ async def admin_get_pricing(admin: User = Depends(require_admin)):
 async def admin_update_pricing(request: Request, admin: User = Depends(require_admin)):
     """Admin can update platform pricing. Changes take effect immediately."""
     pricing_data = await request.json()
-    
+
     plans = pricing_data.get("plans")
     if plans:
-        for plan_id, plan in plans.items():
-            if not all(k in plan for k in ["name", "price_usd", "price_bdt", "credits", "max_agents", "max_custom_agents"]):
-                raise HTTPException(status_code=400, detail=f"Invalid plan structure for {plan_id}")
-            if "max_team_members" not in plan:
-                plan["max_team_members"] = SUBSCRIPTION_PLANS.get(plan_id, {}).get("max_team_members", 1)
+        # Replace ALL plans with what admin sends — no hardcoded validation
+        SUBSCRIPTION_PLANS.clear()
         SUBSCRIPTION_PLANS.update(plans)
-    
+
     if "custom_agent_credit_cost" in pricing_data:
         shared_constants.CUSTOM_AGENT_CREDIT_COST = pricing_data["custom_agent_credit_cost"]
-    
-    # Save to DB
+
     config_doc = {
         "config_type": "pricing",
         "plans": SUBSCRIPTION_PLANS,
@@ -435,18 +430,66 @@ async def admin_update_pricing(request: Request, admin: User = Depends(require_a
         "ai_cost_per_credit": pricing_data.get("ai_cost_per_credit", 0.003),
         "target_profit_margin": pricing_data.get("target_profit_margin", 200),
         "bdt_exchange_rate": pricing_data.get("bdt_exchange_rate", 107),
+        "credit_packages": pricing_data.get("credit_packages"),
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "updated_by": admin.email
     }
-    
+
     await db.platform_config.update_one(
         {"config_type": "pricing"},
         {"$set": config_doc},
         upsert=True
     )
-    
+
     await log_admin_action(admin.email, "pricing_update", {"plans_updated": list(plans.keys()) if plans else []})
     return {"message": "Pricing updated successfully", "pricing": config_doc}
+
+@router.post("/admin/pricing/plans")
+async def admin_create_plan(request: Request, admin: User = Depends(require_admin)):
+    """Create a new subscription plan."""
+    plan_data = await request.json()
+    plan_id = plan_data.get("plan_id")
+    if not plan_id:
+        raise HTTPException(status_code=400, detail="plan_id is required")
+    if plan_id in SUBSCRIPTION_PLANS:
+        raise HTTPException(status_code=409, detail=f"Plan '{plan_id}' already exists")
+
+    SUBSCRIPTION_PLANS[plan_id] = {
+        "name": plan_data.get("name", plan_id.title()),
+        "price_usd": plan_data.get("price_usd", 0),
+        "price_bdt": plan_data.get("price_bdt", 0),
+        "credits": plan_data.get("credits", 0),
+        "max_agents": plan_data.get("max_agents", 0),
+        "max_custom_agents": plan_data.get("max_custom_agents", 0),
+        "includes_commander": plan_data.get("includes_commander", False),
+        "max_team_members": plan_data.get("max_team_members", 1),
+        "features": plan_data.get("features", []),
+    }
+
+    await db.platform_config.update_one(
+        {"config_type": "pricing"},
+        {"$set": {"plans": SUBSCRIPTION_PLANS, "updated_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True
+    )
+    await log_admin_action(admin.email, "plan_created", {"plan_id": plan_id})
+    return {"message": f"Plan '{plan_id}' created", "plan": SUBSCRIPTION_PLANS[plan_id]}
+
+@router.delete("/admin/pricing/plans/{plan_id}")
+async def admin_delete_plan(plan_id: str, admin: User = Depends(require_admin)):
+    """Delete a subscription plan."""
+    if plan_id not in SUBSCRIPTION_PLANS:
+        raise HTTPException(status_code=404, detail=f"Plan '{plan_id}' not found")
+    if plan_id == "free":
+        raise HTTPException(status_code=400, detail="Cannot delete the free plan")
+    del SUBSCRIPTION_PLANS[plan_id]
+
+    await db.platform_config.update_one(
+        {"config_type": "pricing"},
+        {"$set": {"plans": SUBSCRIPTION_PLANS, "updated_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True
+    )
+    await log_admin_action(admin.email, "plan_deleted", {"plan_id": plan_id})
+    return {"message": f"Plan '{plan_id}' deleted"}
 
 @router.get("/admin/avg-cost")
 async def admin_avg_cost(admin: User = Depends(require_admin)):

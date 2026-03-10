@@ -16,7 +16,7 @@ import requests
 import os
 import time
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://ai-coordination.preview.emergentagent.com').rstrip('/')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://agent-infinity.preview.emergentagent.com').rstrip('/')
 
 # Test credentials
 ADMIN_EMAIL = "management.maars@marsgc.net"
