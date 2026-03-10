@@ -522,12 +522,31 @@ const AboutPage = () => {
     });
   };
 
-  /* Print-ready PDF download */
-  const handlePrint = () => {
+  /* Direct PDF download */
+  const handlePrint = async () => {
     setPrinting(true);
     setExpandedNetworks(new Set(sortedNetworks.map(([k]) => k)));
     setExpandedSystems(new Set(SYSTEMS.map((_, i) => i)));
-    setTimeout(() => { window.print(); setPrinting(false); }, 500);
+    
+    // Wait for DOM to update with all sections expanded
+    await new Promise(r => setTimeout(r, 800));
+    
+    const html2pdf = (await import("html2pdf.js")).default;
+    const el = printRef.current;
+    if (!el) { setPrinting(false); return; }
+    
+    html2pdf().set({
+      margin: [10, 10, 10, 10],
+      filename: "MAARS-Command-Documentation.pdf",
+      image: { type: "jpeg", quality: 0.95 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#09090b", logging: false },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      pagebreak: { mode: ["avoid-all", "css", "legacy"] },
+    }).from(el).save().then(() => {
+      setPrinting(false);
+    }).catch(() => {
+      setPrinting(false);
+    });
   };
 
   const getNetworkMeta = (netId) => {
@@ -555,7 +574,7 @@ const AboutPage = () => {
             </div>
           </div>
           <Button onClick={handlePrint} variant="outline" className="border-white/10 text-zinc-300 hover:bg-white/5 no-print" data-testid="download-pdf-btn">
-            <Printer className="w-4 h-4 mr-2" />{printing ? "Preparing..." : "Download Docs"}
+            <Download className="w-4 h-4 mr-2" />{printing ? "Generating PDF..." : "Save as PDF"}
           </Button>
         </div>
 
