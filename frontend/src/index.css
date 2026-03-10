@@ -145,18 +145,20 @@ code, pre {
 .stagger-4 { animation-delay: 0.4s; }
 .stagger-5 { animation-delay: 0.5s; }
 
-/* ── Print styles for About page ── */
+/* ── Print styles for About page (dark theme preserved) ── */
 @media print {
   @page {
     size: A4;
-    margin: 18mm 15mm 18mm 15mm;
+    margin: 12mm 10mm 12mm 10mm;
   }
 
-  /* Force print colors */
+  /* Force browsers to print background colors & images */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
+    animation: none !important;
+    transition: none !important;
   }
 
   /* ─── HIDE non-print elements ─── */
@@ -175,15 +177,15 @@ code, pre {
     visibility: hidden !important;
   }
 
-  /* ─── LAYOUT RESET ─── */
+  /* ─── DARK BACKGROUND on html/body ─── */
   html, body {
-    background: #fff !important;
-    color: #1a1a1a !important;
-    font-size: 11pt !important;
-    line-height: 1.4 !important;
+    background: #09090b !important;
+    color: #e4e4e7 !important;
+    font-size: 10pt !important;
+    line-height: 1.35 !important;
   }
 
-  /* Remove sidebar margins */
+  /* Remove sidebar margins & make full width */
   .lg\:ml-56,
   .lg\:ml-\[68px\],
   [class*="lg:ml-"] {
@@ -195,48 +197,13 @@ code, pre {
     margin-left: 0 !important;
     padding-left: 0 !important;
     width: 100% !important;
-    background: #fff !important;
+    background: #09090b !important;
   }
 
   .print-container {
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-    background: #fff !important;
-  }
-
-  /* ─── TYPOGRAPHY ─── */
-  h1, h2, h3, h4, .print-heading { color: #111 !important; }
-  p, span, li, div { color: #333 !important; }
-  .text-zinc-300, .text-zinc-400, .text-zinc-500 { color: #444 !important; }
-  .text-zinc-600 { color: #666 !important; }
-  .text-white { color: #111 !important; }
-  .text-indigo-400, .text-emerald-400, .text-amber-400,
-  .text-cyan-400, .text-violet-400, .text-pink-400,
-  .text-rose-400, .text-blue-400, .text-teal-400,
-  .text-orange-400, .text-red-400, .text-green-400,
-  .text-purple-400, .text-sky-400, .text-yellow-400,
-  .text-lime-400, .text-indigo-300 { color: #222 !important; }
-
-  /* ─── BACKGROUNDS & BORDERS ─── */
-  [class*="bg-zinc"], [class*="bg-white/"], .glass {
-    background: #fff !important;
-    border-color: #ddd !important;
-  }
-  [class*="border-white/"] { border-color: #ddd !important; }
-
-  /* Cards get light borders for structure */
-  .print-card, [class*="bg-zinc-900"] {
-    background: #fafafa !important;
-    border: 1px solid #ddd !important;
-    box-shadow: none !important;
-  }
-
-  /* Badges remain visible with light styling */
-  [class*="Badge"], span[class*="bg-"] {
-    background: #f0f0f0 !important;
-    color: #333 !important;
-    border: 1px solid #ccc !important;
   }
 
   /* ─── PAGE BREAKS ─── */
@@ -253,17 +220,15 @@ code, pre {
   .print-keep-together {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    page-break-after: auto !important;
   }
 
-  /* Headings should not be orphaned at bottom of page */
+  /* Headings stay with their content */
   h1, h2, h3, h4 {
     page-break-after: avoid !important;
     break-after: avoid !important;
   }
 
-  /* ─── ABOUT PAGE SPECIFICS ─── */
-  /* Each major section on its own page */
+  /* Each major section starts on a new page */
   .about-section {
     page-break-before: always !important;
     break-before: page !important;
@@ -271,7 +236,7 @@ code, pre {
     padding-top: 8px !important;
   }
 
-  /* First section (hero) should NOT have a page break before it */
+  /* Hero does NOT force a page break */
   .about-hero {
     page-break-before: auto !important;
     break-before: auto !important;
@@ -283,32 +248,16 @@ code, pre {
     overflow: visible !important;
   }
 
-  /* Icons stay small */
-  .print-icon {
-    width: 24px !important;
-    height: 24px !important;
-  }
+  /* ─── ELEMENT SIZING ─── */
+  .print-icon { width: 24px !important; height: 24px !important; }
+  img { max-width: 28px !important; max-height: 28px !important; }
+  .print-logo { max-width: 48px !important; max-height: 48px !important; }
 
-  /* Agent/provider images */
-  img {
-    max-width: 28px !important;
-    max-height: 28px !important;
-  }
-
-  /* Logo in header can be bigger */
-  .print-logo {
-    max-width: 48px !important;
-    max-height: 48px !important;
-  }
-
-  /* Grid fixes for print */
+  /* ─── GRID → stacked for print ─── */
   .grid { display: block !important; }
   .grid > * { margin-bottom: 8px !important; }
-  .sm\:grid-cols-2 { display: block !important; }
-  .sm\:grid-cols-3 { display: block !important; }
-  .sm\:grid-cols-6 { display: block !important; }
 
-  /* Stats row should stay inline */
+  /* Stats row stays inline */
   .print-stats-row {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -319,37 +268,14 @@ code, pre {
     margin-bottom: 0 !important;
   }
 
-  /* Chevron arrows hidden */
-  .no-print { display: none !important; }
-
-  /* Network groups */
-  .print-network-group {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    margin-bottom: 12px !important;
-  }
-
-  /* Agent cards */
+  /* Agent cards don't split */
   .print-agent-card {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     margin-bottom: 4px !important;
   }
 
-  /* Remove dark background from everything */
-  .bg-zinc-950, .bg-zinc-900\/50, .bg-zinc-900\/40,
-  .bg-zinc-900\/30, .bg-zinc-800\/60, .bg-zinc-800\/30 {
-    background: #fff !important;
-  }
-
-  /* Rounded corners less aggressive */
-  [class*="rounded-xl"] { border-radius: 6px !important; }
-  [class*="rounded-lg"] { border-radius: 4px !important; }
-
-  /* Remove blur effects */
+  /* Remove blur (not rendered in print) */
   [class*="backdrop-blur"] { backdrop-filter: none !important; }
-
-  /* Remove animations */
-  * { animation: none !important; transition: none !important; }
 }
 

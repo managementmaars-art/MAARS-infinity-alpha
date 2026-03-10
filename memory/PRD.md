@@ -17,8 +17,9 @@ Make the "MAARS Command" application absolutely market ready/ready for official 
 - Dynamic loading of 458+ agents with full descriptions, skills, tools, autonomy levels
 - Support email updated to support.maars@marsgc.net
 - Print-ready output via `window.print()` with comprehensive `@media print` CSS
-- Clean page breaks: each major section starts on new page (98-page PDF verified)
-- Print CSS: white background, dark text, no sidebar/watermark, proper margins
+- **Dark-themed** print output matching the web page aesthetic (user-requested)
+- Clean page breaks: each major section starts on new page (84-page PDF verified)
+- Print CSS: dark background preserved with `print-color-adjust: exact`, no sidebar/watermark, proper margins
 
 ### P1 - Agent Team Builder (COMPLETE)
 - UI: `frontend/src/pages/TeamBuilder.jsx`
