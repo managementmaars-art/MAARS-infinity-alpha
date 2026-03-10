@@ -650,3 +650,280 @@ async def update_workflow(user_id, workflow_id, data):
 async def delete_workflow(user_id, workflow_id):
     await db.workflows.delete_one({"user_id": user_id, "workflow_id": workflow_id})
     return True
+
+
+
+# ---------- Workflow Execution ----------
+
+async def execute_workflow(user_id, workflow_id):
+    """Start a workflow run, return a run_id."""
+    wf = await get_workflow(user_id, workflow_id)
+    if not wf:
+        return None
+    now = datetime.now(timezone.utc).isoformat()
+    run = {
+        "run_id": f"run_{ObjectId()}",
+        "workflow_id": workflow_id,
+        "user_id": user_id,
+        "status": "running",
+        "node_states": {n["id"]: {"status": "pending", "output": None, "started_at": None, "finished_at": None} for n in wf.get("nodes", [])},
+        "current_step": 0,
+        "total_steps": len(wf.get("nodes", [])),
+        "started_at": now,
+        "finished_at": None,
+        "created_at": now,
+    }
+    await db.workflow_runs.insert_one(run)
+    run.pop("_id", None)
+    return run
+
+
+async def get_workflow_runs(user_id, workflow_id=None):
+    query = {"user_id": user_id}
+    if workflow_id:
+        query["workflow_id"] = workflow_id
+    results = []
+    async for r in db.workflow_runs.find(query, {"_id": 0}).sort("created_at", -1).limit(50):
+        results.append(r)
+    return results
+
+
+async def get_workflow_run(user_id, run_id):
+    return await db.workflow_runs.find_one({"user_id": user_id, "run_id": run_id}, {"_id": 0})
+
+
+async def advance_workflow_step(user_id, run_id, node_id, status, output=""):
+    """Advance a single workflow step."""
+    now = datetime.now(timezone.utc).isoformat()
+    run = await db.workflow_runs.find_one({"user_id": user_id, "run_id": run_id})
+    if not run:
+        return None
+
+    node_states = run.get("node_states", {})
+    if node_id in node_states:
+        node_states[node_id]["status"] = status
+        node_states[node_id]["output"] = output
+        if status == "running":
+            node_states[node_id]["started_at"] = now
+        if status in ("completed", "failed"):
+            node_states[node_id]["finished_at"] = now
+
+    # Count progress
+    completed = sum(1 for ns in node_states.values() if ns["status"] in ("completed", "failed"))
+    total = len(node_states)
+    all_done = completed == total
+    any_failed = any(ns["status"] == "failed" for ns in node_states.values())
+
+    update = {
+        "$set": {
+            "node_states": node_states,
+            "current_step": completed,
+        }
+    }
+    if all_done:
+        update["$set"]["status"] = "failed" if any_failed else "completed"
+        update["$set"]["finished_at"] = now
+
+    await db.workflow_runs.update_one({"run_id": run_id}, update)
+    return await get_workflow_run(user_id, run_id)
+
+
+async def simulate_workflow_execution(user_id, run_id):
+    """Simulate step-by-step execution of a workflow. Returns the final state."""
+    import asyncio
+    run = await get_workflow_run(user_id, run_id)
+    if not run:
+        return None
+
+    wf = await get_workflow(user_id, run["workflow_id"])
+    if not wf:
+        return None
+
+    nodes = wf.get("nodes", [])
+    edges = wf.get("edges", [])
+
+    # Build dependency graph
+    deps = {n["id"]: [] for n in nodes}
+    for e in edges:
+        if e["target"] in deps:
+            deps[e["target"]].append(e["source"])
+
+    # Topological execution
+    executed = set()
+    for _ in range(len(nodes)):
+        for node in nodes:
+            nid = node["id"]
+            if nid in executed:
+                continue
+            # Check if all dependencies are met
+            if all(d in executed for d in deps.get(nid, [])):
+                # Mark running
+                await advance_workflow_step(user_id, run_id, nid, "running")
+                # Simulate execution
+                await asyncio.sleep(0.1)
+                # Mark completed
+                output = f"Executed task by {node.get('name', 'Agent')}: {node.get('role', 'processed')}"
+                await advance_workflow_step(user_id, run_id, nid, "completed", output)
+                executed.add(nid)
+                break  # Restart loop to pick next ready node
+
+    return await get_workflow_run(user_id, run_id)
+
+
+# ---------- Environment Segregation ----------
+
+ENVIRONMENTS = {
+    "sandbox": {
+        "name": "Sandbox",
+        "description": "Safe testing environment. All executions are dry-runs with no real side effects.",
+        "color": "#f59e0b",
+        "limits": {"max_agents": 10, "max_cost_per_run": 0.01, "real_actions": False},
+    },
+    "staging": {
+        "name": "Staging",
+        "description": "Pre-production environment. Limited executions with approval gates.",
+        "color": "#3b82f6",
+        "limits": {"max_agents": 100, "max_cost_per_run": 1.0, "real_actions": True},
+    },
+    "production": {
+        "name": "Production",
+        "description": "Live environment. Full execution with all integrations active.",
+        "color": "#10b981",
+        "limits": {"max_agents": 500, "max_cost_per_run": 100.0, "real_actions": True},
+    },
+}
+
+
+async def get_environments():
+    return ENVIRONMENTS
+
+
+async def get_user_environment(user_id):
+    env = await db.user_environments.find_one({"user_id": user_id}, {"_id": 0})
+    if not env:
+        env = {
+            "user_id": user_id,
+            "active_env": "sandbox",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        }
+        await db.user_environments.insert_one(env)
+        env.pop("_id", None)
+    return env
+
+
+async def set_user_environment(user_id, env_key):
+    if env_key not in ENVIRONMENTS:
+        return None
+    now = datetime.now(timezone.utc).isoformat()
+    await db.user_environments.update_one(
+        {"user_id": user_id},
+        {"$set": {"active_env": env_key, "updated_at": now}},
+        upsert=True,
+    )
+    return await get_user_environment(user_id)
+
+
+async def get_env_stats():
+    """Get usage stats per environment."""
+    stats = {}
+    for key in ENVIRONMENTS:
+        count = await db.user_environments.count_documents({"active_env": key})
+        stats[key] = {"users": count}
+    return stats
+
+
+# ---------- Memory Hierarchy ----------
+
+MEMORY_LAYERS = [
+    {
+        "layer": 1, "name": "Working Memory", "code": "L1",
+        "description": "Active context for current task execution. Fastest access, smallest capacity.",
+        "ttl": "Session", "capacity": "4KB per agent", "access_speed": "< 1ms",
+        "color": "#ef4444",
+    },
+    {
+        "layer": 2, "name": "Short-Term Memory", "code": "L2",
+        "description": "Recent conversation history and task context. Persists across turns.",
+        "ttl": "1 hour", "capacity": "64KB per agent", "access_speed": "< 5ms",
+        "color": "#f97316",
+    },
+    {
+        "layer": 3, "name": "Session Memory", "code": "L3",
+        "description": "Full chat session data with reasoning chains and tool outputs.",
+        "ttl": "24 hours", "capacity": "1MB per session", "access_speed": "< 10ms",
+        "color": "#eab308",
+    },
+    {
+        "layer": 4, "name": "Episodic Memory", "code": "L4",
+        "description": "Indexed history of past interactions, decisions, and outcomes.",
+        "ttl": "30 days", "capacity": "100MB per user", "access_speed": "< 50ms",
+        "color": "#22c55e",
+    },
+    {
+        "layer": 5, "name": "Semantic Memory", "code": "L5",
+        "description": "Knowledge base embeddings, facts, and learned relationships.",
+        "ttl": "Permanent", "capacity": "1GB per org", "access_speed": "< 100ms",
+        "color": "#3b82f6",
+    },
+    {
+        "layer": 6, "name": "Procedural Memory", "code": "L6",
+        "description": "Learned workflows, best practices, and execution patterns.",
+        "ttl": "Permanent", "capacity": "500MB per org", "access_speed": "< 200ms",
+        "color": "#8b5cf6",
+    },
+    {
+        "layer": 7, "name": "Archival Memory", "code": "L7",
+        "description": "Compressed long-term storage. Cold data for compliance and audit trails.",
+        "ttl": "Infinite", "capacity": "Unlimited", "access_speed": "< 1s",
+        "color": "#6366f1",
+    },
+]
+
+
+async def get_memory_layers():
+    return MEMORY_LAYERS
+
+
+async def get_memory_stats(user_id):
+    """Get memory usage stats per layer."""
+    stats = []
+    # Aggregate from various collections to estimate usage
+    msg_count = await db.messages.count_documents({"user_id": user_id}) if await db.messages.count_documents({}) > 0 else 0
+    conv_count = await db.conversations.count_documents({})
+    mem_count = await db.memory_entries.count_documents({}) if "memory_entries" in await db.list_collection_names() else 0
+    kb_count = await db.knowledge_base.count_documents({}) if "knowledge_base" in await db.list_collection_names() else 0
+    exec_count = await db.execution_logs.count_documents({})
+
+    for layer in MEMORY_LAYERS:
+        usage = 0
+        items = 0
+        if layer["layer"] == 1:
+            items = min(msg_count, 10)
+            usage = items * 0.5  # KB
+        elif layer["layer"] == 2:
+            items = min(msg_count, 50)
+            usage = items * 1.2
+        elif layer["layer"] == 3:
+            items = conv_count
+            usage = items * 8.5
+        elif layer["layer"] == 4:
+            items = exec_count
+            usage = items * 2.1
+        elif layer["layer"] == 5:
+            items = kb_count
+            usage = items * 15.0
+        elif layer["layer"] == 6:
+            items = mem_count
+            usage = items * 5.0
+        elif layer["layer"] == 7:
+            items = exec_count + conv_count
+            usage = items * 0.8
+
+        stats.append({
+            "layer": layer["layer"],
+            "name": layer["name"],
+            "items": items,
+            "usage_kb": round(usage, 1),
+            "color": layer["color"],
+        })
+    return stats

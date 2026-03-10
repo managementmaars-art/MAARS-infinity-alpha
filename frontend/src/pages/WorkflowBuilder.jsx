@@ -39,6 +39,8 @@ export default function WorkflowBuilder() {
   const [selectedNode, setSelectedNode] = useState(null);
   const [connecting, setConnecting] = useState(null);
   const [dragging, setDragging] = useState(null);
+  const [runState, setRunState] = useState(null); // {run_id, status, node_states}
+  const [runHistory, setRunHistory] = useState([]);
   const lastMouse = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -123,6 +125,42 @@ export default function WorkflowBuilder() {
     await fetch(`${API}/api/kernel/workflows/${wfId}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
     setWorkflows(prev => prev.filter(w => w.workflow_id !== wfId));
     if (current === wfId) newWorkflow();
+  };
+
+  const runWorkflow = async () => {
+    if (!current || nodes.length === 0) return;
+    // Save first
+    await saveWorkflow();
+    const res = await fetch(`${API}/api/kernel/workflows/${current}/run`, {
+      method: "POST", headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.ok) {
+      const run = await res.json();
+      setRunState(run);
+      // Poll for updates
+      pollRun(run.run_id);
+    }
+  };
+
+  const pollRun = async (runId) => {
+    for (let i = 0; i < 60; i++) {
+      await new Promise(r => setTimeout(r, 500));
+      const res = await fetch(`${API}/api/kernel/workflow-runs/${runId}`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        const run = await res.json();
+        setRunState(run);
+        if (run.status === "completed" || run.status === "failed") {
+          loadRunHistory();
+          break;
+        }
+      }
+    }
+  };
+
+  const loadRunHistory = async () => {
+    if (!current) return;
+    const res = await fetch(`${API}/api/kernel/workflows/${current}/runs`, { headers: { Authorization: `Bearer ${token}` } });
+    if (res.ok) setRunHistory(await res.json());
   };
 
   const onCanvasMouseDown = (e) => {
@@ -229,6 +267,12 @@ export default function WorkflowBuilder() {
           {connecting && <span className="text-[10px] text-amber-400 animate-pulse">Click a node to connect...</span>}
           <Button size="sm" variant="outline" className="h-7 text-[10px] border-white/10" onClick={newWorkflow} data-testid="wf-new"><Plus className="w-3 h-3 mr-1" /> New</Button>
           <Button size="sm" className="h-7 text-[10px] bg-indigo-600 hover:bg-indigo-700" onClick={saveWorkflow} data-testid="wf-save"><Save className="w-3 h-3 mr-1" /> Save</Button>
+          {current && nodes.length > 0 && (
+            <Button size="sm" className="h-7 text-[10px] bg-emerald-600 hover:bg-emerald-700" onClick={runWorkflow}
+              disabled={runState?.status === "running"} data-testid="wf-run">
+              <Play className="w-3 h-3 mr-1" /> {runState?.status === "running" ? "Running..." : "Run"}
+            </Button>
+          )}
         </div>
 
         {/* Canvas */}
@@ -258,6 +302,14 @@ export default function WorkflowBuilder() {
                   <div className="px-3 py-1.5 bg-zinc-900/80 rounded-b-xl">
                     <p className="text-[9px] text-zinc-500 truncate">{node.role}</p>
                   </div>
+                  {/* Run status overlay */}
+                  {runState?.node_states?.[node.id] && (
+                    <div className={`absolute -bottom-1 left-0 right-0 h-1 rounded-full mx-2 ${
+                      runState.node_states[node.id].status === "completed" ? "bg-emerald-500" :
+                      runState.node_states[node.id].status === "running" ? "bg-amber-500 animate-pulse" :
+                      runState.node_states[node.id].status === "failed" ? "bg-red-500" : "bg-zinc-700"
+                    }`} />
+                  )}
                 </div>
                 {/* Connect / Delete buttons */}
                 {isSel && (

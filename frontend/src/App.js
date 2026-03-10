@@ -40,6 +40,8 @@ import RBAC from "./pages/RBAC";
 import CircuitBreakers from "./pages/CircuitBreakers";
 import CostGovernance from "./pages/CostGovernance";
 import WorkflowBuilder from "./pages/WorkflowBuilder";
+import Environments from "./pages/Environments";
+import MemoryHierarchy from "./pages/MemoryHierarchy";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -291,6 +293,8 @@ const AppRouter = () => {
       <Route path="/circuit-breakers" element={<ProtectedRoute><DashboardLayout><CircuitBreakers /></DashboardLayout></ProtectedRoute>} />
       <Route path="/cost-governance" element={<ProtectedRoute><DashboardLayout><CostGovernance /></DashboardLayout></ProtectedRoute>} />
       <Route path="/workflow-builder" element={<ProtectedRoute><DashboardLayout><WorkflowBuilder /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/environments" element={<ProtectedRoute><DashboardLayout><Environments /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/memory-hierarchy" element={<ProtectedRoute><DashboardLayout><MemoryHierarchy /></DashboardLayout></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminDashboard /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/code-explorer" element={<AdminRoute><DashboardLayout><CodeExplorer /></DashboardLayout></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />

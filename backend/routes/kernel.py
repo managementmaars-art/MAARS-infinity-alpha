@@ -15,6 +15,10 @@ from services.kernel_service import (
     get_cost_overview, get_cost_by_model, get_cost_by_agent,
     get_cost_budget, update_cost_budget,
     create_workflow, get_workflows, get_workflow, update_workflow, delete_workflow,
+    execute_workflow, get_workflow_runs, get_workflow_run,
+    advance_workflow_step, simulate_workflow_execution,
+    get_environments, get_user_environment, set_user_environment, get_env_stats,
+    get_memory_layers, get_memory_stats,
 )
 from infinity_catalog import (
     NETWORK_DEFINITIONS, AUTONOMY_TIERS, AGENT_LIFECYCLE_STATES,
@@ -385,3 +389,64 @@ async def update_wf(workflow_id: str, data: WorkflowUpdate, user=Depends(get_cur
 async def delete_wf(workflow_id: str, user=Depends(get_current_user)):
     await delete_workflow(user.user_id, workflow_id)
     return {"status": "deleted"}
+
+
+# ---------- Workflow Execution ----------
+
+@router.post("/workflows/{workflow_id}/run")
+async def run_workflow(workflow_id: str, user=Depends(get_current_user)):
+    """Start a workflow run."""
+    run = await execute_workflow(user.user_id, workflow_id)
+    if not run:
+        raise HTTPException(status_code=404, detail="Workflow not found")
+    # Simulate execution in background
+    import asyncio
+    asyncio.create_task(simulate_workflow_execution(user.user_id, run["run_id"]))
+    return run
+
+
+@router.get("/workflows/{workflow_id}/runs")
+async def list_workflow_runs(workflow_id: str, user=Depends(get_current_user)):
+    return await get_workflow_runs(user.user_id, workflow_id)
+
+
+@router.get("/workflow-runs/{run_id}")
+async def get_run(run_id: str, user=Depends(get_current_user)):
+    run = await get_workflow_run(user.user_id, run_id)
+    if not run:
+        raise HTTPException(status_code=404, detail="Run not found")
+    return run
+
+
+# ---------- Environments ----------
+
+class EnvSwitch(BaseModel):
+    environment: str
+
+
+@router.get("/environments")
+async def list_envs(user=Depends(get_current_user)):
+    envs = await get_environments()
+    user_env = await get_user_environment(user.user_id)
+    stats = await get_env_stats()
+    return {"environments": envs, "active": user_env.get("active_env", "sandbox"), "stats": stats}
+
+
+@router.put("/environments/active")
+async def switch_env(data: EnvSwitch, user=Depends(get_current_user)):
+    result = await set_user_environment(user.user_id, data.environment)
+    if not result:
+        raise HTTPException(status_code=400, detail="Invalid environment")
+    return result
+
+
+# ---------- Memory Hierarchy ----------
+
+@router.get("/memory/layers")
+async def memory_layers(user=Depends(get_current_user)):
+    return await get_memory_layers()
+
+
+@router.get("/memory/stats")
+async def memory_stats(user=Depends(get_current_user)):
+    return await get_memory_stats(user.user_id)
