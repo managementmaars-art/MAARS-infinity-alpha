@@ -400,9 +400,7 @@ const AboutPage = () => {
       <div>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center shadow-lg shadow-red-500/20">
-              <Rocket className="w-7 h-7 text-white" />
-            </div>
+            <img src="/mgc-logo.png" alt="MAARS Global Corporation" className="w-14 h-14 rounded-2xl object-contain" />
             <div>
               <h1 className="text-2xl lg:text-3xl font-bold text-white font-['Outfit']">MAARS Command</h1>
               <p className="text-sm text-zinc-400">Autonomous AI Enterprise Operating System</p>
