@@ -4,7 +4,7 @@ export const Watermark = () => {
   const branding = useBranding();
   
   return (
-    <div className="fixed bottom-3 right-4 z-30 pointer-events-none select-none">
+    <div className="fixed bottom-3 right-4 z-30 pointer-events-none select-none no-print">
       <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-950/70 backdrop-blur-sm border border-white/[0.04]">
         <img src="/branding/maars-logo.jpeg" alt="MAARS GC" className="w-5 h-5 rounded object-cover" />
         <div className="flex flex-col">

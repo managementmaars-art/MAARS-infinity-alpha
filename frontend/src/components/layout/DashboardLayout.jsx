@@ -346,7 +346,7 @@ const DashboardLayout = ({ children }) => {
       </div>
 
       {/* Sidebar -- Desktop */}
-      <aside className={`hidden lg:flex fixed inset-y-0 left-0 ${sidebarW} bg-zinc-900/50 backdrop-blur-md border-r border-white/[0.06] z-30 flex-col transition-all duration-200`}>
+      <aside className={`hidden lg:flex fixed inset-y-0 left-0 ${sidebarW} bg-zinc-900/50 backdrop-blur-md border-r border-white/[0.06] z-30 flex-col transition-all duration-200 no-print`}>
         {/* Logo */}
         <div className={`h-14 flex items-center border-b border-white/[0.06] ${collapsed ? "justify-center px-2" : "gap-3 px-4"}`}>
           <Link to="/dashboard" className="flex items-center gap-2.5 min-w-0">
