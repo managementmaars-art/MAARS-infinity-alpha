@@ -10,7 +10,7 @@ import pytest
 import requests
 import os
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://agent-infinity.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://maars-market-ready.preview.emergentagent.com')
 
 # Admin credentials
 ADMIN_EMAIL = "management.maars@marsgc.net"

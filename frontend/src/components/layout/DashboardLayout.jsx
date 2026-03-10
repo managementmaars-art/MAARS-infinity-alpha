@@ -248,7 +248,6 @@ const DashboardLayout = ({ children }) => {
           <NavItem icon={Bot} label="Agents" to="/admin/agents" onClick={closeMobile ? () => { navigate("/admin/agents"); closeMobile(); } : undefined} />
           <NavItem icon={DollarSign} label="Transactions" to="/admin/transactions" onClick={closeMobile ? () => { navigate("/admin/transactions"); closeMobile(); } : undefined} />
           <NavItem icon={TrendingUp} label="Pricing & Packages" to="/admin/pricing-manager" onClick={closeMobile ? () => { navigate("/admin/pricing-manager"); closeMobile(); } : undefined} />
-          <NavItem icon={Package} label="Plan Editor" to="/admin/pricing" onClick={closeMobile ? () => { navigate("/admin/pricing"); closeMobile(); } : undefined} />
           <NavItem icon={Key} label="API Keys" to="/admin/api-keys" onClick={closeMobile ? () => { navigate("/admin/api-keys"); closeMobile(); } : undefined} />
           <NavItem icon={CreditCard} label="Payment Setup" to="/admin/payments" onClick={closeMobile ? () => { navigate("/admin/payments"); closeMobile(); } : undefined} />
           <NavItem icon={Mail} label="Email (SMTP)" to="/admin/smtp" onClick={closeMobile ? () => { navigate("/admin/smtp"); closeMobile(); } : undefined} />

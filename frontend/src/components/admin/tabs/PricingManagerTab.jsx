@@ -4,11 +4,11 @@ import { Badge } from "../../ui/badge";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
-import { TrendingUp, CheckCircle } from "lucide-react";
+import { TrendingUp, CheckCircle, Trash2, Plus, X } from "lucide-react";
 import { API } from "../../../App";
 import { toast } from "sonner";
 
-export const PricingManagerTab = ({ pricingConfig, setPricingConfig, pricingEdit, setPricingEdit, calcInputs, setCalcInputs, calcResult, setCalcResult, liveCost, token }) => {
+export const PricingManagerTab = ({ pricingConfig, setPricingConfig, pricingEdit, setPricingEdit, calcInputs, setCalcInputs, calcResult, setCalcResult, liveCost, token, onDeletePlan, onRefresh }) => {
   const headers = token ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } : {};
 
   const handleCalculate = async () => {
@@ -98,7 +98,34 @@ export const PricingManagerTab = ({ pricingConfig, setPricingConfig, pricingEdit
         ...prev.plans,
         [planId]: {
           ...prev.plans[planId],
-          [field]: typeof prev.plans[planId][field] === 'number' ? parseFloat(value) || 0 : value
+          [field]: field === 'includes_commander' ? value : (typeof prev.plans[planId][field] === 'number' ? parseFloat(value) || 0 : value)
+        }
+      }
+    }));
+  };
+
+  const addFeatureToPlan = (planId, feature) => {
+    if (!feature.trim()) return;
+    setPricingEdit(prev => ({
+      ...prev,
+      plans: {
+        ...prev.plans,
+        [planId]: {
+          ...prev.plans[planId],
+          features: [...(prev.plans[planId].features || []), feature.trim()]
+        }
+      }
+    }));
+  };
+
+  const removeFeatureFromPlan = (planId, featureIndex) => {
+    setPricingEdit(prev => ({
+      ...prev,
+      plans: {
+        ...prev.plans,
+        [planId]: {
+          ...prev.plans[planId],
+          features: (prev.plans[planId].features || []).filter((_, i) => i !== featureIndex)
         }
       }
     }));
@@ -280,7 +307,8 @@ export const PricingManagerTab = ({ pricingConfig, setPricingConfig, pricingEdit
             <CardTitle className="text-white font-['Outfit'] text-base">Edit Plan Pricing</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {Object.entries(pricingEdit.plans).filter(([id]) => id !== 'free').map(([planId, plan]) => {
+            {Object.entries(pricingEdit.plans).map(([planId, plan]) => {
+              const isFree = planId === "free";
               const costUsd = (plan.credits || 0) * (calcInputs.ai_cost_per_credit || 0.003);
               const profitUsd = (plan.price_usd || 0) - costUsd;
               const marginPct = costUsd > 0 ? ((profitUsd / costUsd) * 100).toFixed(0) : 0;
@@ -309,108 +337,120 @@ export const PricingManagerTab = ({ pricingConfig, setPricingConfig, pricingEdit
                       }`} data-testid={`margin-${planId}`}>
                         {isLoss ? 'LOSS' : `${marginPct}% margin`}
                       </Badge>
+                      {!isFree && onDeletePlan && (
+                        <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-zinc-500 hover:text-red-400" onClick={() => onDeletePlan(planId)} data-testid={`delete-plan-${planId}`}>
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      )}
                     </div>
                   </div>
 
                   {/* Per-plan margin control */}
-                  <div className="flex items-center gap-2 p-2 rounded bg-white/5 border border-white/5">
-                    <span className="text-xs text-zinc-400 shrink-0">Set margin:</span>
-                    {[100, 200, 500, 1000].map(m => (
-                      <Button key={m} size="sm" variant="outline"
-                        className={`text-[10px] h-6 px-2 border-white/10 ${parseInt(marginPct) === m ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'text-zinc-400 hover:bg-white/5'}`}
-                        onClick={() => applyMarginToPlan(m)}
-                        data-testid={`plan-margin-${planId}-${m}`}
-                      >{m}%</Button>
-                    ))}
-                    <div className="flex items-center gap-1 ml-1">
-                      <Input
-                        type="number" placeholder="Custom"
-                        className="bg-zinc-800/50 border-white/10 h-6 w-16 text-[10px] px-1.5"
-                        data-testid={`plan-margin-${planId}-custom`}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') applyMarginToPlan(parseInt(e.target.value) || 0);
-                        }}
-                      />
-                      <span className="text-[10px] text-zinc-500">%</span>
+                  {!isFree && (
+                    <div className="flex items-center gap-2 p-2 rounded bg-white/5 border border-white/5">
+                      <span className="text-xs text-zinc-400 shrink-0">Set margin:</span>
+                      {[100, 200, 500, 1000].map(m => (
+                        <Button key={m} size="sm" variant="outline"
+                          className={`text-[10px] h-6 px-2 border-white/10 ${parseInt(marginPct) === m ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'text-zinc-400 hover:bg-white/5'}`}
+                          onClick={() => applyMarginToPlan(m)}
+                          data-testid={`plan-margin-${planId}-${m}`}
+                        >{m}%</Button>
+                      ))}
+                      <div className="flex items-center gap-1 ml-1">
+                        <Input
+                          type="number" placeholder="Custom"
+                          className="bg-zinc-800/50 border-white/10 h-6 w-16 text-[10px] px-1.5"
+                          data-testid={`plan-margin-${planId}-custom`}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') applyMarginToPlan(parseInt(e.target.value) || 0);
+                          }}
+                        />
+                        <span className="text-[10px] text-zinc-500">%</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
-                  <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
                     <div className="space-y-1">
                       <Label className="text-zinc-400 text-xs">AI Cost/Credit</Label>
-                      <div
-                        className="flex items-center h-9 px-3 rounded-md bg-zinc-800/80 border border-white/5 text-sm text-amber-400 font-mono"
-                        data-testid={`ai-cost-${planId}`}
-                      >
+                      <div className="flex items-center h-9 px-3 rounded-md bg-zinc-800/80 border border-white/5 text-sm text-amber-400 font-mono" data-testid={`ai-cost-${planId}`}>
                         ${(calcInputs.ai_cost_per_credit || 0).toFixed(6)}
                       </div>
-                      <p className="text-[10px] text-emerald-500/70 flex items-center gap-1"><span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live</p>
                     </div>
                     <div className="space-y-1">
                       <Label className="text-zinc-400 text-xs">Sell Price USD</Label>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        value={plan.price_usd}
-                        onChange={(e) => updatePlanField(planId, 'price_usd', e.target.value)}
-                        className="bg-zinc-800/50 border-white/10 h-9 text-sm"
-                        data-testid={`edit-${planId}-usd`}
-                      />
+                      <Input type="number" step="0.01" value={plan.price_usd} onChange={(e) => updatePlanField(planId, 'price_usd', e.target.value)} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid={`edit-${planId}-usd`} />
                     </div>
                     <div className="space-y-1">
                       <Label className="text-zinc-400 text-xs">Sell Price BDT</Label>
-                      <Input
-                        type="number"
-                        value={plan.price_bdt}
-                        onChange={(e) => updatePlanField(planId, 'price_bdt', e.target.value)}
-                        className="bg-zinc-800/50 border-white/10 h-9 text-sm"
-                        data-testid={`edit-${planId}-bdt`}
-                      />
+                      <Input type="number" value={plan.price_bdt} onChange={(e) => updatePlanField(planId, 'price_bdt', e.target.value)} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid={`edit-${planId}-bdt`} />
                     </div>
                     <div className="space-y-1">
                       <Label className="text-zinc-400 text-xs">Credits</Label>
-                      <Input
-                        type="number"
-                        value={plan.credits}
-                        onChange={(e) => updatePlanField(planId, 'credits', e.target.value)}
-                        className="bg-zinc-800/50 border-white/10 h-9 text-sm"
-                        data-testid={`edit-${planId}-credits`}
-                      />
+                      <Input type="number" value={plan.credits} onChange={(e) => updatePlanField(planId, 'credits', e.target.value)} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid={`edit-${planId}-credits`} />
                     </div>
                     <div className="space-y-1">
                       <Label className="text-zinc-400 text-xs">Max Agents</Label>
-                      <Input
-                        type="number"
-                        value={plan.max_agents}
-                        onChange={(e) => updatePlanField(planId, 'max_agents', e.target.value)}
-                        className="bg-zinc-800/50 border-white/10 h-9 text-sm"
-                        data-testid={`edit-${planId}-agents`}
-                      />
+                      <Input type="number" value={plan.max_agents} onChange={(e) => updatePlanField(planId, 'max_agents', e.target.value)} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid={`edit-${planId}-agents`} />
                     </div>
                     <div className="space-y-1">
                       <Label className="text-zinc-400 text-xs">Custom Agents</Label>
-                      <Input
-                        type="number"
-                        value={plan.max_custom_agents}
-                        onChange={(e) => updatePlanField(planId, 'max_custom_agents', e.target.value)}
-                        className="bg-zinc-800/50 border-white/10 h-9 text-sm"
-                        data-testid={`edit-${planId}-custom`}
-                      />
+                      <Input type="number" value={plan.max_custom_agents} onChange={(e) => updatePlanField(planId, 'max_custom_agents', e.target.value)} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid={`edit-${planId}-custom`} />
                       <p className="text-[10px] text-zinc-500">-1 = unlimited</p>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-zinc-400 text-xs">Team Members</Label>
+                      <Input type="number" value={plan.max_team_members || 1} onChange={(e) => updatePlanField(planId, 'max_team_members', e.target.value)} className="bg-zinc-800/50 border-white/10 h-9 text-sm" data-testid={`edit-${planId}-team`} />
+                      <p className="text-[10px] text-zinc-500">-1 = unlimited</p>
+                    </div>
+                    <div className="space-y-1 flex flex-col justify-center">
+                      <label className="flex items-center gap-2 cursor-pointer mt-5">
+                        <input type="checkbox" checked={plan.includes_commander || false} onChange={(e) => updatePlanField(planId, 'includes_commander', e.target.checked)} className="w-4 h-4 rounded border-white/20 bg-zinc-800" data-testid={`edit-${planId}-commander`} />
+                        <span className="text-xs text-zinc-300">Commander</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Features Editor */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Features (displayed on pricing page)</Label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {(plan.features || []).map((f, i) => (
+                        <Badge key={i} className="bg-indigo-500/15 text-indigo-400 border-0 text-[10px] gap-1">
+                          {f}
+                          <button onClick={() => removeFeatureFromPlan(planId, i)} className="hover:text-red-400"><X className="w-2.5 h-2.5" /></button>
+                        </Badge>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Add feature..."
+                        className="bg-zinc-800/50 border-white/10 h-7 text-xs flex-1"
+                        data-testid={`feature-input-${planId}`}
+                        onKeyDown={(e) => { if (e.key === 'Enter' && e.target.value.trim()) { addFeatureToPlan(planId, e.target.value); e.target.value = ''; }}}
+                      />
+                      <Button size="sm" variant="ghost" className="h-7 px-2 text-zinc-400 hover:text-indigo-400" onClick={(e) => {
+                        const input = e.currentTarget.previousElementSibling;
+                        if (input?.value?.trim()) { addFeatureToPlan(planId, input.value); input.value = ''; }
+                      }}><Plus className="w-3 h-3" /></Button>
                     </div>
                   </div>
 
                   {/* Cost breakdown bar */}
-                  <div className="h-2 rounded-full bg-zinc-800 overflow-hidden">
-                    <div
-                      className={`h-full rounded-full ${isLoss ? 'bg-red-500' : 'bg-gradient-to-r from-red-500 via-amber-500 to-emerald-500'}`}
-                      style={{ width: `${Math.min(100, plan.price_usd > 0 ? (costUsd / plan.price_usd * 100) : 100)}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-[10px] text-zinc-500">
-                    <span>AI Cost: ${costUsd.toFixed(2)}</span>
-                    <span>Your Price: ${plan.price_usd}</span>
-                  </div>
+                  {!isFree && (
+                    <>
+                      <div className="h-2 rounded-full bg-zinc-800 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${isLoss ? 'bg-red-500' : 'bg-gradient-to-r from-red-500 via-amber-500 to-emerald-500'}`}
+                          style={{ width: `${Math.min(100, plan.price_usd > 0 ? (costUsd / plan.price_usd * 100) : 100)}%` }}
+                        />
+                      </div>
+                      <div className="flex justify-between text-[10px] text-zinc-500">
+                        <span>AI Cost: ${costUsd.toFixed(2)}</span>
+                        <span>Your Price: ${plan.price_usd}</span>
+                      </div>
+                    </>
+                  )}
                 </div>
               );
             })}
