@@ -29,7 +29,7 @@ backend/services/
 - [x] User authentication (JWT) + RBAC
 - [x] Dashboard with real-time stats
 - [x] Command palette + voice commands
-- [x] Agent catalog (458+ agents with unique SVG avatars)
+- [x] Agent catalog (458+ agents with unique AI-generated avatars)
 - [x] Agent networks (27 categories)
 - [x] Brain profiles + Workspace Brain
 - [x] Chat with multi-model support
@@ -51,35 +51,26 @@ backend/services/
 - [x] RBAC Access Control (4 roles, permission matrix, user assignments)
 
 ### Admin Control Panel — All Working
-- [x] Overview (/admin/overview)
-- [x] Analytics (/admin/analytics)
-- [x] Users (/admin/users)
-- [x] Agents (/admin/agents)
-- [x] Transactions (/admin/transactions)
-- [x] Pricing & Packages (/admin/pricing-manager) — UNIFIED
-- [x] API Keys & Integrations (/admin/api-keys)
-- [x] Payment Setup (/admin/payments)
-- [x] Email SMTP (/admin/smtp)
-- [x] Branding & Domain (/admin/branding)
-- [x] Knowledge Base (/admin/knowledge)
-- [x] Audit Log (/admin/audit)
-- [x] Code Explorer (/admin/code-explorer)
-- [x] Access Control (/rbac)
-- [x] Circuit Breakers (/circuit-breakers)
-- [x] Cost Governance (/cost-governance)
+- [x] Overview, Analytics, Users, Agents, Transactions
+- [x] Pricing & Packages (UNIFIED with create/delete/features/margin)
+- [x] API Keys & Integrations, Payment Setup, Email SMTP
+- [x] Branding & Domain, Knowledge Base, Audit Log, Code Explorer
+- [x] Access Control, Circuit Breakers, Cost Governance
 
 ### PWA / Mobile
 - [x] manifest.json, service worker, PWA icons, installable
 
-### Full System Audit (Feb 10, 2026)
-- [x] All 49+ pages load without crashes
+### UI Polish (Feb 10, 2026)
+- [x] Credits display moved from top-right header to sidebar under MAARS ∞ logo
+- [x] SidebarCredits: shows balance, plan badge, + Buy Credits button
+- [x] Collapsed sidebar shows diamond icon for credits
+- [x] Watermark repositioned from fixed bottom-right to centered bottom footer
+- [x] Watermark no longer overlaps page content
+- [x] All 458 agents verified to have unique avatar URLs
 - [x] Fixed /integrations crash (null features array)
 - [x] Fixed /rbac crash (API data format mismatch)
-- [x] Polished pricing admin UI (7-column layout, cleaner grid)
-- [x] Sidebar consistent across all pages
-- [x] No overlapping UI elements
-- [x] No missing navigation items
-- [x] 100% testing pass rate
+- [x] Unified pricing admin with 7-column layout, features editor, commander toggle
+- [x] All 49+ pages load without crashes — 100% test pass rate
 
 ## Credentials
 - Admin: management.maars@marsgc.net / Admin123!
@@ -89,5 +80,4 @@ backend/services/
 - Advanced multi-org switching with shared resources
 - Custom branded login pages per org
 - Billing history / invoice dashboard
-- Advanced trust analytics and customizable dashboard widgets
-- Align backend route files to import directly from new services instead of kernel_service.py shim
+- Align backend route files to import directly from new services
