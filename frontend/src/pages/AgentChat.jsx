@@ -1623,78 +1623,161 @@ const AgentChat = () => {
 // Sidebar Content Component
 const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent, 
   currentChat, loadChat, deleteChat, startNewChat, navigate 
-}) => (
-  <div className="flex-1 flex flex-col overflow-hidden">
-    {/* Agents */}
-    <div className="px-3 pt-3 pb-2 border-b border-white/[0.06]">
-      <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-2 px-1">Agents</p>
-      <div className="flex gap-1.5 overflow-x-auto pb-1">
-        {agents.slice(0, 6).map((agent) => (
-          <button
-            key={agent.agent_id}
-            onClick={() => {
-              setSelectedAgent(agent);
-              navigate(`/chat/${agent.agent_id}`);
-              toast.success(`Switched to ${agent.name}`);
-            }}
-            className={`flex-shrink-0 p-1.5 rounded-lg transition-all ${
-              selectedAgent?.agent_id === agent.agent_id
-                ? "bg-indigo-500/15 ring-1 ring-indigo-500/40"
-                : "bg-zinc-800/40 hover:bg-zinc-800"
-            }`}
-            title={agent.name}
-            data-testid={`agent-btn-${agent.agent_id}`}
-          >
-            <img
-              src={agent.avatar}
-              alt={agent.name}
-              className="w-8 h-8 rounded-md object-cover"
-            />
-          </button>
-        ))}
-      </div>
-    </div>
+}) => {
+  const [agentSearch, setAgentSearch] = useState("");
+  const [showAllAgents, setShowAllAgents] = useState(false);
+  
+  // Group agents by network
+  const groupedAgents = {};
+  agents.forEach(a => {
+    const net = a.network || "ungrouped";
+    if (!groupedAgents[net]) groupedAgents[net] = [];
+    groupedAgents[net].push(a);
+  });
+  
+  // Original 41 agents (not infinity)
+  const originalAgents = agents.filter(a => !a.is_infinity);
+  // Infinity agents filtered by search
+  const filteredInfinity = agentSearch
+    ? agents.filter(a => a.is_infinity && (
+        a.name.toLowerCase().includes(agentSearch.toLowerCase()) ||
+        a.role.toLowerCase().includes(agentSearch.toLowerCase()) ||
+        (a.network || "").toLowerCase().includes(agentSearch.toLowerCase())
+      ))
+    : [];
 
-    {/* Chat History */}
-    <ScrollArea className="flex-1">
-      <div className="px-3 pt-3">
-        <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-2 px-1">Recent Chats</p>
-        <div className="space-y-0.5">
-          {chats.map((chat) => (
-            <div
-              key={chat.chat_id}
-              className={`group flex items-center gap-2 px-2.5 py-2 rounded-lg cursor-pointer transition-all ${
-                currentChat?.chat_id === chat.chat_id
-                  ? "bg-indigo-500/12 text-indigo-400"
-                  : "hover:bg-white/[0.04] text-zinc-400 hover:text-zinc-300"
-              }`}
+  const NETWORK_LABELS = {
+    core_platform: "Core Platform", strategic_executive: "Strategic", venture_creation: "Venture",
+    product_development: "Product", engineering: "Engineering", creative_brand: "Creative",
+    growth_distribution: "Growth", sales_revenue: "Sales", customer_experience: "Customer",
+    operations: "Operations", finance_capital: "Finance", investment_portfolio: "Investment",
+    research_intelligence: "Research", simulation_foresight: "Simulation", legal_governance: "Legal",
+    security: "Security", memory_knowledge: "Memory", tooling_capability: "Tooling",
+    execution: "Execution", verification: "Verification", experimentation: "Experimentation",
+    conflict_resolution: "Conflict", observability_incident: "Observability", recovery_resilience: "Recovery",
+    communication_reporting: "Communication", web_search_intelligence: "Web Intel", industry_specific: "Industry",
+  };
+
+  const getInitials = (name) => name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const NET_COLORS = ["emerald", "blue", "purple", "amber", "cyan", "rose", "indigo", "orange", "teal", "pink"];
+  const getNetColor = (net) => NET_COLORS[Math.abs([...net].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 0)) % NET_COLORS.length];
+
+  return (
+    <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Original Agents Quick Access */}
+      <div className="px-3 pt-3 pb-2 border-b border-white/[0.06]">
+        <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-2 px-1">Agents</p>
+        <div className="flex gap-1.5 overflow-x-auto pb-1">
+          {originalAgents.slice(0, 8).map((agent) => (
+            <button
+              key={agent.agent_id}
               onClick={() => {
-                loadChat(chat.chat_id);
-                navigate(`/chat/${chat.agent_id}?chat=${chat.chat_id}`);
+                setSelectedAgent(agent);
+                navigate(`/chat/${agent.agent_id}`);
               }}
-              data-testid={`chat-item-${chat.chat_id}`}
+              className={`flex-shrink-0 p-1.5 rounded-lg transition-all ${
+                selectedAgent?.agent_id === agent.agent_id
+                  ? "bg-indigo-500/15 ring-1 ring-indigo-500/40"
+                  : "bg-zinc-800/40 hover:bg-zinc-800"
+              }`}
+              title={agent.name}
+              data-testid={`agent-btn-${agent.agent_id}`}
             >
-              <MessageSquare className="w-3.5 h-3.5 flex-shrink-0 opacity-50" />
-              <span className="flex-1 text-[13px] truncate">{chat.title}</span>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteChat(chat.chat_id);
-                }}
-                className="opacity-0 group-hover:opacity-100 p-1 text-zinc-600 hover:text-red-400 transition-opacity"
-                data-testid={`delete-chat-${chat.chat_id}`}
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            </div>
+              {agent.avatar ? (
+                <img src={agent.avatar} alt={agent.name} className="w-8 h-8 rounded-md object-cover" />
+              ) : (
+                <div className="w-8 h-8 rounded-md bg-zinc-700 flex items-center justify-center text-[10px] font-bold text-zinc-300">
+                  {getInitials(agent.name)}
+                </div>
+              )}
+            </button>
           ))}
-          {chats.length === 0 && (
-            <p className="text-xs text-zinc-600 text-center py-6">No chats yet</p>
+        </div>
+        {/* Infinity Agent Search */}
+        <div className="mt-2">
+          <div className="relative">
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-zinc-500" />
+            <input
+              type="text"
+              placeholder="Search 458+ agents..."
+              value={agentSearch}
+              onChange={e => setAgentSearch(e.target.value)}
+              onFocus={() => setShowAllAgents(true)}
+              className="w-full bg-zinc-800/50 border border-white/5 rounded-md pl-7 pr-2 py-1.5 text-[11px] text-white placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/30"
+              data-testid="agent-search-input"
+            />
+          </div>
+          {agentSearch && filteredInfinity.length > 0 && (
+            <div className="mt-1 max-h-48 overflow-y-auto space-y-0.5 bg-zinc-900/90 rounded-md border border-white/5 p-1">
+              {filteredInfinity.slice(0, 20).map(agent => (
+                <button
+                  key={agent.agent_id}
+                  onClick={() => {
+                    setSelectedAgent(agent);
+                    navigate(`/chat/${agent.agent_id}`);
+                    setAgentSearch("");
+                  }}
+                  className="w-full text-left flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/5 transition-colors"
+                  data-testid={`search-agent-${agent.agent_id}`}
+                >
+                  <div className={`w-6 h-6 rounded bg-${getNetColor(agent.network || '')}-500/20 flex items-center justify-center`}>
+                    <span className={`text-[8px] font-bold text-${getNetColor(agent.network || '')}-400`}>{getInitials(agent.name)}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] text-white truncate">{agent.name}</p>
+                    <p className="text-[9px] text-zinc-500 truncate">{NETWORK_LABELS[agent.network] || agent.network}</p>
+                  </div>
+                </button>
+              ))}
+              {filteredInfinity.length > 20 && (
+                <p className="text-[9px] text-zinc-600 text-center py-1">+{filteredInfinity.length - 20} more</p>
+              )}
+            </div>
           )}
         </div>
       </div>
-    </ScrollArea>
-  </div>
-);
+
+      {/* Chat History */}
+      <ScrollArea className="flex-1">
+        <div className="px-3 pt-3">
+          <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-2 px-1">Recent Chats</p>
+          <div className="space-y-0.5">
+            {chats.map((chat) => (
+              <div
+                key={chat.chat_id}
+                className={`group flex items-center gap-2 px-2.5 py-2 rounded-lg cursor-pointer transition-all ${
+                  currentChat?.chat_id === chat.chat_id
+                    ? "bg-indigo-500/12 text-indigo-400"
+                    : "hover:bg-white/[0.04] text-zinc-400 hover:text-zinc-300"
+                }`}
+                onClick={() => {
+                  loadChat(chat.chat_id);
+                  navigate(`/chat/${chat.agent_id}?chat=${chat.chat_id}`);
+                }}
+                data-testid={`chat-item-${chat.chat_id}`}
+              >
+                <MessageSquare className="w-3.5 h-3.5 flex-shrink-0 opacity-50" />
+                <span className="flex-1 text-[13px] truncate">{chat.title}</span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteChat(chat.chat_id);
+                  }}
+                  className="opacity-0 group-hover:opacity-100 p-1 text-zinc-600 hover:text-red-400 transition-opacity"
+                  data-testid={`delete-chat-${chat.chat_id}`}
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
+            {chats.length === 0 && (
+              <p className="text-xs text-zinc-600 text-center py-6">No chats yet</p>
+            )}
+          </div>
+        </div>
+      </ScrollArea>
+    </div>
+  );
+};
 
 export default AgentChat;
