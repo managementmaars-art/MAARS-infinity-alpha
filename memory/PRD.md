@@ -6,17 +6,17 @@ MAARS ∞ is an autonomous AI enterprise operating system by MAARS Global Corpor
 
 ## Architecture
 - **Backend**: FastAPI (Python) + MongoDB + WebSocket
-- **Frontend**: React 18 + Tailwind CSS + Shadcn/UI
+- **Frontend**: React 18 + Tailwind CSS + Shadcn/UI (PWA-enabled)
 - **Payments**: Stripe (test key integrated, checkout sessions + webhooks)
 - **AI**: OpenAI, Anthropic, Google, Groq, Together AI, Fireworks, AI21, xAI, DeepSeek, Mistral, Perplexity, Cohere, ElevenLabs
 
-## Refactored Service Architecture (Feb 10, 2026)
+## Refactored Service Architecture
 ```
 backend/services/
-├── kernel_service.py       # Core kernel, workflows, knowledge graph, RBAC, memory (re-export hub)
-├── campaign_service.py     # Campaigns, templates, PDF generation, scheduling
-├── analytics_service.py    # Cost governance, trust analytics, dashboard widgets
-├── integration_service.py  # Third-party integration hub (WhatsApp, Shopify, etc.)
+├── kernel_service.py       # Core kernel + re-export hub
+├── campaign_service.py     # Campaigns, templates, PDF, scheduling
+├── analytics_service.py    # Cost governance, trust analytics, widgets
+├── integration_service.py  # Third-party integration hub
 ├── organization_service.py # Multi-tenancy, teams, org management
 ├── agent_service.py        # Agent catalog, seeding, CRUD
 ├── llm_service.py          # LLM routing, provider management
@@ -26,8 +26,7 @@ backend/services/
 ## Completed Features
 
 ### Core Platform
-- [x] User authentication (JWT)
-- [x] Admin panel with role-based access
+- [x] User authentication (JWT) + RBAC
 - [x] Dashboard with real-time stats
 - [x] Command palette + voice commands
 - [x] Agent catalog (458+ agents with unique SVG avatars)
@@ -43,36 +42,56 @@ backend/services/
 - [x] Agent-to-agent collaboration within workflows
 
 ### Enterprise Features
-- [x] Dynamic pricing system (admin CRUD + inline editing from pricing page)
-- [x] Functional API integrations hub (connect/disconnect)
-- [x] Code explorer (tree, file viewer, search, ZIP download)
+- [x] Dynamic pricing system (admin CRUD + inline editing)
+- [x] Functional API integrations hub
+- [x] Code explorer (tree, viewer, search, ZIP)
 - [x] Organization/Team management (multi-tenancy)
-- [x] Custom analytics dashboard (draggable widgets)
-- [x] Trust analytics with trends and anomaly detection
-- [x] Agent suggestions / self-expanding agent creation
-- [x] Stripe payment integration (subscriptions + credits)
+- [x] Trust analytics with trends & anomaly detection
+- [x] Agent suggestions / self-expanding agents
+- [x] Stripe payment integration
 
-### Market-Ready Polish (Feb 10, 2026)
-- [x] PDF downloads with Unicode support (DejaVu font)
-- [x] Unique SVG avatars for all 417 infinity agents
-- [x] Professional About page (458+ agents, 13 providers, 45+ models)
-- [x] Admin Pricing Management UI + inline pricing editing
-- [x] Cost By Provider endpoint and UI section
-- [x] Updated all "41" references to "458+" (About, PDF, DB)
-- [x] Refactored kernel_service.py into 4 separate service modules
+### Admin Control Panel — Sidebar Breakdown (Feb 10, 2026)
+- [x] Overview (/admin/overview)
+- [x] Analytics (/admin/analytics)
+- [x] Users (/admin/users)
+- [x] Agents (/admin/agents)
+- [x] Transactions (/admin/transactions)
+- [x] Pricing & Packages (/admin/pricing-manager)
+- [x] Plan Editor (/admin/pricing)
+- [x] API Keys & Integrations (/admin/api-keys)
+- [x] Payment Setup (/admin/payments)
+- [x] Email SMTP (/admin/smtp)
+- [x] Branding & Domain (/admin/branding)
+- [x] Knowledge Base (/admin/knowledge)
+- [x] Audit Log (/admin/audit)
+- [x] Code Explorer (/admin/code-explorer)
+- [x] Access Control (/rbac)
+- [x] Circuit Breakers (/circuit-breakers)
+- [x] Cost Governance (/cost-governance)
 
-## Pages & Routes
-- `/dashboard`, `/chat`, `/agents`, `/agent-networks`
-- `/workflow-builder`, `/campaigns`, `/vibe-coding`
-- `/content-generator`, `/reference-intel`, `/analytics`
-- `/integrations`, `/pricing`, `/about`, `/organization`
-- `/cost-governance`, `/payment/success`
-- `/admin/pricing`, `/admin/code-explorer`
+### PWA / Mobile (Feb 10, 2026)
+- [x] manifest.json with MAARS metadata
+- [x] Service worker (sw.js) with cache-first strategy
+- [x] PWA icons (192x192, 512x512)
+- [x] Apple mobile web app meta tags
+- [x] Installable on mobile via "Add to Home Screen"
+
+### Multi-Org Switching (Feb 10, 2026)
+- [x] Org Switcher in sidebar (above search)
+- [x] Create Organization flow
+- [x] Personal Workspace default
+
+### Advanced Dashboard Widgets (Feb 10, 2026)
+- [x] Auto-refresh toggle (30s interval)
+- [x] Last refresh timestamp
+- [x] Manual refresh button
+- [x] Widget catalog with 8 types
 
 ## Credentials
 - Admin: management.maars@marsgc.net / Admin123!
 
 ## P2 Backlog
-- Mobile app wrapper / PWA
-- Advanced customizable dashboard widgets
-- Multi-org switching UI
+- Mobile-native app wrapper (React Native / Capacitor)
+- Advanced multi-org switching with shared resources
+- Custom branded login pages per org
+- Billing history / invoice dashboard

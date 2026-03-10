@@ -121,7 +121,7 @@ const OnboardingFlow = ({ onComplete }) => {
                   </div>
                   <div className="grid grid-cols-3 gap-4 pt-4">
                     {[
-                      { icon: Bot, label: "41 AI Agents", desc: "Specialized experts" },
+                      { icon: Bot, label: "458+ AI Agents", desc: "Specialized experts" },
                       { icon: Brain, label: "Smart AI", desc: "Asks questions first" },
                       { icon: Zap, label: "Instant Results", desc: "Files, images & more" },
                     ].map((item, i) => (
