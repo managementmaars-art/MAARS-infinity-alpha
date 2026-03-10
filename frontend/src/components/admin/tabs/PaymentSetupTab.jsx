@@ -136,34 +136,5 @@ export const PaymentSetupTab = ({ token }) => (
           </div>
         </CardContent>
       </Card>
-
-      {/* Current Pricing Summary */}
-      <Card className="bg-zinc-900/50 border-white/10">
-        <CardHeader>
-          <CardTitle className="text-white font-['Outfit'] text-base">Your Pricing Structure (200% Profit Margin)</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left py-2 text-zinc-400 font-medium">Plan</th>
-                  <th className="text-right py-2 text-zinc-400 font-medium">USD</th>
-                  <th className="text-right py-2 text-zinc-400 font-medium">BDT</th>
-                  <th className="text-right py-2 text-zinc-400 font-medium">Credits</th>
-                  <th className="text-right py-2 text-zinc-400 font-medium">Custom Agents</th>
-                </tr>
-              </thead>
-              <tbody className="text-zinc-300">
-                <tr className="border-b border-white/5"><td className="py-2">Free</td><td className="text-right">$0</td><td className="text-right">$0</td><td className="text-right">50</td><td className="text-right">0</td></tr>
-                <tr className="border-b border-white/5"><td className="py-2">Starter</td><td className="text-right">$29</td><td className="text-right">3,100</td><td className="text-right">500</td><td className="text-right">2</td></tr>
-                <tr className="border-b border-white/5"><td className="py-2">Pro</td><td className="text-right">$79</td><td className="text-right">8,400</td><td className="text-right">2,000</td><td className="text-right">5</td></tr>
-                <tr><td className="py-2">Business</td><td className="text-right">$199</td><td className="text-right">21,100</td><td className="text-right">6,000</td><td className="text-right">Unlimited</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
-
