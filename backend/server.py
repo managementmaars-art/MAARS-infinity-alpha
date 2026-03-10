@@ -49,6 +49,12 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="MAARS Command API")
 
+# Serve generated avatar images
+from fastapi.staticfiles import StaticFiles
+avatar_dir = ROOT_DIR / "static" / "avatars"
+avatar_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/api/static", StaticFiles(directory=str(ROOT_DIR / "static")), name="static")
+
 # Include all routers under /api prefix
 from fastapi import APIRouter
 api_router = APIRouter(prefix="/api")
