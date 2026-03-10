@@ -522,31 +522,23 @@ const AboutPage = () => {
     });
   };
 
-  /* Direct PDF download */
+  /* Direct PDF download from backend */
   const handlePrint = async () => {
     setPrinting(true);
-    setExpandedNetworks(new Set(sortedNetworks.map(([k]) => k)));
-    setExpandedSystems(new Set(SYSTEMS.map((_, i) => i)));
-    
-    // Wait for DOM to update with all sections expanded
-    await new Promise(r => setTimeout(r, 800));
-    
-    const html2pdf = (await import("html2pdf.js")).default;
-    const el = printRef.current;
-    if (!el) { setPrinting(false); return; }
-    
-    html2pdf().set({
-      margin: [10, 10, 10, 10],
-      filename: "MAARS-Command-Documentation.pdf",
-      image: { type: "jpeg", quality: 0.95 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#09090b", logging: false },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      pagebreak: { mode: ["avoid-all", "css", "legacy"] },
-    }).from(el).save().then(() => {
-      setPrinting(false);
-    }).catch(() => {
-      setPrinting(false);
-    });
+    try {
+      const res = await fetch(`${API}/summary/pdf`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "MAARS-Command-Documentation.pdf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+    } catch {} finally { setPrinting(false); }
   };
 
   const getNetworkMeta = (netId) => {

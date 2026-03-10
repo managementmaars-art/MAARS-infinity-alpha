@@ -51,15 +51,33 @@ YELLOW = (250, 204, 21)
 GREEN = (74, 222, 128)
 BLUE = (96, 165, 250)
 
-LAYER_COLORS = {
-    "Executive Layer": AMBER,
-    "Product & Technical Layer": CYAN,
-    "Creative & Brand Layer": PINK,
-    "Growth & Marketing Layer": GREEN,
-    "Operations Layer": INDIGO,
-    "Finance Layer": EMERALD,
-    "Governance Layer": RED,
-    "Intelligence Layer": VIOLET,
+NETWORK_LABELS = {
+    "strategic_executive": "Strategic & Executive", "product_development": "Product Development",
+    "engineering": "Engineering", "creative_brand": "Creative & Brand",
+    "growth_distribution": "Growth & Distribution", "sales_revenue": "Sales & Revenue",
+    "operations": "Operations", "finance_capital": "Finance & Capital",
+    "legal_governance": "Legal & Governance", "research_intelligence": "Research & Intelligence",
+    "customer_experience": "Customer Experience", "security": "Security",
+    "core_platform": "Core Platform", "memory_knowledge": "Memory & Knowledge",
+    "tooling_capability": "Tooling & Capability", "observability_incident": "Observability & Incident",
+    "verification": "Verification", "execution": "Execution",
+    "simulation_foresight": "Simulation & Foresight", "experimentation": "Experimentation",
+    "communication_reporting": "Communication & Reporting", "conflict_resolution": "Conflict Resolution",
+    "recovery_resilience": "Recovery & Resilience", "investment_portfolio": "Investment & Portfolio",
+    "venture_creation": "Venture Creation", "web_search_intelligence": "Web Search Intelligence",
+    "industry_specific": "Industry Specific",
+}
+
+NETWORK_COLORS = {
+    "strategic_executive": AMBER, "product_development": CYAN, "engineering": EMERALD,
+    "creative_brand": PINK, "growth_distribution": GREEN, "sales_revenue": YELLOW,
+    "operations": INDIGO, "finance_capital": EMERALD, "legal_governance": RED,
+    "research_intelligence": VIOLET, "customer_experience": ROSE, "security": ORANGE,
+    "core_platform": BLUE, "memory_knowledge": VIOLET, "tooling_capability": GREEN,
+    "observability_incident": AMBER, "verification": EMERALD, "execution": YELLOW,
+    "simulation_foresight": VIOLET, "experimentation": TEAL, "communication_reporting": SKY,
+    "conflict_resolution": ORANGE, "recovery_resilience": GREEN, "investment_portfolio": AMBER,
+    "venture_creation": RED, "web_search_intelligence": CYAN, "industry_specific": BLUE,
 }
 
 BADGE_COLORS = [
@@ -405,6 +423,19 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
     total_memories = await db.memory_entries.count_documents({"user_id": current_user.user_id})
     auto_learned = await db.memory_entries.count_documents({"user_id": current_user.user_id, "source": "auto_learn"})
 
+    # Dynamically load ALL agents from DB
+    all_agents = await db.agents.find({}, {"_id": 0, "agent_id": 1, "name": 1, "role": 1, "description": 1, "capabilities": 1, "tools": 1, "network": 1, "autonomy_tier": 1}).to_list(600)
+    
+    # Group by network
+    network_groups = {}
+    for a in all_agents:
+        net = a.get("network") or "core_team"
+        if net not in network_groups:
+            network_groups[net] = []
+        network_groups[net].append(a)
+    sorted_networks = sorted(network_groups.items(), key=lambda x: -len(x[1]))
+    unique_network_count = len(sorted_networks)
+
     pdf = DarkPDF()
     pdf.alias_nb_pages()
     pdf.set_auto_page_break(auto=True, margin=16)
@@ -454,8 +485,8 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
     pdf.set_text_color(*LIGHT)
     pdf.set_x(pdf.l_margin + 2)
     pdf.multi_cell(pdf.w - pdf.l_margin - pdf.r_margin - 4, 4.5, _s(
-        "MAARS Command deploys a workforce of 458+ specialized AI agents organized across 27 network categories "
-        "and 16 system layers, powered by 13 LLM providers with 45+ models. It merges the power of preset "
+        f"MAARS Command deploys a workforce of {len(all_agents)}+ specialized AI agents organized across {unique_network_count} network categories "
+        "and 21 system layers, powered by 13 LLM providers with 45+ models. It merges the power of preset "
         "specialist business agents with autonomous execution, persistent memory, and real-world action capabilities. "
         "Users set high-level business goals, and the AI workforce autonomously plans, delegates, executes, "
         "collaborates, and delivers -- with quality control, failure recovery, and human oversight at every step."
@@ -494,11 +525,12 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
 
     toc_items = [
         ("1", "Platform Statistics", EMERALD),
-        ("2", "The 458-Agent AI Workforce (8 Layers)", AMBER),
+        ("2", f"The {len(all_agents)}-Agent AI Workforce ({unique_network_count} Networks)", AMBER),
         ("3", f"Core Systems & Capabilities ({len(SYSTEMS)} Systems)", CYAN),
         ("4", f"AI Models & Providers ({len(PROVIDERS)} Providers)", VIOLET),
-        ("5", "Technical Architecture", PINK),
-        ("6", "Complete API Reference (212+ Endpoints)", SKY),
+        ("5", "Security & Governance", RED),
+        ("6", "Technical Architecture", PINK),
+        ("7", "Complete API Reference (212+ Endpoints)", SKY),
     ]
     pdf.ln(1)
     for num, name, color in toc_items:
@@ -526,10 +558,10 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
 
     # Stats in a card
     stats_data = [
-        ("AI Agents", "458+", INDIGO), ("Organizational Layers", "8", AMBER),
+        ("AI Agents", f"{len(all_agents)}+", INDIGO), ("Network Categories", str(unique_network_count), AMBER),
         ("Core Systems", str(len(SYSTEMS)), EMERALD), ("AI Providers", str(len(PROVIDERS)), VIOLET),
-        ("AI Models Available", "30+", CYAN), ("API Endpoints", "212+", SKY),
-        ("Frontend Pages", "20+", PINK), ("Database Collections", "27+", ORANGE),
+        ("AI Models Available", "45+", CYAN), ("API Endpoints", "212+", SKY),
+        ("Frontend Pages", "50+", PINK), ("Database Collections", "27+", ORANGE),
         ("Total Projects", str(total_projects), LIGHT), ("Total Tasks Executed", str(total_tasks), LIGHT),
         ("Chat Conversations", str(total_chats), LIGHT),
         ("Memory Entries", f"{total_memories} ({auto_learned} auto-learned)", LIGHT),
@@ -548,63 +580,82 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
         pdf.cell(0, 5.8, _s(str(value)), new_x="LMARGIN", new_y="NEXT")
     pdf.set_y(card_y + card_h + 4)
 
-    # ===== SECTION 2: AGENTS =====
+    # ===== SECTION 2: AGENTS (Dynamic from DB) =====
     pdf.add_page()
-    pdf.section_title("2. The 458-Agent AI Workforce", AMBER)
-    pdf.body("Each agent has a unique identity and Custom Brain Profile: LLM model, autonomy level (1-10), communication style, tool permissions, and creativity temperature. Organized into 8 enterprise layers.")
+    pdf.section_title(f"2. The {len(all_agents)}-Agent AI Workforce", AMBER)
+    pdf.body(f"Every agent has a unique identity and Custom Brain Profile: LLM model, autonomy level (1-10), communication style, tool permissions, and creativity temperature. Organized into {unique_network_count} specialized network categories.")
     pdf.ln(2)
 
-    for layer_name, count, agents in AGENT_LAYERS:
-        layer_color = LAYER_COLORS.get(layer_name, LIGHT)
+    for net_id, net_agents in sorted_networks:
+        net_label = NETWORK_LABELS.get(net_id, net_id.replace("_", " ").title() if net_id != "core_team" else "Core Team")
+        net_color = NETWORK_COLORS.get(net_id, LIGHT)
 
-        # Layer header card
         pdf._ensure_space(14)
         lh_y = pdf.get_y()
-        pdf.set_fill_color(layer_color[0] // 5, layer_color[1] // 5, layer_color[2] // 5)
+        pdf.set_fill_color(net_color[0] // 5, net_color[1] // 5, net_color[2] // 5)
         pdf.rect(pdf.l_margin, lh_y, pdf.w - pdf.l_margin - pdf.r_margin, 8.5, style="F")
-        pdf.set_fill_color(*layer_color)
+        pdf.set_fill_color(*net_color)
         pdf.rect(pdf.l_margin, lh_y, 2.5, 8.5, style="F")
         pdf.set_xy(pdf.l_margin + 6, lh_y + 1)
         pdf.set_font(FN, "B", 10)
-        pdf.set_text_color(*layer_color)
-        pdf.cell(0, 6, _s(f"{layer_name}  ({count} agents)"))
+        pdf.set_text_color(*net_color)
+        pdf.cell(0, 6, _s(f"{net_label}  ({len(net_agents)} agents)"))
         pdf.set_y(lh_y + 10)
 
-        for name, role, model, desc, caps in agents:
-            pdf._ensure_space(20)
-            # Agent entry with left accent
-            ay = pdf.get_y()
-            pdf.set_fill_color(*CARD_BG)
-            card_w_full = pdf.w - pdf.l_margin - pdf.r_margin - 4
-            pdf.rect(pdf.l_margin + 4, ay, card_w_full, 0.3, style="F")
-            pdf.set_fill_color(*BORDER)
-            pdf.rect(pdf.l_margin + 4, ay, card_w_full, 0.1, style="F")
+        for agent in net_agents:
+            a_name = agent.get("name", "Agent")
+            a_role = agent.get("role", "")
+            a_desc = agent.get("description", "")
+            a_caps = agent.get("capabilities", [])
+            a_tools = agent.get("tools", [])
+            a_auto = agent.get("autonomy_tier", "")
 
-            # Agent name and role
+            desc_lines = max(1, len(a_desc) // 90 + 1)
+            needed = 12 + desc_lines * 4 + (5 if a_caps else 0) + (5 if a_tools else 0)
+            pdf._ensure_space(needed)
+
+            ay = pdf.get_y()
+            card_w_full = pdf.w - pdf.l_margin - pdf.r_margin - 4
+            pdf.set_fill_color(*CARD_BG)
+            pdf.rect(pdf.l_margin + 4, ay, card_w_full, 0.3, style="F")
+
             pdf.set_xy(pdf.l_margin + 6, ay + 1)
             pdf.set_font(FN, "B", 8.5)
             pdf.set_text_color(*WHITE)
-            pdf.cell(0, 4.5, _s(name))
-            pdf.set_x(pdf.l_margin + 6 + pdf.get_string_width(name) + 3)
+            pdf.cell(0, 4.5, _s(a_name))
+            x_after = pdf.l_margin + 6 + pdf.get_string_width(a_name) + 3
+            pdf.set_x(x_after)
             pdf.set_font(FN, "", 7)
-            pdf.set_text_color(*layer_color)
-            pdf.cell(20, 4.5, _s(f"[{role}]"))
-            pdf.set_text_color(*DIM)
-            pdf.cell(0, 4.5, _s(f"Default: {model}"))
+            pdf.set_text_color(*net_color)
+            pdf.cell(30, 4.5, _s(f"[{a_role}]"))
+            if a_auto:
+                pdf.set_text_color(*DIM)
+                pdf.cell(0, 4.5, _s(f"Autonomy: {a_auto}/10"))
             pdf.ln(5)
 
-            # Description
-            pdf.set_font(FN, "", 7.5)
-            pdf.set_text_color(*LIGHT)
-            pdf.set_x(pdf.l_margin + 6)
-            pdf.multi_cell(card_w_full - 4, 3.8, _s(desc))
+            if a_desc:
+                pdf.set_font(FN, "", 7.5)
+                pdf.set_text_color(*LIGHT)
+                pdf.set_x(pdf.l_margin + 6)
+                pdf.multi_cell(card_w_full - 4, 3.8, _s(a_desc))
 
-            # Capabilities
-            pdf.set_font(FN, "", 6.5)
-            pdf.set_text_color(*DIM)
-            pdf.set_x(pdf.l_margin + 6)
-            pdf.multi_cell(card_w_full - 4, 3.5, _s(f"Capabilities: {caps}"))
-            pdf.ln(2.5)
+            if a_caps:
+                pdf.set_font(FN, "", 6.5)
+                pdf.set_text_color(*DIM)
+                pdf.set_x(pdf.l_margin + 6)
+                pdf.cell(12, 3.5, "Skills: ")
+                pdf.set_text_color(*net_color)
+                pdf.multi_cell(card_w_full - 16, 3.5, _s(", ".join(a_caps)))
+
+            if a_tools:
+                pdf.set_font(FN, "", 6.5)
+                pdf.set_text_color(*DIM)
+                pdf.set_x(pdf.l_margin + 6)
+                pdf.cell(12, 3.5, "Tools: ")
+                pdf.set_text_color(*INDIGO)
+                pdf.multi_cell(card_w_full - 16, 3.5, _s(", ".join(a_tools)))
+
+            pdf.ln(1.5)
 
         pdf.ln(3)
 
