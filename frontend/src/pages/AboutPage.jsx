@@ -424,17 +424,21 @@ const AboutPage = () => {
           <Badge className="bg-violet-500/20 text-violet-400 border-0">Memory Governance</Badge>
           <Badge className="bg-rose-500/20 text-rose-400 border-0">Voice Commands</Badge>
           <Badge className="bg-sky-500/20 text-sky-400 border-0">Code Explorer</Badge>
+          <Badge className="bg-blue-500/20 text-blue-400 border-0">Knowledge Graph</Badge>
+          <Badge className="bg-teal-500/20 text-teal-400 border-0">Trust Scores</Badge>
+          <Badge className="bg-orange-500/20 text-orange-400 border-0">Execution Gateway</Badge>
         </div>
       </div>
 
       {/* Platform Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
         {[
-          { label: "AI Agents", value: totalAgents, color: "text-indigo-400" },
-          { label: "Org Layers", value: "8", color: "text-amber-400" },
-          { label: "Core Systems", value: SYSTEMS.length, color: "text-emerald-400" },
+          { label: "AI Agents", value: "458+", color: "text-indigo-400" },
+          { label: "Networks", value: "27", color: "text-emerald-400" },
+          { label: "Core Systems", value: SYSTEMS.length, color: "text-amber-400" },
           { label: "LLM Providers", value: "9", color: "text-violet-400" },
-          { label: "API Endpoints", value: "212+", color: "text-cyan-400" },
+          { label: "System Layers", value: "16", color: "text-cyan-400" },
+          { label: "API Endpoints", value: "212+", color: "text-rose-400" },
         ].map(s => (
           <Card key={s.label} className="bg-zinc-900/50 border-white/5">
             <CardContent className="p-4 text-center">

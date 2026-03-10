@@ -5,7 +5,7 @@ import {
   Shield, BarChart3, Package, Rocket, Brain, FileCheck, Cpu, LayoutDashboard,
   Activity, Gauge, Radio, Code, Palette, PenTool, Info,
   PanelLeftClose, PanelLeftOpen, Search, FileCode, Database,
-  Network, GitBranch, Layers
+  Network, GitBranch, Layers, Share2, Zap
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import CommandPalette from "../CommandPalette";
@@ -43,6 +43,9 @@ const navSections = [
       { icon: Layers, label: "Kernel", to: "/kernel" },
       { icon: Network, label: "Agent Networks", to: "/networks" },
       { icon: GitBranch, label: "Task Graphs", to: "/task-graphs" },
+      { icon: Share2, label: "Knowledge Graph", to: "/knowledge-graph" },
+      { icon: Shield, label: "Trust Scores", to: "/trust-scores" },
+      { icon: Zap, label: "Execution Gateway", to: "/execution-gateway" },
       { icon: Database, label: "Memory", to: "/memory" },
       { icon: Activity, label: "Collaborations", to: "/collaborations" },
       { icon: Gauge, label: "KPI Dashboard", to: "/kpi-dashboard" },

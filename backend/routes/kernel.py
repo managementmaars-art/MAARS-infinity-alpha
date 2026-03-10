@@ -8,6 +8,8 @@ from services.kernel_service import (
     get_task_graph, update_task_graph, delete_task_graph,
     log_execution, get_execution_logs, get_trust_scores,
     register_tool, get_tool_registry, get_circuit_breakers,
+    create_kg_node, create_kg_edge, get_knowledge_graph,
+    delete_kg_node, seed_knowledge_graph,
 )
 from infinity_catalog import (
     NETWORK_DEFINITIONS, AUTONOMY_TIERS, AGENT_LIFECYCLE_STATES,
@@ -199,3 +201,43 @@ async def list_tools(user=Depends(get_current_user)):
 @router.get("/circuit-breakers")
 async def list_circuit_breakers(user=Depends(get_current_user)):
     return await get_circuit_breakers()
+
+
+# ---------- Knowledge Graph ----------
+class KGNodeCreate(BaseModel):
+    node_id: str
+    label: str
+    type: str = "entity"
+    properties: dict = {}
+
+
+class KGEdgeCreate(BaseModel):
+    edge_id: str
+    source: str
+    target: str
+    relationship: str = "related_to"
+    weight: float = 1.0
+    properties: dict = {}
+
+
+@router.get("/knowledge-graph")
+async def get_kg(user=Depends(get_current_user)):
+    """Get the full knowledge graph."""
+    await seed_knowledge_graph(user.user_id)
+    return await get_knowledge_graph(user.user_id)
+
+
+@router.post("/knowledge-graph/nodes")
+async def add_kg_node(data: KGNodeCreate, user=Depends(get_current_user)):
+    return await create_kg_node(user.user_id, data.dict())
+
+
+@router.post("/knowledge-graph/edges")
+async def add_kg_edge(data: KGEdgeCreate, user=Depends(get_current_user)):
+    return await create_kg_edge(user.user_id, data.dict())
+
+
+@router.delete("/knowledge-graph/nodes/{node_id}")
+async def remove_kg_node(node_id: str, user=Depends(get_current_user)):
+    await delete_kg_node(user.user_id, node_id)
+    return {"status": "deleted"}

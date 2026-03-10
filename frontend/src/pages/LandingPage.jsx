@@ -54,33 +54,33 @@ const LandingPage = () => {
   const features = [
     {
       icon: <Bot className="w-6 h-6" />,
-      title: "Specialized AI Agents",
-      description: "Pre-built expert agents for marketing, sales, development, and more."
+      title: "458+ Specialized AI Agents",
+      description: "Pre-built expert agents across 27 networks — engineering, finance, legal, creative, and more."
     },
     {
       icon: <Sparkles className="w-6 h-6" />,
-      title: "Custom Agent Builder",
-      description: "Create personalized AI agents tailored to your specific workflow needs."
+      title: "Knowledge Graph",
+      description: "Visualize how agents, networks, products, and ventures interconnect in a living knowledge map."
     },
     {
       icon: <Users className="w-6 h-6" />,
       title: "Agent Collaboration",
-      description: "Multiple agents working together to tackle complex tasks efficiently."
+      description: "Multiple agents working together across 27 specialized networks to tackle complex goals."
     },
     {
       icon: <MessageSquare className="w-6 h-6" />,
-      title: "Intelligent Chat",
-      description: "Natural conversations with context-aware AI that remembers your history."
+      title: "Chat with Any Agent",
+      description: "Natural conversations with 458+ context-aware AI agents, each with unique expertise and tools."
     },
     {
       icon: <BarChart3 className="w-6 h-6" />,
-      title: "Task Management",
-      description: "Assign tasks to agents and track progress with detailed results."
+      title: "Trust Scores & Execution Gateway",
+      description: "Every action is governed, metered, and audited. Agent trust scores built from execution history."
     },
     {
       icon: <Zap className="w-6 h-6" />,
-      title: "Multiple LLM Support",
-      description: "Powered by OpenAI, Claude, and Gemini for the best AI capabilities."
+      title: "30+ AI Models",
+      description: "Powered by OpenAI, Claude, Gemini, Grok, DeepSeek, Mistral, and more with smart auto-routing."
     }
   ];
 
@@ -167,7 +167,7 @@ const LandingPage = () => {
             </h1>
             
             <p className="text-lg text-zinc-400 mb-8 max-w-2xl animate-slide-up stagger-1" style={{ opacity: 0 }}>
-              Build, customize, and deploy specialized AI agents that work together to accomplish your goals. From marketing to development, your AI team handles it all.
+              458+ specialized AI agents across 27 networks, powered by 30+ AI models. Build, orchestrate, and govern your autonomous AI workforce with enterprise-grade trust scoring and execution governance.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 animate-slide-up stagger-2" style={{ opacity: 0 }}>

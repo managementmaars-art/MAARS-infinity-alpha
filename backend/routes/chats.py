@@ -590,6 +590,23 @@ Rules:
     except Exception as log_err:
         logger.error(f"Usage logging error: {log_err}")
     
+    # Log to Execution Gateway for trust scoring and audit
+    try:
+        from services.kernel_service import log_execution
+        await log_execution(current_user.user_id, {
+            "action": "chat_message",
+            "agent_id": agent.get("agent_id", ""),
+            "tool_id": "",
+            "input_summary": message_data.content[:200],
+            "output_summary": response_text[:200],
+            "status": "completed",
+            "cost": round(est_cost, 6) if 'est_cost' in dir() else 0,
+            "latency_ms": 0,
+            "model_used": f"{model_provider}/{model_name}",
+        })
+    except Exception as gw_err:
+        logger.error(f"Execution gateway logging error: {gw_err}")
+    
     # Update title if first message
     if len(chat.get("messages", [])) == 0:
         title = message_data.content[:50] + "..." if len(message_data.content) > 50 else message_data.content

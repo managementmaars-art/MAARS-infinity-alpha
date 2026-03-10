@@ -262,3 +262,125 @@ async def seed_default_tools():
             "cost_score": 0,
             "risk_score": 0,
         })
+
+
+# ---------- Knowledge Graph ----------
+
+async def create_kg_node(user_id, data):
+    """Create a knowledge graph node."""
+    now = datetime.now(timezone.utc).isoformat()
+    node = {
+        "user_id": user_id,
+        "node_id": data.get("node_id", ""),
+        "label": data.get("label", ""),
+        "type": data.get("type", "entity"),  # agent, network, venture, product, market, concept
+        "properties": data.get("properties", {}),
+        "created_at": now,
+        "updated_at": now,
+    }
+    await db.knowledge_graph_nodes.update_one(
+        {"user_id": user_id, "node_id": node["node_id"]},
+        {"$set": node},
+        upsert=True,
+    )
+    return node
+
+
+async def create_kg_edge(user_id, data):
+    """Create a knowledge graph edge."""
+    now = datetime.now(timezone.utc).isoformat()
+    edge = {
+        "user_id": user_id,
+        "edge_id": data.get("edge_id", ""),
+        "source": data.get("source", ""),
+        "target": data.get("target", ""),
+        "relationship": data.get("relationship", "related_to"),
+        "weight": data.get("weight", 1.0),
+        "properties": data.get("properties", {}),
+        "created_at": now,
+    }
+    await db.knowledge_graph_edges.update_one(
+        {"user_id": user_id, "edge_id": edge["edge_id"]},
+        {"$set": edge},
+        upsert=True,
+    )
+    return edge
+
+
+async def get_knowledge_graph(user_id):
+    """Get full knowledge graph for a user."""
+    nodes = []
+    async for n in db.knowledge_graph_nodes.find({"user_id": user_id}, {"_id": 0}):
+        nodes.append(n)
+    edges = []
+    async for e in db.knowledge_graph_edges.find({"user_id": user_id}, {"_id": 0}):
+        edges.append(e)
+    return {"nodes": nodes, "edges": edges}
+
+
+async def delete_kg_node(user_id, node_id):
+    """Delete a knowledge graph node and its connected edges."""
+    await db.knowledge_graph_nodes.delete_one({"user_id": user_id, "node_id": node_id})
+    await db.knowledge_graph_edges.delete_many(
+        {"user_id": user_id, "$or": [{"source": node_id}, {"target": node_id}]}
+    )
+    return True
+
+
+async def seed_knowledge_graph(user_id):
+    """Seed the knowledge graph with agent/network data."""
+    existing = await db.knowledge_graph_nodes.count_documents({"user_id": user_id})
+    if existing > 0:
+        return  # Already seeded
+
+    from infinity_catalog import NETWORK_DEFINITIONS, INFINITY_AGENTS
+
+    # Create network nodes
+    for key, net in NETWORK_DEFINITIONS.items():
+        await create_kg_node(user_id, {
+            "node_id": f"net_{key}",
+            "label": net["name"],
+            "type": "network",
+            "properties": {"code": net["code"], "layer": net["layer"], "purpose": net["purpose"]},
+        })
+
+    # Create agent nodes (sample — top 3 per network)
+    from infinity_catalog import get_agents_by_network
+    for key in NETWORK_DEFINITIONS:
+        agents = get_agents_by_network(key)
+        for a in agents[:3]:
+            await create_kg_node(user_id, {
+                "node_id": f"agent_{a['agent_id']}",
+                "label": a["name"],
+                "type": "agent",
+                "properties": {"role": a["role"], "network": key, "autonomy_tier": a.get("autonomy_tier", 0)},
+            })
+            await create_kg_edge(user_id, {
+                "edge_id": f"edge_{a['agent_id']}_to_{key}",
+                "source": f"agent_{a['agent_id']}",
+                "target": f"net_{key}",
+                "relationship": "belongs_to",
+                "weight": 1.0,
+            })
+
+    # Create cross-network edges
+    cross_links = [
+        ("net_engineering", "net_product_development", "supports"),
+        ("net_engineering", "net_security", "secures"),
+        ("net_strategic_executive", "net_finance_capital", "governs"),
+        ("net_growth_distribution", "net_sales_revenue", "drives"),
+        ("net_creative_brand", "net_communication_reporting", "creates_for"),
+        ("net_research_intelligence", "net_simulation_foresight", "informs"),
+        ("net_legal_governance", "net_verification", "validates"),
+        ("net_execution", "net_observability_incident", "monitored_by"),
+        ("net_memory_knowledge", "net_research_intelligence", "feeds"),
+        ("net_tooling_capability", "net_execution", "enables"),
+    ]
+    for src, tgt, rel in cross_links:
+        await create_kg_edge(user_id, {
+            "edge_id": f"edge_{src}_to_{tgt}",
+            "source": src,
+            "target": tgt,
+            "relationship": rel,
+            "weight": 0.8,
+        })
