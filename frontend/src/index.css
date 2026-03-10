@@ -147,30 +147,13 @@ code, pre {
 
 /* ── Print styles for About page ── */
 @media print {
-  * { background: transparent !important; color: #000 !important; box-shadow: none !important; text-shadow: none !important; }
-  body, html, #root, main, [data-testid="about-page"] { background: #fff !important; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
   .no-print, [data-testid="mobile-sidebar-toggle"], [data-testid="sidebar-nav"],
   aside, nav, header, .watermark-container, [class*="GlobalWatermark"],
   [data-testid="download-pdf-btn"] { display: none !important; }
   .print-container { max-width: 100% !important; margin: 0 !important; padding: 8px !important; }
-  .print-container h1, .print-container h2, .print-heading { color: #000 !important; font-weight: 700 !important; }
-  .print-container p, .print-container span, .print-container div { color: #333 !important; }
-  .print-card, .about-section, [class*="bg-zinc"], [class*="bg-white/5"],
-  [class*="bg-indigo"], [class*="bg-emerald"], [class*="bg-amber"],
-  [class*="bg-violet"], [class*="bg-pink"], [class*="bg-cyan"],
-  [class*="bg-red"], [class*="bg-blue"], [class*="bg-green"],
-  [class*="bg-orange"], [class*="bg-yellow"], [class*="bg-teal"],
-  [class*="bg-rose"], [class*="bg-sky"], [class*="bg-lime"],
-  [class*="bg-purple"], [class*="bg-slate"] {
-    background: #fff !important; border: 1px solid #ddd !important;
-  }
-  .print-icon { background: #eee !important; }
-  .print-icon svg { color: #555 !important; }
   .print-no-clamp { -webkit-line-clamp: unset !important; display: block !important; }
   main { margin-left: 0 !important; padding: 0 !important; }
-  .about-section { page-break-inside: avoid; }
   img { max-width: 32px !important; max-height: 32px !important; }
-  button { border: 1px solid #ccc !important; }
-  [class*="badge"], [class*="Badge"] { border: 1px solid #ccc !important; background: #f5f5f5 !important; color: #333 !important; }
 }
 
