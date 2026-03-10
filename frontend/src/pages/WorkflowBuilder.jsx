@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "../App";
-import { Plus, Save, Trash2, Play, Search, GripVertical, X, ArrowRight, ChevronDown, Settings } from "lucide-react";
+import { Plus, Save, Trash2, Play, Search, GripVertical, X, ArrowRight, ChevronDown, Settings, FileText, Clock, CheckCircle, AlertCircle } from "lucide-react";
 import { Button } from "../components/ui/button";
 
 const API = process.env.REACT_APP_BACKEND_URL;
@@ -41,6 +41,7 @@ export default function WorkflowBuilder() {
   const [dragging, setDragging] = useState(null);
   const [runState, setRunState] = useState(null); // {run_id, status, node_states}
   const [runHistory, setRunHistory] = useState([]);
+  const [expandedOutput, setExpandedOutput] = useState(null); // node_id of expanded output
   const lastMouse = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -68,13 +69,17 @@ export default function WorkflowBuilder() {
 
   const addNode = (agent, x, y) => {
     const id = `node_${Date.now()}`;
-    setNodes(prev => [...prev, { id, agent_id: agent.agent_id, name: agent.name, role: agent.role, network: agent.network, avatar: agent.avatar, x: x || 300 + Math.random() * 400, y: y || 100 + nodes.length * 80 }]);
+    setNodes(prev => [...prev, { id, agent_id: agent.agent_id, name: agent.name, role: agent.role, network: agent.network, avatar: agent.avatar, x: x || 300 + Math.random() * 400, y: y || 100 + nodes.length * 80, task: "" }]);
   };
 
   const removeNode = (nodeId) => {
     setNodes(prev => prev.filter(n => n.id !== nodeId));
     setEdges(prev => prev.filter(e => e.source !== nodeId && e.target !== nodeId));
     if (selectedNode === nodeId) setSelectedNode(null);
+  };
+
+  const updateNodeTask = (nodeId, task) => {
+    setNodes(prev => prev.map(n => n.id === nodeId ? { ...n, task } : n));
   };
 
   const addEdge = (source, target) => {
@@ -285,10 +290,13 @@ export default function WorkflowBuilder() {
             const color = NET_COLORS[node.network] || "#6366f1";
             const isSel = selectedNode === node.id;
             const isConn = connecting === node.id;
+            const nodeState = runState?.node_states?.[node.id];
+            const hasOutput = nodeState?.output && nodeState.status === "completed";
+            const isExpanded = expandedOutput === node.id;
             return (
               <div key={node.id} style={{ position: "absolute", left: `${node.x}px`, top: `${node.y}px`, zIndex: isSel ? 10 : 1 }}
                 onMouseDown={e => onNodeMouseDown(e, node.id)} data-testid={`wf-node-${node.id}`}>
-                <div className={`w-44 rounded-xl border-2 transition-all cursor-pointer ${isSel ? "border-white/30 shadow-lg" : isConn ? "border-amber-400/50 shadow-amber-500/10" : "border-white/5 hover:border-white/10"}`}
+                <div className={`w-52 rounded-xl border-2 transition-all cursor-pointer ${isSel ? "border-white/30 shadow-lg" : isConn ? "border-amber-400/50 shadow-amber-500/10" : "border-white/5 hover:border-white/10"}`}
                   style={{ borderColor: isSel ? color : undefined, boxShadow: isSel ? `0 0 16px ${color}30` : undefined }}>
                   <div className="px-3 py-2 rounded-t-xl" style={{ backgroundColor: `${color}15` }}>
                     <div className="flex items-center gap-2">
@@ -297,20 +305,41 @@ export default function WorkflowBuilder() {
                         <p className="text-[11px] font-medium text-white truncate">{node.name}</p>
                         <p className="text-[8px] truncate" style={{ color }}>{NET_LABELS[node.network] || node.network}</p>
                       </div>
+                      {nodeState && (
+                        <div className="shrink-0">
+                          {nodeState.status === "completed" && <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />}
+                          {nodeState.status === "running" && <Clock className="w-3.5 h-3.5 text-amber-400 animate-spin" />}
+                          {nodeState.status === "failed" && <AlertCircle className="w-3.5 h-3.5 text-red-400" />}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div className="px-3 py-1.5 bg-zinc-900/80 rounded-b-xl">
+                  <div className="px-3 py-1.5 bg-zinc-900/80">
                     <p className="text-[9px] text-zinc-500 truncate">{node.role}</p>
+                    {node.task && <p className="text-[8px] text-indigo-400/70 truncate mt-0.5"><FileText className="w-2.5 h-2.5 inline mr-0.5" />{node.task}</p>}
                   </div>
-                  {/* Run status overlay */}
-                  {runState?.node_states?.[node.id] && (
-                    <div className={`absolute -bottom-1 left-0 right-0 h-1 rounded-full mx-2 ${
-                      runState.node_states[node.id].status === "completed" ? "bg-emerald-500" :
-                      runState.node_states[node.id].status === "running" ? "bg-amber-500 animate-pulse" :
-                      runState.node_states[node.id].status === "failed" ? "bg-red-500" : "bg-zinc-700"
-                    }`} />
+                  {/* LLM Output preview */}
+                  {hasOutput && (
+                    <div className="px-3 py-1.5 bg-emerald-950/30 border-t border-emerald-500/10 rounded-b-xl cursor-pointer"
+                      onClick={(e) => { e.stopPropagation(); setExpandedOutput(isExpanded ? null : node.id); }}
+                      data-testid={`wf-output-toggle-${node.id}`}>
+                      <p className="text-[8px] text-emerald-400/80 truncate">{isExpanded ? "Hide output" : "View LLM output"}</p>
+                    </div>
+                  )}
+                  {nodeState?.status === "failed" && nodeState.output && (
+                    <div className="px-3 py-1.5 bg-red-950/30 border-t border-red-500/10 rounded-b-xl">
+                      <p className="text-[8px] text-red-400/80 truncate">{nodeState.output}</p>
+                    </div>
                   )}
                 </div>
+                {/* Expanded Output */}
+                {isExpanded && hasOutput && (
+                  <div className="mt-1 w-72 bg-zinc-900 border border-emerald-500/20 rounded-lg p-3 shadow-xl z-20 max-h-48 overflow-y-auto"
+                    onMouseDown={e => e.stopPropagation()} data-testid={`wf-output-panel-${node.id}`}>
+                    <p className="text-[9px] font-semibold text-emerald-400 mb-1">LLM Output — {node.name}</p>
+                    <p className="text-[10px] text-zinc-300 whitespace-pre-wrap leading-relaxed">{nodeState.output}</p>
+                  </div>
+                )}
                 {/* Connect / Delete buttons */}
                 {isSel && (
                   <div className="absolute -top-2 -right-2 flex gap-1">
@@ -336,26 +365,89 @@ export default function WorkflowBuilder() {
         </div>
       </div>
 
-      {/* Saved Workflows Sidebar */}
-      <div className="w-48 bg-zinc-900/60 border-l border-white/5 flex flex-col shrink-0" data-testid="wf-saved-list">
-        <div className="p-3 border-b border-white/5">
-          <p className="text-xs font-semibold text-zinc-400">Saved Workflows</p>
-        </div>
-        <div className="flex-1 overflow-y-auto p-2 space-y-1">
-          {workflows.map(wf => (
-            <div key={wf.workflow_id} className={`group flex items-center gap-2 px-2 py-2 rounded-lg cursor-pointer transition-colors ${current === wf.workflow_id ? "bg-indigo-500/10 text-indigo-400" : "hover:bg-white/[0.04] text-zinc-400"}`}
-              onClick={() => loadWorkflow(wf)} data-testid={`wf-item-${wf.workflow_id}`}>
-              <div className="flex-1 min-w-0">
-                <p className="text-[11px] truncate">{wf.name}</p>
-                <p className="text-[9px] text-zinc-600">{(wf.nodes || []).length} nodes</p>
+      {/* Right Panel: Node Detail + Saved Workflows */}
+      <div className="w-56 bg-zinc-900/60 border-l border-white/5 flex flex-col shrink-0" data-testid="wf-right-panel">
+        {/* Node Task Editor */}
+        {selectedNode && (() => {
+          const node = nodes.find(n => n.id === selectedNode);
+          if (!node) return null;
+          const color = NET_COLORS[node.network] || "#6366f1";
+          const nodeState = runState?.node_states?.[node.id];
+          return (
+            <div className="border-b border-white/5" data-testid="wf-node-detail">
+              <div className="p-3 border-b border-white/5">
+                <div className="flex items-center gap-2 mb-2">
+                  {node.avatar ? <img src={node.avatar} alt="" className="w-5 h-5 rounded" /> : <div className="w-5 h-5 rounded flex items-center justify-center text-[7px] font-bold" style={{ backgroundColor: `${color}30`, color }}>{node.name.split(" ").map(w => w[0]).join("").slice(0, 2)}</div>}
+                  <p className="text-[11px] font-semibold text-white truncate flex-1">{node.name}</p>
+                </div>
+                <p className="text-[9px] text-zinc-500 mb-2">{node.role}</p>
+                <label className="text-[9px] text-zinc-400 font-medium block mb-1">Task Prompt</label>
+                <textarea
+                  value={node.task || ""}
+                  onChange={e => updateNodeTask(node.id, e.target.value)}
+                  placeholder="What should this agent do? e.g., 'Analyze market trends for Q1 2026'"
+                  className="w-full bg-zinc-800/50 border border-white/5 rounded px-2 py-1.5 text-[10px] text-white placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/30 resize-none"
+                  rows={3}
+                  data-testid="wf-task-input"
+                />
               </div>
-              <button onClick={e => { e.stopPropagation(); deleteWorkflow(wf.workflow_id); }} className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400" data-testid={`wf-delete-item-${wf.workflow_id}`}>
-                <Trash2 className="w-3 h-3" />
-              </button>
+              {/* Node execution result */}
+              {nodeState && (
+                <div className="p-3">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    {nodeState.status === "completed" && <CheckCircle className="w-3 h-3 text-emerald-400" />}
+                    {nodeState.status === "running" && <Clock className="w-3 h-3 text-amber-400 animate-spin" />}
+                    {nodeState.status === "failed" && <AlertCircle className="w-3 h-3 text-red-400" />}
+                    {nodeState.status === "pending" && <Clock className="w-3 h-3 text-zinc-500" />}
+                    <span className={`text-[9px] font-medium ${nodeState.status === "completed" ? "text-emerald-400" : nodeState.status === "failed" ? "text-red-400" : nodeState.status === "running" ? "text-amber-400" : "text-zinc-500"}`}>
+                      {nodeState.status.charAt(0).toUpperCase() + nodeState.status.slice(1)}
+                    </span>
+                  </div>
+                  {nodeState.output && (
+                    <div className="bg-zinc-800/50 rounded p-2 max-h-32 overflow-y-auto">
+                      <p className="text-[9px] text-zinc-300 whitespace-pre-wrap leading-relaxed">{nodeState.output}</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          ))}
-          {workflows.length === 0 && <p className="text-[10px] text-zinc-600 text-center py-4">No saved workflows</p>}
+          );
+        })()}
+        {/* Saved Workflows */}
+        <div className="flex-1 flex flex-col min-h-0">
+          <div className="p-3 border-b border-white/5">
+            <p className="text-xs font-semibold text-zinc-400">Saved Workflows</p>
+          </div>
+          <div className="flex-1 overflow-y-auto p-2 space-y-1">
+            {workflows.map(wf => (
+              <div key={wf.workflow_id} className={`group flex items-center gap-2 px-2 py-2 rounded-lg cursor-pointer transition-colors ${current === wf.workflow_id ? "bg-indigo-500/10 text-indigo-400" : "hover:bg-white/[0.04] text-zinc-400"}`}
+                onClick={() => loadWorkflow(wf)} data-testid={`wf-item-${wf.workflow_id}`}>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] truncate">{wf.name}</p>
+                  <p className="text-[9px] text-zinc-600">{(wf.nodes || []).length} nodes</p>
+                </div>
+                <button onClick={e => { e.stopPropagation(); deleteWorkflow(wf.workflow_id); }} className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400" data-testid={`wf-delete-item-${wf.workflow_id}`}>
+                  <Trash2 className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+            {workflows.length === 0 && <p className="text-[10px] text-zinc-600 text-center py-4">No saved workflows</p>}
+          </div>
         </div>
+        {/* Run History */}
+        {runHistory.length > 0 && (
+          <div className="border-t border-white/5 max-h-32 overflow-y-auto">
+            <div className="p-2">
+              <p className="text-[9px] font-semibold text-zinc-500 mb-1">Run History</p>
+              {runHistory.slice(0, 5).map(rh => (
+                <div key={rh.run_id} className="flex items-center gap-1.5 py-0.5">
+                  <div className={`w-1.5 h-1.5 rounded-full ${rh.status === "completed" ? "bg-emerald-400" : rh.status === "failed" ? "bg-red-400" : "bg-amber-400"}`} />
+                  <span className="text-[8px] text-zinc-500">{rh.status} — {rh.total_steps} steps</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

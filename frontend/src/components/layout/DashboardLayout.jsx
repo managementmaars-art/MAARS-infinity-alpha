@@ -6,7 +6,7 @@ import {
   Activity, Gauge, Radio, Code, Palette, PenTool, Info,
   PanelLeftClose, PanelLeftOpen, Search, FileCode, Database,
   Network, GitBranch, Layers, Share2, Zap, Lock, CircuitBoard, DollarSign, Workflow,
-  Globe, HardDrive
+  Globe, HardDrive, Megaphone
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import CommandPalette from "../CommandPalette";
@@ -48,6 +48,7 @@ const navSections = [
       { icon: Shield, label: "Trust Scores", to: "/trust-scores" },
       { icon: Zap, label: "Execution Gateway", to: "/execution-gateway" },
       { icon: Workflow, label: "Workflow Builder", to: "/workflow-builder" },
+      { icon: Megaphone, label: "Campaign Builder", to: "/campaigns" },
       { icon: Globe, label: "Environments", to: "/environments" },
       { icon: HardDrive, label: "Memory Hierarchy", to: "/memory-hierarchy" },
       { icon: Database, label: "Memory", to: "/memory" },

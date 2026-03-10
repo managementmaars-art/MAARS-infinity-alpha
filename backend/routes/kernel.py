@@ -19,6 +19,8 @@ from services.kernel_service import (
     advance_workflow_step, simulate_workflow_execution,
     get_environments, get_user_environment, set_user_environment, get_env_stats,
     get_memory_layers, get_memory_stats,
+    get_campaign_templates, get_campaigns, get_campaign,
+    create_campaign, update_campaign, delete_campaign, execute_campaign,
 )
 from infinity_catalog import (
     NETWORK_DEFINITIONS, AUTONOMY_TIERS, AGENT_LIFECYCLE_STATES,
@@ -450,3 +452,71 @@ async def memory_layers(user=Depends(get_current_user)):
 @router.get("/memory/stats")
 async def memory_stats(user=Depends(get_current_user)):
     return await get_memory_stats(user.user_id)
+
+
+# ---------- Campaign Builder ----------
+
+class CampaignCreate(BaseModel):
+    template_id: Optional[str] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    context: Optional[str] = None
+    steps: Optional[list] = None
+
+class CampaignUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    steps: Optional[list] = None
+    context: Optional[str] = None
+    status: Optional[str] = None
+
+
+@router.get("/campaign-templates")
+async def list_templates(user=Depends(get_current_user)):
+    return await get_campaign_templates()
+
+
+@router.get("/campaigns")
+async def list_campaigns(user=Depends(get_current_user)):
+    return await get_campaigns(user.user_id)
+
+
+@router.post("/campaigns")
+async def new_campaign(data: CampaignCreate, user=Depends(get_current_user)):
+    return await create_campaign(user.user_id, data.dict())
+
+
+@router.get("/campaigns/{campaign_id}")
+async def get_camp(campaign_id: str, user=Depends(get_current_user)):
+    c = await get_campaign(user.user_id, campaign_id)
+    if not c:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+    return c
+
+
+@router.put("/campaigns/{campaign_id}")
+async def update_camp(campaign_id: str, data: CampaignUpdate, user=Depends(get_current_user)):
+    result = await update_campaign(user.user_id, campaign_id, data.dict(exclude_none=True))
+    if not result:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+    return result
+
+
+@router.delete("/campaigns/{campaign_id}")
+async def delete_camp(campaign_id: str, user=Depends(get_current_user)):
+    await delete_campaign(user.user_id, campaign_id)
+    return {"status": "deleted"}
+
+
+@router.post("/campaigns/{campaign_id}/run")
+async def run_campaign(campaign_id: str, user=Depends(get_current_user)):
+    """Execute a campaign with real LLM calls."""
+    campaign = await get_campaign(user.user_id, campaign_id)
+    if not campaign:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+    if campaign.get("status") == "running":
+        raise HTTPException(status_code=409, detail="Campaign already running")
+    import asyncio
+    asyncio.create_task(execute_campaign(user.user_id, campaign_id))
+    return {"status": "started", "campaign_id": campaign_id}

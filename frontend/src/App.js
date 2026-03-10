@@ -42,6 +42,7 @@ import CostGovernance from "./pages/CostGovernance";
 import WorkflowBuilder from "./pages/WorkflowBuilder";
 import Environments from "./pages/Environments";
 import MemoryHierarchy from "./pages/MemoryHierarchy";
+import CampaignBuilder from "./pages/CampaignBuilder";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { CreditsDisplay } from "./components/CreditsDisplay";
@@ -295,6 +296,7 @@ const AppRouter = () => {
       <Route path="/workflow-builder" element={<ProtectedRoute><DashboardLayout><WorkflowBuilder /></DashboardLayout></ProtectedRoute>} />
       <Route path="/environments" element={<ProtectedRoute><DashboardLayout><Environments /></DashboardLayout></ProtectedRoute>} />
       <Route path="/memory-hierarchy" element={<ProtectedRoute><DashboardLayout><MemoryHierarchy /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/campaigns" element={<ProtectedRoute><DashboardLayout><CampaignBuilder /></DashboardLayout></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminDashboard /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/code-explorer" element={<AdminRoute><DashboardLayout><CodeExplorer /></DashboardLayout></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
