@@ -201,6 +201,15 @@ const navSections = [
     ],
   },
   {
+    label: "MAARS Infinity",
+    items: [
+      { icon: Activity, label: "Observability", to: "/observability" },
+      { icon: Brain, label: "Model Router", to: "/model-router" },
+      { icon: Rocket, label: "Commander Orion", to: "/commander" },
+      { icon: TrendingUp, label: "Venture Portfolio", to: "/venture-portfolio" },
+    ],
+  },
+  {
     label: "Manage",
     items: [
       { icon: Package, label: "Products", to: "/products" },

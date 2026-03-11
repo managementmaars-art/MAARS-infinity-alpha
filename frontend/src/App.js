@@ -48,6 +48,10 @@ import Organization from "./pages/Organization";
 import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 import AgentSuggestions from "./pages/AgentSuggestions";
 import TeamBuilder from "./pages/TeamBuilder";
+import ObservabilityDashboard from "./pages/ObservabilityDashboard";
+import ModelRouterDashboard from "./pages/ModelRouterDashboard";
+import VenturePortfolio from "./pages/VenturePortfolio";
+import CommanderOrion from "./pages/CommanderOrion";
 import {
   AdminOverviewPage, AdminAnalyticsPage, AdminUsersPage, AdminAgentsPage,
   AdminTransactionsPage, AdminPricingManagerPage, AdminApiKeysPage,
@@ -299,6 +303,10 @@ const AppRouter = () => {
       <Route path="/analytics" element={<ProtectedRoute><DashboardLayout><AnalyticsDashboard /></DashboardLayout></ProtectedRoute>} />
       <Route path="/agent-suggestions" element={<ProtectedRoute><DashboardLayout><AgentSuggestions /></DashboardLayout></ProtectedRoute>} />
       <Route path="/team-builder" element={<ProtectedRoute><DashboardLayout><TeamBuilder /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/observability" element={<ProtectedRoute><DashboardLayout><ObservabilityDashboard /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/model-router" element={<ProtectedRoute><DashboardLayout><ModelRouterDashboard /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/venture-portfolio" element={<ProtectedRoute><DashboardLayout><VenturePortfolio /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/commander" element={<ProtectedRoute><DashboardLayout><CommanderOrion /></DashboardLayout></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminOverviewPage /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/overview" element={<AdminRoute><DashboardLayout><AdminOverviewPage /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/analytics" element={<AdminRoute><DashboardLayout><AdminAnalyticsPage /></DashboardLayout></AdminRoute>} />
