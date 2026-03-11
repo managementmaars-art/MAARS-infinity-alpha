@@ -1,9 +1,9 @@
-"""MAARS Infinity — Phase 1 API Routes.
-Exposes kernel, router, verification, governance endpoints."""
+"""MAARS Infinity — Full System API Routes (Phases 1-5).
+Exposes kernel, router, verification, governance, orchestrator, memory, intelligence, portfolio endpoints."""
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from kernel.task_graph import (
     create_goal, create_task_graph, get_task_graph,
     get_ready_nodes, update_node_status, check_graph_completion, list_task_graphs,
@@ -16,6 +16,8 @@ from kernel.scheduler import (
     find_best_agent, assign_agent_to_task, release_agent,
     update_agent_performance, get_agent_workload,
 )
+from kernel.tool_registry import register_tool, get_tools, validate_schema, record_tool_call, get_tool_health
+from kernel.approval_controller import request_approval, decide_approval, get_pending_approvals, get_approval_history
 from router.engine import route_task, get_model_performance, log_model_result, classify_task, PROVIDER_CATALOG
 from verification.engine import (
     verify_output, crosscheck, get_verification_results,
@@ -30,6 +32,16 @@ from governance.trust_scoring import (
     get_trust_score, update_trust_score, get_trust_leaderboard,
     get_low_trust_entities,
 )
+from governance.incidents import create_incident, resolve_incident, get_incidents, escalate, get_escalations, resolve_escalation
+from governance.autonomy import get_tier_info, check_action_allowed, get_agent_autonomy, set_agent_autonomy, get_all_tiers
+from orchestrator.commander import execute_goal, get_commander_log, classify_goal, decompose_goal
+from memory_system.working import store_working, get_working, append_result, clear_working
+from memory_system.episodic import record_episode, recall_episodes, recall_similar, get_lessons
+from memory_system.knowledge_graph import add_entity, add_relationship, get_entity, query_graph, get_graph_stats
+from intelligence.search_engine import plan_query, search_and_rank, verify_across_sources
+from intelligence.monitors import create_monitor, run_monitor, get_monitors, get_alerts
+from intelligence.citation import create_citation, get_citations
+from portfolio.ventures import create_venture, update_venture_metrics, get_ventures, transition_venture, get_portfolio_summary
 
 router = APIRouter(prefix="/infinity", tags=["MAARS Infinity"])
 
@@ -290,3 +302,342 @@ async def api_system_status():
         "busy_agents": sum(w["busy"] for w in workload),
         "verification_stats": verify_stats,
     }
+
+
+# ════════════════════════════════════════════════════════════════════
+# PHASE 2: Intelligence + Memory
+# ════════════════════════════════════════════════════════════════════
+
+# ─── Memory: Working ───
+
+class WorkingMemoryRequest(BaseModel):
+    task_id: str
+    agent_id: str
+    context: dict
+    intermediate_results: Optional[list] = None
+
+class AppendResultRequest(BaseModel):
+    task_id: str
+    agent_id: str
+    result: dict
+
+@router.post("/memory/working/store")
+async def api_store_working(req: WorkingMemoryRequest):
+    return await store_working(req.task_id, req.agent_id, req.context, req.intermediate_results)
+
+@router.get("/memory/working/{task_id}")
+async def api_get_working(task_id: str, agent_id: Optional[str] = None):
+    return await get_working(task_id, agent_id)
+
+@router.post("/memory/working/append")
+async def api_append_result(req: AppendResultRequest):
+    return await append_result(req.task_id, req.agent_id, req.result)
+
+@router.delete("/memory/working/{task_id}")
+async def api_clear_working(task_id: str):
+    return await clear_working(task_id)
+
+
+# ─── Memory: Episodic ───
+
+class EpisodeRequest(BaseModel):
+    agent_id: str
+    event_type: str
+    event_data: dict
+    outcome: Optional[str] = ""
+    lessons_learned: Optional[str] = ""
+
+@router.post("/memory/episodic/record")
+async def api_record_episode(req: EpisodeRequest):
+    return await record_episode(req.agent_id, req.event_type, req.event_data, req.outcome, req.lessons_learned)
+
+@router.get("/memory/episodic/{agent_id}")
+async def api_recall_episodes(agent_id: str, event_type: Optional[str] = None, limit: int = 20):
+    return await recall_episodes(agent_id, event_type, limit)
+
+@router.get("/memory/episodic/collective/{event_type}")
+async def api_recall_similar(event_type: str, limit: int = 10):
+    return await recall_similar(event_type, limit)
+
+@router.get("/memory/lessons")
+async def api_get_lessons(agent_id: Optional[str] = None, limit: int = 20):
+    return await get_lessons(agent_id, limit)
+
+
+# ─── Memory: Knowledge Graph ───
+
+class EntityRequest(BaseModel):
+    entity: str
+    entity_type: str
+    attributes: Optional[dict] = None
+    source: Optional[str] = "system"
+
+class RelationshipRequest(BaseModel):
+    entity: str
+    target: str
+    relationship_type: str
+    weight: Optional[float] = 1.0
+    source: Optional[str] = "system"
+
+@router.post("/memory/knowledge-graph/entity")
+async def api_add_entity(req: EntityRequest):
+    return await add_entity(req.entity, req.entity_type, req.attributes, req.source)
+
+@router.post("/memory/knowledge-graph/relationship")
+async def api_add_relationship(req: RelationshipRequest):
+    return await add_relationship(req.entity, req.target, req.relationship_type, req.weight, req.source)
+
+@router.get("/memory/knowledge-graph/entity/{entity}")
+async def api_get_entity(entity: str):
+    doc = await get_entity(entity)
+    if not doc:
+        raise HTTPException(404, "Entity not found")
+    return doc
+
+@router.get("/memory/knowledge-graph/query")
+async def api_query_graph(entity_type: Optional[str] = None, limit: int = 50):
+    return await query_graph(entity_type, limit=limit)
+
+@router.get("/memory/knowledge-graph/stats")
+async def api_graph_stats():
+    return await get_graph_stats()
+
+
+# ─── Intelligence: Search ───
+
+class SearchRequest(BaseModel):
+    query: str
+    freshness: Optional[str] = "standard"
+
+class VerifyClaimRequest(BaseModel):
+    claim: str
+    results: list
+
+@router.post("/intelligence/search/plan")
+async def api_plan_query(goal: str):
+    return await plan_query(goal)
+
+@router.post("/intelligence/search")
+async def api_search(req: SearchRequest):
+    return await search_and_rank(req.query, req.freshness)
+
+@router.post("/intelligence/verify-sources")
+async def api_verify_sources(req: VerifyClaimRequest):
+    return await verify_across_sources(req.claim, req.results)
+
+
+# ─── Intelligence: Monitors ───
+
+class MonitorRequest(BaseModel):
+    monitor_type: str
+    target: str
+    config: Optional[dict] = None
+
+@router.post("/intelligence/monitors")
+async def api_create_monitor(req: MonitorRequest):
+    return await create_monitor(req.monitor_type, req.target, req.config)
+
+@router.get("/intelligence/monitors")
+async def api_get_monitors(monitor_type: Optional[str] = None):
+    return await get_monitors(monitor_type)
+
+@router.post("/intelligence/monitors/run")
+async def api_run_monitor(monitor_type: str, target: str):
+    return await run_monitor(monitor_type, target)
+
+@router.get("/intelligence/alerts")
+async def api_get_alerts(min_level: str = "low"):
+    return await get_alerts(min_level)
+
+
+# ─── Intelligence: Citations ───
+
+class CitationRequest(BaseModel):
+    claim: str
+    sources: list
+    confidence: float
+    verified: Optional[bool] = False
+
+@router.post("/intelligence/citations")
+async def api_create_citation(req: CitationRequest):
+    return await create_citation(req.claim, req.sources, req.confidence, req.verified)
+
+@router.get("/intelligence/citations")
+async def api_get_citations(verified_only: bool = False, limit: int = 50):
+    return await get_citations(verified_only, limit)
+
+
+# ─── Tool Registry ───
+
+class ToolRegisterRequest(BaseModel):
+    tool_id: str
+    name: str
+    description: str
+    schema: dict
+    permissions: Optional[list] = None
+    category: Optional[str] = "general"
+
+class ToolCallRequest(BaseModel):
+    tool_id: str
+    success: bool
+    latency_ms: int
+
+@router.post("/tools/register")
+async def api_register_tool(req: ToolRegisterRequest):
+    return await register_tool(req.tool_id, req.name, req.description, req.schema, req.permissions, req.category)
+
+@router.get("/tools")
+async def api_get_tools(category: Optional[str] = None):
+    return await get_tools(category)
+
+@router.post("/tools/validate")
+async def api_validate_schema(tool_id: str, input_data: dict):
+    return await validate_schema(tool_id, input_data)
+
+@router.post("/tools/record-call")
+async def api_record_tool_call(req: ToolCallRequest):
+    await record_tool_call(req.tool_id, req.success, req.latency_ms)
+    return {"recorded": True}
+
+@router.get("/tools/health")
+async def api_tool_health(tool_id: Optional[str] = None):
+    return await get_tool_health(tool_id)
+
+
+# ════════════════════════════════════════════════════════════════════
+# PHASE 3: Commander Orion + Governance
+# ════════════════════════════════════════════════════════════════════
+
+class ExecuteGoalRequest(BaseModel):
+    description: str
+    requester_id: Optional[str] = "system"
+    environment: Optional[str] = "simulation"
+
+@router.post("/orchestrator/execute")
+async def api_execute_goal(req: ExecuteGoalRequest):
+    return await execute_goal(req.description, req.requester_id, req.environment)
+
+@router.get("/orchestrator/log")
+async def api_commander_log(limit: int = 20):
+    return await get_commander_log(limit)
+
+@router.post("/orchestrator/classify")
+async def api_classify_goal(description: str):
+    return classify_goal(description)
+
+
+# ─── Approvals ───
+
+class ApprovalRequest(BaseModel):
+    task_id: str
+    graph_id: str
+    action: str
+    reason: str
+    urgency: Optional[str] = "normal"
+
+class ApprovalDecision(BaseModel):
+    task_id: str
+    approved: bool
+    approver: str
+    notes: Optional[str] = ""
+
+@router.post("/governance/approvals/request")
+async def api_request_approval(req: ApprovalRequest):
+    return await request_approval(req.task_id, req.graph_id, req.action, req.reason, urgency=req.urgency)
+
+@router.post("/governance/approvals/decide")
+async def api_decide_approval(req: ApprovalDecision):
+    return await decide_approval(req.task_id, req.approved, req.approver, req.notes)
+
+@router.get("/governance/approvals/pending")
+async def api_pending_approvals():
+    return await get_pending_approvals()
+
+@router.get("/governance/approvals/history")
+async def api_approval_history(limit: int = 50):
+    return await get_approval_history(limit)
+
+
+# ─── Incidents & Escalations ───
+
+class IncidentRequest(BaseModel):
+    incident_type: str
+    severity: str
+    description: str
+    affected: Optional[list] = None
+
+class EscalateRequest(BaseModel):
+    source_task_id: str
+    reason: str
+    severity: Optional[str] = "high"
+
+@router.post("/governance/incidents")
+async def api_create_incident(req: IncidentRequest):
+    return await create_incident(req.incident_type, req.severity, req.description, req.affected)
+
+@router.get("/governance/incidents")
+async def api_get_incidents(status: Optional[str] = None, severity: Optional[str] = None):
+    return await get_incidents(status, severity)
+
+@router.post("/governance/escalations")
+async def api_escalate(req: EscalateRequest):
+    return await escalate(req.source_task_id, req.reason, req.severity)
+
+@router.get("/governance/escalations")
+async def api_get_escalations(status: str = "open"):
+    return await get_escalations(status)
+
+
+# ─── Autonomy Tiers ───
+
+@router.get("/governance/autonomy/tiers")
+async def api_all_tiers():
+    return get_all_tiers()
+
+@router.get("/governance/autonomy/agent/{agent_id}")
+async def api_agent_autonomy(agent_id: str):
+    return await get_agent_autonomy(agent_id)
+
+@router.post("/governance/autonomy/agent/{agent_id}/set")
+async def api_set_autonomy(agent_id: str, tier: int):
+    return await set_agent_autonomy(agent_id, tier)
+
+@router.post("/governance/autonomy/check")
+async def api_check_action(tier: int, action: str):
+    return check_action_allowed(tier, action)
+
+
+# ════════════════════════════════════════════════════════════════════
+# PHASE 4: Portfolio & Economics
+# ════════════════════════════════════════════════════════════════════
+
+class VentureRequest(BaseModel):
+    name: str
+    description: str
+    stage: Optional[str] = "idea"
+    initial_investment: Optional[float] = 0
+
+class VentureMetricsRequest(BaseModel):
+    name: str
+    metrics: dict
+
+@router.post("/portfolio/ventures")
+async def api_create_venture(req: VentureRequest):
+    return await create_venture(req.name, req.description, req.stage, req.initial_investment)
+
+@router.get("/portfolio/ventures")
+async def api_get_ventures(status: Optional[str] = None):
+    return await get_ventures(status)
+
+@router.post("/portfolio/ventures/metrics")
+async def api_update_metrics(req: VentureMetricsRequest):
+    return await update_venture_metrics(req.name, req.metrics)
+
+@router.post("/portfolio/ventures/{name}/transition")
+async def api_transition_venture(name: str, stage: str):
+    return await transition_venture(name, stage)
+
+@router.get("/portfolio/summary")
+async def api_portfolio_summary():
+    return await get_portfolio_summary()
+
