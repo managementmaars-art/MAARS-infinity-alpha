@@ -44,6 +44,7 @@ from routes.summary import router as summary_router
 from routes.websocket import router as ws_router
 from routes.kernel import router as kernel_router
 from routes.agent_teams import router as agent_teams_router
+from routes.infinity_routes import router as infinity_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -86,6 +87,7 @@ api_router.include_router(memory_router)
 api_router.include_router(summary_router)
 api_router.include_router(kernel_router)
 api_router.include_router(agent_teams_router)
+api_router.include_router(infinity_router)
 
 app.include_router(api_router)
 
@@ -98,6 +100,12 @@ async def startup():
     await seed_default_agents()
     await backfill_usage_logs()
     await seed_default_tools()
+
+    # Seed MAARS Infinity defaults
+    from kernel.policy_engine import seed_default_policies
+    from governance.circuit_breaker import seed_default_breakers
+    await seed_default_policies()
+    await seed_default_breakers()
 
     # Create MongoDB indexes for performance
     await db.chats.create_index([("user_id", 1), ("updated_at", -1)])
