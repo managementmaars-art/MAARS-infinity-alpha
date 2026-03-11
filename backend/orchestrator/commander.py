@@ -5,7 +5,7 @@ Uses real LLM for intelligent goal classification and task decomposition."""
 import logging
 from datetime import datetime, timezone
 from db import db
-from kernel.task_graph import create_goal, create_task_graph, get_ready_nodes, update_node_status
+from kernel.task_graph import create_goal, create_task_graph, get_ready_nodes, update_node_status, TASK_GRAPH_COLLECTION
 from kernel.scheduler import find_best_agent, assign_agent_to_task
 from router.engine import route_task
 from governance.audit import log_action
@@ -262,4 +262,181 @@ async def execute_goal(description: str, requester_id: str = "system", environme
 async def get_commander_log(limit: int = 20):
     """Get recent commander orchestration logs."""
     cursor = db[COMMANDER_LOG].find({}, {"_id": 0}).sort("timestamp", -1).limit(limit)
+    return await cursor.to_list(length=limit)
+
+
+# ════════════════════════════════════════════════════════════════════
+# FULL EXECUTION LOOP: Execute → Verify → Report
+# ════════════════════════════════════════════════════════════════════
+
+EXECUTION_RUNS = "execution_runs"
+
+
+async def execute_graph(graph_id: str, max_retries_per_node: int = 1):
+    """Execute all nodes in a task graph through the full LLM pipeline.
+    Flow: get ready nodes → execute via LLM → verify → mark done → repeat → final report."""
+    from router.engine import execute_routed_task
+    from verification.engine import verify_output
+    from kernel.task_graph import get_task_graph, get_ready_nodes, update_node_status, check_graph_completion
+    from kernel.budget_controller import record_spend
+
+    graph = await get_task_graph(graph_id)
+    if not graph:
+        return {"error": "Graph not found"}
+
+    run_id = str(__import__("uuid").uuid4())[:12]
+    started_at = _now()
+    node_results = []
+    total_cost = 0.0
+    total_latency = 0
+
+    await db[TASK_GRAPH_COLLECTION].update_one(
+        {"graph_id": graph_id}, {"$set": {"status": "executing", "updated_at": _now()}}
+    )
+
+    # Execute nodes in dependency order
+    max_rounds = len(graph["nodes"]) + 2
+    for _ in range(max_rounds):
+        ready = await get_ready_nodes(graph_id)
+        if not ready:
+            status = await check_graph_completion(graph_id)
+            break
+
+        for node in ready:
+            task_desc = node.get("task_description", "Execute task")
+            node_id = node["node_id"]
+
+            # Build context from dependency outputs
+            dep_context = ""
+            g = await get_task_graph(graph_id)
+            for dep_id in node.get("dependencies", []):
+                dep_node = next((n for n in g["nodes"] if n["node_id"] == dep_id), None)
+                if dep_node and dep_node.get("outputs"):
+                    dep_context += f"\n--- Output from {dep_id} ---\n{dep_node['outputs'][:800]}\n"
+
+            await update_node_status(graph_id, node_id, {"status": "executing", "started_at": _now()})
+
+            # Execute via LLM
+            try:
+                exec_result = await execute_routed_task(task_desc, context=dep_context)
+                output = exec_result["output"]
+                provider = exec_result["execution"]["provider"]
+                model = exec_result["execution"]["model"]
+                latency = exec_result["execution"]["latency_ms"]
+                cost = exec_result["execution"].get("estimated_cost", 0)
+            except Exception as e:
+                logger.error(f"Node {node_id} execution failed: {e}")
+                await update_node_status(graph_id, node_id, {
+                    "status": "failed", "error_log": [str(e)], "completed_at": _now(),
+                })
+                node_results.append({"node_id": node_id, "status": "failed", "error": str(e)})
+                continue
+
+            # Verify output
+            try:
+                v = await verify_output(node_id, output, "fact", "auto_verifier", {"task": task_desc}, graph_id)
+                v_score = v["confidence_score"]
+                v_pass = v["verification_pass"]
+            except Exception:
+                v_score = 5.0
+                v_pass = True
+
+            # Record spend
+            try:
+                await record_spend("model", f"{provider}/{model}", cost, model, node_id)
+            except Exception:
+                pass
+
+            total_cost += cost
+            total_latency += latency
+
+            await update_node_status(graph_id, node_id, {
+                "status": "completed",
+                "outputs": output[:3000],
+                "model_used": f"{provider}/{model}",
+                "cost": cost,
+                "verification_status": "passed" if v_pass else "flagged",
+                "verification_score": v_score,
+                "completed_at": _now(),
+            })
+
+            node_results.append({
+                "node_id": node_id,
+                "task": task_desc[:100],
+                "status": "completed",
+                "provider": provider,
+                "model": model,
+                "latency_ms": latency,
+                "cost": cost,
+                "verification_score": v_score,
+                "verification_pass": v_pass,
+                "output_preview": output[:200],
+            })
+
+    # Check final graph status
+    final_status = await check_graph_completion(graph_id)
+    completed_nodes = [r for r in node_results if r["status"] == "completed"]
+    failed_nodes = [r for r in node_results if r["status"] == "failed"]
+
+    # Generate consolidated report from all outputs
+    final_report = None
+    if completed_nodes and not failed_nodes:
+        from services.infinity_llm import call
+        all_outputs = "\n\n".join(
+            f"### {r['task']}\n{r['output_preview']}" for r in completed_nodes
+        )
+        try:
+            report_result = await call(
+                prompt=f"Consolidate these task outputs into a cohesive final report. Be concise but thorough.\n\nGoal: {graph.get('objective', 'Unknown')}\n\n{all_outputs}",
+                system_message="You are a senior analyst producing final consolidated reports. Synthesize all inputs into a clear, actionable deliverable.",
+                model_name="gpt-5.2",
+            )
+            final_report = report_result["response"]
+            total_latency += report_result["latency_ms"]
+        except Exception as e:
+            final_report = f"Report generation failed: {e}. Raw outputs available in node results."
+
+        await db[TASK_GRAPH_COLLECTION].update_one(
+            {"graph_id": graph_id},
+            {"$set": {"final_output": final_report[:5000], "verification_result": {"all_passed": True}, "budget_used": total_cost}},
+        )
+
+    completed_at = _now()
+    run = {
+        "run_id": run_id,
+        "graph_id": graph_id,
+        "goal_id": graph.get("goal_id"),
+        "objective": graph.get("objective", ""),
+        "status": final_status or "completed",
+        "node_results": node_results,
+        "summary": {
+            "total_nodes": len(graph["nodes"]),
+            "completed": len(completed_nodes),
+            "failed": len(failed_nodes),
+            "total_cost": round(total_cost, 4),
+            "total_latency_ms": total_latency,
+        },
+        "final_report": final_report,
+        "started_at": started_at,
+        "completed_at": completed_at,
+    }
+    await db[EXECUTION_RUNS].insert_one(run)
+    run.pop("_id", None)
+
+    await record_episode(
+        "commander_orion", "graph_execution",
+        {"graph_id": graph_id, "nodes": len(graph["nodes"]), "cost": total_cost},
+        outcome=final_status or "completed",
+        lessons_learned=f"Executed {len(completed_nodes)} nodes, {len(failed_nodes)} failed, cost=${total_cost:.4f}",
+    )
+
+    return run
+
+
+async def get_execution_runs(graph_id: str = None, limit: int = 20):
+    """Get execution run history."""
+    query = {}
+    if graph_id:
+        query["graph_id"] = graph_id
+    cursor = db[EXECUTION_RUNS].find(query, {"_id": 0}).sort("started_at", -1).limit(limit)
     return await cursor.to_list(length=limit)

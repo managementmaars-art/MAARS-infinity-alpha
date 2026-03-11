@@ -12,33 +12,24 @@ MODEL_PERF = "model_performance"
 # Provider catalog with model capabilities and pricing tiers
 PROVIDER_CATALOG = {
     "openai": {
-        "gpt-5.2": {"tier": "flagship", "strengths": ["reasoning", "coding", "analysis"], "cost_per_1k_in": 0.01, "cost_per_1k_out": 0.03, "latency": "medium"},
+        "gpt-5.2": {"tier": "flagship", "strengths": ["reasoning", "coding", "analysis", "search"], "cost_per_1k_in": 0.01, "cost_per_1k_out": 0.03, "latency": "medium"},
         "gpt-4o": {"tier": "balanced", "strengths": ["general", "multimodal", "speed"], "cost_per_1k_in": 0.005, "cost_per_1k_out": 0.015, "latency": "fast"},
         "gpt-4o-mini": {"tier": "economy", "strengths": ["general", "speed"], "cost_per_1k_in": 0.00015, "cost_per_1k_out": 0.0006, "latency": "fast"},
         "o3": {"tier": "reasoning", "strengths": ["deep_reasoning", "math", "logic"], "cost_per_1k_in": 0.01, "cost_per_1k_out": 0.04, "latency": "slow"},
     },
     "anthropic": {
-        "claude-sonnet-4.5": {"tier": "flagship", "strengths": ["safety", "reasoning", "coding", "analysis"], "cost_per_1k_in": 0.003, "cost_per_1k_out": 0.015, "latency": "medium"},
+        "claude-sonnet-4.5": {"tier": "flagship", "strengths": ["safety", "reasoning", "coding", "analysis", "nuance"], "cost_per_1k_in": 0.003, "cost_per_1k_out": 0.015, "latency": "medium"},
         "claude-opus-4.5": {"tier": "premium", "strengths": ["deep_reasoning", "safety", "nuance"], "cost_per_1k_in": 0.015, "cost_per_1k_out": 0.075, "latency": "slow"},
         "claude-haiku-4.5": {"tier": "economy", "strengths": ["speed", "general"], "cost_per_1k_in": 0.0008, "cost_per_1k_out": 0.004, "latency": "fast"},
     },
     "google": {
-        "gemini-3-flash": {"tier": "economy", "strengths": ["speed", "general", "multimodal"], "cost_per_1k_in": 0.0001, "cost_per_1k_out": 0.0004, "latency": "fast"},
-        "gemini-3-pro": {"tier": "balanced", "strengths": ["reasoning", "multimodal", "analysis"], "cost_per_1k_in": 0.00125, "cost_per_1k_out": 0.005, "latency": "medium"},
-    },
-    "groq": {
-        "llama-4-scout": {"tier": "economy", "strengths": ["speed", "general"], "cost_per_1k_in": 0.00011, "cost_per_1k_out": 0.00034, "latency": "ultra_fast"},
-    },
-    "deepseek": {
-        "deepseek-v3": {"tier": "economy", "strengths": ["coding", "reasoning"], "cost_per_1k_in": 0.00027, "cost_per_1k_out": 0.0011, "latency": "fast"},
-    },
-    "xai": {
-        "grok-3": {"tier": "flagship", "strengths": ["reasoning", "long_context", "analysis"], "cost_per_1k_in": 0.003, "cost_per_1k_out": 0.015, "latency": "medium"},
-    },
-    "perplexity": {
-        "sonar-pro": {"tier": "balanced", "strengths": ["search", "grounded_answers", "citations"], "cost_per_1k_in": 0.003, "cost_per_1k_out": 0.015, "latency": "medium"},
+        "gemini-3-flash": {"tier": "economy", "strengths": ["speed", "general", "multimodal", "search"], "cost_per_1k_in": 0.0001, "cost_per_1k_out": 0.0004, "latency": "fast"},
+        "gemini-3-pro": {"tier": "balanced", "strengths": ["reasoning", "multimodal", "analysis", "grounded_answers"], "cost_per_1k_in": 0.00125, "cost_per_1k_out": 0.005, "latency": "medium"},
     },
 }
+
+# Providers available via Emergent LLM key
+AVAILABLE_PROVIDERS = {"openai", "anthropic", "google"}
 
 # Task class → model preference mapping
 TASK_ROUTING_RULES = {
@@ -114,6 +105,8 @@ def select_model(classification: dict):
     best_score = -1
 
     for provider, models in PROVIDER_CATALOG.items():
+        if provider not in AVAILABLE_PROVIDERS:
+            continue
         for model_name, info in models.items():
             score = 0
             model_strengths = set(info["strengths"])

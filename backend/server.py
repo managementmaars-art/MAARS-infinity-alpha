@@ -172,6 +172,51 @@ async def health_check():
     return {"status": "ok", "service": "MAARS Command"}
 
 
+# ── Rate Limiting Middleware ──
+import time as _time
+from collections import defaultdict
+
+_RATE_LIMITS = defaultdict(list)
+_RATE_WINDOW = 60  # seconds
+_RATE_MAX = 120  # requests per window for infinity endpoints
+
+
+@app.middleware("http")
+async def rate_limit_middleware(request, call_next):
+    if request.url.path.startswith("/api/infinity/"):
+        ip = request.client.host if request.client else "unknown"
+        now = _time.time()
+        _RATE_LIMITS[ip] = [t for t in _RATE_LIMITS[ip] if now - t < _RATE_WINDOW]
+        if len(_RATE_LIMITS[ip]) >= _RATE_MAX:
+            from starlette.responses import JSONResponse
+            return JSONResponse({"detail": "Rate limit exceeded"}, status_code=429)
+        _RATE_LIMITS[ip].append(now)
+    response = await call_next(request)
+    return response
+
+
+# ── Response Cache for Read-Heavy Endpoints ──
+_CACHE = {}
+_CACHE_TTL = 5  # seconds
+
+
+def _cache_get(key):
+    if key in _CACHE:
+        val, ts = _CACHE[key]
+        if _time.time() - ts < _CACHE_TTL:
+            return val
+        del _CACHE[key]
+    return None
+
+
+def _cache_set(key, val):
+    _CACHE[key] = (val, _time.time())
+    # Evict old entries
+    if len(_CACHE) > 200:
+        oldest_key = min(_CACHE, key=lambda k: _CACHE[k][1])
+        del _CACHE[oldest_key]
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,

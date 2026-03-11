@@ -21,10 +21,6 @@ ROUTER_MODEL_MAP = {
     "claude-haiku-4.5": ("anthropic", "claude-haiku-4-5-20251001"),
     "gemini-3-flash": ("gemini", "gemini-3-flash-preview"),
     "gemini-3-pro": ("gemini", "gemini-3-pro-preview"),
-    "deepseek-v3": ("deepseek", "deepseek-chat"),
-    "grok-3": ("xai", "grok-3"),
-    "sonar-pro": ("perplexity", "sonar-pro"),
-    "llama-4-scout": ("groq", "meta-llama/llama-4-scout-17b-16e-instruct"),
 }
 
 FALLBACK_CHAIN = [

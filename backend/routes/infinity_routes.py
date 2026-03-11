@@ -34,10 +34,10 @@ from governance.trust_scoring import (
 )
 from governance.incidents import create_incident, resolve_incident, get_incidents, escalate, get_escalations, resolve_escalation
 from governance.autonomy import get_tier_info, check_action_allowed, get_agent_autonomy, set_agent_autonomy, get_all_tiers
-from orchestrator.commander import execute_goal, get_commander_log, classify_goal_ai, classify_goal_rules
+from orchestrator.commander import execute_goal, get_commander_log, classify_goal_ai, classify_goal_rules, execute_graph, get_execution_runs
 from memory_system.working import store_working, get_working, append_result, clear_working
 from memory_system.episodic import record_episode, recall_episodes, recall_similar, get_lessons
-from memory_system.knowledge_graph import add_entity, add_relationship, get_entity, query_graph, get_graph_stats
+from memory_system.knowledge_graph import add_entity, add_relationship, get_entity, query_graph, get_graph_stats, traverse_graph, search_entities, find_paths
 from intelligence.search_engine import plan_query, search_and_rank, verify_across_sources
 from intelligence.monitors import create_monitor, run_monitor, get_monitors, get_alerts
 from intelligence.citation import create_citation, get_citations
@@ -415,6 +415,21 @@ async def api_graph_stats():
     return await get_graph_stats()
 
 
+@router.get("/memory/knowledge-graph/traverse/{entity}")
+async def api_traverse_graph(entity: str, max_depth: int = 3, relationship: Optional[str] = None):
+    return await traverse_graph(entity, max_depth, relationship)
+
+
+@router.get("/memory/knowledge-graph/search")
+async def api_search_entities(q: str, limit: int = 20):
+    return await search_entities(q, limit)
+
+
+@router.get("/memory/knowledge-graph/paths")
+async def api_find_paths(source: str, target: str, max_depth: int = 4):
+    return await find_paths(source, target, max_depth)
+
+
 # ─── Intelligence: Search ───
 
 class SearchRequest(BaseModel):
@@ -715,4 +730,80 @@ async def api_operator_dashboard():
         "agent_workload": workload,
         "tiers": get_all_tiers(),
     }
+
+
+# ════════════════════════════════════════════════════════════════════
+# EXECUTION LOOP ENDPOINTS
+# ════════════════════════════════════════════════════════════════════
+
+@router.post("/orchestrator/execute-graph/{graph_id}")
+async def api_execute_graph(graph_id: str):
+    result = await execute_graph(graph_id)
+    if "error" in result:
+        raise HTTPException(404, result["error"])
+    return result
+
+
+class FullExecuteRequest(BaseModel):
+    description: str
+    requester_id: Optional[str] = "operator"
+    environment: Optional[str] = "production"
+
+
+@router.post("/orchestrator/full-execute")
+async def api_full_execute(req: FullExecuteRequest):
+    """Full pipeline: classify → decompose → create graph → execute all nodes → verify → report."""
+    goal_result = await execute_goal(req.description, req.requester_id, req.environment)
+    exec_result = await execute_graph(goal_result["graph_id"])
+    return {**goal_result, "execution": exec_result}
+
+
+@router.get("/orchestrator/runs")
+async def api_get_runs(graph_id: Optional[str] = None, limit: int = 20):
+    return await get_execution_runs(graph_id, limit)
+
+
+# ════════════════════════════════════════════════════════════════════
+# METRICS & ALERTING ENDPOINTS
+# ════════════════════════════════════════════════════════════════════
+
+from governance.metrics import collect_metrics, evaluate_alerts, get_active_alerts, acknowledge_alert, get_alert_rules, update_alert_rule, get_metrics_history
+
+
+@router.get("/metrics/live")
+async def api_live_metrics():
+    metrics = await collect_metrics()
+    alerts = await evaluate_alerts(metrics)
+    return {"metrics": metrics, "triggered_alerts": alerts}
+
+
+@router.get("/metrics/history")
+async def api_metrics_history(limit: int = 30):
+    return await get_metrics_history(limit)
+
+
+@router.get("/alerts")
+async def api_get_alerts():
+    return await get_active_alerts()
+
+
+@router.post("/alerts/{rule_id}/acknowledge")
+async def api_ack_alert(rule_id: str):
+    return await acknowledge_alert(rule_id)
+
+
+@router.get("/alerts/rules")
+async def api_get_rules():
+    return await get_alert_rules()
+
+
+class UpdateRuleRequest(BaseModel):
+    threshold: Optional[float] = None
+    enabled: Optional[bool] = None
+    severity: Optional[str] = None
+
+
+@router.put("/alerts/rules/{rule_id}")
+async def api_update_rule(rule_id: str, req: UpdateRuleRequest):
+    return await update_alert_rule(rule_id, req.dict(exclude_none=True))
 
