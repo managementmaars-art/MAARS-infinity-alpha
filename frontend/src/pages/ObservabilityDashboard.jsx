@@ -136,10 +136,18 @@ export default function ObservabilityDashboard() {
             {commanderLog.map((g, i) => (
               <div key={i} className="p-2 rounded bg-zinc-800/40 border border-white/5">
                 <div className="flex items-center justify-between mb-1">
-                  <p className="text-xs text-white">{g.classification?.goal_type || "general"}</p>
+                  <div className="flex items-center gap-1.5">
+                    <Badge className="bg-indigo-500/20 text-indigo-400 border-indigo-500/30 text-[10px]">{g.classification?.goal_type || "general"}</Badge>
+                    {g.classification?.ai_powered && <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]">AI</Badge>}
+                  </div>
                   <Badge variant="outline" className="text-cyan-400 border-cyan-500/30">{g.node_count} nodes</Badge>
                 </div>
-                <p className="text-[10px] text-zinc-500">{g.environment} | {g.assignments?.length ?? 0} assigned | {new Date(g.timestamp).toLocaleString()}</p>
+                <p className="text-[10px] text-zinc-500">
+                  {g.environment} | {g.assignments?.length ?? 0} assigned
+                  {g.classification?.model_used && ` | ${g.classification.model_used}`}
+                  {g.decomposition_meta?.ai_powered && ` | AI decomp`}
+                  {" | "}{new Date(g.timestamp).toLocaleString()}
+                </p>
               </div>
             ))}
             {commanderLog.length === 0 && <p className="text-xs text-zinc-500">No goals executed yet</p>}

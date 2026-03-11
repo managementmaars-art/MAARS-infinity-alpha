@@ -1,17 +1,17 @@
 """MAARS — Orchestrator: Commander Orion.
-Full goal-to-execution pipeline: classify → decompose → assign → execute → verify → report."""
+Full goal-to-execution pipeline: classify → decompose → assign → execute → verify → report.
+Uses real LLM for intelligent goal classification and task decomposition."""
 
+import logging
 from datetime import datetime, timezone
 from db import db
-from kernel.task_graph import create_goal, create_task_graph, get_task_graph, get_ready_nodes, update_node_status, check_graph_completion
-from kernel.scheduler import find_best_agent, assign_agent_to_task, update_agent_performance
-from router.engine import route_task, classify_task
-from verification.engine import verify_output, crosscheck
-from kernel.budget_controller import record_spend
+from kernel.task_graph import create_goal, create_task_graph, get_ready_nodes, update_node_status
+from kernel.scheduler import find_best_agent, assign_agent_to_task
+from router.engine import route_task
 from governance.audit import log_action
 from memory_system.episodic import record_episode
 
-
+logger = logging.getLogger(__name__)
 COMMANDER_LOG = "commander_log"
 
 
@@ -19,8 +19,41 @@ def _now():
     return datetime.now(timezone.utc).isoformat()
 
 
-def classify_goal(description: str):
-    """Classify a goal into type, risk, complexity, freshness requirement."""
+async def classify_goal_ai(description: str):
+    """Use LLM to classify a goal into type, risk, complexity, freshness requirement."""
+    from services.infinity_llm import call_json
+
+    prompt = f"""Classify this goal into a structured task. Return JSON only.
+
+Goal: "{description}"
+
+Return this exact JSON structure:
+{{
+  "goal_type": "<one of: research, engineering, marketing, financial, legal, crisis, creative, operational, general>",
+  "risk_level": "<one of: low, medium, high, critical>",
+  "complexity": "<one of: low, medium, high>",
+  "freshness": "<one of: standard, fresh, real_time>",
+  "reasoning": "<brief explanation of classification>"
+}}"""
+
+    try:
+        result = await call_json(prompt, system_message="You are MAARS Commander Orion, an AI orchestration engine. Classify goals accurately based on their content, domain, and risk profile. Respond with JSON only.")
+        classification = result["parsed"]
+        classification["ai_powered"] = True
+        classification["model_used"] = result["model"]
+        classification["provider_used"] = result["provider"]
+        classification["latency_ms"] = result["latency_ms"]
+        return classification
+    except Exception as e:
+        logger.warning(f"AI classification failed, using rule-based fallback: {e}")
+        result = classify_goal_rules(description)
+        result["ai_powered"] = False
+        result["fallback_reason"] = str(e)
+        return result
+
+
+def classify_goal_rules(description: str):
+    """Rule-based fallback for goal classification."""
     desc = description.lower()
     goal_type = "general"
     risk = "medium"
@@ -46,14 +79,67 @@ def classify_goal(description: str):
         risk = "critical"
         freshness = "real_time"
 
-    return {"goal_type": goal_type, "risk_level": risk, "complexity": complexity, "freshness": freshness}
+    return {"goal_type": goal_type, "risk_level": risk, "complexity": complexity, "freshness": freshness, "reasoning": "Rule-based classification"}
 
 
-def decompose_goal(description: str, classification: dict):
-    """Decompose a goal into a task graph with nodes and dependencies."""
+async def decompose_goal_ai(description: str, classification: dict):
+    """Use LLM to decompose a goal into a task graph with nodes and dependencies."""
+    from services.infinity_llm import call_json
+
     goal_type = classification.get("goal_type", "general")
+    risk = classification.get("risk_level", "medium")
+    complexity = classification.get("complexity", "medium")
 
-    # Template task graphs per goal type
+    node_count_hint = {"low": "3-4", "medium": "4-6", "high": "6-8"}.get(complexity, "4-6")
+
+    prompt = f"""Decompose this goal into a task graph for an AI agent team.
+
+Goal: "{description}"
+Classification: type={goal_type}, risk={risk}, complexity={complexity}
+
+Create {node_count_hint} task nodes. Each node should have:
+- task_description: Clear, actionable description
+- capabilities: List of required skills (e.g., ["research", "web_search"], ["coding", "testing"])
+- deps: List of node indices this depends on (0-indexed). First node has no deps.
+
+Return a JSON array of objects:
+[
+  {{"task_description": "...", "capabilities": ["..."], "deps": []}},
+  {{"task_description": "...", "capabilities": ["..."], "deps": [0]}},
+  ...
+]
+
+Rules:
+- First node must have empty deps []
+- Dependencies must reference earlier nodes only (no circular)
+- Final node should produce the deliverable
+- Include a verification/review step before the final output"""
+
+    try:
+        result = await call_json(prompt, system_message="You are MAARS Commander Orion, an AI orchestration engine. Break down goals into precise, actionable task graphs. Each task should be specific enough for a single AI agent to execute. Respond with a JSON array only.")
+        tasks = result["parsed"]
+        if not isinstance(tasks, list) or len(tasks) < 2:
+            raise ValueError("Invalid task graph structure")
+
+        nodes = []
+        for i, t in enumerate(tasks):
+            node = {
+                "node_id": f"node_{i}",
+                "task_description": f"{t.get('task_description', f'Task {i}')} — for: {description[:60]}",
+                "required_capabilities": t.get("capabilities", ["general"]),
+                "dependencies": [f"node_{d}" for d in t.get("deps", []) if isinstance(d, int) and d < i],
+            }
+            nodes.append(node)
+        return nodes, {"ai_powered": True, "model": result["model"], "provider": result["provider"], "latency_ms": result["latency_ms"]}
+    except Exception as e:
+        logger.warning(f"AI decomposition failed, using template fallback: {e}")
+        nodes = decompose_goal_rules(description, classification)
+        return nodes, {"ai_powered": False, "fallback_reason": str(e)}
+
+
+def decompose_goal_rules(description: str, classification: dict):
+    """Rule-based fallback for goal decomposition."""
+    goal_type = classification.get("goal_type", "general")
     templates = {
         "research": [
             {"task_description": "Define research scope and questions", "capabilities": ["research", "planning"]},
@@ -61,74 +147,44 @@ def decompose_goal(description: str, classification: dict):
             {"task_description": "Gather data from secondary sources", "capabilities": ["web_search", "analysis"], "deps": [0]},
             {"task_description": "Analyze and synthesize findings", "capabilities": ["analysis", "synthesis"], "deps": [1, 2]},
             {"task_description": "Verify facts and sources", "capabilities": ["verification"], "deps": [3]},
-            {"task_description": "Write final report with recommendations", "capabilities": ["writing", "strategy"], "deps": [4]},
+            {"task_description": "Write final report", "capabilities": ["writing", "strategy"], "deps": [4]},
         ],
         "engineering": [
-            {"task_description": "Define technical requirements and architecture", "capabilities": ["architecture", "planning"]},
+            {"task_description": "Define technical requirements", "capabilities": ["architecture", "planning"]},
             {"task_description": "Implement core functionality", "capabilities": ["coding", "engineering"], "deps": [0]},
             {"task_description": "Write tests and validate", "capabilities": ["testing", "quality"], "deps": [1]},
             {"task_description": "Code review and verification", "capabilities": ["code_review", "verification"], "deps": [2]},
             {"task_description": "Deploy and document", "capabilities": ["devops", "documentation"], "deps": [3]},
         ],
-        "marketing": [
-            {"task_description": "Research target audience and competitors", "capabilities": ["research", "market_analysis"]},
-            {"task_description": "Develop campaign strategy", "capabilities": ["strategy", "marketing"], "deps": [0]},
-            {"task_description": "Create campaign content and assets", "capabilities": ["creative", "content"], "deps": [1]},
-            {"task_description": "Verify compliance and brand alignment", "capabilities": ["compliance", "brand"], "deps": [2]},
-            {"task_description": "Launch plan and distribution", "capabilities": ["distribution", "growth"], "deps": [3]},
-        ],
-        "financial": [
-            {"task_description": "Gather financial data and inputs", "capabilities": ["finance", "data_collection"]},
-            {"task_description": "Build financial model", "capabilities": ["financial_modeling", "analysis"], "deps": [0]},
-            {"task_description": "Run scenarios and sensitivity analysis", "capabilities": ["forecasting", "simulation"], "deps": [1]},
-            {"task_description": "Verify quantitative accuracy", "capabilities": ["quantitative_verification"], "deps": [2]},
-            {"task_description": "Produce financial summary and recommendations", "capabilities": ["writing", "finance"], "deps": [3]},
-        ],
-        "legal": [
-            {"task_description": "Review relevant documents and context", "capabilities": ["legal", "research"]},
-            {"task_description": "Analyze legal implications", "capabilities": ["legal_analysis", "compliance"], "deps": [0]},
-            {"task_description": "Verify compliance status", "capabilities": ["compliance_verification"], "deps": [1]},
-            {"task_description": "Produce legal assessment and recommendations", "capabilities": ["legal", "writing"], "deps": [2]},
-        ],
-        "crisis": [
-            {"task_description": "Assess situation and gather facts", "capabilities": ["research", "monitoring"]},
-            {"task_description": "Identify impact and affected parties", "capabilities": ["analysis", "risk"], "deps": [0]},
-            {"task_description": "Develop response plan", "capabilities": ["strategy", "crisis_management"], "deps": [1]},
-            {"task_description": "Execute communications", "capabilities": ["communication", "pr"], "deps": [2]},
-        ],
     }
-
     tasks = templates.get(goal_type, [
-        {"task_description": "Analyze the goal and gather context", "capabilities": ["analysis"]},
+        {"task_description": "Analyze goal and gather context", "capabilities": ["analysis"]},
         {"task_description": "Execute primary work", "capabilities": ["general"], "deps": [0]},
         {"task_description": "Verify and review output", "capabilities": ["verification"], "deps": [1]},
         {"task_description": "Produce final deliverable", "capabilities": ["writing"], "deps": [2]},
     ])
-
     nodes = []
     for i, t in enumerate(tasks):
-        node = {
+        nodes.append({
             "node_id": f"node_{i}",
             "task_description": f"{t['task_description']} — for: {description[:80]}",
             "required_capabilities": t.get("capabilities", []),
             "dependencies": [f"node_{d}" for d in t.get("deps", [])],
-        }
-        nodes.append(node)
-
+        })
     return nodes
 
 
 async def execute_goal(description: str, requester_id: str = "system", environment: str = "simulation"):
-    """Full Commander Orion pipeline: classify → decompose → create graph → assign agents."""
-    # Step 1: Classify
-    classification = classify_goal(description)
+    """Full Commander Orion pipeline: AI classify → AI decompose → route → assign agents."""
+    # Step 1: AI-powered classification
+    classification = await classify_goal_ai(description)
     await log_action("goal_classified", "orchestrator", "commander_orion", details={"classification": classification})
 
     # Step 2: Create goal
     goal = await create_goal(description, classification, requester_id)
 
-    # Step 3: Decompose into task graph
-    nodes = decompose_goal(description, classification)
+    # Step 3: AI-powered decomposition
+    nodes, decomp_meta = await decompose_goal_ai(description, classification)
 
     # Step 4: Route each node to optimal model
     for node in nodes:
@@ -165,6 +221,7 @@ async def execute_goal(description: str, requester_id: str = "system", environme
         "goal_id": goal["goal_id"],
         "graph_id": graph["graph_id"],
         "classification": classification,
+        "decomposition_meta": decomp_meta,
         "node_count": len(nodes),
         "assignments": assignments,
         "environment": environment,
@@ -178,15 +235,27 @@ async def execute_goal(description: str, requester_id: str = "system", environme
         outcome="graph_created",
     )
 
+    reasoning_parts = [
+        f"Goal classified as {classification['goal_type']} (risk={classification['risk_level']}).",
+        f"{'AI-powered' if classification.get('ai_powered') else 'Rule-based'} classification",
+    ]
+    if classification.get("model_used"):
+        reasoning_parts.append(f"using {classification['model_used']}")
+    reasoning_parts.append(f". Decomposed into {len(nodes)} tasks.")
+    if decomp_meta.get("ai_powered"):
+        reasoning_parts.append(f" AI decomposition via {decomp_meta['model']}.")
+    reasoning_parts.append(f" {len(assignments)} agents assigned to ready nodes.")
+
     return {
         "goal": goal,
         "classification": classification,
+        "decomposition_meta": decomp_meta,
         "graph_id": graph["graph_id"],
         "nodes": len(nodes),
+        "node_details": [{"node_id": n["node_id"], "task": n["task_description"][:100], "model": n.get("routed_model"), "provider": n.get("routed_provider")} for n in nodes],
         "assignments": assignments,
         "environment": environment,
-        "reasoning": f"Goal classified as {classification['goal_type']} (risk={classification['risk_level']}). "
-                     f"Decomposed into {len(nodes)} tasks. {len(assignments)} agents assigned to ready nodes.",
+        "reasoning": "".join(reasoning_parts),
     }
 
 

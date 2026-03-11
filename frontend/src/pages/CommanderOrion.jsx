@@ -80,20 +80,48 @@ export default function CommanderOrion() {
               <Badge className={riskColor[result.classification?.risk_level] || ""}>{result.classification?.risk_level} risk</Badge>
               <Badge variant="outline" className="text-zinc-400">{result.classification?.complexity} complexity</Badge>
               <Badge variant="outline" className="text-cyan-400 border-cyan-500/30">{result.environment}</Badge>
+              {result.classification?.ai_powered && (
+                <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30">
+                  <Cpu className="w-3 h-3 mr-1" />AI via {result.classification?.model_used} ({result.classification?.latency_ms}ms)
+                </Badge>
+              )}
             </div>
+
+            {/* AI Reasoning */}
+            {result.classification?.reasoning && result.classification.ai_powered && (
+              <div className="bg-zinc-800/40 border border-white/5 rounded-lg p-3">
+                <p className="text-[10px] text-zinc-500 uppercase tracking-wide mb-1">AI Classification Reasoning</p>
+                <p className="text-xs text-zinc-300">{result.classification.reasoning}</p>
+              </div>
+            )}
 
             {/* Reasoning */}
             <p className="text-xs text-zinc-400 bg-zinc-800/60 p-3 rounded-lg border border-white/5">{result.reasoning}</p>
 
             {/* Task Graph */}
             <div>
-              <p className="text-[10px] text-zinc-500 uppercase tracking-wide mb-2">Task Graph — {result.nodes} nodes</p>
-              <div className="space-y-2">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] text-zinc-500 uppercase tracking-wide">Task Graph — {result.nodes} nodes</p>
+                {result.decomposition_meta?.ai_powered && (
+                  <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px]">
+                    AI decomposed via {result.decomposition_meta?.model} ({result.decomposition_meta?.latency_ms}ms)
+                  </Badge>
+                )}
+              </div>
+              <div className="space-y-1.5">
                 {result.goal && (
                   <div className="text-xs text-zinc-300 bg-zinc-800/40 p-2 rounded border border-white/5">
                     <span className="text-zinc-500">Goal ID:</span> {result.goal.goal_id} | <span className="text-zinc-500">Graph:</span> {result.graph_id}
                   </div>
                 )}
+                {result.node_details?.map((n, i) => (
+                  <div key={i} className="flex items-center gap-2 p-2 rounded bg-zinc-800/30 border border-white/5" data-testid={`task-node-${n.node_id}`}>
+                    <GitBranch className="w-3 h-3 text-amber-400 shrink-0" />
+                    <span className="text-[10px] text-zinc-500 w-12 shrink-0">{n.node_id}</span>
+                    <span className="text-xs text-zinc-300 flex-1 truncate">{n.task}</span>
+                    <Badge variant="outline" className="text-violet-400 border-violet-500/30 text-[10px] shrink-0">{n.provider}:{n.model}</Badge>
+                  </div>
+                ))}
               </div>
             </div>
 

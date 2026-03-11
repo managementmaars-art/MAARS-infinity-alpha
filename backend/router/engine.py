@@ -203,3 +203,49 @@ async def get_model_performance(provider: str = None):
         r["success_rate"] = round(r.get("success_count", 0) / max(calls, 1), 3)
         r["verification_pass_rate"] = round(r.get("verification_passes", 0) / max(calls, 1), 3)
     return results
+
+
+
+async def execute_routed_task(task_description: str, context: str = "", metadata: dict = None):
+    """Full pipeline: route → call LLM → log result → return output."""
+    import time as _time
+    from services.infinity_llm import call
+
+    routing = await route_task(task_description, metadata)
+    model_name = routing["selection"]["model"]
+    provider = routing["selection"]["provider"]
+    task_type = routing["classification"]["task_type"]
+
+    system_msg = f"You are an expert AI agent specialized in {task_type} tasks. Execute the task precisely and provide a thorough response."
+
+    prompt = task_description
+    if context:
+        prompt = f"Context:\n{context}\n\nTask:\n{task_description}"
+
+    start = _time.time()
+    try:
+        llm_result = await call(prompt, system_msg, model_name)
+        latency_ms = int((_time.time() - start) * 1000)
+        cost_info = routing["selection"]
+        estimated_cost = cost_info.get("expected_cost_per_1k_out", 0) * 2
+
+        await log_model_result(
+            llm_result["provider"], llm_result["model"], task_type,
+            success=True, cost=estimated_cost, latency_ms=latency_ms,
+        )
+
+        return {
+            "output": llm_result["response"],
+            "routing": routing,
+            "execution": {
+                "provider": llm_result["provider"],
+                "model": llm_result["model"],
+                "latency_ms": latency_ms,
+                "estimated_cost": estimated_cost,
+                "attempt": llm_result.get("attempt", 1),
+            },
+        }
+    except Exception as e:
+        latency_ms = int((_time.time() - start) * 1000)
+        await log_model_result(provider, model_name, task_type, success=False, cost=0, latency_ms=latency_ms)
+        raise RuntimeError(f"Task execution failed: {e}")

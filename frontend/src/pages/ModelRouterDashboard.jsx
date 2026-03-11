@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
-import { Brain, Zap, DollarSign, Clock, ArrowRight, Search } from "lucide-react";
+import { Brain, Zap, DollarSign, Clock, ArrowRight, Search, Play, Loader2, FileText } from "lucide-react";
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
@@ -19,17 +19,31 @@ const PROVIDER_COLORS = {
 export default function ModelRouterDashboard() {
   const [query, setQuery] = useState("");
   const [result, setResult] = useState(null);
+  const [execResult, setExecResult] = useState(null);
+  const [executing, setExecuting] = useState(false);
   const [history, setHistory] = useState([]);
   const token = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 
   const routeTask = async () => {
     if (!query.trim()) return;
+    setExecResult(null);
     const res = await fetch(`${API}/api/infinity/router/route`, { method: "POST", headers, body: JSON.stringify({ task_description: query }) });
     const data = await res.json();
     setResult(data);
     setHistory(prev => [{ query, ...data }, ...prev.slice(0, 9)]);
-    setQuery("");
+  };
+
+  const executeTask = async () => {
+    if (!query.trim()) return;
+    setExecuting(true);
+    try {
+      const res = await fetch(`${API}/api/infinity/router/execute`, { method: "POST", headers, body: JSON.stringify({ task_description: query }) });
+      const data = await res.json();
+      setExecResult(data);
+      setResult(data.routing);
+    } catch (e) { console.error(e); }
+    setExecuting(false);
   };
 
   return (
@@ -52,6 +66,9 @@ export default function ModelRouterDashboard() {
               onKeyDown={e => e.key === "Enter" && routeTask()}
             />
             <Button onClick={routeTask} className="bg-violet-500 hover:bg-violet-600" data-testid="route-btn"><Search className="w-4 h-4 mr-1" /> Route</Button>
+            <Button onClick={executeTask} disabled={executing || !query.trim()} className="bg-emerald-600 hover:bg-emerald-700" data-testid="execute-btn">
+              {executing ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Play className="w-4 h-4 mr-1" />} Execute
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -85,6 +102,28 @@ export default function ModelRouterDashboard() {
               <div className="p-2 rounded bg-zinc-800/40 text-center"><Zap className="w-3 h-3 text-amber-400 mx-auto mb-1" /><p className="text-xs text-zinc-400">{result.selection?.latency_class}</p><p className="text-[10px] text-zinc-500">Latency</p></div>
               <div className="p-2 rounded bg-zinc-800/40 text-center"><DollarSign className="w-3 h-3 text-emerald-400 mx-auto mb-1" /><p className="text-xs text-zinc-400">${result.selection?.expected_cost_per_1k_out}/1K out</p><p className="text-[10px] text-zinc-500">Cost</p></div>
               <div className="p-2 rounded bg-zinc-800/40 text-center"><Brain className="w-3 h-3 text-violet-400 mx-auto mb-1" /><p className="text-xs text-zinc-400">{result.selection?.reason?.split(":")[0]}</p><p className="text-[10px] text-zinc-500">Reason</p></div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Execution Output */}
+      {execResult && (
+        <Card className="bg-zinc-900/50 border-emerald-500/20" data-testid="exec-result-card">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm text-emerald-400 flex items-center gap-2"><FileText className="w-4 h-4" /> LLM Execution Result</CardTitle>
+              <div className="flex items-center gap-2">
+                <Badge className={PROVIDER_COLORS[execResult.execution?.provider] || ""}>{execResult.execution?.provider}</Badge>
+                <span className="text-xs text-white">{execResult.execution?.model}</span>
+                <Badge variant="outline" className="text-zinc-400 text-[10px]">{execResult.execution?.latency_ms}ms</Badge>
+                <Badge variant="outline" className="text-emerald-400 border-emerald-500/30 text-[10px]">${execResult.execution?.estimated_cost?.toFixed(4)}</Badge>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-zinc-800/40 border border-white/5 rounded-lg p-3 max-h-64 overflow-y-auto">
+              <pre className="text-xs text-zinc-300 whitespace-pre-wrap font-mono">{execResult.output}</pre>
             </div>
           </CardContent>
         </Card>

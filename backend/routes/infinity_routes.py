@@ -34,7 +34,7 @@ from governance.trust_scoring import (
 )
 from governance.incidents import create_incident, resolve_incident, get_incidents, escalate, get_escalations, resolve_escalation
 from governance.autonomy import get_tier_info, check_action_allowed, get_agent_autonomy, set_agent_autonomy, get_all_tiers
-from orchestrator.commander import execute_goal, get_commander_log, classify_goal, decompose_goal
+from orchestrator.commander import execute_goal, get_commander_log, classify_goal_ai, classify_goal_rules
 from memory_system.working import store_working, get_working, append_result, clear_working
 from memory_system.episodic import record_episode, recall_episodes, recall_similar, get_lessons
 from memory_system.knowledge_graph import add_entity, add_relationship, get_entity, query_graph, get_graph_stats
@@ -208,6 +208,18 @@ async def api_model_performance(provider: Optional[str] = None):
 @router.get("/router/providers")
 async def api_get_providers():
     return PROVIDER_CATALOG
+
+
+class ExecuteTaskRequest(BaseModel):
+    task_description: str
+    context: Optional[str] = ""
+    metadata: Optional[dict] = None
+
+
+@router.post("/router/execute")
+async def api_execute_task(req: ExecuteTaskRequest):
+    from router.engine import execute_routed_task
+    return await execute_routed_task(req.task_description, req.context, req.metadata)
 
 
 # ─── VERIFICATION ───
@@ -523,7 +535,7 @@ async def api_commander_log(limit: int = 20):
 
 @router.post("/orchestrator/classify")
 async def api_classify_goal(description: str):
-    return classify_goal(description)
+    return await classify_goal_ai(description)
 
 
 # ─── Approvals ───
