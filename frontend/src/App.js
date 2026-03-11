@@ -52,6 +52,7 @@ import ObservabilityDashboard from "./pages/ObservabilityDashboard";
 import ModelRouterDashboard from "./pages/ModelRouterDashboard";
 import VenturePortfolio from "./pages/VenturePortfolio";
 import CommanderOrion from "./pages/CommanderOrion";
+import OperatorControlPanel from "./pages/OperatorControlPanel";
 import {
   AdminOverviewPage, AdminAnalyticsPage, AdminUsersPage, AdminAgentsPage,
   AdminTransactionsPage, AdminPricingManagerPage, AdminApiKeysPage,
@@ -307,6 +308,7 @@ const AppRouter = () => {
       <Route path="/model-router" element={<ProtectedRoute><DashboardLayout><ModelRouterDashboard /></DashboardLayout></ProtectedRoute>} />
       <Route path="/venture-portfolio" element={<ProtectedRoute><DashboardLayout><VenturePortfolio /></DashboardLayout></ProtectedRoute>} />
       <Route path="/commander" element={<ProtectedRoute><DashboardLayout><CommanderOrion /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/operator" element={<ProtectedRoute><DashboardLayout><OperatorControlPanel /></DashboardLayout></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><DashboardLayout><AdminOverviewPage /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/overview" element={<AdminRoute><DashboardLayout><AdminOverviewPage /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/analytics" element={<AdminRoute><DashboardLayout><AdminAnalyticsPage /></DashboardLayout></AdminRoute>} />

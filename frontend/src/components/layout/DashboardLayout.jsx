@@ -207,6 +207,7 @@ const navSections = [
       { icon: Brain, label: "Model Router", to: "/model-router" },
       { icon: Rocket, label: "Commander Orion", to: "/commander" },
       { icon: TrendingUp, label: "Venture Portfolio", to: "/venture-portfolio" },
+      { icon: Shield, label: "Operator Panel", to: "/operator" },
     ],
   },
   {

@@ -641,3 +641,66 @@ async def api_transition_venture(name: str, stage: str):
 async def api_portfolio_summary():
     return await get_portfolio_summary()
 
+
+# ════════════════════════════════════════════════════════════════════
+# PHASE 5: Operator Control & Test Harness
+# ════════════════════════════════════════════════════════════════════
+
+from testing_harness.scenarios import run_scenario, run_all_scenarios, get_test_runs, SCENARIOS
+
+
+@router.get("/test-harness/scenarios")
+async def api_list_scenarios():
+    return {k: {"name": v["name"], "description": v["description"]} for k, v in SCENARIOS.items()}
+
+
+@router.post("/test-harness/run/{scenario_id}")
+async def api_run_scenario(scenario_id: str):
+    result = await run_scenario(scenario_id)
+    if "error" in result:
+        raise HTTPException(400, result["error"])
+    return result
+
+
+@router.post("/test-harness/run-all")
+async def api_run_all():
+    return await run_all_scenarios()
+
+
+@router.get("/test-harness/history")
+async def api_test_history(scenario_id: Optional[str] = None, limit: int = 20):
+    return await get_test_runs(scenario_id, limit)
+
+
+@router.get("/operator/dashboard")
+async def api_operator_dashboard():
+    """Get unified operator dashboard data."""
+    from kernel.scheduler import get_agent_workload
+    from governance.circuit_breaker import get_all_breakers, get_tripped_breakers
+    from kernel.budget_controller import get_spend_summary
+    from governance.trust_scoring import get_low_trust_entities
+
+    tripped = await get_tripped_breakers()
+    workload = await get_agent_workload()
+    pending = await get_pending_approvals()
+    active_incidents = await get_incidents(status="open")
+    open_escalations = await get_escalations(status="open")
+    breakers = await get_all_breakers()
+    budget = await get_spend_summary(period="daily")
+    low_trust = await get_low_trust_entities(threshold=30)
+
+    return {
+        "system_health": "degraded" if tripped else "operational",
+        "pending_approvals": len(pending),
+        "approvals": pending[:10],
+        "open_incidents": len(active_incidents),
+        "incidents": active_incidents[:10],
+        "open_escalations": len(open_escalations),
+        "escalations": open_escalations[:10],
+        "circuit_breakers": {"total": len(breakers), "tripped": len(tripped), "breakers": breakers},
+        "budget_summary": budget,
+        "low_trust_entities": low_trust,
+        "agent_workload": workload,
+        "tiers": get_all_tiers(),
+    }
+
