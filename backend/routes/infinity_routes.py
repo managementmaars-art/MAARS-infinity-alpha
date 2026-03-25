@@ -4,6 +4,11 @@ Exposes kernel, router, verification, governance, orchestrator, memory, intellig
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List
+from datetime import datetime, timezone
+from db import db
+
+ALERT_RULES_COLLECTION = "alert_rules"
+ALERTS_COLLECTION = "system_alerts"
 from kernel.task_graph import (
     create_goal, create_task_graph, get_task_graph,
     get_ready_nodes, update_node_status, check_graph_completion, list_task_graphs,
@@ -912,4 +917,235 @@ async def api_retry(graph_id: str, node_id: str):
 @router.get("/recovery/log")
 async def api_recovery_log(limit: int = 30):
     return await get_recovery_log(limit)
+
+
+# ════════════════════════════════════════════════════════════════════
+# SEMANTIC MEMORY
+# ════════════════════════════════════════════════════════════════════
+
+from memory_system.semantic import (
+    store_concept, query_semantic, build_agent_context,
+    extract_concepts_from_execution, get_concept, get_semantic_stats,
+)
+
+
+class StoreConceptRequest(BaseModel):
+    concept: str
+    concept_type: str
+    description: str
+    source_agent: Optional[str] = "system"
+    related_entities: Optional[List[str]] = None
+    confidence: Optional[float] = 1.0
+    tags: Optional[List[str]] = None
+
+
+class SemanticQueryRequest(BaseModel):
+    query: str
+    agent_id: Optional[str] = None
+    concept_type: Optional[str] = None
+    limit: Optional[int] = 10
+
+
+class AgentContextRequest(BaseModel):
+    agent_id: str
+    task_description: str
+    limit: Optional[int] = 5
+
+
+@router.post("/memory/semantic/store")
+async def api_store_concept(req: StoreConceptRequest):
+    return await store_concept(
+        req.concept, req.concept_type, req.description,
+        req.source_agent, req.related_entities, req.confidence, req.tags,
+    )
+
+
+@router.post("/memory/semantic/query")
+async def api_query_semantic(req: SemanticQueryRequest):
+    return await query_semantic(req.query, req.agent_id, req.concept_type, req.limit)
+
+
+@router.post("/memory/semantic/agent-context")
+async def api_agent_context(req: AgentContextRequest):
+    return await build_agent_context(req.agent_id, req.task_description, req.limit)
+
+
+@router.get("/memory/semantic/concept/{concept}")
+async def api_get_concept(concept: str):
+    doc = await get_concept(concept)
+    if not doc:
+        raise HTTPException(404, "Concept not found")
+    return doc
+
+
+@router.get("/memory/semantic/stats")
+async def api_semantic_stats():
+    return await get_semantic_stats()
+
+
+# ════════════════════════════════════════════════════════════════════
+# WORKER QUEUES
+# ════════════════════════════════════════════════════════════════════
+
+from workers.queue_manager import (
+    enqueue_job, get_job, list_jobs, cancel_job, get_queue_stats,
+)
+
+
+class EnqueueJobRequest(BaseModel):
+    job_type: str
+    payload: dict
+    priority: Optional[int] = 5
+    callback_url: Optional[str] = None
+    max_retries: Optional[int] = 2
+    timeout_seconds: Optional[int] = 120
+
+
+@router.post("/workers/enqueue")
+async def api_enqueue_job(req: EnqueueJobRequest):
+    return await enqueue_job(
+        req.job_type, req.payload, req.priority,
+        req.callback_url, req.max_retries, req.timeout_seconds,
+    )
+
+
+@router.get("/workers/jobs")
+async def api_list_jobs(status: Optional[str] = None, job_type: Optional[str] = None, limit: int = 20):
+    return await list_jobs(status, job_type, limit)
+
+
+@router.get("/workers/jobs/{job_id}")
+async def api_get_job(job_id: str):
+    job = await get_job(job_id)
+    if not job:
+        raise HTTPException(404, "Job not found")
+    return job
+
+
+@router.post("/workers/jobs/{job_id}/cancel")
+async def api_cancel_job(job_id: str):
+    return await cancel_job(job_id)
+
+
+@router.get("/workers/stats")
+async def api_queue_stats():
+    return await get_queue_stats()
+
+
+# ════════════════════════════════════════════════════════════════════
+# MULTI-ENVIRONMENT
+# ════════════════════════════════════════════════════════════════════
+
+from governance.environments import (
+    get_active_environment, set_active_environment,
+    get_environment_config, get_all_environments,
+    validate_execution_environment, get_environment_stats,
+    store_environment_config,
+)
+
+
+class SetEnvironmentRequest(BaseModel):
+    environment: str
+
+
+class EnvironmentOverrideRequest(BaseModel):
+    environment: str
+    overrides: dict
+
+
+@router.get("/environments/active")
+async def api_active_env():
+    env = get_active_environment()
+    config = get_environment_config(env)
+    return {"active": env, "config": config}
+
+
+@router.post("/environments/set")
+async def api_set_env(req: SetEnvironmentRequest):
+    result = set_active_environment(req.environment)
+    if "error" in result:
+        raise HTTPException(400, result["error"])
+    return result
+
+
+@router.get("/environments")
+async def api_all_envs():
+    return get_all_environments()
+
+
+@router.get("/environments/stats")
+async def api_env_stats():
+    return await get_environment_stats()
+
+
+@router.post("/environments/validate")
+async def api_validate_env(environment: str, autonomy_tier: int = 1, model: Optional[str] = None):
+    return validate_execution_environment(environment, autonomy_tier, model)
+
+
+@router.post("/environments/configure")
+async def api_configure_env(req: EnvironmentOverrideRequest):
+    return await store_environment_config(req.environment, req.overrides)
+
+
+# ════════════════════════════════════════════════════════════════════
+# CUSTOM ALERT RULES (CRUD)
+# ════════════════════════════════════════════════════════════════════
+
+from governance.metrics import get_alert_rules
+
+
+class CreateAlertRuleRequest(BaseModel):
+    rule_id: str
+    name: str
+    metric: str
+    operator: str
+    threshold: float
+    severity: Optional[str] = "medium"
+    enabled: Optional[bool] = True
+
+
+@router.post("/alerts/rules")
+async def api_create_alert_rule(req: CreateAlertRuleRequest):
+    """Create a new custom alert rule."""
+    existing = await db[ALERT_RULES_COLLECTION].find_one({"rule_id": req.rule_id})
+    if existing:
+        raise HTTPException(400, f"Rule '{req.rule_id}' already exists")
+    rule = {
+        "rule_id": req.rule_id,
+        "name": req.name,
+        "metric": req.metric,
+        "operator": req.operator,
+        "threshold": req.threshold,
+        "severity": req.severity,
+        "enabled": req.enabled,
+        "custom": True,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db[ALERT_RULES_COLLECTION].insert_one({**rule})
+    rule.pop("_id", None)
+    return rule
+
+
+@router.delete("/alerts/rules/{rule_id}")
+async def api_delete_alert_rule(rule_id: str):
+    """Delete a custom alert rule."""
+    result = await db[ALERT_RULES_COLLECTION].delete_one({"rule_id": rule_id})
+    if result.deleted_count == 0:
+        raise HTTPException(404, "Rule not found")
+    # Also remove any active alerts for this rule
+    await db[ALERTS_COLLECTION].delete_many({"rule_id": rule_id})
+    return {"rule_id": rule_id, "deleted": True}
+
+
+# ════════════════════════════════════════════════════════════════════
+# WEBSOCKET CONNECTION STATS
+# ════════════════════════════════════════════════════════════════════
+
+from routes.infinity_ws import get_connection_stats
+
+
+@router.get("/ws/stats")
+async def api_ws_stats():
+    return get_connection_stats()
 

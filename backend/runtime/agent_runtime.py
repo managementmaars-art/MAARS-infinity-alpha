@@ -77,10 +77,19 @@ async def execute_agent_loop(
     context = context or {}
     steps = []
     started_at = time.time()
+    step_counter = [0]
 
     def _step(name, status, detail=""):
         elapsed = int((time.time() - started_at) * 1000)
+        step_counter[0] += 1
         steps.append({"step": name, "status": status, "detail": detail, "elapsed_ms": elapsed})
+        # Fire-and-forget WebSocket broadcast
+        try:
+            import asyncio
+            from routes.infinity_ws import broadcast_step
+            asyncio.ensure_future(broadcast_step(execution_id, name, status, detail, step_counter[0]))
+        except Exception:
+            pass
 
     try:
         # ── Step 1: Load Role Pack ──
@@ -100,6 +109,13 @@ async def execute_agent_loop(
         }
         _step("load_role_pack", "pass", f"{role_pack['name']} (tier {role_pack['autonomy_tier']}, {role_pack['maturity']})")
 
+        # ── Step 1.5: Validate Environment ──
+        from governance.environments import validate_execution_environment
+        env_check = validate_execution_environment(environment, role_pack["autonomy_tier"])
+        if not env_check.get("allowed", True):
+            _step("environment_check", "fail", env_check.get("reason", "Environment validation failed"))
+            return _build_result(execution_id, agent_id, task_description, steps, "env_denied", environment)
+
         # ── Step 2: Load Context ──
         exec_context = {
             "task": task_description,
@@ -114,15 +130,19 @@ async def execute_agent_loop(
         # ── Step 3: Retrieve Memory ──
         from memory_system.working import get_working
         from memory_system.episodic import recall_episodes
+        from memory_system.semantic import build_agent_context
         working_mem = await get_working(graph_id or execution_id)
         episodes = await recall_episodes(agent_id, limit=3)
+        semantic_ctx = await build_agent_context(agent_id, task_description, limit=3)
         memory_context = ""
         if working_mem:
             memory_context += f"Working memory: {len(working_mem)} entries. "
         if episodes:
             lessons = [e.get("lessons_learned", "") for e in episodes if e.get("lessons_learned")]
             if lessons:
-                memory_context += f"Past lessons: {'; '.join(lessons[:2])}"
+                memory_context += f"Past lessons: {'; '.join(lessons[:2])}. "
+        if semantic_ctx.get("semantic_context") and semantic_ctx["semantic_context"] != "No prior semantic context":
+            memory_context += f"Semantic: {semantic_ctx['semantic_context'][:200]}"
         _step("retrieve_memory", "pass", memory_context or "No prior memory")
 
         # ── Step 4: Analyze Task ──
@@ -203,6 +223,7 @@ async def execute_agent_loop(
         # ── Step 11: Update Memory ──
         from memory_system.working import store_working, append_result
         from memory_system.episodic import record_episode
+        from memory_system.semantic import extract_concepts_from_execution
         if graph_id:
             await append_result(graph_id, agent_id, {"output_preview": output[:500], "model": exec_model})
         await record_episode(
@@ -211,7 +232,10 @@ async def execute_agent_loop(
             outcome="completed" if v_pass else "flagged",
             lessons_learned=f"Used {exec_model} for {routing['classification']['task_type']} task",
         )
-        _step("update_memory", "pass", "Working + episodic memory updated")
+        await extract_concepts_from_execution(
+            agent_id, task_description, output, exec_model,
+        )
+        _step("update_memory", "pass", "Working + episodic + semantic memory updated")
 
         # ── Step 12: Log ──
         from governance.audit import log_action

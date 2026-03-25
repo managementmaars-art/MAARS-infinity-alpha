@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import {
   Rocket, GitBranch, Cpu, CheckCircle, XCircle, Clock, Activity,
-  Play, Loader2, AlertCircle, FileText, ChevronRight, Zap
+  Play, Loader2, AlertCircle, FileText, ChevronRight, Zap, Wifi, WifiOff
 } from "lucide-react";
 
 const API = process.env.REACT_APP_BACKEND_URL;
@@ -23,6 +23,9 @@ export default function CommanderOrion() {
   const [loading, setLoading] = useState(false);
   const [runs, setRuns] = useState([]);
   const [selectedRun, setSelectedRun] = useState(null);
+  const [liveSteps, setLiveSteps] = useState([]);
+  const [wsConnected, setWsConnected] = useState(false);
+  const wsRef = useRef(null);
   const token = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 
@@ -33,11 +36,46 @@ export default function CommanderOrion() {
 
   useEffect(() => { fetchRuns(); }, [fetchRuns]);
 
+  /* ─── WebSocket for live step streaming ─── */
+  useEffect(() => {
+    if (!token) return;
+    const wsUrl = API.replace(/^http/, "ws") + `/api/ws/infinity?token=${token}&channel=global`;
+    let ws;
+    let reconnectTimer;
+
+    const connect = () => {
+      ws = new WebSocket(wsUrl);
+      ws.onopen = () => { setWsConnected(true); wsRef.current = ws; };
+      ws.onclose = () => { setWsConnected(false); reconnectTimer = setTimeout(connect, 5000); };
+      ws.onerror = () => { ws.close(); };
+      ws.onmessage = (evt) => {
+        try {
+          const data = JSON.parse(evt.data);
+          if (data.type === "step_update") {
+            setLiveSteps(prev => {
+              const existing = prev.findIndex(s => s.step === data.step && s.execution_id === data.execution_id);
+              if (existing >= 0) {
+                const updated = [...prev];
+                updated[existing] = data;
+                return updated;
+              }
+              return [...prev, data];
+            });
+          }
+        } catch {}
+      };
+    };
+    connect();
+
+    return () => { clearTimeout(reconnectTimer); ws?.close(); };
+  }, [token]);
+
   const executeGoal = async () => {
     if (!goal.trim()) return;
     setLoading(true);
     setResult(null);
     setSelectedRun(null);
+    setLiveSteps([]);
     try {
       const endpoint = mode === "full" ? "/api/infinity/orchestrator/full-execute" : "/api/infinity/orchestrator/execute";
       const res = await fetch(`${API}${endpoint}`, {
@@ -58,11 +96,18 @@ export default function CommanderOrion() {
 
   return (
     <div className="space-y-5" data-testid="commander-orion">
-      <div>
-        <h1 className="text-2xl font-bold text-white font-['Outfit'] flex items-center gap-2">
-          <Rocket className="w-6 h-6 text-amber-400" /> Commander Orion
-        </h1>
-        <p className="text-sm text-zinc-400">AI-powered goal orchestration: classify, decompose, execute, verify, report</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white font-['Outfit'] flex items-center gap-2">
+            <Rocket className="w-6 h-6 text-amber-400" /> Commander Orion
+          </h1>
+          <p className="text-sm text-zinc-400">AI-powered goal orchestration: classify, decompose, execute, verify, report</p>
+        </div>
+        {wsConnected ? (
+          <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px]" data-testid="ws-status-commander"><Wifi className="w-3 h-3 mr-1" /> Live Stream</Badge>
+        ) : (
+          <Badge className="bg-zinc-700/30 text-zinc-500 border-zinc-600/30 text-[10px]" data-testid="ws-status-commander"><WifiOff className="w-3 h-3 mr-1" /> Offline</Badge>
+        )}
       </div>
 
       {/* Goal Input */}
@@ -77,8 +122,8 @@ export default function CommanderOrion() {
           <div className="flex items-center justify-between mt-3">
             <div className="flex items-center gap-2">
               <select value={mode} onChange={e => setMode(e.target.value)} className="bg-zinc-800 text-zinc-400 text-xs border border-white/10 rounded px-2 py-1.5" data-testid="mode-select">
-                <option value="full">Full Execute (classify → decompose → execute → verify → report)</option>
-                <option value="plan">Plan Only (classify → decompose → assign)</option>
+                <option value="full">Full Execute (classify \u2192 decompose \u2192 execute \u2192 verify \u2192 report)</option>
+                <option value="plan">Plan Only (classify \u2192 decompose \u2192 assign)</option>
               </select>
             </div>
             <Button onClick={executeGoal} disabled={loading || !goal.trim()} className="bg-amber-600 hover:bg-amber-700" data-testid="execute-goal-btn">
@@ -89,14 +134,36 @@ export default function CommanderOrion() {
         </CardContent>
       </Card>
 
-      {/* Loading State */}
-      {loading && (
+      {/* Live Step Progress (WebSocket) */}
+      {loading && liveSteps.length > 0 && (
+        <Card className="bg-zinc-900/50 border-cyan-500/20" data-testid="live-steps-panel">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-cyan-400 flex items-center gap-2">
+              <Activity className="w-4 h-4 animate-pulse" /> Live Execution Progress
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-1">
+            {liveSteps.map((s, i) => (
+              <div key={i} className={`flex items-center gap-2 p-1.5 rounded text-[11px] ${s.status === "pass" ? "bg-emerald-500/5 border border-emerald-500/10" : s.status === "fail" ? "bg-red-500/5 border border-red-500/10" : "bg-zinc-800/40 border border-white/5"}`}>
+                {s.status === "pass" ? <CheckCircle className="w-3 h-3 text-emerald-400 shrink-0" /> : s.status === "fail" ? <XCircle className="w-3 h-3 text-red-400 shrink-0" /> : <Loader2 className="w-3 h-3 text-cyan-400 animate-spin shrink-0" />}
+                <span className="text-zinc-500 w-8 shrink-0">{s.step_num}</span>
+                <span className="text-zinc-300 font-medium">{s.step}</span>
+                <span className="text-zinc-500 flex-1 truncate">{s.detail}</span>
+                <Badge className="bg-zinc-800 text-zinc-400 text-[9px]">{s.progress}%</Badge>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Loading State (fallback when no WS steps) */}
+      {loading && liveSteps.length === 0 && (
         <Card className="bg-zinc-900/50 border-cyan-500/20">
           <CardContent className="p-6 text-center">
             <Loader2 className="w-8 h-8 text-cyan-400 animate-spin mx-auto mb-3" />
             <p className="text-sm text-white font-medium">Executing goal pipeline...</p>
             <p className="text-xs text-zinc-400 mt-1">
-              {mode === "full" ? "Classifying → Decomposing → Executing nodes → Verifying → Generating report" : "Classifying → Decomposing → Assigning agents"}
+              {mode === "full" ? "Classifying \u2192 Decomposing \u2192 Executing nodes \u2192 Verifying \u2192 Generating report" : "Classifying \u2192 Decomposing \u2192 Assigning agents"}
             </p>
           </CardContent>
         </Card>
@@ -134,7 +201,7 @@ export default function CommanderOrion() {
           <Card className="bg-zinc-900/50 border-white/5">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm text-white flex items-center gap-2"><GitBranch className="w-4 h-4 text-amber-400" /> Task Graph — {result.nodes} nodes</CardTitle>
+                <CardTitle className="text-sm text-white flex items-center gap-2"><GitBranch className="w-4 h-4 text-amber-400" /> Task Graph \u2014 {result.nodes} nodes</CardTitle>
                 {exec?.summary && (
                   <div className="flex items-center gap-2">
                     <Badge className={exec.summary.failed === 0 ? "bg-emerald-500/15 text-emerald-400 text-[10px]" : "bg-red-500/15 text-red-400 text-[10px]"}>

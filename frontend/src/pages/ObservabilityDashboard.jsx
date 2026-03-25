@@ -1,13 +1,29 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import {
   Rocket, GitBranch, Users, Cpu, Shield, Activity, AlertTriangle, CheckCircle,
-  Clock, Brain, Search, Eye, Bell, BellOff, BarChart3, TrendingUp, RefreshCw, Gauge
+  Clock, Brain, Search, Eye, Bell, BellOff, TrendingUp, RefreshCw, Gauge,
+  Plus, Trash2, Settings, Wifi, WifiOff, X, Save
 } from "lucide-react";
 
 const API = process.env.REACT_APP_BACKEND_URL;
+
+/* ───── Available metrics for alert rules ───── */
+const AVAILABLE_METRICS = [
+  { value: "circuit_breakers_tripped", label: "Circuit Breakers Tripped" },
+  { value: "open_incidents", label: "Open Incidents" },
+  { value: "low_trust_count", label: "Low Trust Agents" },
+  { value: "agent_utilization", label: "Agent Utilization %" },
+  { value: "model_success_rate_min", label: "Min Model Success Rate %" },
+  { value: "recent_failures", label: "Recent Execution Failures" },
+  { value: "busy_agents", label: "Busy Agents" },
+  { value: "total_agents", label: "Total Agents" },
+];
+
+const OPERATORS = [">", "<", ">=", "=="];
+const SEVERITIES = ["low", "medium", "high"];
 
 export default function ObservabilityDashboard() {
   const [status, setStatus] = useState(null);
@@ -23,12 +39,21 @@ export default function ObservabilityDashboard() {
   const [runs, setRuns] = useState([]);
   const [refreshRate, setRefreshRate] = useState(10);
   const [lastRefresh, setLastRefresh] = useState(null);
+  const [alertRules, setAlertRules] = useState([]);
+  const [showRuleEditor, setShowRuleEditor] = useState(false);
+  const [editingRule, setEditingRule] = useState(null);
+  const [wsConnected, setWsConnected] = useState(false);
+  const wsRef = useRef(null);
   const token = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 
+  /* ─── New rule form defaults ─── */
+  const emptyRule = { rule_id: "", name: "", metric: "circuit_breakers_tripped", operator: ">", threshold: 0, severity: "medium", enabled: true };
+
+  /* ─── Data fetching ─── */
   const fetchAll = useCallback(async () => {
     const f = (url) => fetch(`${API}${url}`, { headers }).then(r => r.ok ? r.json() : null).catch(() => null);
-    const [s, b, a, rp, tl, inc, cl, lm, mh, al, rn] = await Promise.all([
+    const [s, b, a, rp, tl, inc, cl, lm, mh, al, rn, rules] = await Promise.all([
       f("/api/infinity/system/status"),
       f("/api/infinity/governance/circuit-breakers"),
       f("/api/infinity/governance/audit?limit=8"),
@@ -40,6 +65,7 @@ export default function ObservabilityDashboard() {
       f("/api/infinity/metrics/history?limit=20"),
       f("/api/infinity/alerts/active"),
       f("/api/infinity/orchestrator/runs?limit=5"),
+      f("/api/infinity/alerts/rules"),
     ]);
     if (s) setStatus(s);
     if (b) setBreakers(b);
@@ -52,6 +78,7 @@ export default function ObservabilityDashboard() {
     if (Array.isArray(mh)) setMetricsHistory(mh);
     if (Array.isArray(al)) setAlerts(al);
     if (Array.isArray(rn)) setRuns(rn);
+    if (Array.isArray(rules)) setAlertRules(rules);
     setLastRefresh(new Date());
   }, [token]);
 
@@ -61,8 +88,74 @@ export default function ObservabilityDashboard() {
     return () => clearInterval(i);
   }, [fetchAll, refreshRate]);
 
+  /* ─── WebSocket connection ─── */
+  useEffect(() => {
+    if (!token) return;
+    const wsUrl = API.replace(/^http/, "ws") + `/api/ws/infinity?token=${token}&channel=metrics`;
+    let ws;
+    let reconnectTimer;
+
+    const connect = () => {
+      ws = new WebSocket(wsUrl);
+      ws.onopen = () => { setWsConnected(true); wsRef.current = ws; };
+      ws.onclose = () => { setWsConnected(false); reconnectTimer = setTimeout(connect, 5000); };
+      ws.onerror = () => { ws.close(); };
+      ws.onmessage = (evt) => {
+        try {
+          const data = JSON.parse(evt.data);
+          if (data.type === "metrics_update" && data.metrics) {
+            setLiveMetrics({ metrics: data.metrics, triggered_alerts: [] });
+          }
+          if (data.type === "alert_triggered" && data.alert) {
+            setAlerts(prev => {
+              const exists = prev.find(a => a.rule_id === data.alert.rule_id);
+              return exists ? prev : [data.alert, ...prev];
+            });
+          }
+        } catch {}
+      };
+    };
+    connect();
+
+    return () => { clearTimeout(reconnectTimer); ws?.close(); };
+  }, [token]);
+
+  /* ─── Alert rule actions ─── */
   const ackAlert = async (ruleId) => {
     await fetch(`${API}/api/infinity/alerts/${ruleId}/acknowledge`, { method: "POST", headers });
+    fetchAll();
+  };
+
+  const saveRule = async () => {
+    if (!editingRule?.rule_id || !editingRule?.name) return;
+    if (alertRules.find(r => r.rule_id === editingRule.rule_id && !editingRule._existing)) {
+      // Updating existing rule
+      await fetch(`${API}/api/infinity/alerts/rules/${editingRule.rule_id}`, {
+        method: "PUT", headers, body: JSON.stringify({ threshold: editingRule.threshold, enabled: editingRule.enabled, severity: editingRule.severity }),
+      });
+    } else if (editingRule._existing) {
+      await fetch(`${API}/api/infinity/alerts/rules/${editingRule.rule_id}`, {
+        method: "PUT", headers, body: JSON.stringify({ threshold: editingRule.threshold, enabled: editingRule.enabled, severity: editingRule.severity }),
+      });
+    } else {
+      await fetch(`${API}/api/infinity/alerts/rules`, {
+        method: "POST", headers, body: JSON.stringify(editingRule),
+      });
+    }
+    setEditingRule(null);
+    setShowRuleEditor(false);
+    fetchAll();
+  };
+
+  const deleteRule = async (ruleId) => {
+    await fetch(`${API}/api/infinity/alerts/rules/${ruleId}`, { method: "DELETE", headers });
+    fetchAll();
+  };
+
+  const toggleRule = async (rule) => {
+    await fetch(`${API}/api/infinity/alerts/rules/${rule.rule_id}`, {
+      method: "PUT", headers, body: JSON.stringify({ enabled: !rule.enabled }),
+    });
     fetchAll();
   };
 
@@ -83,6 +176,11 @@ export default function ObservabilityDashboard() {
           <p className="text-sm text-zinc-400">Live system health, metrics, execution runs, and alerting</p>
         </div>
         <div className="flex items-center gap-2">
+          {wsConnected ? (
+            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px]" data-testid="ws-status"><Wifi className="w-3 h-3 mr-1" /> Live</Badge>
+          ) : (
+            <Badge className="bg-zinc-700/30 text-zinc-500 border-zinc-600/30 text-[10px]" data-testid="ws-status"><WifiOff className="w-3 h-3 mr-1" /> Polling</Badge>
+          )}
           {alerts.length > 0 && (
             <Badge className="bg-red-500/20 text-red-400 border-red-500/30 animate-pulse" data-testid="alert-count-badge">
               <Bell className="w-3 h-3 mr-1" /> {alerts.length} Alert{alerts.length > 1 ? "s" : ""}
@@ -137,7 +235,7 @@ export default function ObservabilityDashboard() {
               <div className={`w-8 h-8 rounded-lg ${s.color} flex items-center justify-center shrink-0`}><s.icon className="w-3.5 h-3.5 text-white" /></div>
               <div className="min-w-0">
                 <p className="text-[9px] text-zinc-500 uppercase tracking-wide">{s.label}</p>
-                <p className="text-base font-bold text-white leading-tight">{s.value ?? "—"}</p>
+                <p className="text-base font-bold text-white leading-tight">{s.value ?? "\u2014"}</p>
                 {s.sub && <p className="text-[9px] text-zinc-600 truncate">{s.sub}</p>}
               </div>
             </CardContent>
@@ -173,6 +271,151 @@ export default function ObservabilityDashboard() {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* ════════════════════════════════════════════════════ */}
+      {/* CUSTOM ALERT RULES MANAGEMENT */}
+      {/* ════════════════════════════════════════════════════ */}
+      <Card className="bg-zinc-900/50 border-white/5" data-testid="alert-rules-panel">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-sm text-white flex items-center gap-2">
+              <Settings className="w-4 h-4 text-amber-400" /> Alert Rules
+              <Badge className="bg-zinc-800 text-zinc-400 text-[10px]">{alertRules.length}</Badge>
+            </CardTitle>
+            <Button
+              variant="outline" size="sm"
+              className="h-7 text-[11px] gap-1"
+              onClick={() => { setEditingRule({ ...emptyRule }); setShowRuleEditor(true); }}
+              data-testid="create-alert-rule-btn"
+            >
+              <Plus className="w-3 h-3" /> New Rule
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-1.5">
+          {alertRules.map((rule, i) => (
+            <div key={i} className={`flex items-center justify-between p-2 rounded-lg border ${rule.enabled ? "bg-zinc-800/40 border-white/5" : "bg-zinc-800/20 border-white/3 opacity-60"}`} data-testid={`alert-rule-${rule.rule_id}`}>
+              <div className="flex items-center gap-2 min-w-0">
+                <div className={`w-2 h-2 rounded-full shrink-0 ${rule.enabled ? "bg-emerald-400" : "bg-zinc-600"}`} />
+                <span className="text-xs text-white font-medium truncate">{rule.name}</span>
+                <span className="text-[10px] text-zinc-500">{rule.metric} {rule.operator} {rule.threshold}</span>
+                <Badge className={
+                  rule.severity === "high" ? "bg-red-500/20 text-red-400 text-[9px]" :
+                  rule.severity === "medium" ? "bg-amber-500/20 text-amber-400 text-[9px]" :
+                  "bg-zinc-700/30 text-zinc-400 text-[9px]"
+                }>{rule.severity}</Badge>
+                {rule.custom && <Badge className="bg-cyan-500/10 text-cyan-400 text-[9px]">custom</Badge>}
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-zinc-500 hover:text-white" onClick={() => toggleRule(rule)} data-testid={`toggle-rule-${rule.rule_id}`}>
+                  {rule.enabled ? <Bell className="w-3 h-3" /> : <BellOff className="w-3 h-3" />}
+                </Button>
+                <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-zinc-500 hover:text-amber-400" onClick={() => { setEditingRule({ ...rule, _existing: true }); setShowRuleEditor(true); }} data-testid={`edit-rule-${rule.rule_id}`}>
+                  <Settings className="w-3 h-3" />
+                </Button>
+                <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-zinc-500 hover:text-red-400" onClick={() => deleteRule(rule.rule_id)} data-testid={`delete-rule-${rule.rule_id}`}>
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
+            </div>
+          ))}
+          {alertRules.length === 0 && <p className="text-xs text-zinc-500">No alert rules configured</p>}
+        </CardContent>
+      </Card>
+
+      {/* Alert Rule Editor Modal */}
+      {showRuleEditor && editingRule && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" data-testid="alert-rule-editor-modal">
+          <Card className="bg-zinc-900 border-white/10 w-full max-w-md shadow-2xl">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm text-white">{editingRule._existing ? "Edit Alert Rule" : "Create Alert Rule"}</CardTitle>
+                <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-zinc-500" onClick={() => { setShowRuleEditor(false); setEditingRule(null); }}><X className="w-4 h-4" /></Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {!editingRule._existing && (
+                <div>
+                  <label className="text-[10px] text-zinc-400 mb-1 block">Rule ID (unique identifier)</label>
+                  <input
+                    className="w-full bg-zinc-800 border border-white/10 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500/40"
+                    value={editingRule.rule_id} onChange={e => setEditingRule({ ...editingRule, rule_id: e.target.value.replace(/\s/g, "_").toLowerCase() })}
+                    placeholder="e.g., high_latency_warning" data-testid="rule-id-input"
+                  />
+                </div>
+              )}
+              <div>
+                <label className="text-[10px] text-zinc-400 mb-1 block">Rule Name</label>
+                <input
+                  className="w-full bg-zinc-800 border border-white/10 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500/40"
+                  value={editingRule.name} onChange={e => setEditingRule({ ...editingRule, name: e.target.value })}
+                  placeholder="Human-readable name" data-testid="rule-name-input"
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                <div>
+                  <label className="text-[10px] text-zinc-400 mb-1 block">Metric</label>
+                  <select
+                    className="w-full bg-zinc-800 border border-white/10 rounded px-2 py-1.5 text-xs text-white"
+                    value={editingRule.metric} onChange={e => setEditingRule({ ...editingRule, metric: e.target.value })}
+                    data-testid="rule-metric-select"
+                  >
+                    {AVAILABLE_METRICS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] text-zinc-400 mb-1 block">Operator</label>
+                  <select
+                    className="w-full bg-zinc-800 border border-white/10 rounded px-2 py-1.5 text-xs text-white"
+                    value={editingRule.operator} onChange={e => setEditingRule({ ...editingRule, operator: e.target.value })}
+                    data-testid="rule-operator-select"
+                  >
+                    {OPERATORS.map(o => <option key={o} value={o}>{o}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] text-zinc-400 mb-1 block">Threshold</label>
+                  <input
+                    type="number"
+                    className="w-full bg-zinc-800 border border-white/10 rounded px-2 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500/40"
+                    value={editingRule.threshold} onChange={e => setEditingRule({ ...editingRule, threshold: parseFloat(e.target.value) || 0 })}
+                    data-testid="rule-threshold-input"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[10px] text-zinc-400 mb-1 block">Severity</label>
+                  <select
+                    className="w-full bg-zinc-800 border border-white/10 rounded px-2 py-1.5 text-xs text-white"
+                    value={editingRule.severity} onChange={e => setEditingRule({ ...editingRule, severity: e.target.value })}
+                    data-testid="rule-severity-select"
+                  >
+                    {SEVERITIES.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div className="flex items-end">
+                  <label className="flex items-center gap-2 text-xs text-zinc-300 cursor-pointer">
+                    <input
+                      type="checkbox" checked={editingRule.enabled}
+                      onChange={e => setEditingRule({ ...editingRule, enabled: e.target.checked })}
+                      className="rounded bg-zinc-800 border-white/20"
+                      data-testid="rule-enabled-checkbox"
+                    />
+                    Enabled
+                  </label>
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <Button variant="outline" size="sm" onClick={() => { setShowRuleEditor(false); setEditingRule(null); }} data-testid="cancel-rule-btn">Cancel</Button>
+                <Button size="sm" className="bg-amber-600 hover:bg-amber-700" onClick={saveRule} disabled={!editingRule.rule_id || !editingRule.name} data-testid="save-rule-btn">
+                  <Save className="w-3 h-3 mr-1" /> {editingRule._existing ? "Update" : "Create"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
 
       {/* Execution Runs */}
@@ -256,7 +499,7 @@ export default function ObservabilityDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Commander Orion Log */}
         <Card className="bg-zinc-900/50 border-white/5" data-testid="commander-log-panel">
-          <CardHeader className="pb-2"><CardTitle className="text-sm text-white flex items-center gap-2"><Rocket className="w-4 h-4 text-amber-400" /> Commander Orion — Recent Goals</CardTitle></CardHeader>
+          <CardHeader className="pb-2"><CardTitle className="text-sm text-white flex items-center gap-2"><Rocket className="w-4 h-4 text-amber-400" /> Commander Orion \u2014 Recent Goals</CardTitle></CardHeader>
           <CardContent className="space-y-1.5">
             {commanderLog.map((g, i) => (
               <div key={i} className="p-2 rounded bg-zinc-800/40 border border-white/5">

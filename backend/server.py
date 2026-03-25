@@ -45,6 +45,7 @@ from routes.websocket import router as ws_router
 from routes.kernel import router as kernel_router
 from routes.agent_teams import router as agent_teams_router
 from routes.infinity_routes import router as infinity_router
+from routes.infinity_ws import router as infinity_ws_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -93,6 +94,7 @@ app.include_router(api_router)
 
 # WebSocket routes (outside /api prefix — ingress handles /ws differently)
 app.include_router(ws_router, prefix="/api")
+app.include_router(infinity_ws_router, prefix="/api")
 
 
 @app.on_event("startup")
