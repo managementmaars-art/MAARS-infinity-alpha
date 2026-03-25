@@ -500,7 +500,7 @@ class ToolRegisterRequest(BaseModel):
     tool_id: str
     name: str
     description: str
-    schema: dict
+    tool_schema: dict
     permissions: Optional[list] = None
     category: Optional[str] = "general"
 
@@ -511,7 +511,7 @@ class ToolCallRequest(BaseModel):
 
 @router.post("/tools/register")
 async def api_register_tool(req: ToolRegisterRequest):
-    return await register_tool(req.tool_id, req.name, req.description, req.schema, req.permissions, req.category)
+    return await register_tool(req.tool_id, req.name, req.description, req.tool_schema, req.permissions, req.category)
 
 @router.get("/tools")
 async def api_get_tools(category: Optional[str] = None):
@@ -782,8 +782,8 @@ async def api_metrics_history(limit: int = 30):
     return await get_metrics_history(limit)
 
 
-@router.get("/alerts")
-async def api_get_alerts():
+@router.get("/alerts/active")
+async def api_get_active_alerts():
     return await get_active_alerts()
 
 
@@ -806,4 +806,110 @@ class UpdateRuleRequest(BaseModel):
 @router.put("/alerts/rules/{rule_id}")
 async def api_update_rule(rule_id: str, req: UpdateRuleRequest):
     return await update_alert_rule(rule_id, req.dict(exclude_none=True))
+
+
+# ════════════════════════════════════════════════════════════════════
+# AGENT RUNTIME
+# ════════════════════════════════════════════════════════════════════
+
+from runtime.agent_runtime import execute_agent_loop, get_runtime_executions
+
+
+class AgentExecRequest(BaseModel):
+    agent_id: str
+    task_description: str
+    context: Optional[dict] = None
+    environment: Optional[str] = "sandbox"
+    graph_id: Optional[str] = None
+    node_id: Optional[str] = None
+
+
+@router.post("/runtime/execute")
+async def api_runtime_execute(req: AgentExecRequest):
+    return await execute_agent_loop(
+        req.agent_id, req.task_description, req.context,
+        req.environment, req.graph_id, req.node_id,
+    )
+
+
+@router.get("/runtime/history")
+async def api_runtime_history(agent_id: Optional[str] = None, status: Optional[str] = None, limit: int = 20):
+    return await get_runtime_executions(agent_id, status, limit)
+
+
+# ════════════════════════════════════════════════════════════════════
+# AGENT CATALOG
+# ════════════════════════════════════════════════════════════════════
+
+from services.catalog_manager import get_catalog, get_agent_detail, update_agent_maturity, get_catalog_stats, get_networks
+
+
+@router.get("/catalog/agents")
+async def api_catalog(network: Optional[str] = None, maturity: Optional[str] = None, search: Optional[str] = None, capability: Optional[str] = None, tier: Optional[int] = None, limit: int = 50, skip: int = 0):
+    return await get_catalog(network, maturity, search, capability, tier, limit, skip)
+
+
+@router.get("/catalog/agents/{agent_id}")
+async def api_agent_detail(agent_id: str):
+    agent = await get_agent_detail(agent_id)
+    if not agent:
+        raise HTTPException(404, "Agent not found")
+    return agent
+
+
+@router.put("/catalog/agents/{agent_id}/maturity")
+async def api_update_maturity(agent_id: str, maturity: str):
+    return await update_agent_maturity(agent_id, maturity)
+
+
+@router.get("/catalog/stats")
+async def api_catalog_stats():
+    return await get_catalog_stats()
+
+
+@router.get("/catalog/networks")
+async def api_catalog_networks():
+    return await get_networks()
+
+
+# ════════════════════════════════════════════════════════════════════
+# RECOVERY SYSTEM
+# ════════════════════════════════════════════════════════════════════
+
+from governance.recovery import quarantine_agent, release_from_quarantine, get_quarantined_agents, rollback_graph, retry_failed_node, get_recovery_log
+
+
+class QuarantineRequest(BaseModel):
+    agent_id: str
+    reason: str
+
+
+@router.post("/recovery/quarantine")
+async def api_quarantine(req: QuarantineRequest):
+    return await quarantine_agent(req.agent_id, req.reason)
+
+
+@router.post("/recovery/release/{agent_id}")
+async def api_release(agent_id: str):
+    return await release_from_quarantine(agent_id)
+
+
+@router.get("/recovery/quarantined")
+async def api_quarantined():
+    return await get_quarantined_agents()
+
+
+@router.post("/recovery/rollback/{graph_id}")
+async def api_rollback(graph_id: str, reason: str = "operator_rollback"):
+    return await rollback_graph(graph_id, reason)
+
+
+@router.post("/recovery/retry/{graph_id}/{node_id}")
+async def api_retry(graph_id: str, node_id: str):
+    return await retry_failed_node(graph_id, node_id)
+
+
+@router.get("/recovery/log")
+async def api_recovery_log(limit: int = 30):
+    return await get_recovery_log(limit)
 

@@ -208,6 +208,7 @@ const navSections = [
       { icon: Rocket, label: "Commander Orion", to: "/commander" },
       { icon: TrendingUp, label: "Venture Portfolio", to: "/venture-portfolio" },
       { icon: Shield, label: "Operator Panel", to: "/operator" },
+      { icon: Users, label: "Agent Catalog", to: "/agent-catalog" },
     ],
   },
   {

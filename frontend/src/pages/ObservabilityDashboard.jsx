@@ -38,7 +38,7 @@ export default function ObservabilityDashboard() {
       f("/api/infinity/orchestrator/log?limit=5"),
       f("/api/infinity/metrics/live"),
       f("/api/infinity/metrics/history?limit=20"),
-      f("/api/infinity/alerts"),
+      f("/api/infinity/alerts/active"),
       f("/api/infinity/orchestrator/runs?limit=5"),
     ]);
     if (s) setStatus(s);
