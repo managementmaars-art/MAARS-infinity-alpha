@@ -1,77 +1,97 @@
-# MAARS INFINITY — Product Requirements Document
+# MAARS COMMAND — AI Operating System
+## Product Requirements Document
 
-## Original Problem Statement
-Build the complete MAARS Infinity operating system including all subsystems, runtime layers, agent networks, and intelligence systems with full AI-powered execution capabilities.
+## System Definition
+MAARS Command is a production-ready, autonomous multi-agent AI operating system. Not a chatbot. Not a model picker. An AI Operating System with:
+- Shared agent runtime (single kernel, 13-step execution loop)
+- Commander/orchestrator (goal → task graph → execution → verification → report)
+- Full agent catalog (459 agents, 28 networks, ALL included with maturity states)
+- Model orchestration engine (automatic selection, not manual)
+- Policy + approval + governance system
+- Execution gateway (governed, safe execution)
+- Memory + knowledge system (working, episodic, semantic, knowledge graph)
+- Verification system (factual, citation, consistency checks)
+- Observability + audit + cost system (real-time metrics, alerting, sparklines)
+- Recovery + rollback + incident system (quarantine, retry, rollback)
+- Command center UI (7 Infinity pages)
 
 ## Architecture
 ```
 /app/backend/
-  kernel/          → Budget, Policy, Scheduler, Task Graph, Tool Registry, Model Router, Approval Controller
-  intelligence/    → Search Engine (DuckDuckGo), Monitors, Citations
-  memory_system/   → Working Memory, Episodic Memory, Knowledge Graph (with traversal/search/pathfinding)
-  verification/    → Verification Engine (confidence scoring, crosscheck)
-  orchestrator/    → Commander Orion (AI-powered: classify → decompose → execute → verify → report)
-  governance/      → Audit, Circuit Breakers, Trust, Incidents, Autonomy, Metrics & Alerting
-  portfolio/       → Venture Portfolio
-  testing_harness/ → 5 Validation Scenarios (A-E)
-  router/          → Model Router (auto-select + execute via 9 models across 3 providers)
-  services/        → infinity_llm.py (LLM wrapper), llm_service.py (main LLM service)
-  routes/infinity_routes.py → All /api/infinity/* endpoints (80+)
-  server.py        → Rate limiting middleware, response caching
+  runtime/           → Shared Agent Runtime (13-step execution loop for ALL agents)
+  orchestrator/      → Commander Orion (AI-powered: classify → decompose → execute → verify → report)
+  kernel/            → Budget, Policy, Scheduler, Task Graph, Tool Registry, Approval Controller
+  router/            → Model Router (auto-select across 9 models, 3 providers, with fallback chain)
+  intelligence/      → Search Engine (DuckDuckGo), Monitors, Citations
+  memory_system/     → Working Memory, Episodic Memory, Knowledge Graph (traversal/search/pathfinding)
+  verification/      → Verification Engine (confidence scoring, crosscheck consensus)
+  governance/        → Audit, Circuit Breakers, Trust, Incidents, Autonomy, Metrics, Alerting, Recovery
+  portfolio/         → Venture Portfolio
+  testing_harness/   → 5 Validation Scenarios (A-E)
+  services/          → infinity_llm.py, catalog_manager.py, llm_service.py, agent_service.py
+  infinity_catalog.py → 370+ agent definitions with role packs
+  routes/infinity_routes.py → 100+ API endpoints
+  server.py          → Rate limiting, CORS, middleware
 ```
 
-## ALL 5 PHASES COMPLETE + PRODUCTION HARDENED
+## Agent Runtime Loop (13 Steps)
+Every agent executes through this identical pipeline:
+1. Load Role Pack → 2. Load Context → 3. Retrieve Memory → 4. Analyze Task →
+5. Plan (Model Selection) → 6. Choose Action → 7. Create ActionRequest →
+8. Run Policy → 9. Request Approval (if needed) → 10. Execute via Gateway →
+11. Verify Result → 12. Update Memory → 13. Continue / Escalate / Stop
 
-### Phase 1: Foundation — COMPLETE
-Kernel, Task Graph, Scheduler, Budget, Policy, Circuit Breakers, Model Router
+## Agent Maturity States
+- `production-ready` — Fully implemented, tested, production-safe
+- `partial` — Core logic implemented, some features missing
+- `experimental` — Under development, sandbox-only
+- `catalog-only` — Registered in catalog, no runtime implementation yet
 
-### Phase 2: Intelligence & Memory — COMPLETE
-Real DuckDuckGo search, source ranking, freshness detection, intelligence monitors, citations, tool registry, verification engine
+## Model Orchestration (Smart Auto)
+- Auto-selection based on: task type, agent role, cost, latency, quality, policy
+- Providers: OpenAI (GPT-5.2, GPT-4o, GPT-4o-mini, o3), Anthropic (Claude Sonnet 4.5, Opus 4.5, Haiku 4.5), Google (Gemini 3 Flash, Gemini 3 Pro)
+- Fallback chain: GPT-5.2 → Claude Sonnet 4.5 → Gemini 3 Flash
+- All routing logged with selected/rejected models, reasoning, cost, latency
 
-### Phase 3: Orchestration & Governance — COMPLETE
-AI-powered Commander Orion (GPT-5.2), full execution loop, approvals, incidents, autonomy tiers, trust scoring
-
-### Phase 4: Economics & Knowledge — COMPLETE
-Venture Portfolio, Knowledge Graph with traversal/search/pathfinding
-
-### Phase 5: Operator Control & Test Harness — COMPLETE
-5 validation scenarios, Operator Control Panel, test history
-
-### Full Execution Loop — COMPLETE (Mar 11)
-- `POST /api/infinity/orchestrator/full-execute`: Classify → Decompose → Execute ALL nodes → Verify → Final Report
-- Each node executed via auto-selected LLM (GPT-5.2, Claude Sonnet 4.5, Gemini 3 Flash, etc.)
-- Outputs verified with confidence scoring
-- Final consolidated report generated via GPT-5.2
-- Cost tracking per node and per run
-
-### Real-Time Metrics & Alerting — COMPLETE (Mar 11)
-- `GET /api/infinity/metrics/live`: Agent utilization, model success rates, incidents, breakers
-- `GET /api/infinity/metrics/history`: Historical snapshots for trend charts
-- 6 default alert rules (circuit breaker, budget, success rate, incidents, trust, failures)
-- Threshold-based evaluation with acknowledge flow
-
-### Production Hardening — COMPLETE (Mar 11)
-- Rate limiting: 120 req/60s per IP for infinity endpoints
-- Response caching for read-heavy endpoints
-- LLM fallback chain: GPT-5.2 → Claude Sonnet 4.5 → Gemini 3 Flash
-
-### Advanced Knowledge Graph — COMPLETE (Mar 11)
-- Graph traversal with max_depth and relationship filtering
-- Fuzzy text search across entities
-- Path finding between entities
-
-## Frontend Pages
-- `/observability` — Live metrics, sparklines, execution runs, model performance, alerts
-- `/model-router` — Route + Execute tasks with real LLM output
-- `/commander` — Full Execute mode (classify → decompose → execute → verify → report)
-- `/venture-portfolio` — Venture Portfolio CRUD
-- `/operator` — Operator Control Panel (4 tabs)
+## Frontend Command Center
+- `/observability` — Live metrics (7 cards), sparklines, execution runs, model performance, alerts
+- `/commander` — Full Execute (classify → decompose → execute → verify → report)
+- `/model-router` — Route + Execute tasks with auto-selected LLM
+- `/operator` — Operator Control Panel (Overview, Approvals, Test Harness, Autonomy)
+- `/agent-catalog` — Full 459-agent catalog with search, filter, inspect, execute
+- `/venture-portfolio` — Venture Portfolio management
 
 ## Test Reports (All 100% pass rate)
-- iteration_87: Phase 2 — 39/39 backend, 21/21 frontend
-- iteration_88: Phase 5 — 24/24 backend, 17/17 frontend
-- iteration_89: LLM Integration — 15/15 backend, 18/18 frontend
-- iteration_90: Full Execute + Metrics + KG + Hardening — 16/16 backend, 18/18 frontend
+- iteration_87: Phase 2 Intelligence — 60/60 tests
+- iteration_88: Phase 5 Operator — 41/41 tests
+- iteration_89: LLM Integration — 33/33 tests
+- iteration_90: Execution + Metrics — 34/34 tests
+- iteration_91: Runtime + Catalog + Recovery — 23/23 tests
+
+## Key API Endpoints (100+)
+### Runtime
+- POST /api/infinity/runtime/execute — 13-step agent execution loop
+- GET /api/infinity/runtime/history — Execution history
+
+### Commander
+- POST /api/infinity/orchestrator/full-execute — Full pipeline: classify → decompose → execute → verify → report
+- POST /api/infinity/orchestrator/execute — Plan only: classify → decompose → assign
+- GET /api/infinity/orchestrator/runs — Execution run history
+
+### Catalog
+- GET /api/infinity/catalog/agents — Search/filter agent catalog
+- GET /api/infinity/catalog/stats — Catalog statistics
+- GET /api/infinity/catalog/networks — Network definitions
+
+### Metrics & Alerts
+- GET /api/infinity/metrics/live — Real-time system metrics
+- GET /api/infinity/metrics/history — Trend data
+- GET /api/infinity/alerts/rules — Alert rules
+
+### Recovery
+- POST /api/infinity/recovery/quarantine — Quarantine agent
+- POST /api/infinity/recovery/rollback/{graph_id} — Rollback execution
+- POST /api/infinity/recovery/retry/{graph_id}/{node_id} — Retry failed node
 
 ## Credentials
 - Admin: management.maars@marsgc.net / admin123
