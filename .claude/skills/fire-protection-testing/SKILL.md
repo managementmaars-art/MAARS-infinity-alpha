@@ -1,0 +1,36 @@
+---
+name: fire-protection-testing
+description: Execute fire protection product testing programs including UL listing compliance, FM approval, and international CE certification.
+---
+
+## Overview
+Execute fire protection product testing programs including UL listing compliance, FM approval, and international CE certification.
+
+## Core Framework
+- Analyze requirements and constraints specific to fire-protection-testing
+- Design workflows aligned to industry best practices
+- Implement automation and intelligence layers
+- Monitor outcomes and continuously improve
+
+## Key Prompts
+- "Initiate fire-protection-testing workflow for [context]"
+- "Analyze current state of fire-protection-testing and identify gaps"
+- "Generate recommendations for fire-protection-testing optimization"
+- "Create detailed plan for fire-protection-testing execution"
+
+## Best Practices
+- Always validate inputs against domain-specific regulatory and compliance requirements
+- Maintain audit trails for all automated decisions
+- Escalate ambiguous or high-risk decisions to human reviewers
+- Use structured data formats for downstream system integration
+
+## Common Patterns
+- Intake and triage incoming work items
+- Route to appropriate specialist or automated handler
+- Track status and SLA compliance
+- Generate reports and dashboards for stakeholders
+
+## Models to Use
+- Complex analysis and strategy: claude-opus-4-6
+- Standard workflows and generation: claude-sonnet-4-6
+- High-volume classification and routing: claude-haiku-4-5-20251001

@@ -1,0 +1,36 @@
+---
+name: portable-storage-rental-ops
+description: Operate portable storage rental operations including pricing management, rental agreement administration, customer service, and damage assessment.
+---
+
+## Overview
+Operate portable storage rental operations including pricing management, rental agreement administration, customer service, and damage assessment.
+
+## Core Framework
+- Analyze requirements and constraints specific to portable-storage-rental-ops
+- Design workflows aligned to industry best practices
+- Implement automation and intelligence layers
+- Monitor outcomes and continuously improve
+
+## Key Prompts
+- "Initiate portable-storage-rental-ops workflow for [context]"
+- "Analyze current state of portable-storage-rental-ops and identify gaps"
+- "Generate recommendations for portable-storage-rental-ops optimization"
+- "Create detailed plan for portable-storage-rental-ops execution"
+
+## Best Practices
+- Always validate inputs against domain-specific regulatory and compliance requirements
+- Maintain audit trails for all automated decisions
+- Escalate ambiguous or high-risk decisions to human reviewers
+- Use structured data formats for downstream system integration
+
+## Common Patterns
+- Intake and triage incoming work items
+- Route to appropriate specialist or automated handler
+- Track status and SLA compliance
+- Generate reports and dashboards for stakeholders
+
+## Models to Use
+- Complex analysis and strategy: claude-opus-4-6
+- Standard workflows and generation: claude-sonnet-4-6
+- High-volume classification and routing: claude-haiku-4-5-20251001

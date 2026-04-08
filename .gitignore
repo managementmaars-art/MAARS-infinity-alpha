@@ -4,6 +4,15 @@
 .idea/
 .vscode/
 
+# Claude Code — commit skills and settings, ignore session/local files
+.claude/settings.local.json
+.claude/sessions/
+.claude/file-history/
+.claude/shell-snapshots/
+.claude/telemetry/
+.claude/backups/
+.claude/ide/
+
 # Dependencies
 node_modules/
 /node_modules
