@@ -3,9 +3,6 @@
 #   irm https://raw.githubusercontent.com/managementmaars-art/MAARS-infinity-alpha/main/new_device_setup.ps1 | iex
 
 $ErrorActionPreference = "Stop"
-# Bypass SSL certificate validation globally (handles revocation check errors on restricted networks)
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
-[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
 $REPO_URL     = "https://github.com/managementmaars-art/MAARS-infinity-alpha.git"
 $RELEASE_BASE = "https://github.com/managementmaars-art/MAARS-infinity-alpha/releases/download/migration-v1"
 $PROJECT_DIR  = "$env:USERPROFILE\MAARS-Command"
@@ -19,24 +16,13 @@ function OK($msg)   { Write-Host "   OK: $msg" -ForegroundColor Green }
 function Download($url, $dest) {
     $name = Split-Path $dest -Leaf
     Write-Host "   Downloading $name..." -ForegroundColor Gray
-    $ok = $false
-    # Primary: .NET WebClient with SSL validation disabled (works on restricted networks)
-    if (-not $ok) {
-        try {
-            $wc = New-Object System.Net.WebClient
-            $wc.DownloadFile($url, $dest)
-            $wc.Dispose()
-            if ((Test-Path $dest) -and (Get-Item $dest).Length -gt 100) { $ok = $true }
-        } catch { Write-Host "   (WebClient failed: $($_.Exception.Message))" -ForegroundColor Yellow }
+    # Invoke-WebRequest works on this network (same engine as irm) — disable progress for speed
+    $prev = $ProgressPreference; $ProgressPreference = 'SilentlyContinue'
+    Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
+    $ProgressPreference = $prev
+    if (-not (Test-Path $dest) -or (Get-Item $dest).Length -lt 100) {
+        throw "Download failed or empty: $name"
     }
-    # Fallback: curl.exe with revocation check disabled
-    if (-not $ok) {
-        try {
-            curl.exe -L -o $dest $url --silent --show-error --retry 3 --ssl-no-revoke 2>&1 | Out-Null
-            if ((Test-Path $dest) -and (Get-Item $dest).Length -gt 100) { $ok = $true }
-        } catch { Write-Host "   (curl failed)" -ForegroundColor Yellow }
-    }
-    if (-not $ok) { throw "All download methods failed for: $name" }
     Write-Host "   Downloaded $name ($([math]::Round((Get-Item $dest).Length/1MB,1)) MB)" -ForegroundColor Gray
 }
 
