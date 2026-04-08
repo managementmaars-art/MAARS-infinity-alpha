@@ -2058,34 +2058,46 @@ SHAPE_PATTERNS = [
 
 
 def generate_rich_svg_avatar(name, network, index):
-    """Generate a unique geometric SVG avatar for an agent."""
-    import hashlib
+    """Generate a professional person-silhouette SVG avatar for an agent."""
+    import hashlib, base64
     h = hashlib.md5(f"{name}{network}{index}".encode()).hexdigest()
+    n = int(h[:8], 16)
     colors = NETWORK_COLORS.get(network, ("#6366f1", "#818cf8"))
     c1, c2 = colors
 
-    # Deterministic pattern selection based on hash
-    pattern_idx = int(h[:2], 16) % len(SHAPE_PATTERNS)
-    pattern = SHAPE_PATTERNS[pattern_idx].format(c1=c1, c2=c2)
+    # Subtle deterministic variation per agent
+    head_y   = 35 + (n % 5)           # 35–39
+    head_r   = 16 + (n % 5)           # 16–20
+    body_top = head_y + head_r + 16    # neck gap
+    bg_darks = ["#0a0f1a", "#0c111d", "#080d18", "#0d1220", "#091017"]
+    bg_dark  = bg_darks[n % len(bg_darks)]
 
-    # Initials
-    parts = name.split()
-    initials = (parts[0][0] + parts[-1][0]).upper() if len(parts) > 1 else name[:2].upper()
-
-    # Background gradient angle based on hash
-    angle = int(h[2:4], 16) % 360
-
-    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-<defs><linearGradient id="g{h[:6]}" x1="0%" y1="0%" x2="100%" y2="100%" gradientTransform="rotate({angle})">
-<stop offset="0%" stop-color="{c1}" stop-opacity="0.15"/>
-<stop offset="100%" stop-color="{c2}" stop-opacity="0.08"/>
-</linearGradient></defs>
-<rect width="48" height="48" rx="10" fill="url(#g{h[:6]})"/>
-{pattern}
-<text x="24" y="26" text-anchor="middle" dominant-baseline="central" fill="{c1}" font-family="system-ui,sans-serif" font-size="12" font-weight="700" opacity="0.9">{initials}</text>
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<defs>
+  <linearGradient id="bg{h[:8]}" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="{c1}" stop-opacity="0.22"/>
+    <stop offset="100%" stop-color="{c2}" stop-opacity="0.07"/>
+  </linearGradient>
+  <linearGradient id="fig{h[:8]}" x1="25%" y1="0%" x2="75%" y2="100%">
+    <stop offset="0%" stop-color="{c2}" stop-opacity="1.0"/>
+    <stop offset="100%" stop-color="{c1}" stop-opacity="0.65"/>
+  </linearGradient>
+  <radialGradient id="glow{h[:8]}" cx="50%" cy="38%" r="45%">
+    <stop offset="0%" stop-color="{c1}" stop-opacity="0.35"/>
+    <stop offset="100%" stop-color="{c1}" stop-opacity="0"/>
+  </radialGradient>
+  <clipPath id="clip{h[:8]}"><circle cx="50" cy="50" r="50"/></clipPath>
+</defs>
+<circle cx="50" cy="50" r="50" fill="{bg_dark}"/>
+<circle cx="50" cy="50" r="50" fill="url(#bg{h[:8]})"/>
+<circle cx="50" cy="{head_y}" r="34" fill="url(#glow{h[:8]})"/>
+<g clip-path="url(#clip{h[:8]})">
+  <circle cx="50" cy="{head_y}" r="{head_r}" fill="url(#fig{h[:8]})" opacity="0.92"/>
+  <path d="M 0 100 Q 2 {body_top} 50 {body_top} Q 98 {body_top} 100 100 Z" fill="url(#fig{h[:8]})" opacity="0.85"/>
+</g>
+<circle cx="50" cy="50" r="48.5" fill="none" stroke="{c1}" stroke-width="1.5" stroke-opacity="0.22"/>
 </svg>'''
 
-    import base64
     encoded = base64.b64encode(svg.encode()).decode()
     return f"data:image/svg+xml;base64,{encoded}"
 

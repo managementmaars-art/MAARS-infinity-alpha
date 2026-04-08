@@ -54,17 +54,21 @@ import VenturePortfolio from "./pages/VenturePortfolio";
 import CommanderOrion from "./pages/CommanderOrion";
 import OperatorControlPanel from "./pages/OperatorControlPanel";
 import AgentCatalog from "./pages/AgentCatalog";
+import DeveloperPortal from './pages/DeveloperPortal';
+import SocialMediaCommand from './pages/SocialMediaCommand';
+import UniversalKeyPage from './pages/UniversalKeyPage';
 import {
   AdminOverviewPage, AdminAnalyticsPage, AdminUsersPage, AdminAgentsPage,
   AdminTransactionsPage, AdminPricingManagerPage, AdminApiKeysPage,
   AdminPaymentSetupPage, AdminSmtpPage, AdminBrandingPage,
-  AdminKnowledgeBasePage, AdminAuditLogPage
+  AdminKnowledgeBasePage, AdminAuditLogPage, AdminUniversalGatewayPage
 } from "./pages/AdminPages";
 import { Toaster } from "./components/ui/sonner";
 import { Watermark } from "./components/Watermark";
 import { BrandingProvider } from "./components/BrandingProvider";
+import { PreviewModeProvider } from "./components/PreviewModeContext";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL?.trim() || "http://localhost:8000";
 export const API = `${BACKEND_URL}/api`;
 
 // Auth Context
@@ -143,8 +147,49 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-// Auth Callback Component
-// REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
+// Google OAuth Callback — reads token from query params set by the backend redirect
+const GoogleAuthCallback = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
+  const hasProcessed = useRef(false);
+
+  useEffect(() => {
+    if (hasProcessed.current) return;
+    hasProcessed.current = true;
+
+    const params = new URLSearchParams(location.search);
+    const token = params.get("token");
+    const error = params.get("error");
+
+    if (error || !token) {
+      navigate("/login?error=" + (error || "oauth_failed"), { replace: true });
+      return;
+    }
+
+    const userData = {
+      user_id: params.get("user_id"),
+      email: params.get("email"),
+      name: params.get("name"),
+      picture: params.get("picture") || null,
+      is_admin: params.get("is_admin") === "true",
+    };
+
+    login(userData, token);
+    navigate("/dashboard", { replace: true });
+  }, [location, navigate, login]);
+
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+        <p className="text-muted-foreground text-sm">Signing you in with Google...</p>
+      </div>
+    </div>
+  );
+};
+
+// Legacy Auth Callback Component (Emergent session-based OAuth — kept for backwards compat)
 const AuthCallback = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -264,6 +309,7 @@ const AppRouter = () => {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/auth/google/callback" element={<GoogleAuthCallback />} />
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/payment/success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout><Dashboard /></DashboardLayout></ProtectedRoute>} />
@@ -293,6 +339,7 @@ const AppRouter = () => {
       <Route path="/knowledge-graph" element={<ProtectedRoute><DashboardLayout><KnowledgeGraph /></DashboardLayout></ProtectedRoute>} />
       <Route path="/trust-scores" element={<ProtectedRoute><DashboardLayout><TrustScores /></DashboardLayout></ProtectedRoute>} />
       <Route path="/execution-gateway" element={<ProtectedRoute><DashboardLayout><ExecutionGateway /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/developer" element={<ProtectedRoute><DashboardLayout><DeveloperPortal /></DashboardLayout></ProtectedRoute>} />
       <Route path="/rbac" element={<ProtectedRoute><DashboardLayout><RBAC /></DashboardLayout></ProtectedRoute>} />
       <Route path="/circuit-breakers" element={<ProtectedRoute><DashboardLayout><CircuitBreakers /></DashboardLayout></ProtectedRoute>} />
       <Route path="/cost-governance" element={<ProtectedRoute><DashboardLayout><CostGovernance /></DashboardLayout></ProtectedRoute>} />
@@ -301,6 +348,8 @@ const AppRouter = () => {
       <Route path="/memory-hierarchy" element={<ProtectedRoute><DashboardLayout><MemoryHierarchy /></DashboardLayout></ProtectedRoute>} />
       <Route path="/campaigns" element={<ProtectedRoute><DashboardLayout><CampaignBuilder /></DashboardLayout></ProtectedRoute>} />
       <Route path="/integrations" element={<ProtectedRoute><DashboardLayout><IntegrationHub /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/social" element={<ProtectedRoute><DashboardLayout><SocialMediaCommand /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/universal-key" element={<ProtectedRoute><DashboardLayout><UniversalKeyPage /></DashboardLayout></ProtectedRoute>} />
       <Route path="/organization" element={<ProtectedRoute><DashboardLayout><Organization /></DashboardLayout></ProtectedRoute>} />
       <Route path="/analytics" element={<ProtectedRoute><DashboardLayout><AnalyticsDashboard /></DashboardLayout></ProtectedRoute>} />
       <Route path="/agent-suggestions" element={<ProtectedRoute><DashboardLayout><AgentSuggestions /></DashboardLayout></ProtectedRoute>} />
@@ -324,6 +373,7 @@ const AppRouter = () => {
       <Route path="/admin/branding" element={<AdminRoute><DashboardLayout><AdminBrandingPage /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/knowledge" element={<AdminRoute><DashboardLayout><AdminKnowledgeBasePage /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/audit" element={<AdminRoute><DashboardLayout><AdminAuditLogPage /></DashboardLayout></AdminRoute>} />
+      <Route path="/admin/gateway" element={<AdminRoute><DashboardLayout><AdminUniversalGatewayPage /></DashboardLayout></AdminRoute>} />
       <Route path="/admin/code-explorer" element={<AdminRoute><DashboardLayout><CodeExplorer /></DashboardLayout></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
@@ -335,9 +385,11 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <BrandingProvider>
-          <AppRouter />
-          <Watermark />
-          <Toaster position="top-right" richColors />
+          <PreviewModeProvider>
+            <AppRouter />
+            <Watermark />
+            <Toaster position="top-right" richColors />
+          </PreviewModeProvider>
         </BrandingProvider>
       </AuthProvider>
     </BrowserRouter>

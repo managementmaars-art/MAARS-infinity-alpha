@@ -1,8 +1,23 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../App";
-import { Database, Layers, Clock, HardDrive, Zap, Info } from "lucide-react";
+import { Database, Layers, Clock, HardDrive, Zap } from "lucide-react";
 
 const API = process.env.REACT_APP_BACKEND_URL;
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  violet: "#7c3aed",
+  cyan: "#22d3ee",
+  green: "#34d399",
+  red: "#ef4444",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
 
 export default function MemoryHierarchy() {
   const { token } = useAuth();
@@ -27,119 +42,125 @@ export default function MemoryHierarchy() {
   const totalUsage = stats.reduce((s, x) => s + x.usage_kb, 0);
   const totalItems = stats.reduce((s, x) => s + x.items, 0);
 
-  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }}>
+      <div style={{ width: 28, height: 28, border: `2px solid ${T.violet}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+      <style>{STYLES}</style>
+    </div>
+  );
+
+  const selected = layers.find(l => l.layer === selectedLayer);
+  const selectedStat = selectedLayer ? getStatForLayer(selectedLayer) : null;
 
   return (
-    <div className="space-y-6" data-testid="memory-hierarchy">
+    <div style={{ display: "flex", flexDirection: "column", gap: 24, animation: "fadeUp .4s ease" }} data-testid="memory-hierarchy">
+      <style>{STYLES}</style>
+
       <div>
-        <h1 className="text-2xl font-bold text-white font-['Outfit']">Memory Hierarchy</h1>
-        <p className="text-sm text-zinc-400 mt-1">7-layer memory architecture from L1 working memory to L7 archival storage</p>
+        <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 26, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 4 }}>Memory Hierarchy</h1>
+        <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>7-layer memory architecture from L1 working memory to L7 archival storage</p>
       </div>
 
       {/* Summary */}
-      <div className="grid grid-cols-3 gap-3" data-testid="memory-summary">
-        <div className="bg-zinc-900/40 border border-white/5 rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-2"><Layers className="w-4 h-4 text-violet-400" /><span className="text-xs text-zinc-500">Memory Layers</span></div>
-          <p className="text-2xl font-bold text-white">7</p>
-        </div>
-        <div className="bg-zinc-900/40 border border-white/5 rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-2"><Database className="w-4 h-4 text-cyan-400" /><span className="text-xs text-zinc-500">Total Items</span></div>
-          <p className="text-2xl font-bold text-white">{totalItems}</p>
-        </div>
-        <div className="bg-zinc-900/40 border border-white/5 rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-2"><HardDrive className="w-4 h-4 text-emerald-400" /><span className="text-xs text-zinc-500">Total Usage</span></div>
-          <p className="text-2xl font-bold text-white">{totalUsage < 1024 ? `${totalUsage.toFixed(1)} KB` : `${(totalUsage / 1024).toFixed(1)} MB`}</p>
-        </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12 }} data-testid="memory-summary">
+        {[
+          { icon: Layers, label: "Memory Layers", value: "7", accent: T.violet },
+          { icon: Database, label: "Total Items", value: totalItems, accent: T.cyan },
+          { icon: HardDrive, label: "Total Usage", value: totalUsage < 1024 ? `${totalUsage.toFixed(1)} KB` : `${(totalUsage / 1024).toFixed(1)} MB`, accent: T.green },
+        ].map(s => (
+          <div key={s.label} style={{ position: "relative", background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, padding: "16px 18px", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: s.accent }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+              <s.icon size={14} style={{ color: s.accent }} />
+              <span style={{ fontSize: 10, color: T.zinc, textTransform: "uppercase", letterSpacing: ".06em" }}>{s.label}</span>
+            </div>
+            <div style={{ fontSize: 24, fontWeight: 700, color: "#fff" }}>{s.value}</div>
+          </div>
+        ))}
       </div>
 
-      <div className="flex gap-6">
-        {/* Pyramid Visualization */}
-        <div className="flex-1" data-testid="memory-pyramid">
-          <div className="flex flex-col items-center gap-1">
+      <div style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
+        {/* Pyramid */}
+        <div style={{ flex: 1 }} data-testid="memory-pyramid">
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
             {layers.map((layer, i) => {
               const stat = getStatForLayer(layer.layer);
-              const widthPercent = 30 + (i * 10);
+              const widthPct = 30 + (i * 10);
               const isSelected = selectedLayer === layer.layer;
               return (
                 <button
                   key={layer.layer}
                   onClick={() => setSelectedLayer(isSelected ? null : layer.layer)}
-                  className={`relative transition-all rounded-lg border ${isSelected ? "border-white/20 shadow-lg" : "border-transparent hover:border-white/10"}`}
-                  style={{ width: `${widthPercent}%`, minWidth: "200px" }}
                   data-testid={`memory-layer-${layer.layer}`}
+                  style={{
+                    width: `${widthPct}%`, minWidth: 200,
+                    borderRadius: 12, border: `1px solid ${isSelected ? "rgba(255,255,255,.2)" : "transparent"}`,
+                    background: `${layer.color}15`, padding: "10px 14px",
+                    cursor: "pointer", transition: "all .2s",
+                    boxShadow: isSelected ? `0 0 0 1px ${layer.color}30` : "none",
+                  }}
+                  onMouseEnter={e => !isSelected && (e.currentTarget.style.borderColor = `${layer.color}40`)}
+                  onMouseLeave={e => !isSelected && (e.currentTarget.style.borderColor = "transparent")}
                 >
-                  <div className="px-4 py-3 rounded-lg" style={{ backgroundColor: `${layer.color}15` }}>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold" style={{ backgroundColor: `${layer.color}25`, color: layer.color }}>
-                          {layer.code}
-                        </div>
-                        <div className="text-left">
-                          <p className="text-xs font-medium text-white">{layer.name}</p>
-                          <p className="text-[9px] text-zinc-500">TTL: {layer.ttl}</p>
-                        </div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <div style={{ width: 28, height: 28, borderRadius: 8, background: `${layer.color}25`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: layer.color }}>
+                        {layer.code}
                       </div>
-                      <div className="text-right">
-                        <p className="text-xs font-bold" style={{ color: layer.color }}>{stat.items} items</p>
-                        <p className="text-[9px] text-zinc-500">{stat.usage_kb.toFixed(1)} KB</p>
+                      <div style={{ textAlign: "left" }}>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>{layer.name}</div>
+                        <div style={{ fontSize: 9, color: T.zinc }}>TTL: {layer.ttl}</div>
                       </div>
                     </div>
-                    {/* Usage bar */}
-                    <div className="mt-2 h-1 bg-zinc-800/50 rounded-full overflow-hidden">
-                      <div className="h-full rounded-full transition-all" style={{
-                        backgroundColor: layer.color,
-                        width: `${totalUsage > 0 ? Math.max((stat.usage_kb / totalUsage) * 100, 2) : 2}%`,
-                        opacity: 0.7,
-                      }} />
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: layer.color }}>{stat.items} items</div>
+                      <div style={{ fontSize: 9, color: T.zinc }}>{stat.usage_kb.toFixed(1)} KB</div>
                     </div>
+                  </div>
+                  <div style={{ height: 3, background: "rgba(255,255,255,.06)", borderRadius: 4, overflow: "hidden", marginTop: 8 }}>
+                    <div style={{ height: "100%", borderRadius: 4, background: layer.color, opacity: .7, width: `${totalUsage > 0 ? Math.max((stat.usage_kb / totalUsage) * 100, 2) : 2}%` }} />
                   </div>
                 </button>
               );
             })}
           </div>
-
-          {/* Speed Indicators */}
-          <div className="flex items-center justify-between mt-4 px-8">
-            <div className="flex items-center gap-1.5 text-[10px] text-red-400"><Zap className="w-3 h-3" /> Fastest (L1)</div>
-            <div className="flex-1 h-px bg-gradient-to-r from-red-500/30 via-amber-500/30 via-blue-500/30 to-violet-500/30 mx-3" />
-            <div className="flex items-center gap-1.5 text-[10px] text-indigo-400"><Clock className="w-3 h-3" /> Largest (L7)</div>
+          {/* Speed gradient */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 16, paddingLeft: "8%", paddingRight: "8%" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10, color: T.red }}><Zap size={11} /> Fastest (L1)</div>
+            <div style={{ flex: 1, height: 1, margin: "0 12px", background: "linear-gradient(to right, rgba(239,68,68,.4), rgba(245,158,11,.4), rgba(96,165,250,.4), rgba(124,58,237,.4))" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10, color: "#818cf8" }}><Clock size={11} /> Largest (L7)</div>
           </div>
         </div>
 
-        {/* Detail Panel */}
-        {selectedLayer && (() => {
-          const layer = layers.find(l => l.layer === selectedLayer);
-          const stat = getStatForLayer(selectedLayer);
-          if (!layer) return null;
-          return (
-            <div className="w-72 bg-zinc-900/40 border border-white/5 rounded-xl p-4 shrink-0" data-testid="memory-detail">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold" style={{ backgroundColor: `${layer.color}20`, color: layer.color }}>
-                  {layer.code}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white">{layer.name}</p>
-                  <p className="text-[10px] text-zinc-500">Layer {layer.layer}</p>
-                </div>
+        {/* Detail panel */}
+        {selected && (
+          <div style={{ width: 280, flexShrink: 0, background: T.glass, border: `1px solid ${T.border}`, borderRadius: 16, padding: "18px 20px" }} data-testid="memory-detail">
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: `${selected.color}20`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: selected.color }}>
+                {selected.code}
               </div>
-              <p className="text-xs text-zinc-400 mb-4">{layer.description}</p>
-              <div className="space-y-3">
-                {[
-                  { label: "TTL", value: layer.ttl },
-                  { label: "Capacity", value: layer.capacity },
-                  { label: "Access Speed", value: layer.access_speed },
-                  { label: "Current Items", value: stat.items },
-                  { label: "Current Usage", value: `${stat.usage_kb.toFixed(1)} KB` },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center justify-between">
-                    <span className="text-[10px] text-zinc-500">{item.label}</span>
-                    <span className="text-xs text-white font-medium">{item.value}</span>
-                  </div>
-                ))}
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{selected.name}</div>
+                <div style={{ fontSize: 10, color: T.zinc }}>Layer {selected.layer}</div>
               </div>
             </div>
-          );
-        })()}
+            <p style={{ fontSize: 12, color: T.zinc, marginBottom: 16, lineHeight: 1.6 }}>{selected.description}</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {[
+                ["TTL", selected.ttl],
+                ["Capacity", selected.capacity],
+                ["Access Speed", selected.access_speed],
+                ["Current Items", selectedStat.items],
+                ["Current Usage", `${selectedStat.usage_kb.toFixed(1)} KB`],
+              ].map(([label, val]) => (
+                <div key={label} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span style={{ fontSize: 10, color: T.zinc }}>{label}</span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{val}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

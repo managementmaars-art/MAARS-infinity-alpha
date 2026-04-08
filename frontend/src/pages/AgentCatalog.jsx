@@ -1,22 +1,35 @@
 import { useState, useEffect, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Button } from "../components/ui/button";
 import {
-  Users, Search, Brain, Shield, Layers, ChevronRight, Play,
-  Loader2, CheckCircle, AlertTriangle, Cpu, GitBranch, Filter, X
+  Users, Search, CheckCircle, AlertTriangle, Play, ChevronRight, X
 } from "lucide-react";
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
-const MATURITY_COLORS = {
-  "production-ready": "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
-  "partial": "bg-amber-500/15 text-amber-400 border-amber-500/20",
-  "experimental": "bg-violet-500/15 text-violet-400 border-violet-500/20",
-  "catalog-only": "bg-zinc-500/15 text-zinc-400 border-zinc-500/20",
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  cyan: "#22d3ee",
+  green: "#34d399",
+  amber: "#f59e0b",
+  red: "#ef4444",
+  violet: "#7c3aed",
+  zinc: "#71717a",
 };
 
-const TIER_COLORS = ["text-zinc-500", "text-zinc-400", "text-cyan-400", "text-emerald-400", "text-amber-400", "text-red-400"];
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
+
+const MATURITY_COLORS = {
+  "production-ready": { color: T.green, bg: "rgba(52,211,153,.12)", border: "rgba(52,211,153,.25)" },
+  "partial": { color: T.amber, bg: "rgba(245,158,11,.12)", border: "rgba(245,158,11,.25)" },
+  "experimental": { color: "#a78bfa", bg: "rgba(167,139,250,.12)", border: "rgba(167,139,250,.25)" },
+  "catalog-only": { color: T.zinc, bg: "rgba(113,113,122,.12)", border: "rgba(113,113,122,.25)" },
+};
+
+const maturityStyle = (m) => MATURITY_COLORS[m] || MATURITY_COLORS["production-ready"];
 
 export default function AgentCatalog() {
   const [stats, setStats] = useState(null);
@@ -48,27 +61,21 @@ export default function AgentCatalog() {
     if (filterMaturity) params.set("maturity", filterMaturity);
     if (filterTier) params.set("tier", filterTier);
     const res = await fetch(`${API}/api/infinity/catalog/agents?${params}`, { headers }).catch(() => null);
-    if (res?.ok) {
-      const d = await res.json();
-      setAgents(d.agents || []);
-      setTotal(d.total || 0);
-    }
+    if (res?.ok) { const d = await res.json(); setAgents(d.agents || []); setTotal(d.total || 0); }
   }, [token, search, filterNetwork, filterMaturity, filterTier]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
   useEffect(() => { fetchAgents(); }, [fetchAgents]);
 
   const selectAgent = async (agentId) => {
-    setExecResult(null);
-    setTaskInput("");
+    setExecResult(null); setTaskInput("");
     const res = await fetch(`${API}/api/infinity/catalog/agents/${agentId}`, { headers }).catch(() => null);
     if (res?.ok) setSelected(await res.json());
   };
 
   const executeAgent = async () => {
     if (!selected || !taskInput.trim()) return;
-    setExecuting(true);
-    setExecResult(null);
+    setExecuting(true); setExecResult(null);
     const res = await fetch(`${API}/api/infinity/runtime/execute`, {
       method: "POST", headers,
       body: JSON.stringify({ agent_id: selected.agent_id, task_description: taskInput, environment: "sandbox" }),
@@ -80,187 +87,198 @@ export default function AgentCatalog() {
   const clearFilters = () => { setSearch(""); setFilterNetwork(""); setFilterMaturity(""); setFilterTier(""); };
   const hasFilters = search || filterNetwork || filterMaturity || filterTier;
 
+  const selectStyle = { background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 7, padding: "5px 10px", color: "#a1a1aa", fontSize: 11, outline: "none", fontFamily: "inherit", cursor: "pointer" };
+
   return (
-    <div className="space-y-5" data-testid="agent-catalog">
-      <div className="flex items-center justify-between">
+    <div style={{ display: "flex", flexDirection: "column", gap: 18, animation: "fadeUp .4s ease" }} data-testid="agent-catalog">
+      <style>{STYLES}</style>
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div>
-          <h1 className="text-2xl font-bold text-white font-['Outfit'] flex items-center gap-2"><Users className="w-6 h-6 text-indigo-400" /> Agent Catalog</h1>
-          <p className="text-sm text-zinc-400">{stats?.total_agents || 0} agents across {networks.length} networks — full registry, search, inspect, execute</p>
+          <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 26, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 4, display: "flex", alignItems: "center", gap: 10 }}>
+            <Users size={22} style={{ color: T.indigo }} /> Agent Catalog
+          </h1>
+          <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>{stats?.total_agents || 0} agents across {networks.length} networks — search, inspect, execute</p>
         </div>
       </div>
 
-      {/* Stats Row */}
+      {/* Stats */}
       {stats && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" data-testid="catalog-stats">
-          <Card className="bg-zinc-900/50 border-white/5"><CardContent className="p-3 text-center">
-            <p className="text-2xl font-bold text-white">{stats.total_agents}</p><p className="text-[10px] text-zinc-500">Total Agents</p>
-          </CardContent></Card>
-          <Card className="bg-zinc-900/50 border-white/5"><CardContent className="p-3 text-center">
-            <p className="text-2xl font-bold text-white">{stats.by_network?.length}</p><p className="text-[10px] text-zinc-500">Networks</p>
-          </CardContent></Card>
-          <Card className="bg-zinc-900/50 border-white/5"><CardContent className="p-3 text-center">
-            <p className="text-2xl font-bold text-white">{stats.by_tier?.length}</p><p className="text-[10px] text-zinc-500">Autonomy Tiers</p>
-          </CardContent></Card>
-          <Card className="bg-zinc-900/50 border-white/5"><CardContent className="p-3 text-center">
-            <p className="text-2xl font-bold text-emerald-400">{stats.by_maturity?.find(m => m.maturity === "production-ready")?.count || 0}</p>
-            <p className="text-[10px] text-zinc-500">Production Ready</p>
-          </CardContent></Card>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }} data-testid="catalog-stats">
+          {[
+            { label: "Total Agents", value: stats.total_agents, accent: T.indigo },
+            { label: "Networks", value: stats.by_network?.length, accent: T.cyan },
+            { label: "Autonomy Tiers", value: stats.by_tier?.length, accent: "#a78bfa" },
+            { label: "Production Ready", value: stats.by_maturity?.find(m => m.maturity === "production-ready")?.count || 0, accent: T.green },
+          ].map(s => (
+            <div key={s.label} style={{ position: "relative", background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "12px 14px", textAlign: "center", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: s.accent }} />
+              <div style={{ fontSize: 22, fontWeight: 700, color: "#fff" }}>{s.value}</div>
+              <div style={{ fontSize: 10, color: T.zinc, marginTop: 2 }}>{s.label}</div>
+            </div>
+          ))}
         </div>
       )}
 
       {/* Filters */}
-      <Card className="bg-zinc-900/50 border-white/5" data-testid="catalog-filters">
-        <CardContent className="p-3 flex flex-wrap items-center gap-2">
-          <div className="relative flex-1 min-w-48">
-            <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search agents by name, role, or ID..."
-              className="w-full bg-zinc-800/50 border border-white/10 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500/30" data-testid="search-input" />
-          </div>
-          <select value={filterNetwork} onChange={e => setFilterNetwork(e.target.value)} className="bg-zinc-800 text-zinc-400 text-[11px] border border-white/10 rounded px-2 py-1.5" data-testid="filter-network">
-            <option value="">All Networks</option>
-            {networks.map(n => <option key={n.network_id} value={n.network_id}>{n.name} ({n.agent_count})</option>)}
-          </select>
-          <select value={filterMaturity} onChange={e => setFilterMaturity(e.target.value)} className="bg-zinc-800 text-zinc-400 text-[11px] border border-white/10 rounded px-2 py-1.5" data-testid="filter-maturity">
-            <option value="">All Maturity</option>
-            <option value="production-ready">Production Ready</option>
-            <option value="partial">Partial</option>
-            <option value="experimental">Experimental</option>
-            <option value="catalog-only">Catalog Only</option>
-          </select>
-          <select value={filterTier} onChange={e => setFilterTier(e.target.value)} className="bg-zinc-800 text-zinc-400 text-[11px] border border-white/10 rounded px-2 py-1.5" data-testid="filter-tier">
-            <option value="">All Tiers</option>
-            {[0,1,2,3,4,5].map(t => <option key={t} value={t}>Tier {t}</option>)}
-          </select>
-          {hasFilters && <Button variant="ghost" size="sm" onClick={clearFilters} className="h-7 text-[10px] text-zinc-500"><X className="w-3 h-3 mr-1" />Clear</Button>}
-          <span className="text-[10px] text-zinc-500">{total} results</span>
-        </CardContent>
-      </Card>
+      <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "12px 14px", display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }} data-testid="catalog-filters">
+        <div style={{ position: "relative", flex: 1, minWidth: 200 }}>
+          <Search size={12} style={{ position: "absolute", left: 9, top: "50%", transform: "translateY(-50%)", color: T.zinc }} />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search agents by name, role, or ID…"
+            data-testid="search-input"
+            style={{ paddingLeft: 28, paddingRight: 10, paddingTop: 7, paddingBottom: 7, background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 8, color: "#fff", fontSize: 12, outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box" }} />
+        </div>
+        <select value={filterNetwork} onChange={e => setFilterNetwork(e.target.value)} style={selectStyle} data-testid="filter-network">
+          <option value="">All Networks</option>
+          {networks.map(n => <option key={n.network_id} value={n.network_id} style={{ background: "#0f0f1a" }}>{n.name} ({n.agent_count})</option>)}
+        </select>
+        <select value={filterMaturity} onChange={e => setFilterMaturity(e.target.value)} style={selectStyle} data-testid="filter-maturity">
+          <option value="">All Maturity</option>
+          <option value="production-ready">Production Ready</option>
+          <option value="partial">Partial</option>
+          <option value="experimental">Experimental</option>
+          <option value="catalog-only">Catalog Only</option>
+        </select>
+        <select value={filterTier} onChange={e => setFilterTier(e.target.value)} style={selectStyle} data-testid="filter-tier">
+          <option value="">All Tiers</option>
+          {[0,1,2,3,4,5].map(t => <option key={t} value={t} style={{ background: "#0f0f1a" }}>Tier {t}</option>)}
+        </select>
+        {hasFilters && (
+          <button onClick={clearFilters} style={{ display: "flex", alignItems: "center", gap: 4, padding: "5px 10px", borderRadius: 7, background: "transparent", border: `1px solid ${T.border}`, color: T.zinc, fontSize: 11, cursor: "pointer" }}>
+            <X size={11} /> Clear
+          </button>
+        )}
+        <span style={{ fontSize: 10, color: T.zinc }}>{total} results</span>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Agent List */}
-        <div className="lg:col-span-2 space-y-1.5" data-testid="agent-list">
-          {agents.map(a => (
-            <div key={a.agent_id} onClick={() => selectAgent(a.agent_id)}
-              className={`flex items-center gap-3 p-2.5 rounded-lg border cursor-pointer transition-all ${selected?.agent_id === a.agent_id ? "bg-cyan-500/5 border-cyan-500/20" : "bg-zinc-900/50 border-white/5 hover:bg-zinc-800/50"}`}
-              data-testid={`agent-row-${a.agent_id}`}>
-              <div className={`w-8 h-8 rounded-lg bg-indigo-500/15 flex items-center justify-center text-indigo-400 text-[10px] font-bold shrink-0`}>
-                T{a.autonomy_tier}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs text-white font-medium truncate">{a.name}</span>
-                  <Badge className={`${MATURITY_COLORS[a.maturity] || MATURITY_COLORS["production-ready"]} text-[8px] px-1 py-0`}>{a.maturity || "ready"}</Badge>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 14 }}>
+        {/* Agent list */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 5 }} data-testid="agent-list">
+          {agents.length === 0 ? (
+            <p style={{ fontSize: 12, color: T.zinc, textAlign: "center", padding: "32px 0" }}>No agents match your filters</p>
+          ) : agents.map(a => {
+            const ms = maturityStyle(a.maturity);
+            const isSelected = selected?.agent_id === a.agent_id;
+            return (
+              <div key={a.agent_id} onClick={() => selectAgent(a.agent_id)}
+                data-testid={`agent-row-${a.agent_id}`}
+                style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 10, border: `1px solid ${isSelected ? "rgba(34,211,238,.25)" : T.border}`, background: isSelected ? "rgba(34,211,238,.04)" : T.glass, cursor: "pointer", transition: "all .2s" }}
+                onMouseEnter={e => !isSelected && (e.currentTarget.style.borderColor = "rgba(255,255,255,.13)")}
+                onMouseLeave={e => !isSelected && (e.currentTarget.style.borderColor = T.border)}>
+                <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(129,140,248,.12)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: T.indigo, flexShrink: 0 }}>
+                  T{a.autonomy_tier}
                 </div>
-                <p className="text-[10px] text-zinc-500 truncate">{a.role} — {a.network?.replace(/_/g, " ")}</p>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.name}</span>
+                    <span style={{ fontSize: 8, padding: "2px 6px", borderRadius: 4, background: ms.bg, color: ms.color, border: `1px solid ${ms.border}`, fontWeight: 700, flexShrink: 0 }}>{a.maturity || "ready"}</span>
+                  </div>
+                  <p style={{ fontSize: 10, color: T.zinc, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.role} — {a.network?.replace(/_/g, " ")}</p>
+                </div>
+                <ChevronRight size={12} style={{ color: T.zinc, flexShrink: 0 }} />
               </div>
-              <ChevronRight className="w-3 h-3 text-zinc-600 shrink-0" />
-            </div>
-          ))}
-          {agents.length === 0 && <p className="text-xs text-zinc-500 text-center py-8">No agents match your filters</p>}
+            );
+          })}
         </div>
 
-        {/* Agent Detail Panel */}
-        <div className="space-y-3" data-testid="agent-detail-panel">
+        {/* Detail panel */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }} data-testid="agent-detail-panel">
           {selected ? (
             <>
-              <Card className="bg-zinc-900/50 border-cyan-500/15">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm text-white">{selected.name}</CardTitle>
-                    <Badge className={MATURITY_COLORS[selected.maturity] || MATURITY_COLORS["production-ready"]}>{selected.maturity || "production-ready"}</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <p className="text-xs text-zinc-400">{selected.description}</p>
-                  <div className="flex flex-wrap gap-1">
-                    <Badge variant="outline" className="text-indigo-400 border-indigo-500/30 text-[9px]">Tier {selected.autonomy_tier}</Badge>
-                    <Badge variant="outline" className="text-zinc-400 border-zinc-600 text-[9px]">{selected.network?.replace(/_/g, " ")}</Badge>
-                    {selected.authority_tier && <Badge variant="outline" className="text-amber-400 border-amber-500/30 text-[9px]">{selected.authority_tier}</Badge>}
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-zinc-500 mb-1">Capabilities</p>
-                    <div className="flex flex-wrap gap-1">
-                      {selected.capabilities?.map((c, i) => (
-                        <Badge key={i} variant="outline" className="text-cyan-400 border-cyan-500/20 text-[8px]">{c}</Badge>
+              <div style={{ background: T.glass, border: `1px solid rgba(34,211,238,.15)`, borderRadius: 12, padding: "14px 16px" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>{selected.name}</span>
+                  {(() => { const ms = maturityStyle(selected.maturity); return (
+                    <span style={{ fontSize: 9, padding: "3px 8px", borderRadius: 5, background: ms.bg, color: ms.color, border: `1px solid ${ms.border}`, fontWeight: 700 }}>{selected.maturity || "production-ready"}</span>
+                  ); })()}
+                </div>
+                <p style={{ fontSize: 12, color: "#a1a1aa", marginBottom: 10, lineHeight: 1.5 }}>{selected.description}</p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 10 }}>
+                  <span style={{ fontSize: 9, padding: "2px 7px", borderRadius: 5, border: `1px solid rgba(129,140,248,.3)`, color: T.indigo }}>Tier {selected.autonomy_tier}</span>
+                  <span style={{ fontSize: 9, padding: "2px 7px", borderRadius: 5, border: `1px solid ${T.border}`, color: T.zinc }}>{selected.network?.replace(/_/g, " ")}</span>
+                  {selected.authority_tier && <span style={{ fontSize: 9, padding: "2px 7px", borderRadius: 5, border: `1px solid rgba(245,158,11,.3)`, color: T.amber }}>{selected.authority_tier}</span>}
+                </div>
+                {selected.capabilities?.length > 0 && (
+                  <div style={{ marginBottom: 10 }}>
+                    <p style={{ fontSize: 10, color: T.zinc, marginBottom: 5 }}>Capabilities</p>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                      {selected.capabilities.map((c, i) => (
+                        <span key={i} style={{ fontSize: 9, padding: "2px 6px", borderRadius: 4, border: `1px solid rgba(34,211,238,.2)`, color: T.cyan }}>{c}</span>
                       ))}
                     </div>
                   </div>
-                  {selected.trust_detail && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-zinc-500">Trust Score:</span>
-                      <Badge className={selected.trust_detail.score >= 60 ? "bg-emerald-500/15 text-emerald-400 text-[10px]" : "bg-amber-500/15 text-amber-400 text-[10px]"}>{selected.trust_detail.score?.toFixed(1)}</Badge>
-                    </div>
-                  )}
-                  <p className="text-[9px] text-zinc-600 font-mono">{selected.agent_id}</p>
-                </CardContent>
-              </Card>
+                )}
+                {selected.trust_detail && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontSize: 10, color: T.zinc }}>Trust Score:</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 5, background: selected.trust_detail.score >= 60 ? "rgba(52,211,153,.1)" : "rgba(245,158,11,.1)", color: selected.trust_detail.score >= 60 ? T.green : T.amber }}>
+                      {selected.trust_detail.score?.toFixed(1)}
+                    </span>
+                  </div>
+                )}
+                <p style={{ fontSize: 9, color: "rgba(113,113,122,.5)", fontFamily: "monospace", marginTop: 8 }}>{selected.agent_id}</p>
+              </div>
 
-              {/* Execute Agent */}
-              <Card className="bg-zinc-900/50 border-white/5">
-                <CardHeader className="pb-2"><CardTitle className="text-xs text-white flex items-center gap-2"><Play className="w-3 h-3 text-emerald-400" /> Execute Agent</CardTitle></CardHeader>
-                <CardContent className="space-y-2">
-                  <textarea value={taskInput} onChange={e => setTaskInput(e.target.value)}
-                    placeholder={`Give ${selected.name} a task...`}
-                    className="w-full bg-zinc-800/50 border border-white/10 rounded p-2 text-xs text-white placeholder-zinc-500 resize-none focus:outline-none focus:border-cyan-500/30"
-                    rows={2} data-testid="task-input" />
-                  <Button onClick={executeAgent} disabled={executing || !taskInput.trim()} className="bg-emerald-600 hover:bg-emerald-700 w-full text-xs" data-testid="execute-agent-btn">
-                    {executing ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Play className="w-3 h-3 mr-1" />}
-                    Execute via Runtime Loop
-                  </Button>
-                </CardContent>
-              </Card>
+              {/* Execute */}
+              <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "14px 16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10 }}>
+                  <Play size={12} style={{ color: T.green }} />
+                  <span style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>Execute Agent</span>
+                </div>
+                <textarea value={taskInput} onChange={e => setTaskInput(e.target.value)}
+                  placeholder={`Give ${selected.name} a task…`}
+                  style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 8, padding: "8px 10px", color: "#fff", fontSize: 12, outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box", resize: "none", minHeight: 54, lineHeight: 1.5 }}
+                  rows={2} data-testid="task-input" />
+                <button onClick={executeAgent} disabled={executing || !taskInput.trim()} data-testid="execute-agent-btn"
+                  style={{ marginTop: 8, width: "100%", padding: "8px 0", borderRadius: 8, background: executing || !taskInput.trim() ? "rgba(52,211,153,.2)" : `linear-gradient(135deg, #059669, ${T.green})`, border: "none", color: "#fff", fontSize: 12, fontWeight: 700, cursor: executing || !taskInput.trim() ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                  {executing ? <div style={{ width: 12, height: 12, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> : <Play size={12} />}
+                  Execute via Runtime Loop
+                </button>
+              </div>
 
-              {/* Execution Result */}
+              {/* Result */}
               {execResult && (
-                <Card className={`border ${execResult.status === "completed" ? "border-emerald-500/15" : "border-red-500/15"} bg-zinc-900/50`} data-testid="exec-result">
-                  <CardHeader className="pb-1">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-xs text-white">Runtime Result</CardTitle>
-                      <Badge className={execResult.status === "completed" ? "bg-emerald-500/15 text-emerald-400 text-[10px]" : "bg-red-500/15 text-red-400 text-[10px]"}>
-                        {execResult.summary?.passed}/{execResult.summary?.total} steps | {execResult.summary?.latency_ms}ms
-                      </Badge>
+                <div style={{ background: T.glass, border: `1px solid ${execResult.status === "completed" ? "rgba(52,211,153,.2)" : "rgba(239,68,68,.2)"}`, borderRadius: 12, padding: "12px 14px" }} data-testid="exec-result">
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>Runtime Result</span>
+                    <span style={{ fontSize: 9, padding: "2px 8px", borderRadius: 5, background: execResult.status === "completed" ? "rgba(52,211,153,.1)" : "rgba(239,68,68,.1)", color: execResult.status === "completed" ? T.green : T.red }}>
+                      {execResult.summary?.passed}/{execResult.summary?.total} steps · {execResult.summary?.latency_ms}ms
+                    </span>
+                  </div>
+                  {execResult.steps?.map((s, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 10, paddingBottom: 4 }}>
+                      {s.status === "pass" ? <CheckCircle size={10} style={{ color: T.green }} /> : <AlertTriangle size={10} style={{ color: T.red }} />}
+                      <span style={{ color: T.zinc, width: 90, flexShrink: 0 }}>{s.step}</span>
+                      <span style={{ color: "#a1a1aa", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.detail}</span>
                     </div>
-                  </CardHeader>
-                  <CardContent className="space-y-1">
-                    {execResult.steps?.map((s, i) => (
-                      <div key={i} className="flex items-center gap-1.5 text-[10px]">
-                        {s.status === "pass" ? <CheckCircle className="w-2.5 h-2.5 text-emerald-400" /> : <AlertTriangle className="w-2.5 h-2.5 text-red-400" />}
-                        <span className="text-zinc-500 w-24 shrink-0">{s.step}</span>
-                        <span className="text-zinc-400 truncate">{s.detail}</span>
-                      </div>
-                    ))}
-                    {execResult.output && (
-                      <details className="mt-2">
-                        <summary className="text-[10px] text-cyan-400 cursor-pointer">View Output</summary>
-                        <pre className="text-[10px] text-zinc-400 whitespace-pre-wrap mt-1 p-2 bg-zinc-800/40 rounded max-h-40 overflow-y-auto">{execResult.output}</pre>
-                      </details>
-                    )}
-                  </CardContent>
-                </Card>
+                  ))}
+                  {execResult.output && (
+                    <details style={{ marginTop: 8 }}>
+                      <summary style={{ fontSize: 10, color: T.cyan, cursor: "pointer" }}>View Output</summary>
+                      <pre style={{ fontSize: 10, color: "#a1a1aa", whiteSpace: "pre-wrap", marginTop: 5, padding: "8px 10px", background: "rgba(255,255,255,.03)", borderRadius: 6, maxHeight: 140, overflow: "auto" }}>{execResult.output}</pre>
+                    </details>
+                  )}
+                </div>
               )}
 
-              {/* Recent Executions */}
+              {/* Recent executions */}
               {selected.recent_executions?.length > 0 && (
-                <Card className="bg-zinc-900/50 border-white/5">
-                  <CardHeader className="pb-1"><CardTitle className="text-xs text-zinc-400">Recent Executions</CardTitle></CardHeader>
-                  <CardContent className="space-y-1">
-                    {selected.recent_executions.map((e, i) => (
-                      <div key={i} className="flex items-center justify-between text-[10px] p-1 rounded bg-zinc-800/40">
-                        <span className="text-zinc-400 truncate">{e.task}</span>
-                        <Badge className={e.status === "completed" ? "bg-emerald-500/10 text-emerald-400 text-[8px]" : "bg-red-500/10 text-red-400 text-[8px]"}>{e.status}</Badge>
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
+                <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "12px 14px" }}>
+                  <p style={{ fontSize: 10, color: T.zinc, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600, marginBottom: 8 }}>Recent Executions</p>
+                  {selected.recent_executions.map((e, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 10, padding: "5px 8px", borderRadius: 6, background: "rgba(255,255,255,.025)", marginBottom: 4 }}>
+                      <span style={{ color: "#a1a1aa", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>{e.task}</span>
+                      <span style={{ fontSize: 9, padding: "1px 7px", borderRadius: 4, background: e.status === "completed" ? "rgba(52,211,153,.1)" : "rgba(239,68,68,.1)", color: e.status === "completed" ? T.green : T.red, flexShrink: 0, marginLeft: 8 }}>{e.status}</span>
+                    </div>
+                  ))}
+                </div>
               )}
             </>
           ) : (
-            <Card className="bg-zinc-900/50 border-white/5">
-              <CardContent className="p-8 text-center">
-                <Users className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
-                <p className="text-xs text-zinc-500">Select an agent to inspect</p>
-              </CardContent>
-            </Card>
+            <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "40px 20px", textAlign: "center" }}>
+              <Users size={36} style={{ color: "rgba(255,255,255,.06)", marginBottom: 10 }} />
+              <p style={{ fontSize: 12, color: T.zinc }}>Select an agent to inspect</p>
+            </div>
           )}
         </div>
       </div>

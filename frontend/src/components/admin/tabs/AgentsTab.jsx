@@ -112,7 +112,7 @@ export const AgentsTab = ({ agents, setAgents, showCreateAgent, setShowCreateAge
         <h2 className="text-lg font-semibold text-white font-['Outfit']">All Agents ({agents.length})</h2>
         <Button
           onClick={() => setShowCreateAgent(!showCreateAgent)}
-          className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600"
+          className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
           data-testid="admin-create-agent-btn"
         >
           {showCreateAgent ? <X className="w-4 h-4 mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
@@ -165,7 +165,7 @@ export const AgentsTab = ({ agents, setAgents, showCreateAgent, setShowCreateAge
               <Label className="text-zinc-300">Capabilities (comma-separated)</Label>
               <Input value={newAgent.capabilities} onChange={(e) => setNewAgent(p => ({...p, capabilities: e.target.value}))} placeholder="Skill 1, Skill 2, Skill 3" className="bg-zinc-800/50 border-white/10" data-testid="admin-agent-capabilities-input" />
             </div>
-            <Button onClick={handleCreateAgent} className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600" data-testid="admin-save-agent-btn">
+            <Button onClick={handleCreateAgent} className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600" data-testid="admin-save-agent-btn">
               Create Agent
             </Button>
           </CardContent>

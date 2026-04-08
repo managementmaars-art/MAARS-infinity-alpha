@@ -7,8 +7,8 @@ const defaults = {
   tagline: "AI-Powered Team Platform",
   logo_url: "",
   favicon_url: "",
-  primary_color: "#ef4444",
-  accent_color: "#f97316",
+  primary_color: "#6366f1",
+  accent_color: "#8b5cf6",
   footer_text: "MAARS Global Corporation",
 };
 

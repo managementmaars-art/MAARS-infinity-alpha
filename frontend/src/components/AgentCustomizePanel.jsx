@@ -1,10 +1,32 @@
 import { useState, useEffect } from "react";
-import { Button } from "../components/ui/button";
-import { Label } from "../components/ui/label";
-import { Textarea } from "../components/ui/textarea";
-import { Settings, Thermometer, Hash, RotateCcw, Loader2, X, Sparkles } from "lucide-react";
+import { Settings, Thermometer, Hash, RotateCcw, X, Sparkles } from "lucide-react";
 import { API, useAuth } from "../App";
 import { toast } from "sonner";
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  violet: "#a78bfa",
+  zinc: "#71717a",
+};
+
+const STYLES = `@keyframes cp_spin { to { transform: rotate(360deg); } }`;
+
+const formInput = {
+  background: "rgba(255,255,255,.05)",
+  border: `1px solid ${T.border}`,
+  borderRadius: 8,
+  padding: "8px 12px",
+  color: "#fff",
+  fontSize: 12,
+  outline: "none",
+  fontFamily: "inherit",
+  width: "100%",
+  boxSizing: "border-box",
+  resize: "vertical",
+  transition: "border-color .2s",
+};
 
 const AgentCustomizePanel = ({ agent, onClose }) => {
   const { token } = useAuth();
@@ -86,114 +108,146 @@ const AgentCustomizePanel = ({ agent, onClose }) => {
 
   return (
     <>
-      <div className="fixed inset-0 z-[59]" onClick={onClose} />
-      <div className="fixed right-4 top-16 w-80 z-[60] bg-zinc-900 border border-white/10 rounded-xl shadow-2xl p-4 space-y-4" data-testid="agent-customize-panel">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Settings className="w-4 h-4 text-indigo-400" />
-          <span className="text-sm font-medium text-white">Customize {agent.name}</span>
+      <style>{STYLES}</style>
+      <div style={{ position: "fixed", inset: 0, zIndex: 59 }} onClick={onClose} />
+      <div
+        data-testid="agent-customize-panel"
+        style={{
+          position: "fixed", right: 16, top: 64, width: 300, zIndex: 60,
+          background: "#111113", border: `1px solid ${T.border}`,
+          borderRadius: 14, boxShadow: "0 24px 64px rgba(0,0,0,.6)",
+          padding: 16, display: "flex", flexDirection: "column", gap: 14,
+        }}
+      >
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Settings size={14} style={{ color: T.indigo }} />
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Customize {agent.name}</span>
+          </div>
+          <button
+            onClick={onClose}
+            data-testid="customize-close-btn"
+            style={{ background: "none", border: "none", cursor: "pointer", color: T.zinc, padding: 4, borderRadius: 6, display: "flex", alignItems: "center" }}
+            onMouseEnter={e => e.currentTarget.style.color = "#fff"}
+            onMouseLeave={e => e.currentTarget.style.color = T.zinc}
+          >
+            <X size={14} />
+          </button>
         </div>
-        <button onClick={onClose} className="text-zinc-500 hover:text-white p-1" data-testid="customize-close-btn">
-          <X className="w-4 h-4" />
-        </button>
-      </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-6">
-          <Loader2 className="w-5 h-5 text-indigo-400 animate-spin" />
-        </div>
-      ) : (
-        <>
-          <p className="text-[11px] text-zinc-500">These settings apply only to your chats with this agent.</p>
-
-          {/* Personality Tone */}
-          <div className="space-y-1.5">
-            <Label className="text-zinc-400 text-xs flex items-center gap-1.5">
-              <Sparkles className="w-3 h-3" /> Personality Adjustment
-            </Label>
-            <Textarea
-              value={settings.personality_tone}
-              onChange={e => setSettings(p => ({ ...p, personality_tone: e.target.value }))}
-              placeholder="e.g. Be more casual and use humor"
-              className="bg-zinc-800/50 border-white/10 text-sm min-h-[50px] resize-none"
-              data-testid="customize-personality"
-            />
+        {loading ? (
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "24px 0" }}>
+            <div style={{ width: 18, height: 18, border: `2px solid rgba(129,140,248,.3)`, borderTopColor: T.indigo, borderRadius: "50%", animation: "cp_spin .8s linear infinite" }} />
           </div>
+        ) : (
+          <>
+            <p style={{ fontSize: 11, color: T.zinc, margin: 0 }}>These settings apply only to your chats with this agent.</p>
 
-          {/* Custom Instructions */}
-          <div className="space-y-1.5">
-            <Label className="text-zinc-400 text-xs">Custom Instructions</Label>
-            <Textarea
-              value={settings.custom_instructions}
-              onChange={e => setSettings(p => ({ ...p, custom_instructions: e.target.value }))}
-              placeholder="e.g. Always respond in bullet points"
-              className="bg-zinc-800/50 border-white/10 text-sm min-h-[50px] resize-none"
-              data-testid="customize-instructions"
-            />
-          </div>
-
-          {/* Temperature */}
-          <div className="space-y-1.5">
-            <Label className="text-zinc-400 text-xs flex items-center gap-1.5">
-              <Thermometer className="w-3 h-3" /> Temperature: {settings.temperature.toFixed(1)}
-            </Label>
-            <input
-              type="range" min="0" max="2" step="0.1"
-              value={settings.temperature}
-              onChange={e => setSettings(p => ({ ...p, temperature: parseFloat(e.target.value) }))}
-              className="w-full h-1.5 rounded-full appearance-none bg-zinc-700 accent-indigo-500"
-              data-testid="customize-temperature"
-            />
-            <div className="flex justify-between text-[10px] text-zinc-600">
-              <span>Precise</span><span>Creative</span>
+            {/* Personality Tone */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <label style={{ fontSize: 11, color: "#a1a1aa", display: "flex", alignItems: "center", gap: 5 }}>
+                <Sparkles size={11} /> Personality Adjustment
+              </label>
+              <textarea
+                value={settings.personality_tone}
+                onChange={e => setSettings(p => ({ ...p, personality_tone: e.target.value }))}
+                placeholder="e.g. Be more casual and use humor"
+                rows={2}
+                style={{ ...formInput }}
+                data-testid="customize-personality"
+                onFocus={e => e.target.style.borderColor = "rgba(129,140,248,.5)"}
+                onBlur={e => e.target.style.borderColor = T.border}
+              />
             </div>
-          </div>
 
-          {/* Max Tokens */}
-          <div className="space-y-1.5">
-            <Label className="text-zinc-400 text-xs flex items-center gap-1.5">
-              <Hash className="w-3 h-3" /> Max Tokens: {settings.max_tokens}
-            </Label>
-            <input
-              type="range" min="256" max="16384" step="256"
-              value={settings.max_tokens}
-              onChange={e => setSettings(p => ({ ...p, max_tokens: parseInt(e.target.value) }))}
-              className="w-full h-1.5 rounded-full appearance-none bg-zinc-700 accent-indigo-500"
-              data-testid="customize-max-tokens"
-            />
-            <div className="flex justify-between text-[10px] text-zinc-600">
-              <span>Short</span><span>Long</span>
+            {/* Custom Instructions */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <label style={{ fontSize: 11, color: "#a1a1aa" }}>Custom Instructions</label>
+              <textarea
+                value={settings.custom_instructions}
+                onChange={e => setSettings(p => ({ ...p, custom_instructions: e.target.value }))}
+                placeholder="e.g. Always respond in bullet points"
+                rows={2}
+                style={{ ...formInput }}
+                data-testid="customize-instructions"
+                onFocus={e => e.target.style.borderColor = "rgba(129,140,248,.5)"}
+                onBlur={e => e.target.style.borderColor = T.border}
+              />
             </div>
-          </div>
 
-          {/* Actions */}
-          <div className="flex gap-2 pt-1">
-            <Button
-              onClick={handleSave}
-              disabled={saving}
-              size="sm"
-              className="flex-1 bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-xs h-8"
-              data-testid="customize-save-btn"
-            >
-              {saving ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : null}
-              Save
-            </Button>
-            {hasOverride && (
-              <Button
-                onClick={handleReset}
+            {/* Temperature */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <label style={{ fontSize: 11, color: "#a1a1aa", display: "flex", alignItems: "center", gap: 5 }}>
+                <Thermometer size={11} /> Temperature: {settings.temperature.toFixed(1)}
+              </label>
+              <input
+                type="range" min="0" max="2" step="0.1"
+                value={settings.temperature}
+                onChange={e => setSettings(p => ({ ...p, temperature: parseFloat(e.target.value) }))}
+                style={{ width: "100%", accentColor: T.indigo }}
+                data-testid="customize-temperature"
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#52525b" }}>
+                <span>Precise</span><span>Creative</span>
+              </div>
+            </div>
+
+            {/* Max Tokens */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <label style={{ fontSize: 11, color: "#a1a1aa", display: "flex", alignItems: "center", gap: 5 }}>
+                <Hash size={11} /> Max Tokens: {settings.max_tokens}
+              </label>
+              <input
+                type="range" min="256" max="16384" step="256"
+                value={settings.max_tokens}
+                onChange={e => setSettings(p => ({ ...p, max_tokens: parseInt(e.target.value) }))}
+                style={{ width: "100%", accentColor: T.indigo }}
+                data-testid="customize-max-tokens"
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#52525b" }}>
+                <span>Short</span><span>Long</span>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: "flex", gap: 8, paddingTop: 4 }}>
+              <button
+                onClick={handleSave}
                 disabled={saving}
-                variant="ghost"
-                size="sm"
-                className="text-zinc-400 hover:text-white text-xs h-8"
-                data-testid="customize-reset-btn"
+                data-testid="customize-save-btn"
+                style={{
+                  flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                  padding: "7px 14px", borderRadius: 9, border: "none",
+                  background: saving ? "rgba(129,140,248,.25)" : "linear-gradient(135deg,#6366f1,#7c3aed)",
+                  color: saving ? T.indigo : "#fff", fontSize: 12, fontWeight: 600,
+                  cursor: saving ? "not-allowed" : "pointer",
+                }}
               >
-                <RotateCcw className="w-3 h-3 mr-1" /> Reset
-              </Button>
-            )}
-          </div>
-        </>
-      )}
-    </div>
+                {saving && <div style={{ width: 11, height: 11, border: "1.5px solid rgba(255,255,255,.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "cp_spin .8s linear infinite" }} />}
+                Save
+              </button>
+              {hasOverride && (
+                <button
+                  onClick={handleReset}
+                  disabled={saving}
+                  data-testid="customize-reset-btn"
+                  style={{
+                    display: "flex", alignItems: "center", gap: 5,
+                    padding: "7px 12px", borderRadius: 9, border: `1px solid ${T.border}`,
+                    background: "transparent", color: T.zinc, fontSize: 12, fontWeight: 500,
+                    cursor: saving ? "not-allowed" : "pointer",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "rgba(255,255,255,.2)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = T.zinc; e.currentTarget.style.borderColor = T.border; }}
+                >
+                  <RotateCcw size={11} /> Reset
+                </button>
+              )}
+            </div>
+          </>
+        )}
+      </div>
     </>
   );
 };

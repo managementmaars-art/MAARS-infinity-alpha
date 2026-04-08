@@ -3,43 +3,31 @@ import { useNavigate } from "react-router-dom";
 import { useAuth, API } from "../App";
 import {
   Bot, ArrowRight, ArrowLeft, MessageSquare, CreditCard, Sparkles,
-  Zap, Users, X, CheckCircle, Brain, Volume2, Image, FileText
+  Zap, Users, X, CheckCircle, Brain, Volume2, Image, FileText, Trophy
 } from "lucide-react";
-import { Button } from "../components/ui/button";
 
-const steps = [
-  {
-    id: "welcome",
-    title: "Welcome to MAARS Command",
-    subtitle: "Your AI-powered team is ready",
-  },
-  {
-    id: "agents",
-    title: "Meet Your AI Team",
-    subtitle: "21 specialists ready to work for you",
-  },
-  {
-    id: "how-it-works",
-    title: "How It Works",
-    subtitle: "Three simple steps to get started",
-  },
-  {
-    id: "features",
-    title: "Powerful Capabilities",
-    subtitle: "Everything your AI team can do",
-  },
-  {
-    id: "ready",
-    title: "You're All Set!",
-    subtitle: "Start chatting with your AI team",
-  },
+/* ─── Design tokens ───────────────────────────────────────────────────────── */
+const T = {
+  teal:   "#4fd1c5",
+  violet: "#7c3aed",
+  blue:   "#2563eb",
+  border: "rgba(255,255,255,0.07)",
+  glass:  "rgba(8,15,28,0.6)",
+};
+
+const STEPS = [
+  { id: "welcome",      title: "Welcome to MAARS",      subtitle: "Your AI workforce awaits" },
+  { id: "agents",       title: "Meet Your AI Team",      subtitle: "Specialists for every task" },
+  { id: "how-it-works", title: "How It Works",           subtitle: "Three steps to results" },
+  { id: "features",     title: "Powerful Capabilities",  subtitle: "What your team can do" },
+  { id: "ready",        title: "You're All Set!",        subtitle: "+50 XP for getting started" },
 ];
 
 const OnboardingFlow = ({ onComplete }) => {
   const { token, user } = useAuth();
-  const navigate = useNavigate();
-  const [step, setStep] = useState(0);
-  const [agents, setAgents] = useState([]);
+  const navigate  = useNavigate();
+  const [step,    setStep]    = useState(0);
+  const [agents,  setAgents]  = useState([]);
   const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
@@ -49,136 +37,140 @@ const OnboardingFlow = ({ onComplete }) => {
       .catch(() => {});
   }, []);
 
-  const handleComplete = async () => {
+  const complete = async () => {
     setExiting(true);
     try {
       await fetch(`${API}/auth/onboarding-complete`, {
-        method: "POST", headers: { Authorization: `Bearer ${token}` }
+        method: "POST", headers: { Authorization: `Bearer ${token}` },
       });
     } catch {}
     setTimeout(() => onComplete(), 300);
   };
 
-  const handleSkip = async () => {
-    setExiting(true);
-    try {
-      await fetch(`${API}/auth/onboarding-complete`, {
-        method: "POST", headers: { Authorization: `Bearer ${token}` }
-      });
-    } catch {}
-    setTimeout(() => onComplete(), 300);
-  };
-
-  const next = () => step < steps.length - 1 && setStep(s => s + 1);
+  const next = () => step < STEPS.length - 1 && setStep(s => s + 1);
   const prev = () => step > 0 && setStep(s => s - 1);
-  const current = steps[step];
+  const current = STEPS[step];
+  const progress = ((step + 1) / STEPS.length) * 100;
 
   return (
-    <div className={`fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md transition-opacity duration-300 ${exiting ? "opacity-0" : "opacity-100"}`} data-testid="onboarding-overlay">
-      <div className="relative w-full max-w-2xl mx-4">
-        {/* Skip button */}
+    <div
+      data-testid="onboarding-overlay"
+      style={{
+        position: "fixed", inset: 0, zIndex: 200,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        background: "rgba(3,7,18,0.88)", backdropFilter: "blur(20px)",
+        transition: "opacity 0.3s", opacity: exiting ? 0 : 1,
+      }}
+    >
+      <div style={{ position: "relative", width: "100%", maxWidth: 620, margin: "0 16px" }}>
+        {/* Skip */}
         <button
-          onClick={handleSkip}
-          className="absolute -top-12 right-0 text-zinc-500 hover:text-white text-sm flex items-center gap-1 transition-colors"
+          onClick={complete}
           data-testid="onboarding-skip"
-        >
-          Skip tour <X className="w-4 h-4" />
+          style={{ position: "absolute", top: -48, right: 0, display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#475569", background: "none", border: "none", cursor: "pointer", transition: "color 0.15s" }}
+          onMouseEnter={e => e.currentTarget.style.color = "#e2e8f0"}
+          onMouseLeave={e => e.currentTarget.style.color = "#475569"}>
+          Skip tour <X style={{ width: 14, height: 14 }} />
         </button>
 
         {/* Card */}
-        <div className="bg-zinc-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+        <div style={{
+          background: "rgba(5,10,20,0.97)", border: `1px solid ${T.border}`,
+          borderRadius: 24, overflow: "hidden",
+          boxShadow: "0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(79,209,197,0.06)",
+        }}>
           {/* Progress bar */}
-          <div className="h-1 bg-white/5">
-            <div
-              className="h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-500"
-              style={{ width: `${((step + 1) / steps.length) * 100}%` }}
-            />
+          <div style={{ height: 3, background: "rgba(255,255,255,0.05)" }}>
+            <div style={{ height: "100%", background: `linear-gradient(90deg, ${T.teal}, ${T.violet})`, width: `${progress}%`, transition: "width 0.5s ease", boxShadow: `0 0 12px rgba(79,209,197,0.4)` }} />
           </div>
 
-          <div className="p-8 min-h-[420px] flex flex-col">
-            {/* Step indicator */}
-            <div className="flex items-center gap-2 mb-6">
-              {steps.map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === step ? "w-8 bg-red-500" : i < step ? "w-4 bg-red-500/40" : "w-4 bg-white/10"
-                  }`}
-                />
+          <div style={{ padding: "36px 40px", minHeight: 460, display: "flex", flexDirection: "column" }}>
+            {/* Step dots */}
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 32 }}>
+              {STEPS.map((_, i) => (
+                <div key={i} style={{ height: 4, borderRadius: 2, transition: "all 0.3s", background: i <= step ? T.teal : "rgba(255,255,255,0.08)", width: i === step ? 28 : 14 }} />
               ))}
+              <span style={{ marginLeft: "auto", fontSize: 11, color: "#64748b", fontVariantNumeric: "tabular-nums" }}>{step + 1} / {STEPS.length}</span>
             </div>
 
             {/* Content */}
-            <div className="flex-1">
+            <div style={{ flex: 1 }}>
+
+              {/* ── Welcome ──────────────────────────────── */}
               {current.id === "welcome" && (
-                <div className="text-center space-y-6" data-testid="onboarding-step-welcome">
-                  <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center">
-                    <Sparkles className="w-10 h-10 text-white" />
+                <div data-testid="onboarding-step-welcome" style={{ textAlign: "center" }}>
+                  <div style={{ width: 80, height: 80, borderRadius: 24, background: `linear-gradient(135deg, rgba(79,209,197,0.2), rgba(124,58,237,0.2))`, border: "1px solid rgba(79,209,197,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", boxShadow: "0 0 40px rgba(79,209,197,0.15)" }}>
+                    <img src="/branding/maars-logo.jpeg" alt="MAARS" style={{ width: 56, height: 56, borderRadius: 16, objectFit: "cover" }} />
                   </div>
-                  <div>
-                    <h2 className="text-3xl font-bold text-white font-['Outfit']">Welcome to MAARS Command</h2>
-                    <p className="text-zinc-400 mt-2 text-lg">{user?.name ? `Hey ${user.name.split(" ")[0]}!` : "Hey!"} Your AI-powered team is ready to work.</p>
-                  </div>
-                  <div className="grid grid-cols-3 gap-4 pt-4">
+                  <h2 style={{ fontSize: 28, fontWeight: 800, color: "#f1f5f9", fontFamily: "Outfit, sans-serif", marginBottom: 10 }}>
+                    Welcome to{" "}
+                    <span style={{ background: `linear-gradient(135deg, ${T.teal}, #a78bfa)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>MAARS Command</span>
+                  </h2>
+                  <p style={{ fontSize: 15, color: "#64748b", marginBottom: 32, lineHeight: 1.6 }}>
+                    {user?.name ? `Hey ${user.name.split(" ")[0]}! ` : ""}Your AI-powered team of 458+ specialists is ready to work for you.
+                  </p>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
                     {[
-                      { icon: Bot, label: "458+ AI Agents", desc: "Specialized experts" },
-                      { icon: Brain, label: "Smart AI", desc: "Asks questions first" },
-                      { icon: Zap, label: "Instant Results", desc: "Files, images & more" },
+                      { icon: Bot,    color: T.teal,   label: "458+ AI Agents",     desc: "Specialized experts" },
+                      { icon: Brain,  color: "#a78bfa", label: "Smart Routing",      desc: "Right agent, every time" },
+                      { icon: Zap,    color: T.violet, label: "Instant Results",     desc: "Files, images & more" },
                     ].map((item, i) => (
-                      <div key={i} className="p-4 rounded-xl bg-white/5 text-center">
-                        <item.icon className="w-6 h-6 text-red-400 mx-auto mb-2" />
-                        <p className="text-sm text-white font-medium">{item.label}</p>
-                        <p className="text-xs text-zinc-500">{item.desc}</p>
+                      <div key={i} style={{ padding: "18px 14px", borderRadius: 16, background: "rgba(255,255,255,0.03)", border: `1px solid ${T.border}`, textAlign: "center" }}>
+                        <div style={{ width: 40, height: 40, borderRadius: 11, background: `${item.color}18`, border: `1px solid ${item.color}28`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 10px" }}>
+                          <item.icon style={{ width: 18, height: 18, color: item.color }} />
+                        </div>
+                        <p style={{ fontSize: 12, fontWeight: 700, color: "#e2e8f0", marginBottom: 4, fontFamily: "Outfit, sans-serif" }}>{item.label}</p>
+                        <p style={{ fontSize: 11, color: "#475569" }}>{item.desc}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
 
+              {/* ── Agents ───────────────────────────────── */}
               {current.id === "agents" && (
-                <div className="space-y-5" data-testid="onboarding-step-agents">
-                  <div>
-                    <h2 className="text-2xl font-bold text-white font-['Outfit']">Meet Your AI Team</h2>
-                    <p className="text-zinc-400 mt-1">Each agent is a specialist. Pick the right one for your task.</p>
-                  </div>
-                  <div className="grid grid-cols-4 gap-3">
-                    {agents.map((agent) => (
-                      <div key={agent.agent_id} className="p-3 rounded-xl bg-white/5 text-center hover:bg-white/10 transition-colors">
-                        <img src={agent.avatar} alt="" className="w-12 h-12 rounded-lg mx-auto mb-2 object-cover" />
-                        <p className="text-xs text-white font-medium truncate">{agent.name}</p>
-                        <p className="text-[10px] text-zinc-500 truncate">{agent.role}</p>
+                <div data-testid="onboarding-step-agents">
+                  <h2 style={{ fontSize: 24, fontWeight: 800, color: "#f1f5f9", fontFamily: "Outfit, sans-serif", marginBottom: 6 }}>Meet Your AI Team</h2>
+                  <p style={{ fontSize: 13, color: "#64748b", marginBottom: 20 }}>Each agent is a specialist. Pick the right one for your task.</p>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10, marginBottom: 20 }}>
+                    {agents.map(agent => (
+                      <div key={agent.agent_id} style={{ padding: "12px 10px", borderRadius: 14, background: "rgba(255,255,255,0.03)", border: `1px solid ${T.border}`, textAlign: "center", transition: "border-color 0.2s", cursor: "default" }}
+                        onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(79,209,197,0.25)"}
+                        onMouseLeave={e => e.currentTarget.style.borderColor = T.border}>
+                        <img src={agent.avatar} alt="" style={{ width: 44, height: 44, borderRadius: 12, objectFit: "cover", margin: "0 auto 8px", display: "block" }} />
+                        <p style={{ fontSize: 11, fontWeight: 700, color: "#e2e8f0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{agent.name}</p>
+                        <p style={{ fontSize: 10, color: "#475569", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{agent.role}</p>
                       </div>
                     ))}
                   </div>
-                  <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                    <p className="text-amber-300 text-sm">
-                      <strong>Commander Orion</strong> is your lead agent. Give it a complex goal and it delegates to the right specialists automatically.
+                  <div style={{ padding: "14px 16px", borderRadius: 14, background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.2)" }}>
+                    <p style={{ fontSize: 13, color: "#fbbf24", lineHeight: 1.5 }}>
+                      <strong>Commander Orion</strong> is your lead strategist. Give it a complex goal and it automatically delegates to the right specialists.
                     </p>
                   </div>
                 </div>
               )}
 
+              {/* ── How It Works ─────────────────────────── */}
               {current.id === "how-it-works" && (
-                <div className="space-y-5" data-testid="onboarding-step-how">
-                  <div>
-                    <h2 className="text-2xl font-bold text-white font-['Outfit']">How It Works</h2>
-                    <p className="text-zinc-400 mt-1">Getting results is as easy as 1-2-3.</p>
-                  </div>
-                  <div className="space-y-4">
+                <div data-testid="onboarding-step-how">
+                  <h2 style={{ fontSize: 24, fontWeight: 800, color: "#f1f5f9", fontFamily: "Outfit, sans-serif", marginBottom: 6 }}>How It Works</h2>
+                  <p style={{ fontSize: 13, color: "#64748b", marginBottom: 24 }}>Getting results is as easy as 1-2-3.</p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {[
-                      { num: "1", title: "Pick an Agent", desc: "Choose the specialist that fits your task. Marketing? Finance? Design? We've got you covered.", icon: Users },
-                      { num: "2", title: "Describe Your Task", desc: "Just type what you need in plain English. The AI will ask clarifying questions if needed.", icon: MessageSquare },
-                      { num: "3", title: "Get Results", desc: "Receive expert-level output — text, PDFs, images, or even videos. Download and use instantly.", icon: CheckCircle },
+                      { num: "1", accent: T.teal,   title: "Pick an Agent",    desc: "Choose the specialist that fits your task — marketing, finance, code, design, and 450+ more.", icon: Users },
+                      { num: "2", accent: T.violet, title: "Describe Your Task",desc: "Just type in plain English. The AI asks clarifying questions when needed to ensure perfect output.", icon: MessageSquare },
+                      { num: "3", accent: T.blue,   title: "Get Results",      desc: "Receive expert output — text, PDFs, images, or videos. Download and use in seconds.", icon: CheckCircle },
                     ].map((item, i) => (
-                      <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/5">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center shrink-0">
-                          <span className="text-white font-bold text-sm">{item.num}</span>
+                      <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 16, padding: "16px 18px", borderRadius: 16, background: "rgba(255,255,255,0.03)", border: `1px solid ${T.border}` }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 10, background: `${item.accent}18`, border: `1px solid ${item.accent}28`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <span style={{ fontSize: 16, fontWeight: 800, color: item.accent, fontFamily: "Outfit, sans-serif" }}>{item.num}</span>
                         </div>
-                        <div>
-                          <p className="text-white font-medium flex items-center gap-2">
-                            {item.title} <item.icon className="w-4 h-4 text-zinc-500" />
+                        <div style={{ minWidth: 0 }}>
+                          <p style={{ fontSize: 14, fontWeight: 700, color: "#e2e8f0", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                            {item.title} <item.icon style={{ width: 13, height: 13, color: "#64748b" }} />
                           </p>
-                          <p className="text-zinc-400 text-sm mt-0.5">{item.desc}</p>
+                          <p style={{ fontSize: 12, color: "#64748b", lineHeight: 1.55 }}>{item.desc}</p>
                         </div>
                       </div>
                     ))}
@@ -186,77 +178,82 @@ const OnboardingFlow = ({ onComplete }) => {
                 </div>
               )}
 
+              {/* ── Features ─────────────────────────────── */}
               {current.id === "features" && (
-                <div className="space-y-5" data-testid="onboarding-step-features">
-                  <div>
-                    <h2 className="text-2xl font-bold text-white font-['Outfit']">Powerful Capabilities</h2>
-                    <p className="text-zinc-400 mt-1">Everything your AI team can do for you.</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
+                <div data-testid="onboarding-step-features">
+                  <h2 style={{ fontSize: 24, fontWeight: 800, color: "#f1f5f9", fontFamily: "Outfit, sans-serif", marginBottom: 6 }}>Powerful Capabilities</h2>
+                  <p style={{ fontSize: 13, color: "#64748b", marginBottom: 24 }}>Everything your AI team can do.</p>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
                     {[
-                      { icon: FileText, title: "Document Generation", desc: "PDF, Word documents instantly", color: "blue" },
-                      { icon: Image, title: "Image Creation", desc: "AI-generated visuals on demand", color: "purple" },
-                      { icon: Volume2, title: "Voice Mode", desc: "Listen to AI responses out loud", color: "emerald" },
-                      { icon: Brain, title: "Smart Collaboration", desc: "Agents consult each other", color: "amber" },
-                      { icon: CreditCard, title: "Flexible Pricing", desc: "Pay only for what you use", color: "rose" },
-                      { icon: Users, title: "Team Access", desc: "Invite your team to collaborate", color: "cyan" },
+                      { icon: FileText,    color: "#60a5fa", bg: "rgba(96,165,250,0.1)",  border: "rgba(96,165,250,0.2)",  title: "Document Generation", desc: "PDF, Word, Excel instantly" },
+                      { icon: Image,       color: "#c084fc", bg: "rgba(192,132,252,0.1)", border: "rgba(192,132,252,0.2)", title: "Image Creation",       desc: "AI visuals on demand" },
+                      { icon: Volume2,     color: T.teal,   bg: "rgba(79,209,197,0.1)",  border: "rgba(79,209,197,0.2)",  title: "Voice Mode",           desc: "Listen to AI responses" },
+                      { icon: Brain,       color: "#fbbf24", bg: "rgba(251,191,36,0.1)",  border: "rgba(251,191,36,0.2)",  title: "Multi-Agent Collab",   desc: "Agents consult each other" },
+                      { icon: CreditCard,  color: "#f472b6", bg: "rgba(244,114,182,0.1)", border: "rgba(244,114,182,0.2)", title: "Flexible Credits",     desc: "Pay only for what you use" },
+                      { icon: Users,       color: T.violet, bg: "rgba(124,58,237,0.1)",  border: "rgba(124,58,237,0.2)",  title: "Team Access",          desc: "Invite your whole team" },
                     ].map((item, i) => (
-                      <div key={i} className={`p-4 rounded-xl bg-${item.color}-500/10 border border-${item.color}-500/20`}>
-                        <item.icon className={`w-5 h-5 text-${item.color}-400 mb-2`} />
-                        <p className="text-white text-sm font-medium">{item.title}</p>
-                        <p className="text-zinc-500 text-xs mt-0.5">{item.desc}</p>
+                      <div key={i} style={{ padding: "14px 16px", borderRadius: 14, background: item.bg, border: `1px solid ${item.border}` }}>
+                        <item.icon style={{ width: 18, height: 18, color: item.color, marginBottom: 8 }} />
+                        <p style={{ fontSize: 13, fontWeight: 700, color: "#e2e8f0", marginBottom: 3 }}>{item.title}</p>
+                        <p style={{ fontSize: 11, color: "#64748b" }}>{item.desc}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
 
+              {/* ── Ready ────────────────────────────────── */}
               {current.id === "ready" && (
-                <div className="text-center space-y-6" data-testid="onboarding-step-ready">
-                  <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
-                    <CheckCircle className="w-10 h-10 text-white" />
+                <div data-testid="onboarding-step-ready" style={{ textAlign: "center" }}>
+                  <div style={{ width: 80, height: 80, borderRadius: "50%", background: "linear-gradient(135deg, rgba(79,209,197,0.2), rgba(52,211,153,0.2))", border: "1px solid rgba(79,209,197,0.35)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", boxShadow: "0 0 40px rgba(79,209,197,0.2)" }}>
+                    <CheckCircle style={{ width: 36, height: 36, color: T.teal }} />
                   </div>
-                  <div>
-                    <h2 className="text-3xl font-bold text-white font-['Outfit']">You're All Set!</h2>
-                    <p className="text-zinc-400 mt-2 text-lg">Start by chatting with any agent. Try asking for something specific!</p>
+                  <h2 style={{ fontSize: 28, fontWeight: 800, color: "#f1f5f9", fontFamily: "Outfit, sans-serif", marginBottom: 10 }}>You're All Set!</h2>
+                  <p style={{ fontSize: 15, color: "#64748b", marginBottom: 28, lineHeight: 1.6 }}>Start chatting with any agent. Try something specific!</p>
+
+                  {/* XP reward */}
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 20px", borderRadius: 24, background: "rgba(79,209,197,0.08)", border: "1px solid rgba(79,209,197,0.2)", marginBottom: 24 }}>
+                    <Trophy style={{ width: 16, height: 16, color: "#f59e0b" }} />
+                    <span style={{ fontSize: 13, fontWeight: 700, color: T.teal }}>+50 XP earned for completing onboarding!</span>
                   </div>
-                  <div className="p-4 rounded-xl bg-white/5 text-left max-w-sm mx-auto">
-                    <p className="text-xs text-zinc-500 mb-2">Try saying:</p>
-                    <p className="text-sm text-white italic">"Create a social media strategy for my coffee shop and give me a PDF"</p>
+
+                  <div style={{ padding: "16px 20px", borderRadius: 14, background: "rgba(255,255,255,0.03)", border: `1px solid ${T.border}`, textAlign: "left", maxWidth: 400, margin: "0 auto" }}>
+                    <p style={{ fontSize: 10, color: "#64748b", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.1em" }}>Try saying:</p>
+                    <p style={{ fontSize: 13, color: "#94a3b8", fontStyle: "italic", lineHeight: 1.5 }}>
+                      "Create a social media strategy for my coffee shop and give me a PDF report"
+                    </p>
                   </div>
                 </div>
               )}
             </div>
 
             {/* Navigation */}
-            <div className="flex items-center justify-between pt-6 mt-auto">
-              <Button
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 28, marginTop: "auto" }}>
+              <button
                 onClick={prev}
-                variant="ghost"
-                className={`text-zinc-400 hover:text-white ${step === 0 ? "invisible" : ""}`}
                 data-testid="onboarding-prev"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" /> Back
-              </Button>
+                style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", borderRadius: 10, background: "transparent", border: `1px solid ${T.border}`, color: "#475569", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all 0.15s", visibility: step === 0 ? "hidden" : "visible" }}
+                onMouseEnter={e => { e.currentTarget.style.color = "#e2e8f0"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; }}
+                onMouseLeave={e => { e.currentTarget.style.color = "#475569"; e.currentTarget.style.borderColor = T.border; }}>
+                <ArrowLeft style={{ width: 14, height: 14 }} /> Back
+              </button>
 
-              <span className="text-xs text-zinc-600">{step + 1} / {steps.length}</span>
-
-              {step < steps.length - 1 ? (
-                <Button
-                  onClick={next}
-                  className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600"
+              {step < STEPS.length - 1 ? (
+                <button onClick={next}
                   data-testid="onboarding-next"
-                >
-                  Next <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                  style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 22px", borderRadius: 11, background: `linear-gradient(135deg, ${T.teal}, ${T.blue})`, color: "#030712", fontSize: 13, fontWeight: 700, border: "none", cursor: "pointer", boxShadow: "0 0 24px rgba(79,209,197,0.3)", transition: "box-shadow 0.2s" }}
+                  onMouseEnter={e => e.currentTarget.style.boxShadow = "0 0 40px rgba(79,209,197,0.5)"}
+                  onMouseLeave={e => e.currentTarget.style.boxShadow = "0 0 24px rgba(79,209,197,0.3)"}>
+                  Next <ArrowRight style={{ width: 15, height: 15 }} />
+                </button>
               ) : (
-                <Button
-                  onClick={handleComplete}
-                  className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600"
+                <button onClick={complete}
                   data-testid="onboarding-complete"
-                >
-                  Start Chatting <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                  style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 22px", borderRadius: 11, background: `linear-gradient(135deg, ${T.teal}, ${T.violet})`, color: "#030712", fontSize: 13, fontWeight: 700, border: "none", cursor: "pointer", boxShadow: "0 0 28px rgba(79,209,197,0.35)", transition: "box-shadow 0.2s" }}
+                  onMouseEnter={e => e.currentTarget.style.boxShadow = "0 0 48px rgba(79,209,197,0.55)"}
+                  onMouseLeave={e => e.currentTarget.style.boxShadow = "0 0 28px rgba(79,209,197,0.35)"}>
+                  Start Chatting <ArrowRight style={{ width: 15, height: 15 }} />
+                </button>
               )}
             </div>
           </div>

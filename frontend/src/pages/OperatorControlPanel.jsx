@@ -1,20 +1,36 @@
 import { useState, useEffect, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Button } from "../components/ui/button";
 import {
-  Shield, AlertTriangle, CheckCircle, Clock, Play, RotateCcw,
+  Shield, AlertTriangle, CheckCircle, Clock, Play,
   Activity, Users, Zap, Lock, Eye, FileCheck, Beaker, ChevronRight,
-  XCircle, AlertCircle, Loader2
+  XCircle, AlertCircle
 } from "lucide-react";
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
-const STATUS_COLORS = {
-  pass: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
-  fail: "text-red-400 bg-red-500/10 border-red-500/20",
-  warn: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  cyan: "#22d3ee",
+  green: "#34d399",
+  amber: "#f59e0b",
+  red: "#ef4444",
+  violet: "#a78bfa",
+  indigo: "#818cf8",
+  zinc: "#71717a",
 };
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
+
+const STEP_STATUS = {
+  pass: { color: T.green, bg: "rgba(52,211,153,.1)", border: "rgba(52,211,153,.2)" },
+  fail: { color: T.red, bg: "rgba(239,68,68,.1)", border: "rgba(239,68,68,.2)" },
+  warn: { color: T.amber, bg: "rgba(245,158,11,.1)", border: "rgba(245,158,11,.2)" },
+};
+
+const SEV_COLOR = { high: T.red, medium: T.amber, low: T.zinc };
 
 export default function OperatorControlPanel() {
   const [dashboard, setDashboard] = useState(null);
@@ -75,258 +91,277 @@ export default function OperatorControlPanel() {
     { id: "autonomy", label: "Autonomy", icon: Lock },
   ];
 
+  const Spinner = () => <div style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} />;
+
   return (
-    <div className="space-y-6" data-testid="operator-control-panel">
-      <div className="flex items-center justify-between">
+    <div style={{ display: "flex", flexDirection: "column", gap: 22, animation: "fadeUp .4s ease" }} data-testid="operator-control-panel">
+      <style>{STYLES}</style>
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div>
-          <h1 className="text-2xl font-bold text-white font-['Outfit'] flex items-center gap-2">
-            <Shield className="w-6 h-6 text-cyan-400" /> Operator Control Panel
+          <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 24, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 4, display: "flex", alignItems: "center", gap: 10 }}>
+            <Shield size={22} style={{ color: T.cyan }} /> Operator Control Panel
           </h1>
-          <p className="text-sm text-zinc-400">System oversight, approvals, test harness, and autonomy management</p>
+          <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>System oversight, approvals, test harness, and autonomy management</p>
         </div>
-        <Badge className={dashboard?.system_health === "operational" ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" : "bg-red-500/20 text-red-400 border-red-500/30"} data-testid="system-health-badge">
+        <span style={{
+          fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 20,
+          background: dashboard?.system_health === "operational" ? "rgba(52,211,153,.15)" : "rgba(239,68,68,.15)",
+          color: dashboard?.system_health === "operational" ? T.green : T.red,
+          border: `1px solid ${dashboard?.system_health === "operational" ? "rgba(52,211,153,.3)" : "rgba(239,68,68,.3)"}`,
+        }} data-testid="system-health-badge">
           {dashboard?.system_health === "operational" ? "All Systems Operational" : "System Degraded"}
-        </Badge>
+        </span>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex gap-1 bg-zinc-900/40 border border-white/5 rounded-lg p-1" data-testid="tab-nav">
+      <div style={{ display: "flex", gap: 4, background: "rgba(255,255,255,.02)", border: `1px solid ${T.border}`, borderRadius: 10, padding: 4 }} data-testid="tab-nav">
         {tabs.map(t => (
-          <button
-            key={t.id}
-            onClick={() => setActiveTab(t.id)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${activeTab === t.id ? "bg-cyan-500/20 text-cyan-400" : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"}`}
-            data-testid={`tab-${t.id}`}
-          >
-            <t.icon className="w-3.5 h-3.5" /> {t.label}
+          <button key={t.id} onClick={() => setActiveTab(t.id)} data-testid={`tab-${t.id}`}
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", borderRadius: 7, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 600, transition: "all .2s",
+              background: activeTab === t.id ? "rgba(34,211,238,.15)" : "transparent",
+              color: activeTab === t.id ? T.cyan : T.zinc }}>
+            <t.icon size={13} /> {t.label}
           </button>
         ))}
       </div>
 
       {/* Overview Tab */}
       {activeTab === "overview" && dashboard && (
-        <div className="space-y-4" data-testid="overview-tab">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }} data-testid="overview-tab">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }}>
             {[
-              { label: "Pending Approvals", value: dashboard.pending_approvals, icon: FileCheck, color: "bg-amber-500/20", iconColor: "text-amber-400" },
-              { label: "Open Incidents", value: dashboard.open_incidents, icon: AlertTriangle, color: "bg-red-500/20", iconColor: "text-red-400" },
-              { label: "Open Escalations", value: dashboard.open_escalations, icon: AlertCircle, color: "bg-orange-500/20", iconColor: "text-orange-400" },
-              { label: "Circuit Breakers Tripped", value: dashboard.circuit_breakers?.tripped || 0, icon: Zap, color: "bg-violet-500/20", iconColor: "text-violet-400" },
+              { label: "Pending Approvals", value: dashboard.pending_approvals, icon: FileCheck, color: T.amber, bg: "rgba(245,158,11,.15)" },
+              { label: "Open Incidents", value: dashboard.open_incidents, icon: AlertTriangle, color: T.red, bg: "rgba(239,68,68,.15)" },
+              { label: "Open Escalations", value: dashboard.open_escalations, icon: AlertCircle, color: "#f97316", bg: "rgba(249,115,22,.15)" },
+              { label: "Circuit Breakers Tripped", value: dashboard.circuit_breakers?.tripped || 0, icon: Zap, color: T.violet, bg: "rgba(167,139,250,.15)" },
             ].map((s, i) => (
-              <Card key={i} className="bg-zinc-900/50 border-white/5" data-testid={`stat-${s.label.toLowerCase().replace(/\s/g, '-')}`}>
-                <CardContent className="p-4 flex items-center gap-3">
-                  <div className={`w-9 h-9 rounded-lg ${s.color} flex items-center justify-center`}>
-                    <s.icon className={`w-4 h-4 ${s.iconColor}`} />
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-wide">{s.label}</p>
-                    <p className="text-lg font-bold text-white">{s.value}</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <div key={i} style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12 }} data-testid={`stat-${s.label.toLowerCase().replace(/\s/g, '-')}`}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: s.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <s.icon size={16} style={{ color: s.color }} />
+                </div>
+                <div>
+                  <p style={{ fontSize: 9, color: T.zinc, textTransform: "uppercase", letterSpacing: "0.08em", margin: 0 }}>{s.label}</p>
+                  <p style={{ fontSize: 20, fontWeight: 700, color: "#fff", margin: 0 }}>{s.value}</p>
+                </div>
+              </div>
             ))}
           </div>
 
-          {/* Recent Incidents */}
           {dashboard.incidents?.length > 0 && (
-            <Card className="bg-zinc-900/50 border-white/5">
-              <CardHeader className="pb-2"><CardTitle className="text-sm text-white flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-red-400" /> Open Incidents</CardTitle></CardHeader>
-              <CardContent className="space-y-2">
+            <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, overflow: "hidden" }}>
+              <div style={{ padding: "12px 16px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 8 }}>
+                <AlertTriangle size={13} style={{ color: T.red }} />
+                <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Open Incidents</span>
+              </div>
+              <div style={{ padding: "10px 14px", display: "flex", flexDirection: "column", gap: 6 }}>
                 {dashboard.incidents.map((inc, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 rounded bg-zinc-800/40 border border-white/5">
-                    <div className="flex items-center gap-2">
-                      <Badge className={inc.severity === "high" ? "bg-red-500/20 text-red-400" : inc.severity === "medium" ? "bg-amber-500/20 text-amber-400" : "bg-zinc-500/20 text-zinc-400"}>{inc.severity}</Badge>
-                      <span className="text-xs text-zinc-300">{inc.type}: {inc.description?.slice(0, 80)}</span>
+                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 12px", borderRadius: 8, background: "rgba(255,255,255,.025)", border: `1px solid ${T.border}` }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: `${SEV_COLOR[inc.severity] || T.zinc}20`, color: SEV_COLOR[inc.severity] || T.zinc }}>{inc.severity}</span>
+                      <span style={{ fontSize: 11, color: "#d4d4d8" }}>{inc.type}: {inc.description?.slice(0, 80)}</span>
                     </div>
-                    <span className="text-[10px] text-zinc-500">{inc.detected_at?.slice(0, 16)}</span>
+                    <span style={{ fontSize: 10, color: T.zinc }}>{inc.detected_at?.slice(0, 16)}</span>
                   </div>
                 ))}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
 
-          {/* Low Trust Entities */}
           {dashboard.low_trust_entities?.length > 0 && (
-            <Card className="bg-zinc-900/50 border-white/5">
-              <CardHeader className="pb-2"><CardTitle className="text-sm text-white flex items-center gap-2"><Users className="w-4 h-4 text-amber-400" /> Low Trust Entities</CardTitle></CardHeader>
-              <CardContent className="space-y-1">
+            <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, overflow: "hidden" }}>
+              <div style={{ padding: "12px 16px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 8 }}>
+                <Users size={13} style={{ color: T.amber }} />
+                <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Low Trust Entities</span>
+              </div>
+              <div style={{ padding: "10px 14px", display: "flex", flexDirection: "column", gap: 4 }}>
                 {dashboard.low_trust_entities.map((e, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 rounded bg-zinc-800/40 text-xs">
-                    <span className="text-zinc-300">{e.entity_id}</span>
-                    <Badge className="bg-red-500/20 text-red-400">{e.score?.toFixed(1)}</Badge>
+                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "7px 10px", borderRadius: 7, background: "rgba(255,255,255,.025)", fontSize: 11 }}>
+                    <span style={{ color: "#d4d4d8" }}>{e.entity_id}</span>
+                    <span style={{ padding: "2px 8px", borderRadius: 20, background: "rgba(239,68,68,.15)", color: T.red, fontWeight: 700, fontSize: 10 }}>{e.score?.toFixed(1)}</span>
                   </div>
                 ))}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
         </div>
       )}
 
       {/* Approvals Tab */}
       {activeTab === "approvals" && (
-        <div className="space-y-4" data-testid="approvals-tab">
-          <Card className="bg-zinc-900/50 border-white/5">
-            <CardHeader className="pb-2"><CardTitle className="text-sm text-white flex items-center gap-2"><FileCheck className="w-4 h-4 text-amber-400" /> Pending Approvals ({dashboard?.pending_approvals || 0})</CardTitle></CardHeader>
-            <CardContent className="space-y-2">
+        <div data-testid="approvals-tab">
+          <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, overflow: "hidden" }}>
+            <div style={{ padding: "12px 16px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 8 }}>
+              <FileCheck size={13} style={{ color: T.amber }} />
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Pending Approvals ({dashboard?.pending_approvals || 0})</span>
+            </div>
+            <div style={{ padding: "10px 14px", display: "flex", flexDirection: "column", gap: 8 }}>
               {dashboard?.approvals?.length > 0 ? dashboard.approvals.map((a, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-zinc-800/40 border border-white/5" data-testid={`approval-${a.task_id}`}>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Badge className={a.urgency === "high" ? "bg-red-500/20 text-red-400" : "bg-zinc-500/20 text-zinc-400"}>{a.urgency}</Badge>
-                      <span className="text-xs text-zinc-300 font-medium">{a.action}</span>
+                <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 14px", borderRadius: 10, background: "rgba(255,255,255,.025)", border: `1px solid ${T.border}` }} data-testid={`approval-${a.task_id}`}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: a.urgency === "high" ? "rgba(239,68,68,.15)" : "rgba(113,113,122,.15)", color: a.urgency === "high" ? T.red : T.zinc }}>{a.urgency}</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>{a.action}</span>
                     </div>
-                    <p className="text-[11px] text-zinc-500 truncate">{a.reason}</p>
-                    <p className="text-[10px] text-zinc-600">Task: {a.task_id} | Graph: {a.graph_id}</p>
+                    <p style={{ fontSize: 11, color: T.zinc, margin: "0 0 3px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.reason}</p>
+                    <p style={{ fontSize: 10, color: "rgba(113,113,122,.6)", margin: 0 }}>Task: {a.task_id} | Graph: {a.graph_id}</p>
                   </div>
-                  <div className="flex gap-1.5 shrink-0 ml-3">
-                    <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 h-7 px-2 text-[11px]" onClick={() => decideApproval(a.task_id, true)} data-testid={`approve-${a.task_id}`}>
-                      <CheckCircle className="w-3 h-3 mr-1" /> Approve
-                    </Button>
-                    <Button size="sm" variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10 h-7 px-2 text-[11px]" onClick={() => decideApproval(a.task_id, false)} data-testid={`deny-${a.task_id}`}>
-                      <XCircle className="w-3 h-3 mr-1" /> Deny
-                    </Button>
+                  <div style={{ display: "flex", gap: 7, flexShrink: 0, marginLeft: 12 }}>
+                    <button onClick={() => decideApproval(a.task_id, true)} data-testid={`approve-${a.task_id}`}
+                      style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "5px 12px", borderRadius: 7, border: "none", background: "rgba(52,211,153,.2)", color: T.green, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                      <CheckCircle size={11} /> Approve
+                    </button>
+                    <button onClick={() => decideApproval(a.task_id, false)} data-testid={`deny-${a.task_id}`}
+                      style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "5px 12px", borderRadius: 7, border: `1px solid rgba(239,68,68,.3)`, background: "rgba(239,68,68,.08)", color: T.red, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                      <XCircle size={11} /> Deny
+                    </button>
                   </div>
                 </div>
               )) : (
-                <p className="text-xs text-zinc-500 text-center py-4">No pending approvals</p>
+                <p style={{ fontSize: 12, color: T.zinc, textAlign: "center", padding: "20px 0" }}>No pending approvals</p>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       )}
 
       {/* Test Harness Tab */}
       {activeTab === "harness" && (
-        <div className="space-y-4" data-testid="harness-tab">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-white">Validation Scenarios</h2>
-            <Button onClick={runAll} disabled={!!runningTest} className="bg-cyan-600 hover:bg-cyan-700 h-8 text-xs" data-testid="run-all-btn">
-              {runningTest === "ALL" ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <Play className="w-3.5 h-3.5 mr-1" />}
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }} data-testid="harness-tab">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Validation Scenarios</span>
+            <button onClick={runAll} disabled={!!runningTest} data-testid="run-all-btn"
+              style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "7px 16px", borderRadius: 9, border: "none", background: runningTest ? "rgba(34,211,238,.2)" : "rgba(34,211,238,.85)", color: "#000", fontSize: 12, fontWeight: 700, cursor: runningTest ? "not-allowed" : "pointer" }}>
+              {runningTest === "ALL" ? <Spinner /> : <Play size={13} />}
               Run All Scenarios
-            </Button>
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
             {Object.entries(scenarios).map(([id, s]) => (
-              <Card key={id} className="bg-zinc-900/50 border-white/5" data-testid={`scenario-card-${id}`}>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <Badge className="bg-cyan-500/20 text-cyan-400 border-cyan-500/30">Scenario {id}</Badge>
-                    <Button size="sm" variant="outline" className="h-7 px-2 text-[11px] border-white/10" onClick={() => runScenario(id)} disabled={!!runningTest} data-testid={`run-scenario-${id}`}>
-                      {runningTest === id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3" />}
-                    </Button>
-                  </div>
-                  <h3 className="text-xs font-semibold text-white mb-1">{s.name}</h3>
-                  <p className="text-[10px] text-zinc-500">{s.description}</p>
-                </CardContent>
-              </Card>
+              <div key={id} style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "14px 16px" }} data-testid={`scenario-card-${id}`}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 20, background: "rgba(34,211,238,.15)", color: T.cyan }}>Scenario {id}</span>
+                  <button onClick={() => runScenario(id)} disabled={!!runningTest} data-testid={`run-scenario-${id}`}
+                    style={{ width: 26, height: 26, borderRadius: 6, border: `1px solid ${T.border}`, background: "transparent", cursor: runningTest ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: T.zinc }}>
+                    {runningTest === id ? <Spinner /> : <Play size={11} />}
+                  </button>
+                </div>
+                <h3 style={{ fontSize: 12, fontWeight: 600, color: "#fff", margin: "0 0 4px" }}>{s.name}</h3>
+                <p style={{ fontSize: 10, color: T.zinc, margin: 0 }}>{s.description}</p>
+              </div>
             ))}
           </div>
 
-          {/* Test Results */}
           {testResults && (
-            <Card className={`border ${testResults.overall_status === "pass" ? "border-emerald-500/20" : "border-red-500/20"} bg-zinc-900/50`} data-testid="test-results">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm text-white flex items-center gap-2">
-                    {testResults.overall_status === "pass" ? <CheckCircle className="w-4 h-4 text-emerald-400" /> : <XCircle className="w-4 h-4 text-red-400" />}
-                    {testResults.scenarios ? "Full Suite Results" : `Scenario ${testResults.scenario_id} Results`}
-                  </CardTitle>
-                  <Badge className={testResults.overall_status === "pass" ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}>
-                    {testResults.overall_status?.toUpperCase()}
-                  </Badge>
+            <div style={{ background: T.glass, border: `1px solid ${testResults.overall_status === "pass" ? "rgba(52,211,153,.25)" : "rgba(239,68,68,.25)"}`, borderRadius: 12, overflow: "hidden" }} data-testid="test-results">
+              <div style={{ padding: "12px 16px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  {testResults.overall_status === "pass" ? <CheckCircle size={14} style={{ color: T.green }} /> : <XCircle size={14} style={{ color: T.red }} />}
+                  <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{testResults.scenarios ? "Full Suite Results" : `Scenario ${testResults.scenario_id} Results`}</span>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
+                <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: testResults.overall_status === "pass" ? "rgba(52,211,153,.15)" : "rgba(239,68,68,.15)", color: testResults.overall_status === "pass" ? T.green : T.red }}>
+                  {testResults.overall_status?.toUpperCase()}
+                </span>
+              </div>
+              <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 14 }}>
                 {(testResults.scenarios || [testResults]).map((sc, si) => (
-                  <div key={si} className="space-y-1.5">
+                  <div key={si} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                     {testResults.scenarios && (
-                      <div className="flex items-center gap-2 mb-1">
-                        <Badge className="bg-zinc-800 text-zinc-300 text-[10px]">{sc.scenario_id}</Badge>
-                        <span className="text-xs text-zinc-400">{sc.scenario_name}</span>
-                        <Badge className={sc.overall_status === "pass" ? "bg-emerald-500/15 text-emerald-400 text-[10px]" : "bg-red-500/15 text-red-400 text-[10px]"}>{sc.summary?.passed}/{sc.summary?.total}</Badge>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                        <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 6, background: "rgba(255,255,255,.07)", color: T.zinc }}>{sc.scenario_id}</span>
+                        <span style={{ fontSize: 11, color: "#d4d4d8" }}>{sc.scenario_name}</span>
+                        <span style={{ fontSize: 10, fontWeight: 700, padding: "1px 7px", borderRadius: 20, background: sc.overall_status === "pass" ? "rgba(52,211,153,.1)" : "rgba(239,68,68,.1)", color: sc.overall_status === "pass" ? T.green : T.red }}>{sc.summary?.passed}/{sc.summary?.total}</span>
                       </div>
                     )}
-                    {sc.steps?.map((step, i) => (
-                      <div key={i} className={`flex items-center gap-2 px-3 py-1.5 rounded border text-[11px] ${STATUS_COLORS[step.status] || STATUS_COLORS.warn}`} data-testid={`step-${sc.scenario_id}-${step.step}`}>
-                        {step.status === "pass" ? <CheckCircle className="w-3 h-3 shrink-0" /> : step.status === "fail" ? <XCircle className="w-3 h-3 shrink-0" /> : <AlertCircle className="w-3 h-3 shrink-0" />}
-                        <span className="font-medium">{step.step}</span>
-                        <ChevronRight className="w-3 h-3 text-zinc-600" />
-                        <span className="text-zinc-400 truncate">{step.detail}</span>
-                      </div>
-                    ))}
+                    {sc.steps?.map((step, i) => {
+                      const sm = STEP_STATUS[step.status] || STEP_STATUS.warn;
+                      return (
+                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", borderRadius: 7, background: sm.bg, border: `1px solid ${sm.border}`, color: sm.color, fontSize: 11 }} data-testid={`step-${sc.scenario_id}-${step.step}`}>
+                          {step.status === "pass" ? <CheckCircle size={11} style={{ flexShrink: 0 }} /> : step.status === "fail" ? <XCircle size={11} style={{ flexShrink: 0 }} /> : <AlertCircle size={11} style={{ flexShrink: 0 }} />}
+                          <span style={{ fontWeight: 600 }}>{step.step}</span>
+                          <ChevronRight size={11} style={{ color: T.zinc }} />
+                          <span style={{ color: "#a1a1aa", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{step.detail}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 ))}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
 
-          {/* Test History */}
           {testHistory.length > 0 && (
-            <Card className="bg-zinc-900/50 border-white/5">
-              <CardHeader className="pb-2"><CardTitle className="text-sm text-white flex items-center gap-2"><Clock className="w-4 h-4 text-zinc-400" /> Recent Test Runs</CardTitle></CardHeader>
-              <CardContent className="space-y-1.5">
+            <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, overflow: "hidden" }}>
+              <div style={{ padding: "12px 16px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 8 }}>
+                <Clock size={13} style={{ color: T.zinc }} />
+                <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Recent Test Runs</span>
+              </div>
+              <div style={{ padding: "10px 14px", display: "flex", flexDirection: "column", gap: 5 }}>
                 {testHistory.map((h, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 rounded bg-zinc-800/40 text-xs">
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-zinc-700/50 text-zinc-400 text-[10px]">{h.scenario_id}</Badge>
-                      <span className="text-zinc-300">{h.scenario_name}</span>
+                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "7px 10px", borderRadius: 7, background: "rgba(255,255,255,.025)", fontSize: 11 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 10, padding: "1px 7px", borderRadius: 5, background: "rgba(255,255,255,.06)", color: T.zinc }}>{h.scenario_id}</span>
+                      <span style={{ color: "#d4d4d8" }}>{h.scenario_name}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-zinc-500">{h.summary?.passed}/{h.summary?.total}</span>
-                      <Badge className={h.overall_status === "pass" ? "bg-emerald-500/15 text-emerald-400 text-[10px]" : "bg-red-500/15 text-red-400 text-[10px]"}>{h.overall_status}</Badge>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ color: T.zinc }}>{h.summary?.passed}/{h.summary?.total}</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: h.overall_status === "pass" ? "rgba(52,211,153,.1)" : "rgba(239,68,68,.1)", color: h.overall_status === "pass" ? T.green : T.red }}>{h.overall_status}</span>
                     </div>
                   </div>
                 ))}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
         </div>
       )}
 
       {/* Autonomy Tab */}
       {activeTab === "autonomy" && dashboard && (
-        <div className="space-y-4" data-testid="autonomy-tab">
-          <Card className="bg-zinc-900/50 border-white/5">
-            <CardHeader className="pb-2"><CardTitle className="text-sm text-white flex items-center gap-2"><Lock className="w-4 h-4 text-violet-400" /> Autonomy Tiers</CardTitle></CardHeader>
-            <CardContent className="space-y-2">
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }} data-testid="autonomy-tab">
+          <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, overflow: "hidden" }}>
+            <div style={{ padding: "12px 16px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 8 }}>
+              <Lock size={13} style={{ color: T.violet }} />
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Autonomy Tiers</span>
+            </div>
+            <div style={{ padding: "10px 14px", display: "flex", flexDirection: "column", gap: 8 }}>
               {Object.entries(dashboard.tiers || {}).map(([tier, info]) => (
-                <div key={tier} className="flex items-center justify-between p-3 rounded-lg bg-zinc-800/40 border border-white/5" data-testid={`tier-${tier}`}>
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-violet-500/15 flex items-center justify-center text-violet-400 text-xs font-bold">T{tier}</div>
+                <div key={tier} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 14px", borderRadius: 10, background: "rgba(255,255,255,.025)", border: `1px solid ${T.border}` }} data-testid={`tier-${tier}`}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 9, background: "rgba(167,139,250,.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: T.violet }}>T{tier}</div>
                     <div>
-                      <p className="text-xs font-medium text-white">{info.name}</p>
-                      <p className="text-[10px] text-zinc-500">Max spend: ${info.max_spend} | Approval: {info.requires_approval ? "Required" : "Auto"}</p>
+                      <p style={{ fontSize: 12, fontWeight: 600, color: "#fff", margin: 0 }}>{info.name}</p>
+                      <p style={{ fontSize: 10, color: T.zinc, margin: 0 }}>Max spend: ${info.max_spend} | Approval: {info.requires_approval ? "Required" : "Auto"}</p>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-1 max-w-xs">
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 5, maxWidth: 220 }}>
                     {info.allowed_actions?.slice(0, 4).map((a, i) => (
-                      <Badge key={i} variant="outline" className="text-[9px] text-zinc-500 border-zinc-700">{a}</Badge>
+                      <span key={i} style={{ fontSize: 9, padding: "2px 7px", borderRadius: 5, border: `1px solid ${T.border}`, color: T.zinc }}>{a}</span>
                     ))}
-                    {info.allowed_actions?.length > 4 && <Badge variant="outline" className="text-[9px] text-zinc-500 border-zinc-700">+{info.allowed_actions.length - 4}</Badge>}
+                    {info.allowed_actions?.length > 4 && <span style={{ fontSize: 9, padding: "2px 7px", borderRadius: 5, border: `1px solid ${T.border}`, color: T.zinc }}>+{info.allowed_actions.length - 4}</span>}
                   </div>
                 </div>
               ))}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          {/* Agent Workload */}
-          <Card className="bg-zinc-900/50 border-white/5">
-            <CardHeader className="pb-2"><CardTitle className="text-sm text-white flex items-center gap-2"><Users className="w-4 h-4 text-emerald-400" /> Agent Workload by Network</CardTitle></CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {dashboard.agent_workload?.slice(0, 12).map((w, i) => (
-                  <div key={i} className="p-2 rounded bg-zinc-800/40 border border-white/5 text-center" data-testid={`workload-${w.network}`}>
-                    <p className="text-[10px] text-zinc-500 truncate">{w.network?.replace(/_/g, " ")}</p>
-                    <p className="text-sm font-bold text-white">{w.busy}/{w.total}</p>
-                    <div className="mt-1 h-1 bg-zinc-700/50 rounded-full overflow-hidden">
-                      <div className="h-full bg-emerald-500/60 rounded-full" style={{ width: `${w.total > 0 ? (w.busy / w.total) * 100 : 0}%` }} />
-                    </div>
+          <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, overflow: "hidden" }}>
+            <div style={{ padding: "12px 16px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 8 }}>
+              <Users size={13} style={{ color: T.green }} />
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Agent Workload by Network</span>
+            </div>
+            <div style={{ padding: "12px 14px", display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8 }}>
+              {dashboard.agent_workload?.slice(0, 12).map((w, i) => (
+                <div key={i} style={{ padding: "10px 12px", borderRadius: 9, background: "rgba(255,255,255,.025)", border: `1px solid ${T.border}`, textAlign: "center" }} data-testid={`workload-${w.network}`}>
+                  <p style={{ fontSize: 9, color: T.zinc, margin: "0 0 4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{w.network?.replace(/_/g, " ")}</p>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: "0 0 6px" }}>{w.busy}/{w.total}</p>
+                  <div style={{ height: 3, background: "rgba(255,255,255,.07)", borderRadius: 99, overflow: "hidden" }}>
+                    <div style={{ height: "100%", background: "rgba(52,211,153,.6)", borderRadius: 99, width: `${w.total > 0 ? (w.busy / w.total) * 100 : 0}%` }} />
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

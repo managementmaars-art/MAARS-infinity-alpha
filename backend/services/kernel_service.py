@@ -278,7 +278,7 @@ async def seed_knowledge_graph(user_id):
         {"label": "Knowledge Graph", "type": "system", "properties": {"description": "Semantic relationship mapping"}},
         {"label": "Memory Layer", "type": "system", "properties": {"description": "Persistent context management"}},
         {"label": "Integration Hub", "type": "system", "properties": {"description": "Third-party API connections"}},
-        {"label": "OpenAI", "type": "provider", "properties": {"models": "GPT-5.2, GPT-4o, o3"}},
+        {"label": "OpenAI", "type": "provider", "properties": {"models": "GPT-5, GPT-4o, o3"}},
         {"label": "Anthropic", "type": "provider", "properties": {"models": "Claude Sonnet 4.5"}},
         {"label": "Google", "type": "provider", "properties": {"models": "Gemini 3 Flash, Pro"}},
         {"label": "xAI", "type": "provider", "properties": {"models": "Grok 3"}},

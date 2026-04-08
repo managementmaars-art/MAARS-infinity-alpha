@@ -1,5 +1,7 @@
 """Task management endpoints."""
 import uuid
+import time
+import asyncio
 import logging
 from datetime import datetime, timezone
 from typing import List
@@ -75,40 +77,79 @@ async def execute_task(task_id: str, current_user: User = Depends(get_current_us
     if not task.get("assigned_agents"):
         raise HTTPException(status_code=400, detail="No agents assigned to task")
     
+    # Block double-execution
+    if task.get("status") == "in_progress":
+        raise HTTPException(status_code=409, detail="Task is already executing")
+
+    priority = task.get("priority", "medium")
+    priority_directive = {
+        "critical": "⚡ CRITICAL PRIORITY — respond with maximum urgency, depth, and precision.",
+        "high":     "🔴 HIGH PRIORITY — deliver a comprehensive, thorough response.",
+        "medium":   "Deliver a complete, well-structured response.",
+        "low":      "Provide a concise but complete response.",
+    }.get(priority, "Deliver a complete, well-structured response.")
+
     # Update status to in_progress
-    await db.tasks.update_one({"task_id": task_id}, {"$set": {"status": "in_progress", "updated_at": datetime.now(timezone.utc).isoformat()}})
-    
+    await db.tasks.update_one(
+        {"task_id": task_id},
+        {"$set": {"status": "in_progress", "updated_at": datetime.now(timezone.utc).isoformat()}}
+    )
+
+    start_ts = time.monotonic()
     results = []
-    for agent_id in task["assigned_agents"]:
+    errors = []
+
+    async def _run_agent(agent_id: str) -> str:
         agent = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0})
         if not agent:
-            continue
-        
+            return f"**{agent_id}:** Agent not found"
         try:
             from emergentintegrations.llm.chat import LlmChat, UserMessage
-            
             llm_chat = LlmChat(
                 api_key=EMERGENT_LLM_KEY,
                 session_id=f"{task_id}_{agent_id}",
                 system_message=agent["system_prompt"]
             ).with_model(agent["model_provider"], agent["model_name"])
-            
-            prompt = f"Task: {task['title']}\n\nDescription: {task['description']}\n\nPlease complete this task and provide your output."
-            user_message = UserMessage(text=prompt)
-            response = await llm_chat.send_message(user_message)
-            results.append(f"**{agent['name']}:**\n{response}")
+            prompt = (
+                f"{priority_directive}\n\n"
+                f"**Task:** {task['title']}\n\n"
+                f"**Description:**\n{task['description']}\n\n"
+                f"Please complete this task thoroughly and provide structured output with clear sections."
+            )
+            response = await llm_chat.send_message(UserMessage(text=prompt))
+            return f"**{agent['name']} ({agent.get('role', 'Agent')}):**\n{response}"
         except Exception as e:
             logger.error(f"Task execution error for agent {agent_id}: {e}")
-            results.append(f"**{agent['name']}:** Error - {str(e)}")
-    
+            errors.append(agent_id)
+            return f"**{agent.get('name', agent_id)}:** ⚠️ Execution error — {str(e)}"
+
+    # Run all agents concurrently
+    agent_results = await asyncio.gather(*[_run_agent(aid) for aid in task["assigned_agents"]])
+    results = list(agent_results)
+
+    elapsed_ms = int((time.monotonic() - start_ts) * 1000)
     combined_result = "\n\n---\n\n".join(results)
-    
+
+    # Add execution metadata footer
+    combined_result += (
+        f"\n\n---\n*Executed {len(task['assigned_agents'])} agent(s) in {elapsed_ms}ms"
+        f" · Priority: {priority.upper()}"
+        + (f" · {len(errors)} error(s)" if errors else "")
+        + "*"
+    )
+
+    final_status = "failed" if len(errors) == len(task["assigned_agents"]) else "completed"
+
     await db.tasks.update_one(
         {"task_id": task_id},
-        {"$set": {"status": "completed", "result": combined_result, "updated_at": datetime.now(timezone.utc).isoformat()}}
+        {"$set": {
+            "status": final_status,
+            "result": combined_result,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+        }}
     )
-    
-    return {"status": "completed", "result": combined_result}
+
+    return {"status": final_status, "result": combined_result, "elapsed_ms": elapsed_ms}
 
 @router.delete("/tasks/{task_id}")
 async def delete_task(task_id: str, current_user: User = Depends(get_current_user)):

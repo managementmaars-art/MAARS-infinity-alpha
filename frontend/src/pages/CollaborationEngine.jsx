@@ -1,96 +1,109 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth, API } from "../App";
-import { Card, CardContent } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Button } from "../components/ui/button";
 import {
   MessageSquare, ArrowRight, Clock, CheckCircle, AlertTriangle,
   Zap, Users, ChevronDown, ChevronUp, Filter
 } from "lucide-react";
 
-const STATUS_COLORS = {
-  pending: "bg-amber-500/15 text-amber-400 border-amber-500/30",
-  in_progress: "bg-indigo-500/15 text-indigo-400 border-indigo-500/30",
-  completed: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-  failed: "bg-red-500/15 text-red-400 border-red-500/30",
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  violet: "#7c3aed",
+  indigo: "#818cf8",
+  amber: "#f59e0b",
+  green: "#34d399",
+  red: "#ef4444",
+  zinc: "#71717a",
 };
 
-const RISK_COLORS = {
-  low: "text-emerald-400",
-  medium: "text-amber-400",
-  high: "text-red-400",
-  critical: "text-red-500",
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
+
+const STATUS_META = {
+  pending: { color: T.amber, bg: "rgba(245,158,11,.12)" },
+  in_progress: { color: T.indigo, bg: "rgba(129,140,248,.12)" },
+  completed: { color: T.green, bg: "rgba(52,211,153,.12)" },
+  failed: { color: T.red, bg: "rgba(239,68,68,.12)" },
+};
+
+const RISK_COLOR = { low: T.green, medium: T.amber, high: T.red, critical: "#dc2626" };
+
+const selectStyle = {
+  background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`,
+  borderRadius: 8, padding: "7px 10px", color: "#a1a1aa", fontSize: 12,
+  outline: "none", fontFamily: "inherit", cursor: "pointer", width: "100%",
 };
 
 const CollabCard = ({ collab }) => {
   const [expanded, setExpanded] = useState(false);
+  const sm = STATUS_META[collab.status] || STATUS_META.pending;
+  const riskColor = RISK_COLOR[collab.risk_level] || T.green;
   return (
-    <Card className="bg-zinc-900/50 border-white/5 hover:border-white/10 transition-all">
-      <CardContent className="p-4">
-        <div className="flex items-start gap-3">
-          <div className="w-8 h-8 rounded-lg bg-indigo-500/15 flex items-center justify-center shrink-0 mt-0.5">
-            <MessageSquare className="w-4 h-4 text-indigo-400" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="text-sm font-medium text-white">{collab.sender || "System"}</span>
-              <ArrowRight className="w-3 h-3 text-zinc-600" />
-              <span className="text-sm text-indigo-400">{(collab.receivers || []).join(", ") || "All"}</span>
-              <Badge variant="outline" className={`text-[9px] ${STATUS_COLORS[collab.status] || STATUS_COLORS.pending}`}>
-                {collab.status}
-              </Badge>
-              <Badge variant="outline" className={`text-[9px] border-white/10 ${RISK_COLORS[collab.risk_level] || RISK_COLORS.low}`}>
-                {collab.risk_level} risk
-              </Badge>
-            </div>
-            <p className="text-sm text-zinc-300 mb-1">{collab.objective}</p>
-            {collab.context && (
-              <p className="text-xs text-zinc-500 line-clamp-2">{collab.context}</p>
-            )}
-
-            {expanded && (
-              <div className="mt-3 space-y-2 border-t border-white/5 pt-3">
-                {collab.required_output && (
-                  <div>
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Required Output</p>
-                    <p className="text-xs text-zinc-300">{collab.required_output}</p>
-                  </div>
-                )}
-                {collab.dependencies?.length > 0 && (
-                  <div>
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Dependencies</p>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {collab.dependencies.map((d, i) => (
-                        <Badge key={i} variant="outline" className="border-white/10 text-zinc-400 text-[9px]">{d}</Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {collab.response && (
-                  <div>
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Response</p>
-                    <p className="text-xs text-zinc-300 whitespace-pre-wrap">{collab.response}</p>
-                  </div>
-                )}
-                {collab.deadline && (
-                  <div className="flex items-center gap-1 text-[10px] text-zinc-500">
-                    <Clock className="w-3 h-3" />Deadline: {collab.deadline}
-                  </div>
-                )}
-              </div>
-            )}
-
-            <button onClick={() => setExpanded(!expanded)} className="mt-2 flex items-center gap-1 text-[10px] text-zinc-500 hover:text-zinc-300">
-              {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-              {expanded ? "Less" : "More details"}
-            </button>
-          </div>
-          <div className="text-[10px] text-zinc-600 shrink-0">
-            {collab.created_at ? new Date(collab.created_at).toLocaleDateString() : ""}
-          </div>
+    <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "14px 16px", transition: "border-color .2s" }}
+      onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(255,255,255,.13)"}
+      onMouseLeave={e => e.currentTarget.style.borderColor = T.border}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+        <div style={{ width: 34, height: 34, borderRadius: 9, background: "rgba(129,140,248,.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <MessageSquare size={15} style={{ color: T.indigo }} />
         </div>
-      </CardContent>
-    </Card>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 5 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{collab.sender || "System"}</span>
+            <ArrowRight size={11} style={{ color: T.zinc }} />
+            <span style={{ fontSize: 13, color: T.indigo }}>{(collab.receivers || []).join(", ") || "All"}</span>
+            <span style={{ fontSize: 9, padding: "2px 7px", borderRadius: 5, background: sm.bg, color: sm.color, fontWeight: 700 }}>{collab.status}</span>
+            <span style={{ fontSize: 9, padding: "2px 7px", borderRadius: 5, background: "rgba(255,255,255,.04)", color: riskColor, fontWeight: 700 }}>{collab.risk_level} risk</span>
+          </div>
+          <p style={{ fontSize: 13, color: "#d4d4d8", marginBottom: 4 }}>{collab.objective}</p>
+          {collab.context && <p style={{ fontSize: 11, color: T.zinc, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: expanded ? "unset" : 2, WebkitBoxOrient: "vertical" }}>{collab.context}</p>}
+
+          {expanded && (
+            <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${T.border}`, display: "flex", flexDirection: "column", gap: 10 }}>
+              {collab.required_output && (
+                <div>
+                  <p style={{ fontSize: 9, color: T.zinc, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 4 }}>Required Output</p>
+                  <p style={{ fontSize: 12, color: "#d4d4d8" }}>{collab.required_output}</p>
+                </div>
+              )}
+              {collab.dependencies?.length > 0 && (
+                <div>
+                  <p style={{ fontSize: 9, color: T.zinc, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 5 }}>Dependencies</p>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                    {collab.dependencies.map((d, i) => (
+                      <span key={i} style={{ fontSize: 9, padding: "2px 7px", borderRadius: 5, border: `1px solid ${T.border}`, color: T.zinc }}>{d}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {collab.response && (
+                <div>
+                  <p style={{ fontSize: 9, color: T.zinc, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 4 }}>Response</p>
+                  <p style={{ fontSize: 12, color: "#d4d4d8", whiteSpace: "pre-wrap" }}>{collab.response}</p>
+                </div>
+              )}
+              {collab.deadline && (
+                <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10, color: T.zinc }}>
+                  <Clock size={11} /> Deadline: {collab.deadline}
+                </div>
+              )}
+            </div>
+          )}
+
+          <button onClick={() => setExpanded(!expanded)}
+            style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 10, color: T.zinc, background: "none", border: "none", cursor: "pointer", padding: 0, marginTop: 8, transition: "color .2s" }}
+            onMouseEnter={e => e.currentTarget.style.color = "#a1a1aa"}
+            onMouseLeave={e => e.currentTarget.style.color = T.zinc}>
+            {expanded ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
+            {expanded ? "Less" : "More details"}
+          </button>
+        </div>
+        <span style={{ fontSize: 10, color: "rgba(113,113,122,.5)", flexShrink: 0 }}>
+          {collab.created_at ? new Date(collab.created_at).toLocaleDateString() : ""}
+        </span>
+      </div>
+    </div>
   );
 };
 
@@ -132,122 +145,115 @@ const CollaborationEngine = () => {
     } catch {} finally { setCreating(false); }
   };
 
-  /* Stats */
   const statusCounts = collabs.reduce((acc, c) => { acc[c.status] = (acc[c.status] || 0) + 1; return acc; }, {});
   const uniqueAgents = new Set([...collabs.map(c => c.sender), ...collabs.flatMap(c => c.receivers || [])]);
-
   const statusFilters = ["all", "pending", "in_progress", "completed", "failed"];
 
   return (
-    <div className="space-y-6" data-testid="collaboration-engine">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-violet-500/15 flex items-center justify-center">
-          <Users className="w-5 h-5 text-violet-400" />
+    <div style={{ display: "flex", flexDirection: "column", gap: 22, animation: "fadeUp .4s ease" }} data-testid="collaboration-engine">
+      <style>{STYLES}</style>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(124,58,237,.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Users size={22} style={{ color: T.violet }} />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-white font-['Outfit']">Agent-to-Agent Collaboration</h1>
-          <p className="text-xs text-zinc-500">Inter-agent communication, task handoff & cross-domain coordination</p>
+          <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 26, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 3 }}>Agent-to-Agent Collaboration</h1>
+          <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>Inter-agent communication, task handoff & cross-domain coordination</p>
         </div>
-        <Badge variant="outline" className="ml-auto border-white/10 text-zinc-400">{total} total</Badge>
+        <span style={{ marginLeft: "auto", fontSize: 11, padding: "4px 12px", borderRadius: 20, background: T.glass, border: `1px solid ${T.border}`, color: T.zinc }}>{total} total</span>
       </div>
 
-      {/* Collaboration Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" data-testid="collab-stats">
-        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-3">
-          <div className="flex items-center gap-2 mb-1"><MessageSquare className="w-3.5 h-3.5 text-violet-400" /><span className="text-[10px] text-zinc-500">Total Collabs</span></div>
-          <p className="text-lg font-bold text-white">{total}</p>
-        </div>
-        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-3">
-          <div className="flex items-center gap-2 mb-1"><Users className="w-3.5 h-3.5 text-indigo-400" /><span className="text-[10px] text-zinc-500">Agents Involved</span></div>
-          <p className="text-lg font-bold text-white">{uniqueAgents.size}</p>
-        </div>
-        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-3">
-          <div className="flex items-center gap-2 mb-1"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /><span className="text-[10px] text-zinc-500">Completed</span></div>
-          <p className="text-lg font-bold text-white">{statusCounts.completed || 0}</p>
-        </div>
-        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-3">
-          <div className="flex items-center gap-2 mb-1"><Clock className="w-3.5 h-3.5 text-amber-400" /><span className="text-[10px] text-zinc-500">Pending</span></div>
-          <p className="text-lg font-bold text-white">{statusCounts.pending || 0}</p>
-        </div>
+      {/* Stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }} data-testid="collab-stats">
+        {[
+          { icon: MessageSquare, label: "Total Collabs", value: total, color: T.violet },
+          { icon: Users, label: "Agents Involved", value: uniqueAgents.size, color: T.indigo },
+          { icon: CheckCircle, label: "Completed", value: statusCounts.completed || 0, color: T.green },
+          { icon: Clock, label: "Pending", value: statusCounts.pending || 0, color: T.amber },
+        ].map(s => (
+          <div key={s.label} style={{ position: "relative", background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "12px 14px", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: s.color }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+              <s.icon size={12} style={{ color: s.color }} />
+              <span style={{ fontSize: 10, color: T.zinc }}>{s.label}</span>
+            </div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "#fff" }}>{s.value}</div>
+          </div>
+        ))}
       </div>
 
-      {/* Filters + Create Button */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <Filter className="w-4 h-4 text-zinc-500" />
+      {/* Filters + create */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+        <Filter size={13} style={{ color: T.zinc }} />
         {statusFilters.map(s => (
-          <button key={s} onClick={() => setFilter(s)}
-            className={`px-3 py-1.5 rounded-lg text-xs transition-colors ${filter === s ? "bg-indigo-500/15 text-indigo-400" : "bg-zinc-800/50 text-zinc-500 hover:text-zinc-300"}`}
-            data-testid={`filter-${s}`}>
+          <button key={s} onClick={() => setFilter(s)} data-testid={`filter-${s}`}
+            style={{ padding: "5px 12px", borderRadius: 8, border: `1px solid ${filter === s ? "rgba(129,140,248,.3)" : T.border}`, background: filter === s ? "rgba(129,140,248,.1)" : T.glass, color: filter === s ? T.indigo : T.zinc, fontSize: 11, fontWeight: 600, cursor: "pointer", transition: "all .2s" }}>
             {s === "all" ? "All" : s.replace("_", " ")}
           </button>
         ))}
-        <button onClick={() => setShowCreate(!showCreate)}
-          className="ml-auto px-3 py-1.5 rounded-lg text-xs bg-violet-500/15 text-violet-400 hover:bg-violet-500/25 transition-colors"
-          data-testid="initiate-collab-btn">
-          <Zap className="w-3 h-3 inline mr-1" />Initiate Collaboration
+        <button onClick={() => setShowCreate(!showCreate)} data-testid="initiate-collab-btn"
+          style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5, padding: "6px 14px", borderRadius: 9, background: "rgba(124,58,237,.15)", border: `1px solid rgba(124,58,237,.3)`, color: "#c4b5fd", fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "background .2s" }}>
+          <Zap size={12} /> Initiate Collaboration
         </button>
       </div>
 
-      {/* Create Collaboration Form */}
+      {/* Create form */}
       {showCreate && (
-        <Card className="bg-zinc-900/50 border-violet-500/20" data-testid="create-collab-form">
-          <CardContent className="p-4 space-y-3">
-            <p className="text-sm font-bold text-white">Initiate Agent-to-Agent Collaboration</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <select value={newCollab.sender} onChange={e => setNewCollab(p => ({ ...p, sender: e.target.value }))}
-                className="bg-zinc-800 border border-white/10 rounded-md px-3 py-2 text-xs text-zinc-300" data-testid="collab-sender">
-                <option value="">Select sender agent...</option>
-                {agents.slice(0, 50).map(a => <option key={a.agent_id} value={a.name}>{a.name} ({a.role})</option>)}
-              </select>
-              <select value="" onChange={e => {
-                if (e.target.value && !newCollab.receivers.includes(e.target.value))
-                  setNewCollab(p => ({ ...p, receivers: [...p.receivers, e.target.value] }));
-              }}
-                className="bg-zinc-800 border border-white/10 rounded-md px-3 py-2 text-xs text-zinc-300" data-testid="collab-receiver">
-                <option value="">Add receiver agent...</option>
-                {agents.slice(0, 50).filter(a => a.name !== newCollab.sender).map(a => <option key={a.agent_id} value={a.name}>{a.name} ({a.role})</option>)}
-              </select>
+        <div style={{ background: T.glass, border: `1px solid rgba(124,58,237,.2)`, borderRadius: 14, padding: "16px 18px", display: "flex", flexDirection: "column", gap: 12 }} data-testid="create-collab-form">
+          <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Initiate Agent-to-Agent Collaboration</p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <select value={newCollab.sender} onChange={e => setNewCollab(p => ({ ...p, sender: e.target.value }))} style={selectStyle} data-testid="collab-sender">
+              <option value="">Select sender agent…</option>
+              {agents.slice(0, 50).map(a => <option key={a.agent_id} value={a.name} style={{ background: "#0f0f1a" }}>{a.name} ({a.role})</option>)}
+            </select>
+            <select value="" onChange={e => { if (e.target.value && !newCollab.receivers.includes(e.target.value)) setNewCollab(p => ({ ...p, receivers: [...p.receivers, e.target.value] })); }} style={selectStyle} data-testid="collab-receiver">
+              <option value="">Add receiver agent…</option>
+              {agents.slice(0, 50).filter(a => a.name !== newCollab.sender).map(a => <option key={a.agent_id} value={a.name} style={{ background: "#0f0f1a" }}>{a.name} ({a.role})</option>)}
+            </select>
+          </div>
+          {newCollab.receivers.length > 0 && (
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+              {newCollab.receivers.map(r => (
+                <span key={r} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10, padding: "3px 8px", borderRadius: 5, background: "rgba(124,58,237,.12)", border: `1px solid rgba(124,58,237,.25)`, color: "#c4b5fd" }}>
+                  {r}
+                  <button onClick={() => setNewCollab(p => ({ ...p, receivers: p.receivers.filter(x => x !== r) }))} style={{ background: "none", border: "none", cursor: "pointer", color: T.zinc, padding: 0, lineHeight: 1 }}>×</button>
+                </span>
+              ))}
             </div>
-            {newCollab.receivers.length > 0 && (
-              <div className="flex gap-1 flex-wrap">
-                {newCollab.receivers.map(r => (
-                  <Badge key={r} className="bg-violet-500/15 text-violet-300 border border-violet-500/20 text-[10px] gap-1">
-                    {r}<button onClick={() => setNewCollab(p => ({ ...p, receivers: p.receivers.filter(x => x !== r) }))} className="hover:text-white">&times;</button>
-                  </Badge>
-                ))}
-              </div>
-            )}
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-              <input value={newCollab.objective} onChange={e => setNewCollab(p => ({ ...p, objective: e.target.value }))}
-                placeholder="Collaboration objective..." className="sm:col-span-3 bg-zinc-800 border border-white/10 rounded-md px-3 py-2 text-xs text-zinc-300 placeholder:text-zinc-600" data-testid="collab-objective" />
-              <select value={newCollab.collab_type} onChange={e => setNewCollab(p => ({ ...p, collab_type: e.target.value }))}
-                className="bg-zinc-800 border border-white/10 rounded-md px-3 py-2 text-xs text-zinc-300" data-testid="collab-type">
-                <option value="information_sharing">Info Sharing</option>
-                <option value="review_request">Review Request</option>
-                <option value="data_handoff">Data Handoff</option>
-                <option value="coordination">Coordination</option>
-              </select>
-            </div>
-            <Button onClick={handleCreateCollab} disabled={creating} size="sm" className="bg-violet-600 hover:bg-violet-700 text-xs" data-testid="submit-collab-btn">
-              {creating ? "Creating..." : "Create Collaboration"}
-            </Button>
-          </CardContent>
-        </Card>
+          )}
+          <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr", gap: 10 }}>
+            <input value={newCollab.objective} onChange={e => setNewCollab(p => ({ ...p, objective: e.target.value }))}
+              placeholder="Collaboration objective…" style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 8, padding: "7px 11px", color: "#fff", fontSize: 12, outline: "none", fontFamily: "inherit" }} data-testid="collab-objective" />
+            <select value={newCollab.collab_type} onChange={e => setNewCollab(p => ({ ...p, collab_type: e.target.value }))} style={selectStyle} data-testid="collab-type">
+              <option value="information_sharing" style={{ background: "#0f0f1a" }}>Info Sharing</option>
+              <option value="review_request" style={{ background: "#0f0f1a" }}>Review Request</option>
+              <option value="data_handoff" style={{ background: "#0f0f1a" }}>Data Handoff</option>
+              <option value="coordination" style={{ background: "#0f0f1a" }}>Coordination</option>
+            </select>
+          </div>
+          <button onClick={handleCreateCollab} disabled={creating} data-testid="submit-collab-btn"
+            style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 6, padding: "8px 18px", borderRadius: 9, background: creating ? "rgba(124,58,237,.3)" : `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 13, fontWeight: 700, cursor: creating ? "not-allowed" : "pointer" }}>
+            {creating ? <div style={{ width: 13, height: 13, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> : null}
+            {creating ? "Creating…" : "Create Collaboration"}
+          </button>
+        </div>
       )}
 
+      {/* List */}
       {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <div className="w-6 h-6 border-2 border-violet-400 border-t-transparent rounded-full animate-spin" />
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 200 }}>
+          <div style={{ width: 24, height: 24, border: `2px solid ${T.violet}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
         </div>
       ) : collabs.length > 0 ? (
-        <div className="space-y-3">
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {collabs.map(c => <CollabCard key={c.collab_id} collab={c} />)}
         </div>
       ) : (
-        <div className="text-center py-16 border border-dashed border-white/10 rounded-xl">
-          <Users className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
-          <p className="text-zinc-400 text-sm">No collaboration logs yet</p>
-          <p className="text-zinc-600 text-xs mt-1">Collaborations are created automatically when agents work together on projects</p>
+        <div style={{ textAlign: "center", padding: "56px 20px", border: `1px dashed ${T.border}`, borderRadius: 16 }}>
+          <Users size={44} style={{ color: "rgba(255,255,255,.06)", marginBottom: 12 }} />
+          <p style={{ fontSize: 13, color: T.zinc, marginBottom: 4 }}>No collaboration logs yet</p>
+          <p style={{ fontSize: 11, color: "rgba(113,113,122,.5)" }}>Collaborations are created automatically when agents work together on projects</p>
         </div>
       )}
     </div>

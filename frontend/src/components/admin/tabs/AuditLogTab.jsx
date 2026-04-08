@@ -43,7 +43,7 @@ export const AuditLogTab = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <Loader2 className="w-6 h-6 text-red-400 animate-spin" />
+        <Loader2 className="w-6 h-6 text-indigo-400 animate-spin" />
       </div>
     );
   }
@@ -53,7 +53,7 @@ export const AuditLogTab = () => {
       <Card className="bg-zinc-900/50 border-white/10">
         <CardHeader className="pb-3">
           <CardTitle className="text-white font-['Outfit'] text-base flex items-center gap-2">
-            <ScrollText className="w-4 h-4 text-red-400" />
+            <ScrollText className="w-4 h-4 text-indigo-400" />
             Admin Audit Log
             <Badge variant="outline" className="ml-2 text-zinc-400 border-white/10">{logs.length} entries</Badge>
           </CardTitle>

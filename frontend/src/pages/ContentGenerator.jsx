@@ -1,24 +1,39 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth, API } from "../App";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Badge } from "../components/ui/badge";
-import { Input } from "../components/ui/input";
 import {
-  Sparkles, Loader2, Clock, Copy, Trash2, ChevronDown, ChevronUp,
+  Sparkles, Clock, Copy, Trash2, ChevronDown, ChevronUp,
   FileText, Palette, Zap, Mail, Megaphone, Newspaper, PenTool
 } from "lucide-react";
 import { toast } from "sonner";
 
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  amber: "#f59e0b",
+  violet: "#7c3aed",
+  indigo: "#818cf8",
+  green: "#34d399",
+  red: "#ef4444",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+`;
+
+const formInput = {
+  background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`,
+  borderRadius: 8, padding: "8px 12px", color: "#fff", fontSize: 13,
+  outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box",
+  transition: "border-color .2s",
+};
+
 const TYPE_ICONS = {
-  marketing_copy: Megaphone,
-  social_post: Zap,
-  email_campaign: Mail,
-  blog_article: Newspaper,
-  ad_copy: Megaphone,
-  press_release: FileText,
-  brand_guidelines: Palette,
-  custom: PenTool,
+  marketing_copy: Megaphone, social_post: Zap, email_campaign: Mail,
+  blog_article: Newspaper, ad_copy: Megaphone, press_release: FileText,
+  brand_guidelines: Palette, custom: PenTool,
 };
 
 const ContentGenerator = () => {
@@ -30,7 +45,6 @@ const ContentGenerator = () => {
   const [generating, setGenerating] = useState(false);
   const [expandedItem, setExpandedItem] = useState(null);
 
-  // Form state
   const [selectedType, setSelectedType] = useState("marketing_copy");
   const [selectedBlueprint, setSelectedBlueprint] = useState("");
   const [prompt, setPrompt] = useState("");
@@ -59,32 +73,16 @@ const ContentGenerator = () => {
     setGenerating(true);
     try {
       const res = await fetch(`${API}/content/generate`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          content_type: selectedType,
-          blueprint_id: selectedBlueprint,
-          prompt,
-          length,
-          tone_override: toneOverride,
-        }),
+        method: "POST", headers,
+        body: JSON.stringify({ content_type: selectedType, blueprint_id: selectedBlueprint, prompt, length, tone_override: toneOverride }),
       });
-      if (res.ok) {
-        const result = await res.json();
-        setHistory(prev => [result, ...prev]);
-        toast.success("Content generated!");
-      } else {
-        const err = await res.json().catch(() => ({}));
-        toast.error(err.detail || "Generation failed");
-      }
+      if (res.ok) { const result = await res.json(); setHistory(prev => [result, ...prev]); toast.success("Content generated!"); }
+      else { const err = await res.json().catch(() => ({})); toast.error(err.detail || "Generation failed"); }
     } catch { toast.error("Error generating content"); }
     finally { setGenerating(false); }
   };
 
-  const copyContent = (text) => {
-    navigator.clipboard.writeText(text);
-    toast.success("Copied to clipboard");
-  };
+  const copyContent = (text) => { navigator.clipboard.writeText(text); toast.success("Copied to clipboard"); };
 
   const deleteContent = async (contentId) => {
     try {
@@ -95,214 +93,182 @@ const ContentGenerator = () => {
   };
 
   if (loading) return (
-    <div className="flex items-center justify-center py-20">
-      <div className="w-6 h-6 border-2 border-violet-400 border-t-transparent rounded-full animate-spin" />
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }}>
+      <div style={{ width: 28, height: 28, border: `2px solid ${T.amber}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+      <style>{STYLES}</style>
     </div>
   );
 
+  const glassCard = { background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, padding: "18px 20px" };
+
   return (
-    <div className="space-y-6" data-testid="content-generator">
+    <div style={{ display: "flex", flexDirection: "column", gap: 24, animation: "fadeUp .4s ease" }} data-testid="content-generator">
+      <style>{STYLES}</style>
+
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-amber-500/15 flex items-center justify-center">
-          <PenTool className="w-5 h-5 text-amber-400" />
+      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(245,158,11,.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <PenTool size={22} style={{ color: T.amber }} />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-white font-['Outfit']">Content Generator</h1>
-          <p className="text-xs text-zinc-500">Generate on-brand content using Style Blueprints from Reference Intelligence</p>
+          <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 26, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 3 }}>Content Generator</h1>
+          <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>Generate on-brand content using Style Blueprints from Reference Intelligence</p>
         </div>
       </div>
 
-      {/* Generator Form */}
-      <Card className="bg-zinc-900/50 border-white/10">
-        <CardContent className="p-5 space-y-4">
-          {/* Content Type */}
-          <div>
-            <label className="text-xs text-zinc-400 mb-2 block">Content Type</label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {contentTypes.map(t => {
-                const Icon = TYPE_ICONS[t.id] || PenTool;
-                return (
-                  <button
-                    key={t.id}
-                    onClick={() => setSelectedType(t.id)}
-                    className={`p-2.5 rounded-lg text-left transition-all ${
-                      selectedType === t.id
-                        ? "bg-amber-500/10 border border-amber-500/30 text-amber-400"
-                        : "bg-zinc-800/50 border border-white/5 text-zinc-400 hover:border-white/10"
-                    }`}
-                    data-testid={`content-type-${t.id}`}
-                  >
-                    <Icon className="w-4 h-4 mb-1" />
-                    <p className="text-xs font-medium">{t.label}</p>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+      {/* Generator form */}
+      <div style={{ ...glassCard, display: "flex", flexDirection: "column", gap: 18 }}>
 
-          {/* Style Blueprint Selector */}
-          <div>
-            <label className="text-xs text-zinc-400 mb-2 block">Style Blueprint (optional)</label>
-            <select
-              value={selectedBlueprint}
-              onChange={e => setSelectedBlueprint(e.target.value)}
-              className="w-full bg-zinc-800/50 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500/40"
-              data-testid="blueprint-select"
-            >
-              <option value="">No blueprint — use default style</option>
-              {blueprints.map(bp => (
-                <option key={bp.ref_id} value={bp.ref_id}>
-                  [{bp.type}] {bp.source?.substring(0, 80)}
-                </option>
-              ))}
-            </select>
-            {selectedBlueprint && (
-              <p className="text-[10px] text-amber-400 mt-1">
-                Content will match the tone and style from this reference
-              </p>
-            )}
-          </div>
-
-          {/* Prompt */}
-          <div>
-            <label className="text-xs text-zinc-400 mb-2 block">What content do you need?</label>
-            <textarea
-              value={prompt}
-              onChange={e => setPrompt(e.target.value)}
-              placeholder="Describe the content you want... e.g., 'Write a LinkedIn post announcing our new AI product launch targeting enterprise CTOs'"
-              className="w-full h-28 bg-zinc-800/50 border border-white/10 rounded-lg p-3 text-sm text-white placeholder-zinc-600 resize-none focus:outline-none focus:border-amber-500/40"
-              data-testid="content-prompt"
-            />
-          </div>
-
-          {/* Options Row */}
-          <div className="flex gap-3 flex-wrap">
-            {/* Length */}
-            <div>
-              <label className="text-xs text-zinc-400 mb-1.5 block">Length</label>
-              <div className="flex gap-1.5">
-                {["short", "medium", "long"].map(l => (
-                  <button
-                    key={l}
-                    onClick={() => setLength(l)}
-                    className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
-                      length === l
-                        ? "bg-amber-500/15 text-amber-400 border border-amber-500/30"
-                        : "bg-zinc-800/50 text-zinc-500 border border-white/5"
-                    }`}
-                    data-testid={`length-${l}`}
-                  >
-                    {l}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Tone Override */}
-            <div className="flex-1 min-w-[200px]">
-              <label className="text-xs text-zinc-400 mb-1.5 block">Tone Override (optional)</label>
-              <Input
-                value={toneOverride}
-                onChange={e => setToneOverride(e.target.value)}
-                placeholder="e.g., formal, playful, urgent..."
-                className="bg-zinc-800/50 border-white/10 text-white text-xs"
-                data-testid="tone-input"
-              />
-            </div>
-          </div>
-
-          {/* Generate Button */}
-          <Button
-            onClick={generate}
-            disabled={generating}
-            className="bg-amber-600 hover:bg-amber-500 text-white"
-            data-testid="generate-btn"
-          >
-            {generating ? (
-              <><Loader2 className="w-4 h-4 animate-spin mr-2" />Generating...</>
-            ) : (
-              <><Sparkles className="w-4 h-4 mr-2" />Generate Content</>
-            )}
-          </Button>
-          {generating && <p className="text-xs text-amber-400 animate-pulse">AI is crafting your content... This may take 10-20 seconds.</p>}
-        </CardContent>
-      </Card>
-
-      {/* Generated Content History */}
-      <div>
-        <h2 className="text-sm font-medium text-zinc-400 mb-3 uppercase tracking-wider flex items-center gap-2">
-          <Clock className="w-3.5 h-3.5 text-zinc-500" />Generated Content
-          <Badge variant="outline" className="border-white/10 text-zinc-500 text-[9px] ml-auto">{history.length} items</Badge>
-        </h2>
-
-        {history.length > 0 ? (
-          <div className="space-y-3">
-            {history.map((item) => {
-              const Icon = TYPE_ICONS[item.content_type] || PenTool;
+        {/* Content type grid */}
+        <div>
+          <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 8, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>Content Type</label>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8 }}>
+            {contentTypes.map(t => {
+              const Icon = TYPE_ICONS[t.id] || PenTool;
+              const active = selectedType === t.id;
               return (
-                <Card key={item.content_id} className="bg-zinc-900/50 border-white/5 hover:border-white/10 transition-all">
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center shrink-0">
-                        <Icon className="w-4 h-4 text-amber-400" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <Badge variant="outline" className="text-[9px] border-amber-500/30 text-amber-400">
-                            {item.content_type?.replace("_", " ")}
-                          </Badge>
-                          {item.blueprint_id && (
-                            <Badge variant="outline" className="text-[9px] border-violet-500/30 text-violet-400">
-                              Blueprint Applied
-                            </Badge>
-                          )}
-                          <span className="text-[10px] text-zinc-600">{item.model_used}</span>
-                          <span className="text-[10px] text-zinc-600">{item.created_at ? new Date(item.created_at).toLocaleString() : ""}</span>
-                        </div>
-                        <p className="text-xs text-zinc-400 mb-2 italic">"{item.prompt?.substring(0, 120)}"</p>
-
-                        {/* Expand/collapse content */}
-                        <div className={`text-sm text-zinc-200 whitespace-pre-wrap leading-relaxed ${expandedItem === item.content_id ? "" : "line-clamp-4"}`}>
-                          {item.content}
-                        </div>
-
-                        <div className="flex items-center gap-2 mt-3">
-                          <button
-                            onClick={() => setExpandedItem(expandedItem === item.content_id ? null : item.content_id)}
-                            className="flex items-center gap-1 text-xs text-amber-400 hover:text-amber-300"
-                            data-testid={`expand-content-${item.content_id}`}
-                          >
-                            {expandedItem === item.content_id ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                            {expandedItem === item.content_id ? "Collapse" : "Expand"}
-                          </button>
-                          <button
-                            onClick={() => copyContent(item.content)}
-                            className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300"
-                            data-testid={`copy-content-${item.content_id}`}
-                          >
-                            <Copy className="w-3 h-3" />Copy
-                          </button>
-                          <button
-                            onClick={() => deleteContent(item.content_id)}
-                            className="flex items-center gap-1 text-xs text-red-500/70 hover:text-red-400 ml-auto"
-                            data-testid={`delete-content-${item.content_id}`}
-                          >
-                            <Trash2 className="w-3 h-3" />Delete
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <button key={t.id} onClick={() => setSelectedType(t.id)} data-testid={`content-type-${t.id}`}
+                  style={{ padding: "10px 12px", borderRadius: 10, border: `1px solid ${active ? "rgba(245,158,11,.3)" : T.border}`, background: active ? "rgba(245,158,11,.08)" : T.glass, cursor: "pointer", textAlign: "left", transition: "all .2s" }}
+                  onMouseEnter={e => !active && (e.currentTarget.style.borderColor = "rgba(255,255,255,.12)")}
+                  onMouseLeave={e => !active && (e.currentTarget.style.borderColor = T.border)}>
+                  <Icon size={14} style={{ color: active ? T.amber : T.zinc, marginBottom: 4, display: "block" }} />
+                  <span style={{ fontSize: 11, fontWeight: 600, color: active ? T.amber : "#a1a1aa" }}>{t.label}</span>
+                </button>
               );
             })}
           </div>
+        </div>
+
+        {/* Blueprint selector */}
+        <div>
+          <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 8, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>Style Blueprint (optional)</label>
+          <select value={selectedBlueprint} onChange={e => setSelectedBlueprint(e.target.value)}
+            data-testid="blueprint-select"
+            style={{ ...formInput, cursor: "pointer" }}
+            onFocus={e => e.target.style.borderColor = "rgba(245,158,11,.4)"}
+            onBlur={e => e.target.style.borderColor = T.border}>
+            <option value="" style={{ background: "#1a1a2e" }}>No blueprint — use default style</option>
+            {blueprints.map(bp => (
+              <option key={bp.ref_id} value={bp.ref_id} style={{ background: "#1a1a2e" }}>
+                [{bp.type}] {bp.source?.substring(0, 80)}
+              </option>
+            ))}
+          </select>
+          {selectedBlueprint && <p style={{ fontSize: 10, color: T.amber, marginTop: 5 }}>Content will match the tone and style from this reference</p>}
+        </div>
+
+        {/* Prompt */}
+        <div>
+          <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 8, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>What content do you need?</label>
+          <textarea value={prompt} onChange={e => setPrompt(e.target.value)}
+            placeholder="Describe the content you want... e.g., 'Write a LinkedIn post announcing our new AI product launch targeting enterprise CTOs'"
+            data-testid="content-prompt"
+            style={{ ...formInput, minHeight: 96, resize: "vertical", lineHeight: 1.6 }}
+            onFocus={e => e.target.style.borderColor = "rgba(245,158,11,.4)"}
+            onBlur={e => e.target.style.borderColor = T.border} />
+        </div>
+
+        {/* Options row */}
+        <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "flex-end" }}>
+          <div>
+            <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 8, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>Length</label>
+            <div style={{ display: "flex", gap: 6 }}>
+              {["short", "medium", "long"].map(l => (
+                <button key={l} onClick={() => setLength(l)} data-testid={`length-${l}`}
+                  style={{ padding: "6px 14px", borderRadius: 8, border: `1px solid ${length === l ? "rgba(245,158,11,.3)" : T.border}`, background: length === l ? "rgba(245,158,11,.1)" : T.glass, color: length === l ? T.amber : T.zinc, fontSize: 11, fontWeight: 600, cursor: "pointer", transition: "all .2s" }}>
+                  {l}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 8, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>Tone Override (optional)</label>
+            <input type="text" value={toneOverride} onChange={e => setToneOverride(e.target.value)}
+              placeholder="e.g., formal, playful, urgent..." style={formInput} data-testid="tone-input"
+              onFocus={e => e.target.style.borderColor = "rgba(245,158,11,.4)"}
+              onBlur={e => e.target.style.borderColor = T.border} />
+          </div>
+        </div>
+
+        {/* Generate button */}
+        <div>
+          <button onClick={generate} disabled={generating} data-testid="generate-btn"
+            style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 22px", borderRadius: 10, background: generating ? "rgba(245,158,11,.3)" : `linear-gradient(135deg, #d97706, ${T.amber})`, border: "none", color: "#fff", fontSize: 14, fontWeight: 700, cursor: generating ? "not-allowed" : "pointer", transition: "opacity .2s" }}>
+            {generating
+              ? <><div style={{ width: 15, height: 15, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> Generating…</>
+              : <><Sparkles size={15} /> Generate Content</>}
+          </button>
+          {generating && <p style={{ fontSize: 11, color: T.amber, marginTop: 8, animation: "pulse 1.5s ease infinite" }}>AI is crafting your content… This may take 10–20 seconds.</p>}
+        </div>
+      </div>
+
+      {/* History */}
+      <div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+          <Clock size={13} style={{ color: T.zinc }} />
+          <span style={{ fontSize: 11, color: T.zinc, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>Generated Content</span>
+          <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 5, background: "rgba(255,255,255,.05)", color: T.zinc, marginLeft: "auto" }}>{history.length} items</span>
+        </div>
+
+        {history.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "56px 20px", border: `1px dashed ${T.border}`, borderRadius: 16 }}>
+            <PenTool size={44} style={{ color: "rgba(255,255,255,.06)", marginBottom: 12 }} />
+            <p style={{ fontSize: 13, color: T.zinc, marginBottom: 4 }}>No content generated yet</p>
+            <p style={{ fontSize: 11, color: "rgba(113,113,122,.6)" }}>Select a content type, optionally pick a Style Blueprint, and describe what you need</p>
+          </div>
         ) : (
-          <div className="text-center py-16 border border-dashed border-white/10 rounded-xl">
-            <PenTool className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
-            <p className="text-sm text-zinc-400">No content generated yet</p>
-            <p className="text-xs text-zinc-600 mt-1">Select a content type, optionally pick a Style Blueprint, and describe what you need</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {history.map((item) => {
+              const Icon = TYPE_ICONS[item.content_type] || PenTool;
+              const expanded = expandedItem === item.content_id;
+              return (
+                <div key={item.content_id}
+                  style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "14px 16px", transition: "border-color .2s" }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(255,255,255,.13)"}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = T.border}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                    <div style={{ width: 34, height: 34, borderRadius: 9, background: "rgba(245,158,11,.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <Icon size={15} style={{ color: T.amber }} />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap", marginBottom: 5 }}>
+                        <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 5, border: `1px solid rgba(245,158,11,.3)`, color: T.amber, fontWeight: 700 }}>
+                          {item.content_type?.replace("_", " ")}
+                        </span>
+                        {item.blueprint_id && (
+                          <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 5, border: `1px solid rgba(124,58,237,.3)`, color: "#a78bfa", fontWeight: 700 }}>Blueprint Applied</span>
+                        )}
+                        <span style={{ fontSize: 10, color: T.zinc }}>{item.model_used}</span>
+                        <span style={{ fontSize: 10, color: T.zinc }}>{item.created_at ? new Date(item.created_at).toLocaleString() : ""}</span>
+                      </div>
+                      <p style={{ fontSize: 11, color: T.zinc, marginBottom: 8, fontStyle: "italic" }}>"{item.prompt?.substring(0, 120)}"</p>
+                      <div style={{ fontSize: 13, color: "#d4d4d8", lineHeight: 1.6, whiteSpace: "pre-wrap", overflow: expanded ? "visible" : "hidden", display: "-webkit-box", WebkitLineClamp: expanded ? "unset" : 4, WebkitBoxOrient: "vertical" }}>
+                        {item.content}
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 10 }}>
+                        <button onClick={() => setExpandedItem(expanded ? null : item.content_id)} data-testid={`expand-content-${item.content_id}`}
+                          style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: T.amber, background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+                          {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                          {expanded ? "Collapse" : "Expand"}
+                        </button>
+                        <button onClick={() => copyContent(item.content)} data-testid={`copy-content-${item.content_id}`}
+                          style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: T.zinc, background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                          onMouseEnter={e => e.currentTarget.style.color = "#e4e4e7"}
+                          onMouseLeave={e => e.currentTarget.style.color = T.zinc}>
+                          <Copy size={11} /> Copy
+                        </button>
+                        <button onClick={() => deleteContent(item.content_id)} data-testid={`delete-content-${item.content_id}`}
+                          style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "rgba(239,68,68,.6)", background: "none", border: "none", cursor: "pointer", padding: 0, marginLeft: "auto" }}
+                          onMouseEnter={e => e.currentTarget.style.color = T.red}
+                          onMouseLeave={e => e.currentTarget.style.color = "rgba(239,68,68,.6)"}>
+                          <Trash2 size={11} /> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

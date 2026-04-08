@@ -245,7 +245,7 @@ export const OverviewTab = ({ stats, profitData, apiKeysConfig }) => {
               </div>
             ))}
           </div>
-          <p className="text-[10px] text-zinc-600 mt-3">* Emergent Universal Key includes a small markup over direct pricing for convenience and unified billing.</p>
+          <p className="text-[10px] text-zinc-600 mt-3">* MAARS AI Gateway includes a small markup over direct pricing for convenience and unified billing.</p>
         </CardContent>
       </Card>
     </div>

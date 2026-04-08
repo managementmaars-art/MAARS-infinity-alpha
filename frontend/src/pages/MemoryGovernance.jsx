@@ -1,34 +1,50 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth, API } from "../App";
 import {
-  Brain, Trash2, Plus, Edit3, History, BarChart3, Zap,
-  AlertTriangle, RefreshCw, Tag, Filter, ChevronDown,
-  ChevronRight, Loader2, Search, Archive
+  Brain, Trash2, Plus, Edit3, History, Zap,
+  AlertTriangle, Tag, Search, Archive, X
 } from "lucide-react";
-import { Button } from "../components/ui/button";
-import { Card, CardContent } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  violet: "#7c3aed",
+  indigo: "#818cf8",
+  cyan: "#22d3ee",
+  amber: "#f59e0b",
+  green: "#34d399",
+  red: "#ef4444",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
+
+const formInput = {
+  background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`,
+  borderRadius: 8, padding: "7px 11px", color: "#fff", fontSize: 12,
+  outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box",
+  transition: "border-color .2s",
+};
 
 const CATEGORY_COLORS = {
-  general: "border-zinc-500/30 text-zinc-400",
-  fact: "border-blue-500/30 text-blue-400",
-  preference: "border-violet-500/30 text-violet-400",
-  instruction: "border-amber-500/30 text-amber-400",
-  context: "border-emerald-500/30 text-emerald-400",
-  decision: "border-rose-500/30 text-rose-400",
+  general: T.zinc, fact: "#60a5fa", preference: "#a78bfa",
+  instruction: T.amber, context: T.green, decision: "#f87171",
 };
 
 const CATEGORIES = ["general", "fact", "preference", "instruction", "context", "decision"];
 
 const RelevanceBar = ({ score }) => {
-  const pct = Math.round(score * 100);
-  const color = pct > 60 ? "bg-emerald-500" : pct > 30 ? "bg-amber-500" : "bg-red-500";
+  const pct = Math.round((score || 0) * 100);
+  const color = pct > 60 ? T.green : pct > 30 ? T.amber : T.red;
   return (
-    <div className="flex items-center gap-2">
-      <div className="w-20 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-        <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
+    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      <div style={{ width: 70, height: 4, background: "rgba(255,255,255,.06)", borderRadius: 3, overflow: "hidden" }}>
+        <div style={{ height: "100%", borderRadius: 3, background: color, width: `${pct}%` }} />
       </div>
-      <span className="text-[10px] text-zinc-500">{pct}%</span>
+      <span style={{ fontSize: 10, color: T.zinc }}>{pct}%</span>
     </div>
   );
 };
@@ -66,18 +82,12 @@ export default function MemoryGovernance() {
 
   const handleCreate = async (formData) => {
     const res = await fetch(`${API}/memory/entries`, { method: "POST", headers, body: JSON.stringify(formData) });
-    if (res.ok) {
-      setShowCreate(false);
-      fetchEntries();
-    }
+    if (res.ok) { setShowCreate(false); fetchEntries(); }
   };
 
   const handleUpdate = async (memoryId, formData) => {
     const res = await fetch(`${API}/memory/entries/${memoryId}`, { method: "PUT", headers, body: JSON.stringify(formData) });
-    if (res.ok) {
-      setEditEntry(null);
-      fetchEntries();
-    }
+    if (res.ok) { setEditEntry(null); fetchEntries(); }
   };
 
   const handleDelete = async (memoryId) => {
@@ -89,20 +99,13 @@ export default function MemoryGovernance() {
   const handleViewVersions = async (entry) => {
     setVersionEntry(entry);
     const res = await fetch(`${API}/memory/entries/${entry.memory_id}/versions`, { headers });
-    if (res.ok) {
-      const data = await res.json();
-      setVersions(data.versions || []);
-    }
+    if (res.ok) { const data = await res.json(); setVersions(data.versions || []); }
   };
 
   const handlePrune = async (dryRun = true) => {
     setPruning(true);
     const res = await fetch(`${API}/memory/prune`, { method: "POST", headers, body: JSON.stringify({ threshold: 0.15, dry_run: dryRun }) });
-    if (res.ok) {
-      const data = await res.json();
-      setPruneResult(data);
-      if (!dryRun) fetchEntries();
-    }
+    if (res.ok) { const data = await res.json(); setPruneResult(data); if (!dryRun) fetchEntries(); }
     setPruning(false);
   };
 
@@ -112,196 +115,186 @@ export default function MemoryGovernance() {
     e.agent_name?.toLowerCase().includes(search.toLowerCase())
   ) : entries;
 
-  if (loading) return <div className="flex items-center justify-center py-20"><Loader2 className="w-6 h-6 text-indigo-400 animate-spin" /></div>;
+  if (loading) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }}>
+      <div style={{ width: 26, height: 26, border: `2px solid ${T.violet}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+      <style>{STYLES}</style>
+    </div>
+  );
+
+  const glassCard = { background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "14px 16px" };
 
   return (
-    <div className="space-y-6" data-testid="memory-governance-page">
+    <div style={{ display: "flex", flexDirection: "column", gap: 24, animation: "fadeUp .4s ease" }} data-testid="memory-governance-page">
+      <style>{STYLES}</style>
+
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-violet-500/15 flex items-center justify-center">
-            <Brain className="w-5 h-5 text-violet-400" />
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(124,58,237,.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Brain size={22} style={{ color: T.violet }} />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white font-['Outfit']" data-testid="memory-title">Memory Governance</h1>
-            <p className="text-xs text-zinc-500">Versioning, relevance scoring & auto-pruning for agent memory</p>
+            <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 26, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 3 }} data-testid="memory-title">Memory Governance</h1>
+            <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>Versioning, relevance scoring & auto-pruning for agent memory</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Button size="sm" variant="outline" onClick={() => handlePrune(true)} disabled={pruning} className="text-zinc-400 border-white/10" data-testid="prune-preview-btn">
-            {pruning ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : <Archive className="w-3.5 h-3.5 mr-1" />}
+        <div style={{ display: "flex", gap: 8 }}>
+          <button onClick={() => handlePrune(true)} disabled={pruning} data-testid="prune-preview-btn"
+            style={{ display: "flex", alignItems: "center", gap: 5, padding: "7px 14px", borderRadius: 9, background: T.glass, border: `1px solid ${T.border}`, color: T.zinc, fontSize: 12, fontWeight: 600, cursor: pruning ? "not-allowed" : "pointer" }}>
+            {pruning
+              ? <div style={{ width: 12, height: 12, border: `2px solid ${T.zinc}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+              : <Archive size={13} />}
             Prune Preview
-          </Button>
-          <Button size="sm" onClick={() => setShowCreate(true)} className="bg-violet-600 hover:bg-violet-700 text-white" data-testid="create-memory-btn">
-            <Plus className="w-3.5 h-3.5 mr-1" /> Add Memory
-          </Button>
+          </button>
+          <button onClick={() => setShowCreate(true)} data-testid="create-memory-btn"
+            style={{ display: "flex", alignItems: "center", gap: 5, padding: "7px 14px", borderRadius: 9, background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+            <Plus size={13} /> Add Memory
+          </button>
         </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats */}
       {stats && (
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3" data-testid="memory-stats">
-          <Card className="bg-zinc-900/50 border-white/5">
-            <CardContent className="p-3">
-              <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Total Entries</p>
-              <p className="text-xl font-bold text-white">{stats.total_entries}</p>
-              <p className="text-[10px] text-zinc-600">{stats.usage_pct}% of {stats.max_entries} limit</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-zinc-900/50 border-white/5">
-            <CardContent className="p-3">
-              <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Auto-Learned</p>
-              <p className="text-xl font-bold text-cyan-400">{stats.auto_learned || 0}</p>
-              <p className="text-[10px] text-zinc-600">{stats.manual || 0} manual</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-zinc-900/50 border-white/5">
-            <CardContent className="p-3">
-              <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Avg Relevance</p>
-              <p className="text-xl font-bold text-white">{Math.round(stats.avg_relevance * 100)}%</p>
-              <RelevanceBar score={stats.avg_relevance} />
-            </CardContent>
-          </Card>
-          <Card className="bg-zinc-900/50 border-white/5">
-            <CardContent className="p-3">
-              <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Low Relevance</p>
-              <p className="text-xl font-bold text-amber-400">{stats.low_relevance_count}</p>
-              <p className="text-[10px] text-zinc-600">Candidates for pruning</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-zinc-900/50 border-white/5">
-            <CardContent className="p-3">
-              <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Categories</p>
-              <p className="text-xl font-bold text-white">{Object.keys(stats.categories || {}).length}</p>
-              <div className="flex gap-1 mt-0.5 flex-wrap">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 10 }} data-testid="memory-stats">
+          {[
+            { label: "Total Entries", value: stats.total_entries, sub: `${stats.usage_pct}% of ${stats.max_entries} limit`, accent: T.violet },
+            { label: "Auto-Learned", value: stats.auto_learned || 0, sub: `${stats.manual || 0} manual`, accent: T.cyan },
+            { label: "Avg Relevance", value: `${Math.round(stats.avg_relevance * 100)}%`, sub: <RelevanceBar score={stats.avg_relevance} />, accent: T.green },
+            { label: "Low Relevance", value: stats.low_relevance_count, sub: "Candidates for pruning", accent: T.amber },
+            { label: "Categories", value: Object.keys(stats.categories || {}).length, sub: (
+              <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 3 }}>
                 {Object.entries(stats.categories || {}).map(([cat, count]) => (
-                  <Badge key={cat} variant="outline" className={`text-[8px] ${CATEGORY_COLORS[cat] || CATEGORY_COLORS.general}`}>{cat}: {count}</Badge>
+                  <span key={cat} style={{ fontSize: 8, padding: "1px 5px", borderRadius: 4, border: `1px solid ${CATEGORY_COLORS[cat] || T.zinc}40`, color: CATEGORY_COLORS[cat] || T.zinc }}>{cat}: {count}</span>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            ), accent: T.indigo },
+          ].map(s => (
+            <div key={s.label} style={{ position: "relative", ...glassCard, overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: s.accent }} />
+              <div style={{ fontSize: 10, color: T.zinc, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 6 }}>{s.label}</div>
+              <div style={{ fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 3 }}>{s.value}</div>
+              <div style={{ fontSize: 10, color: T.zinc }}>{s.sub}</div>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Prune Result */}
+      {/* Prune result */}
       {pruneResult && (
-        <Card className="bg-amber-500/5 border-amber-500/20" data-testid="prune-result">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-400" />
-                <span className="text-sm font-medium text-amber-300">
-                  {pruneResult.dry_run ? `${pruneResult.candidates} entries eligible for pruning` : `${pruneResult.pruned} entries pruned`}
-                </span>
-              </div>
-              <div className="flex gap-2">
-                {pruneResult.dry_run && pruneResult.candidates > 0 && (
-                  <Button size="sm" variant="destructive" onClick={() => handlePrune(false)} className="text-xs" data-testid="confirm-prune-btn">
-                    Confirm Prune
-                  </Button>
-                )}
-                <Button size="sm" variant="ghost" onClick={() => setPruneResult(null)} className="text-zinc-400 text-xs">Dismiss</Button>
-              </div>
+        <div style={{ background: "rgba(245,158,11,.05)", border: `1px solid rgba(245,158,11,.2)`, borderRadius: 12, padding: "14px 16px" }} data-testid="prune-result">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <AlertTriangle size={14} style={{ color: T.amber }} />
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#fcd34d" }}>
+                {pruneResult.dry_run ? `${pruneResult.candidates} entries eligible for pruning` : `${pruneResult.pruned} entries pruned`}
+              </span>
             </div>
-            {pruneResult.entries?.slice(0, 5).map(e => (
-              <div key={e.memory_id} className="flex items-center gap-3 text-xs py-1 text-zinc-400">
-                <span className="text-red-400 font-mono w-16">{Math.round(e.relevance_score * 100)}%</span>
-                <span className="truncate">{e.content_preview}</span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+            <div style={{ display: "flex", gap: 8 }}>
+              {pruneResult.dry_run && pruneResult.candidates > 0 && (
+                <button onClick={() => handlePrune(false)} data-testid="confirm-prune-btn"
+                  style={{ padding: "4px 12px", borderRadius: 7, background: T.red, border: "none", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                  Confirm Prune
+                </button>
+              )}
+              <button onClick={() => setPruneResult(null)}
+                style={{ padding: "4px 10px", borderRadius: 7, background: T.glass, border: `1px solid ${T.border}`, color: T.zinc, fontSize: 11, cursor: "pointer" }}>
+                Dismiss
+              </button>
+            </div>
+          </div>
+          {pruneResult.entries?.slice(0, 5).map(e => (
+            <div key={e.memory_id} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 11, color: "#a1a1aa", paddingTop: 4 }}>
+              <span style={{ color: T.red, fontFamily: "monospace", width: 36 }}>{Math.round(e.relevance_score * 100)}%</span>
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{e.content_preview}</span>
+            </div>
+          ))}
+        </div>
       )}
 
       {/* Search */}
-      <div className="flex items-center gap-2 bg-zinc-900/50 border border-white/5 rounded-lg px-3 py-2">
-        <Search className="w-4 h-4 text-zinc-500" />
-        <input
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Filter memories..."
-          className="flex-1 bg-transparent text-sm text-white placeholder-zinc-600 outline-none"
+      <div style={{ position: "relative" }}>
+        <Search size={13} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: T.zinc }} />
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Filter memories..."
           data-testid="memory-search"
-        />
+          style={{ paddingLeft: 32, paddingRight: 12, paddingTop: 9, paddingBottom: 9, background: T.glass, border: `1px solid ${T.border}`, borderRadius: 10, color: "#fff", fontSize: 13, outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box" }} />
       </div>
 
-      {/* Memory Entries */}
-      <div className="space-y-2" data-testid="memory-entries-list">
+      {/* Entries */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }} data-testid="memory-entries-list">
         {filtered.length === 0 ? (
-          <div className="text-center py-12 border border-dashed border-white/10 rounded-xl">
-            <Brain className="w-10 h-10 text-zinc-700 mx-auto mb-3" />
-            <p className="text-sm text-zinc-500">No memory entries yet</p>
-            <p className="text-xs text-zinc-600 mt-1">Add memories manually or they'll be created as agents learn</p>
+          <div style={{ textAlign: "center", padding: "56px 20px", border: `1px dashed ${T.border}`, borderRadius: 16 }}>
+            <Brain size={44} style={{ color: "rgba(255,255,255,.06)", marginBottom: 12 }} />
+            <p style={{ fontSize: 13, color: T.zinc, marginBottom: 4 }}>No memory entries yet</p>
+            <p style={{ fontSize: 11, color: "rgba(113,113,122,.5)" }}>Add memories manually or they'll be created as agents learn</p>
           </div>
-        ) : (
-          filtered.map(entry => (
-            <div key={entry.memory_id} className="bg-zinc-900/50 border border-white/5 rounded-lg p-4 hover:border-white/10 transition-all" data-testid={`memory-entry-${entry.memory_id}`}>
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <Badge variant="outline" className={`text-[9px] ${CATEGORY_COLORS[entry.category] || CATEGORY_COLORS.general}`}>
-                      {entry.category}
-                    </Badge>
-                    {entry.source === "auto_learn" && (
-                      <Badge variant="outline" className="text-[9px] border-cyan-500/30 text-cyan-400" data-testid={`auto-learn-badge-${entry.memory_id}`}>
-                        <Zap className="w-2.5 h-2.5 mr-0.5" />Auto-learned
-                      </Badge>
-                    )}
-                    {entry.agent_name && (
-                      <span className="text-[10px] text-indigo-400">{entry.agent_name}</span>
-                    )}
-                    <span className="text-[10px] text-zinc-600">v{entry.version}</span>
-                    {entry.source_task_title && (
-                      <span className="text-[10px] text-zinc-700 truncate max-w-[120px]" title={entry.source_task_title}>from: {entry.source_task_title}</span>
-                    )}
-                  </div>
-                  <p className="text-sm text-zinc-300 mb-1">{entry.content?.substring(0, 200)}{entry.content?.length > 200 ? "..." : ""}</p>
-                  {entry.summary && <p className="text-xs text-zinc-500 italic">{entry.summary}</p>}
-                  <div className="flex items-center gap-3 mt-2">
-                    <RelevanceBar score={entry.relevance_score || 0} />
-                    {entry.tags?.length > 0 && (
-                      <div className="flex gap-1">
-                        {entry.tags.map(t => (
-                          <span key={t} className="text-[9px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-500 border border-white/5">{t}</span>
-                        ))}
-                      </div>
-                    )}
-                    <span className="text-[10px] text-zinc-700 ml-auto">{entry.access_count} accesses</span>
-                  </div>
+        ) : filtered.map(entry => (
+          <div key={entry.memory_id}
+            style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "14px 16px", transition: "border-color .2s" }}
+            data-testid={`memory-entry-${entry.memory_id}`}
+            onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(255,255,255,.14)"}
+            onMouseLeave={e => e.currentTarget.style.borderColor = T.border}>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap", marginBottom: 6 }}>
+                  <span style={{ fontSize: 9, padding: "2px 7px", borderRadius: 5, border: `1px solid ${CATEGORY_COLORS[entry.category] || T.zinc}40`, color: CATEGORY_COLORS[entry.category] || T.zinc, fontWeight: 700 }}>
+                    {entry.category}
+                  </span>
+                  {entry.source === "auto_learn" && (
+                    <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 9, padding: "2px 7px", borderRadius: 5, border: `1px solid rgba(34,211,238,.3)`, color: T.cyan, fontWeight: 700 }} data-testid={`auto-learn-badge-${entry.memory_id}`}>
+                      <Zap size={8} /> Auto-learned
+                    </span>
+                  )}
+                  {entry.agent_name && <span style={{ fontSize: 10, color: T.indigo }}>{entry.agent_name}</span>}
+                  <span style={{ fontSize: 10, color: T.zinc }}>v{entry.version}</span>
+                  {entry.source_task_title && <span style={{ fontSize: 10, color: "rgba(113,113,122,.6)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 120 }}>from: {entry.source_task_title}</span>}
                 </div>
-                <div className="flex gap-1 shrink-0">
-                  <button onClick={() => handleViewVersions(entry)} className="p-1.5 rounded-md hover:bg-white/5 text-zinc-600 hover:text-zinc-300" title="Version history" data-testid={`version-btn-${entry.memory_id}`}>
-                    <History className="w-3.5 h-3.5" />
-                  </button>
-                  <button onClick={() => setEditEntry(entry)} className="p-1.5 rounded-md hover:bg-white/5 text-zinc-600 hover:text-zinc-300" title="Edit" data-testid={`edit-btn-${entry.memory_id}`}>
-                    <Edit3 className="w-3.5 h-3.5" />
-                  </button>
-                  <button onClick={() => handleDelete(entry.memory_id)} className="p-1.5 rounded-md hover:bg-white/5 text-zinc-600 hover:text-red-400" title="Delete" data-testid={`delete-btn-${entry.memory_id}`}>
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                <p style={{ fontSize: 13, color: "#d4d4d8", marginBottom: 5, lineHeight: 1.5 }}>{entry.content?.substring(0, 200)}{entry.content?.length > 200 ? "…" : ""}</p>
+                {entry.summary && <p style={{ fontSize: 11, color: T.zinc, fontStyle: "italic", marginBottom: 6 }}>{entry.summary}</p>}
+                <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                  <RelevanceBar score={entry.relevance_score || 0} />
+                  {entry.tags?.length > 0 && (
+                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                      {entry.tags.map(t => (
+                        <span key={t} style={{ fontSize: 9, padding: "2px 6px", borderRadius: 4, background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, color: T.zinc }}>{t}</span>
+                      ))}
+                    </div>
+                  )}
+                  <span style={{ fontSize: 10, color: "rgba(113,113,122,.5)", marginLeft: "auto" }}>{entry.access_count} accesses</span>
                 </div>
               </div>
+              <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+                {[
+                  { icon: History, action: () => handleViewVersions(entry), testId: `version-btn-${entry.memory_id}`, title: "Version history" },
+                  { icon: Edit3, action: () => setEditEntry(entry), testId: `edit-btn-${entry.memory_id}`, title: "Edit" },
+                  { icon: Trash2, action: () => handleDelete(entry.memory_id), testId: `delete-btn-${entry.memory_id}`, title: "Delete", danger: true },
+                ].map(({ icon: Icon, action, testId, title, danger }) => (
+                  <button key={testId} onClick={action} title={title} data-testid={testId}
+                    style={{ padding: 6, borderRadius: 7, background: "transparent", border: "none", color: T.zinc, cursor: "pointer", transition: "color .2s" }}
+                    onMouseEnter={e => e.currentTarget.style.color = danger ? T.red : "#e4e4e7"}
+                    onMouseLeave={e => e.currentTarget.style.color = T.zinc}>
+                    <Icon size={14} />
+                  </button>
+                ))}
+              </div>
             </div>
-          ))
-        )}
+          </div>
+        ))}
       </div>
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center gap-2">
+        <div style={{ display: "flex", justifyContent: "center", gap: 6 }}>
           {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setPage(i + 1)}
-              className={`w-8 h-8 rounded-lg text-xs ${page === i + 1 ? "bg-violet-600 text-white" : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"}`}
-            >
+            <button key={i} onClick={() => setPage(i + 1)}
+              style={{ width: 32, height: 32, borderRadius: 8, border: `1px solid ${page === i + 1 ? T.violet : T.border}`, background: page === i + 1 ? `${T.violet}30` : T.glass, color: page === i + 1 ? "#fff" : T.zinc, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
               {i + 1}
             </button>
           ))}
         </div>
       )}
 
-      {/* Create/Edit Modal */}
+      {/* Modals */}
       {(showCreate || editEntry) && (
         <MemoryModal
           entry={editEntry}
@@ -309,14 +302,8 @@ export default function MemoryGovernance() {
           onClose={() => { setShowCreate(false); setEditEntry(null); }}
         />
       )}
-
-      {/* Version History Modal */}
       {versionEntry && (
-        <VersionModal
-          entry={versionEntry}
-          versions={versions}
-          onClose={() => { setVersionEntry(null); setVersions([]); }}
-        />
+        <VersionModal entry={versionEntry} versions={versions} onClose={() => { setVersionEntry(null); setVersions([]); }} />
       )}
     </div>
   );
@@ -330,48 +317,53 @@ function MemoryModal({ entry, onSave, onClose }) {
   const [tags, setTags] = useState(entry?.tags?.join(", ") || "");
   const [reason, setReason] = useState("");
 
+  const inputFocus = e => e.target.style.borderColor = "rgba(124,58,237,.5)";
+  const inputBlur = e => e.target.style.borderColor = T.border;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" data-testid="memory-modal">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-lg mx-4 max-h-[80vh] overflow-y-auto">
-        <h3 className="text-lg font-semibold text-white mb-4">{entry ? "Edit Memory" : "Add Memory"}</h3>
-        <div className="space-y-3">
-          <div>
-            <label className="text-xs text-zinc-400 mb-1 block">Content *</label>
-            <textarea value={content} onChange={e => setContent(e.target.value)} rows={4} className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-violet-500/50" placeholder="Memory content..." data-testid="memory-content-input" />
-          </div>
-          <div>
-            <label className="text-xs text-zinc-400 mb-1 block">Summary</label>
-            <input value={summary} onChange={e => setSummary(e.target.value)} className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-violet-500/50" placeholder="Brief summary..." data-testid="memory-summary-input" />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs text-zinc-400 mb-1 block">Category</label>
-              <select value={category} onChange={e => setCategory(e.target.value)} className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none" data-testid="memory-category-select">
-                {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="text-xs text-zinc-400 mb-1 block">Importance ({Math.round(importance * 100)}%)</label>
-              <input type="range" min="0" max="1" step="0.05" value={importance} onChange={e => setImportance(parseFloat(e.target.value))} className="w-full" data-testid="memory-importance-slider" />
-            </div>
-          </div>
-          <div>
-            <label className="text-xs text-zinc-400 mb-1 block">Tags (comma-separated)</label>
-            <input value={tags} onChange={e => setTags(e.target.value)} className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-violet-500/50" placeholder="tag1, tag2..." data-testid="memory-tags-input" />
-          </div>
-          {entry && (
-            <div>
-              <label className="text-xs text-zinc-400 mb-1 block">Update Reason</label>
-              <input value={reason} onChange={e => setReason(e.target.value)} className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-violet-500/50" placeholder="Why this change?" data-testid="memory-reason-input" />
-            </div>
-          )}
+    <div style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center" }} data-testid="memory-modal">
+      <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,.6)", backdropFilter: "blur(4px)" }} onClick={onClose} />
+      <div style={{ position: "relative", background: "#0f0f1a", border: `1px solid ${T.border}`, borderRadius: 18, padding: "24px", width: "100%", maxWidth: 480, margin: "0 16px", maxHeight: "80vh", overflowY: "auto", display: "flex", flexDirection: "column", gap: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <h3 style={{ fontSize: 17, fontWeight: 700, color: "#fff", margin: 0 }}>{entry ? "Edit Memory" : "Add Memory"}</h3>
+          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: T.zinc, padding: 4 }}><X size={16} /></button>
         </div>
-        <div className="flex justify-end gap-2 mt-5">
-          <Button variant="ghost" onClick={onClose} className="text-zinc-400">Cancel</Button>
-          <Button onClick={() => onSave({ content, summary, category, importance, tags: tags.split(",").map(t => t.trim()).filter(Boolean), reason })} disabled={!content.trim()} className="bg-violet-600 hover:bg-violet-700 text-white" data-testid="memory-save-btn">
+        <div>
+          <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 5, textTransform: "uppercase", letterSpacing: ".05em" }}>Content *</label>
+          <textarea value={content} onChange={e => setContent(e.target.value)} rows={4} style={{ ...{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 8, padding: "8px 12px", color: "#fff", fontSize: 12, outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box", resize: "vertical", lineHeight: 1.5, transition: "border-color .2s" } }} placeholder="Memory content…" data-testid="memory-content-input" onFocus={inputFocus} onBlur={inputBlur} />
+        </div>
+        <div>
+          <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 5, textTransform: "uppercase", letterSpacing: ".05em" }}>Summary</label>
+          <input value={summary} onChange={e => setSummary(e.target.value)} style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 8, padding: "7px 11px", color: "#fff", fontSize: 12, outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box", transition: "border-color .2s" }} placeholder="Brief summary…" data-testid="memory-summary-input" onFocus={inputFocus} onBlur={inputBlur} />
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div>
+            <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 5, textTransform: "uppercase", letterSpacing: ".05em" }}>Category</label>
+            <select value={category} onChange={e => setCategory(e.target.value)} style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 8, padding: "7px 11px", color: "#fff", fontSize: 12, outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box", cursor: "pointer" }} data-testid="memory-category-select">
+              {CATEGORIES.map(c => <option key={c} value={c} style={{ background: "#0f0f1a" }}>{c}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 5, textTransform: "uppercase", letterSpacing: ".05em" }}>Importance ({Math.round(importance * 100)}%)</label>
+            <input type="range" min="0" max="1" step="0.05" value={importance} onChange={e => setImportance(parseFloat(e.target.value))} style={{ width: "100%", accentColor: T.violet, marginTop: 8 }} data-testid="memory-importance-slider" />
+          </div>
+        </div>
+        <div>
+          <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 5, textTransform: "uppercase", letterSpacing: ".05em" }}>Tags (comma-separated)</label>
+          <input value={tags} onChange={e => setTags(e.target.value)} style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 8, padding: "7px 11px", color: "#fff", fontSize: 12, outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box", transition: "border-color .2s" }} placeholder="tag1, tag2…" data-testid="memory-tags-input" onFocus={inputFocus} onBlur={inputBlur} />
+        </div>
+        {entry && (
+          <div>
+            <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 5, textTransform: "uppercase", letterSpacing: ".05em" }}>Update Reason</label>
+            <input value={reason} onChange={e => setReason(e.target.value)} style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 8, padding: "7px 11px", color: "#fff", fontSize: 12, outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box", transition: "border-color .2s" }} placeholder="Why this change?" data-testid="memory-reason-input" onFocus={inputFocus} onBlur={inputBlur} />
+          </div>
+        )}
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, paddingTop: 4 }}>
+          <button onClick={onClose} style={{ padding: "7px 16px", borderRadius: 9, background: "transparent", border: `1px solid ${T.border}`, color: T.zinc, fontSize: 12, cursor: "pointer" }}>Cancel</button>
+          <button onClick={() => onSave({ content, summary, category, importance, tags: tags.split(",").map(t => t.trim()).filter(Boolean), reason })} disabled={!content.trim()} data-testid="memory-save-btn"
+            style={{ padding: "7px 18px", borderRadius: 9, background: !content.trim() ? "rgba(124,58,237,.3)" : `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 12, fontWeight: 700, cursor: !content.trim() ? "not-allowed" : "pointer" }}>
             {entry ? "Save Changes" : "Create Memory"}
-          </Button>
+          </button>
         </div>
       </div>
     </div>
@@ -380,36 +372,42 @@ function MemoryModal({ entry, onSave, onClose }) {
 
 function VersionModal({ entry, versions, onClose }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" data-testid="version-modal">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-lg mx-4 max-h-[80vh] overflow-y-auto">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-            <History className="w-4 h-4 text-violet-400" />
-            Version History
-          </h3>
-          <span className="text-xs text-zinc-500">Current: v{entry.version}</span>
+    <div style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center" }} data-testid="version-modal">
+      <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,.6)", backdropFilter: "blur(4px)" }} onClick={onClose} />
+      <div style={{ position: "relative", background: "#0f0f1a", border: `1px solid ${T.border}`, borderRadius: 18, padding: "24px", width: "100%", maxWidth: 480, margin: "0 16px", maxHeight: "80vh", overflowY: "auto" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <History size={16} style={{ color: T.violet }} />
+            <h3 style={{ fontSize: 17, fontWeight: 700, color: "#fff", margin: 0 }}>Version History</h3>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ fontSize: 11, color: T.zinc }}>Current: v{entry.version}</span>
+            <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: T.zinc, padding: 4 }}><X size={16} /></button>
+          </div>
         </div>
         {versions.length === 0 ? (
-          <p className="text-sm text-zinc-500 text-center py-8">No version history</p>
+          <p style={{ fontSize: 13, color: T.zinc, textAlign: "center", padding: "32px 0" }}>No version history</p>
         ) : (
-          <div className="space-y-3">
-            {[...versions].reverse().map((v, i) => (
-              <div key={v.version} className={`p-3 rounded-lg border ${v.version === entry.version ? "bg-violet-500/5 border-violet-500/20" : "bg-zinc-800/50 border-white/5"}`}>
-                <div className="flex items-center justify-between mb-1.5">
-                  <Badge variant="outline" className={v.version === entry.version ? "border-violet-500/30 text-violet-400 text-[9px]" : "border-white/10 text-zinc-500 text-[9px]"}>
-                    v{v.version} {v.version === entry.version && "(current)"}
-                  </Badge>
-                  <span className="text-[10px] text-zinc-600">{new Date(v.updated_at).toLocaleString()}</span>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {[...versions].reverse().map((v) => {
+              const isCurrent = v.version === entry.version;
+              return (
+                <div key={v.version} style={{ padding: "12px 14px", borderRadius: 10, border: `1px solid ${isCurrent ? "rgba(124,58,237,.25)" : T.border}`, background: isCurrent ? "rgba(124,58,237,.05)" : T.glass }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                    <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 5, border: `1px solid ${isCurrent ? "rgba(124,58,237,.3)" : T.border}`, color: isCurrent ? "#a78bfa" : T.zinc, fontWeight: 700 }}>
+                      v{v.version} {isCurrent && "(current)"}
+                    </span>
+                    <span style={{ fontSize: 10, color: T.zinc }}>{new Date(v.updated_at).toLocaleString()}</span>
+                  </div>
+                  <p style={{ fontSize: 12, color: "#d4d4d8", lineHeight: 1.5 }}>{v.content?.substring(0, 150)}{v.content?.length > 150 ? "…" : ""}</p>
+                  {v.reason && <p style={{ fontSize: 10, color: T.zinc, marginTop: 4, fontStyle: "italic" }}>{v.reason}</p>}
                 </div>
-                <p className="text-xs text-zinc-300">{v.content?.substring(0, 150)}{v.content?.length > 150 ? "..." : ""}</p>
-                {v.reason && <p className="text-[10px] text-zinc-500 mt-1 italic">{v.reason}</p>}
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
-        <div className="flex justify-end mt-4">
-          <Button variant="ghost" onClick={onClose} className="text-zinc-400">Close</Button>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
+          <button onClick={onClose} style={{ padding: "7px 16px", borderRadius: 9, background: T.glass, border: `1px solid ${T.border}`, color: T.zinc, fontSize: 12, cursor: "pointer" }}>Close</button>
         </div>
       </div>
     </div>

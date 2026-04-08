@@ -1,47 +1,54 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth, API } from "../App";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Button } from "../components/ui/button";
 import {
   MessageSquare, Bot, Zap, TrendingUp, ThumbsUp, ThumbsDown,
-  Flame, CreditCard, ArrowLeft, Loader2, ChevronRight, Sparkles
+  Flame, CreditCard, ArrowLeft, Loader2, ChevronRight, Sparkles,
+  Activity, BarChart3, Star
 } from "lucide-react";
 import { toast } from "sonner";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from "recharts";
 
-const StatCard = ({ title, value, subtitle, icon: Icon, color }) => (
-  <div className={`p-4 rounded-xl bg-${color}-500/10 border border-${color}-500/20 relative overflow-hidden`} data-testid={`insight-${title.toLowerCase().replace(/\s+/g, '-')}`}>
-    <div className="absolute top-3 right-3 opacity-15">
-      <Icon className={`w-8 h-8 text-${color}-400`} />
-    </div>
-    <p className={`text-[11px] font-medium text-${color}-400 uppercase tracking-wide`}>{title}</p>
-    <p className="text-xl font-bold text-white mt-1">{value}</p>
-    {subtitle && <p className="text-[11px] text-zinc-500 mt-0.5">{subtitle}</p>}
-  </div>
-);
+/* ─── Design tokens ─────────────────────────────────────────────────── */
+const T = {
+  teal:   "#4fd1c5",
+  violet: "#7c3aed",
+  blue:   "#2563eb",
+  green:  "#34d399",
+  amber:  "#f59e0b",
+  red:    "#f87171",
+  pink:   "#f472b6",
+  indigo: "#6366f1",
+  border: "rgba(255,255,255,0.07)",
+  glass:  "rgba(8,15,28,0.65)",
+};
 
-const CustomTooltip = ({ active, payload, label }) => {
+/* ─── Keyframes ─────────────────────────────────────────────────────── */
+const STYLES = `
+  @keyframes ins_fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes ins_spin   { to { transform: rotate(360deg); } }
+  @keyframes ins_pulse  { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }
+  @keyframes ins_bar    { from { transform:scaleY(0); } to { transform:scaleY(1); } }
+`;
+
+function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-zinc-800 border border-white/10 rounded-lg p-3 shadow-xl">
-      <p className="text-xs text-zinc-400 mb-1">{label}</p>
+    <div style={{ background: "rgba(5,10,20,0.95)", border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 14px", backdropFilter: "blur(12px)" }}>
+      <p style={{ fontSize: 11, color: "#475569", marginBottom: 5 }}>{label}</p>
       {payload.map((p, i) => (
-        <p key={i} className="text-sm font-medium" style={{ color: p.color }}>
-          {p.name}: {p.value}
-        </p>
+        <p key={i} style={{ fontSize: 13, fontWeight: 700, color: p.color }}>{p.name}: {p.value}</p>
       ))}
     </div>
   );
-};
+}
 
 const InsightsPage = () => {
   const { token, user } = useAuth();
   const navigate = useNavigate();
-  const [data, setData] = useState(null);
+  const [data, setData]     = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { fetchInsights(); }, []);
@@ -49,167 +56,177 @@ const InsightsPage = () => {
   const fetchInsights = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API}/user/insights`, { headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await fetch(`${API}/user/insights`, { headers: { Authorization: `Bearer ${token}` } });
       if (res.ok) setData(await res.json());
       else toast.error("Failed to load insights");
     } catch { toast.error("Failed to load insights"); }
     setLoading(false);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center" data-testid="insights-loading">
-        <Loader2 className="w-8 h-8 animate-spin text-red-400" />
+  if (loading) return (
+    <div style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 14 }} data-testid="insights-loading">
+      <style>{STYLES}</style>
+      <div style={{ position: "relative", width: 44, height: 44 }}>
+        <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "2px solid transparent", borderTopColor: T.teal, borderRightColor: "rgba(79,209,197,0.25)", animation: "ins_spin 0.85s linear infinite" }} />
+        <div style={{ position: "absolute", inset: 6, borderRadius: "50%", border: "2px solid transparent", borderBottomColor: T.violet, borderLeftColor: "rgba(124,58,237,0.25)", animation: "ins_spin 0.6s linear infinite reverse" }} />
       </div>
-    );
-  }
+      <p style={{ fontSize: 12, color: "#475569" }}>Loading your insights…</p>
+    </div>
+  );
 
   if (!data) return null;
 
   const { stats, favorite_agents, recommendations, daily_activity } = data;
 
-  const formatDate = (d) => {
-    const date = new Date(d + "T00:00:00");
-    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  };
-  const chartData = daily_activity?.map(d => ({ ...d, date: formatDate(d.date) })) || [];
+  const formatDate = (d) => new Date(d + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  const chartData  = daily_activity?.map(d => ({ ...d, date: formatDate(d.date) })) || [];
+
+  const statItems = [
+    { title: "Messages Sent",  value: stats.user_messages,            sub: `${stats.ai_messages} AI responses`,  icon: MessageSquare, color: T.indigo },
+    { title: "Total Chats",    value: stats.total_chats,              sub: "conversations started",              icon: Bot,           color: T.violet },
+    { title: "Credits Left",   value: stats.credits_remaining?.toLocaleString(), sub: `${stats.credits_used?.toLocaleString()} used`, icon: CreditCard, color: T.amber },
+    { title: "Ratings Given",  value: stats.feedback_up + stats.feedback_down, sub: `${stats.feedback_up}↑ ${stats.feedback_down}↓`, icon: ThumbsUp, color: T.green },
+    { title: "Day Streak",     value: `${stats.streak}d`,             sub: stats.streak >= 7 ? "🔥 On fire!" : "Keep going!", icon: Flame, color: T.red },
+  ];
 
   return (
-    <div className="min-h-screen bg-background" data-testid="insights-page">
-      {/* Header */}
-      <div className="border-b border-white/10 bg-zinc-900/50">
-        <div className="max-w-5xl mx-auto px-6 py-5 flex items-center gap-4">
-          <button onClick={() => navigate("/dashboard")} className="text-zinc-500 hover:text-white transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <div>
-            <h1 className="text-xl font-bold text-white font-['Outfit']">Your Insights</h1>
-            <p className="text-sm text-zinc-500">See how you're using MAARS Command</p>
+    <div data-testid="insights-page" style={{ animation: "ins_fadeUp 0.35s ease" }}>
+      <style>{STYLES}</style>
+
+      {/* ── Header ──────────────────────────────────────────────────────── */}
+      <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 28 }}>
+        <button
+          onClick={() => navigate("/dashboard")}
+          style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`, color: "#475569", cursor: "pointer", transition: "all 0.15s" }}
+          onMouseEnter={e => { e.currentTarget.style.color = "#e2e8f0"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; }}
+          onMouseLeave={e => { e.currentTarget.style.color = "#475569"; e.currentTarget.style.borderColor = T.border; }}>
+          <ArrowLeft style={{ width: 15, height: 15 }} />
+        </button>
+        <div style={{ width: 44, height: 44, borderRadius: 14, background: "linear-gradient(135deg, rgba(99,102,241,0.2), rgba(124,58,237,0.15))", border: "1px solid rgba(99,102,241,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <BarChart3 style={{ width: 20, height: 20, color: T.indigo }} />
+        </div>
+        <div>
+          <h1 style={{ fontSize: "clamp(1.2rem,2.5vw,1.5rem)", fontWeight: 800, color: "#f1f5f9", fontFamily: "Outfit, sans-serif", margin: 0 }}>Your Insights</h1>
+          <p style={{ fontSize: 12, color: "#475569", margin: 0 }}>How you're using MAARS Command</p>
+        </div>
+        {stats.plan && (
+          <span style={{ marginLeft: "auto", padding: "3px 10px", borderRadius: 20, background: "rgba(255,255,255,0.05)", border: `1px solid ${T.border}`, color: "#64748b", fontSize: 11, fontWeight: 600, textTransform: "capitalize" }}>
+            {stats.plan} plan
+          </span>
+        )}
+      </div>
+
+      {/* ── Stat cards ──────────────────────────────────────────────────── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 10, marginBottom: 28 }}>
+        {statItems.map((s, i) => {
+          const Icon = s.icon;
+          return (
+            <div key={i} data-testid={`insight-${s.title.toLowerCase().replace(/\s+/g, '-')}`}
+              style={{ padding: "14px 16px", borderRadius: 14, background: T.glass, border: `1px solid ${T.border}`, backdropFilter: "blur(12px)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: s.color, opacity: 0.5 }} />
+              <Icon style={{ width: 20, height: 20, color: s.color, opacity: 0.5, position: "absolute", top: 12, right: 12 }} />
+              <p style={{ fontSize: 9, color: "#475569", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 6px" }}>{s.title}</p>
+              <p style={{ fontSize: 22, fontWeight: 800, color: s.color, fontFamily: "Outfit, sans-serif", lineHeight: 1, margin: "0 0 4px" }}>{s.value}</p>
+              {s.sub && <p style={{ fontSize: 10, color: "#475569", margin: 0 }}>{s.sub}</p>}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── Activity chart ──────────────────────────────────────────────── */}
+      <div style={{ borderRadius: 16, background: T.glass, border: `1px solid ${T.border}`, backdropFilter: "blur(12px)", padding: 20, marginBottom: 24 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+          <TrendingUp style={{ width: 14, height: 14, color: T.teal }} />
+          <span style={{ fontSize: 13, fontWeight: 700, color: "#e2e8f0" }}>Activity — Last 30 Days</span>
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5 }}>
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.teal, animation: "ins_pulse 2.5s ease-in-out infinite" }} />
+            <span style={{ fontSize: 10, color: T.teal, fontWeight: 600 }}>LIVE</span>
           </div>
-          <Badge className="ml-auto bg-white/5 text-zinc-300 capitalize">{stats.plan} plan</Badge>
+        </div>
+        <div style={{ height: 200 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+              <defs>
+                <linearGradient id="insGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%"  stopColor={T.teal} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={T.teal} stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+              <XAxis dataKey="date" tick={{ fill: "#334155", fontSize: 10 }} interval={6} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: "#334155", fontSize: 10 }} allowDecimals={false} axisLine={false} tickLine={false} />
+              <Tooltip content={<CustomTooltip />} cursor={{ stroke: T.teal, strokeWidth: 1, strokeDasharray: "4 4" }} />
+              <Area type="monotone" dataKey="messages" stroke={T.teal} strokeWidth={2} fill="url(#insGrad)" name="Messages" dot={false} />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
-        {/* Stat Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-          <StatCard title="Messages Sent" value={stats.user_messages} subtitle={`${stats.ai_messages} AI responses`} icon={MessageSquare} color="indigo" />
-          <StatCard title="Total Chats" value={stats.total_chats} icon={Bot} color="violet" />
-          <StatCard title="Credits Left" value={stats.credits_remaining.toLocaleString()} subtitle={`${stats.credits_used.toLocaleString()} used`} icon={CreditCard} color="amber" />
-          <StatCard title="Ratings Given" value={stats.feedback_up + stats.feedback_down} subtitle={`${stats.feedback_up} up / ${stats.feedback_down} down`} icon={ThumbsUp} color="emerald" />
-          <StatCard title="Day Streak" value={`${stats.streak} days`} subtitle={stats.streak >= 7 ? "On fire!" : "Keep going!"} icon={Flame} color="red" />
+      {/* ── Favorites + Recommendations ─────────────────────────────────── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 20 }}>
+        {/* Favorite agents */}
+        <div style={{ borderRadius: 16, background: T.glass, border: `1px solid ${T.border}`, backdropFilter: "blur(12px)", padding: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+            <Star style={{ width: 14, height: 14, color: T.amber }} />
+            <span style={{ fontSize: 13, fontWeight: 700, color: "#e2e8f0" }}>Your Favorite Agents</span>
+          </div>
+          {favorite_agents?.length > 0 ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {favorite_agents.map((agent, i) => (
+                <Link key={agent.agent_id} to={`/chat/${agent.agent_id}`} data-testid={`fav-agent-${i}`}
+                  style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 12, background: "rgba(255,255,255,0.03)", border: `1px solid ${T.border}`, textDecoration: "none", transition: "all 0.15s" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(79,209,197,0.05)"; e.currentTarget.style.borderColor = "rgba(79,209,197,0.2)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.03)"; e.currentTarget.style.borderColor = T.border; }}>
+                  <img src={agent.avatar} alt="" style={{ width: 36, height: 36, borderRadius: 10, objectFit: "cover", flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 12, fontWeight: 700, color: "#e2e8f0", margin: "0 0 1px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{agent.name}</p>
+                    <p style={{ fontSize: 10, color: "#475569", margin: 0 }}>{agent.role}</p>
+                  </div>
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <p style={{ fontSize: 13, fontWeight: 700, color: "#94a3b8", margin: "0 0 1px" }}>{agent.messages}</p>
+                    <p style={{ fontSize: 9, color: "#334155", margin: 0 }}>messages</p>
+                  </div>
+                  <ChevronRight style={{ width: 13, height: 13, color: "#334155", flexShrink: 0 }} />
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div style={{ textAlign: "center", padding: "32px 0" }}>
+              <Bot style={{ width: 36, height: 36, color: "#1e293b", margin: "0 auto 10px" }} />
+              <p style={{ fontSize: 12, color: "#475569", marginBottom: 14 }}>Start chatting to discover your favorites!</p>
+              <Link to="/agents" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 9, background: "rgba(79,209,197,0.1)", border: "1px solid rgba(79,209,197,0.2)", color: T.teal, fontSize: 12, fontWeight: 600, textDecoration: "none" }} data-testid="browse-agents-btn">
+                Browse Agents
+              </Link>
+            </div>
+          )}
         </div>
 
-        {/* Activity Chart */}
-        <Card className="bg-zinc-900/50 border-white/10">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-white font-['Outfit'] text-base flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-red-400" />
-              Your Activity (Last 30 Days)
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-52">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData}>
-                  <defs>
-                    <linearGradient id="actGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                  <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 11 }} interval={6} />
-                  <YAxis tick={{ fill: '#71717a', fontSize: 11 }} allowDecimals={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="messages" stroke="#ef4444" fill="url(#actGrad)" name="Messages" />
-                </AreaChart>
-              </ResponsiveContainer>
+        {/* Recommendations */}
+        <div style={{ borderRadius: 16, background: T.glass, border: `1px solid ${T.border}`, backdropFilter: "blur(12px)", padding: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+            <Sparkles style={{ width: 14, height: 14, color: T.amber }} />
+            <span style={{ fontSize: 13, fontWeight: 700, color: "#e2e8f0" }}>Try These Agents</span>
+          </div>
+          <p style={{ fontSize: 10, color: "#334155", marginBottom: 14 }}>Agents you haven't used yet</p>
+          {recommendations?.length > 0 ? (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              {recommendations.map((agent, i) => (
+                <Link key={agent.agent_id} to={`/chat/${agent.agent_id}`} data-testid={`rec-agent-${i}`}
+                  style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "12px 8px", borderRadius: 12, background: "rgba(255,255,255,0.03)", border: `1px solid ${T.border}`, textDecoration: "none", transition: "all 0.15s", textAlign: "center" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(79,209,197,0.06)"; e.currentTarget.style.borderColor = "rgba(79,209,197,0.2)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.03)"; e.currentTarget.style.borderColor = T.border; }}>
+                  <img src={agent.avatar} alt="" style={{ width: 40, height: 40, borderRadius: 10, objectFit: "cover", marginBottom: 8 }} />
+                  <p style={{ fontSize: 11, fontWeight: 700, color: "#e2e8f0", margin: "0 0 2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" }}>{agent.name}</p>
+                  <p style={{ fontSize: 9, color: "#475569", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" }}>{agent.role}</p>
+                </Link>
+              ))}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Favorite Agents + Recommendations */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Favorites */}
-          <Card className="bg-zinc-900/50 border-white/10">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-white font-['Outfit'] text-base flex items-center gap-2">
-                <Bot className="w-4 h-4 text-red-400" />
-                Your Favorite Agents
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {favorite_agents.length > 0 ? (
-                <div className="space-y-2">
-                  {favorite_agents.map((agent, i) => (
-                    <Link
-                      key={agent.agent_id}
-                      to={`/chat/${agent.agent_id}`}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group"
-                      data-testid={`fav-agent-${i}`}
-                    >
-                      <img src={agent.avatar} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-white font-medium truncate">{agent.name}</p>
-                        <p className="text-xs text-zinc-500">{agent.role}</p>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <p className="text-sm text-zinc-300 font-medium">{agent.messages}</p>
-                        <p className="text-[10px] text-zinc-600">messages</p>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors shrink-0" />
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <Bot className="w-10 h-10 text-zinc-700 mx-auto mb-2" />
-                  <p className="text-zinc-500 text-sm">Start chatting to discover your favorites!</p>
-                  <Link to="/agents">
-                    <Button variant="outline" className="mt-3 border-white/10 text-sm" data-testid="browse-agents-btn">
-                      Browse Agents
-                    </Button>
-                  </Link>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Recommendations */}
-          <Card className="bg-zinc-900/50 border-white/10">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-white font-['Outfit'] text-base flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-400" />
-                Try These Agents
-              </CardTitle>
-              <p className="text-xs text-zinc-500">Agents you haven't used yet</p>
-            </CardHeader>
-            <CardContent>
-              {recommendations.length > 0 ? (
-                <div className="grid grid-cols-2 gap-2">
-                  {recommendations.map((agent, i) => (
-                    <Link
-                      key={agent.agent_id}
-                      to={`/chat/${agent.agent_id}`}
-                      className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors text-center group"
-                      data-testid={`rec-agent-${i}`}
-                    >
-                      <img src={agent.avatar} alt="" className="w-10 h-10 rounded-lg mx-auto mb-2 object-cover" />
-                      <p className="text-xs text-white font-medium truncate">{agent.name}</p>
-                      <p className="text-[10px] text-zinc-500 truncate">{agent.role}</p>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <Sparkles className="w-10 h-10 text-zinc-700 mx-auto mb-2" />
-                  <p className="text-zinc-500 text-sm">You've tried all agents! Amazing.</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          ) : (
+            <div style={{ textAlign: "center", padding: "32px 0" }}>
+              <Sparkles style={{ width: 36, height: 36, color: "#1e293b", margin: "0 auto 10px" }} />
+              <p style={{ fontSize: 12, color: "#475569" }}>You've tried all agents! Amazing.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

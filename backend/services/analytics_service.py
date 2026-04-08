@@ -307,7 +307,7 @@ async def get_widget_data(user_id, widget_id):
         return {"active": active, "total": len(integrations)}
 
     elif widget_id == "model_distribution":
-        return {"models": {"GPT-5.2": 35, "Claude Sonnet": 25, "Gemini Flash": 20, "Llama 4": 10, "Other": 10}}
+        return {"models": {"GPT-5": 35, "Claude Sonnet": 25, "Gemini Flash": 20, "Llama 4": 10, "Other": 10}}
 
     elif widget_id == "latency_heatmap":
         data = []

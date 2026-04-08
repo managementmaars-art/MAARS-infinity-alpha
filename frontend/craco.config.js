@@ -5,12 +5,44 @@ require("dotenv").config();
 // Check if we're in development/preview mode (not production build)
 // Craco sets NODE_ENV=development for start, NODE_ENV=production for build
 const isDevServer = process.env.NODE_ENV !== "production";
+const envVisualEdits = String(process.env.ENABLE_VISUAL_EDITS || "").toLowerCase() === "true";
 
 // Environment variable overrides
 const config = {
   enableHealthCheck: process.env.ENABLE_HEALTH_CHECK === "true",
-  enableVisualEdits: isDevServer, // Only enable during dev server
+  // Default remains disabled. Only enable intentionally in dev with env override.
+  enableVisualEdits: isDevServer && envVisualEdits,
 };
+
+function stripVisualEditsBabelPlugins(webpackConfig) {
+  const rules = webpackConfig?.module?.rules || [];
+  const removeFromUseEntry = (entry) => {
+    if (!entry || typeof entry !== "object") return;
+    if (!entry.options || !Array.isArray(entry.options.plugins)) return;
+    entry.options.plugins = entry.options.plugins.filter((plugin) => {
+      const name = typeof plugin === "string" ? plugin : Array.isArray(plugin) ? plugin[0] : "";
+      return !String(name).includes("babel-metadata-plugin");
+    });
+  };
+
+  for (const rule of rules) {
+    if (Array.isArray(rule.oneOf)) {
+      for (const oneOfRule of rule.oneOf) {
+        if (Array.isArray(oneOfRule.use)) {
+          oneOfRule.use.forEach(removeFromUseEntry);
+        } else {
+          removeFromUseEntry(oneOfRule.use);
+        }
+      }
+      continue;
+    }
+    if (Array.isArray(rule.use)) {
+      rule.use.forEach(removeFromUseEntry);
+    } else {
+      removeFromUseEntry(rule.use);
+    }
+  }
+}
 
 // Conditionally load visual edits modules only in dev mode
 let setupDevServer;
@@ -47,6 +79,10 @@ const webpackConfig = {
       '@': path.resolve(__dirname, 'src'),
     },
     configure: (webpackConfig) => {
+      // Safety net: ensure the visual edits Babel plugin is removed unless explicitly enabled.
+      if (!config.enableVisualEdits) {
+        stripVisualEditsBabelPlugins(webpackConfig);
+      }
 
       // Add ignored patterns to reduce watched directories
         webpackConfig.watchOptions = {

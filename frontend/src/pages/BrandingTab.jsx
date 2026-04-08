@@ -1,15 +1,42 @@
 import { useState, useEffect, useRef } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Button } from "../components/ui/button";
 import {
-  Palette, Globe, Image, Type, Loader2, CheckCircle, Clock,
+  Palette, Globe, Image, Type, CheckCircle, Clock,
   XCircle, Upload, Copy, RefreshCw, AlertCircle, Save, Sparkles
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  violet: "#7c3aed",
+  green: "#34d399",
+  amber: "#f59e0b",
+  red: "#ef4444",
+  cyan: "#22d3ee",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
+
+const formInput = {
+  background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`,
+  borderRadius: 8, padding: "8px 12px", color: "#fff", fontSize: 13,
+  outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box",
+  transition: "border-color .2s",
+};
+
+const DOMAIN_STATUS_META = {
+  verified: { color: T.green, bg: "rgba(52,211,153,.15)", icon: CheckCircle, label: "Verified" },
+  pending_verification: { color: T.amber, bg: "rgba(245,158,11,.15)", icon: Clock, label: "Pending" },
+  dns_not_found: { color: T.red, bg: "rgba(239,68,68,.15)", icon: XCircle, label: "DNS Not Found" },
+  verification_error: { color: T.red, bg: "rgba(239,68,68,.15)", icon: XCircle, label: "Error" },
+  not_configured: { color: T.zinc, bg: "rgba(113,113,122,.15)", icon: AlertCircle, label: "Not Configured" },
+};
 
 const BrandingTab = () => {
   const { token } = useAuth();
@@ -111,227 +138,243 @@ const BrandingTab = () => {
     return url;
   };
 
-  if (loading || !config) return <div className="flex items-center justify-center h-32"><Loader2 className="w-6 h-6 animate-spin text-red-400" /></div>;
+  const inputFocus = e => e.target.style.borderColor = "rgba(124,58,237,.5)";
+  const inputBlur = e => e.target.style.borderColor = T.border;
+
+  if (loading || !config) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 128 }}>
+      <div style={{ width: 24, height: 24, border: `2px solid ${T.indigo}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+      <style>{STYLES}</style>
+    </div>
+  );
 
   const domainStatus = config.custom_domain_status || "not_configured";
+  const dsMeta = DOMAIN_STATUS_META[domainStatus] || DOMAIN_STATUS_META.not_configured;
+  const DsIcon = dsMeta.icon;
 
   return (
-    <div className="space-y-6" data-testid="branding-tab">
+    <div style={{ display: "flex", flexDirection: "column", gap: 20, animation: "fadeUp .4s ease" }} data-testid="branding-tab">
+      <style>{STYLES}</style>
+
       {/* Brand Identity */}
-      <Card className="bg-zinc-900/50 border-white/10">
-        <CardHeader>
-          <CardTitle className="text-white font-['Outfit'] flex items-center gap-3 text-base">
-            <div className="w-10 h-10 rounded-lg bg-rose-500/20 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-rose-400" />
-            </div>
-            Brand Identity
-          </CardTitle>
-          <p className="text-zinc-400 text-sm">Customize how your platform appears to users</p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-zinc-300 text-sm flex items-center gap-1.5"><Type className="w-3 h-3" /> Platform Name</Label>
-              <Input value={config.platform_name || ""} onChange={e => updateField("platform_name", e.target.value)} placeholder="MAARS Command" className="bg-zinc-800/50 border-white/10" data-testid="brand-name-input" />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-zinc-300 text-sm">Tagline</Label>
-              <Input value={config.tagline || ""} onChange={e => updateField("tagline", e.target.value)} placeholder="AI-Powered Team Platform" className="bg-zinc-800/50 border-white/10" data-testid="brand-tagline-input" />
-            </div>
+      <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, overflow: "hidden" }}>
+        <div style={{ padding: "16px 18px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(244,63,94,.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Sparkles size={18} style={{ color: "#fb7185" }} />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-zinc-300 text-sm">Footer Text</Label>
-              <Input value={config.footer_text || ""} onChange={e => updateField("footer_text", e.target.value)} placeholder="MAARS Global Corporation" className="bg-zinc-800/50 border-white/10" data-testid="brand-footer-input" />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-zinc-300 text-sm">Support Email</Label>
-              <Input type="email" value={config.support_email || ""} onChange={e => updateField("support_email", e.target.value)} placeholder="support@yourdomain.com" className="bg-zinc-800/50 border-white/10" data-testid="brand-support-email" />
-            </div>
+          <div>
+            <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Brand Identity</p>
+            <p style={{ fontSize: 11, color: T.zinc, margin: 0 }}>Customize how your platform appears to users</p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div style={{ padding: 18, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          <div>
+            <label style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#d4d4d8", marginBottom: 6, fontWeight: 600 }}>
+              <Type size={11} /> Platform Name
+            </label>
+            <input value={config.platform_name || ""} onChange={e => updateField("platform_name", e.target.value)}
+              placeholder="MAARS Command" style={formInput} data-testid="brand-name-input"
+              onFocus={inputFocus} onBlur={inputBlur} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: "#d4d4d8", marginBottom: 6, fontWeight: 600 }}>Tagline</label>
+            <input value={config.tagline || ""} onChange={e => updateField("tagline", e.target.value)}
+              placeholder="AI-Powered Team Platform" style={formInput} data-testid="brand-tagline-input"
+              onFocus={inputFocus} onBlur={inputBlur} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: "#d4d4d8", marginBottom: 6, fontWeight: 600 }}>Footer Text</label>
+            <input value={config.footer_text || ""} onChange={e => updateField("footer_text", e.target.value)}
+              placeholder="MAARS Global Corporation" style={formInput} data-testid="brand-footer-input"
+              onFocus={inputFocus} onBlur={inputBlur} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: "#d4d4d8", marginBottom: 6, fontWeight: 600 }}>Support Email</label>
+            <input type="email" value={config.support_email || ""} onChange={e => updateField("support_email", e.target.value)}
+              placeholder="support@yourdomain.com" style={formInput} data-testid="brand-support-email"
+              onFocus={inputFocus} onBlur={inputBlur} />
+          </div>
+        </div>
+      </div>
 
       {/* Logo & Favicon */}
-      <Card className="bg-zinc-900/50 border-white/10">
-        <CardHeader>
-          <CardTitle className="text-white font-['Outfit'] flex items-center gap-3 text-base">
-            <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
-              <Image className="w-5 h-5 text-violet-400" />
+      <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, overflow: "hidden" }}>
+        <div style={{ padding: "16px 18px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(167,139,250,.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Image size={18} style={{ color: "#a78bfa" }} />
+          </div>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Logo & Favicon</p>
+        </div>
+        <div style={{ padding: 18, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+          {/* Logo */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <label style={{ fontSize: 11, color: "#d4d4d8", fontWeight: 600 }}>Platform Logo</label>
+            <div style={{ border: `1px dashed rgba(255,255,255,.2)`, borderRadius: 12, padding: 20, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+              {config.logo_url ? (
+                <div style={{ width: 112, height: 112, borderRadius: 10, background: "rgba(255,255,255,.06)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                  <img src={resolveUrl(config.logo_url)} alt="Logo" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} data-testid="brand-logo-preview" onError={e => e.target.style.display = "none"} />
+                </div>
+              ) : (
+                <div style={{ width: 112, height: 112, borderRadius: 10, background: "rgba(255,255,255,.04)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Upload size={32} style={{ color: "rgba(255,255,255,.15)" }} />
+                </div>
+              )}
+              <input ref={logoRef} type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" style={{ display: "none" }} onChange={e => handleUpload(e.target.files[0], "logo")} />
+              <button onClick={() => logoRef.current?.click()} disabled={uploadingLogo} data-testid="brand-upload-logo-btn"
+                style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "7px 14px", borderRadius: 8, border: `1px solid ${T.border}`, background: "transparent", color: "#d4d4d8", fontSize: 12, fontWeight: 600, cursor: uploadingLogo ? "not-allowed" : "pointer" }}>
+                {uploadingLogo ? <div style={{ width: 13, height: 13, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> : <Upload size={13} />}
+                Upload Logo
+              </button>
+              <span style={{ fontSize: 10, color: T.zinc }}>PNG, JPG, SVG, WebP. Max 5MB.</span>
             </div>
-            Logo & Favicon
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Logo */}
-            <div className="space-y-3">
-              <Label className="text-zinc-300 text-sm">Platform Logo</Label>
-              <div className="border border-dashed border-white/20 rounded-xl p-5 flex flex-col items-center gap-3">
-                {config.logo_url ? (
-                  <div className="w-28 h-28 rounded-lg bg-zinc-800 flex items-center justify-center overflow-hidden">
-                    <img src={resolveUrl(config.logo_url)} alt="Logo" className="max-w-full max-h-full object-contain" data-testid="brand-logo-preview" onError={e => e.target.style.display = "none"} />
-                  </div>
-                ) : (
-                  <div className="w-28 h-28 rounded-lg bg-zinc-800/50 flex items-center justify-center">
-                    <Upload className="w-8 h-8 text-zinc-600" />
-                  </div>
-                )}
-                <input ref={logoRef} type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" className="hidden" onChange={e => handleUpload(e.target.files[0], "logo")} />
-                <Button variant="outline" size="sm" onClick={() => logoRef.current?.click()} disabled={uploadingLogo} className="border-white/10 text-zinc-300 hover:bg-white/5" data-testid="brand-upload-logo-btn">
-                  {uploadingLogo ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Upload className="w-4 h-4 mr-2" />}
-                  Upload Logo
-                </Button>
-                <span className="text-[11px] text-zinc-500">PNG, JPG, SVG, WebP. Max 5MB.</span>
-              </div>
-              <div>
-                <Label className="text-zinc-500 text-xs">Or paste URL</Label>
-                <Input value={config.logo_url || ""} onChange={e => updateField("logo_url", e.target.value)} placeholder="https://..." className="bg-zinc-800/50 border-white/10 mt-1 text-sm" data-testid="brand-logo-input" />
-              </div>
+            <div>
+              <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 5 }}>Or paste URL</label>
+              <input value={config.logo_url || ""} onChange={e => updateField("logo_url", e.target.value)}
+                placeholder="https://..." style={formInput} data-testid="brand-logo-input"
+                onFocus={inputFocus} onBlur={inputBlur} />
             </div>
+          </div>
 
-            {/* Favicon */}
-            <div className="space-y-3">
-              <Label className="text-zinc-300 text-sm">Favicon</Label>
-              <div className="border border-dashed border-white/20 rounded-xl p-5 flex flex-col items-center gap-3">
-                {config.favicon_url ? (
-                  <div className="w-16 h-16 rounded-lg bg-zinc-800 flex items-center justify-center overflow-hidden">
-                    <img src={resolveUrl(config.favicon_url)} alt="Favicon" className="max-w-full max-h-full object-contain" data-testid="brand-favicon-preview" onError={e => e.target.style.display = "none"} />
-                  </div>
-                ) : (
-                  <div className="w-16 h-16 rounded-lg bg-zinc-800/50 flex items-center justify-center">
-                    <Upload className="w-5 h-5 text-zinc-600" />
-                  </div>
-                )}
-                <input ref={faviconRef} type="file" accept="image/png,image/x-icon,image/svg+xml,image/webp,.ico" className="hidden" onChange={e => handleUpload(e.target.files[0], "favicon")} />
-                <Button variant="outline" size="sm" onClick={() => faviconRef.current?.click()} disabled={uploadingFavicon} className="border-white/10 text-zinc-300 hover:bg-white/5" data-testid="brand-upload-favicon-btn">
-                  {uploadingFavicon ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Upload className="w-4 h-4 mr-2" />}
-                  Upload Favicon
-                </Button>
-                <span className="text-[11px] text-zinc-500">ICO, PNG, SVG. Max 5MB.</span>
-              </div>
-              <div>
-                <Label className="text-zinc-500 text-xs">Or paste URL</Label>
-                <Input value={config.favicon_url || ""} onChange={e => updateField("favicon_url", e.target.value)} placeholder="https://..." className="bg-zinc-800/50 border-white/10 mt-1 text-sm" data-testid="brand-favicon-input" />
-              </div>
+          {/* Favicon */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <label style={{ fontSize: 11, color: "#d4d4d8", fontWeight: 600 }}>Favicon</label>
+            <div style={{ border: `1px dashed rgba(255,255,255,.2)`, borderRadius: 12, padding: 20, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+              {config.favicon_url ? (
+                <div style={{ width: 64, height: 64, borderRadius: 10, background: "rgba(255,255,255,.06)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                  <img src={resolveUrl(config.favicon_url)} alt="Favicon" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} data-testid="brand-favicon-preview" onError={e => e.target.style.display = "none"} />
+                </div>
+              ) : (
+                <div style={{ width: 64, height: 64, borderRadius: 10, background: "rgba(255,255,255,.04)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Upload size={20} style={{ color: "rgba(255,255,255,.15)" }} />
+                </div>
+              )}
+              <input ref={faviconRef} type="file" accept="image/png,image/x-icon,image/svg+xml,image/webp,.ico" style={{ display: "none" }} onChange={e => handleUpload(e.target.files[0], "favicon")} />
+              <button onClick={() => faviconRef.current?.click()} disabled={uploadingFavicon} data-testid="brand-upload-favicon-btn"
+                style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "7px 14px", borderRadius: 8, border: `1px solid ${T.border}`, background: "transparent", color: "#d4d4d8", fontSize: 12, fontWeight: 600, cursor: uploadingFavicon ? "not-allowed" : "pointer" }}>
+                {uploadingFavicon ? <div style={{ width: 13, height: 13, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> : <Upload size={13} />}
+                Upload Favicon
+              </button>
+              <span style={{ fontSize: 10, color: T.zinc }}>ICO, PNG, SVG. Max 5MB.</span>
+            </div>
+            <div>
+              <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 5 }}>Or paste URL</label>
+              <input value={config.favicon_url || ""} onChange={e => updateField("favicon_url", e.target.value)}
+                placeholder="https://..." style={formInput} data-testid="brand-favicon-input"
+                onFocus={inputFocus} onBlur={inputBlur} />
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      {/* Colors */}
-      <Card className="bg-zinc-900/50 border-white/10">
-        <CardHeader>
-          <CardTitle className="text-white font-['Outfit'] flex items-center gap-3 text-base">
-            <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-              <Palette className="w-5 h-5 text-indigo-400" />
-            </div>
-            Brand Colors
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-zinc-300 text-sm">Primary Color</Label>
-              <div className="flex items-center gap-3">
-                <input type="color" value={config.primary_color || "#ef4444"} onChange={e => updateField("primary_color", e.target.value)} className="w-12 h-10 rounded-lg border border-white/10 cursor-pointer bg-transparent" data-testid="brand-primary-color" />
-                <Input value={config.primary_color || "#ef4444"} onChange={e => updateField("primary_color", e.target.value)} className="bg-zinc-800/50 border-white/10 font-mono text-sm flex-1" />
+      {/* Brand Colors */}
+      <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, overflow: "hidden" }}>
+        <div style={{ padding: "16px 18px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(129,140,248,.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Palette size={18} style={{ color: T.indigo }} />
+          </div>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Brand Colors</p>
+        </div>
+        <div style={{ padding: 18 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+            <div>
+              <label style={{ display: "block", fontSize: 11, color: "#d4d4d8", marginBottom: 8, fontWeight: 600 }}>Primary Color</label>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <input type="color" value={config.primary_color || "#ef4444"} onChange={e => updateField("primary_color", e.target.value)}
+                  style={{ width: 44, height: 36, borderRadius: 8, border: `1px solid ${T.border}`, cursor: "pointer", background: "transparent" }} data-testid="brand-primary-color" />
+                <input value={config.primary_color || "#ef4444"} onChange={e => updateField("primary_color", e.target.value)}
+                  style={{ ...formInput, fontFamily: "monospace" }} onFocus={inputFocus} onBlur={inputBlur} />
               </div>
-              <p className="text-[11px] text-zinc-500">Buttons, highlights, active states</p>
+              <p style={{ fontSize: 10, color: T.zinc, marginTop: 5 }}>Buttons, highlights, active states</p>
             </div>
-            <div className="space-y-2">
-              <Label className="text-zinc-300 text-sm">Accent Color</Label>
-              <div className="flex items-center gap-3">
-                <input type="color" value={config.accent_color || "#f97316"} onChange={e => updateField("accent_color", e.target.value)} className="w-12 h-10 rounded-lg border border-white/10 cursor-pointer bg-transparent" data-testid="brand-accent-color" />
-                <Input value={config.accent_color || "#f97316"} onChange={e => updateField("accent_color", e.target.value)} className="bg-zinc-800/50 border-white/10 font-mono text-sm flex-1" />
+            <div>
+              <label style={{ display: "block", fontSize: 11, color: "#d4d4d8", marginBottom: 8, fontWeight: 600 }}>Accent Color</label>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <input type="color" value={config.accent_color || "#f97316"} onChange={e => updateField("accent_color", e.target.value)}
+                  style={{ width: 44, height: 36, borderRadius: 8, border: `1px solid ${T.border}`, cursor: "pointer", background: "transparent" }} data-testid="brand-accent-color" />
+                <input value={config.accent_color || "#f97316"} onChange={e => updateField("accent_color", e.target.value)}
+                  style={{ ...formInput, fontFamily: "monospace" }} onFocus={inputFocus} onBlur={inputBlur} />
               </div>
-              <p className="text-[11px] text-zinc-500">Gradients, secondary highlights</p>
+              <p style={{ fontSize: 10, color: T.zinc, marginTop: 5 }}>Gradients, secondary highlights</p>
             </div>
           </div>
-          <div className="mt-4 p-4 rounded-xl bg-white/5">
-            <p className="text-xs text-zinc-500 mb-3">Live Preview</p>
-            <div className="flex items-center gap-3 flex-wrap">
-              <div className="h-10 w-32 rounded-lg" style={{ background: `linear-gradient(135deg, ${config.primary_color}, ${config.accent_color})` }} />
-              <button className="px-4 py-2 rounded-lg text-white text-sm font-medium" style={{ background: config.primary_color }}>Primary</button>
-              <button className="px-4 py-2 rounded-lg text-sm font-medium border" style={{ borderColor: config.primary_color, color: config.primary_color }}>Outline</button>
-              <Badge style={{ backgroundColor: `${config.primary_color}20`, color: config.primary_color, border: "none" }}>Badge</Badge>
+
+          <div style={{ marginTop: 16, padding: "14px 16px", borderRadius: 12, background: "rgba(255,255,255,.03)" }}>
+            <p style={{ fontSize: 10, color: T.zinc, marginBottom: 12 }}>Live Preview</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+              <div style={{ height: 40, width: 120, borderRadius: 10, background: `linear-gradient(135deg, ${config.primary_color || "#ef4444"}, ${config.accent_color || "#f97316"})` }} />
+              <button style={{ padding: "8px 16px", borderRadius: 10, border: "none", color: "#fff", fontSize: 13, fontWeight: 600, background: config.primary_color || "#ef4444", cursor: "default" }}>Primary</button>
+              <button style={{ padding: "8px 16px", borderRadius: 10, fontSize: 13, fontWeight: 600, background: "transparent", border: `1px solid ${config.primary_color || "#ef4444"}`, color: config.primary_color || "#ef4444", cursor: "default" }}>Outline</button>
+              <span style={{ padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, background: `${config.primary_color || "#ef4444"}20`, color: config.primary_color || "#ef4444" }}>Badge</span>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Custom Domain */}
-      <Card className="bg-zinc-900/50 border-white/10">
-        <CardHeader>
-          <CardTitle className="text-white font-['Outfit'] flex items-center gap-3 text-base">
-            <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center">
-              <Globe className="w-5 h-5 text-cyan-400" />
-            </div>
-            Custom Domain
-            <Badge className={`ml-2 border-0 text-xs ${
-              domainStatus === "verified" ? "bg-emerald-500/20 text-emerald-400" :
-              domainStatus === "pending_verification" ? "bg-amber-500/20 text-amber-400" :
-              domainStatus === "dns_not_found" || domainStatus === "verification_error" ? "bg-red-500/20 text-red-400" :
-              "bg-zinc-500/20 text-zinc-400"
-            }`} data-testid="brand-domain-status">
-              {domainStatus === "verified" && <CheckCircle className="w-3 h-3 mr-1" />}
-              {domainStatus === "pending_verification" && <Clock className="w-3 h-3 mr-1" />}
-              {(domainStatus === "dns_not_found" || domainStatus === "verification_error") && <XCircle className="w-3 h-3 mr-1" />}
-              {domainStatus === "not_configured" && <AlertCircle className="w-3 h-3 mr-1" />}
-              {domainStatus === "verified" ? "Verified" :
-               domainStatus === "pending_verification" ? "Pending" :
-               domainStatus === "dns_not_found" ? "DNS Not Found" :
-               domainStatus === "verification_error" ? "Error" : "Not Configured"}
-            </Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-end gap-3">
-            <div className="flex-1 space-y-2">
-              <Label className="text-zinc-300 text-sm">Your Domain</Label>
-              <Input value={config.custom_domain || ""} onChange={e => updateField("custom_domain", e.target.value)} placeholder="app.yourdomain.com" className="bg-zinc-800/50 border-white/10" data-testid="brand-domain-input" />
+      <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, overflow: "hidden" }}>
+        <div style={{ padding: "16px 18px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(34,211,238,.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Globe size={18} style={{ color: T.cyan }} />
+          </div>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Custom Domain</p>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: dsMeta.bg, color: dsMeta.color }} data-testid="brand-domain-status">
+            <DsIcon size={10} /> {dsMeta.label}
+          </span>
+        </div>
+        <div style={{ padding: 18, display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: 10 }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: "block", fontSize: 11, color: "#d4d4d8", marginBottom: 6, fontWeight: 600 }}>Your Domain</label>
+              <input value={config.custom_domain || ""} onChange={e => updateField("custom_domain", e.target.value)}
+                placeholder="app.yourdomain.com" style={formInput} data-testid="brand-domain-input"
+                onFocus={inputFocus} onBlur={inputBlur} />
             </div>
             {config.custom_domain && (
-              <Button variant="outline" size="sm" onClick={handleVerifyDomain} disabled={verifying} className="border-white/10 text-zinc-300 hover:bg-white/5 h-10" data-testid="brand-verify-domain-btn">
-                {verifying ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <RefreshCw className="w-4 h-4 mr-1" />}
+              <button onClick={handleVerifyDomain} disabled={verifying} data-testid="brand-verify-domain-btn"
+                style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 14px", borderRadius: 9, border: `1px solid ${T.border}`, background: "transparent", color: "#d4d4d8", fontSize: 12, fontWeight: 600, cursor: verifying ? "not-allowed" : "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>
+                {verifying ? <div style={{ width: 13, height: 13, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> : <RefreshCw size={13} />}
                 Verify DNS
-              </Button>
+              </button>
             )}
           </div>
 
           {config.custom_domain && (
-            <div className="p-4 rounded-xl bg-white/5 space-y-3">
-              <p className="text-sm text-white font-medium">DNS Configuration</p>
-              <p className="text-xs text-zinc-400">Add these DNS records with your domain registrar:</p>
-              <div className="space-y-2">
-                <div className="p-3 rounded-lg bg-zinc-900/80 font-mono text-xs border border-white/5">
-                  <div className="grid grid-cols-3 gap-3 text-zinc-500 mb-2 border-b border-white/5 pb-2">
-                    <span>Type</span><span>Name</span><span>Value</span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-3 text-cyan-400">
-                    <span>CNAME</span>
-                    <span className="text-white">{config.custom_domain.split(".")[0] || "app"}</span>
-                    <span className="flex items-center gap-1.5">
-                      {window.location.hostname}
-                      <button onClick={() => copyText(window.location.hostname)} className="text-zinc-500 hover:text-white"><Copy className="w-3 h-3" /></button>
-                    </span>
-                  </div>
+            <div style={{ padding: "14px 16px", borderRadius: 12, background: "rgba(255,255,255,.03)", display: "flex", flexDirection: "column", gap: 12 }}>
+              <p style={{ fontSize: 13, fontWeight: 600, color: "#fff", margin: 0 }}>DNS Configuration</p>
+              <p style={{ fontSize: 11, color: T.zinc, margin: 0 }}>Add these DNS records with your domain registrar:</p>
+              <div style={{ padding: "12px 14px", borderRadius: 9, background: "rgba(0,0,0,.3)", border: `1px solid ${T.border}`, fontFamily: "monospace", fontSize: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr 3fr", gap: 12, color: T.zinc, marginBottom: 8, paddingBottom: 8, borderBottom: `1px solid ${T.border}` }}>
+                  <span>Type</span><span>Name</span><span>Value</span>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr 3fr", gap: 12, color: T.cyan }}>
+                  <span>CNAME</span>
+                  <span style={{ color: "#fff" }}>{config.custom_domain.split(".")[0] || "app"}</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ color: "#fff" }}>{window.location.hostname}</span>
+                    <button onClick={() => copyText(window.location.hostname)}
+                      style={{ background: "none", border: "none", cursor: "pointer", color: T.zinc, display: "flex", padding: 0 }}
+                      onMouseEnter={e => e.currentTarget.style.color = "#fff"}
+                      onMouseLeave={e => e.currentTarget.style.color = T.zinc}>
+                      <Copy size={12} />
+                    </button>
+                  </span>
                 </div>
               </div>
-              <div className="flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <p className="text-[11px] text-zinc-500">DNS changes may take up to 48 hours. SSL certificates are automatically provisioned after verification.</p>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                <AlertCircle size={14} style={{ color: T.amber, flexShrink: 0, marginTop: 1 }} />
+                <p style={{ fontSize: 11, color: T.zinc, margin: 0 }}>DNS changes may take up to 48 hours. SSL certificates are automatically provisioned after verification.</p>
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Save */}
-      <Button onClick={handleSave} disabled={saving} className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 w-full" data-testid="save-branding-btn">
-        {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+      <button onClick={handleSave} disabled={saving} data-testid="save-branding-btn"
+        style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "11px 0", borderRadius: 12, border: "none", background: saving ? "rgba(129,140,248,.2)" : `linear-gradient(135deg, ${T.indigo}, ${T.violet})`, color: "#fff", fontSize: 14, fontWeight: 700, cursor: saving ? "not-allowed" : "pointer", width: "100%" }}>
+        {saving ? <div style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> : <Save size={15} />}
         Save Branding & Domain Settings
-      </Button>
+      </button>
     </div>
   );
 };

@@ -1,11 +1,12 @@
 """
 Iteration 72: New LLM Providers Testing
 Tests for Groq, Together AI, Fireworks AI, AI21 provider integrations
+Note: System now has 33 providers total (175,609+ models). This test covers the original 13.
 
 Features tested:
-1. GET /api/llm/config - Returns 12 available_providers including groq, together, fireworks, ai21
-2. GET /api/admin/api-keys - Returns cost_reference for all 13 providers including new 4
-3. GET /api/admin/api-keys - Returns key_set flags for all 13 providers
+1. GET /api/llm/config - Returns available_providers including groq, together, fireworks, ai21
+2. GET /api/admin/api-keys - Returns cost_reference for all 33 providers
+3. GET /api/admin/api-keys - Returns key_set flags for all 33 providers
 4. PUT /api/llm/config - Accepts new providers for user preference
 5. POST /api/admin/api-keys/test - Handles new provider names without 'Unknown provider' error
 """

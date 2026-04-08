@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 # ============== MODEL COST MAPS ==============
 
 MODEL_COSTS_MAP = {
-    "gpt-5.2": {"input": 2.50, "output": 10.00, "provider": "openai"},
+    "gpt-5": {"input": 2.50, "output": 10.00, "provider": "openai"},
     "gpt-4o": {"input": 2.50, "output": 10.00, "provider": "openai"},
     "gpt-4o-mini": {"input": 0.15, "output": 0.60, "provider": "openai"},
     "o3": {"input": 10.00, "output": 40.00, "provider": "openai"},
@@ -57,6 +57,179 @@ MODEL_COSTS_MAP = {
     # AI21 Jamba
     "jamba-large-1.7": {"input": 2.00, "output": 8.00, "provider": "ai21"},
     "jamba-mini-1.7": {"input": 0.20, "output": 0.40, "provider": "ai21"},
+    # OpenAI GPT-4.1 family (April 2025)
+    "gpt-4.1": {"input": 2.00, "output": 8.00, "provider": "openai"},
+    "gpt-4.1-mini": {"input": 0.40, "output": 1.60, "provider": "openai"},
+    "gpt-4.1-nano": {"input": 0.10, "output": 0.40, "provider": "openai"},
+    # OpenAI o4 family
+    "o4-mini": {"input": 1.10, "output": 4.40, "provider": "openai"},
+    "o4": {"input": 15.00, "output": 60.00, "provider": "openai"},
+    # Anthropic Claude latest
+    "claude-opus-4-6": {"input": 15.00, "output": 75.00, "provider": "anthropic"},
+    "claude-sonnet-4-6": {"input": 3.00, "output": 15.00, "provider": "anthropic"},
+    "claude-haiku-4-5-20251001": {"input": 0.80, "output": 4.00, "provider": "anthropic"},
+    # Gemini 2.5 family
+    "gemini-2.5-pro": {"input": 1.25, "output": 10.00, "provider": "gemini"},
+    "gemini-2.5-flash": {"input": 0.075, "output": 0.30, "provider": "gemini"},
+    "gemini-2.5-flash-lite": {"input": 0.0375, "output": 0.15, "provider": "gemini"},
+    # DeepSeek latest
+    "deepseek-v3-0324": {"input": 0.14, "output": 0.28, "provider": "deepseek"},
+    "deepseek-r1-0528": {"input": 0.55, "output": 2.19, "provider": "deepseek"},
+    # Mistral additions
+    "codestral-latest": {"input": 0.30, "output": 0.90, "provider": "mistral"},
+    "pixtral-large-latest": {"input": 2.00, "output": 6.00, "provider": "mistral"},
+    "mistral-nemo": {"input": 0.15, "output": 0.15, "provider": "mistral"},
+    # Perplexity additions
+    "sonar-reasoning": {"input": 1.00, "output": 5.00, "provider": "perplexity"},
+    "sonar-reasoning-pro": {"input": 2.00, "output": 8.00, "provider": "perplexity"},
+    "sonar-deep-research": {"input": 2.00, "output": 8.00, "provider": "perplexity"},
+    # Cohere additions
+    "command-a-03-2025": {"input": 2.50, "output": 10.00, "provider": "cohere"},
+    # Groq additions
+    "qwen-qwq-32b": {"input": 0.29, "output": 0.39, "provider": "groq"},
+    "gemma2-9b-it": {"input": 0.20, "output": 0.20, "provider": "groq"},
+    "llama-3.1-8b-instant": {"input": 0.05, "output": 0.08, "provider": "groq"},
+    # Together AI additions
+    "Qwen/Qwen2.5-72B-Instruct-Turbo": {"input": 0.72, "output": 0.72, "provider": "together"},
+    "Qwen/Qwen3-235B-A22B-Instruct-FP8": {"input": 0.20, "output": 0.60, "provider": "together"},
+    # Fireworks AI additions
+    "accounts/fireworks/models/qwen3-30b-a3b-instruct": {"input": 0.15, "output": 0.60, "provider": "fireworks"},
+    "accounts/fireworks/models/phi-4": {"input": 0.90, "output": 0.90, "provider": "fireworks"},
+    # Cerebras (ultra-fast open-source inference)
+    "llama-3.3-70b": {"input": 0.60, "output": 0.60, "provider": "cerebras"},
+    "llama3.1-8b": {"input": 0.10, "output": 0.10, "provider": "cerebras"},
+    "qwen-3-32b": {"input": 0.40, "output": 0.40, "provider": "cerebras"},
+    # Sambanova (fast open-source inference)
+    "Meta-Llama-3.3-70B-Instruct": {"input": 0.60, "output": 0.60, "provider": "sambanova"},
+    "Qwen2.5-72B-Instruct": {"input": 0.70, "output": 0.70, "provider": "sambanova"},
+    "DeepSeek-R1-0528": {"input": 1.30, "output": 1.30, "provider": "sambanova"},
+    # Novita AI
+    "hermes-3-llama-3.1-70b": {"input": 0.40, "output": 0.40, "provider": "novita"},
+    # Lambda Labs
+    "hermes-3-405b": {"input": 0.80, "output": 0.80, "provider": "lambda"},
+    # Minimax AI
+    "minimax-text-01": {"input": 0.20, "output": 1.10, "provider": "minimax"},
+    "minimax-vl-01":   {"input": 0.20, "output": 1.10, "provider": "minimax"},
+    # Inception AI (Mercury)
+    "mercury-coder-small": {"input": 0.25, "output": 1.00, "provider": "inception"},
+    "mercury-coder-large": {"input": 0.50, "output": 2.00, "provider": "inception"},
+    # Arcee AI
+    "arcee-maestro":   {"input": 1.20, "output": 5.00, "provider": "arcee"},
+    "arcee-blaze":     {"input": 0.50, "output": 1.50, "provider": "arcee"},
+    # Amazon Bedrock (Nova)
+    "amazon.nova-pro-v1:0":   {"input": 0.80, "output": 3.20, "provider": "amazon"},
+    "amazon.nova-lite-v1:0":  {"input": 0.06, "output": 0.24, "provider": "amazon"},
+    "amazon.nova-micro-v1:0": {"input": 0.035, "output": 0.14, "provider": "amazon"},
+    # Nvidia NIM (Nvidia-hosted accelerated inference)
+    "meta/llama-3.1-8b-instruct": {"input": 0.10, "output": 0.10, "provider": "nvidia"},
+    "meta/llama-3.3-70b-instruct": {"input": 0.60, "output": 0.60, "provider": "nvidia"},
+    "nvidia/llama-3.1-nemotron-70b-instruct": {"input": 0.35, "output": 0.35, "provider": "nvidia"},
+    "nvidia/llama-3.1-nemotron-ultra-253b-v1": {"input": 0.55, "output": 3.25, "provider": "nvidia"},
+    "microsoft/phi-4-multimodal-instruct": {"input": 0.20, "output": 0.20, "provider": "nvidia"},
+    # Moonshot AI / Kimi (long-context specialist, up to 1M tokens)
+    "moonshot-v1-8k": {"input": 0.18, "output": 0.18, "provider": "moonshot"},
+    "moonshot-v1-32k": {"input": 0.44, "output": 0.44, "provider": "moonshot"},
+    "moonshot-v1-128k": {"input": 0.73, "output": 0.73, "provider": "moonshot"},
+    # Qwen / Alibaba DashScope
+    "qwen-turbo": {"input": 0.15, "output": 0.15, "provider": "qwen"},
+    "qwen-plus": {"input": 0.80, "output": 0.80, "provider": "qwen"},
+    "qwen-max": {"input": 2.40, "output": 9.60, "provider": "qwen"},
+    "qwen2.5-72b-instruct": {"input": 0.72, "output": 0.72, "provider": "qwen"},
+    "qwen3-235b-a22b": {"input": 0.22, "output": 0.88, "provider": "qwen"},
+    # ── 01.AI / Yi ───────────────────────────────────────────────────────────
+    "yi-lightning":       {"input": 0.14,  "output": 0.14,  "provider": "yi"},
+    "yi-large-fc":        {"input": 3.00,  "output": 3.00,  "provider": "yi"},
+    "yi-medium-200k":     {"input": 12.00, "output": 12.00, "provider": "yi"},
+    # ── Zhipu AI / GLM ───────────────────────────────────────────────────────
+    "glm-4-plus":         {"input": 7.00,  "output": 7.00,  "provider": "zhipu"},
+    "glm-4-0520":         {"input": 1.00,  "output": 1.00,  "provider": "zhipu"},
+    "glm-4-air":          {"input": 0.13,  "output": 0.13,  "provider": "zhipu"},
+    "glm-z1-air":         {"input": 0.13,  "output": 0.13,  "provider": "zhipu"},
+    # ── ByteDance Doubao ─────────────────────────────────────────────────────
+    "doubao-pro-128k":    {"input": 0.80,  "output": 0.80,  "provider": "doubao"},
+    "doubao-pro-32k":     {"input": 0.12,  "output": 0.12,  "provider": "doubao"},
+    "doubao-lite-128k":   {"input": 0.11,  "output": 0.11,  "provider": "doubao"},
+    "doubao-lite-32k":    {"input": 0.04,  "output": 0.04,  "provider": "doubao"},
+    # ── Hyperbolic ───────────────────────────────────────────────────────────
+    "meta-llama/Llama-3.3-70B-Instruct":       {"input": 0.40, "output": 0.40, "provider": "hyperbolic"},
+    "meta-llama/Meta-Llama-3.1-405B-Instruct": {"input": 2.00, "output": 2.00, "provider": "hyperbolic"},
+    "deepseek-ai/DeepSeek-R1-hyperbolic":      {"input": 0.50, "output": 2.18, "provider": "hyperbolic"},
+    "Qwen/Qwen2.5-72B-Instruct-hyperbolic":    {"input": 0.40, "output": 0.40, "provider": "hyperbolic"},
+    # ── Upstage Solar ────────────────────────────────────────────────────────
+    "solar-pro":          {"input": 9.00,  "output": 9.00,  "provider": "upstage"},
+    "solar-mini":         {"input": 0.29,  "output": 0.29,  "provider": "upstage"},
+    # ── Writer Palmyra ────────────────────────────────────────────────────────
+    "palmyra-x-004":      {"input": 0.50,  "output": 2.50,  "provider": "writer"},
+    "palmyra-med":        {"input": 0.80,  "output": 4.00,  "provider": "writer"},
+    "palmyra-fin":        {"input": 0.80,  "output": 4.00,  "provider": "writer"},
+    # ── OpenAI legacy + o1 series ─────────────────────────────────────────────
+    "o1":                 {"input": 15.00, "output": 60.00, "provider": "openai"},
+    "o1-mini":            {"input": 3.00,  "output": 12.00, "provider": "openai"},
+    "o1-pro":             {"input": 150.00,"output": 600.00,"provider": "openai"},
+    "gpt-4-turbo":        {"input": 10.00, "output": 30.00, "provider": "openai"},
+    "gpt-3.5-turbo":      {"input": 0.50,  "output": 1.50,  "provider": "openai"},
+    # ── Anthropic legacy ─────────────────────────────────────────────────────
+    "claude-3-5-sonnet-20241022": {"input": 3.00,  "output": 15.00, "provider": "anthropic"},
+    "claude-3-5-haiku-20241022":  {"input": 0.80,  "output": 4.00,  "provider": "anthropic"},
+    "claude-3-opus-20240229":     {"input": 15.00, "output": 75.00, "provider": "anthropic"},
+    # ── Google Gemini legacy + 2.0 ───────────────────────────────────────────
+    "gemini-2.0-flash":      {"input": 0.075, "output": 0.30, "provider": "gemini"},
+    "gemini-2.0-flash-lite": {"input": 0.075, "output": 0.30, "provider": "gemini"},
+    "gemini-1.5-pro":        {"input": 1.25,  "output": 5.00, "provider": "gemini"},
+    "gemini-1.5-flash":      {"input": 0.075, "output": 0.30, "provider": "gemini"},
+    # ── xAI vision ───────────────────────────────────────────────────────────
+    "grok-2-vision-1212":    {"input": 2.00, "output": 10.00, "provider": "xai"},
+    # ── Mistral additions ────────────────────────────────────────────────────
+    "pixtral-12b-2409":      {"input": 0.15, "output": 0.15, "provider": "mistral"},
+    "ministral-8b-latest":   {"input": 0.10, "output": 0.10, "provider": "mistral"},
+    "ministral-3b-latest":   {"input": 0.04, "output": 0.04, "provider": "mistral"},
+    # ── Groq expanded ────────────────────────────────────────────────────────
+    "llama-3.2-90b-vision-preview":    {"input": 0.90, "output": 0.90, "provider": "groq"},
+    "llama-3.2-11b-vision-preview":    {"input": 0.18, "output": 0.18, "provider": "groq"},
+    "llama-3.2-3b-preview":            {"input": 0.06, "output": 0.06, "provider": "groq"},
+    "llama-3.1-70b-versatile":         {"input": 0.59, "output": 0.79, "provider": "groq"},
+    "mistral-saba-24b":                {"input": 0.79, "output": 0.79, "provider": "groq"},
+    "deepseek-r1-distill-llama-70b":   {"input": 0.75, "output": 0.99, "provider": "groq"},
+    "deepseek-r1-distill-qwen-32b":    {"input": 0.69, "output": 0.69, "provider": "groq"},
+    # ── Cerebras expanded ────────────────────────────────────────────────────
+    "llama-3.1-70b":         {"input": 0.60, "output": 0.60, "provider": "cerebras"},
+    "llama-3.1-8b":          {"input": 0.10, "output": 0.10, "provider": "cerebras"},
+    "qwen-3-8b":             {"input": 0.10, "output": 0.10, "provider": "cerebras"},
+    # ── Together AI expanded ─────────────────────────────────────────────────
+    "meta-llama/Llama-4-Scout-17B-16E-Instruct-FP8":      {"input": 0.18, "output": 0.59, "provider": "together"},
+    "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo":     {"input": 1.20, "output": 1.20, "provider": "together"},
+    "meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo":     {"input": 0.18, "output": 0.18, "provider": "together"},
+    "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo":      {"input": 3.50, "output": 3.50, "provider": "together"},
+    "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo":       {"input": 0.88, "output": 0.88, "provider": "together"},
+    "deepseek-ai/DeepSeek-V3":                             {"input": 1.28, "output": 1.28, "provider": "together"},
+    "mistralai/Mixtral-8x7B-Instruct-v0.1":               {"input": 0.60, "output": 0.60, "provider": "together"},
+    "mistralai/Mixtral-8x22B-Instruct-v0.1":              {"input": 1.20, "output": 1.20, "provider": "together"},
+    "microsoft/WizardLM-2-8x22B":                          {"input": 1.20, "output": 1.20, "provider": "together"},
+    "NousResearch/Hermes-3-Llama-3.1-70B":                {"input": 0.88, "output": 0.88, "provider": "together"},
+    "NousResearch/Hermes-3-Llama-3.1-405B":               {"input": 3.50, "output": 3.50, "provider": "together"},
+    "google/gemma-2-27b-it":                               {"input": 0.80, "output": 0.80, "provider": "together"},
+    "Qwen/QwQ-32B":                                        {"input": 1.20, "output": 1.20, "provider": "together"},
+    # ── Fireworks expanded ───────────────────────────────────────────────────
+    "accounts/fireworks/models/qwen3-235b-a22b":           {"input": 0.20, "output": 0.60, "provider": "fireworks"},
+    "accounts/fireworks/models/mixtral-8x7b-instruct-hf":  {"input": 0.50, "output": 0.50, "provider": "fireworks"},
+    # ── SambaNova expanded ───────────────────────────────────────────────────
+    "Meta-Llama-4-Scout-17B-16E-Instruct":  {"input": 0.10, "output": 0.10, "provider": "sambanova"},
+    "DeepSeek-V3-0324":                     {"input": 0.70, "output": 0.70, "provider": "sambanova"},
+    "Qwen2.5-32B-Instruct":                 {"input": 0.40, "output": 0.40, "provider": "sambanova"},
+    # ── Nvidia NIM expanded ──────────────────────────────────────────────────
+    "meta/llama-3.2-90b-vision-instruct":   {"input": 0.90, "output": 0.90, "provider": "nvidia"},
+    "mistralai/mistral-nemo-instruct-2407": {"input": 0.15, "output": 0.15, "provider": "nvidia"},
+    # ── Moonshot Kimi K2 ─────────────────────────────────────────────────────
+    "kimi-k2-instruct":       {"input": 0.14, "output": 0.60, "provider": "moonshot"},
+    # ── HuggingFace Inference API ────────────────────────────────────────────
+    "microsoft/phi-4":                       {"input": 0.05, "output": 0.05, "provider": "huggingface"},
+    "google/gemma-2-9b-it":                  {"input": 0.05, "output": 0.05, "provider": "huggingface"},
+    "mistralai/Mistral-7B-Instruct-v0.3":    {"input": 0.05, "output": 0.05, "provider": "huggingface"},
+    "meta-llama/Llama-3.1-8B-Instruct":      {"input": 0.05, "output": 0.05, "provider": "huggingface"},
+    # ── Meta Llama API (official) ────────────────────────────────────────────
+    "Llama-4-Scout-17B-16E-Instruct":          {"input": 0.18, "output": 0.59, "provider": "llama"},
+    "Llama-4-Maverick-17B-128E-Instruct-FP8":  {"input": 0.27, "output": 0.85, "provider": "llama"},
+    "Llama-3.3-70B-Instruct":                  {"input": 0.59, "output": 0.79, "provider": "llama"},
 }
 
 MODEL_CREDIT_COSTS = {
@@ -64,7 +237,7 @@ MODEL_CREDIT_COSTS = {
     "deepseek-chat": 1, "mistral-small-latest": 1, "command-r": 1, "grok-3-mini": 1,
     "gpt-4o": 2, "grok-2": 2, "mistral-medium-latest": 2, "sonar": 2,
     "gemini-3-pro-preview": 2, "deepseek-reasoner": 2,
-    "gpt-5.2": 3, "claude-sonnet-4-5-20250929": 3, "grok-3": 3,
+    "gpt-5": 3, "claude-sonnet-4-5-20250929": 3, "grok-3": 3,
     "mistral-large-latest": 3, "command-r-plus": 3, "sonar-pro": 3,
     "claude-opus-4-5-20251101": 5, "o3": 5,
     "o3-mini": 2,
@@ -84,6 +257,44 @@ MODEL_CREDIT_COSTS = {
     "accounts/fireworks/models/deepseek-v3": 2,
     # AI21 Jamba
     "jamba-large-1.7": 3, "jamba-mini-1.7": 1,
+    # OpenAI GPT-4.1 family
+    "gpt-4.1": 2, "gpt-4.1-mini": 1, "gpt-4.1-nano": 1,
+    # OpenAI o4
+    "o4-mini": 2, "o4": 5,
+    # Anthropic latest
+    "claude-opus-4-6": 5, "claude-sonnet-4-6": 3, "claude-haiku-4-5-20251001": 1,
+    # Gemini 2.5
+    "gemini-2.5-pro": 2, "gemini-2.5-flash": 1, "gemini-2.5-flash-lite": 1,
+    # DeepSeek latest
+    "deepseek-v3-0324": 1, "deepseek-r1-0528": 2,
+    # Mistral additions
+    "codestral-latest": 1, "pixtral-large-latest": 3, "mistral-nemo": 1,
+    # Perplexity additions
+    "sonar-reasoning": 2, "sonar-reasoning-pro": 3, "sonar-deep-research": 3,
+    # Cohere additions
+    "command-a-03-2025": 3,
+    # Groq additions
+    "qwen-qwq-32b": 1, "gemma2-9b-it": 1, "llama-3.1-8b-instant": 1,
+    # Together AI additions
+    "Qwen/Qwen2.5-72B-Instruct-Turbo": 1, "Qwen/Qwen3-235B-A22B-Instruct-FP8": 2,
+    # Fireworks AI additions
+    "accounts/fireworks/models/qwen3-30b-a3b-instruct": 1, "accounts/fireworks/models/phi-4": 1,
+    # Cerebras
+    "llama-3.3-70b": 1, "llama3.1-8b": 1, "qwen-3-32b": 1,
+    # Sambanova
+    "Meta-Llama-3.3-70B-Instruct": 1, "Qwen2.5-72B-Instruct": 1, "DeepSeek-R1-0528": 2,
+    # Novita AI / Lambda Labs (open-source hosting)
+    "nousresearch/hermes-3-llama-3.1-70b": 1, "meta-llama/llama-4-maverick": 1,
+    "anthropic/claude-sonnet-4-6": 3, "openai/gpt-4.1": 2, "google/gemini-2.5-flash": 1,
+    "deepseek/deepseek-r1": 2, "qwen/qwen3-235b-a22b": 1,
+    # Nvidia NIM
+    "meta/llama-3.1-8b-instruct": 1, "meta/llama-3.3-70b-instruct": 1,
+    "nvidia/llama-3.1-nemotron-70b-instruct": 1, "nvidia/llama-3.1-nemotron-ultra-253b-v1": 2,
+    "microsoft/phi-4-multimodal-instruct": 1,
+    # Moonshot AI (Kimi)
+    "moonshot-v1-8k": 1, "moonshot-v1-32k": 1, "moonshot-v1-128k": 2,
+    # Qwen / Alibaba
+    "qwen-turbo": 1, "qwen-plus": 1, "qwen-max": 3, "qwen2.5-72b-instruct": 1, "qwen3-235b-a22b": 1,
 }
 
 
@@ -352,20 +563,20 @@ def auto_select_model(content: str, agent_role: str) -> tuple:
 
     if best_score >= 2:
         model_map = {
-            'coding': ('openai', 'gpt-5.2', 'GPT-5.2 selected - best for coding & technical tasks'),
-            'reasoning': ('openai', 'gpt-5.2', 'GPT-5.2 selected - best for complex reasoning & analysis'),
-            'creative': ('openai', 'gpt-5.2', 'GPT-5.2 selected - best for creative work'),
+            'coding': ('openai', 'gpt-5', 'GPT-5 selected - best for coding & technical tasks'),
+            'reasoning': ('openai', 'gpt-5', 'GPT-5 selected - best for complex reasoning & analysis'),
+            'creative': ('openai', 'gpt-5', 'GPT-5 selected - best for creative work'),
             'quick': ('openai', 'gpt-4o-mini', 'GPT-4o Mini selected - fastest for simple tasks'),
-            'long_form': ('openai', 'gpt-5.2', 'GPT-5.2 selected - best for detailed long-form content'),
+            'long_form': ('openai', 'gpt-5', 'GPT-5 selected - best for detailed long-form content'),
             'data': ('openai', 'gpt-4o', 'GPT-4o selected - best for data analysis & multimodal'),
-            'legal': ('openai', 'gpt-5.2', 'GPT-5.2 selected - precise for legal analysis'),
+            'legal': ('openai', 'gpt-5', 'GPT-5 selected - precise for legal analysis'),
         }
         if best_task in model_map:
             return model_map[best_task]
 
     if len(content) < 50:
         return ('openai', 'gpt-4o-mini', 'GPT-4o Mini selected - efficient for short messages')
-    return ('openai', 'gpt-5.2', 'GPT-5.2 selected - best all-around model')
+    return ('openai', 'gpt-5', 'GPT-5 selected - best all-around model')
 
 
 # ============== DIRECT LLM CALLING ==============
@@ -423,6 +634,46 @@ async def call_direct_llm(provider: str, model_name: str, system_prompt: str, co
         return await _call_openai_compatible("https://api.fireworks.ai/inference/v1/chat/completions", model_name, system_prompt, content, api_key)
     elif provider == "ai21":
         return await _call_openai_compatible("https://api.ai21.com/studio/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "cerebras":
+        return await _call_openai_compatible("https://api.cerebras.ai/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "sambanova":
+        return await _call_openai_compatible("https://api.sambanova.ai/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "novita":
+        return await _call_openai_compatible("https://api.novita.ai/v3/openai/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "lepton":
+        return await _call_openai_compatible(f"https://{model_name.split('/')[0]}.lepton.run/api/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "lambda":
+        return await _call_openai_compatible("https://api.lambda.ai/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "minimax":
+        return await _call_openai_compatible("https://api.minimaxi.chat/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "inception":
+        return await _call_openai_compatible("https://api.inception.ai/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "arcee":
+        return await _call_openai_compatible("https://api.arcee.ai/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "amazon":
+        return await _call_openai_compatible("https://bedrock-runtime.us-east-1.amazonaws.com/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "nvidia":
+        return await _call_openai_compatible("https://integrate.api.nvidia.com/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "moonshot":
+        return await _call_openai_compatible("https://api.moonshot.cn/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "qwen":
+        return await _call_openai_compatible("https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "yi":
+        return await _call_openai_compatible("https://api.lingyiwanwu.com/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "zhipu":
+        return await _call_openai_compatible("https://open.bigmodel.cn/api/paas/v4/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "doubao":
+        return await _call_openai_compatible("https://ark.cn-beijing.volces.com/api/v3/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "hyperbolic":
+        return await _call_openai_compatible("https://api.hyperbolic.xyz/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "upstage":
+        return await _call_openai_compatible("https://api.upstage.ai/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "writer":
+        return await _call_openai_compatible("https://api.writer.com/v1/chat", model_name, system_prompt, content, api_key)
+    elif provider == "huggingface":
+        return await _call_openai_compatible("https://api-inference.huggingface.co/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "llama":
+        return await _call_openai_compatible("https://api.llama.com/v1/chat/completions", model_name, system_prompt, content, api_key)
     raise ValueError(f"Unsupported provider: {provider}")
 
 
@@ -438,7 +689,7 @@ async def _call_openai_compatible(url: str, model_name: str, system_prompt: str,
 async def call_llm_with_fallback(api_keys, model_provider, model_name, system_prompt, content, attachments, chat_id, temperature=None, max_tokens=None):
     fallback_models = [
         (model_provider, model_name),
-        ("openai", "gpt-5.2"),
+        ("openai", "gpt-5"),
         ("openai", "gpt-4o"),
         ("openai", "gpt-4o-mini"),
         ("gemini", "gemini-3-flash-preview"),

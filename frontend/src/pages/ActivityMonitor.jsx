@@ -1,18 +1,35 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth, API } from "../App";
-import { Card, CardContent } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
 import {
   Activity, Zap, ArrowRight, CheckCircle, Clock, AlertTriangle,
   Radio, Users, GitBranch, Terminal, RefreshCw, Wifi, WifiOff
 } from "lucide-react";
-import { Button } from "../components/ui/button";
 
-const STATUS_DOT = {
-  completed: "bg-emerald-400",
-  in_progress: "bg-indigo-400 animate-pulse",
-  pending: "bg-amber-400",
-  failed: "bg-red-400",
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  teal: "#4fd1c5",
+  violet: "#7c3aed",
+  amber: "#f59e0b",
+  green: "#34d399",
+  red: "#ef4444",
+  blue: "#60a5fa",
+  zinc: "#71717a",
+  indigo: "#818cf8",
+  cyan: "#22d3ee",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+`;
+
+const STATUS_COLOR = {
+  completed:  T.green,
+  in_progress: T.indigo,
+  pending:    T.amber,
+  failed:     T.red,
 };
 
 const ActivityMonitor = () => {
@@ -26,7 +43,6 @@ const ActivityMonitor = () => {
 
   const headers = { Authorization: `Bearer ${token}` };
 
-  // Fallback: fetch via REST
   const fetchActivity = useCallback(async () => {
     try {
       const res = await fetch(`${API}/activity/live`, { headers });
@@ -34,268 +50,250 @@ const ActivityMonitor = () => {
     } catch {} finally { setLoading(false); }
   }, [token]);
 
-  // WebSocket connection
   const connectWs = useCallback(() => {
     if (!token || !liveMode) return;
-
-    // Build WS URL from API URL
     const apiUrl = API.replace(/\/api$/, "");
     const wsProtocol = apiUrl.startsWith("https") ? "wss" : "ws";
     const wsHost = apiUrl.replace(/^https?:\/\//, "");
     const wsUrl = `${wsProtocol}://${wsHost}/api/ws/activity?token=${token}`;
-
     try {
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
-
-      ws.onopen = () => {
-        setWsConnected(true);
-        setLoading(false);
-      };
-
+      ws.onopen = () => { setWsConnected(true); setLoading(false); };
       ws.onmessage = (event) => {
         try {
           const msg = JSON.parse(event.data);
           if (msg.type === "pong") return;
-          if (msg.type === "snapshot" || msg.agent_activity) {
-            setData(msg);
-            setLoading(false);
-          }
+          if (msg.type === "snapshot" || msg.agent_activity) { setData(msg); setLoading(false); }
         } catch {}
       };
-
       ws.onclose = () => {
-        setWsConnected(false);
-        wsRef.current = null;
-        // Reconnect after 3 seconds
-        if (liveMode) {
-          reconnectRef.current = setTimeout(connectWs, 3000);
-        }
+        setWsConnected(false); wsRef.current = null;
+        if (liveMode) reconnectRef.current = setTimeout(connectWs, 3000);
       };
-
-      ws.onerror = () => {
-        ws.close();
-      };
-    } catch {
-      // Fallback to polling
-      setWsConnected(false);
-      fetchActivity();
-    }
+      ws.onerror = () => ws.close();
+    } catch { setWsConnected(false); fetchActivity(); }
   }, [token, liveMode]);
 
   useEffect(() => {
-    if (liveMode) {
-      connectWs();
-    } else {
-      // Disconnect WS and use polling
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = null;
-      }
-      fetchActivity();
-    }
-
+    if (liveMode) { connectWs(); }
+    else { if (wsRef.current) { wsRef.current.close(); wsRef.current = null; } fetchActivity(); }
     return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = null;
-      }
-      if (reconnectRef.current) {
-        clearTimeout(reconnectRef.current);
-      }
+      if (wsRef.current) { wsRef.current.close(); wsRef.current = null; }
+      if (reconnectRef.current) clearTimeout(reconnectRef.current);
     };
   }, [liveMode, connectWs, fetchActivity]);
 
-  // Polling fallback when WS is not connected
   useEffect(() => {
     if (wsConnected || !liveMode) return;
     const interval = setInterval(fetchActivity, 10000);
     return () => clearInterval(interval);
   }, [wsConnected, liveMode, fetchActivity]);
 
-  // Initial REST fetch as fallback
-  useEffect(() => {
-    fetchActivity();
-  }, []);
+  useEffect(() => { fetchActivity(); }, []);
 
   const handleRefresh = () => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send("refresh");
-    } else {
-      fetchActivity();
-    }
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) wsRef.current.send("refresh");
+    else fetchActivity();
   };
 
-  if (loading) return <div className="flex items-center justify-center py-20"><div className="w-6 h-6 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: 80 }}>
+      <div style={{ width: 28, height: 28, border: `2px solid ${T.green}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+      <style>{STYLES}</style>
+    </div>
+  );
 
   const agents = data?.agent_activity || [];
   const flows = data?.communication_flows || [];
   const tasks = data?.task_graph || [];
   const tools = data?.recent_tool_calls || [];
 
+  const SectionHead = ({ icon, label, count, accent = T.zinc }) => (
+    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+      <span style={{ color: accent }}>{icon}</span>
+      <span style={{ fontSize: 11, fontWeight: 700, color: T.zinc, textTransform: "uppercase", letterSpacing: ".08em" }}>{label}</span>
+      {count != null && (
+        <span style={{ fontSize: 10, color: accent, background: `${accent}15`, padding: "2px 8px", borderRadius: 6, fontWeight: 600, marginLeft: "auto" }}>{count}</span>
+      )}
+    </div>
+  );
+
+  const EmptyState = ({ icon, text }) => (
+    <div style={{ textAlign: "center", padding: "32px 20px", border: `1px dashed ${T.border}`, borderRadius: 16 }}>
+      <div style={{ color: "rgba(255,255,255,.1)", marginBottom: 10 }}>{icon}</div>
+      <p style={{ fontSize: 12, color: T.zinc }}>{text}</p>
+    </div>
+  );
+
+  const wsStatusColor = wsConnected ? T.green : liveMode ? T.amber : T.zinc;
+  const wsLabel = wsConnected ? "WebSocket Live" : liveMode ? "Polling (10s)" : "Paused";
+  const WsIcon = wsConnected ? Wifi : WifiOff;
+
   return (
-    <div className="space-y-6" data-testid="activity-monitor">
+    <div style={{ display: "flex", flexDirection: "column", gap: 28, animation: "fadeUp .4s ease" }} data-testid="activity-monitor">
+      <style>{STYLES}</style>
+
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center">
-            <Radio className="w-5 h-5 text-emerald-400" />
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 14, background: "rgba(52,211,153,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Radio size={20} style={{ color: T.green }} />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white font-['Outfit']">Agent Activity Monitor</h1>
-            <p className="text-xs text-zinc-500">Real-time agent execution, communication flows & task dependencies</p>
+            <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 22, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 2 }}>Agent Activity Monitor</h1>
+            <p style={{ fontSize: 12, color: T.zinc, margin: 0 }}>Real-time execution, communication flows & task dependencies</p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          {/* Connection status */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900/50 border border-white/5" data-testid="ws-status">
-            {wsConnected ? (
-              <>
-                <Wifi className="w-3 h-3 text-emerald-400" />
-                <span className="text-[10px] text-emerald-400 font-medium">WebSocket Live</span>
-              </>
-            ) : liveMode ? (
-              <>
-                <WifiOff className="w-3 h-3 text-amber-400" />
-                <span className="text-[10px] text-amber-400">Polling (10s)</span>
-              </>
-            ) : (
-              <>
-                <WifiOff className="w-3 h-3 text-zinc-500" />
-                <span className="text-[10px] text-zinc-500">Paused</span>
-              </>
-            )}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {/* WS status */}
+          <div data-testid="ws-status" style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 8, background: T.glass, border: `1px solid ${T.border}` }}>
+            <WsIcon size={12} style={{ color: wsStatusColor }} />
+            <span style={{ fontSize: 11, color: wsStatusColor, fontWeight: 500 }}>{wsLabel}</span>
           </div>
-          <Button size="sm" variant={liveMode ? "default" : "ghost"} onClick={() => setLiveMode(!liveMode)} className={liveMode ? "bg-emerald-600 hover:bg-emerald-700 text-white text-xs" : "text-zinc-400 text-xs"} data-testid="toggle-live">
+          <button
+            onClick={() => setLiveMode(!liveMode)}
+            data-testid="toggle-live"
+            style={{
+              padding: "5px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer",
+              background: liveMode ? "rgba(52,211,153,.12)" : "rgba(255,255,255,.04)",
+              border: liveMode ? `1px solid rgba(52,211,153,.35)` : `1px solid ${T.border}`,
+              color: liveMode ? T.green : T.zinc,
+            }}
+          >
             {liveMode ? "Live" : "Paused"}
-          </Button>
-          <Button size="sm" variant="ghost" onClick={handleRefresh} className="text-zinc-400" data-testid="refresh-btn">
-            <RefreshCw className="w-3.5 h-3.5" />
-          </Button>
+          </button>
+          <button
+            onClick={handleRefresh}
+            data-testid="refresh-btn"
+            style={{ width: 32, height: 32, borderRadius: 8, background: T.glass, border: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: T.zinc }}
+          >
+            <RefreshCw size={13} />
+          </button>
         </div>
       </div>
 
       {/* Active Projects */}
       {data?.active_projects?.length > 0 && (
         <div>
-          <h2 className="text-sm font-medium text-zinc-400 mb-2 uppercase tracking-wider flex items-center gap-2">
-            <Zap className="w-3.5 h-3.5 text-amber-400" />Active Projects
-          </h2>
-          <div className="flex gap-3 overflow-x-auto pb-2">
+          <SectionHead icon={<Zap size={14} />} label="Active Projects" count={data.active_projects.length} accent={T.amber} />
+          <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 4 }}>
             {data.active_projects.map(p => (
-              <Card key={p.project_id} className="bg-amber-500/5 border-amber-500/20 shrink-0 w-64">
-                <CardContent className="p-3">
-                  <div className="flex items-center gap-2 mb-1">
-                    <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                    <p className="text-xs font-medium text-white truncate">{p.title || "Untitled"}</p>
-                  </div>
-                  <p className="text-[10px] text-zinc-500 truncate">{p.goal?.substring(0, 80)}</p>
-                </CardContent>
-              </Card>
+              <div
+                key={p.project_id}
+                style={{ flexShrink: 0, width: 240, padding: "12px 14px", borderRadius: 12, background: "rgba(245,158,11,.05)", border: `1px solid rgba(245,158,11,.2)` }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
+                  <div style={{ width: 7, height: 7, borderRadius: "50%", background: T.amber, animation: "pulse 1.5s infinite" }} />
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.title || "Untitled"}</span>
+                </div>
+                <p style={{ fontSize: 10, color: T.zinc, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.goal?.substring(0, 80)}</p>
+              </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Agent Activity Grid */}
+      {/* Agent Workforce */}
       <div>
-        <h2 className="text-sm font-medium text-zinc-400 mb-3 uppercase tracking-wider flex items-center gap-2">
-          <Users className="w-3.5 h-3.5 text-indigo-400" />Agent Workforce Status
-          <Badge variant="outline" className="border-white/10 text-zinc-500 text-[9px] ml-auto">{agents.length} active</Badge>
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-          {agents.slice(0, 20).map((a, i) => (
-            <div key={i} className="bg-zinc-900/50 border border-white/5 rounded-lg p-3 hover:border-white/10 transition-all">
-              <div className="flex items-center gap-2 mb-2">
-                <div className={`w-2 h-2 rounded-full ${a.completed === a.task_count ? "bg-emerald-400" : "bg-indigo-400 animate-pulse"}`} />
-                <p className="text-xs font-medium text-white truncate">{a.agent}</p>
-              </div>
-              <div className="flex items-center justify-between text-[10px]">
-                <span className="text-zinc-500">{a.completed}/{a.task_count} tasks</span>
-                <div className="w-16 h-1 bg-zinc-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${(a.completed / Math.max(a.task_count, 1)) * 100}%` }} />
+        <SectionHead icon={<Users size={14} />} label="Agent Workforce Status" count={`${agents.length} active`} accent={T.indigo} />
+        {agents.length > 0 ? (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px,1fr))", gap: 10 }}>
+            {agents.slice(0, 20).map((a, i) => {
+              const done = a.completed === a.task_count;
+              const pct = Math.round((a.completed / Math.max(a.task_count, 1)) * 100);
+              return (
+                <div
+                  key={i}
+                  style={{ padding: "12px 14px", borderRadius: 12, background: T.glass, border: `1px solid ${T.border}`, transition: "border-color .2s" }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(255,255,255,.14)"}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = T.border}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: done ? T.green : T.indigo, animation: done ? "none" : "pulse 1.5s infinite", flexShrink: 0 }} />
+                    <span style={{ fontSize: 11, fontWeight: 500, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.agent}</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                    <span style={{ fontSize: 10, color: T.zinc }}>{a.completed}/{a.task_count} tasks</span>
+                    <span style={{ fontSize: 10, color: done ? T.green : T.indigo, fontWeight: 600 }}>{pct}%</span>
+                  </div>
+                  <div style={{ height: 3, background: "rgba(255,255,255,.06)", borderRadius: 4, overflow: "hidden" }}>
+                    <div style={{ height: "100%", borderRadius: 4, background: done ? T.green : T.indigo, width: `${pct}%`, transition: "width .6s ease" }} />
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <EmptyState icon={<Users size={32} />} text="No active agents. Start a project to see agent workforce." />
+        )}
       </div>
 
       {/* Communication Flows */}
       <div>
-        <h2 className="text-sm font-medium text-zinc-400 mb-3 uppercase tracking-wider flex items-center gap-2">
-          <ArrowRight className="w-3.5 h-3.5 text-violet-400" />Inter-Agent Communication Flows
-        </h2>
+        <SectionHead icon={<ArrowRight size={14} />} label="Inter-Agent Communication Flows" count={flows.length} accent={T.violet} />
         {flows.length > 0 ? (
-          <div className="space-y-2">
-            {flows.slice(0, 12).map((f, i) => (
-              <div key={i} className="flex items-center gap-3 bg-zinc-900/30 border border-white/5 rounded-lg px-4 py-2.5">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-xs font-medium text-indigo-400 shrink-0">{f.from}</span>
-                  <ArrowRight className="w-3 h-3 text-zinc-600 shrink-0" />
-                  <span className="text-xs font-medium text-violet-400 shrink-0">{f.to}</span>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {flows.slice(0, 12).map((f, i) => {
+              const statusColor = STATUS_COLOR[f.status] || T.amber;
+              return (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 10, background: T.glass, border: `1px solid ${T.border}` }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: T.indigo }}>{f.from}</span>
+                    <ArrowRight size={12} style={{ color: T.zinc }} />
+                    <span style={{ fontSize: 11, fontWeight: 600, color: T.violet }}>{f.to}</span>
+                  </div>
+                  <span style={{ fontSize: 11, color: T.zinc, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.objective}</span>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: statusColor, flexShrink: 0 }} />
                 </div>
-                <span className="text-[10px] text-zinc-500 truncate flex-1">{f.objective}</span>
-                <div className={`w-1.5 h-1.5 rounded-full ${STATUS_DOT[f.status] || STATUS_DOT.pending}`} />
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
-          <div className="text-center py-8 border border-dashed border-white/10 rounded-xl">
-            <ArrowRight className="w-8 h-8 text-zinc-700 mx-auto mb-2" />
-            <p className="text-xs text-zinc-500">No communication flows yet. Run a project to see agent collaboration.</p>
-          </div>
+          <EmptyState icon={<ArrowRight size={28} />} text="No communication flows yet. Run a project to see agent collaboration." />
         )}
       </div>
 
       {/* Task Dependency Graph */}
       <div>
-        <h2 className="text-sm font-medium text-zinc-400 mb-3 uppercase tracking-wider flex items-center gap-2">
-          <GitBranch className="w-3.5 h-3.5 text-cyan-400" />Task Dependency Graph
-        </h2>
+        <SectionHead icon={<GitBranch size={14} />} label="Task Dependency Graph" count={tasks.length} accent={T.cyan} />
         {tasks.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-            {tasks.slice(0, 15).map((t, i) => (
-              <div key={i} className="bg-zinc-900/50 border border-white/5 rounded-lg p-3 flex items-start gap-2">
-                <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${STATUS_DOT[t.status] || STATUS_DOT.pending}`} />
-                <div className="min-w-0">
-                  <p className="text-xs text-white truncate">{t.title}</p>
-                  <p className="text-[10px] text-zinc-500">{t.agent}</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px,1fr))", gap: 10 }}>
+            {tasks.slice(0, 15).map((t, i) => {
+              const sc = STATUS_COLOR[t.status] || T.amber;
+              return (
+                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 12px", borderRadius: 10, background: T.glass, border: `1px solid ${T.border}` }}>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: sc, marginTop: 4, flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 11, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", margin: "0 0 2px" }}>{t.title}</p>
+                    <p style={{ fontSize: 10, color: T.zinc, margin: 0 }}>{t.agent}</p>
+                  </div>
+                  <span style={{ fontSize: 9, fontWeight: 600, color: sc, background: `${sc}18`, padding: "2px 7px", borderRadius: 5, flexShrink: 0 }}>{t.status}</span>
                 </div>
-                <Badge variant="outline" className={`shrink-0 text-[8px] ml-auto ${
-                  t.status === "completed" ? "border-emerald-500/30 text-emerald-400" :
-                  t.status === "in_progress" ? "border-indigo-500/30 text-indigo-400" :
-                  "border-white/10 text-zinc-500"
-                }`}>{t.status}</Badge>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
-          <div className="text-center py-8 border border-dashed border-white/10 rounded-xl">
-            <GitBranch className="w-8 h-8 text-zinc-700 mx-auto mb-2" />
-            <p className="text-xs text-zinc-500">No tasks in the dependency graph yet.</p>
-          </div>
+          <EmptyState icon={<GitBranch size={28} />} text="No tasks in the dependency graph yet." />
         )}
       </div>
 
-      {/* Recent Tool Calls */}
+      {/* Tool Executions */}
       <div>
-        <h2 className="text-sm font-medium text-zinc-400 mb-3 uppercase tracking-wider flex items-center gap-2">
-          <Terminal className="w-3.5 h-3.5 text-amber-400" />Recent Tool Executions
-        </h2>
+        <SectionHead icon={<Terminal size={14} />} label="Recent Tool Executions" count={tools.length} accent={T.amber} />
         {tools.length > 0 ? (
-          <div className="space-y-1.5">
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             {tools.slice(0, 10).map((t, i) => (
-              <div key={i} className="flex items-center gap-3 text-xs bg-zinc-900/30 rounded-lg px-3 py-2">
-                <div className={`w-1.5 h-1.5 rounded-full ${t.status === "success" ? "bg-emerald-400" : "bg-red-400"}`} />
-                <span className="text-indigo-400 font-mono w-28 truncate">{t.tool_name}</span>
-                <span className="text-zinc-500 truncate flex-1">{t.agent_name}</span>
-                <span className="text-[10px] text-zinc-600 shrink-0">{t.timestamp ? new Date(t.timestamp).toLocaleTimeString() : ""}</span>
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", borderRadius: 8, background: "rgba(255,255,255,.02)", border: `1px solid ${T.border}` }}>
+                <div style={{ width: 5, height: 5, borderRadius: "50%", background: t.status === "success" ? T.green : T.red, flexShrink: 0 }} />
+                <span style={{ fontSize: 11, fontFamily: "monospace", color: T.indigo, width: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flexShrink: 0 }}>{t.tool_name}</span>
+                <span style={{ fontSize: 11, color: T.zinc, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.agent_name}</span>
+                <span style={{ fontSize: 10, color: "rgba(113,113,122,.6)", flexShrink: 0 }}>{t.timestamp ? new Date(t.timestamp).toLocaleTimeString() : ""}</span>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-xs text-zinc-500 text-center py-4">No recent tool calls</p>
+          <p style={{ fontSize: 12, color: T.zinc, textAlign: "center", paddingTop: 16 }}>No recent tool calls</p>
         )}
       </div>
     </div>

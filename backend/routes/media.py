@@ -84,7 +84,7 @@ async def get_available_models(current_user: User = Depends(get_current_user)):
     """Get all available AI models for switching"""
     models = [
         # OpenAI
-        {"provider": "openai", "model": "gpt-5.2", "name": "GPT-5.2", "category": "flagship", "cost_per_credit": 0.006, "credits": 3, "best_for": "Coding, analysis, general tasks"},
+        {"provider": "openai", "model": "gpt-5", "name": "GPT-5", "category": "flagship", "cost_per_credit": 0.006, "credits": 3, "best_for": "Coding, analysis, general tasks"},
         {"provider": "openai", "model": "gpt-4o", "name": "GPT-4o", "category": "fast", "cost_per_credit": 0.003, "credits": 2, "best_for": "Balanced speed and quality"},
         {"provider": "openai", "model": "gpt-4o-mini", "name": "GPT-4o Mini", "category": "economy", "cost_per_credit": 0.001, "credits": 1, "best_for": "Simple tasks, quick answers"},
         {"provider": "openai", "model": "o3", "name": "O3", "category": "reasoning", "cost_per_credit": 0.012, "credits": 5, "best_for": "Complex reasoning, math, logic"},
@@ -128,7 +128,7 @@ async def get_available_models(current_user: User = Depends(get_current_user)):
             "image_gen": {"credits": 5, "label": "+5 credits"},
             "video_gen": {"credits": 10, "label": "+10 credits"},
         },
-        "default": {"provider": "openai", "model": "gpt-5.2"}
+        "default": {"provider": "openai", "model": "gpt-5"}
     }
 
 @router.post("/tts/generate")

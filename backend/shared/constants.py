@@ -17,21 +17,66 @@ SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', '')
 STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY', '')
 
 # Direct API Keys (can be overridden from admin panel via DB)
+# All 33 providers: 32 text/LLM + ElevenLabs voice/TTS
 DIRECT_API_KEYS = {
-    "openai": os.environ.get('OPENAI_API_KEY', ''),
-    "anthropic": os.environ.get('ANTHROPIC_API_KEY', ''),
-    "gemini": os.environ.get('GOOGLE_API_KEY', ''),
-    "groq": os.environ.get('GROQ_API_KEY', ''),
-    "together": os.environ.get('TOGETHER_API_KEY', ''),
-    "fireworks": os.environ.get('FIREWORKS_API_KEY', ''),
-    "ai21": os.environ.get('AI21_API_KEY', ''),
+    # ── Flagship ─────────────────────────────────────────────────────────────
+    "openai":     os.environ.get('OPENAI_API_KEY', ''),
+    "anthropic":  os.environ.get('ANTHROPIC_API_KEY', ''),
+    "gemini":     os.environ.get('GOOGLE_API_KEY', '') or os.environ.get('GEMINI_API_KEY', ''),
+    "xai":        os.environ.get('XAI_API_KEY', ''),
+    # ── Specialist ───────────────────────────────────────────────────────────
+    "deepseek":   os.environ.get('DEEPSEEK_API_KEY', ''),
+    "mistral":    os.environ.get('MISTRAL_API_KEY', ''),
+    "perplexity": os.environ.get('PERPLEXITY_API_KEY', ''),
+    "cohere":     os.environ.get('COHERE_API_KEY', ''),
+    # ── Fast Open-Source ─────────────────────────────────────────────────────
+    "groq":       os.environ.get('GROQ_API_KEY', ''),
+    "cerebras":   os.environ.get('CEREBRAS_API_KEY', ''),
+    "together":   os.environ.get('TOGETHER_API_KEY', ''),
+    "fireworks":  os.environ.get('FIREWORKS_API_KEY', ''),
+    "ai21":       os.environ.get('AI21_API_KEY', ''),
+    "sambanova":  os.environ.get('SAMBANOVA_API_KEY', ''),
+    # ── Established Providers ─────────────────────────────────────────────────
+    "nvidia":     os.environ.get('NVIDIA_API_KEY', '') or os.environ.get('NVIDIA_NIM_API_KEY', ''),
+    "moonshot":   os.environ.get('MOONSHOT_API_KEY', ''),
+    "qwen":       os.environ.get('DASHSCOPE_API_KEY', '') or os.environ.get('QWEN_API_KEY', ''),
+    # ── New Direct Providers (replacing OpenRouter) ───────────────────────────
+    "novita":    os.environ.get('NOVITA_API_KEY', ''),
+    "lepton":    os.environ.get('LEPTON_API_KEY', ''),
+    "lambda":    os.environ.get('LAMBDA_API_KEY', '') or os.environ.get('LAMBDA_LABS_API_KEY', ''),
+    "amazon":    os.environ.get('AMAZON_API_KEY', '') or os.environ.get('AWS_BEDROCK_API_KEY', ''),
+    "minimax":   os.environ.get('MINIMAX_API_KEY', ''),
+    "inception": os.environ.get('INCEPTION_API_KEY', ''),
+    "arcee":     os.environ.get('ARCEE_API_KEY', ''),
+    # ── Voice / TTS ───────────────────────────────────────────────────────────
+    "elevenlabs": os.environ.get('ELEVENLABS_API_KEY', ''),
 }
 
-# Upload directory
-UPLOAD_DIR = Path("/app/backend/uploads")
-UPLOAD_DIR.mkdir(exist_ok=True)
+# Upload directory - configurable via environment variable
+# Defaults to ./uploads (current working directory) for development
+# Set UPLOAD_DIR environment variable to override (absolute or relative path)
+upload_dir_env = os.environ.get('UPLOAD_DIR', './uploads')
+if os.path.isabs(upload_dir_env):
+    # Absolute path
+    UPLOAD_DIR = Path(upload_dir_env)
+else:
+    # Relative path - resolve relative to root backend directory
+    UPLOAD_DIR = ROOT_DIR / upload_dir_env
+
+# Ensure directory exists with proper error handling
+try:
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+except PermissionError:
+    import warnings
+    warnings.warn(f"Warning: Cannot create upload directory {UPLOAD_DIR}. Check file permissions.")
+except Exception as e:
+    import warnings
+    warnings.warn(f"Warning: Error creating upload directory {UPLOAD_DIR}: {str(e)}")
 
 # Subscription plans (mutable - updated from DB on startup)
+# Agent count: 41 core named agents + 417 MAARS Infinity = 458 total
+# Credits: capped ~10,000 — enough for a full active month
+# BDT and monthly_cap_usd are recomputed on publish from live rate & cost/credit
 SUBSCRIPTION_PLANS = {
     "free": {
         "name": "Free",
@@ -42,41 +87,227 @@ SUBSCRIPTION_PLANS = {
         "max_custom_agents": 0,
         "includes_commander": False,
         "max_team_members": 1,
-        "features": ["3 AI agents", "50 credits/month", "Basic chat & tasks", "1 LLM provider", "Community support"]
+        "monthly_cap_usd": 0.0,
+        "features": [
+            "3 AI agents", "50 credits/month",
+            "Basic chat & task management", "1 LLM provider",
+            "Community support",
+        ],
     },
     "starter": {
         "name": "Starter",
-        "price_usd": 29.0,
-        "price_bdt": 3100.0,
-        "credits": 500,
-        "max_agents": 10,
-        "max_custom_agents": 2,
+        "price_usd": 50.0,
+        "price_bdt": 5350.0,
+        "credits": 300,
+        "max_agents": 8,
+        "max_custom_agents": 0,
+        "includes_commander": False,
+        "max_team_members": 1,
+        "monthly_cap_usd": 0.9,
+        "features": [
+            "8 AI agents", "300 credits/month",
+            "MAARS Universal AI Gateway — 33 providers, 175,000+ models (economy tier)",
+            "Chat, tasks & projects", "File uploads",
+            "Solo workspace", "Email support",
+        ],
+    },
+    "essential": {
+        "name": "Essential",
+        "price_usd": 100.0,
+        "price_bdt": 10700.0,
+        "credits": 600,
+        "max_agents": 12,
+        "max_custom_agents": 1,
         "includes_commander": False,
         "max_team_members": 3,
-        "features": ["10 AI agents", "500 credits/month", "2 custom agents", "5 LLM providers", "Vibe Coding & Content Generator", "Voice commands", "Team (up to 3)", "Priority support", "File uploads"]
+        "monthly_cap_usd": 1.8,
+        "features": [
+            "12 AI agents", "600 credits/month", "1 custom agent",
+            "MAARS Universal AI Gateway — 33 providers, 175,000+ models (economy + standard)",
+            "Workflow builder", "File uploads",
+            "Team (up to 3)", "Email support",
+        ],
     },
-    "pro": {
-        "name": "Pro",
-        "price_usd": 79.0,
-        "price_bdt": 8400.0,
+    "basic": {
+        "name": "Basic",
+        "price_usd": 200.0,
+        "price_bdt": 21400.0,
+        "credits": 1200,
+        "max_agents": 18,
+        "max_custom_agents": 2,
+        "includes_commander": False,
+        "max_team_members": 5,
+        "monthly_cap_usd": 3.6,
+        "features": [
+            "18 AI agents", "1,200 credits/month", "2 custom agents",
+            "MAARS Universal AI Gateway — 33 providers, 175,000+ models (all tiers)",
+            "Full workflow builder", "Content generator",
+            "Basic analytics", "Team (up to 5)", "Priority email support",
+        ],
+    },
+    "standard": {
+        "name": "Standard",
+        "price_usd": 350.0,
+        "price_bdt": 37450.0,
         "credits": 2000,
         "max_agents": 25,
-        "max_custom_agents": 5,
+        "max_custom_agents": 3,
         "includes_commander": True,
         "max_team_members": 10,
-        "features": ["25 AI agents + Commander Orion", "2,000 credits/month", "5 custom agents", "All 13 LLM providers (45+ models)", "Autonomous orchestration", "Quality control & auto-learning", "Memory governance", "Real-time activity monitor", "Reference intelligence", "Team (up to 10)", "Unlimited uploads"]
+        "monthly_cap_usd": 6.0,
+        "features": [
+            "25 AI agents + Commander Orion", "2,000 credits/month", "3 custom agents",
+            "MAARS Universal AI Gateway — 33 providers, 175,000+ models",
+            "Autonomous orchestration", "Campaign builder",
+            "Knowledge graph", "Trust scores",
+            "Team (up to 10)", "Priority support",
+        ],
+    },
+    "professional": {
+        "name": "Professional",
+        "price_usd": 500.0,
+        "price_bdt": 53500.0,
+        "credits": 3000,
+        "max_agents": 35,
+        "max_custom_agents": 5,
+        "includes_commander": True,
+        "max_team_members": 20,
+        "monthly_cap_usd": 9.0,
+        "features": [
+            "35 AI agents + Commander Orion", "3,000 credits/month", "5 custom agents",
+            "MAARS Universal AI Gateway — 33 providers, 175,000+ models",
+            "Vibe Coding & Reference Intelligence",
+            "Memory hierarchy", "Analytics dashboard",
+            "Team (up to 20)", "Live chat support",
+        ],
+    },
+    "advanced": {
+        "name": "Advanced",
+        "price_usd": 750.0,
+        "price_bdt": 80250.0,
+        "credits": 4000,
+        "max_agents": 41,
+        "max_custom_agents": 10,
+        "includes_commander": True,
+        "max_team_members": 35,
+        "monthly_cap_usd": 12.0,
+        "features": [
+            "All 41 core AI agents + Commander Orion", "4,000 credits/month", "10 custom agents",
+            "MAARS Universal AI Gateway — 33 providers, 175,000+ models",
+            "Full observability dashboard", "Model router",
+            "Circuit breakers", "Cost governance",
+            "Team (up to 35)", "Dedicated Slack support",
+        ],
     },
     "business": {
         "name": "Business",
-        "price_usd": 199.0,
-        "price_bdt": 21100.0,
-        "credits": 6000,
-        "max_agents": 41,
+        "price_usd": 1000.0,
+        "price_bdt": 107000.0,
+        "credits": 5000,
+        "max_agents": 141,
+        "max_custom_agents": 20,
+        "includes_commander": True,
+        "max_team_members": 50,
+        "monthly_cap_usd": 15.0,
+        "features": [
+            "41 core + 100 MAARS Infinity agents + Commander Orion", "5,000 credits/month", "20 custom agents",
+            "MAARS Universal AI Gateway — 33 providers, 175,000+ models",
+            "MAARS Infinity agent networks", "Operator panel",
+            "API access & webhooks", "Team (up to 50)", "Dedicated Slack support",
+        ],
+    },
+    "agency": {
+        "name": "Agency",
+        "price_usd": 1500.0,
+        "price_bdt": 160500.0,
+        "credits": 6500,
+        "max_agents": 241,
         "max_custom_agents": -1,
         "includes_commander": True,
         "max_team_members": -1,
-        "features": ["All 41 AI agents + Commander Orion", "6,000 credits/month", "Unlimited custom agents", "All 13 LLM providers (45+ models)", "Full autonomous orchestration", "All 17 core systems", "KPI dashboard & collaboration engine", "Admin code explorer", "Unlimited team members", "Dedicated support", "API access"]
-    }
+        "monthly_cap_usd": 19.5,
+        "features": [
+            "41 core + 200 MAARS Infinity agents + Commander Orion", "6,500 credits/month",
+            "Unlimited custom agents",
+            "MAARS Universal AI Gateway — 33 providers, 175,000+ models",
+            "White-label ready", "RBAC & access control",
+            "Client management tools", "SLA guarantee",
+            "Unlimited team members", "Dedicated account manager",
+        ],
+    },
+    "studio": {
+        "name": "Studio",
+        "price_usd": 2500.0,
+        "price_bdt": 267500.0,
+        "credits": 7500,
+        "max_agents": 391,
+        "max_custom_agents": -1,
+        "includes_commander": True,
+        "max_team_members": -1,
+        "monthly_cap_usd": 22.5,
+        "features": [
+            "41 core + 350 MAARS Infinity agents + Commander Orion", "7,500 credits/month",
+            "Unlimited custom agents",
+            "MAARS Universal AI Gateway — 33 providers, 175,000+ models",
+            "Venture portfolio", "Agent Catalog (350 networks)",
+            "Custom integrations", "Multi-workspace",
+            "Unlimited team members", "Priority dedicated support",
+        ],
+    },
+    "enterprise": {
+        "name": "Enterprise",
+        "price_usd": 3500.0,
+        "price_bdt": 374500.0,
+        "credits": 8500,
+        "max_agents": 458,
+        "max_custom_agents": -1,
+        "includes_commander": True,
+        "max_team_members": -1,
+        "monthly_cap_usd": 25.5,
+        "features": [
+            "All 458 agents + Commander Orion", "8,500 credits/month", "Unlimited everything",
+            "MAARS Universal AI Gateway — 33 providers, 175,000+ models",
+            "Dedicated infrastructure", "Advanced security & compliance",
+            "Custom AI integrations", "Onboarding & training",
+            "Custom SLAs", "24/7 premium support",
+        ],
+    },
+    "corporate": {
+        "name": "Corporate",
+        "price_usd": 5000.0,
+        "price_bdt": 535000.0,
+        "credits": 9500,
+        "max_agents": 458,
+        "max_custom_agents": -1,
+        "includes_commander": True,
+        "max_team_members": -1,
+        "monthly_cap_usd": 28.5,
+        "features": [
+            "All 458 agents + Commander Orion", "9,500 credits/month", "Unlimited everything",
+            "MAARS Universal AI Gateway — 33 providers, 175,000+ models",
+            "Custom AI model fine-tuning", "Dedicated engineering support",
+            "Multi-workspace management", "Custom contracts & billing",
+            "Quarterly business reviews", "Executive priority support",
+        ],
+    },
+    "elite": {
+        "name": "Elite",
+        "price_usd": 8000.0,
+        "price_bdt": 856000.0,
+        "credits": 10000,
+        "max_agents": 458,
+        "max_custom_agents": -1,
+        "includes_commander": True,
+        "max_team_members": -1,
+        "monthly_cap_usd": 30.0,
+        "features": [
+            "All 458 agents + Commander Orion", "10,000 credits/month", "Unlimited everything",
+            "MAARS Universal AI Gateway — 33 providers, 175,000+ models",
+            "Custom agent development", "Dedicated servers & infrastructure",
+            "Strategic AI consulting", "Full platform customization",
+            "Executive support hotline", "Custom contract & billing",
+        ],
+    },
 }
 
 # Custom agent creation cost (mutable - updated from DB on startup)
@@ -106,13 +337,117 @@ DEFAULT_CREDIT_PACKAGES = [
 
 # Integration services config
 INTEGRATION_SERVICES = {
-    "slack": {"name": "Slack", "key_fields": ["bot_token"], "description": "Send messages to Slack channels and workspaces"},
-    "github": {"name": "GitHub", "key_fields": ["personal_access_token"], "description": "Create issues, PRs, read/write repos"},
-    "sendgrid": {"name": "SendGrid", "key_fields": ["api_key"], "description": "Send transactional and marketing emails"},
-    "resend": {"name": "Resend", "key_fields": ["api_key"], "description": "Modern email sending API"},
-    "twilio": {"name": "Twilio", "key_fields": ["account_sid", "auth_token", "phone_number"], "description": "Send SMS and voice calls"},
-    "airtable": {"name": "Airtable", "key_fields": ["api_key"], "description": "Read/write Airtable bases and records"},
-    "calendly": {"name": "Calendly", "key_fields": ["api_key"], "description": "Schedule meetings and manage events"},
-    "giphy": {"name": "Giphy", "key_fields": ["api_key"], "description": "Search and send GIFs"},
-    "google_suite": {"name": "Google Suite", "key_fields": ["service_account_json", "delegate_email"], "description": "Gmail, Google Calendar, Google Drive"},
+    # ── Productivity / Dev ──────────────────────────────────────────────────────
+    "slack": {"name": "Slack", "key_fields": ["bot_token"], "description": "Send messages to Slack channels and workspaces", "category": "productivity"},
+    "github": {"name": "GitHub", "key_fields": ["personal_access_token"], "description": "Create issues, PRs, read/write repos", "category": "development"},
+    "sendgrid": {"name": "SendGrid", "key_fields": ["api_key"], "description": "Send transactional and marketing emails", "category": "email"},
+    "resend": {"name": "Resend", "key_fields": ["api_key"], "description": "Modern email sending API", "category": "email"},
+    "twilio": {"name": "Twilio", "key_fields": ["account_sid", "auth_token", "phone_number"], "description": "Send SMS, voice calls, and cold outreach", "category": "communications"},
+    "airtable": {"name": "Airtable", "key_fields": ["api_key"], "description": "Read/write Airtable bases and records", "category": "productivity"},
+    "calendly": {"name": "Calendly", "key_fields": ["api_key"], "description": "Schedule meetings, appointments, and calls", "category": "scheduling"},
+    "giphy": {"name": "Giphy", "key_fields": ["api_key"], "description": "Search and send GIFs", "category": "media"},
+    "google_suite": {"name": "Google Suite", "key_fields": ["service_account_json", "delegate_email"], "description": "Gmail, Google Calendar, Google Drive", "category": "productivity"},
+
+    # ── Social Media Platforms ──────────────────────────────────────────────────
+    "facebook": {
+        "name": "Facebook",
+        "key_fields": ["page_access_token", "page_id", "app_id", "app_secret"],
+        "description": "Post content, send Messenger messages, boost posts with geo-targeting, manage Facebook Pages and ad campaigns",
+        "category": "social_media",
+        "capabilities": ["post", "story", "reel", "message", "boost", "ads", "geo_target", "analytics", "comment", "reply"],
+        "oauth_url": "https://developers.facebook.com/apps/",
+        "docs_url": "https://developers.facebook.com/docs/graph-api/",
+    },
+    "instagram": {
+        "name": "Instagram",
+        "key_fields": ["access_token", "instagram_business_account_id"],
+        "description": "Post photos/reels/stories, send DMs, boost posts, reply to comments, geo-target audiences for the right regions",
+        "category": "social_media",
+        "capabilities": ["post", "reel", "story", "dm", "boost", "hashtag", "geo_target", "analytics", "comment"],
+        "oauth_url": "https://developers.facebook.com/apps/",
+        "docs_url": "https://developers.facebook.com/docs/instagram-api/",
+    },
+    "twitter": {
+        "name": "Twitter / X",
+        "key_fields": ["api_key", "api_secret", "access_token", "access_token_secret", "bearer_token"],
+        "description": "Post tweets, reply to mentions, send DMs, run promoted tweet campaigns, engage with followers worldwide",
+        "category": "social_media",
+        "capabilities": ["tweet", "reply", "dm", "retweet", "like", "thread", "spaces", "ads", "analytics"],
+        "oauth_url": "https://developer.twitter.com/en/portal/dashboard",
+        "docs_url": "https://developer.twitter.com/en/docs/twitter-api",
+    },
+    "tiktok": {
+        "name": "TikTok",
+        "key_fields": ["access_token", "advertiser_id", "app_id"],
+        "description": "Post videos, run geo-targeted TikTok ad campaigns, track performance, reach audiences in specific countries/languages",
+        "category": "social_media",
+        "capabilities": ["post", "boost", "ads", "geo_target", "analytics", "spark_ads", "duet"],
+        "oauth_url": "https://ads.tiktok.com/marketing_api/apps/",
+        "docs_url": "https://ads.tiktok.com/marketing_api/docs",
+    },
+    "whatsapp": {
+        "name": "WhatsApp Business",
+        "key_fields": ["phone_number_id", "access_token", "waba_id"],
+        "description": "Send/receive messages, make voice & video calls, broadcast campaigns, send templates in local languages, manage Business catalog",
+        "category": "social_media",
+        "capabilities": ["message", "call", "broadcast", "template", "media", "catalog", "reply", "geo_target"],
+        "oauth_url": "https://developers.facebook.com/apps/",
+        "docs_url": "https://developers.facebook.com/docs/whatsapp/cloud-api/",
+    },
+    "viber": {
+        "name": "Viber",
+        "key_fields": ["auth_token"],
+        "description": "Send messages, media, and broadcasts to Viber subscribers — strong reach in Eastern Europe & Southeast Asia",
+        "category": "social_media",
+        "capabilities": ["message", "broadcast", "media", "keyboard", "reply", "sticker"],
+        "oauth_url": "https://partners.viber.com/",
+        "docs_url": "https://developers.viber.com/docs/api/rest-bot-api/",
+    },
+    "line": {
+        "name": "LINE",
+        "key_fields": ["channel_access_token", "channel_secret"],
+        "description": "Send messages, rich menus, and broadcasts to LINE followers — dominant in Japan, Thailand, Taiwan, Indonesia",
+        "category": "social_media",
+        "capabilities": ["message", "broadcast", "rich_menu", "flex_message", "push", "reply", "liff"],
+        "oauth_url": "https://developers.line.biz/console/",
+        "docs_url": "https://developers.line.biz/en/docs/messaging-api/",
+    },
+    "linkedin": {
+        "name": "LinkedIn",
+        "key_fields": ["access_token", "organization_id"],
+        "description": "Post articles and updates, send InMail, run B2B lead-gen ad campaigns, target by industry/geography/seniority",
+        "category": "social_media",
+        "capabilities": ["post", "article", "inmail", "ads", "lead_gen", "geo_target", "analytics", "comment"],
+        "oauth_url": "https://www.linkedin.com/developers/apps",
+        "docs_url": "https://learn.microsoft.com/en-us/linkedin/",
+    },
+    "youtube": {
+        "name": "YouTube",
+        "key_fields": ["api_key", "oauth_client_id", "oauth_client_secret"],
+        "description": "Upload videos, manage comments, run YouTube video ad campaigns, track analytics and subscriber engagement",
+        "category": "social_media",
+        "capabilities": ["upload", "comment", "reply", "live", "ads", "analytics", "playlist", "subtitle"],
+        "oauth_url": "https://console.cloud.google.com/apis/credentials",
+        "docs_url": "https://developers.google.com/youtube/v3",
+    },
+    "telegram": {
+        "name": "Telegram",
+        "key_fields": ["bot_token", "channel_username"],
+        "description": "Send messages to channels/groups, broadcast updates, manage bots with inline keyboards — global reach, zero cost",
+        "category": "social_media",
+        "capabilities": ["message", "broadcast", "channel", "group", "inline_keyboard", "media", "poll", "bot"],
+        "oauth_url": "https://t.me/BotFather",
+        "docs_url": "https://core.telegram.org/bots/api",
+    },
+}
+
+# Pay-as-you-go Universal Key configuration
+PAYG_CONFIG = {
+    "model_allocation_pct": 0.65,    # 65% of payment goes to AI model costs
+    "platform_profit_pct": 0.35,     # 35% goes to platform profit
+    "credits_per_usd": 16.67,        # ~$0.06 per credit (standard rate)
+    "min_topup_usd": 5.0,
+    "max_topup_usd": 10000.0,
+    "currency_support": ["usd", "bdt"],
+    "bdt_to_usd_rate": 110.0,        # approx, updated live
 }

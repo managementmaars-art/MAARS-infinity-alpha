@@ -1,15 +1,126 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Textarea } from "../components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Badge } from "../components/ui/badge";
-import { Card, CardContent } from "../components/ui/card";
 import { Bot, ArrowLeft, Plus, X, Sparkles, CreditCard, Lock, AlertTriangle } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  violet: "#7c3aed",
+  amber: "#f59e0b",
+  green: "#34d399",
+  red: "#ef4444",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
+
+const PLAN_ACCENT = {
+  Business: T.amber, Pro: "#a78bfa", Starter: T.indigo, Free: T.zinc,
+};
+
+const PROVIDER_ACCENT = {
+  openai: "#10b981", anthropic: "#f97316", gemini: "#3b82f6",
+  xai: "#94a3b8", deepseek: T.indigo, mistral: "#ff7000",
+  perplexity: "#8b5cf6", cohere: "#2563eb", groq: "#f55036",
+  together: "#14b8a6", fireworks: "#f97316", ai21: "#06b6d4",
+};
+
+const PROVIDERS = [
+  { value: "openai", label: "OpenAI" },
+  { value: "anthropic", label: "Anthropic" },
+  { value: "gemini", label: "Google" },
+  { value: "xai", label: "xAI" },
+  { value: "deepseek", label: "DeepSeek" },
+  { value: "mistral", label: "Mistral" },
+  { value: "perplexity", label: "Perplexity" },
+  { value: "cohere", label: "Cohere" },
+  { value: "groq", label: "Groq" },
+  { value: "together", label: "Together AI" },
+  { value: "fireworks", label: "Fireworks" },
+  { value: "ai21", label: "AI21" },
+];
+
+const modelOptions = {
+  openai: [
+    { value: "gpt-5", label: "GPT-5 (Flagship)" },
+    { value: "gpt-4o", label: "GPT-4o (Fast)" },
+    { value: "gpt-4o-mini", label: "GPT-4o Mini (Economy)" },
+    { value: "o3", label: "O3 (Reasoning)" },
+    { value: "o3-mini", label: "O3 Mini (Light)" },
+  ],
+  anthropic: [
+    { value: "claude-sonnet-4-5-20250929", label: "Claude Sonnet 4.5 (Flagship)" },
+    { value: "claude-opus-4-5-20251101", label: "Claude Opus 4.5 (Premium)" },
+    { value: "claude-haiku-4-5-20250929", label: "Claude Haiku 4.5 (Economy)" },
+  ],
+  gemini: [
+    { value: "gemini-3-flash-preview", label: "Gemini 3 Flash (Fast)" },
+    { value: "gemini-3-pro-preview", label: "Gemini 3 Pro (Flagship)" },
+  ],
+  xai: [
+    { value: "grok-3", label: "Grok 3 (Flagship)" },
+    { value: "grok-3-mini", label: "Grok 3 Mini (Fast)" },
+    { value: "grok-2", label: "Grok 2 (Standard)" },
+  ],
+  deepseek: [
+    { value: "deepseek-chat", label: "DeepSeek Chat (Standard)" },
+    { value: "deepseek-reasoner", label: "DeepSeek Reasoner" },
+  ],
+  mistral: [
+    { value: "mistral-large-latest", label: "Mistral Large (Flagship)" },
+    { value: "mistral-medium-latest", label: "Mistral Medium" },
+    { value: "mistral-small-latest", label: "Mistral Small (Economy)" },
+  ],
+  perplexity: [
+    { value: "sonar", label: "Sonar (Standard)" },
+    { value: "sonar-pro", label: "Sonar Pro (Advanced)" },
+  ],
+  cohere: [
+    { value: "command-r-plus", label: "Command R+ (Flagship)" },
+    { value: "command-r", label: "Command R (Standard)" },
+  ],
+  groq: [
+    { value: "llama-4-scout-17b-16e-instruct", label: "Llama 4 Scout (Economy)" },
+    { value: "llama-4-maverick-17b-128e-instruct", label: "Llama 4 Maverick (Fast)" },
+    { value: "llama-3.3-70b-versatile", label: "Llama 3.3 70B (Versatile)" },
+  ],
+  together: [
+    { value: "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", label: "Llama 4 Maverick FP8" },
+    { value: "meta-llama/Llama-3.3-70B-Instruct-Turbo", label: "Llama 3.3 70B Turbo" },
+    { value: "deepseek-ai/DeepSeek-R1", label: "DeepSeek R1 (Reasoning)" },
+  ],
+  fireworks: [
+    { value: "accounts/fireworks/models/llama4-scout-instruct-basic", label: "Llama 4 Scout" },
+    { value: "accounts/fireworks/models/llama4-maverick-instruct-basic", label: "Llama 4 Maverick" },
+    { value: "accounts/fireworks/models/deepseek-v3", label: "DeepSeek V3" },
+  ],
+  ai21: [
+    { value: "jamba-large-1.7", label: "Jamba Large 1.7 (Flagship)" },
+    { value: "jamba-mini-1.7", label: "Jamba Mini 1.7 (Economy)" },
+  ],
+};
+
+const robotAvatars = [
+  "https://api.dicebear.com/7.x/bottts/svg?seed=maars-alpha&backgroundColor=1e1b4b",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=maars-beta&backgroundColor=1e1b4b",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=maars-gamma&backgroundColor=312e81",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=maars-delta&backgroundColor=312e81",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=maars-epsilon&backgroundColor=1e1b4b",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=maars-zeta&backgroundColor=312e81",
+];
+
+const formInput = {
+  background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`,
+  borderRadius: 9, padding: "9px 12px", color: "#fff", fontSize: 13,
+  outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box",
+  transition: "border-color .2s",
+};
 
 const CreateAgent = () => {
   const navigate = useNavigate();
@@ -18,103 +129,23 @@ const CreateAgent = () => {
   const [capability, setCapability] = useState("");
   const [createInfo, setCreateInfo] = useState(null);
   const [infoLoading, setInfoLoading] = useState(true);
-  
+
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    role: "",
-    system_prompt: "",
-    model_provider: "openai",
-    model_name: "gpt-5.2",
-    avatar: "",
-    capabilities: []
+    name: "", description: "", role: "", system_prompt: "",
+    model_provider: "openai", model_name: "gpt-5.2",
+    avatar: "", capabilities: [],
   });
 
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
   useEffect(() => {
-    fetchCreateInfo();
+    (async () => {
+      try {
+        const res = await fetch(`${API}/agents/create/info`, { headers });
+        if (res.ok) setCreateInfo(await res.json());
+      } catch {} finally { setInfoLoading(false); }
+    })();
   }, []);
-
-  const fetchCreateInfo = async () => {
-    try {
-      const res = await fetch(`${API}/agents/create/info`, { headers });
-      if (res.ok) setCreateInfo(await res.json());
-    } catch {
-      // Silently fail
-    } finally {
-      setInfoLoading(false);
-    }
-  };
-
-  const modelOptions = {
-    openai: [
-      { value: "gpt-5.2", label: "GPT-5.2 (Flagship)" },
-      { value: "gpt-4o", label: "GPT-4o (Fast)" },
-      { value: "gpt-4o-mini", label: "GPT-4o Mini (Economy)" },
-      { value: "o3", label: "O3 (Reasoning)" },
-      { value: "o3-mini", label: "O3 Mini (Light Reasoning)" }
-    ],
-    anthropic: [
-      { value: "claude-sonnet-4-5-20250929", label: "Claude Sonnet 4.5 (Flagship)" },
-      { value: "claude-opus-4-5-20251101", label: "Claude Opus 4.5 (Premium)" },
-      { value: "claude-haiku-4-5-20250929", label: "Claude Haiku 4.5 (Economy)" }
-    ],
-    gemini: [
-      { value: "gemini-3-flash-preview", label: "Gemini 3 Flash (Fast)" },
-      { value: "gemini-3-pro-preview", label: "Gemini 3 Pro (Flagship)" }
-    ],
-    xai: [
-      { value: "grok-3", label: "Grok 3 (Flagship)" },
-      { value: "grok-3-mini", label: "Grok 3 Mini (Fast)" },
-      { value: "grok-2", label: "Grok 2 (Standard)" }
-    ],
-    deepseek: [
-      { value: "deepseek-chat", label: "DeepSeek Chat (Standard)" },
-      { value: "deepseek-reasoner", label: "DeepSeek Reasoner (Reasoning)" }
-    ],
-    mistral: [
-      { value: "mistral-large-latest", label: "Mistral Large (Flagship)" },
-      { value: "mistral-medium-latest", label: "Mistral Medium (Balanced)" },
-      { value: "mistral-small-latest", label: "Mistral Small (Economy)" }
-    ],
-    perplexity: [
-      { value: "sonar", label: "Sonar (Standard)" },
-      { value: "sonar-pro", label: "Sonar Pro (Advanced)" }
-    ],
-    cohere: [
-      { value: "command-r-plus", label: "Command R+ (Flagship)" },
-      { value: "command-r", label: "Command R (Standard)" }
-    ],
-    groq: [
-      { value: "llama-4-scout-17b-16e-instruct", label: "Llama 4 Scout (Economy)" },
-      { value: "llama-4-maverick-17b-128e-instruct", label: "Llama 4 Maverick (Fast)" },
-      { value: "llama-3.3-70b-versatile", label: "Llama 3.3 70B (Versatile)" }
-    ],
-    together: [
-      { value: "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", label: "Llama 4 Maverick FP8 (Fast)" },
-      { value: "meta-llama/Llama-3.3-70B-Instruct-Turbo", label: "Llama 3.3 70B Turbo (Fast)" },
-      { value: "deepseek-ai/DeepSeek-R1", label: "DeepSeek R1 (Reasoning)" }
-    ],
-    fireworks: [
-      { value: "accounts/fireworks/models/llama4-scout-instruct-basic", label: "Llama 4 Scout (Economy)" },
-      { value: "accounts/fireworks/models/llama4-maverick-instruct-basic", label: "Llama 4 Maverick (Fast)" },
-      { value: "accounts/fireworks/models/deepseek-v3", label: "DeepSeek V3 (Standard)" }
-    ],
-    ai21: [
-      { value: "jamba-large-1.7", label: "Jamba Large 1.7 (Flagship)" },
-      { value: "jamba-mini-1.7", label: "Jamba Mini 1.7 (Economy)" }
-    ]
-  };
-
-  const robotAvatars = [
-    "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/43ae7e2a837703cb3a5da4fdd616bc12c825f9f0f15b7e9304e61a3dab0bd257.png",
-    "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/c4305af2c26cea8648db361e275c2f1ef2db69815efff20a57aa4e0807abfcce.png",
-    "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/48310a3af62b331e8f13d73aa7ac03cdfd9565c00fc03fd7dade81f63edfe3a7.png",
-    "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/c608195e54230fb30922f73d04dd840a095e7d6ee759b4b9cfe368511284876d.png",
-    "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/2ceaf34f302e1bf7d622058c516b8e86782c142d9a32dee38b13da10b8f0514c.png",
-    "https://static.prod-images.emergentagent.com/jobs/d5c3c70f-465d-437e-854c-b31caef3b9ee/images/96d5c274e3657d527a5a8c4bf869dcfdb08530445029e0df555139dba990b2cc.png"
-  ];
 
   const addCapability = () => {
     if (capability.trim() && !formData.capabilities.includes(capability.trim())) {
@@ -133,14 +164,13 @@ const CreateAgent = () => {
       toast.error("Please fill in all required fields");
       return;
     }
-
     setLoading(true);
     try {
       const response = await fetch(`${API}/agents`, {
         method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify(formData)
+        headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
-
       if (response.ok) {
         const agent = await response.json();
         toast.success("Agent created successfully!");
@@ -149,287 +179,206 @@ const CreateAgent = () => {
         const data = await response.json();
         toast.error(data.detail || "Failed to create agent");
       }
-    } catch {
-      toast.error("Failed to create agent");
-    } finally {
-      setLoading(false);
-    }
+    } catch { toast.error("Failed to create agent"); }
+    finally { setLoading(false); }
   };
 
   const canCreate = createInfo?.can_create;
   const isBlocked = createInfo && !canCreate && !createInfo.is_admin;
 
+  const inputFocus = e => e.target.style.borderColor = "rgba(129,140,248,.5)";
+  const inputBlur = e => e.target.style.borderColor = T.border;
+
   return (
-    <div className="min-h-screen bg-background" data-testid="create-agent-page">
-      <div className="max-w-3xl mx-auto p-6 lg:p-8">
+    <div style={{ minHeight: "100vh", background: "#030712" }} data-testid="create-agent-page">
+      <style>{STYLES}</style>
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 24px", animation: "fadeUp .4s ease" }}>
+
         {/* Header */}
-        <div className="mb-6">
-          <Link
-            to="/agents"
-            className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-4 transition-colors"
-            data-testid="back-to-agents"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Agents
+        <div style={{ marginBottom: 28 }}>
+          <Link to="/agents" data-testid="back-to-agents"
+            style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, color: T.zinc, textDecoration: "none", marginBottom: 16, transition: "color .2s" }}
+            onMouseEnter={e => e.currentTarget.style.color = "#fff"}
+            onMouseLeave={e => e.currentTarget.style.color = T.zinc}>
+            <ArrowLeft size={14} /> Back to Agents
           </Link>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2 font-['Outfit']">
-            Create Custom Agent
-          </h1>
-          <p className="text-zinc-400">Build a personalized AI agent tailored to your needs</p>
+          <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 30, fontWeight: 700, color: "#fff", margin: "0 0 6px" }}>Create Custom Agent</h1>
+          <p style={{ fontSize: 14, color: T.zinc, margin: 0 }}>Build a personalized AI agent tailored to your needs</p>
         </div>
 
-        {/* Cost & Limits Info Card */}
+        {/* Info card */}
         {!infoLoading && createInfo && (
-          <Card className={`mb-6 border ${isBlocked ? 'bg-red-950/20 border-red-500/30' : 'bg-zinc-900/50 border-white/10'}`} data-testid="create-agent-info-card">
-            <CardContent className="p-4">
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <CreditCard className={`w-4 h-4 ${isBlocked ? 'text-red-400' : 'text-indigo-400'}`} />
-                  <span className="text-sm text-zinc-300">
-                    Cost: <span className="font-semibold text-white">{createInfo.credit_cost} credits</span>
-                  </span>
-                </div>
-                <div className="w-px h-4 bg-white/10" />
-                <div className="flex items-center gap-2">
-                  <Bot className="w-4 h-4 text-zinc-400" />
-                  <span className="text-sm text-zinc-300">
-                    {createInfo.max_custom_agents === -1 ? (
-                      "Unlimited custom agents"
-                    ) : (
-                      <>Used: <span className="font-semibold text-white">{createInfo.current_custom_count}/{createInfo.max_custom_agents}</span> slots</>
-                    )}
-                  </span>
-                </div>
-                <div className="w-px h-4 bg-white/10" />
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-zinc-400" />
-                  <span className="text-sm text-zinc-300">
-                    Balance: <span className="font-semibold text-white">{createInfo.credits_remaining} credits</span>
-                  </span>
-                </div>
-                <Badge className={`ml-auto text-xs ${
-                  createInfo.plan_name === 'Business' ? 'bg-amber-500/20 text-amber-400' :
-                  createInfo.plan_name === 'Pro' ? 'bg-violet-500/20 text-violet-400' :
-                  createInfo.plan_name === 'Starter' ? 'bg-indigo-500/20 text-indigo-400' :
-                  'bg-zinc-500/20 text-zinc-400'
-                }`}>
-                  {createInfo.plan_name} Plan
-                </Badge>
+          <div style={{ marginBottom: 24, background: isBlocked ? "rgba(239,68,68,.05)" : T.glass, border: `1px solid ${isBlocked ? "rgba(239,68,68,.3)" : T.border}`, borderRadius: 12, padding: "14px 18px" }} data-testid="create-agent-info-card">
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                <CreditCard size={14} style={{ color: isBlocked ? T.red : T.indigo }} />
+                <span style={{ fontSize: 13, color: "#d4d4d8" }}>Cost: <span style={{ fontWeight: 700, color: "#fff" }}>{createInfo.credit_cost} credits</span></span>
               </div>
-
-              {isBlocked && (
-                <div className="mt-3 flex items-start gap-2 p-3 rounded-lg bg-red-500/10">
-                  <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
-                  <div className="text-sm">
-                    {createInfo.max_custom_agents === 0 ? (
-                      <p className="text-red-300">
-                        Custom agent creation is not available on the Free plan. 
-                        <button onClick={() => navigate("/pricing")} className="text-red-400 underline ml-1 hover:text-red-300">Upgrade now</button>
-                      </p>
-                    ) : !createInfo.can_afford ? (
-                      <p className="text-red-300">
-                        Not enough credits ({createInfo.credits_remaining}/{createInfo.credit_cost} needed). 
-                        <button onClick={() => navigate("/pricing")} className="text-red-400 underline ml-1 hover:text-red-300">Buy credits</button>
-                      </p>
-                    ) : (
-                      <p className="text-red-300">
-                        Custom agent limit reached ({createInfo.current_custom_count}/{createInfo.max_custom_agents}). 
-                        <button onClick={() => navigate("/pricing")} className="text-red-400 underline ml-1 hover:text-red-300">Upgrade plan</button>
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+              <div style={{ width: 1, height: 14, background: T.border }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                <Bot size={14} style={{ color: T.zinc }} />
+                <span style={{ fontSize: 13, color: "#d4d4d8" }}>
+                  {createInfo.max_custom_agents === -1 ? "Unlimited custom agents" : <>Used: <span style={{ fontWeight: 700, color: "#fff" }}>{createInfo.current_custom_count}/{createInfo.max_custom_agents}</span> slots</>}
+                </span>
+              </div>
+              <div style={{ width: 1, height: 14, background: T.border }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                <Sparkles size={14} style={{ color: T.zinc }} />
+                <span style={{ fontSize: 13, color: "#d4d4d8" }}>Balance: <span style={{ fontWeight: 700, color: "#fff" }}>{createInfo.credits_remaining} credits</span></span>
+              </div>
+              <span style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 5, background: `${PLAN_ACCENT[createInfo.plan_name] || T.zinc}20`, color: PLAN_ACCENT[createInfo.plan_name] || T.zinc }}>
+                {createInfo.plan_name} Plan
+              </span>
+            </div>
+            {isBlocked && (
+              <div style={{ marginTop: 10, display: "flex", alignItems: "flex-start", gap: 8, padding: "10px 14px", borderRadius: 9, background: "rgba(239,68,68,.08)" }}>
+                <AlertTriangle size={14} style={{ color: T.red, flexShrink: 0, marginTop: 1 }} />
+                <span style={{ fontSize: 13, color: "#fca5a5" }}>
+                  {createInfo.max_custom_agents === 0 ? <>Custom agents not available on Free plan. <button onClick={() => navigate("/pricing")} style={{ color: T.red, textDecoration: "underline", background: "none", border: "none", cursor: "pointer", fontSize: 13 }}>Upgrade now</button></> :
+                  !createInfo.can_afford ? <>Not enough credits ({createInfo.credits_remaining}/{createInfo.credit_cost} needed). <button onClick={() => navigate("/pricing")} style={{ color: T.red, textDecoration: "underline", background: "none", border: "none", cursor: "pointer", fontSize: 13 }}>Buy credits</button></> :
+                  <>Agent limit reached ({createInfo.current_custom_count}/{createInfo.max_custom_agents}). <button onClick={() => navigate("/pricing")} style={{ color: T.red, textDecoration: "underline", background: "none", border: "none", cursor: "pointer", fontSize: 13 }}>Upgrade plan</button></>}
+                </span>
+              </div>
+            )}
+          </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Avatar Selection */}
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+
+          {/* Avatar */}
           <div>
-            <Label className="text-zinc-300 mb-3 block">Avatar</Label>
-            <div className="flex flex-wrap gap-3">
+            <label style={{ display: "block", fontSize: 11, color: T.zinc, marginBottom: 10, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>Avatar</label>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
               {robotAvatars.map((url, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setFormData(prev => ({ ...prev, avatar: url }))}
-                  className={`w-16 h-16 rounded-lg overflow-hidden transition-all ${
-                    formData.avatar === url
-                      ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-background"
-                      : "opacity-60 hover:opacity-100"
-                  }`}
-                  data-testid={`avatar-option-${i}`}
-                >
-                  <img src={url} alt="" className="w-full h-full object-cover" />
+                <button key={i} type="button" onClick={() => setFormData(prev => ({ ...prev, avatar: url }))} data-testid={`avatar-option-${i}`}
+                  style={{ width: 60, height: 60, borderRadius: 10, overflow: "hidden", border: `2px solid ${formData.avatar === url ? T.indigo : "transparent"}`, opacity: formData.avatar === url ? 1 : 0.55, transition: "all .2s", cursor: "pointer", padding: 0 }}
+                  onMouseEnter={e => e.currentTarget.style.opacity = "1"}
+                  onMouseLeave={e => e.currentTarget.style.opacity = formData.avatar === url ? "1" : "0.55"}>
+                  <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Basic Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-zinc-300">Agent Name *</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="e.g., Project Manager AI"
-                className="bg-zinc-900/50 border-white/10 focus:border-indigo-500"
-                required
-                disabled={isBlocked}
-                data-testid="agent-name-input"
-              />
+          {/* Name + Role */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div>
+              <label htmlFor="name" style={{ display: "block", fontSize: 11, color: T.zinc, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>Agent Name *</label>
+              <input id="name" type="text" value={formData.name} onChange={e => setFormData(p => ({ ...p, name: e.target.value }))}
+                placeholder="e.g., Project Manager AI" style={formInput} required disabled={isBlocked} data-testid="agent-name-input"
+                onFocus={inputFocus} onBlur={inputBlur} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="role" className="text-zinc-300">Role *</Label>
-              <Input
-                id="role"
-                value={formData.role}
-                onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
-                placeholder="e.g., Project Manager"
-                className="bg-zinc-900/50 border-white/10 focus:border-indigo-500"
-                required
-                disabled={isBlocked}
-                data-testid="agent-role-input"
-              />
+            <div>
+              <label htmlFor="role" style={{ display: "block", fontSize: 11, color: T.zinc, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>Role *</label>
+              <input id="role" type="text" value={formData.role} onChange={e => setFormData(p => ({ ...p, role: e.target.value }))}
+                placeholder="e.g., Project Manager" style={formInput} required disabled={isBlocked} data-testid="agent-role-input"
+                onFocus={inputFocus} onBlur={inputBlur} />
             </div>
           </div>
 
           {/* Description */}
-          <div className="space-y-2">
-            <Label htmlFor="description" className="text-zinc-300">Description</Label>
-            <Textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              placeholder="Describe what this agent does..."
-              className="bg-zinc-900/50 border-white/10 focus:border-indigo-500 min-h-[80px]"
-              disabled={isBlocked}
-              data-testid="agent-description-input"
-            />
+          <div>
+            <label htmlFor="description" style={{ display: "block", fontSize: 11, color: T.zinc, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>Description</label>
+            <textarea id="description" value={formData.description} onChange={e => setFormData(p => ({ ...p, description: e.target.value }))}
+              placeholder="Describe what this agent does…" style={{ ...formInput, minHeight: 72, resize: "vertical", lineHeight: 1.5 }} disabled={isBlocked} data-testid="agent-description-input"
+              onFocus={inputFocus} onBlur={inputBlur} />
           </div>
 
-          {/* System Prompt */}
-          <div className="space-y-2">
-            <Label htmlFor="system_prompt" className="text-zinc-300">System Prompt *</Label>
-            <Textarea
-              id="system_prompt"
-              value={formData.system_prompt}
-              onChange={(e) => setFormData(prev => ({ ...prev, system_prompt: e.target.value }))}
-              placeholder="You are an expert AI assistant that..."
-              className="bg-zinc-900/50 border-white/10 focus:border-indigo-500 min-h-[150px] font-mono text-sm"
-              required
-              disabled={isBlocked}
-              data-testid="agent-prompt-input"
-            />
-            <p className="text-xs text-zinc-500">This defines your agent's personality and expertise</p>
+          {/* System prompt */}
+          <div>
+            <label htmlFor="system_prompt" style={{ display: "block", fontSize: 11, color: T.zinc, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>System Prompt *</label>
+            <textarea id="system_prompt" value={formData.system_prompt} onChange={e => setFormData(p => ({ ...p, system_prompt: e.target.value }))}
+              placeholder="You are an expert AI assistant that…" style={{ ...formInput, minHeight: 140, resize: "vertical", lineHeight: 1.6, fontFamily: "monospace", fontSize: 12 }} required disabled={isBlocked} data-testid="agent-prompt-input"
+              onFocus={inputFocus} onBlur={inputBlur} />
+            <p style={{ fontSize: 11, color: T.zinc, marginTop: 5 }}>This defines your agent's personality and expertise</p>
           </div>
 
-          {/* Model Selection */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="text-zinc-300">AI Provider</Label>
-              <Select
-                value={formData.model_provider}
-                onValueChange={(value) => {
-                  setFormData(prev => ({
-                    ...prev,
-                    model_provider: value,
-                    model_name: modelOptions[value][0].value
-                  }));
-                }}
-                disabled={isBlocked}
-              >
-                <SelectTrigger className="bg-zinc-900/50 border-white/10" data-testid="provider-select">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="openai">OpenAI</SelectItem>
-                  <SelectItem value="anthropic">Anthropic (Claude)</SelectItem>
-                  <SelectItem value="gemini">Google (Gemini)</SelectItem>
-                  <SelectItem value="xai">xAI (Grok)</SelectItem>
-                  <SelectItem value="deepseek">DeepSeek</SelectItem>
-                  <SelectItem value="mistral">Mistral AI</SelectItem>
-                  <SelectItem value="perplexity">Perplexity</SelectItem>
-                  <SelectItem value="cohere">Cohere</SelectItem>
-                  <SelectItem value="groq">Groq (Llama 4)</SelectItem>
-                  <SelectItem value="together">Together AI</SelectItem>
-                  <SelectItem value="fireworks">Fireworks AI</SelectItem>
-                  <SelectItem value="ai21">AI21 (Jamba)</SelectItem>
-                </SelectContent>
-              </Select>
+          {/* Provider + Model */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div>
+              <label style={{ display: "block", fontSize: 11, color: T.zinc, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>AI Provider</label>
+              <select value={formData.model_provider} onChange={e => setFormData(p => ({ ...p, model_provider: e.target.value, model_name: modelOptions[e.target.value][0].value }))}
+                disabled={isBlocked} data-testid="provider-select"
+                style={{ ...formInput, cursor: "pointer" }}
+                onFocus={inputFocus} onBlur={inputBlur}>
+                {PROVIDERS.map(p => <option key={p.value} value={p.value} style={{ background: "#0f0f1a" }}>{p.label}</option>)}
+              </select>
             </div>
-            <div className="space-y-2">
-              <Label className="text-zinc-300">Model</Label>
-              <Select
-                value={formData.model_name}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, model_name: value }))}
-                disabled={isBlocked}
-              >
-                <SelectTrigger className="bg-zinc-900/50 border-white/10" data-testid="model-select">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {modelOptions[formData.model_provider].map((model) => (
-                    <SelectItem key={model.value} value={model.value}>
-                      {model.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div>
+              <label style={{ display: "block", fontSize: 11, color: T.zinc, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>Model</label>
+              <select value={formData.model_name} onChange={e => setFormData(p => ({ ...p, model_name: e.target.value }))}
+                disabled={isBlocked} data-testid="model-select"
+                style={{ ...formInput, cursor: "pointer" }}
+                onFocus={inputFocus} onBlur={inputBlur}>
+                {(modelOptions[formData.model_provider] || []).map(m => <option key={m.value} value={m.value} style={{ background: "#0f0f1a" }}>{m.label}</option>)}
+              </select>
+            </div>
+          </div>
+
+          {/* Provider selection pills */}
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: T.zinc, marginBottom: 8, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>Quick Provider</label>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              {PROVIDERS.map(p => {
+                const active = formData.model_provider === p.value;
+                const accent = PROVIDER_ACCENT[p.value] || T.zinc;
+                return (
+                  <button key={p.value} type="button" disabled={isBlocked}
+                    onClick={() => setFormData(prev => ({ ...prev, model_provider: p.value, model_name: modelOptions[p.value][0].value }))}
+                    style={{ padding: "4px 12px", borderRadius: 20, border: `1px solid ${active ? accent : T.border}`, background: active ? `${accent}18` : T.glass, color: active ? accent : T.zinc, fontSize: 11, fontWeight: 600, cursor: "pointer", transition: "all .2s" }}>
+                    {p.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           {/* Capabilities */}
-          <div className="space-y-2">
-            <Label className="text-zinc-300">Capabilities</Label>
-            <div className="flex gap-2">
-              <Input
-                value={capability}
-                onChange={(e) => setCapability(e.target.value)}
-                placeholder="Add a capability..."
-                className="bg-zinc-900/50 border-white/10 focus:border-indigo-500"
-                onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addCapability())}
-                disabled={isBlocked}
-                data-testid="capability-input"
-              />
-              <Button type="button" onClick={addCapability} variant="outline" className="border-white/10 hover:bg-white/5" disabled={isBlocked} data-testid="add-capability-btn">
-                <Plus className="w-4 h-4" />
-              </Button>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: T.zinc, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600 }}>Capabilities</label>
+            <div style={{ display: "flex", gap: 8 }}>
+              <input value={capability} onChange={e => setCapability(e.target.value)}
+                placeholder="Add a capability…" style={{ ...formInput, flex: 1 }} disabled={isBlocked} data-testid="capability-input"
+                onFocus={inputFocus} onBlur={inputBlur}
+                onKeyPress={e => e.key === "Enter" && (e.preventDefault(), addCapability())} />
+              <button type="button" onClick={addCapability} disabled={isBlocked} data-testid="add-capability-btn"
+                style={{ padding: "9px 14px", borderRadius: 9, background: T.glass, border: `1px solid ${T.border}`, color: T.zinc, cursor: "pointer", display: "flex", alignItems: "center" }}>
+                <Plus size={14} />
+              </button>
             </div>
             {formData.capabilities.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-3">
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
                 {formData.capabilities.map((cap, i) => (
-                  <Badge key={i} variant="secondary" className="bg-indigo-500/20 text-indigo-300 border-0 pr-1">
+                  <span key={i} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, padding: "4px 10px", borderRadius: 6, background: "rgba(129,140,248,.12)", color: T.indigo, border: `1px solid rgba(129,140,248,.25)` }}>
                     {cap}
-                    <button type="button" onClick={() => removeCapability(cap)} className="ml-2 hover:text-white" data-testid={`remove-cap-${i}`}>
-                      <X className="w-3 h-3" />
+                    <button type="button" onClick={() => removeCapability(cap)} data-testid={`remove-cap-${i}`}
+                      style={{ background: "none", border: "none", cursor: "pointer", color: T.zinc, padding: 0, lineHeight: 1 }}
+                      onMouseEnter={e => e.currentTarget.style.color = T.red}
+                      onMouseLeave={e => e.currentTarget.style.color = T.zinc}>
+                      <X size={10} />
                     </button>
-                  </Badge>
+                  </span>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Submit */}
-          <div className="flex gap-4 pt-4">
-            <Button type="button" variant="outline" className="flex-1 border-white/10 hover:bg-white/5" onClick={() => navigate("/agents")} data-testid="cancel-btn">
+          {/* Submit row */}
+          <div style={{ display: "flex", gap: 12, paddingTop: 8 }}>
+            <button type="button" onClick={() => navigate("/agents")} data-testid="cancel-btn"
+              style={{ flex: 1, padding: "11px 0", borderRadius: 10, background: T.glass, border: `1px solid ${T.border}`, color: T.zinc, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
               Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="flex-1 bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 glow-primary"
-              disabled={loading || isBlocked}
-              data-testid="create-agent-submit-btn"
-            >
-              {loading ? "Creating..." : isBlocked ? (
-                <><Lock className="w-4 h-4 mr-2" />Upgrade to Create</>
+            </button>
+            <button type="submit" disabled={loading || isBlocked} data-testid="create-agent-submit-btn"
+              style={{ flex: 1, padding: "11px 0", borderRadius: 10, background: loading || isBlocked ? "rgba(129,140,248,.2)" : `linear-gradient(135deg, ${T.indigo}, ${T.violet})`, border: "none", color: "#fff", fontSize: 14, fontWeight: 700, cursor: loading || isBlocked ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
+              {loading ? (
+                <><div style={{ width: 15, height: 15, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> Creating…</>
+              ) : isBlocked ? (
+                <><Lock size={14} /> Upgrade to Create</>
               ) : (
-                <><Sparkles className="w-4 h-4 mr-2" />Create Agent ({createInfo?.credit_cost || 20} credits)</>
+                <><Sparkles size={14} /> Create Agent ({createInfo?.credit_cost || 20} credits)</>
               )}
-            </Button>
+            </button>
           </div>
         </form>
       </div>

@@ -23,9 +23,10 @@ async def get_plans():
 @router.get("/subscription")
 async def get_subscription(current_user: User = Depends(get_current_user)):
     """Get current user's subscription"""
+    is_admin = current_user.email == ADMIN_EMAIL
+
     sub = await db.subscriptions.find_one({"user_id": current_user.user_id}, {"_id": 0})
     if not sub:
-        # Create default free subscription
         sub = {
             "user_id": current_user.user_id,
             "plan_id": "free",
@@ -36,7 +37,30 @@ async def get_subscription(current_user: User = Depends(get_current_user)):
             "renewed_at": datetime.now(timezone.utc).isoformat()
         }
         await db.subscriptions.insert_one(sub)
-    
+
+    # Admin/Owner gets unlimited everything
+    if is_admin:
+        owner_plan = {
+            "plan_id": "owner",
+            "name": "Owner",
+            "price_usd": 0,
+            "credits": 999999,
+            "max_agents": -1,
+            "max_custom_agents": -1,
+            "includes_commander": True,
+            "max_team_members": -1,
+            "features": ["Unlimited credits", "All agents", "All features", "No restrictions"],
+        }
+        return {
+            **sub,
+            "plan_id": "owner",
+            "credits": 999999,
+            "credits_used": sub.get("credits_used", 0),
+            "status": "active",
+            "is_owner": True,
+            "plan_info": owner_plan,
+        }
+
     plan_info = SUBSCRIPTION_PLANS.get(sub.get("plan_id", "free"), SUBSCRIPTION_PLANS["free"])
     return {**sub, "plan_info": plan_info}
 
@@ -188,6 +212,18 @@ async def get_checkout_status(session_id: str, current_user: User = Depends(get_
                     "credits_used": 0,
                     "status": "active",
                     "renewed_at": datetime.now(timezone.utc).isoformat()
+                }},
+                upsert=True
+            )
+            # Update gateway key budget to match new plan's AI cost allocation
+            await db.client_gateway_keys.update_one(
+                {"user_id": current_user.user_id},
+                {"$set": {
+                    "plan_id":            plan_id,
+                    "monthly_budget_usd": plan.get("monthly_cap_usd", 0.0),
+                    "used_usd":           0.0,
+                    "cycle_start":        datetime.now(timezone.utc).isoformat(),
+                    "status":             "active",
                 }},
                 upsert=True
             )

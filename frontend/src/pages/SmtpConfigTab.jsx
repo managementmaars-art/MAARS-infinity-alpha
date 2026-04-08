@@ -1,12 +1,30 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Button } from "../components/ui/button";
-import { Mail, CheckCircle, XCircle, Loader2, Send, Eye, EyeOff, ExternalLink } from "lucide-react";
+import { Mail, CheckCircle, XCircle, Send, Eye, EyeOff, ExternalLink } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  violet: "#7c3aed",
+  green: "#34d399",
+  amber: "#f59e0b",
+  red: "#ef4444",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
+
+const formInput = {
+  background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`,
+  borderRadius: 8, padding: "8px 12px", color: "#fff", fontSize: 13,
+  outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box",
+  transition: "border-color .2s",
+};
 
 const SmtpConfigTab = () => {
   const { token } = useAuth();
@@ -73,138 +91,131 @@ const SmtpConfigTab = () => {
     setTesting(false);
   };
 
-  if (loading) return <div className="flex items-center justify-center h-32"><Loader2 className="w-6 h-6 animate-spin text-red-400" /></div>;
+  const inputFocus = e => e.target.style.borderColor = "rgba(124,58,237,.5)";
+  const inputBlur = e => e.target.style.borderColor = T.border;
+
+  if (loading) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 128 }}>
+      <div style={{ width: 24, height: 24, border: `2px solid ${T.indigo}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+      <style>{STYLES}</style>
+    </div>
+  );
 
   return (
-    <div className="space-y-6" data-testid="smtp-config-tab">
+    <div style={{ display: "flex", flexDirection: "column", gap: 20, animation: "fadeUp .4s ease" }} data-testid="smtp-config-tab">
+      <style>{STYLES}</style>
+
       {/* Status Banner */}
-      <div className={`p-4 rounded-xl border flex items-center gap-3 ${
-        config.configured
-          ? "bg-emerald-500/10 border-emerald-500/20"
-          : "bg-amber-500/10 border-amber-500/20"
-      }`}>
-        {config.configured ? (
-          <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0" />
-        ) : (
-          <XCircle className="w-5 h-5 text-amber-400 shrink-0" />
-        )}
+      <div style={{
+        display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 16px", borderRadius: 12,
+        background: config.configured ? "rgba(52,211,153,.08)" : "rgba(245,158,11,.08)",
+        border: `1px solid ${config.configured ? "rgba(52,211,153,.2)" : "rgba(245,158,11,.2)"}`,
+      }}>
+        {config.configured
+          ? <CheckCircle size={18} style={{ color: T.green, flexShrink: 0, marginTop: 1 }} />
+          : <XCircle size={18} style={{ color: T.amber, flexShrink: 0, marginTop: 1 }} />}
         <div>
-          <p className={`text-sm font-medium ${config.configured ? "text-emerald-300" : "text-amber-300"}`}>
-            {config.configured ? "SMTP is configured and ready" : "SMTP not configured - email notifications are disabled"}
+          <p style={{ fontSize: 13, fontWeight: 600, color: config.configured ? T.green : T.amber, margin: 0 }}>
+            {config.configured ? "SMTP is configured and ready" : "SMTP not configured — email notifications are disabled"}
           </p>
-          <p className="text-xs text-zinc-500 mt-0.5">
+          <p style={{ fontSize: 11, color: T.zinc, margin: "3px 0 0" }}>
             {config.configured ? `Using: ${config.email}` : "Configure Gmail SMTP to enable team invites and notifications"}
           </p>
         </div>
       </div>
 
-      {/* Configuration Card */}
-      <Card className="bg-zinc-900/50 border-white/10">
-        <CardHeader>
-          <CardTitle className="text-white font-['Outfit'] flex items-center gap-3 text-base">
-            <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
-              <Mail className="w-5 h-5 text-red-400" />
-            </div>
-            Gmail SMTP Configuration
-          </CardTitle>
-          <p className="text-zinc-400 text-sm">Used for sending team invitations, notifications, and alerts</p>
-        </CardHeader>
-        <CardContent className="space-y-5">
-          <div className="space-y-2">
-            <Label className="text-zinc-300 text-sm">Gmail Address</Label>
-            <Input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
+      {/* Gmail SMTP Configuration */}
+      <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: T.red, borderRadius: "14px 14px 0 0", position: "relative" }} />
+        <div style={{ padding: "16px 18px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(239,68,68,.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Mail size={18} style={{ color: T.red }} />
+          </div>
+          <div>
+            <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Gmail SMTP Configuration</p>
+            <p style={{ fontSize: 11, color: T.zinc, margin: 0 }}>Used for sending team invitations, notifications, and alerts</p>
+          </div>
+        </div>
+        <div style={{ padding: "18px", display: "flex", flexDirection: "column", gap: 14 }}>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: "#d4d4d8", marginBottom: 6, fontWeight: 600 }}>Gmail Address</label>
+            <input
+              type="email" value={email} onChange={e => setEmail(e.target.value)}
               placeholder="your-email@gmail.com"
-              className="bg-zinc-800/50 border-white/10"
-              data-testid="smtp-email-input"
+              style={formInput} data-testid="smtp-email-input"
+              onFocus={inputFocus} onBlur={inputBlur}
             />
           </div>
 
-          <div className="space-y-2">
-            <Label className="text-zinc-300 text-sm">
+          <div>
+            <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: "#d4d4d8", marginBottom: 6, fontWeight: 600 }}>
               App Password
               {config.has_password && (
-                <Badge className="ml-2 bg-emerald-500/20 text-emerald-400 text-[10px]">Saved</Badge>
+                <span style={{ fontSize: 10, padding: "1px 8px", borderRadius: 20, background: "rgba(52,211,153,.15)", color: T.green, fontWeight: 700 }}>Saved</span>
               )}
-            </Label>
-            <div className="relative">
-              <Input
+            </label>
+            <div style={{ position: "relative" }}>
+              <input
                 type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder={config.has_password ? "********** (leave blank to keep current)" : "Enter your Gmail App Password"}
-                className="bg-zinc-800/50 border-white/10 pr-10"
-                data-testid="smtp-password-input"
+                value={password} onChange={e => setPassword(e.target.value)}
+                placeholder={config.has_password ? "·········· (leave blank to keep current)" : "Enter your Gmail App Password"}
+                style={{ ...formInput, paddingRight: 36 }} data-testid="smtp-password-input"
+                onFocus={inputFocus} onBlur={inputBlur}
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
-              >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              <button type="button" onClick={() => setShowPassword(!showPassword)}
+                style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: T.zinc, display: "flex", alignItems: "center" }}>
+                {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
               </button>
             </div>
           </div>
 
-          <Button
-            onClick={handleSave}
-            disabled={saving || !email}
-            className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600"
-            data-testid="smtp-save-btn"
-          >
-            {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Mail className="w-4 h-4 mr-2" />}
+          <button onClick={handleSave} disabled={saving || !email} data-testid="smtp-save-btn"
+            style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "9px 18px", borderRadius: 10, border: "none", background: saving || !email ? "rgba(129,140,248,.2)" : `linear-gradient(135deg, ${T.indigo}, ${T.violet})`, color: "#fff", fontSize: 13, fontWeight: 700, cursor: saving || !email ? "not-allowed" : "pointer", width: "fit-content" }}>
+            {saving
+              ? <div style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+              : <Mail size={14} />}
             Save SMTP Configuration
-          </Button>
-        </CardContent>
-      </Card>
+          </button>
+        </div>
+      </div>
 
       {/* Test Email */}
       {config.configured && (
-        <Card className="bg-zinc-900/50 border-white/10">
-          <CardHeader>
-            <CardTitle className="text-white font-['Outfit'] flex items-center gap-3 text-base">
-              <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                <Send className="w-5 h-5 text-indigo-400" />
-              </div>
-              Test Email
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label className="text-zinc-300 text-sm">Send test email to (optional — defaults to your admin email)</Label>
-              <div className="flex gap-3">
-                <Input
-                  type="email"
-                  value={testEmail}
-                  onChange={e => setTestEmail(e.target.value)}
-                  placeholder="test@example.com"
-                  className="bg-zinc-800/50 border-white/10"
-                  data-testid="smtp-test-email-input"
-                />
-                <Button
-                  onClick={handleTest}
-                  disabled={testing}
-                  variant="outline"
-                  className="border-white/10 shrink-0"
-                  data-testid="smtp-test-btn"
-                >
-                  {testing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Send className="w-4 h-4 mr-2" />}
-                  Send Test
-                </Button>
-              </div>
+        <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, overflow: "hidden" }}>
+          <div style={{ padding: "16px 18px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(129,140,248,.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Send size={18} style={{ color: T.indigo }} />
             </div>
-          </CardContent>
-        </Card>
+            <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>Test Email</p>
+          </div>
+          <div style={{ padding: 18 }}>
+            <label style={{ display: "block", fontSize: 11, color: T.zinc, marginBottom: 6 }}>
+              Send test email to (optional — defaults to your admin email)
+            </label>
+            <div style={{ display: "flex", gap: 8 }}>
+              <input type="email" value={testEmail} onChange={e => setTestEmail(e.target.value)}
+                placeholder="test@example.com"
+                style={formInput} data-testid="smtp-test-email-input"
+                onFocus={inputFocus} onBlur={inputBlur}
+              />
+              <button onClick={handleTest} disabled={testing} data-testid="smtp-test-btn"
+                style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 16px", borderRadius: 9, border: `1px solid ${T.border}`, background: "transparent", color: "#fff", fontSize: 13, fontWeight: 600, cursor: testing ? "not-allowed" : "pointer", flexShrink: 0, whiteSpace: "nowrap" }}>
+                {testing
+                  ? <div style={{ width: 13, height: 13, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+                  : <Send size={13} />}
+                Send Test
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Setup Guide */}
-      <Card className="bg-zinc-900/50 border-white/10">
-        <CardHeader>
-          <CardTitle className="text-white font-['Outfit'] text-base">How to Get a Gmail App Password</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
+      <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, overflow: "hidden" }}>
+        <div style={{ padding: "16px 18px", borderBottom: `1px solid ${T.border}` }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>How to Get a Gmail App Password</p>
+        </div>
+        <div style={{ padding: "14px 18px", display: "flex", flexDirection: "column", gap: 8 }}>
           {[
             { step: "1", text: "Go to your Google Account security settings", link: "https://myaccount.google.com/security" },
             { step: "2", text: "Ensure 2-Step Verification is enabled" },
@@ -212,28 +223,31 @@ const SmtpConfigTab = () => {
             { step: "4", text: 'Select "Other (Custom name)" and enter "MAARS Command"' },
             { step: "5", text: "Google will generate a 16-character password — paste it above" },
           ].map(item => (
-            <div key={item.step} className="flex items-start gap-3 p-3 rounded-lg bg-white/5">
-              <div className="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                <span className="text-xs font-bold text-red-400">{item.step}</span>
+            <div key={item.step} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "10px 14px", borderRadius: 9, background: "rgba(255,255,255,.025)" }}>
+              <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(239,68,68,.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: T.red }}>{item.step}</span>
               </div>
               <div>
-                <p className="text-zinc-300 text-sm">{item.text}</p>
+                <p style={{ fontSize: 12, color: "#d4d4d8", margin: 0 }}>{item.text}</p>
                 {item.link && (
-                  <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-red-400 text-xs hover:underline flex items-center gap-1 mt-1">
-                    <ExternalLink className="w-3 h-3" /> {item.link}
+                  <a href={item.link} target="_blank" rel="noopener noreferrer"
+                    style={{ display: "inline-flex", alignItems: "center", gap: 4, color: T.red, fontSize: 11, marginTop: 4, textDecoration: "none" }}
+                    onMouseEnter={e => e.currentTarget.style.textDecoration = "underline"}
+                    onMouseLeave={e => e.currentTarget.style.textDecoration = "none"}>
+                    <ExternalLink size={11} /> {item.link}
                   </a>
                 )}
               </div>
             </div>
           ))}
 
-          <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 mt-4">
-            <p className="text-amber-300 text-sm">
+          <div style={{ padding: "12px 14px", borderRadius: 10, background: "rgba(245,158,11,.08)", border: `1px solid rgba(245,158,11,.2)`, marginTop: 4 }}>
+            <p style={{ fontSize: 12, color: T.amber, margin: 0 }}>
               <strong>Important:</strong> Use an App Password, NOT your regular Gmail password. Regular passwords won't work with SMTP if 2FA is enabled.
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };

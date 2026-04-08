@@ -1,14 +1,32 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../App";
-import { Activity, Zap, Clock, CheckCircle, XCircle, AlertTriangle, Search, Filter, ArrowRight, DollarSign } from "lucide-react";
+import { Activity, Zap, Clock, CheckCircle, XCircle, AlertTriangle, Search, ArrowRight, DollarSign } from "lucide-react";
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
-const STATUS_STYLES = {
-  completed: { icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10" },
-  failed: { icon: XCircle, color: "text-red-400", bg: "bg-red-500/10" },
-  pending: { icon: Clock, color: "text-amber-400", bg: "bg-amber-500/10" },
-  running: { icon: Activity, color: "text-blue-400", bg: "bg-blue-500/10" },
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  teal: "#4fd1c5",
+  amber: "#f59e0b",
+  green: "#34d399",
+  red: "#ef4444",
+  blue: "#60a5fa",
+  indigo: "#818cf8",
+  cyan: "#22d3ee",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
+
+const STATUS_META = {
+  completed: { icon: CheckCircle, color: T.green },
+  failed:    { icon: XCircle, color: T.red },
+  pending:   { icon: Clock, color: T.amber },
+  running:   { icon: Activity, color: T.blue },
 };
 
 export default function ExecutionGateway() {
@@ -50,89 +68,111 @@ export default function ExecutionGateway() {
   const avgLatency = logs.length > 0 ? (logs.reduce((s, l) => s + (l.latency_ms || 0), 0) / logs.length).toFixed(0) : 0;
   const successRate = logs.length > 0 ? ((logs.filter(l => l.status === "completed").length / logs.length) * 100).toFixed(1) : 0;
 
-  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }}>
+      <div style={{ width: 28, height: 28, border: `2px solid ${T.indigo}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+      <style>{STYLES}</style>
+    </div>
+  );
+
+  const METRIC_CARDS = [
+    { icon: Zap, label: "Total Executions", value: logs.length, accent: T.indigo },
+    { icon: CheckCircle, label: "Success Rate", value: `${successRate}%`, accent: T.green },
+    { icon: Clock, label: "Avg Latency", value: `${avgLatency}ms`, accent: T.amber },
+    { icon: DollarSign, label: "Total Cost", value: `$${totalCost.toFixed(4)}`, accent: T.cyan },
+  ];
 
   return (
-    <div className="space-y-6" data-testid="execution-gateway">
+    <div style={{ display: "flex", flexDirection: "column", gap: 24, animation: "fadeUp .4s ease" }} data-testid="execution-gateway">
+      <style>{STYLES}</style>
+
+      {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white font-['Outfit']">Execution Gateway</h1>
-        <p className="text-sm text-zinc-400 mt-1">All agent actions flow through governed execution with cost metering and audit trails</p>
+        <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 26, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 4 }}>Execution Gateway</h1>
+        <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>All agent actions flow through governed execution with cost metering and audit trails</p>
       </div>
 
       {/* Metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3" data-testid="exec-metrics">
-        <div className="bg-zinc-900/40 border border-white/5 rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-2"><Zap className="w-4 h-4 text-indigo-400" /><span className="text-xs text-zinc-500">Total Executions</span></div>
-          <p className="text-2xl font-bold text-white">{logs.length}</p>
-        </div>
-        <div className="bg-zinc-900/40 border border-white/5 rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-2"><CheckCircle className="w-4 h-4 text-emerald-400" /><span className="text-xs text-zinc-500">Success Rate</span></div>
-          <p className="text-2xl font-bold text-emerald-400">{successRate}%</p>
-        </div>
-        <div className="bg-zinc-900/40 border border-white/5 rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-2"><Clock className="w-4 h-4 text-amber-400" /><span className="text-xs text-zinc-500">Avg Latency</span></div>
-          <p className="text-2xl font-bold text-white">{avgLatency}ms</p>
-        </div>
-        <div className="bg-zinc-900/40 border border-white/5 rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-2"><DollarSign className="w-4 h-4 text-cyan-400" /><span className="text-xs text-zinc-500">Total Cost</span></div>
-          <p className="text-2xl font-bold text-white">${totalCost.toFixed(4)}</p>
-        </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12 }} data-testid="exec-metrics">
+        {METRIC_CARDS.map(c => (
+          <div key={c.label} style={{ position: "relative", background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, padding: "16px 16px", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: c.accent }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+              <c.icon size={14} style={{ color: c.accent }} />
+              <span style={{ fontSize: 10, color: T.zinc, textTransform: "uppercase", letterSpacing: ".06em" }}>{c.label}</span>
+            </div>
+            <div style={{ fontSize: 24, fontWeight: 700, color: c.label === "Success Rate" ? c.accent : "#fff", fontFamily: "'Outfit',sans-serif" }}>{c.value}</div>
+          </div>
+        ))}
       </div>
 
       {/* Controls */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        <div style={{ position: "relative", flex: 1, maxWidth: 320 }}>
+          <Search size={13} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: T.zinc }} />
           <input
-            type="text" placeholder="Search actions or agents..." value={searchTerm}
+            type="text"
+            placeholder="Search actions or agents..."
+            value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="w-full bg-zinc-900/60 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-indigo-500/50"
             data-testid="exec-search"
+            style={{
+              width: "100%", boxSizing: "border-box",
+              paddingLeft: 32, paddingRight: 12, paddingTop: 8, paddingBottom: 8,
+              background: T.glass, border: `1px solid ${T.border}`, borderRadius: 10,
+              color: "#fff", fontSize: 12, outline: "none", fontFamily: "inherit",
+            }}
           />
         </div>
         <select
-          value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-          className="bg-zinc-900/60 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none"
+          value={statusFilter}
+          onChange={e => setStatusFilter(e.target.value)}
           data-testid="exec-status-filter"
+          style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 10, padding: "8px 12px", color: "#fff", fontSize: 12, cursor: "pointer" }}
         >
           <option value="all">All Status</option>
           <option value="completed">Completed</option>
           <option value="failed">Failed</option>
           <option value="pending">Pending</option>
         </select>
+        <span style={{ fontSize: 11, color: T.zinc, marginLeft: "auto" }}>{filteredLogs.length} of {logs.length} entries</span>
       </div>
 
-      {/* Execution Log */}
+      {/* Log List */}
       {filteredLogs.length === 0 ? (
-        <div className="bg-zinc-900/20 border border-dashed border-white/5 rounded-xl p-12 text-center" data-testid="exec-empty">
-          <Activity className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
-          <p className="text-sm text-zinc-500">{logs.length === 0 ? "No executions yet. Actions are logged as you chat with agents." : "No matching executions"}</p>
+        <div style={{ textAlign: "center", padding: "56px 20px", border: `1px dashed ${T.border}`, borderRadius: 16 }} data-testid="exec-empty">
+          <Activity size={44} style={{ color: "rgba(255,255,255,.08)", marginBottom: 14 }} />
+          <p style={{ fontSize: 13, color: T.zinc }}>{logs.length === 0 ? "No executions yet. Actions are logged as you chat with agents." : "No matching executions"}</p>
         </div>
       ) : (
-        <div className="space-y-1.5" data-testid="exec-log-list">
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }} data-testid="exec-log-list">
           {filteredLogs.map((log, i) => {
             const agent = getAgent(log.agent_id);
-            const st = STATUS_STYLES[log.status] || STATUS_STYLES.completed;
-            const StatusIcon = st.icon;
+            const sm = STATUS_META[log.status] || STATUS_META.completed;
+            const StatusIcon = sm.icon;
             return (
-              <div key={i} className="bg-zinc-900/40 border border-white/5 rounded-lg px-4 py-3 hover:border-white/10 transition-colors" data-testid={`exec-log-${i}`}>
-                <div className="flex items-center gap-3">
-                  <StatusIcon className={`w-4 h-4 ${st.color} shrink-0`} />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm text-white font-medium">{log.action}</span>
-                      <ArrowRight className="w-3 h-3 text-zinc-600" />
-                      <span className="text-xs text-zinc-400">{agent?.name || log.agent_id || "System"}</span>
-                      {log.tool_id && <span className="text-[10px] bg-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded">{log.tool_id}</span>}
-                    </div>
-                    {log.input_summary && <p className="text-[11px] text-zinc-500 mt-0.5 truncate">{log.input_summary}</p>}
+              <div
+                key={i}
+                data-testid={`exec-log-${i}`}
+                style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 16px", borderRadius: 10, background: T.glass, border: `1px solid ${T.border}`, transition: "border-color .2s" }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(255,255,255,.14)"}
+                onMouseLeave={e => e.currentTarget.style.borderColor = T.border}
+              >
+                <StatusIcon size={15} style={{ color: sm.color, flexShrink: 0 }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>{log.action}</span>
+                    <ArrowRight size={11} style={{ color: T.zinc }} />
+                    <span style={{ fontSize: 11, color: T.zinc }}>{agent?.name || log.agent_id || "System"}</span>
+                    {log.tool_id && <span style={{ fontSize: 10, background: "rgba(255,255,255,.06)", color: T.zinc, padding: "1px 6px", borderRadius: 5 }}>{log.tool_id}</span>}
                   </div>
-                  <div className="flex items-center gap-3 text-[11px] text-zinc-500 shrink-0">
-                    {log.cost > 0 && <span>${log.cost.toFixed(4)}</span>}
-                    {log.latency_ms > 0 && <span>{log.latency_ms.toFixed(0)}ms</span>}
-                    <span className={`px-1.5 py-0.5 rounded text-[10px] ${st.bg} ${st.color}`}>{log.status}</span>
-                    <span className="text-zinc-600">{log.created_at ? new Date(log.created_at).toLocaleTimeString() : ""}</span>
-                  </div>
+                  {log.input_summary && <p style={{ fontSize: 11, color: T.zinc, margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{log.input_summary}</p>}
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 11, color: T.zinc, flexShrink: 0 }}>
+                  {log.cost > 0 && <span style={{ color: T.cyan }}>${log.cost.toFixed(4)}</span>}
+                  {log.latency_ms > 0 && <span>{log.latency_ms.toFixed(0)}ms</span>}
+                  <span style={{ fontSize: 10, fontWeight: 600, color: sm.color, background: `${sm.color}18`, padding: "2px 8px", borderRadius: 5 }}>{log.status}</span>
+                  <span style={{ fontSize: 10, color: "rgba(113,113,122,.6)" }}>{log.created_at ? new Date(log.created_at).toLocaleTimeString() : ""}</span>
                 </div>
               </div>
             );

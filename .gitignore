@@ -30,10 +30,16 @@ next-env.d.ts
 dist/
 dist
 
-# Environment files (comprehensive coverage)
-
-*token.json*
-*credentials.json*
+# Environment variables (CRITICAL: Never commit actual .env files!)
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+*.env
+!.env.example
+!frontend/.env.example
+!backend/.env.example
 
 # Logs and debug files
 npm-debug.log*
@@ -41,6 +47,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 dump.rdb
+*.log
+*.err.log
+*.out.log
 
 # System files
 .DS_Store
@@ -97,23 +106,3 @@ frontend/node_modules/.cache/default-development/13.pack
 frontend/node_modules/.cache/default-development/15.pack_
 frontend/node_modules/.cache/default-development/16.pack
 frontend/node_modules/.cache/default-development/11.pack
--e 
-# Environment files
-*.env
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*

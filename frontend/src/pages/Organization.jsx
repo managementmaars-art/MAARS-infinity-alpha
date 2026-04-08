@@ -1,10 +1,38 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../App";
 import { Building2, Users, Crown, Shield, UserPlus, Trash2, Mail } from "lucide-react";
-import { Button } from "../components/ui/button";
 import { toast } from "sonner";
 
 const API = process.env.REACT_APP_BACKEND_URL;
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  violet: "#7c3aed",
+  amber: "#f59e0b",
+  green: "#34d399",
+  red: "#ef4444",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
+
+const formInput = {
+  background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`,
+  borderRadius: 9, padding: "8px 12px", color: "#fff", fontSize: 13,
+  outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box",
+  transition: "border-color .2s",
+};
+
+const ROLE_META = {
+  owner: { icon: Crown, color: T.amber, bg: "rgba(245,158,11,.12)" },
+  admin: { icon: Shield, color: T.indigo, bg: "rgba(129,140,248,.12)" },
+  member: { icon: Users, color: T.zinc, bg: "rgba(113,113,122,.1)" },
+};
 
 export default function Organization() {
   const { token } = useAuth();
@@ -21,8 +49,7 @@ export default function Organization() {
     try {
       const res = await fetch(`${API}/api/kernel/organizations/me`, { headers: h });
       if (res.ok) setOrgData(await res.json());
-    } catch {}
-    setLoading(false);
+    } catch {} finally { setLoading(false); }
   };
 
   useEffect(() => { fetchOrg(); }, [token]);
@@ -33,12 +60,7 @@ export default function Organization() {
       method: "POST", headers: h,
       body: JSON.stringify({ name: orgName, slug: orgName.toLowerCase().replace(/\s+/g, "-") }),
     });
-    if (res.ok) {
-      toast.success("Organization created");
-      setCreating(false);
-      setOrgName("");
-      fetchOrg();
-    }
+    if (res.ok) { toast.success("Organization created"); setCreating(false); setOrgName(""); fetchOrg(); }
   };
 
   const inviteMember = async () => {
@@ -47,59 +69,61 @@ export default function Organization() {
       method: "POST", headers: h,
       body: JSON.stringify({ email: inviteEmail, role: inviteRole }),
     });
-    if (res.ok) {
-      toast.success(`Invite sent to ${inviteEmail}`);
-      setInviteEmail("");
-    }
+    if (res.ok) { toast.success(`Invite sent to ${inviteEmail}`); setInviteEmail(""); }
   };
 
   const removeMember = async (targetUserId) => {
     if (!orgData.org) return;
-    await fetch(`${API}/api/kernel/organizations/${orgData.org.org_id}/members/${targetUserId}`, {
-      method: "DELETE", headers: h,
-    });
-    toast.success("Member removed");
-    fetchOrg();
+    await fetch(`${API}/api/kernel/organizations/${orgData.org.org_id}/members/${targetUserId}`, { method: "DELETE", headers: h });
+    toast.success("Member removed"); fetchOrg();
   };
 
   const updateRole = async (targetUserId, newRole) => {
     if (!orgData.org) return;
     await fetch(`${API}/api/kernel/organizations/${orgData.org.org_id}/members/${targetUserId}/role`, {
-      method: "PUT", headers: h,
-      body: JSON.stringify({ role: newRole }),
+      method: "PUT", headers: h, body: JSON.stringify({ role: newRole }),
     });
-    toast.success("Role updated");
-    fetchOrg();
+    toast.success("Role updated"); fetchOrg();
   };
 
-  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }}>
+      <div style={{ width: 24, height: 24, border: `2px solid ${T.indigo}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+      <style>{STYLES}</style>
+    </div>
+  );
 
   const org = orgData.org;
   const members = orgData.members || [];
 
-  const roleIcons = { owner: Crown, admin: Shield, member: Users };
-  const roleColors = { owner: "text-amber-400", admin: "text-indigo-400", member: "text-zinc-400" };
-
-  // No org yet
   if (!org) {
     return (
-      <div className="max-w-2xl mx-auto p-6 space-y-6" data-testid="org-create">
-        <div className="text-center py-12">
-          <Building2 className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-white mb-2">Create Your Organization</h2>
-          <p className="text-sm text-zinc-500 mb-6">Set up a workspace to share agents, campaigns, and integrations with your team.</p>
+      <div style={{ maxWidth: 480, margin: "0 auto", padding: "32px 24px", animation: "fadeUp .4s ease" }} data-testid="org-create">
+        <style>{STYLES}</style>
+        <div style={{ textAlign: "center", padding: "40px 20px" }}>
+          <Building2 size={48} style={{ color: "rgba(255,255,255,.08)", marginBottom: 16 }} />
+          <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 8 }}>Create Your Organization</h2>
+          <p style={{ fontSize: 13, color: T.zinc, marginBottom: 28 }}>Set up a workspace to share agents, campaigns, and integrations with your team.</p>
           {!creating ? (
-            <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={() => setCreating(true)} data-testid="create-org-start">
-              <Building2 className="w-4 h-4 mr-2" /> Create Organization
-            </Button>
+            <button onClick={() => setCreating(true)} data-testid="create-org-start"
+              style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "10px 22px", borderRadius: 10, background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+              <Building2 size={15} /> Create Organization
+            </button>
           ) : (
-            <div className="max-w-sm mx-auto space-y-3">
-              <input value={orgName} onChange={e => setOrgName(e.target.value)} placeholder="Organization name..."
-                className="w-full bg-zinc-900/50 border border-white/5 rounded-lg px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/30"
-                data-testid="org-name-input" />
-              <div className="flex gap-2">
-                <Button className="flex-1 bg-indigo-600 hover:bg-indigo-700" onClick={createOrg} data-testid="create-org-confirm">Create</Button>
-                <Button variant="ghost" className="text-zinc-400" onClick={() => setCreating(false)}>Cancel</Button>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <input value={orgName} onChange={e => setOrgName(e.target.value)} placeholder="Organization name…" style={formInput}
+                data-testid="org-name-input"
+                onFocus={e => e.target.style.borderColor = "rgba(129,140,248,.5)"}
+                onBlur={e => e.target.style.borderColor = T.border} />
+              <div style={{ display: "flex", gap: 8 }}>
+                <button onClick={createOrg} data-testid="create-org-confirm"
+                  style={{ flex: 1, padding: "9px 0", borderRadius: 9, background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                  Create
+                </button>
+                <button onClick={() => setCreating(false)}
+                  style={{ padding: "9px 16px", borderRadius: 9, background: T.glass, border: `1px solid ${T.border}`, color: T.zinc, fontSize: 13, cursor: "pointer" }}>
+                  Cancel
+                </button>
               </div>
             </div>
           )}
@@ -109,72 +133,79 @@ export default function Organization() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6" data-testid="org-dashboard">
-      {/* Org Header */}
-      <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-6">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-            <Building2 className="w-7 h-7 text-indigo-400" />
+    <div style={{ maxWidth: 800, margin: "0 auto", display: "flex", flexDirection: "column", gap: 20, animation: "fadeUp .4s ease" }} data-testid="org-dashboard">
+      <style>{STYLES}</style>
+
+      {/* Org header */}
+      <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 16, padding: "20px 24px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <div style={{ width: 52, height: 52, borderRadius: 14, background: "rgba(129,140,248,.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Building2 size={26} style={{ color: T.indigo }} />
           </div>
-          <div className="flex-1">
-            <h1 className="text-xl font-bold text-white">{org.name}</h1>
-            <p className="text-xs text-zinc-500">{members.length} member{members.length !== 1 ? "s" : ""} &middot; Created {new Date(org.created_at).toLocaleDateString()}</p>
+          <div style={{ flex: 1 }}>
+            <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 22, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 4 }}>{org.name}</h1>
+            <p style={{ fontSize: 12, color: T.zinc, margin: 0 }}>{members.length} member{members.length !== 1 ? "s" : ""} · Created {new Date(org.created_at).toLocaleDateString()}</p>
           </div>
-          <div className="text-right">
-            <p className="text-[10px] text-zinc-500 uppercase tracking-wider">Shared Resources</p>
-            <p className="text-xs text-zinc-400">Agents, Campaigns, Integrations</p>
+          <div style={{ textAlign: "right" }}>
+            <p style={{ fontSize: 10, color: T.zinc, textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 3 }}>Shared Resources</p>
+            <p style={{ fontSize: 12, color: "#a1a1aa" }}>Agents, Campaigns, Integrations</p>
           </div>
         </div>
       </div>
 
-      {/* Invite Member */}
-      <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-4">
-        <p className="text-xs font-semibold text-zinc-400 mb-3">Invite Team Member</p>
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
-            <input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} placeholder="Email address..."
-              className="w-full pl-8 pr-3 py-2 bg-zinc-800/50 border border-white/5 rounded-lg text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/30"
-              data-testid="invite-email-input" />
+      {/* Invite */}
+      <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "14px 18px" }}>
+        <p style={{ fontSize: 10, color: T.zinc, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 600, marginBottom: 10 }}>Invite Team Member</p>
+        <div style={{ display: "flex", gap: 8 }}>
+          <div style={{ position: "relative", flex: 1 }}>
+            <Mail size={12} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: T.zinc }} />
+            <input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} placeholder="Email address…"
+              style={{ ...formInput, paddingLeft: 30 }} data-testid="invite-email-input"
+              onFocus={e => e.target.style.borderColor = "rgba(129,140,248,.5)"}
+              onBlur={e => e.target.style.borderColor = T.border} />
           </div>
-          <select value={inviteRole} onChange={e => setInviteRole(e.target.value)}
-            className="bg-zinc-800/50 border border-white/5 rounded-lg px-3 text-xs text-zinc-300" data-testid="invite-role-select">
-            <option value="member">Member</option>
-            <option value="admin">Admin</option>
+          <select value={inviteRole} onChange={e => setInviteRole(e.target.value)} data-testid="invite-role-select"
+            style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 9, padding: "8px 12px", color: "#a1a1aa", fontSize: 12, outline: "none", fontFamily: "inherit", cursor: "pointer" }}>
+            <option value="member" style={{ background: "#0f0f1a" }}>Member</option>
+            <option value="admin" style={{ background: "#0f0f1a" }}>Admin</option>
           </select>
-          <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 h-9 text-xs" onClick={inviteMember} data-testid="invite-btn">
-            <UserPlus className="w-3.5 h-3.5 mr-1" /> Invite
-          </Button>
+          <button onClick={inviteMember} data-testid="invite-btn"
+            style={{ display: "flex", alignItems: "center", gap: 5, padding: "8px 14px", borderRadius: 9, background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", flexShrink: 0 }}>
+            <UserPlus size={13} /> Invite
+          </button>
         </div>
       </div>
 
-      {/* Members List */}
+      {/* Members list */}
       <div>
-        <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Team Members</p>
-        <div className="space-y-2" data-testid="members-list">
+        <p style={{ fontSize: 10, color: T.zinc, textTransform: "uppercase", letterSpacing: ".07em", fontWeight: 600, marginBottom: 10 }}>Team Members</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }} data-testid="members-list">
           {members.map((m, i) => {
-            const RoleIcon = roleIcons[m.role] || Users;
+            const rm = ROLE_META[m.role] || ROLE_META.member;
+            const RoleIcon = rm.icon;
             return (
-              <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-xl border border-white/5 bg-zinc-900/30" data-testid={`member-${m.user_id}`}>
-                <div className="w-9 h-9 rounded-lg bg-zinc-800 flex items-center justify-center">
-                  <RoleIcon className={`w-4 h-4 ${roleColors[m.role] || "text-zinc-400"}`} />
+              <div key={i} data-testid={`member-${m.user_id}`}
+                style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 12, border: `1px solid ${T.border}`, background: T.glass }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: rm.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <RoleIcon size={16} style={{ color: rm.color }} />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white">{m.name}</p>
-                  <p className="text-[10px] text-zinc-500">{m.email} &middot; Joined {new Date(m.joined_at).toLocaleDateString()}</p>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: "#fff", margin: 0, marginBottom: 2 }}>{m.name}</p>
+                  <p style={{ fontSize: 10, color: T.zinc, margin: 0 }}>{m.email} · Joined {new Date(m.joined_at).toLocaleDateString()}</p>
                 </div>
-                <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${m.role === "owner" ? "bg-amber-500/10 text-amber-400" : m.role === "admin" ? "bg-indigo-500/10 text-indigo-400" : "bg-zinc-800 text-zinc-400"}`}>
-                  {m.role}
-                </span>
+                <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: rm.bg, color: rm.color }}>{m.role}</span>
                 {m.role !== "owner" && (
-                  <div className="flex gap-1">
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <select value={m.role} onChange={e => updateRole(m.user_id, e.target.value)}
-                      className="bg-zinc-800/50 border border-white/5 rounded px-1.5 py-0.5 text-[10px] text-zinc-400">
-                      <option value="member">Member</option>
-                      <option value="admin">Admin</option>
+                      style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 6, padding: "3px 8px", fontSize: 10, color: "#a1a1aa", outline: "none", fontFamily: "inherit", cursor: "pointer" }}>
+                      <option value="member" style={{ background: "#0f0f1a" }}>Member</option>
+                      <option value="admin" style={{ background: "#0f0f1a" }}>Admin</option>
                     </select>
-                    <button onClick={() => removeMember(m.user_id)} className="text-zinc-600 hover:text-red-400 transition-colors" data-testid={`remove-member-${m.user_id}`}>
-                      <Trash2 className="w-3.5 h-3.5" />
+                    <button onClick={() => removeMember(m.user_id)} data-testid={`remove-member-${m.user_id}`}
+                      style={{ background: "none", border: "none", cursor: "pointer", color: T.zinc, padding: 4, transition: "color .2s" }}
+                      onMouseEnter={e => e.currentTarget.style.color = T.red}
+                      onMouseLeave={e => e.currentTarget.style.color = T.zinc}>
+                      <Trash2 size={14} />
                     </button>
                   </div>
                 )}

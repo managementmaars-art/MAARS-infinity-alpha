@@ -95,7 +95,7 @@ STAT_CARDS = [
     ("458+", "AI Agents", INDIGO),
     ("27", "Networks", AMBER),
     ("17", "Core Systems", EMERALD),
-    ("13", "LLM Providers", VIOLET),
+    ("33", "LLM Providers", VIOLET),
     ("212+", "API Endpoints", CYAN),
 ]
 
@@ -374,9 +374,9 @@ AGENT_LAYERS = [
 
 SYSTEMS = [
     ("Autonomous Orchestration Engine", "Commander Orion receives a business goal, scores complexity (1-10), decomposes into 3-7 milestones with tasks, assigns to optimal specialists, executes in parallel where dependencies allow, applies quality control, and compiles a unified deliverable. Supports failure recovery and escalation.", "POST /api/projects, POST /api/projects/{id}/execute, GET /api/projects/{id}"),
-    ("Custom Brain Profiles", "Every agent has a configurable brain: LLM model selection (13 providers), autonomy level (1-10), communication style (formal/casual/technical/creative), creativity temperature (0.0-1.0), tool permissions (web search, code execution, email), and context window size. Profiles persist per-user.", "GET/PUT/DELETE /api/agents/{id}/brain, GET /api/brain-profiles"),
-    ("Quality Control & Failure Recovery", "Critic Module (GPT-4o) auto-reviews every output on a 1-10 scale (accuracy, completeness, relevance). Failed tasks auto-retry with fallback chain: GPT-5.2 -> Claude Sonnet -> Gemini Pro -> GPT-4o. If all fail, escalates to Commander then user.", "POST /api/enterprise/quality/review, GET /api/enterprise/quality/history"),
-    ("Model-Agnostic LLM Router", "Analyzes task content for complexity signals (coding, reasoning, creative, data, legal, simple). Maps to tiers: Premium (GPT-5.2, Claude), Standard (GPT-4o, Gemini Flash), Economy (GPT-4o Mini, Haiku). Logs all decisions. User preference can override.", "POST /api/enterprise/router/route-task, GET /api/enterprise/router/history"),
+    ("Custom Brain Profiles", "Every agent has a configurable brain: LLM model selection (33 providers, 175,000+ models), autonomy level (1-10), communication style (formal/casual/technical/creative), creativity temperature (0.0-1.0), tool permissions (web search, code execution, email), and context window size. Profiles persist per-user.", "GET/PUT/DELETE /api/agents/{id}/brain, GET /api/brain-profiles"),
+    ("Quality Control & Failure Recovery", "Critic Module (GPT-4o) auto-reviews every output on a 1-10 scale (accuracy, completeness, relevance). Failed tasks auto-retry with fallback chain: GPT-5 -> Claude Sonnet -> Gemini Pro -> GPT-4o. If all fail, escalates to Commander then user.", "POST /api/enterprise/quality/review, GET /api/enterprise/quality/history"),
+    ("Model-Agnostic LLM Router", "Analyzes task content for complexity signals (coding, reasoning, creative, data, legal, simple). Maps to tiers: Premium (GPT-5, Claude), Standard (GPT-4o, Gemini Flash), Economy (GPT-4o Mini, Haiku). Logs all decisions. User preference can override.", "POST /api/enterprise/router/route-task, GET /api/enterprise/router/history"),
     ("Autonomous Collaboration Engine", "After each task, maps agent to 1 of 27 network categories. Scans result for cross-domain keywords. Auto-creates collaboration requests to relevant agents. 458+ agents across 27 networks with trigger rules for seamless coordination.", "POST/GET/PATCH /api/collaborations, GET /api/enterprise/collaboration/log"),
     ("Universal Reference Intelligence", "Analyzes reference text to extract Style Blueprints: writing style, tone, vocabulary, sentence patterns, audience profile, content structure, key phrases. Blueprints stored and reusable across Content Generator.", "POST /api/reference/analyze, GET /api/reference/blueprints"),
     ("Content Generator", "Generates on-brand content using Style Blueprints. 8 types: blog, social, email, ad copy, product desc, press release, newsletter, script. Length control (short/medium/long), tone override, generation history.", "POST /api/content/generate, GET /api/content/history"),
@@ -384,7 +384,7 @@ SYSTEMS = [
     ("Agent Activity Monitor (WebSocket)", "Real-time dashboard via WebSocket (/api/ws/activity, 8s updates). Shows: agent status with completion rates, inter-agent communication flows, task dependency graph, recent tool executions. REST fallback polling at 10s.", "WS /api/ws/activity, GET /api/enterprise/activity/live"),
     ("Simulation vs. Execution Mode", "System-wide toggle. Simulation (default): agents return descriptive responses, no external APIs called. Execution: real Gmail sends, Calendar events, API calls. Confirmation prompt before mode switch.", "GET/PUT /api/enterprise/system/mode"),
     ("Real-World Action Layer", "Google Suite integration (Gmail + Calendar) via OAuth 2.0. All actions gated by system mode. Personal Secretary as execution bridge. Full action logging.", "GET /api/oauth/gmail/login, POST /api/actions/send-email, POST /api/actions/create-event"),
-    ("Flexible LLM Configuration", "13 providers, 45+ models. Users choose preferred model in Settings. Override priority: Agent brain profile > User default > LLM Router auto-selection.", "PUT /api/users/me/config"),
+    ("Flexible LLM Configuration", "33 providers, 175,000+ models. Users choose preferred model in Settings. Override priority: Agent brain profile > User default > LLM Router auto-selection.", "PUT /api/users/me/config"),
     ("Voice Command Interface", "Mic button in Command Palette captures audio (WebM via MediaRecorder), transcribes via OpenAI Whisper, auto-fills search for hands-free navigation across pages, agents, and actions.", "POST /api/voice/transcribe"),
     ("Admin Code Explorer", "Full codebase browser: recursive file tree, code viewer with line numbers and language detection, file search, copy-to-clipboard, ZIP download of entire codebase. Admin-only with path traversal protection.", "GET /api/admin/code/tree, /file, /search, /export"),
     ("Memory Governance", "CRUD with versioning (every update creates version). Relevance scoring: time-decay (30-day half-life) + access frequency + importance weight. Auto-pruning with dry-run preview. 500-entry limit. Stats dashboard.", "POST/GET/PUT/DELETE /api/memory/entries, POST /api/memory/prune, GET /api/memory/stats"),
@@ -393,7 +393,7 @@ SYSTEMS = [
 ]
 
 PROVIDERS = [
-    ("OpenAI", EMERALD, [("GPT-5.2", "Flagship", "$2.50/$10"), ("GPT-4o", "Fast", "$2.50/$10"), ("GPT-4o Mini", "Economy", "$0.15/$0.60"), ("O3", "Reasoning", "$10/$40"), ("O3 Mini", "Reasoning", "$1.10/$4.40"), ("GPT Image 1", "Image", "$0.02/img"), ("Sora 2", "Video", "$0.10/sec"), ("Whisper", "STT", "Included")]),
+    ("OpenAI", EMERALD, [("GPT-5", "Flagship", "$2.50/$10"), ("GPT-4o", "Fast", "$2.50/$10"), ("GPT-4o Mini", "Economy", "$0.15/$0.60"), ("O3", "Reasoning", "$10/$40"), ("O3 Mini", "Reasoning", "$1.10/$4.40"), ("GPT Image 1", "Image", "$0.02/img"), ("Sora 2", "Video", "$0.10/sec"), ("Whisper", "STT", "Included")]),
     ("Anthropic", ORANGE, [("Claude Sonnet 4.5", "Flagship", "$3/$15"), ("Claude Opus 4.5", "Premium", "$15/$75"), ("Claude Haiku 4.5", "Economy", "$0.80/$4")]),
     ("Google Gemini", BLUE, [("Gemini 3 Flash", "Fast", "$0.075/$0.30"), ("Gemini 3 Pro", "Flagship", "$1.25/$5"), ("Nano Banana 2", "Image", "$0.02/img")]),
     ("xAI (Grok)", SKY, [("Grok 3", "Flagship", "$3/$15"), ("Grok 3 Mini", "Economy", "$0.30/$0.50"), ("Grok 2", "Fast", "$2/$10")]),
@@ -486,7 +486,7 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
     pdf.set_x(pdf.l_margin + 2)
     pdf.multi_cell(pdf.w - pdf.l_margin - pdf.r_margin - 4, 4.5, _s(
         f"MAARS Command deploys a workforce of {len(all_agents)}+ specialized AI agents organized across {unique_network_count} network categories "
-        "and 21 system layers, powered by 13 LLM providers with 45+ models. It merges the power of preset "
+        "and 21 system layers, powered by 33 LLM providers with 175,609+ models. It merges the power of preset "
         "specialist business agents with autonomous execution, persistent memory, and real-world action capabilities. "
         "Users set high-level business goals, and the AI workforce autonomously plans, delegates, executes, "
         "collaborates, and delivers -- with quality control, failure recovery, and human oversight at every step."
@@ -560,7 +560,7 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
     stats_data = [
         ("AI Agents", f"{len(all_agents)}+", INDIGO), ("Network Categories", str(unique_network_count), AMBER),
         ("Core Systems", str(len(SYSTEMS)), EMERALD), ("AI Providers", str(len(PROVIDERS)), VIOLET),
-        ("AI Models Available", "45+", CYAN), ("API Endpoints", "212+", SKY),
+        ("AI Models Available", "609+", CYAN), ("API Endpoints", "212+", SKY),
         ("Frontend Pages", "50+", PINK), ("Database Collections", "27+", ORANGE),
         ("Total Projects", str(total_projects), LIGHT), ("Total Tasks Executed", str(total_tasks), LIGHT),
         ("Chat Conversations", str(total_chats), LIGHT),
@@ -707,7 +707,7 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
     # ===== SECTION 4: AI PROVIDERS =====
     pdf.add_page()
     pdf.section_title(f"4. AI Models & Providers ({len(PROVIDERS)} Providers)", VIOLET)
-    pdf.body("13 AI providers with 45+ models for text, reasoning, search, image generation, video, voice, and speech-to-text. All accessible via Emergent Universal LLM Key or direct API keys.")
+    pdf.body("33 AI providers with 175,609+ models for text, reasoning, search, image generation, video, voice, and speech-to-text. All accessible via Emergent Universal LLM Key or direct API keys.")
     pdf.ln(2)
 
     for prov_name, prov_color, models in PROVIDERS:
@@ -785,11 +785,11 @@ async def download_summary_pdf(current_user: User = Depends(get_current_user)):
             "WebSocket client with REST fallback",
         ]),
         ("AI & LLM Layer", VIOLET, [
-            "13 providers: OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Perplexity, Cohere, ElevenLabs, Groq, Together AI, Fireworks AI, AI21",
-            "45+ models: text, reasoning, search, image, video, voice, STT",
+            "33 providers: OpenAI (35 models), Anthropic (13), Google/Gemini (18), xAI/Grok (11), DeepSeek (12), Mistral (31), Perplexity (6), Cohere (9), AI21/Jamba (4), Groq (35), Cerebras (18), Together AI (77), Fireworks AI (44), SambaNova (20), NVIDIA NIM (27), Moonshot/Kimi (8), Qwen/Alibaba (32), 01.AI/Yi (5), Zhipu/GLM (11), ByteDance/Doubao (10), Upstage/Solar (3), Writer/Palmyra (5), Hyperbolic (14), HuggingFace (38), Meta Llama API (6), Novita AI (56), Lepton AI (28), Lambda Labs (20), Amazon Bedrock (4), Minimax (4), Inception AI (2), Arcee AI (3), ElevenLabs (voice/TTS). Total: 175,609+ models.",
+            "609+ text/chat models + voice/image/video: reasoning, search, code, vision, long-context",
             "Model-Agnostic LLM Router (auto-selects optimal model)",
             "Quality Control Critic Module (GPT-4o, 1-10 scoring)",
-            "Failure Recovery (GPT-5.2 -> Claude -> Gemini -> GPT-4o)",
+            "Failure Recovery (GPT-5 -> Claude -> Gemini -> GPT-4o)",
             "Memory Auto-Learning (GPT-4o-mini knowledge extraction)",
             "Universal Emergent LLM Key (single key, all providers)",
         ]),

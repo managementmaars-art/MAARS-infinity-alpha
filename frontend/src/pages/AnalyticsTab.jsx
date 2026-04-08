@@ -1,14 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
 import {
   Users, MessageSquare, DollarSign, TrendingUp, Activity,
-  BarChart3, PieChart as PieChartIcon, Loader2, Bot, Zap, Crown,
+  BarChart3, PieChart as PieChartIcon, Bot, Zap, Crown,
   UserPlus, Radio, RefreshCw, Download, ThumbsUp, ThumbsDown, Star
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
-import { Button } from "../components/ui/button";
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
@@ -16,41 +13,67 @@ import {
 
 const COLORS = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#06b6d4", "#8b5cf6", "#ec4899", "#14b8a6"];
 
-const KpiCard = ({ title, value, subtitle, icon: Icon, color }) => (
-  <div className={`p-5 rounded-xl bg-${color}-500/10 border border-${color}-500/20 relative overflow-hidden`} data-testid={`kpi-${title.toLowerCase().replace(/\s+/g, '-')}`}>
-    <div className="absolute top-3 right-3 opacity-20">
-      <Icon className={`w-10 h-10 text-${color}-400`} />
-    </div>
-    <p className={`text-xs font-medium text-${color}-400 mb-1 uppercase tracking-wide`}>{title}</p>
-    <p className="text-2xl font-bold text-white">{value}</p>
-    {subtitle && <p className="text-xs text-zinc-500 mt-1">{subtitle}</p>}
-  </div>
-);
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  violet: "#7c3aed",
+  green: "#34d399",
+  amber: "#f59e0b",
+  red: "#ef4444",
+  cyan: "#22d3ee",
+  zinc: "#71717a",
+};
 
-const ChartCard = ({ title, icon: Icon, children, className = "" }) => (
-  <Card className={`bg-zinc-900/50 border-white/10 ${className}`}>
-    <CardHeader className="pb-2">
-      <CardTitle className="text-white font-['Outfit'] text-base flex items-center gap-2">
-        {Icon && <Icon className="w-4 h-4 text-red-400" />}
-        {title}
-      </CardTitle>
-    </CardHeader>
-    <CardContent>{children}</CardContent>
-  </Card>
+const KPI_COLORS = {
+  indigo: { color: "#818cf8", bg: "rgba(129,140,248,.15)" },
+  emerald: { color: "#34d399", bg: "rgba(52,211,153,.15)" },
+  teal: { color: "#2dd4bf", bg: "rgba(45,212,191,.15)" },
+  violet: { color: "#a78bfa", bg: "rgba(167,139,250,.15)" },
+  amber: { color: "#f59e0b", bg: "rgba(245,158,11,.15)" },
+  red: { color: "#ef4444", bg: "rgba(239,68,68,.15)" },
+};
+
+const KpiCard = ({ title, value, subtitle, icon: Icon, color }) => {
+  const c = KPI_COLORS[color] || KPI_COLORS.indigo;
+  return (
+    <div style={{ padding: "18px 20px", borderRadius: 14, background: c.bg, border: `1px solid ${c.color}30`, position: "relative", overflow: "hidden" }} data-testid={`kpi-${title.toLowerCase().replace(/\s+/g, '-')}`}>
+      <div style={{ position: "absolute", top: 10, right: 12, opacity: 0.15 }}>
+        <Icon size={40} style={{ color: c.color }} />
+      </div>
+      <p style={{ fontSize: 9, fontWeight: 700, color: c.color, marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.1em" }}>{title}</p>
+      <p style={{ fontSize: 24, fontWeight: 700, color: "#fff", margin: 0 }}>{value}</p>
+      {subtitle && <p style={{ fontSize: 10, color: "#71717a", marginTop: 3 }}>{subtitle}</p>}
+    </div>
+  );
+};
+
+const ChartCard = ({ title, icon: Icon, children }) => (
+  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden" }}>
+    <div style={{ padding: "12px 16px", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", gap: 8 }}>
+      {Icon && <Icon size={14} style={{ color: "#ef4444" }} />}
+      <span style={{ fontSize: 13, fontWeight: 600, color: "#fff", fontFamily: "'Outfit',sans-serif" }}>{title}</span>
+    </div>
+    <div style={{ padding: "14px 16px" }}>{children}</div>
+  </div>
 );
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-zinc-800 border border-white/10 rounded-lg p-3 shadow-xl">
-      <p className="text-xs text-zinc-400 mb-1">{label}</p>
+    <div style={{ background: "#27272a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px 12px", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
+      <p style={{ fontSize: 11, color: "#71717a", marginBottom: 4 }}>{label}</p>
       {payload.map((p, i) => (
-        <p key={i} className="text-sm font-medium" style={{ color: p.color }}>
+        <p key={i} style={{ fontSize: 13, fontWeight: 500, color: p.color, margin: 0 }}>
           {p.name}: {typeof p.value === 'number' && p.name.includes('$') ? `$${p.value.toFixed(2)}` : p.value?.toLocaleString?.() ?? p.value}
         </p>
       ))}
     </div>
   );
+};
+
+const FEED_COLOR = {
+  signup: "#34d399", payment: "#f59e0b", chat: "#818cf8", team: "#a78bfa"
 };
 
 const getTimeAgo = (timestamp) => {
@@ -202,13 +225,21 @@ const AnalyticsTab = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64" data-testid="analytics-loading">
-        <Loader2 className="w-8 h-8 animate-spin text-red-400" />
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }} data-testid="analytics-loading">
+        <div style={{
+          width: 32,
+          height: 32,
+          borderRadius: "50%",
+          border: "3px solid rgba(129,140,248,0.2)",
+          borderTopColor: "#818cf8",
+          animation: "spin 0.75s linear infinite"
+        }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
-  if (!data) return <p className="text-zinc-500">No analytics data available.</p>;
+  if (!data) return <p style={{ color: "#71717a" }}>No analytics data available.</p>;
 
   const { kpis, daily_signups, daily_messages, daily_revenue, agent_usage, plan_distribution, token_usage, top_users, model_costs } = data;
 
@@ -224,25 +255,24 @@ const AnalyticsTab = () => {
   const tokenData = token_usage?.map(d => ({ ...d, date: formatDate(d.date) })) || [];
 
   return (
-    <div className="space-y-6" data-testid="analytics-tab">
+    <div style={{ display: "flex", flexDirection: "column", gap: 24 }} data-testid="analytics-tab">
       {/* Header with Export */}
-      <div className="flex items-center justify-between">
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div>
-          <h2 className="text-lg font-semibold text-white font-['Outfit']">Platform Analytics</h2>
-          <p className="text-xs text-zinc-500">Real-time business intelligence</p>
+          <h2 style={{ fontSize: 18, fontWeight: 600, color: "#fff", fontFamily: "'Outfit',sans-serif", margin: 0 }}>Platform Analytics</h2>
+          <p style={{ fontSize: 11, color: "#71717a", margin: 0 }}>Real-time business intelligence</p>
         </div>
-        <Button
+        <button
           onClick={handleExportCSV}
-          variant="outline"
-          className="border-white/10 text-zinc-300 hover:text-white"
+          style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", borderRadius: 8, background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "#d4d4d8", fontSize: 13, cursor: "pointer" }}
           data-testid="export-csv-btn"
         >
-          <Download className="w-4 h-4 mr-2" /> Export CSV
-        </Button>
+          <Download size={14} /> Export CSV
+        </button>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 16 }}>
         <KpiCard title="Total Users" value={kpis.total_users} icon={Users} color="indigo" />
         <KpiCard title="Active (7d)" value={kpis.active_7d} subtitle={`${kpis.total_users > 0 ? ((kpis.active_7d / kpis.total_users) * 100).toFixed(0) : 0}% of total`} icon={Activity} color="emerald" />
         <KpiCard title="Active (30d)" value={kpis.active_30d} icon={Activity} color="teal" />
@@ -252,24 +282,25 @@ const AnalyticsTab = () => {
       </div>
 
       {/* Live Activity Feed */}
-      <Card className="bg-zinc-900/50 border-white/10" data-testid="activity-feed">
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-white font-['Outfit'] text-base flex items-center gap-2">
-              <div className="relative">
-                <Radio className="w-4 h-4 text-red-400" />
-                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden" }} data-testid="activity-feed">
+        <div style={{ padding: "12px 16px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ position: "relative" }}>
+                <Radio size={14} style={{ color: "#ef4444" }} />
+                <span style={{ position: "absolute", top: -2, right: -2, width: 7, height: 7, background: "#ef4444", borderRadius: "50%", animation: "pulse 1.5s ease-in-out infinite" }} />
+                <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }`}</style>
               </div>
-              Live Activity Feed
-            </CardTitle>
-            <button onClick={fetchFeed} className="text-zinc-500 hover:text-white transition-colors" data-testid="refresh-feed-btn">
-              <RefreshCw className="w-4 h-4" />
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#fff", fontFamily: "'Outfit',sans-serif" }}>Live Activity Feed</span>
+            </div>
+            <button onClick={fetchFeed} style={{ background: "none", border: "none", color: "#71717a", cursor: "pointer", padding: 4 }} data-testid="refresh-feed-btn">
+              <RefreshCw size={14} />
             </button>
           </div>
-          <p className="text-xs text-zinc-500">Auto-refreshes every 15 seconds</p>
-        </CardHeader>
-        <CardContent>
-          <div className="max-h-64 overflow-y-auto space-y-1 pr-1 scrollbar-thin">
+          <p style={{ fontSize: 11, color: "#71717a", margin: "4px 0 0 0" }}>Auto-refreshes every 15 seconds</p>
+        </div>
+        <div style={{ padding: "14px 16px" }}>
+          <div style={{ maxHeight: 256, overflowY: "auto", display: "flex", flexDirection: "column", gap: 2 }}>
             {feed.length > 0 ? feed.map((event, i) => {
               const IconMap = {
                 "user-plus": UserPlus,
@@ -277,51 +308,45 @@ const AnalyticsTab = () => {
                 "message-square": MessageSquare,
                 "users": Users,
               };
-              const colorMap = {
-                signup: "emerald",
-                payment: "amber",
-                chat: "indigo",
-                team: "violet",
-              };
               const EventIcon = IconMap[event.icon] || Activity;
-              const color = colorMap[event.type] || "zinc";
+              const iconColor = FEED_COLOR[event.type] || "#71717a";
               const timeAgo = getTimeAgo(event.timestamp);
               return (
-                <div key={`${event.type}-${i}`} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors" data-testid={`feed-item-${i}`}>
-                  <div className={`w-8 h-8 rounded-full bg-${color}-500/15 flex items-center justify-center shrink-0`}>
-                    <EventIcon className={`w-4 h-4 text-${color}-400`} />
+                <div key={`${event.type}-${i}`} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px", borderRadius: 8 }} data-testid={`feed-item-${i}`}>
+                  <div style={{ width: 32, height: 32, borderRadius: "50%", background: `${iconColor}26`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <EventIcon size={14} style={{ color: iconColor }} />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-white truncate">{event.title}</p>
-                    {event.detail && <p className="text-xs text-zinc-500 truncate">{event.detail}</p>}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 13, color: "#fff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{event.title}</p>
+                    {event.detail && <p style={{ fontSize: 11, color: "#71717a", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{event.detail}</p>}
                   </div>
-                  <span className="text-[10px] text-zinc-600 whitespace-nowrap shrink-0">{timeAgo}</span>
+                  <span style={{ fontSize: 10, color: "#52525b", whiteSpace: "nowrap", flexShrink: 0 }}>{timeAgo}</span>
                 </div>
               );
             }) : (
-              <p className="text-zinc-500 text-sm text-center py-6">No activity yet</p>
+              <p style={{ color: "#71717a", fontSize: 13, textAlign: "center", padding: "24px 0" }}>No activity yet</p>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Row 1: User Signups + Messages */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 24 }}>
         <ChartCard title="Daily Signups (30d)" icon={Users}>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={signupData}>
                 <defs>
                   <linearGradient id="signupGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#4fd1c5" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#4fd1c5" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 11 }} interval={6} />
                 <YAxis tick={{ fill: '#71717a', fontSize: 11 }} allowDecimals={false} />
                 <Tooltip content={<CustomTooltip />} />
-                <Area type="monotone" dataKey="signups" stroke="#6366f1" fill="url(#signupGrad)" name="Signups" />
+                <Area type="monotone" dataKey="signups" stroke="#4fd1c5" fill="url(#signupGrad)" name="Signups" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -349,7 +374,7 @@ const AnalyticsTab = () => {
       </div>
 
       {/* Row 2: Revenue + Token Cost */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 24 }}>
         <ChartCard title="Daily Revenue (30d)" icon={DollarSign}>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -386,7 +411,7 @@ const AnalyticsTab = () => {
       </div>
 
       {/* Row 3: Agent Usage + Subscription Distribution */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 24 }}>
         <ChartCard title="Agent Usage (by messages)" icon={Bot}>
           {agent_usage?.length > 0 ? (
             <div className="h-72">
@@ -401,13 +426,13 @@ const AnalyticsTab = () => {
               </ResponsiveContainer>
             </div>
           ) : (
-            <p className="text-zinc-500 text-sm py-8 text-center">No agent usage data yet</p>
+            <p style={{ color: "#71717a", fontSize: 13, textAlign: "center", padding: "32px 0" }}>No agent usage data yet</p>
           )}
         </ChartCard>
 
         <ChartCard title="Subscription Distribution" icon={Crown}>
           {plan_distribution?.length > 0 ? (
-            <div className="h-72 flex items-center">
+            <div className="h-72" style={{ display: "flex", alignItems: "center" }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -431,59 +456,60 @@ const AnalyticsTab = () => {
               </ResponsiveContainer>
             </div>
           ) : (
-            <p className="text-zinc-500 text-sm py-8 text-center">No subscription data yet</p>
+            <p style={{ color: "#71717a", fontSize: 13, textAlign: "center", padding: "32px 0" }}>No subscription data yet</p>
           )}
         </ChartCard>
       </div>
 
       {/* Row 4: Top Users + Model Costs */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 24 }}>
         <ChartCard title="Top Users by Messages" icon={Users}>
           {top_users?.length > 0 ? (
-            <div className="space-y-2">
-              {top_users.map((u, i) => (
-                <div key={u.user_id} className="flex items-center gap-3 p-3 rounded-lg bg-white/5" data-testid={`top-user-${i}`}>
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                    i === 0 ? 'bg-amber-500/20 text-amber-400' :
-                    i === 1 ? 'bg-zinc-400/20 text-zinc-300' :
-                    i === 2 ? 'bg-orange-500/20 text-orange-400' :
-                    'bg-white/5 text-zinc-500'
-                  }`}>
-                    {i + 1}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {top_users.map((u, i) => {
+                const rankStyle =
+                  i === 0 ? { background: "rgba(245,158,11,0.2)", color: "#f59e0b" } :
+                  i === 1 ? { background: "rgba(161,161,170,0.2)", color: "#d4d4d8" } :
+                  i === 2 ? { background: "rgba(249,115,22,0.2)", color: "#fb923c" } :
+                  { background: "rgba(255,255,255,0.05)", color: "#71717a" };
+                return (
+                  <div key={u.user_id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 8, background: "rgba(255,255,255,0.05)" }} data-testid={`top-user-${i}`}>
+                    <div style={{ width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, flexShrink: 0, ...rankStyle }}>
+                      {i + 1}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 13, color: "#fff", fontWeight: 500, margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{u.name || "Unknown"}</p>
+                      <p style={{ fontSize: 11, color: "#71717a", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{u.email}</p>
+                    </div>
+                    <span style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, padding: "2px 8px", fontSize: 11, color: "#d4d4d8", flexShrink: 0 }}>
+                      {u.total_messages} msgs
+                    </span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-white font-medium truncate">{u.name || "Unknown"}</p>
-                    <p className="text-xs text-zinc-500 truncate">{u.email}</p>
-                  </div>
-                  <Badge variant="outline" className="border-white/10 text-zinc-300 shrink-0">
-                    {u.total_messages} msgs
-                  </Badge>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
-            <p className="text-zinc-500 text-sm py-8 text-center">No user data yet</p>
+            <p style={{ color: "#71717a", fontSize: 13, textAlign: "center", padding: "32px 0" }}>No user data yet</p>
           )}
         </ChartCard>
 
         <ChartCard title="Cost by AI Model" icon={Zap}>
           {model_costs?.length > 0 ? (
-            <div className="space-y-2">
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {model_costs.map((m, i) => {
                 const maxCost = model_costs[0]?.cost || 1;
                 return (
-                  <div key={m.model} className="space-y-1" data-testid={`model-cost-${i}`}>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-zinc-300 truncate max-w-[200px]">{m.model}</span>
-                      <div className="flex items-center gap-3">
-                        <span className="text-zinc-500 text-xs">{m.calls} calls</span>
-                        <span className="text-white font-medium">${m.cost.toFixed(4)}</span>
+                  <div key={m.model} style={{ display: "flex", flexDirection: "column", gap: 4 }} data-testid={`model-cost-${i}`}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 13 }}>
+                      <span style={{ color: "#d4d4d8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 200 }}>{m.model}</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <span style={{ color: "#71717a", fontSize: 11 }}>{m.calls} calls</span>
+                        <span style={{ color: "#fff", fontWeight: 500 }}>${m.cost.toFixed(4)}</span>
                       </div>
                     </div>
-                    <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                    <div style={{ height: 8, background: "rgba(255,255,255,0.05)", borderRadius: 4, overflow: "hidden" }}>
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-red-500 to-orange-500"
-                        style={{ width: `${(m.cost / maxCost) * 100}%` }}
+                        style={{ height: "100%", borderRadius: 4, background: "linear-gradient(to right, #ef4444, #f97316)", width: `${(m.cost / maxCost) * 100}%` }}
                       />
                     </div>
                   </div>
@@ -491,7 +517,7 @@ const AnalyticsTab = () => {
               })}
             </div>
           ) : (
-            <p className="text-zinc-500 text-sm py-8 text-center">No model cost data yet</p>
+            <p style={{ color: "#71717a", fontSize: 13, textAlign: "center", padding: "32px 0" }}>No model cost data yet</p>
           )}
         </ChartCard>
       </div>
@@ -506,7 +532,7 @@ const AnalyticsTab = () => {
               <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />
               <Tooltip content={<CustomTooltip />} />
               <Legend formatter={(value) => <span className="text-zinc-300 text-sm">{value}</span>} />
-              <Bar dataKey="input_tokens" stackId="a" fill="#6366f1" name="Input Tokens" />
+              <Bar dataKey="input_tokens" stackId="a" fill="#4fd1c5" name="Input Tokens" />
               <Bar dataKey="output_tokens" stackId="a" fill="#8b5cf6" name="Output Tokens" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -514,67 +540,68 @@ const AnalyticsTab = () => {
       </ChartCard>
 
       {/* Agent Performance Scoring */}
-      <ChartCard title="Agent Performance Scoring" icon={Star} className="col-span-full">
+      <ChartCard title="Agent Performance Scoring" icon={Star}>
         {performance.length > 0 ? (
-          <div className="space-y-2">
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {performance.map((agent, i) => {
               const sat = agent.satisfaction_rate;
-              const barColor = sat === null ? "bg-zinc-600" : sat >= 80 ? "bg-emerald-500" : sat >= 50 ? "bg-amber-500" : "bg-red-500";
+              const barColor = sat === null ? "#52525b" : sat >= 80 ? "#10b981" : sat >= 50 ? "#f59e0b" : "#ef4444";
+              const satTextColor = sat === null ? "#52525b" : sat >= 80 ? "#34d399" : sat >= 50 ? "#f59e0b" : "#ef4444";
               return (
-                <div key={agent.agent_id} className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/[0.07] transition-colors" data-testid={`perf-agent-${i}`}>
-                  <img src={agent.avatar} alt="" className="w-9 h-9 rounded-lg object-cover shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm text-white font-medium truncate">{agent.name}</p>
-                      <span className="text-[10px] text-zinc-500">{agent.role}</span>
+                <div key={agent.agent_id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 8, background: "rgba(255,255,255,0.05)" }} data-testid={`perf-agent-${i}`}>
+                  <img src={agent.avatar} alt="" style={{ width: 36, height: 36, borderRadius: 8, objectFit: "cover", flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <p style={{ fontSize: 13, color: "#fff", fontWeight: 500, margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{agent.name}</p>
+                      <span style={{ fontSize: 10, color: "#71717a" }}>{agent.role}</span>
                     </div>
-                    <div className="flex items-center gap-3 mt-1">
-                      <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden max-w-[200px]">
-                        <div className={`h-full rounded-full ${barColor}`} style={{ width: `${sat ?? 0}%` }} />
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+                      <div style={{ flex: 1, height: 6, background: "rgba(255,255,255,0.05)", borderRadius: 3, overflow: "hidden", maxWidth: 200 }}>
+                        <div style={{ height: "100%", borderRadius: 3, background: barColor, width: `${sat ?? 0}%` }} />
                       </div>
-                      <div className="flex items-center gap-2 text-[11px]">
-                        <span className="text-zinc-500">{agent.total_messages} msgs</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11 }}>
+                        <span style={{ color: "#71717a" }}>{agent.total_messages} msgs</span>
                         {agent.total_feedback > 0 && (
                           <>
-                            <span className="text-emerald-400 flex items-center gap-0.5"><ThumbsUp className="w-3 h-3" />{agent.thumbs_up}</span>
-                            <span className="text-red-400 flex items-center gap-0.5"><ThumbsDown className="w-3 h-3" />{agent.thumbs_down}</span>
+                            <span style={{ color: "#34d399", display: "flex", alignItems: "center", gap: 2 }}><ThumbsUp size={10} />{agent.thumbs_up}</span>
+                            <span style={{ color: "#ef4444", display: "flex", alignItems: "center", gap: 2 }}><ThumbsDown size={10} />{agent.thumbs_down}</span>
                           </>
                         )}
                       </div>
                     </div>
                   </div>
-                  <div className="text-right shrink-0 w-16">
+                  <div style={{ textAlign: "right", flexShrink: 0, width: 64 }}>
                     {sat !== null ? (
-                      <p className={`text-lg font-bold ${sat >= 80 ? "text-emerald-400" : sat >= 50 ? "text-amber-400" : "text-red-400"}`}>{sat}%</p>
+                      <p style={{ fontSize: 18, fontWeight: 700, color: satTextColor, margin: 0 }}>{sat}%</p>
                     ) : (
-                      <p className="text-xs text-zinc-600">No ratings</p>
+                      <p style={{ fontSize: 11, color: "#3f3f46", margin: 0 }}>No ratings</p>
                     )}
-                    {agent.feedback_rate > 0 && <p className="text-[10px] text-zinc-600">{agent.feedback_rate}% rated</p>}
+                    {agent.feedback_rate > 0 && <p style={{ fontSize: 10, color: "#3f3f46", margin: 0 }}>{agent.feedback_rate}% rated</p>}
                   </div>
                 </div>
               );
             })}
           </div>
         ) : (
-          <p className="text-zinc-500 text-sm py-8 text-center">No performance data yet. Users will rate responses with thumbs up/down.</p>
+          <p style={{ color: "#71717a", fontSize: 13, textAlign: "center", padding: "32px 0" }}>No performance data yet. Users will rate responses with thumbs up/down.</p>
         )}
       </ChartCard>
 
       {/* Revenue Projections */}
       {projections && (
-        <ChartCard title="Revenue Projections (6 Months)" icon={TrendingUp} className="col-span-2">
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-              <p className="text-xs text-emerald-400">Current MRR</p>
-              <p className="text-lg font-bold text-white">${projections.current?.mrr?.toLocaleString()}</p>
+        <ChartCard title="Revenue Projections (6 Months)" icon={TrendingUp}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 16 }}>
+            <div style={{ padding: "10px 12px", borderRadius: 8, background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.2)" }}>
+              <p style={{ fontSize: 11, color: "#34d399", margin: 0 }}>Current MRR</p>
+              <p style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>${projections.current?.mrr?.toLocaleString()}</p>
             </div>
-            <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
-              <p className="text-xs text-blue-400">30d Revenue</p>
-              <p className="text-lg font-bold text-white">${projections.current?.revenue_30d?.toLocaleString()}</p>
+            <div style={{ padding: "10px 12px", borderRadius: 8, background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.2)" }}>
+              <p style={{ fontSize: 11, color: "#60a5fa", margin: 0 }}>30d Revenue</p>
+              <p style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>${projections.current?.revenue_30d?.toLocaleString()}</p>
             </div>
-            <div className="p-3 rounded-lg bg-violet-500/10 border border-violet-500/20">
-              <p className="text-xs text-violet-400">Profit Margin</p>
-              <p className="text-lg font-bold text-white">{projections.current?.profit_margin}%</p>
+            <div style={{ padding: "10px 12px", borderRadius: 8, background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
+              <p style={{ fontSize: 11, color: "#a78bfa", margin: 0 }}>Profit Margin</p>
+              <p style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>{projections.current?.profit_margin}%</p>
             </div>
           </div>
           <ResponsiveContainer width="100%" height={220}>
@@ -620,14 +647,14 @@ const AnalyticsTab = () => {
             </AreaChart>
           </ResponsiveContainer>
           {creditBurn.by_model?.length > 0 && (
-            <div className="mt-3 space-y-1.5">
-              <p className="text-xs text-zinc-400 font-medium mb-2">Top Models by Cost (30d)</p>
+            <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 6 }}>
+              <p style={{ fontSize: 11, color: "#a1a1aa", fontWeight: 500, marginBottom: 8 }}>Top Models by Cost (30d)</p>
               {creditBurn.by_model.slice(0, 5).map((m, i) => (
-                <div key={i} className="flex items-center justify-between text-xs">
-                  <span className="text-zinc-300 truncate">{m.model}</span>
-                  <div className="flex items-center gap-3">
-                    <span className="text-zinc-500">{m.total_calls} calls</span>
-                    <span className="text-amber-400 font-medium">${m.total_cost.toFixed(4)}</span>
+                <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 11 }}>
+                  <span style={{ color: "#d4d4d8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.model}</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span style={{ color: "#71717a" }}>{m.total_calls} calls</span>
+                    <span style={{ color: "#f59e0b", fontWeight: 500 }}>${m.total_cost.toFixed(4)}</span>
                   </div>
                 </div>
               ))}
@@ -653,64 +680,68 @@ const AnalyticsTab = () => {
 
       {/* Agent Leaderboard */}
       {leaderboard?.leaderboard?.length > 0 && (
-        <ChartCard title="Agent Leaderboard" icon={Crown} className="col-span-1 lg:col-span-2">
-          <div className="space-y-2" data-testid="agent-leaderboard">
-            {leaderboard.leaderboard.slice(0, 10).map((agent, i) => (
-              <div key={agent.agent_id} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] transition-colors" data-testid={`leaderboard-agent-${i}`}>
-                <span className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold ${
-                  i === 0 ? "bg-amber-500/20 text-amber-400" : i === 1 ? "bg-zinc-400/20 text-zinc-300" : i === 2 ? "bg-orange-500/20 text-orange-400" : "bg-zinc-800 text-zinc-500"
-                }`}>{i + 1}</span>
-                {agent.avatar && <img src={agent.avatar} alt="" className="w-8 h-8 rounded-full object-cover" />}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-white font-medium truncate">{agent.name}</p>
-                  <p className="text-[10px] text-zinc-500">{agent.role}</p>
-                </div>
-                <div className="flex items-center gap-4 text-xs">
-                  <div className="text-center">
-                    <p className="text-white font-medium">{agent.total_chats}</p>
-                    <p className="text-zinc-600">chats</p>
+        <ChartCard title="Agent Leaderboard" icon={Crown}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }} data-testid="agent-leaderboard">
+            {leaderboard.leaderboard.slice(0, 10).map((agent, i) => {
+              const rankStyle =
+                i === 0 ? { background: "rgba(245,158,11,0.2)", color: "#f59e0b" } :
+                i === 1 ? { background: "rgba(161,161,170,0.2)", color: "#d4d4d8" } :
+                i === 2 ? { background: "rgba(249,115,22,0.2)", color: "#fb923c" } :
+                { background: "#27272a", color: "#71717a" };
+              return (
+                <div key={agent.agent_id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 8, background: "rgba(255,255,255,0.03)" }} data-testid={`leaderboard-agent-${i}`}>
+                  <span style={{ width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%", fontSize: 11, fontWeight: 700, flexShrink: 0, ...rankStyle }}>{i + 1}</span>
+                  {agent.avatar && <img src={agent.avatar} alt="" style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover" }} />}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 13, color: "#fff", fontWeight: 500, margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{agent.name}</p>
+                    <p style={{ fontSize: 10, color: "#71717a", margin: 0 }}>{agent.role}</p>
                   </div>
-                  <div className="text-center">
-                    <p className="text-white font-medium">{agent.total_messages}</p>
-                    <p className="text-zinc-600">msgs</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="flex items-center gap-1">
-                      {agent.satisfaction_pct >= 70 ? <ThumbsUp className="w-3 h-3 text-emerald-400" /> : <ThumbsDown className="w-3 h-3 text-red-400" />}
-                      <span className={agent.satisfaction_pct >= 70 ? "text-emerald-400" : "text-red-400"}>{agent.satisfaction_pct}%</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 11 }}>
+                    <div style={{ textAlign: "center" }}>
+                      <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>{agent.total_chats}</p>
+                      <p style={{ color: "#3f3f46", margin: 0 }}>chats</p>
                     </div>
-                    <p className="text-zinc-600">rating</p>
+                    <div style={{ textAlign: "center" }}>
+                      <p style={{ color: "#fff", fontWeight: 500, margin: 0 }}>{agent.total_messages}</p>
+                      <p style={{ color: "#3f3f46", margin: 0 }}>msgs</p>
+                    </div>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        {agent.satisfaction_pct >= 70 ? <ThumbsUp size={10} style={{ color: "#34d399" }} /> : <ThumbsDown size={10} style={{ color: "#ef4444" }} />}
+                        <span style={{ color: agent.satisfaction_pct >= 70 ? "#34d399" : "#ef4444" }}>{agent.satisfaction_pct}%</span>
+                      </div>
+                      <p style={{ color: "#3f3f46", margin: 0 }}>rating</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </ChartCard>
       )}
 
       {/* Engagement Heatmap */}
       {heatmap?.heatmap?.length > 0 && (
-        <ChartCard title="User Activity Heatmap" icon={Activity} className="col-span-1 lg:col-span-2">
+        <ChartCard title="User Activity Heatmap" icon={Activity}>
           <div data-testid="engagement-heatmap">
-            <div className="flex gap-0.5">
-              <div className="w-8" />
+            <div style={{ display: "flex", gap: 2 }}>
+              <div style={{ width: 32 }} />
               {Array.from({length: 24}, (_, h) => (
-                <div key={h} className="flex-1 text-center text-[8px] text-zinc-600">{h}</div>
+                <div key={h} style={{ flex: 1, textAlign: "center", fontSize: 8, color: "#52525b" }}>{h}</div>
               ))}
             </div>
             {(heatmap.days || []).map(day => {
               const dayData = Object.fromEntries(heatmap.heatmap.filter(h => h.day === day).map(h => [h.hour, h]));
               return (
-                <div key={day} className="flex gap-0.5 mb-0.5">
-                  <div className="w-8 text-[9px] text-zinc-500 flex items-center">{day}</div>
+                <div key={day} style={{ display: "flex", gap: 2, marginBottom: 2 }}>
+                  <div style={{ width: 32, fontSize: 9, color: "#71717a", display: "flex", alignItems: "center" }}>{day}</div>
                   {Array.from({length: 24}, (_, h) => {
                     const cell = dayData[h];
                     const intensity = cell?.intensity || 0;
                     return (
                       <div
                         key={h}
-                        className="flex-1 aspect-square rounded-sm"
-                        style={{ backgroundColor: intensity > 0 ? `rgba(99,102,241,${0.15 + intensity * 0.85})` : 'rgba(255,255,255,0.03)' }}
+                        style={{ flex: 1, aspectRatio: "1", borderRadius: 2, backgroundColor: intensity > 0 ? `rgba(99,102,241,${0.15 + intensity * 0.85})` : 'rgba(255,255,255,0.03)' }}
                         title={cell ? `${day} ${h}:00 - ${cell.count} messages` : `${day} ${h}:00 - 0`}
                       />
                     );
@@ -718,12 +749,12 @@ const AnalyticsTab = () => {
                 </div>
               );
             })}
-            <div className="flex items-center justify-end gap-1 mt-2">
-              <span className="text-[9px] text-zinc-600">Less</span>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 4, marginTop: 8 }}>
+              <span style={{ fontSize: 9, color: "#52525b" }}>Less</span>
               {[0.1, 0.3, 0.5, 0.7, 1].map(v => (
-                <div key={v} className="w-3 h-3 rounded-sm" style={{ backgroundColor: `rgba(99,102,241,${0.15 + v * 0.85})` }} />
+                <div key={v} style={{ width: 12, height: 12, borderRadius: 2, backgroundColor: `rgba(99,102,241,${0.15 + v * 0.85})` }} />
               ))}
-              <span className="text-[9px] text-zinc-600">More</span>
+              <span style={{ fontSize: 9, color: "#52525b" }}>More</span>
             </div>
           </div>
         </ChartCard>
@@ -731,19 +762,19 @@ const AnalyticsTab = () => {
 
       {/* Revenue Trends */}
       {revTrends?.trends?.length > 0 && (
-        <ChartCard title="Revenue Trends (30d)" icon={TrendingUp} className="col-span-1 lg:col-span-2">
-          <div className="flex gap-4 mb-3" data-testid="revenue-trends-summary">
-            <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex-1 text-center">
-              <p className="text-lg font-bold text-white">${revTrends.summary?.total_revenue?.toFixed(2)}</p>
-              <p className="text-[10px] text-emerald-400">Total Revenue</p>
+        <ChartCard title="Revenue Trends (30d)" icon={TrendingUp}>
+          <div style={{ display: "flex", gap: 16, marginBottom: 12 }} data-testid="revenue-trends-summary">
+            <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.2)", flex: 1, textAlign: "center" }}>
+              <p style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>${revTrends.summary?.total_revenue?.toFixed(2)}</p>
+              <p style={{ fontSize: 10, color: "#34d399", margin: 0 }}>Total Revenue</p>
             </div>
-            <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex-1 text-center">
-              <p className="text-lg font-bold text-white">${revTrends.summary?.avg_daily_revenue?.toFixed(2)}</p>
-              <p className="text-[10px] text-indigo-400">Avg Daily</p>
+            <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(129,140,248,0.1)", border: "1px solid rgba(129,140,248,0.2)", flex: 1, textAlign: "center" }}>
+              <p style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>${revTrends.summary?.avg_daily_revenue?.toFixed(2)}</p>
+              <p style={{ fontSize: 10, color: "#818cf8", margin: 0 }}>Avg Daily</p>
             </div>
-            <div className="p-2 rounded-lg bg-violet-500/10 border border-violet-500/20 flex-1 text-center">
-              <p className="text-lg font-bold text-white">{revTrends.summary?.total_transactions}</p>
-              <p className="text-[10px] text-violet-400">Transactions</p>
+            <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)", flex: 1, textAlign: "center" }}>
+              <p style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>{revTrends.summary?.total_transactions}</p>
+              <p style={{ fontSize: 10, color: "#a78bfa", margin: 0 }}>Transactions</p>
             </div>
           </div>
           <ResponsiveContainer width="100%" height={200}>
@@ -760,23 +791,21 @@ const AnalyticsTab = () => {
       )}
 
       {/* Export Section */}
-      <Card className="bg-zinc-900/50 border-white/10 col-span-1 lg:col-span-2" data-testid="analytics-export">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div>
-              <p className="text-white font-medium text-sm">Export Analytics</p>
-              <p className="text-xs text-zinc-500">Download reports as CSV files</p>
-            </div>
-            <div className="flex gap-2 flex-wrap">
-              {[{id: "overview", label: "Overview"}, {id: "users", label: "Users"}, {id: "revenue", label: "Revenue"}, {id: "agents", label: "Agents"}].map(r => (
-                <Button key={r.id} variant="outline" size="sm" className="border-white/10 text-zinc-300 text-xs" onClick={() => handleExport(r.id)} data-testid={`export-${r.id}`}>
-                  <Download className="w-3 h-3 mr-1" />{r.label}
-                </Button>
-              ))}
-            </div>
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: 16 }} data-testid="analytics-export">
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+          <div>
+            <p style={{ color: "#fff", fontWeight: 500, fontSize: 13, margin: 0 }}>Export Analytics</p>
+            <p style={{ fontSize: 11, color: "#71717a", margin: 0 }}>Download reports as CSV files</p>
           </div>
-        </CardContent>
-      </Card>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {[{id: "overview", label: "Overview"}, {id: "users", label: "Users"}, {id: "revenue", label: "Revenue"}, {id: "agents", label: "Agents"}].map(r => (
+              <button key={r.id} style={{ display: "flex", alignItems: "center", gap: 4, padding: "5px 12px", borderRadius: 6, background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "#d4d4d8", fontSize: 12, cursor: "pointer" }} onClick={() => handleExport(r.id)} data-testid={`export-${r.id}`}>
+                <Download size={11} />{r.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

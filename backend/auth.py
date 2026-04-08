@@ -8,9 +8,17 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from db import db
 from models.schemas import User
 
-JWT_SECRET = os.environ.get('JWT_SECRET', 'nexus-ai-secret-key-2024')
+# Get JWT_SECRET from environment - MUST be set before application starts
+JWT_SECRET = os.environ.get('JWT_SECRET')
+if not JWT_SECRET:
+    raise ValueError(
+        "CRITICAL: JWT_SECRET environment variable is not set. "
+        "Please set JWT_SECRET in your .env file. "
+        "Generate a strong secret using: python -c \"import secrets; print(secrets.token_urlsafe(32))\""
+    )
+
 JWT_ALGORITHM = "HS256"
-JWT_EXPIRATION_HOURS = 72
+JWT_EXPIRATION_HOURS = int(os.environ.get('JWT_EXPIRATION_HOURS', 72))
 ADMIN_EMAIL = "management.maars@marsgc.net"
 
 security = HTTPBearer(auto_error=False)

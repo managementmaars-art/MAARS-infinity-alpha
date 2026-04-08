@@ -1,17 +1,71 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Separator } from "../components/ui/separator";
-import { Badge } from "../components/ui/badge";
-import { Progress } from "../components/ui/progress";
-import { User, Mail, LogOut, CreditCard, Sparkles, Crown, Zap,
+import {
+  User, Mail, LogOut, CreditCard, Sparkles, Crown, Zap,
   Check, Save, Loader2, Cpu, Link2, Unlink, Shield, Users
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  teal: "#4fd1c5",
+  violet: "#7c3aed",
+  amber: "#f59e0b",
+  green: "#34d399",
+  red: "#ef4444",
+  blue: "#60a5fa",
+  orange: "#f97316",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+@keyframes bar { from{width:0} to{width:var(--bar-w)} }
+`;
+
+const glass = {
+  background: T.glass,
+  border: `1px solid ${T.border}`,
+  borderRadius: 16,
+  backdropFilter: "blur(12px)",
+  marginBottom: 20,
+  position: "relative",
+  overflow: "hidden",
+};
+
+const Section = ({ title, icon, accent = T.teal, children, testId }) => (
+  <div style={glass} data-testid={testId}>
+    <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: accent }} />
+    <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "18px 22px 14px", borderBottom: `1px solid ${T.border}` }}>
+      <span style={{ color: accent }}>{icon}</span>
+      <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, color: "#fff" }}>{title}</span>
+    </div>
+    <div style={{ padding: "20px 22px" }}>{children}</div>
+  </div>
+);
+
+const glassInput = {
+  width: "100%", boxSizing: "border-box",
+  background: "rgba(255,255,255,0.04)", border: `1px solid ${T.border}`,
+  borderRadius: 10, padding: "9px 12px",
+  color: "rgba(255,255,255,.5)", fontSize: 13, outline: "none", fontFamily: "inherit",
+};
+
+const PLAN_META = {
+  business: { color: T.amber, icon: Crown, label: "Business" },
+  pro:      { color: T.violet, icon: Sparkles, label: "Pro" },
+  starter:  { color: T.blue, icon: Zap, label: "Starter" },
+  free:     { color: T.zinc, icon: CreditCard, label: "Free" },
+};
+
+const PROVIDER_ACCENT = {
+  openai: "#10b981", anthropic: "#f97316", google: "#3b82f6",
+  deepseek: T.teal, mistral: "#ff7000", groq: "#f55036",
+  xai: "#94a3b8", perplexity: "#8b5cf6", cohere: "#d97706", together: "#06b6d4",
+};
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -36,514 +90,405 @@ const SettingsPage = () => {
   }, []);
 
   const fetchSubscription = async () => {
-    try {
-      const response = await fetch(`${API}/subscription`, { headers
-      });
-      if (response.ok) {
-        setSubscription(await response.json());
-      }
-    } catch (error) {
-      console.error("Failed to fetch subscription");
-    }
+    try { const r = await fetch(`${API}/subscription`, { headers }); if (r.ok) setSubscription(await r.json()); } catch {}
   };
-
   const fetchAgents = async () => {
-    try {
-      const res = await fetch(`${API}/agents`, { headers, });
-      if (res.ok) setAllAgents(await res.json());
-    } catch {}
+    try { const r = await fetch(`${API}/agents`, { headers }); if (r.ok) setAllAgents(await r.json()); } catch {}
   };
-
   const fetchSelectedAgents = async () => {
     try {
-      const res = await fetch(`${API}/subscription/agents`, { headers, });
-      if (res.ok) {
-        const data = await res.json();
-        setAgentConfig(data);
-        setSelectedAgents(data.selected_agents || []);
-      }
+      const r = await fetch(`${API}/subscription/agents`, { headers });
+      if (r.ok) { const d = await r.json(); setAgentConfig(d); setSelectedAgents(d.selected_agents || []); }
     } catch {}
   };
-
-  const toggleAgentSelection = (agentId) => {
-    setSelectedAgents(prev =>
-      prev.includes(agentId) ? prev.filter(id => id !== agentId) : [...prev, agentId]
-    );
-  };
-
   const fetchLlmConfig = async () => {
-    try {
-      const res = await fetch(`${API}/llm/config`, { headers });
-      if (res.ok) setLlmConfig(await res.json());
-    } catch {}
+    try { const r = await fetch(`${API}/llm/config`, { headers }); if (r.ok) setLlmConfig(await r.json()); } catch {}
+  };
+  const fetchActionIntegrations = async () => {
+    try { const r = await fetch(`${API}/actions/integrations`, { headers }); if (r.ok) setActionIntegrations(await r.json()); } catch {}
   };
 
-  const saveLlmConfig = async (provider, model) => {
+  const saveLlmConfig = async (provider, model, quality_tier, task_hint) => {
     setSavingLlm(true);
     try {
-      const res = await fetch(`${API}/llm/config`, {
+      const r = await fetch(`${API}/llm/config`, {
         method: "PUT",
         headers: { ...headers, "Content-Type": "application/json" },
-        body: JSON.stringify({ provider, model }),
+        body: JSON.stringify({
+          provider, model,
+          quality_tier: quality_tier ?? llmConfig?.quality_tier ?? "auto",
+          task_hint:    task_hint    ?? llmConfig?.task_hint    ?? "auto",
+        }),
       });
-      if (res.ok) {
-        const updated = await res.json();
-        setLlmConfig(prev => ({ ...prev, ...updated }));
-        toast.success(`Model updated to ${provider}/${model}`);
-      }
+      if (r.ok) { const updated = await r.json(); setLlmConfig(prev => ({ ...prev, ...updated })); toast.success(`Model: ${provider}/${model}`); }
     } catch { toast.error("Failed to save model config"); }
     finally { setSavingLlm(false); }
   };
 
-  const fetchActionIntegrations = async () => {
-    try {
-      const res = await fetch(`${API}/actions/integrations`, { headers });
-      if (res.ok) setActionIntegrations(await res.json());
-    } catch {}
-  };
-
   const connectGoogle = async () => {
     try {
-      const res = await fetch(`${API}/oauth/gmail/login`, { headers });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.auth_url) window.location.href = data.auth_url;
-      } else {
-        const err = await res.json().catch(() => ({}));
-        toast.error(err.detail || "Google OAuth not configured");
-      }
+      const r = await fetch(`${API}/oauth/gmail/login`, { headers });
+      if (r.ok) { const d = await r.json(); if (d.auth_url) window.location.href = d.auth_url; }
+      else { const e = await r.json().catch(() => ({})); toast.error(e.detail || "Google OAuth not configured"); }
     } catch { toast.error("Failed to start Google connection"); }
   };
-
   const disconnectGoogle = async () => {
-    try {
-      await fetch(`${API}/oauth/gmail/disconnect`, { headers });
-      toast.success("Google disconnected");
-      fetchActionIntegrations();
-    } catch {}
+    try { await fetch(`${API}/oauth/gmail/disconnect`, { headers }); toast.success("Google disconnected"); fetchActionIntegrations(); } catch {}
   };
-
   const saveAgentSelection = async () => {
     setSavingAgents(true);
     try {
-      const res = await fetch(`${API}/subscription/agents`, {
-        method: "PUT",
-        headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify({ selected_agents: selectedAgents })
+      const r = await fetch(`${API}/subscription/agents`, {
+        method: "PUT", headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify({ selected_agents: selectedAgents }),
       });
-      if (res.ok) {
-        toast.success("Agent selection saved!");
-        fetchSelectedAgents();
-      } else {
-        const err = await res.json();
-        toast.error(err.detail || "Failed to save");
-      }
+      if (r.ok) { toast.success("Agent selection saved!"); fetchSelectedAgents(); }
+      else { const e = await r.json(); toast.error(e.detail || "Failed to save"); }
     } catch { toast.error("Failed to save"); }
     finally { setSavingAgents(false); }
   };
-
-  const getPlanIcon = (plan) => {
-    switch (plan) {
-      case "business": return <Crown className="w-5 h-5" />;
-      case "pro": return <Sparkles className="w-5 h-5" />;
-      case "starter": return <Zap className="w-5 h-5" />;
-      default: return <CreditCard className="w-5 h-5" />;
-    }
+  const toggleAgentSelection = (agentId) => {
+    setSelectedAgents(prev => prev.includes(agentId) ? prev.filter(id => id !== agentId) : [...prev, agentId]);
   };
 
-  const getPlanColor = (plan) => {
-    switch (plan) {
-      case "business": return "text-amber-400 bg-amber-500/20";
-      case "pro": return "text-violet-400 bg-violet-500/20";
-      case "starter": return "text-indigo-400 bg-indigo-500/20";
-      default: return "text-zinc-400 bg-zinc-500/20";
-    }
-  };
+  const planId = subscription?.plan_id || "free";
+  const planMeta = PLAN_META[planId] || PLAN_META.free;
+  const PlanIcon = planMeta.icon;
+  const creditPct = subscription?.plan_info?.credits
+    ? Math.min(((subscription?.credits || 0) / subscription.plan_info.credits) * 100, 100)
+    : Math.min(((subscription?.credits || 0) / 50) * 100, 100);
+
+  const isExecution = actionIntegrations?.system_mode === "execution";
+  const googleConnected = actionIntegrations?.integrations?.[0]?.connected;
 
   return (
-    <div data-testid="settings-page">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2 font-['Outfit']">
-              Settings
-            </h1>
-            <p className="text-zinc-400">Manage your account and preferences</p>
+    <div data-testid="settings-page" style={{ maxWidth: 760, animation: "fadeUp .4s ease" }}>
+      <style>{STYLES}</style>
+
+      {/* Header */}
+      <div style={{ marginBottom: 28 }}>
+        <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 28, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 4 }}>Settings</h1>
+        <p style={{ color: T.zinc, fontSize: 14, margin: 0 }}>Manage your account, subscription, and AI preferences</p>
+      </div>
+
+      {/* Profile */}
+      <Section title="Profile" icon={<User size={16} />} accent={T.violet}>
+        <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 24 }}>
+          <div style={{ width: 72, height: 72, borderRadius: "50%", background: `linear-gradient(135deg, ${T.violet}, #9333ea)`, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0, border: `3px solid rgba(124,58,237,.3)` }}>
+            {user?.picture
+              ? <img src={user.picture} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              : <span style={{ fontSize: 24, color: "#fff", fontWeight: 700 }}>{user?.name?.charAt(0) || "U"}</span>
+            }
+          </div>
+          <div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{user?.name}</div>
+            <div style={{ fontSize: 13, color: T.zinc }}>{user?.email}</div>
+            {user?.is_admin && <span style={{ fontSize: 10, background: "rgba(245,158,11,0.15)", color: T.amber, padding: "2px 8px", borderRadius: 6, marginTop: 4, display: "inline-block", fontWeight: 600 }}>ADMIN</span>}
+          </div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          {[["Full Name", user?.name], ["Email Address", user?.email]].map(([label, val]) => (
+            <div key={label}>
+              <label style={{ display: "block", fontSize: 11, color: T.zinc, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".05em" }}>{label}</label>
+              <input value={val || ""} disabled style={glassInput} />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* Subscription & Credits */}
+      <Section title="Subscription & Credits" icon={<CreditCard size={16} />} accent={T.amber} testId="subscription-section">
+        {/* Plan row */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", borderRadius: 12, background: "rgba(255,255,255,.03)", border: `1px solid ${T.border}`, marginBottom: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: `${planMeta.color}18`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <PlanIcon size={18} style={{ color: planMeta.color }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>{subscription?.plan_info?.name || "Free"} Plan</div>
+              <div style={{ fontSize: 12, color: T.zinc }}>${subscription?.plan_info?.price || 0}/month</div>
+            </div>
+          </div>
+          <button
+            onClick={() => navigate("/pricing")}
+            data-testid="upgrade-plan-btn"
+            style={{ background: `linear-gradient(135deg, ${T.violet}, #9333ea)`, border: "none", borderRadius: 10, padding: "8px 18px", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+          >
+            {planId === "business" ? "Manage Plan" : "Upgrade"}
+          </button>
+        </div>
+
+        {/* Credits bar */}
+        <div style={{ padding: "14px 16px", borderRadius: 12, background: "rgba(255,255,255,.03)", border: `1px solid ${T.border}`, marginBottom: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+            <span style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>Credits Remaining</span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: T.amber }}>{subscription?.credits || 0} credits</span>
+          </div>
+          <div style={{ height: 6, background: "rgba(255,255,255,.06)", borderRadius: 6, overflow: "hidden", marginBottom: 8 }}>
+            <div style={{ "--bar-w": `${creditPct}%`, height: "100%", borderRadius: 6, background: `linear-gradient(90deg, ${T.amber}, #d97706)`, width: `${creditPct}%` }} />
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: T.zinc }}>
+            <span>Used: {subscription?.credits_used || 0}</span>
+            <span>Monthly: {subscription?.plan_info?.credits || 50}</span>
+          </div>
+        </div>
+
+        <button
+          onClick={() => navigate("/pricing")}
+          data-testid="buy-credits-btn"
+          style={{ width: "100%", padding: "10px 0", borderRadius: 12, background: "rgba(245,158,11,.08)", border: `1px solid rgba(245,158,11,.25)`, color: T.amber, fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+        >
+          <Sparkles size={14} /> Buy More Credits
+        </button>
+      </Section>
+
+      {/* LLM Configuration */}
+      {llmConfig && (
+        <Section title="AI Model Configuration" icon={<Cpu size={16} />} accent={T.teal} testId="llm-config-card">
+          <p style={{ fontSize: 12, color: T.zinc, marginBottom: 16 }}>Choose your preferred LLM provider and model for Vibe Coding, Reference Intelligence, and other AI features</p>
+
+          {/* Provider grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 16 }}>
+            {llmConfig.available_providers?.map(p => {
+              const active = llmConfig.provider === p.id;
+              const accent = PROVIDER_ACCENT[p.id] || T.teal;
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => saveLlmConfig(p.id, p.models[0])}
+                  disabled={savingLlm}
+                  data-testid={`llm-provider-${p.id}`}
+                  style={{
+                    padding: "10px 12px", borderRadius: 12, textAlign: "left", cursor: "pointer",
+                    background: active ? `${accent}12` : "rgba(255,255,255,.03)",
+                    border: active ? `1px solid ${accent}50` : `1px solid ${T.border}`,
+                    transition: "all .15s",
+                  }}
+                >
+                  <div style={{ fontSize: 12, fontWeight: 600, color: active ? accent : "#e4e4e7", marginBottom: 2 }}>{p.name}</div>
+                  <div style={{ fontSize: 10, color: T.zinc }}>{p.models.length} models</div>
+                  {active && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 5 }}>
+                      <div style={{ width: 6, height: 6, borderRadius: "50%", background: accent }} />
+                      <span style={{ fontSize: 10, color: accent, fontWeight: 600 }}>Active</span>
+                    </div>
+                  )}
+                </button>
+              );
+            })}
           </div>
 
-          {/* Profile Section */}
-          <Card className="bg-zinc-900/50 border-white/10 mb-6">
-            <CardHeader>
-              <CardTitle className="text-white font-['Outfit'] flex items-center gap-2">
-                <User className="w-5 h-5 text-indigo-400" />
-                Profile
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center overflow-hidden">
-                  {user?.picture ? (
-                    <img src={user.picture} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-2xl text-white font-semibold">
-                      {user?.name?.charAt(0) || "U"}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-white">{user?.name}</h3>
-                  <p className="text-zinc-400">{user?.email}</p>
-                </div>
-              </div>
-
-              <Separator className="bg-white/10" />
-
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label className="text-zinc-300">Full Name</Label>
-                  <Input
-                    value={user?.name || ""}
-                    disabled
-                    className="bg-zinc-800/50 border-white/10"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-zinc-300">Email</Label>
-                  <Input
-                    value={user?.email || ""}
-                    disabled
-                    className="bg-zinc-800/50 border-white/10"
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Subscription & Credits Section */}
-          <Card className="bg-zinc-900/50 border-white/10 mb-6">
-            <CardHeader>
-              <CardTitle className="text-white font-['Outfit'] flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-indigo-400" />
-                Subscription & Credits
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Current Plan */}
-              <div className="p-4 rounded-lg bg-zinc-800/30">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${getPlanColor(subscription?.plan_id || "free")}`}>
-                      {getPlanIcon(subscription?.plan_id || "free")}
-                    </div>
-                    <div>
-                      <p className="font-medium text-white">
-                        {subscription?.plan_info?.name || "Free"} Plan
-                      </p>
-                      <p className="text-sm text-zinc-400">
-                        ${subscription?.plan_info?.price || 0}/month
-                      </p>
-                    </div>
-                  </div>
-                  <Button
-                    onClick={() => navigate("/pricing")}
-                    className="bg-gradient-to-r from-indigo-500 to-violet-500"
-                    data-testid="upgrade-plan-btn"
-                  >
-                    {subscription?.plan_id === "business" ? "Manage Plan" : "Upgrade"}
-                  </Button>
-                </div>
-              </div>
-
-              {/* Credits */}
-              <div className="p-4 rounded-lg bg-zinc-800/30">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="font-medium text-white">Credits Remaining</p>
-                  <Badge className={getPlanColor(subscription?.plan_id || "free")}>
-                    {subscription?.credits || 0} credits
-                  </Badge>
-                </div>
-                <Progress 
-                  value={subscription?.plan_info?.credits ? 
-                    ((subscription?.credits || 0) / subscription.plan_info.credits) * 100 : 
-                    ((subscription?.credits || 0) / 50) * 100
-                  } 
-                  className="h-2 bg-zinc-700"
-                />
-                <div className="flex justify-between mt-2 text-xs text-zinc-500">
-                  <span>Used: {subscription?.credits_used || 0}</span>
-                  <span>Monthly: {subscription?.plan_info?.credits || 50}</span>
-                </div>
-              </div>
-
-              {/* Buy More Credits */}
-              <Button
-                onClick={() => navigate("/pricing")}
-                variant="outline"
-                className="w-full border-white/10 hover:bg-white/5"
-                data-testid="buy-credits-btn"
-              >
-                <Sparkles className="w-4 h-4 mr-2" />
-                Buy More Credits
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* LLM Model Configuration */}
-          {llmConfig && (
-            <Card className="bg-zinc-900/50 border-white/10 mb-6" data-testid="llm-config-card">
-              <CardHeader>
-                <CardTitle className="text-white font-['Outfit'] flex items-center gap-2">
-                  <Cpu className="w-5 h-5 text-indigo-400" />
-                  AI Model Configuration
-                </CardTitle>
-                <p className="text-xs text-zinc-400 mt-1">Choose your preferred LLM provider and model for Vibe Coding, Reference Intelligence, and other AI features</p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {llmConfig.available_providers?.map(p => (
+          {/* Model selector */}
+          {llmConfig.available_providers?.filter(p => p.id === llmConfig.provider).map(p => (
+            <div key={p.id} style={{ marginBottom: 16 }}>
+              <p style={{ fontSize: 11, color: T.zinc, marginBottom: 8 }}>Select model for <span style={{ color: "#fff" }}>{p.name}</span>:</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {p.models.map(m => {
+                  const active = llmConfig.model === m;
+                  return (
                     <button
-                      key={p.id}
-                      onClick={() => saveLlmConfig(p.id, p.models[0])}
-                      className={`p-3 rounded-lg border transition-all text-left ${
-                        llmConfig.provider === p.id
-                          ? "border-indigo-500 bg-indigo-500/10"
-                          : "border-white/10 bg-zinc-800/30 hover:border-white/20"
-                      }`}
+                      key={m}
+                      onClick={() => saveLlmConfig(p.id, m)}
                       disabled={savingLlm}
-                      data-testid={`llm-provider-${p.id}`}
+                      data-testid={`llm-model-${m}`}
+                      style={{
+                        padding: "5px 12px", borderRadius: 8, fontSize: 11, cursor: "pointer",
+                        background: active ? "rgba(79,209,197,.12)" : "rgba(255,255,255,.04)",
+                        border: active ? `1px solid rgba(79,209,197,.4)` : `1px solid ${T.border}`,
+                        color: active ? T.teal : T.zinc,
+                      }}
                     >
-                      <p className="text-sm font-medium text-white">{p.name}</p>
-                      <p className="text-[10px] text-zinc-500 mt-1">{p.models.length} models</p>
-                      {llmConfig.provider === p.id && (
-                        <div className="mt-2 flex items-center gap-1">
-                          <Check className="w-3 h-3 text-indigo-400" />
-                          <span className="text-[10px] text-indigo-400">Active</span>
-                        </div>
-                      )}
+                      {m}
                     </button>
-                  ))}
-                </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
 
-                {/* Model Selector */}
-                {llmConfig.available_providers?.filter(p => p.id === llmConfig.provider).map(p => (
-                  <div key={p.id}>
-                    <p className="text-xs text-zinc-400 mb-2">Select model for {p.name}:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {p.models.map(m => (
-                        <button
-                          key={m}
-                          onClick={() => saveLlmConfig(p.id, m)}
-                          className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
-                            llmConfig.model === m
-                              ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/40"
-                              : "bg-zinc-800/50 text-zinc-400 border border-white/5 hover:border-white/15"
-                          }`}
-                          disabled={savingLlm}
-                          data-testid={`llm-model-${m}`}
-                        >
-                          {m}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+          {/* Router Calibration */}
+          <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 16 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "#fff", marginBottom: 4 }}>Universal Router Calibration</div>
+            <div style={{ fontSize: 11, color: T.zinc, marginBottom: 14 }}>When using Auto mode in chat, these preferences guide the smart router.</div>
 
-                <div className="p-3 rounded-lg bg-zinc-800/30 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-medium text-white">Current Model</p>
-                    <p className="text-[10px] text-zinc-500 font-mono">{llmConfig.provider}/{llmConfig.model}</p>
-                  </div>
-                  <Badge className="bg-emerald-500/20 text-emerald-400 border-0 text-[10px]">Active</Badge>
-                </div>
-              </CardContent>
-            </Card>
+            <div style={{ marginBottom: 14 }}>
+              <p style={{ fontSize: 11, color: T.zinc, marginBottom: 8 }}>Default Quality Tier</p>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {[["auto","Auto ✦"],["economy","Economy"],["standard","Standard"],["premium","Premium"]].map(([v, l]) => {
+                  const active = llmConfig.quality_tier === v;
+                  return (
+                    <button key={v} onClick={() => saveLlmConfig(llmConfig.provider, llmConfig.model, v, llmConfig.task_hint)} disabled={savingLlm}
+                      style={{ padding: "5px 12px", borderRadius: 8, fontSize: 11, cursor: "pointer", background: active ? "rgba(79,209,197,.12)" : "rgba(255,255,255,.04)", border: active ? `1px solid ${T.teal}50` : `1px solid ${T.border}`, color: active ? T.teal : T.zinc }}>{l}</button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 14 }}>
+              <p style={{ fontSize: 11, color: T.zinc, marginBottom: 8 }}>Default Task Hint</p>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {[["auto","Auto"],["code","Code"],["math","Math"],["reasoning","Reasoning"],["creative","Creative"],["translation","Translation"],["summary","Summary"],["research","Research"],["data","Data"],["chat","Chat"]].map(([v, l]) => {
+                  const active = llmConfig.task_hint === v;
+                  return (
+                    <button key={v} onClick={() => saveLlmConfig(llmConfig.provider, llmConfig.model, llmConfig.quality_tier, v)} disabled={savingLlm}
+                      style={{ padding: "5px 12px", borderRadius: 8, fontSize: 11, cursor: "pointer", background: active ? "rgba(124,58,237,.12)" : "rgba(255,255,255,.04)", border: active ? `1px solid ${T.violet}50` : `1px solid ${T.border}`, color: active ? "#c4b5fd" : T.zinc }}>{l}</button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Active config badge */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", borderRadius: 10, background: "rgba(79,209,197,.06)", border: `1px solid rgba(79,209,197,.2)` }}>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>Active Configuration</div>
+                <div style={{ fontSize: 11, fontFamily: "monospace", color: T.teal, marginTop: 2 }}>{llmConfig.provider}/{llmConfig.model}</div>
+                <div style={{ fontSize: 10, color: T.zinc }}>{llmConfig.quality_tier || "auto"} quality · {llmConfig.task_hint || "auto"} task</div>
+              </div>
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.green }} />
+            </div>
+          </div>
+        </Section>
+      )}
+
+      {/* Integrations */}
+      <Section title="Integrations & Actions" icon={<Link2 size={16} />} accent={T.blue} testId="integrations-card">
+        <p style={{ fontSize: 12, color: T.zinc, marginBottom: 16 }}>Connect external services for real-world agent actions</p>
+
+        {/* Google Suite */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", borderRadius: 12, background: "rgba(255,255,255,.03)", border: `1px solid ${T.border}`, marginBottom: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(96,165,250,.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Mail size={18} style={{ color: T.blue }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 2 }}>Google Suite</div>
+              <div style={{ fontSize: 11, color: T.zinc }}>Gmail, Calendar integration</div>
+              {actionIntegrations?.integrations?.[0]?.email && (
+                <div style={{ fontSize: 11, color: T.green }}>{actionIntegrations.integrations[0].email}</div>
+              )}
+            </div>
+          </div>
+          {googleConnected ? (
+            <button onClick={disconnectGoogle} data-testid="disconnect-google-btn" style={{ padding: "7px 14px", borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: "pointer", background: "rgba(239,68,68,.08)", border: `1px solid rgba(239,68,68,.25)`, color: T.red, display: "flex", alignItems: "center", gap: 6 }}>
+              <Unlink size={13} /> Disconnect
+            </button>
+          ) : (
+            <button onClick={connectGoogle} data-testid="connect-google-btn" style={{ padding: "7px 14px", borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: "pointer", background: "rgba(96,165,250,.12)", border: `1px solid rgba(96,165,250,.3)`, color: T.blue, display: "flex", alignItems: "center", gap: 6 }}>
+              <Link2 size={13} /> Connect
+            </button>
           )}
+        </div>
 
-          {/* Integrations / Action Layer */}
-          <Card className="bg-zinc-900/50 border-white/10 mb-6" data-testid="integrations-card">
-            <CardHeader>
-              <CardTitle className="text-white font-['Outfit'] flex items-center gap-2">
-                <Link2 className="w-5 h-5 text-indigo-400" />
-                Integrations & Actions
-              </CardTitle>
-              <p className="text-xs text-zinc-400 mt-1">Connect external services for real-world agent actions</p>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {/* Google Suite */}
-              <div className="p-4 rounded-lg bg-zinc-800/30">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-blue-500/15 flex items-center justify-center">
-                      <Mail className="w-5 h-5 text-blue-400" />
+        {/* System mode */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,.02)", border: `1px solid ${T.border}` }}>
+          <div style={{ width: 7, height: 7, borderRadius: "50%", background: isExecution ? T.green : T.amber, flexShrink: 0 }} />
+          <div style={{ fontSize: 12, color: T.zinc }}>
+            System Mode: <span style={{ color: isExecution ? T.green : T.amber, fontWeight: 600 }}>{isExecution ? "Execution (Live)" : "Simulation (Safe)"}</span>
+            <span style={{ color: "rgba(113,113,122,.6)", marginLeft: 8 }}>— Toggle in KPI Dashboard</span>
+          </div>
+        </div>
+      </Section>
+
+      {/* Agent Selection */}
+      {agentConfig && agentConfig.plan_id !== "custom" && (
+        <Section title="Your Agents" icon={<Users size={16} />} accent={T.violet} testId="agent-selection-card">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>
+              Select agents for your plan. {agentConfig.includes_commander && "Commander AI is included."}
+            </p>
+            <span style={{ fontSize: 12, fontWeight: 600, color: T.violet, background: "rgba(124,58,237,.12)", padding: "3px 12px", borderRadius: 8, border: `1px solid rgba(124,58,237,.3)` }}>
+              {selectedAgents.filter(a => a !== "agent_commander").length} / {agentConfig.max_agents}
+            </span>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))", gap: 10, marginBottom: 16 }}>
+            {allAgents.filter(a => a.agent_id !== "agent_commander").map((agent) => {
+              const isSelected = selectedAgents.includes(agent.agent_id);
+              const atLimit = !isSelected && selectedAgents.filter(a => a !== "agent_commander").length >= agentConfig.max_agents;
+              return (
+                <button
+                  key={agent.agent_id}
+                  onClick={() => !atLimit && toggleAgentSelection(agent.agent_id)}
+                  disabled={atLimit && !isSelected}
+                  data-testid={`select-agent-${agent.agent_id}`}
+                  style={{
+                    position: "relative", display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
+                    padding: "10px 6px", borderRadius: 12, cursor: atLimit && !isSelected ? "not-allowed" : "pointer",
+                    background: isSelected ? "rgba(124,58,237,.1)" : "rgba(255,255,255,.03)",
+                    border: isSelected ? `1px solid rgba(124,58,237,.4)` : `1px solid ${T.border}`,
+                    opacity: atLimit && !isSelected ? .4 : 1, transition: "all .15s",
+                  }}
+                >
+                  {isSelected && (
+                    <div style={{ position: "absolute", top: 5, right: 5, width: 14, height: 14, borderRadius: "50%", background: T.violet, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Check size={9} style={{ color: "#fff" }} />
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">Google Suite</p>
-                      <p className="text-[10px] text-zinc-500">Gmail, Calendar integration</p>
-                      {actionIntegrations?.integrations?.[0]?.email && (
-                        <p className="text-[10px] text-emerald-400">{actionIntegrations.integrations[0].email}</p>
-                      )}
-                    </div>
-                  </div>
-                  {actionIntegrations?.integrations?.[0]?.connected ? (
-                    <Button size="sm" variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10" onClick={disconnectGoogle} data-testid="disconnect-google-btn">
-                      <Unlink className="w-3.5 h-3.5 mr-1" />Disconnect
-                    </Button>
-                  ) : (
-                    <Button size="sm" className="bg-blue-600 hover:bg-blue-500 text-white" onClick={connectGoogle} data-testid="connect-google-btn">
-                      <Link2 className="w-3.5 h-3.5 mr-1" />Connect
-                    </Button>
                   )}
-                </div>
-              </div>
+                  <img src={agent.avatar} alt="" style={{ width: 36, height: 36, borderRadius: 8, objectFit: "cover" }} />
+                  <span style={{ fontSize: 10, color: isSelected ? "#c4b5fd" : "#e4e4e7", fontWeight: 500, textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 72 }}>{agent.name}</span>
+                  <span style={{ fontSize: 9, color: T.zinc, textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 72 }}>{agent.role}</span>
+                </button>
+              );
+            })}
+          </div>
+          <button
+            onClick={saveAgentSelection}
+            disabled={savingAgents}
+            data-testid="save-agents-btn"
+            style={{ width: "100%", padding: "11px 0", borderRadius: 12, background: `linear-gradient(135deg, ${T.violet}, #9333ea)`, border: "none", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+          >
+            {savingAgents ? <div style={{ width: 16, height: 16, border: "2px solid #fff", borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> : <Save size={15} />}
+            Save Selection
+          </button>
+        </Section>
+      )}
 
-              {/* System Mode Info */}
-              <div className="p-3 rounded-lg bg-zinc-800/20 flex items-center gap-3">
-                <div className={`w-2 h-2 rounded-full ${actionIntegrations?.system_mode === "execution" ? "bg-emerald-400" : "bg-amber-400 animate-pulse"}`} />
-                <p className="text-xs text-zinc-400">
-                  System Mode: <span className={actionIntegrations?.system_mode === "execution" ? "text-emerald-400" : "text-amber-400"}>
-                    {actionIntegrations?.system_mode === "execution" ? "Execution (Live)" : "Simulation (Safe)"}
-                  </span>
-                  <span className="text-zinc-600 ml-2">Toggle in KPI Dashboard</span>
-                </p>
+      {agentConfig?.plan_id === "custom" && (
+        <Section title="Your Custom Package Agents" icon={<Users size={16} />} accent={T.amber} testId="custom-agents-info">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(80px,1fr))", gap: 10, marginBottom: 14 }}>
+            {allAgents.filter(a => selectedAgents.includes(a.agent_id)).map(agent => (
+              <div key={agent.agent_id} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, padding: "10px 6px", borderRadius: 12, background: "rgba(245,158,11,.06)", border: `1px solid rgba(245,158,11,.2)` }}>
+                <img src={agent.avatar} alt="" style={{ width: 36, height: 36, borderRadius: 8, objectFit: "cover" }} />
+                <span style={{ fontSize: 10, color: "#fff", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 72 }}>{agent.name}</span>
               </div>
-            </CardContent>
-          </Card>
+            ))}
+          </div>
+          <p style={{ fontSize: 12, color: T.zinc, textAlign: "center" }}>
+            Custom package agents are set at purchase.{" "}
+            <Link to="/pricing" style={{ color: T.amber, textDecoration: "underline" }}>Build a new package</Link> to change.
+          </p>
+        </Section>
+      )}
 
-          {/* Agent Selection */}
-          {agentConfig && agentConfig.plan_id !== "custom" && (
-            <Card className="bg-zinc-900/50 border-white/10 mb-6" data-testid="agent-selection-card">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-white font-['Outfit'] flex items-center gap-2">
-                    <Users className="w-5 h-5 text-indigo-400" />
-                    Your Agents
-                  </CardTitle>
-                  <Badge className="bg-indigo-500/20 text-indigo-400 border-0">
-                    {selectedAgents.filter(a => a !== "agent_commander").length} / {agentConfig.max_agents} slots
-                  </Badge>
-                </div>
-                <p className="text-sm text-zinc-400 mt-1">
-                  Select which agents you want access to. Your {(subscription?.plan_info?.name || "Free")} plan allows up to {agentConfig.max_agents} agents.
-                  {agentConfig.includes_commander && " Commander AI is included with your plan."}
-                </p>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-4">
-                  {allAgents.filter(a => a.agent_id !== "agent_commander").map((agent) => {
-                    const isSelected = selectedAgents.includes(agent.agent_id);
-                    const atLimit = !isSelected && selectedAgents.filter(a => a !== "agent_commander").length >= agentConfig.max_agents;
-                    return (
-                      <button
-                        key={agent.agent_id}
-                        onClick={() => !atLimit && toggleAgentSelection(agent.agent_id)}
-                        disabled={atLimit && !isSelected}
-                        className={`relative flex flex-col items-center gap-1.5 p-2.5 rounded-lg border transition-all ${
-                          isSelected
-                            ? "border-indigo-500 bg-indigo-500/15"
-                            : atLimit
-                            ? "border-white/5 bg-zinc-900/30 opacity-40 cursor-not-allowed"
-                            : "border-white/10 bg-zinc-800/30 hover:border-white/20"
-                        }`}
-                        data-testid={`select-agent-${agent.agent_id}`}
-                      >
-                        {isSelected && (
-                          <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-indigo-500 flex items-center justify-center">
-                            <Check className="w-2.5 h-2.5 text-white" />
-                          </div>
-                        )}
-                        <img src={agent.avatar} alt="" className="w-8 h-8 rounded-md object-cover" />
-                        <p className="text-[10px] text-white font-medium truncate max-w-[80px]">{agent.name}</p>
-                        <p className="text-[8px] text-zinc-500 truncate max-w-[80px]">{agent.role}</p>
-                      </button>
-                    );
-                  })}
-                </div>
-                <Button
-                  onClick={saveAgentSelection}
-                  disabled={savingAgents}
-                  className="w-full bg-gradient-to-r from-indigo-500 to-violet-500"
-                  data-testid="save-agents-btn"
-                >
-                  {savingAgents ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                  Save Selection
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-
-          {agentConfig?.plan_id === "custom" && (
-            <Card className="bg-zinc-900/50 border-amber-500/20 mb-6" data-testid="custom-agents-info">
-              <CardHeader>
-                <CardTitle className="text-white font-['Outfit'] flex items-center gap-2">
-                  <Users className="w-5 h-5 text-amber-400" />
-                  Your Custom Package Agents
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-3">
-                  {allAgents.filter(a => selectedAgents.includes(a.agent_id)).map((agent) => (
-                    <div key={agent.agent_id} className="flex flex-col items-center gap-1.5 p-2.5 rounded-lg border border-amber-500/20 bg-amber-500/5">
-                      <img src={agent.avatar} alt="" className="w-8 h-8 rounded-md object-cover" />
-                      <p className="text-[10px] text-white font-medium truncate max-w-[80px]">{agent.name}</p>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-xs text-zinc-500 text-center">
-                  Custom package agents are set at purchase. <Link to="/pricing" className="text-amber-400 underline">Build a new package</Link> to change.
-                </p>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Account Section */}
-          <Card className="bg-zinc-900/50 border-white/10 mb-6">
-            <CardHeader>
-              <CardTitle className="text-white font-['Outfit'] flex items-center gap-2">
-                <Shield className="w-5 h-5 text-indigo-400" />
-                Account
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-800/30">
-                <div>
-                  <p className="font-medium text-white">User ID</p>
-                  <p className="text-sm text-zinc-400 font-mono">{user?.user_id}</p>
-                </div>
+      {/* Account */}
+      <Section title="Account" icon={<Shield size={16} />} accent={T.red}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {[
+            { label: "User ID", value: user?.user_id, mono: true },
+            { label: "AI Providers", value: "OpenAI, Anthropic, Google Gemini", badge: { color: T.green, text: "Connected" } },
+          ].map(row => (
+            <div key={row.label} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: 12, background: "rgba(255,255,255,.03)", border: `1px solid ${T.border}` }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#fff", marginBottom: 2 }}>{row.label}</div>
+                <div style={{ fontSize: 12, color: T.zinc, fontFamily: row.mono ? "monospace" : "inherit" }}>{row.value}</div>
               </div>
-              
-              <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-800/30">
-                <div>
-                  <p className="font-medium text-white">AI Providers</p>
-                  <p className="text-sm text-zinc-400">OpenAI, Anthropic, Google Gemini</p>
-                </div>
-                <span className="px-3 py-1 text-xs rounded-full bg-emerald-500/20 text-emerald-400">
-                  Connected
-                </span>
-              </div>
-            </CardContent>
-          </Card>
+              {row.badge && <span style={{ fontSize: 11, fontWeight: 600, background: "rgba(52,211,153,.12)", color: T.green, padding: "3px 10px", borderRadius: 8 }}>{row.badge.text}</span>}
+            </div>
+          ))}
 
-          {/* Account */}
-          <Card className="bg-zinc-900/50 border-white/10">
-            <CardHeader>
-              <CardTitle className="text-zinc-300 font-['Outfit']">Account</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium text-white">Sign Out</p>
-                  <p className="text-sm text-zinc-400">Sign out from your account</p>
-                </div>
-                <Button
-                  variant="outline"
-                  className="border-red-500/30 text-red-400 hover:bg-red-500/10"
-                  onClick={async () => { await logout(); navigate("/"); }}
-                  data-testid="logout-btn"
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sign Out
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: 12, background: "rgba(255,255,255,.03)", border: `1px solid ${T.border}` }}>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "#fff", marginBottom: 2 }}>Sign Out</div>
+              <div style={{ fontSize: 12, color: T.zinc }}>Sign out from your MAARS account</div>
+            </div>
+            <button
+              onClick={async () => { await logout(); navigate("/"); }}
+              data-testid="logout-btn"
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 10, background: "rgba(239,68,68,.08)", border: `1px solid rgba(239,68,68,.25)`, color: T.red, fontSize: 12, fontWeight: 600, cursor: "pointer" }}
+            >
+              <LogOut size={14} /> Sign Out
+            </button>
+          </div>
+        </div>
+      </Section>
     </div>
   );
 };

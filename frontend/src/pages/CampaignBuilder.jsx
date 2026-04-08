@@ -1,9 +1,78 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../App";
 import { Play, Plus, Trash2, Clock, CheckCircle, AlertCircle, ChevronRight, ChevronDown, FileText, Zap, ArrowLeft, Download, CalendarClock } from "lucide-react";
-import { Button } from "../components/ui/button";
 
 const API = process.env.REACT_APP_BACKEND_URL;
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  violet: "#7c3aed",
+  green: "#34d399",
+  amber: "#f59e0b",
+  red: "#ef4444",
+  cyan: "#22d3ee",
+  zinc: "#71717a",
+};
+
+const STYLES = `@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} } @keyframes spin { to{transform:rotate(360deg)} } @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }`;
+
+const formInput = {
+  background: "rgba(255,255,255,.04)",
+  border: "1px solid rgba(255,255,255,0.08)",
+  borderRadius: 8,
+  padding: "8px 12px",
+  color: "#fff",
+  fontSize: 13,
+  outline: "none",
+  fontFamily: "inherit",
+  width: "100%",
+  boxSizing: "border-box",
+  transition: "border-color .2s",
+};
+
+const btnPrimary = {
+  background: "linear-gradient(135deg,#6366f1,#7c3aed)",
+  border: "none",
+  borderRadius: 8,
+  color: "#fff",
+  fontSize: 12,
+  fontWeight: 600,
+  padding: "6px 14px",
+  cursor: "pointer",
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 5,
+  fontFamily: "inherit",
+};
+
+const btnGhost = {
+  background: "transparent",
+  border: "1px solid rgba(255,255,255,0.08)",
+  borderRadius: 8,
+  color: "#a1a1aa",
+  fontSize: 12,
+  fontWeight: 500,
+  padding: "6px 12px",
+  cursor: "pointer",
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 5,
+  fontFamily: "inherit",
+};
+
+const btnGreen = {
+  ...btnPrimary,
+  background: "linear-gradient(135deg,#059669,#10b981)",
+};
+
+const btnRed = {
+  ...btnGhost,
+  color: "#f87171",
+  border: "none",
+  padding: "4px 8px",
+};
 
 export default function CampaignBuilder() {
   const { token } = useAuth();
@@ -53,7 +122,6 @@ export default function CampaignBuilder() {
   const runCampaign = async (campId) => {
     const res = await fetch(`${API}/api/kernel/campaigns/${campId}/run`, { method: "POST", headers: h });
     if (res.ok) {
-      // Start polling
       const interval = setInterval(async () => {
         const r = await fetch(`${API}/api/kernel/campaigns/${campId}`, { headers: h });
         if (r.ok) {
@@ -67,7 +135,6 @@ export default function CampaignBuilder() {
         }
       }, 1500);
       setPollTimer(interval);
-      // Update local state immediately
       setSelected(prev => prev ? { ...prev, status: "running" } : prev);
     }
   };
@@ -106,7 +173,11 @@ export default function CampaignBuilder() {
     }
   };
 
-  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }}>
+      <div style={{ width: 24, height: 24, border: "2px solid #6366f1", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+    </div>
+  );
 
   // Detail view
   if (view === "detail" && selected) {
@@ -114,90 +185,103 @@ export default function CampaignBuilder() {
     const completedSteps = steps.filter(s => s.status === "completed").length;
     const isRunning = selected.status === "running";
     return (
-      <div className="max-w-4xl mx-auto p-6 space-y-6" data-testid="campaign-detail">
-        <div className="flex items-center gap-3">
-          <Button size="sm" variant="ghost" className="h-7 text-zinc-400" onClick={() => { setView("list"); setSelected(null); }} data-testid="campaign-back">
-            <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back
-          </Button>
-          <div className="flex-1">
-            <h2 className="text-lg font-bold text-white">{selected.name}</h2>
-            <p className="text-xs text-zinc-500">{selected.description} &middot; {selected.category}</p>
+      <div style={{ maxWidth: 896, margin: "0 auto", padding: 24, display: "flex", flexDirection: "column", gap: 20, animation: "fadeUp .4s ease" }} data-testid="campaign-detail">
+        <style>{STYLES}</style>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <button style={btnGhost} onClick={() => { setView("list"); setSelected(null); }} data-testid="campaign-back">
+            <ArrowLeft style={{ width: 14, height: 14 }} /> Back
+          </button>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>{selected.name}</h2>
+            <p style={{ fontSize: 11, color: "#52525b", margin: "2px 0 0" }}>{selected.description} &middot; {selected.category}</p>
           </div>
           <StatusBadge status={selected.status} />
           {selected.status === "completed" && (
-            <Button size="sm" variant="outline" className="h-8 text-xs border-white/10" onClick={() => downloadReport(selected.campaign_id)}
-              data-testid="campaign-download-btn">
-              <Download className="w-3.5 h-3.5 mr-1" /> PDF Report
-            </Button>
+            <button style={btnGhost} onClick={() => downloadReport(selected.campaign_id)} data-testid="campaign-download-btn">
+              <Download style={{ width: 14, height: 14 }} /> PDF Report
+            </button>
           )}
-          <Button size="sm" variant="outline" className="h-8 text-xs border-white/10" onClick={() => setShowSchedule(!showSchedule)}
-            data-testid="campaign-schedule-btn">
-            <CalendarClock className="w-3.5 h-3.5 mr-1" /> Schedule
-          </Button>
+          <button style={btnGhost} onClick={() => setShowSchedule(!showSchedule)} data-testid="campaign-schedule-btn">
+            <CalendarClock style={{ width: 14, height: 14 }} /> Schedule
+          </button>
           {(selected.status === "draft" || selected.status === "completed" || selected.status === "failed") && (
-            <Button size="sm" className="h-8 text-xs bg-emerald-600 hover:bg-emerald-700" onClick={() => runCampaign(selected.campaign_id)}
-              data-testid="campaign-run-btn">
-              <Play className="w-3.5 h-3.5 mr-1" /> {selected.status === "draft" ? "Run Campaign" : "Re-run"}
-            </Button>
+            <button style={btnGreen} onClick={() => runCampaign(selected.campaign_id)} data-testid="campaign-run-btn">
+              <Play style={{ width: 14, height: 14 }} /> {selected.status === "draft" ? "Run Campaign" : "Re-run"}
+            </button>
           )}
           {isRunning && (
-            <span className="text-xs text-amber-400 animate-pulse flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" /> Running... {completedSteps}/{steps.length}
+            <span style={{ fontSize: 11, color: T.amber, display: "flex", alignItems: "center", gap: 5, animation: "pulse 1.5s ease-in-out infinite" }}>
+              <Clock style={{ width: 14, height: 14 }} /> Running... {completedSteps}/{steps.length}
             </span>
           )}
         </div>
 
         {selected.context && (
-          <div className="bg-zinc-900/50 border border-white/5 rounded-lg p-4">
-            <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-1">Campaign Context</p>
-            <p className="text-sm text-zinc-300">{selected.context}</p>
+          <div style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 10, padding: 16 }}>
+            <p style={{ fontSize: 10, fontWeight: 600, color: "#52525b", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Campaign Context</p>
+            <p style={{ fontSize: 13, color: "#d4d4d8", margin: 0 }}>{selected.context}</p>
           </div>
         )}
 
         {/* Schedule Panel */}
         {showSchedule && (
-          <div className="bg-zinc-900/50 border border-indigo-500/10 rounded-lg p-4" data-testid="schedule-panel">
-            <p className="text-xs font-semibold text-indigo-400 mb-3">Auto-Schedule</p>
+          <div style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(99,102,241,0.1)", borderRadius: 10, padding: 16 }} data-testid="schedule-panel">
+            <p style={{ fontSize: 11, fontWeight: 600, color: T.indigo, marginBottom: 10 }}>Auto-Schedule</p>
             {selected.schedule?.enabled ? (
-              <div className="flex items-center gap-3">
-                <p className="text-xs text-zinc-300 flex-1">
-                  Scheduled: <span className="text-white font-medium">{selected.schedule.frequency}</span> at {String(selected.schedule.hour).padStart(2,"0")}:{String(selected.schedule.minute || 0).padStart(2,"0")} UTC
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <p style={{ fontSize: 11, color: "#d4d4d8", flex: 1, margin: 0 }}>
+                  Scheduled: <span style={{ color: "#fff", fontWeight: 600 }}>{selected.schedule.frequency}</span> at {String(selected.schedule.hour).padStart(2, "0")}:{String(selected.schedule.minute || 0).padStart(2, "0")} UTC
                 </p>
-                <Button size="sm" variant="ghost" className="h-7 text-[10px] text-red-400" onClick={() => removeSchedule(selected.campaign_id)} data-testid="remove-schedule-btn">Remove Schedule</Button>
+                <button style={btnRed} onClick={() => removeSchedule(selected.campaign_id)} data-testid="remove-schedule-btn">Remove Schedule</button>
               </div>
             ) : (
-              <div className="flex items-center gap-3">
-                <select value={scheduleData.frequency} onChange={e => setScheduleData(p => ({...p, frequency: e.target.value}))}
-                  className="bg-zinc-800/50 border border-white/5 rounded px-2 py-1.5 text-[10px] text-zinc-300" data-testid="schedule-frequency">
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <select
+                  value={scheduleData.frequency}
+                  onChange={e => setScheduleData(p => ({ ...p, frequency: e.target.value }))}
+                  style={{ ...formInput, width: "auto", fontSize: 11, padding: "5px 10px", cursor: "pointer" }}
+                  data-testid="schedule-frequency"
+                >
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
                   <option value="monthly">Monthly</option>
                 </select>
                 {scheduleData.frequency === "weekly" && (
-                  <select value={scheduleData.day_of_week} onChange={e => setScheduleData(p => ({...p, day_of_week: +e.target.value}))}
-                    className="bg-zinc-800/50 border border-white/5 rounded px-2 py-1.5 text-[10px] text-zinc-300">
-                    {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map((d,i) => <option key={i} value={i}>{d}</option>)}
+                  <select
+                    value={scheduleData.day_of_week}
+                    onChange={e => setScheduleData(p => ({ ...p, day_of_week: +e.target.value }))}
+                    style={{ ...formInput, width: "auto", fontSize: 11, padding: "5px 10px", cursor: "pointer" }}
+                  >
+                    {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d, i) => <option key={i} value={i}>{d}</option>)}
                   </select>
                 )}
-                <input type="number" min={0} max={23} value={scheduleData.hour} onChange={e => setScheduleData(p => ({...p, hour: +e.target.value}))}
-                  className="w-14 bg-zinc-800/50 border border-white/5 rounded px-2 py-1.5 text-[10px] text-zinc-300" placeholder="Hour" />
-                <span className="text-[9px] text-zinc-500">UTC</span>
-                <Button size="sm" className="h-7 text-[10px] bg-indigo-600 hover:bg-indigo-700" onClick={() => saveCampaignSchedule(selected.campaign_id)} data-testid="save-schedule-btn">Save</Button>
+                <input
+                  type="number" min={0} max={23}
+                  value={scheduleData.hour}
+                  onChange={e => setScheduleData(p => ({ ...p, hour: +e.target.value }))}
+                  style={{ ...formInput, width: 56, fontSize: 11, padding: "5px 8px" }}
+                  placeholder="Hour"
+                />
+                <span style={{ fontSize: 10, color: "#52525b" }}>UTC</span>
+                <button style={btnPrimary} onClick={() => saveCampaignSchedule(selected.campaign_id)} data-testid="save-schedule-btn">Save</button>
               </div>
             )}
           </div>
         )}
 
         {/* Progress bar */}
-        <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-          <div className="h-full rounded-full transition-all duration-500" style={{
+        <div style={{ height: 6, background: "#27272a", borderRadius: 9999, overflow: "hidden" }}>
+          <div style={{
+            height: "100%",
+            borderRadius: 9999,
+            transition: "width 0.5s ease",
             width: `${steps.length > 0 ? (completedSteps / steps.length) * 100 : 0}%`,
-            backgroundColor: selected.status === "failed" ? "#ef4444" : "#10b981"
+            backgroundColor: selected.status === "failed" ? T.red : T.green,
           }} />
         </div>
 
         {/* Steps */}
-        <div className="space-y-3" data-testid="campaign-steps">
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }} data-testid="campaign-steps">
           {steps.map((step, i) => (
             <StepCard key={i} step={step} index={i} isLast={i === steps.length - 1} />
           ))}
@@ -209,65 +293,75 @@ export default function CampaignBuilder() {
   // Create view
   if (view === "create") {
     return (
-      <div className="max-w-4xl mx-auto p-6 space-y-6" data-testid="campaign-create">
-        <div className="flex items-center gap-3">
-          <Button size="sm" variant="ghost" className="h-7 text-zinc-400" onClick={() => setView("list")} data-testid="campaign-create-back">
-            <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back
-          </Button>
-          <h2 className="text-lg font-bold text-white">New Campaign</h2>
+      <div style={{ maxWidth: 896, margin: "0 auto", padding: 24, display: "flex", flexDirection: "column", gap: 20, animation: "fadeUp .4s ease" }} data-testid="campaign-create">
+        <style>{STYLES}</style>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <button style={btnGhost} onClick={() => setView("list")} data-testid="campaign-create-back">
+            <ArrowLeft style={{ width: 14, height: 14 }} /> Back
+          </button>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>New Campaign</h2>
         </div>
 
-        <p className="text-sm text-zinc-400">Choose a template and provide context for your campaign.</p>
+        <p style={{ fontSize: 13, color: "#71717a", margin: 0 }}>Choose a template and provide context for your campaign.</p>
 
         {/* Template selection */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" data-testid="template-grid">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }} data-testid="template-grid">
           {templates.map(t => (
-            <div key={t.template_id}
-              className={`rounded-xl border-2 p-4 cursor-pointer transition-all ${selectedTemplate?.template_id === t.template_id ? "border-white/30 bg-white/[0.04]" : "border-white/5 hover:border-white/10 bg-zinc-900/30"}`}
+            <div
+              key={t.template_id}
+              style={{
+                borderRadius: 12,
+                border: selectedTemplate?.template_id === t.template_id ? "2px solid rgba(255,255,255,0.3)" : "2px solid rgba(255,255,255,0.05)",
+                background: selectedTemplate?.template_id === t.template_id ? "rgba(255,255,255,0.04)" : "rgba(9,9,11,0.3)",
+                padding: 16,
+                cursor: "pointer",
+                transition: "border-color .15s",
+              }}
               onClick={() => setSelectedTemplate(t)}
-              data-testid={`template-${t.template_id}`}>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: t.color }} />
-                <p className="text-sm font-semibold text-white">{t.name}</p>
+              data-testid={`template-${t.template_id}`}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                <div style={{ width: 10, height: 10, borderRadius: "50%", backgroundColor: t.color, flexShrink: 0 }} />
+                <p style={{ fontSize: 13, fontWeight: 600, color: "#fff", margin: 0 }}>{t.name}</p>
               </div>
-              <p className="text-xs text-zinc-500 mb-2">{t.description}</p>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">{t.category}</span>
-                <span className="text-[10px] text-zinc-600">{t.steps.length} steps</span>
+              <p style={{ fontSize: 11, color: "#52525b", margin: "0 0 8px" }}>{t.description}</p>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "#27272a", color: "#71717a" }}>{t.category}</span>
+                <span style={{ fontSize: 10, color: "#3f3f46" }}>{t.steps.length} steps</span>
               </div>
             </div>
           ))}
         </div>
 
         {selectedTemplate && (
-          <div className="space-y-3">
-            <div className="bg-zinc-900/50 border border-white/5 rounded-lg p-4">
-              <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-2">Steps Preview</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 10, padding: 16 }}>
+              <p style={{ fontSize: 10, fontWeight: 600, color: "#52525b", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Steps Preview</p>
               {selectedTemplate.steps.map((s, i) => (
-                <div key={i} className="flex items-center gap-2 py-1.5">
-                  <span className="text-[10px] font-mono text-zinc-600 w-4">{s.order}</span>
-                  <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: selectedTemplate.color }} />
-                  <span className="text-xs text-zinc-300">{s.title}</span>
-                  <span className="text-[10px] text-zinc-600">— {s.agent_role}</span>
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0" }}>
+                  <span style={{ fontSize: 10, fontFamily: "monospace", color: "#3f3f46", width: 16 }}>{s.order}</span>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: selectedTemplate.color, flexShrink: 0 }} />
+                  <span style={{ fontSize: 11, color: "#d4d4d8" }}>{s.title}</span>
+                  <span style={{ fontSize: 10, color: "#3f3f46" }}>— {s.agent_role}</span>
                 </div>
               ))}
             </div>
 
             <div>
-              <label className="text-xs font-medium text-zinc-400 block mb-1">Campaign Context (optional)</label>
+              <label style={{ fontSize: 11, fontWeight: 500, color: "#71717a", display: "block", marginBottom: 6 }}>Campaign Context (optional)</label>
               <textarea
                 value={contextInput}
                 onChange={e => setContextInput(e.target.value)}
                 placeholder="Add specific context for this campaign, e.g., 'We are launching a new AI-powered CRM tool targeting small businesses in the US market...'"
-                className="w-full bg-zinc-800/50 border border-white/5 rounded-lg px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/30 resize-none"
+                style={{ ...formInput, resize: "none", minHeight: 72 }}
                 rows={3}
                 data-testid="campaign-context-input"
               />
             </div>
 
-            <Button className="bg-indigo-600 hover:bg-indigo-700 h-9 text-sm" onClick={createCampaign} data-testid="campaign-create-btn">
-              <Zap className="w-3.5 h-3.5 mr-1.5" /> Create Campaign
-            </Button>
+            <button style={btnPrimary} onClick={createCampaign} data-testid="campaign-create-btn">
+              <Zap style={{ width: 14, height: 14 }} /> Create Campaign
+            </button>
           </div>
         )}
       </div>
@@ -276,29 +370,32 @@ export default function CampaignBuilder() {
 
   // List view
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-6" data-testid="campaign-list">
-      <div className="flex items-center justify-between">
+    <div style={{ maxWidth: 1024, margin: "0 auto", padding: 24, display: "flex", flexDirection: "column", gap: 24, animation: "fadeUp .4s ease" }} data-testid="campaign-list">
+      <style>{STYLES}</style>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
         <div>
-          <h1 className="text-xl font-bold text-white">Campaign Builder</h1>
-          <p className="text-sm text-zinc-500">Multi-step automated workflows powered by AI agents</p>
+          <h1 style={{ fontSize: 20, fontWeight: 700, color: "#fff", margin: 0 }}>Campaign Builder</h1>
+          <p style={{ fontSize: 13, color: "#52525b", margin: "4px 0 0" }}>Multi-step automated workflows powered by AI agents</p>
         </div>
-        <Button className="bg-indigo-600 hover:bg-indigo-700 h-9 text-sm" onClick={() => setView("create")} data-testid="new-campaign-btn">
-          <Plus className="w-3.5 h-3.5 mr-1.5" /> New Campaign
-        </Button>
+        <button style={btnPrimary} onClick={() => setView("create")} data-testid="new-campaign-btn">
+          <Plus style={{ width: 14, height: 14 }} /> New Campaign
+        </button>
       </div>
 
       {/* Templates quick access */}
       <div>
-        <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Quick Start Templates</p>
-        <div className="flex gap-2 overflow-x-auto pb-2">
+        <p style={{ fontSize: 11, fontWeight: 600, color: "#52525b", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Quick Start Templates</p>
+        <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8 }}>
           {templates.map(t => (
-            <button key={t.template_id}
-              className="shrink-0 flex items-center gap-2 px-3 py-2 rounded-lg border border-white/5 hover:border-white/10 bg-zinc-900/30 transition-colors"
+            <button
+              key={t.template_id}
+              style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)", background: "rgba(9,9,11,0.3)", cursor: "pointer", fontFamily: "inherit", transition: "border-color .15s" }}
               onClick={() => { setSelectedTemplate(t); setView("create"); }}
-              data-testid={`quick-template-${t.template_id}`}>
-              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: t.color }} />
-              <span className="text-xs text-zinc-300">{t.name}</span>
-              <span className="text-[10px] text-zinc-600">{t.steps.length} steps</span>
+              data-testid={`quick-template-${t.template_id}`}
+            >
+              <div style={{ width: 10, height: 10, borderRadius: "50%", backgroundColor: t.color }} />
+              <span style={{ fontSize: 11, color: "#d4d4d8" }}>{t.name}</span>
+              <span style={{ fontSize: 10, color: "#3f3f46" }}>{t.steps.length} steps</span>
             </button>
           ))}
         </div>
@@ -306,30 +403,38 @@ export default function CampaignBuilder() {
 
       {/* Campaigns list */}
       <div>
-        <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Your Campaigns</p>
+        <p style={{ fontSize: 11, fontWeight: 600, color: "#52525b", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Your Campaigns</p>
         {campaigns.length === 0 ? (
-          <div className="text-center py-12 text-zinc-600">
-            <FileText className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">No campaigns yet. Create one from a template above.</p>
+          <div style={{ textAlign: "center", padding: "48px 0", color: "#3f3f46" }}>
+            <FileText style={{ width: 32, height: 32, margin: "0 auto 8px", opacity: 0.5, display: "block" }} />
+            <p style={{ fontSize: 13, color: "#52525b" }}>No campaigns yet. Create one from a template above.</p>
           </div>
         ) : (
-          <div className="space-y-2" data-testid="campaigns-list">
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }} data-testid="campaigns-list">
             {campaigns.map(c => (
-              <div key={c.campaign_id}
-                className="group flex items-center gap-4 px-4 py-3 rounded-xl border border-white/5 hover:border-white/10 bg-zinc-900/30 cursor-pointer transition-all"
+              <div
+                key={c.campaign_id}
+                style={{ display: "flex", alignItems: "center", gap: 16, padding: "12px 16px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)", background: "rgba(9,9,11,0.3)", cursor: "pointer", transition: "border-color .15s" }}
                 onClick={() => { setSelected(c); setView("detail"); }}
-                data-testid={`campaign-item-${c.campaign_id}`}>
-                <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c.color || "#6366f1" }} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white">{c.name}</p>
-                  <p className="text-[10px] text-zinc-500">{c.category} &middot; {(c.steps || []).length} steps</p>
+                data-testid={`campaign-item-${c.campaign_id}`}
+                onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)"}
+                onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)"}
+              >
+                <div style={{ width: 12, height: 12, borderRadius: "50%", backgroundColor: c.color || "#4fd1c5", flexShrink: 0 }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 13, fontWeight: 500, color: "#fff", margin: 0 }}>{c.name}</p>
+                  <p style={{ fontSize: 10, color: "#52525b", margin: "2px 0 0" }}>{c.category} &middot; {(c.steps || []).length} steps</p>
                 </div>
                 <StatusBadge status={c.status} />
-                <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400" />
-                <button onClick={e => { e.stopPropagation(); deleteCampaign(c.campaign_id); }}
-                  className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400 transition-opacity"
-                  data-testid={`campaign-delete-${c.campaign_id}`}>
-                  <Trash2 className="w-3.5 h-3.5" />
+                <ChevronRight style={{ width: 16, height: 16, color: "#52525b", flexShrink: 0 }} />
+                <button
+                  style={{ ...btnRed, opacity: 0.6 }}
+                  onClick={e => { e.stopPropagation(); deleteCampaign(c.campaign_id); }}
+                  data-testid={`campaign-delete-${c.campaign_id}`}
+                  onMouseEnter={e => e.currentTarget.style.opacity = "1"}
+                  onMouseLeave={e => e.currentTarget.style.opacity = "0.6"}
+                >
+                  <Trash2 style={{ width: 14, height: 14 }} />
                 </button>
               </div>
             ))}
@@ -341,14 +446,18 @@ export default function CampaignBuilder() {
 }
 
 function StatusBadge({ status }) {
-  const styles = {
-    draft: "bg-zinc-800 text-zinc-400",
-    running: "bg-amber-500/10 text-amber-400",
-    completed: "bg-emerald-500/10 text-emerald-400",
-    failed: "bg-red-500/10 text-red-400",
+  const map = {
+    draft: { background: "rgba(39,39,42,0.8)", color: "#71717a" },
+    running: { background: "rgba(245,158,11,0.1)", color: "#fbbf24" },
+    completed: { background: "rgba(16,185,129,0.1)", color: "#34d399" },
+    failed: { background: "rgba(239,68,68,0.1)", color: "#f87171" },
   };
+  const s = map[status] || map.draft;
   return (
-    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${styles[status] || styles.draft}`} data-testid="campaign-status">
+    <span
+      style={{ fontSize: 10, fontWeight: 500, padding: "2px 9px", borderRadius: 20, background: s.background, color: s.color }}
+      data-testid="campaign-status"
+    >
       {status || "draft"}
     </span>
   );
@@ -357,41 +466,48 @@ function StatusBadge({ status }) {
 function StepCard({ step, index, isLast }) {
   const [expanded, setExpanded] = useState(step.status === "completed" || step.status === "failed");
 
+  const indicatorStyle = {
+    width: 32, height: 32, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 11, fontWeight: 700,
+    ...(step.status === "completed" ? { background: "rgba(16,185,129,0.2)", color: "#34d399" } :
+        step.status === "running"   ? { background: "rgba(245,158,11,0.2)", color: "#fbbf24" } :
+        step.status === "failed"    ? { background: "rgba(239,68,68,0.2)", color: "#f87171" } :
+        { background: "#27272a", color: "#71717a" }),
+  };
+
   return (
-    <div className="relative" data-testid={`step-card-${index}`}>
-      {/* Connector line */}
-      {!isLast && <div className="absolute left-[15px] top-10 bottom-0 w-px bg-zinc-800" />}
-      <div className={`flex gap-3 ${step.status === "running" ? "animate-pulse" : ""}`}>
-        {/* Step indicator */}
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${
-          step.status === "completed" ? "bg-emerald-500/20 text-emerald-400" :
-          step.status === "running" ? "bg-amber-500/20 text-amber-400" :
-          step.status === "failed" ? "bg-red-500/20 text-red-400" :
-          "bg-zinc-800 text-zinc-500"
-        }`}>
-          {step.status === "completed" ? <CheckCircle className="w-4 h-4" /> :
-           step.status === "running" ? <Clock className="w-4 h-4 animate-spin" /> :
-           step.status === "failed" ? <AlertCircle className="w-4 h-4" /> :
+    <div style={{ position: "relative" }} data-testid={`step-card-${index}`}>
+      {!isLast && <div style={{ position: "absolute", left: 15, top: 40, bottom: 0, width: 1, background: "#27272a" }} />}
+      <div style={{ display: "flex", gap: 12, opacity: step.status === "running" ? undefined : 1, animation: step.status === "running" ? "pulse 1.5s ease-in-out infinite" : "none" }}>
+        <div style={indicatorStyle}>
+          {step.status === "completed" ? <CheckCircle style={{ width: 16, height: 16 }} /> :
+           step.status === "running"   ? <Clock style={{ width: 16, height: 16, animation: "spin 1s linear infinite" }} /> :
+           step.status === "failed"    ? <AlertCircle style={{ width: 16, height: 16 }} /> :
            index + 1}
         </div>
 
-        {/* Step content */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => setExpanded(!expanded)}>
-            <p className="text-sm font-medium text-white">{step.title}</p>
-            <span className="text-[10px] text-zinc-500">{step.agent_name} &middot; {step.agent_role}</span>
-            <div className="flex-1" />
-            {step.output && (expanded ? <ChevronDown className="w-3.5 h-3.5 text-zinc-500" /> : <ChevronRight className="w-3.5 h-3.5 text-zinc-500" />)}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={() => setExpanded(!expanded)}>
+            <p style={{ fontSize: 13, fontWeight: 500, color: "#fff", margin: 0 }}>{step.title}</p>
+            <span style={{ fontSize: 10, color: "#52525b" }}>{step.agent_name} &middot; {step.agent_role}</span>
+            <div style={{ flex: 1 }} />
+            {step.output && (expanded
+              ? <ChevronDown style={{ width: 14, height: 14, color: "#52525b" }} />
+              : <ChevronRight style={{ width: 14, height: 14, color: "#52525b" }} />
+            )}
           </div>
 
-          {/* Task */}
-          <p className="text-[10px] text-zinc-600 mt-0.5 line-clamp-1">{step.task}</p>
+          <p style={{ fontSize: 10, color: "#3f3f46", marginTop: 2, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{step.task}</p>
 
-          {/* Expanded output */}
           {expanded && step.output && (
-            <div className={`mt-2 rounded-lg p-3 text-xs leading-relaxed whitespace-pre-wrap ${
-              step.status === "failed" ? "bg-red-950/30 border border-red-500/10 text-red-300" : "bg-zinc-800/50 border border-white/5 text-zinc-300"
-            }`} data-testid={`step-output-${index}`}>
+            <div
+              style={{
+                marginTop: 8, borderRadius: 8, padding: 12, fontSize: 11, lineHeight: 1.6, whiteSpace: "pre-wrap",
+                ...(step.status === "failed"
+                  ? { background: "rgba(127,29,29,0.3)", border: "1px solid rgba(239,68,68,0.1)", color: "#fca5a5" }
+                  : { background: "rgba(39,39,42,0.5)", border: "1px solid rgba(255,255,255,0.05)", color: "#d4d4d8" }),
+              }}
+              data-testid={`step-output-${index}`}
+            >
               {step.output}
             </div>
           )}

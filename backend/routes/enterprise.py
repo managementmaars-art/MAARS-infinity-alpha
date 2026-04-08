@@ -380,34 +380,60 @@ async def _get_user_llm_config(user_id: str):
 
 @router.get("/llm/config")
 async def get_llm_config(current_user: User = Depends(get_current_user)):
-    """Get the user's LLM provider/model preference."""
-    provider, model = await _get_user_llm_config(current_user.user_id)
+    """Get the user's LLM provider/model preference and router calibration settings."""
+    config = await db.system_config.find_one(
+        {"user_id": current_user.user_id, "config_type": "llm_preference"}, {"_id": 0}
+    )
+    provider = (config or {}).get("provider", "openai")
+    model    = (config or {}).get("model", "gpt-5.2")
+    quality_tier = (config or {}).get("quality_tier", "auto")
+    task_hint    = (config or {}).get("task_hint", "auto")
     return {
         "provider": provider,
         "model": model,
+        "quality_tier": quality_tier,
+        "task_hint": task_hint,
         "available_providers": [
-            {"id": "openai", "name": "OpenAI", "models": ["gpt-5.2", "gpt-5.1", "gpt-4.1", "gpt-4o", "o3", "o4-mini"]},
-            {"id": "anthropic", "name": "Anthropic", "models": ["claude-sonnet-4-5-20250929", "claude-4-sonnet-20250514", "claude-haiku-4-5-20251001"]},
-            {"id": "gemini", "name": "Google Gemini", "models": ["gemini-3-flash-preview", "gemini-2.5-pro", "gemini-2.5-flash"]},
-            {"id": "xai", "name": "xAI (Grok)", "models": ["grok-3", "grok-3-mini", "grok-2"]},
-            {"id": "deepseek", "name": "DeepSeek", "models": ["deepseek-chat", "deepseek-reasoner"]},
-            {"id": "mistral", "name": "Mistral AI", "models": ["mistral-large-latest", "mistral-medium-latest", "mistral-small-latest"]},
-            {"id": "perplexity", "name": "Perplexity", "models": ["sonar-pro", "sonar"]},
-            {"id": "cohere", "name": "Cohere", "models": ["command-r-plus", "command-r"]},
-            {"id": "groq", "name": "Groq (Llama 4)", "models": ["llama-4-scout-17b-16e-instruct", "llama-4-maverick-17b-128e-instruct", "llama-3.3-70b-versatile"]},
-            {"id": "together", "name": "Together AI", "models": ["meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", "meta-llama/Llama-3.3-70B-Instruct-Turbo", "deepseek-ai/DeepSeek-R1"]},
-            {"id": "fireworks", "name": "Fireworks AI", "models": ["accounts/fireworks/models/llama4-scout-instruct-basic", "accounts/fireworks/models/llama4-maverick-instruct-basic", "accounts/fireworks/models/deepseek-v3"]},
-            {"id": "ai21", "name": "AI21 (Jamba)", "models": ["jamba-large-1.7", "jamba-mini-1.7"]},
+            # ── Flagship ─────────────────────────────────────────────────────
+            {"id": "openai",     "name": "OpenAI",           "models": ["gpt-5.2", "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano", "gpt-4o", "gpt-4o-mini", "o4", "o4-mini", "o3", "o3-mini"]},
+            {"id": "anthropic",  "name": "Anthropic",        "models": ["claude-opus-4-6", "claude-sonnet-4-6", "claude-haiku-4-5-20251001", "claude-sonnet-4-5-20250929", "claude-opus-4-5-20251101"]},
+            {"id": "gemini",     "name": "Google Gemini",    "models": ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-3-pro-preview", "gemini-3-flash-preview"]},
+            {"id": "xai",        "name": "xAI (Grok)",       "models": ["grok-3", "grok-3-mini", "grok-2"]},
+            # ── Specialist ───────────────────────────────────────────────────
+            {"id": "deepseek",   "name": "DeepSeek",         "models": ["deepseek-v3-0324", "deepseek-chat", "deepseek-r1-0528", "deepseek-reasoner"]},
+            {"id": "mistral",    "name": "Mistral AI",       "models": ["mistral-large-latest", "mistral-medium-latest", "mistral-small-latest", "mistral-nemo", "codestral-latest", "pixtral-large-latest"]},
+            {"id": "perplexity", "name": "Perplexity",       "models": ["sonar-deep-research", "sonar-reasoning-pro", "sonar-pro", "sonar-reasoning", "sonar"]},
+            {"id": "cohere",     "name": "Cohere",           "models": ["command-a-03-2025", "command-r-plus", "command-r"]},
+            # ── Fast Open-Source ─────────────────────────────────────────────
+            {"id": "groq",       "name": "Groq (Llama 4)",   "models": ["llama-4-maverick-17b-128e-instruct", "llama-4-scout-17b-16e-instruct", "llama-3.3-70b-versatile", "qwen-qwq-32b", "gemma2-9b-it", "llama-3.1-8b-instant"]},
+            {"id": "cerebras",   "name": "Cerebras",         "models": ["llama-3.3-70b", "llama3.1-8b", "qwen-3-32b"]},
+            {"id": "together",   "name": "Together AI",      "models": ["meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", "meta-llama/Llama-3.3-70B-Instruct-Turbo", "Qwen/Qwen2.5-72B-Instruct-Turbo", "Qwen/Qwen3-235B-A22B-Instruct-FP8", "deepseek-ai/DeepSeek-R1"]},
+            {"id": "fireworks",  "name": "Fireworks AI",     "models": ["accounts/fireworks/models/llama4-maverick-instruct-basic", "accounts/fireworks/models/llama4-scout-instruct-basic", "accounts/fireworks/models/deepseek-v3", "accounts/fireworks/models/phi-4", "accounts/fireworks/models/qwen3-30b-a3b-instruct"]},
+            {"id": "ai21",       "name": "AI21 (Jamba)",     "models": ["jamba-large-1.7", "jamba-mini-1.7"]},
+            {"id": "sambanova",  "name": "SambaNova",        "models": ["Meta-Llama-3.3-70B-Instruct", "Qwen2.5-72B-Instruct", "DeepSeek-R1-0528"]},
+            # ── New Providers ─────────────────────────────────────────────────
+            {"id": "nvidia",     "name": "Nvidia NIM",       "models": ["nvidia/llama-3.1-nemotron-ultra-253b-v1", "nvidia/llama-3.1-nemotron-70b-instruct", "meta/llama-3.3-70b-instruct", "meta/llama-3.1-8b-instruct"]},
+            {"id": "moonshot",   "name": "Moonshot AI (Kimi)","models": ["moonshot-v1-128k", "moonshot-v1-32k", "moonshot-v1-8k"]},
+            {"id": "qwen",       "name": "Qwen / Alibaba",   "models": ["qwen-max", "qwen3-235b-a22b", "qwen2.5-72b-instruct", "qwen-plus", "qwen-turbo"]},
+            {"id": "novita",     "name": "Novita AI",               "models": ["meta-llama/llama-4-maverick", "qwen/qwen3-235b-a22b", "deepseek/deepseek-r1"]},
+            {"id": "lepton",     "name": "Lepton AI",               "models": ["meta-llama/llama-4-maverick", "deepseek/deepseek-r1"]},
+            {"id": "lambda",     "name": "Lambda Labs",             "models": ["hermes-3-405b", "meta-llama/llama-4-scout"]},
+            {"id": "minimax",    "name": "Minimax AI",              "models": ["minimax-text-01", "minimax-vl-01"]},
+            {"id": "inception",  "name": "Inception AI",            "models": ["mercury-coder-small", "mercury-coder-large"]},
+            {"id": "arcee",      "name": "Arcee AI",                "models": ["arcee-maestro", "arcee-blaze", "arcee-spark"]},
+            {"id": "amazon",     "name": "Amazon Bedrock",          "models": ["amazon.nova-pro-v1:0", "amazon.nova-lite-v1:0", "amazon.nova-micro-v1:0"]},
         ]
     }
 
 
 @router.put("/llm/config")
 async def set_llm_config(request: Request, current_user: User = Depends(get_current_user)):
-    """Set the user's preferred LLM provider/model."""
+    """Set the user's preferred LLM provider/model and router calibration."""
     data = await request.json()
-    provider = data.get("provider", "openai")
-    model = data.get("model", "gpt-5.2")
+    provider     = data.get("provider", "openai")
+    model        = data.get("model", "gpt-5.2")
+    quality_tier = data.get("quality_tier", "auto")
+    task_hint    = data.get("task_hint", "auto")
     await db.system_config.update_one(
         {"user_id": current_user.user_id, "config_type": "llm_preference"},
         {"$set": {
@@ -415,11 +441,13 @@ async def set_llm_config(request: Request, current_user: User = Depends(get_curr
             "config_type": "llm_preference",
             "provider": provider,
             "model": model,
+            "quality_tier": quality_tier,
+            "task_hint": task_hint,
             "updated_at": datetime.now(timezone.utc).isoformat(),
         }},
         upsert=True
     )
-    return {"provider": provider, "model": model}
+    return {"provider": provider, "model": model, "quality_tier": quality_tier, "task_hint": task_hint}
 
 
 @router.post("/reference/analyze")

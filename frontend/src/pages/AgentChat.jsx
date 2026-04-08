@@ -1,12 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { ScrollArea } from "../components/ui/scroll-area";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Bot, Send, Plus, ArrowLeft, MessageSquare, Trash2,
   LayoutDashboard, Users, ListTodo, Settings, LogOut, Menu, X,
-  Paperclip, Image, FileText, Sparkles, Mic, MicOff, Loader2,
+  Paperclip, Image, FileText, Sparkles, Mic, MicOff,
   Download, Film, FileSpreadsheet, File, Volume2, VolumeX,
   Search, Calculator, ClipboardList, BarChart3, Wrench, ChevronDown, ChevronRight, Brain, Zap,
   Mail, MessageCircle, Phone, Github, Table, Calendar, Share2, ThumbsUp, ThumbsDown, Globe, Scan, Package
@@ -15,38 +11,192 @@ import { useAuth, API } from "../App";
 import { toast } from "sonner";
 import { CollaborationWorkflow } from "../components/chat/CollaborationWorkflow";
 
+const PROVIDER_COLORS = {
+  openai:     "#10b981",
+  anthropic:  "#f97316",
+  gemini:     "#3b82f6",
+  xai:        "#94a3b8",
+  deepseek:   "#4fd1c5",
+  mistral:    "#8b5cf6",
+  perplexity: "#4fd1c5",
+  groq:       "#eab308",
+  cerebras:   "#f59e0b",
+  together:   "#22c55e",
+  fireworks:  "#f59e0b",
+  cohere:     "#ec4899",
+  amazon:     "#f97316",
+  nvidia:     "#76c442",
+  sambanova:  "#f43f5e",
+  huggingface:"#eab308",
+  qwen:       "#60a5fa",
+  moonshot:   "#3b82f6",
+  minimax:    "#ec4899",
+  hyperbolic: "#4fd1c5",
+  novita:     "#8b5cf6",
+  lepton:     "#6366f1",
+  lambda:     "#6b7280",
+  inception:  "#06b6d4",
+  arcee:      "#a78bfa",
+  ai21:       "#6366f1",
+  writer:     "#a855f7",
+  upstage:    "#eab308",
+  yi:         "#10b981",
+  zhipu:      "#3b82f6",
+  doubao:     "#f59e0b",
+  llama:      "#60a5fa",
+  auto:       "#818cf8",
+};
+
 const AVAILABLE_MODELS = [
-  { provider: "auto", model: "auto", name: "Auto (Smart Selection)", category: "auto", credits: 0 },
-  // OpenAI
-  { provider: "openai", model: "gpt-5.2", name: "GPT-5.2", category: "flagship", credits: 3 },
-  { provider: "openai", model: "gpt-4o", name: "GPT-4o", category: "fast", credits: 2 },
-  { provider: "openai", model: "gpt-4o-mini", name: "GPT-4o Mini", category: "economy", credits: 1 },
-  { provider: "openai", model: "o3", name: "O3 (Reasoning)", category: "reasoning", credits: 5 },
-  { provider: "openai", model: "o3-mini", name: "O3 Mini", category: "reasoning", credits: 2 },
-  // Anthropic
+  // ── Universal Smart Router ────────────────────────────────────────────────
+  { provider: "auto", model: "auto", name: "Universal Auto Router", category: "auto", credits: 0, desc: "Smart routing across 33 providers — task & credit aware" },
+  // ── OpenAI ────────────────────────────────────────────────────────────────
+  { provider: "openai", model: "gpt-5",        name: "GPT-5",           category: "flagship",  credits: 3 },
+  { provider: "openai", model: "gpt-4.1",      name: "GPT-4.1",         category: "flagship",  credits: 2 },
+  { provider: "openai", model: "gpt-4.1-mini", name: "GPT-4.1 Mini",    category: "fast",      credits: 1 },
+  { provider: "openai", model: "gpt-4.1-nano", name: "GPT-4.1 Nano",    category: "economy",   credits: 1 },
+  { provider: "openai", model: "gpt-4o",       name: "GPT-4o",          category: "fast",      credits: 2 },
+  { provider: "openai", model: "gpt-4o-mini",  name: "GPT-4o Mini",     category: "economy",   credits: 1 },
+  { provider: "openai", model: "o4",           name: "O4 (Reasoning)",  category: "reasoning", credits: 5 },
+  { provider: "openai", model: "o4-mini",      name: "O4 Mini",         category: "reasoning", credits: 2 },
+  { provider: "openai", model: "o3",           name: "O3 (Reasoning)",  category: "reasoning", credits: 5 },
+  { provider: "openai", model: "o3-mini",      name: "O3 Mini",         category: "reasoning", credits: 2 },
+  // ── Anthropic ─────────────────────────────────────────────────────────────
+  { provider: "anthropic", model: "claude-opus-4-6",           name: "Claude Opus 4.6",   category: "premium",  credits: 5 },
+  { provider: "anthropic", model: "claude-sonnet-4-6",         name: "Claude Sonnet 4.6", category: "flagship", credits: 3 },
+  { provider: "anthropic", model: "claude-haiku-4-5-20251001", name: "Claude Haiku 4.5",  category: "economy",  credits: 1 },
   { provider: "anthropic", model: "claude-sonnet-4-5-20250929", name: "Claude Sonnet 4.5", category: "flagship", credits: 3 },
-  { provider: "anthropic", model: "claude-opus-4-5-20251101", name: "Claude Opus 4.5", category: "premium", credits: 5 },
-  { provider: "anthropic", model: "claude-haiku-4-5-20250929", name: "Claude Haiku 4.5", category: "economy", credits: 1 },
-  // Google
-  { provider: "gemini", model: "gemini-3-flash-preview", name: "Gemini 3 Flash", category: "fast", credits: 1 },
-  { provider: "gemini", model: "gemini-3-pro-preview", name: "Gemini 3 Pro", category: "flagship", credits: 2 },
-  // xAI Grok
-  { provider: "xai", model: "grok-3", name: "Grok 3", category: "flagship", credits: 3 },
-  { provider: "xai", model: "grok-3-mini", name: "Grok 3 Mini", category: "economy", credits: 1 },
-  { provider: "xai", model: "grok-2", name: "Grok 2", category: "fast", credits: 2 },
-  // DeepSeek
-  { provider: "deepseek", model: "deepseek-chat", name: "DeepSeek Chat", category: "economy", credits: 1 },
-  { provider: "deepseek", model: "deepseek-reasoner", name: "DeepSeek Reasoner", category: "reasoning", credits: 2 },
-  // Mistral
-  { provider: "mistral", model: "mistral-large-latest", name: "Mistral Large", category: "flagship", credits: 3 },
-  { provider: "mistral", model: "mistral-medium-latest", name: "Mistral Medium", category: "fast", credits: 2 },
-  { provider: "mistral", model: "mistral-small-latest", name: "Mistral Small", category: "economy", credits: 1 },
-  // Perplexity
-  { provider: "perplexity", model: "sonar", name: "Perplexity Sonar", category: "search", credits: 2 },
-  { provider: "perplexity", model: "sonar-pro", name: "Perplexity Sonar Pro", category: "search", credits: 3 },
-  // Cohere
-  { provider: "cohere", model: "command-r-plus", name: "Cohere Command R+", category: "flagship", credits: 3 },
-  { provider: "cohere", model: "command-r", name: "Cohere Command R", category: "fast", credits: 1 },
+  { provider: "anthropic", model: "claude-opus-4-5-20251101",  name: "Claude Opus 4.5",   category: "premium",  credits: 5 },
+  // ── Google Gemini ─────────────────────────────────────────────────────────
+  { provider: "gemini", model: "gemini-2.5-pro",        name: "Gemini 2.5 Pro",         category: "flagship", credits: 2 },
+  { provider: "gemini", model: "gemini-2.5-flash",      name: "Gemini 2.5 Flash",       category: "fast",     credits: 1 },
+  { provider: "gemini", model: "gemini-2.5-flash-lite", name: "Gemini 2.5 Flash Lite",  category: "economy",  credits: 1 },
+  { provider: "gemini", model: "gemini-3-pro-preview",  name: "Gemini 3 Pro",           category: "flagship", credits: 2 },
+  { provider: "gemini", model: "gemini-3-flash-preview", name: "Gemini 3 Flash",        category: "economy",  credits: 1 },
+  // ── xAI Grok ─────────────────────────────────────────────────────────────
+  { provider: "xai", model: "grok-3",      name: "Grok 3",      category: "flagship", credits: 3 },
+  { provider: "xai", model: "grok-3-mini", name: "Grok 3 Mini", category: "economy",  credits: 1 },
+  { provider: "xai", model: "grok-2",      name: "Grok 2",      category: "fast",     credits: 2 },
+  // ── DeepSeek ──────────────────────────────────────────────────────────────
+  { provider: "deepseek", model: "deepseek-v3-0324",  name: "DeepSeek V3",        category: "fast",      credits: 1 },
+  { provider: "deepseek", model: "deepseek-chat",     name: "DeepSeek Chat",      category: "economy",   credits: 1 },
+  { provider: "deepseek", model: "deepseek-r1-0528",  name: "DeepSeek R1",        category: "reasoning", credits: 2 },
+  { provider: "deepseek", model: "deepseek-reasoner", name: "DeepSeek Reasoner",  category: "reasoning", credits: 2 },
+  // ── Mistral ───────────────────────────────────────────────────────────────
+  { provider: "mistral", model: "mistral-large-latest",  name: "Mistral Large",   category: "flagship", credits: 3 },
+  { provider: "mistral", model: "mistral-medium-latest", name: "Mistral Medium",  category: "fast",     credits: 2 },
+  { provider: "mistral", model: "mistral-small-latest",  name: "Mistral Small",   category: "economy",  credits: 1 },
+  { provider: "mistral", model: "mistral-nemo",          name: "Mistral Nemo",    category: "economy",  credits: 1 },
+  { provider: "mistral", model: "codestral-latest",      name: "Codestral",       category: "code",     credits: 1 },
+  { provider: "mistral", model: "pixtral-large-latest",  name: "Pixtral Large",   category: "vision",   credits: 3 },
+  // ── Perplexity ────────────────────────────────────────────────────────────
+  { provider: "perplexity", model: "sonar-deep-research", name: "Sonar Deep Research", category: "research", credits: 3 },
+  { provider: "perplexity", model: "sonar-reasoning-pro", name: "Sonar Reasoning Pro", category: "research", credits: 3 },
+  { provider: "perplexity", model: "sonar-pro",           name: "Sonar Pro",           category: "research", credits: 3 },
+  { provider: "perplexity", model: "sonar-reasoning",     name: "Sonar Reasoning",     category: "research", credits: 2 },
+  { provider: "perplexity", model: "sonar",               name: "Sonar",               category: "search",   credits: 2 },
+  // ── Cohere ────────────────────────────────────────────────────────────────
+  { provider: "cohere", model: "command-a-03-2025", name: "Command A",   category: "flagship", credits: 3 },
+  { provider: "cohere", model: "command-r-plus",    name: "Command R+",  category: "flagship", credits: 3 },
+  { provider: "cohere", model: "command-r",         name: "Command R",   category: "economy",  credits: 1 },
+  // ── Groq (Fast Open-Source) ───────────────────────────────────────────────
+  { provider: "groq", model: "llama-4-maverick-17b-128e-instruct", name: "Llama 4 Maverick", category: "fast",    credits: 1 },
+  { provider: "groq", model: "llama-4-scout-17b-16e-instruct",     name: "Llama 4 Scout",    category: "economy", credits: 1 },
+  { provider: "groq", model: "llama-3.3-70b-versatile",            name: "Llama 3.3 70B",    category: "fast",    credits: 1 },
+  { provider: "groq", model: "qwen-qwq-32b",                       name: "QwQ 32B",          category: "reasoning", credits: 1 },
+  { provider: "groq", model: "gemma2-9b-it",                       name: "Gemma 2 9B",       category: "economy", credits: 1 },
+  { provider: "groq", model: "llama-3.1-8b-instant",               name: "Llama 3.1 8B",     category: "economy", credits: 1 },
+  // ── Cerebras (Ultra-Fast) ─────────────────────────────────────────────────
+  { provider: "cerebras", model: "llama-3.3-70b", name: "Cerebras Llama 3.3 70B", category: "fast",    credits: 1 },
+  { provider: "cerebras", model: "llama3.1-8b",   name: "Cerebras Llama 3.1 8B",  category: "economy", credits: 1 },
+  { provider: "cerebras", model: "qwen-3-32b",    name: "Cerebras Qwen 3 32B",    category: "fast",    credits: 1 },
+  // ── Together AI ───────────────────────────────────────────────────────────
+  { provider: "together", model: "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", name: "Llama 4 Maverick FP8", category: "fast",      credits: 1 },
+  { provider: "together", model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",           name: "Llama 3.3 70B Turbo",  category: "economy",   credits: 2 },
+  { provider: "together", model: "Qwen/Qwen2.5-72B-Instruct-Turbo",                   name: "Qwen 2.5 72B",         category: "fast",      credits: 1 },
+  { provider: "together", model: "Qwen/Qwen3-235B-A22B-Instruct-FP8",                 name: "Qwen 3 235B",          category: "flagship",  credits: 2 },
+  { provider: "together", model: "deepseek-ai/DeepSeek-R1",                            name: "DeepSeek R1",          category: "reasoning", credits: 3 },
+  // ── Fireworks AI ──────────────────────────────────────────────────────────
+  { provider: "fireworks", model: "accounts/fireworks/models/llama4-maverick-instruct-basic", name: "FW Llama 4 Maverick", category: "fast",    credits: 1 },
+  { provider: "fireworks", model: "accounts/fireworks/models/llama4-scout-instruct-basic",    name: "FW Llama 4 Scout",    category: "economy", credits: 1 },
+  { provider: "fireworks", model: "accounts/fireworks/models/deepseek-v3",                    name: "FW DeepSeek V3",      category: "fast",    credits: 2 },
+  { provider: "fireworks", model: "accounts/fireworks/models/phi-4",                          name: "FW Phi-4",            category: "fast",    credits: 1 },
+  // ── AI21 ──────────────────────────────────────────────────────────────────
+  { provider: "ai21", model: "jamba-large-1.7", name: "Jamba Large 1.7", category: "flagship", credits: 3 },
+  { provider: "ai21", model: "jamba-mini-1.7",  name: "Jamba Mini 1.7",  category: "economy",  credits: 1 },
+  // ── SambaNova ─────────────────────────────────────────────────────────────
+  { provider: "sambanova", model: "Meta-Llama-3.3-70B-Instruct", name: "SN Llama 3.3 70B",   category: "fast",      credits: 1 },
+  { provider: "sambanova", model: "Qwen2.5-72B-Instruct",        name: "SN Qwen 2.5 72B",    category: "fast",      credits: 1 },
+  { provider: "sambanova", model: "DeepSeek-R1-0528",            name: "SN DeepSeek R1",      category: "reasoning", credits: 2 },
+  // ── Nvidia NIM ────────────────────────────────────────────────────────────
+  { provider: "nvidia", model: "nvidia/llama-3.1-nemotron-ultra-253b-v1", name: "Nemotron Ultra 253B", category: "premium",  credits: 2 },
+  { provider: "nvidia", model: "nvidia/llama-3.1-nemotron-70b-instruct",  name: "Nemotron 70B",        category: "fast",     credits: 1 },
+  { provider: "nvidia", model: "meta/llama-3.3-70b-instruct",             name: "NIM Llama 3.3 70B",   category: "fast",     credits: 1 },
+  { provider: "nvidia", model: "meta/llama-3.1-8b-instruct",              name: "NIM Llama 3.1 8B",    category: "economy",  credits: 1 },
+  // ── Moonshot AI (Kimi) ────────────────────────────────────────────────────
+  { provider: "moonshot", model: "moonshot-v1-128k", name: "Kimi 128K", category: "long-context", credits: 2 },
+  { provider: "moonshot", model: "moonshot-v1-32k",  name: "Kimi 32K",  category: "fast",         credits: 1 },
+  { provider: "moonshot", model: "moonshot-v1-8k",   name: "Kimi 8K",   category: "economy",      credits: 1 },
+  // ── Qwen / Alibaba ────────────────────────────────────────────────────────
+  { provider: "qwen", model: "qwen-max",           name: "Qwen Max",          category: "flagship", credits: 3 },
+  { provider: "qwen", model: "qwen3-235b-a22b",    name: "Qwen 3 235B",       category: "flagship", credits: 1 },
+  { provider: "qwen", model: "qwen2.5-72b-instruct", name: "Qwen 2.5 72B",   category: "fast",     credits: 1 },
+  { provider: "qwen", model: "qwen-plus",          name: "Qwen Plus",         category: "fast",     credits: 1 },
+  { provider: "qwen", model: "qwen-turbo",         name: "Qwen Turbo",        category: "economy",  credits: 1 },
+  // ── 01.AI / Yi ────────────────────────────────────────────────────────────
+  { provider: "yi", model: "yi-lightning",   name: "Yi Lightning",    category: "fast",     credits: 1 },
+  { provider: "yi", model: "yi-large-fc",    name: "Yi Large FC",     category: "flagship", credits: 2 },
+  { provider: "yi", model: "yi-medium-200k", name: "Yi Medium 200K",  category: "flagship", credits: 3 },
+  // ── Zhipu AI / GLM ───────────────────────────────────────────────────────
+  { provider: "zhipu", model: "glm-4-plus",  name: "GLM-4-Plus",      category: "flagship", credits: 3 },
+  { provider: "zhipu", model: "glm-4-air",   name: "GLM-4-Air",       category: "fast",     credits: 1 },
+  { provider: "zhipu", model: "glm-z1-air",  name: "GLM-Z1-Air",      category: "reasoning",credits: 1 },
+  // ── ByteDance Doubao ─────────────────────────────────────────────────────
+  { provider: "doubao", model: "doubao-pro-128k", name: "Doubao Pro 128K", category: "flagship", credits: 2 },
+  { provider: "doubao", model: "doubao-lite-32k",  name: "Doubao Lite 32K",  category: "economy",  credits: 1 },
+  // ── Hyperbolic ────────────────────────────────────────────────────────────
+  { provider: "hyperbolic", model: "meta-llama/Llama-3.3-70B-Instruct",       name: "Llama 3.3 70B (Hyperbolic)",  category: "fast",     credits: 1 },
+  { provider: "hyperbolic", model: "meta-llama/Meta-Llama-3.1-405B-Instruct", name: "Llama 3.1 405B (Hyperbolic)", category: "flagship", credits: 2 },
+  { provider: "hyperbolic", model: "deepseek-ai/DeepSeek-R1-hyperbolic",      name: "DeepSeek R1 (Hyperbolic)",    category: "reasoning",credits: 2 },
+  // ── Upstage Solar ─────────────────────────────────────────────────────────
+  { provider: "upstage", model: "solar-pro",  name: "Solar Pro",  category: "flagship", credits: 3 },
+  { provider: "upstage", model: "solar-mini", name: "Solar Mini", category: "economy",  credits: 1 },
+  // ── Writer Palmyra ───────────────────────────────────────────────────────
+  { provider: "writer", model: "palmyra-x-004", name: "Palmyra X 004", category: "flagship", credits: 2 },
+  { provider: "writer", model: "palmyra-med",   name: "Palmyra Med",   category: "flagship", credits: 2 },
+  // ── HuggingFace ──────────────────────────────────────────────────────────
+  { provider: "huggingface", model: "meta-llama/Llama-3.3-70B-Instruct", name: "Llama 3.3 70B (HF)",      category: "fast",    credits: 1 },
+  { provider: "huggingface", model: "Qwen/Qwen2.5-72B-Instruct",          name: "Qwen 2.5 72B (HF)",       category: "fast",    credits: 1 },
+  // ── Meta Llama API ────────────────────────────────────────────────────────
+  { provider: "llama", model: "Llama-4-Maverick-17B-128E-Instruct-FP8", name: "Llama 4 Maverick (Meta)", category: "fast",    credits: 1 },
+  { provider: "llama", model: "Llama-4-Scout-17B-16E-Instruct",          name: "Llama 4 Scout (Meta)",    category: "economy", credits: 1 },
+  { provider: "llama", model: "Llama-3.3-70B-Instruct",                  name: "Llama 3.3 70B (Meta)",    category: "fast",    credits: 1 },
+  // ── Novita AI ─────────────────────────────────────────────────────────────
+  { provider: "novita", model: "meta-llama/llama-4-maverick-17b-128e-instruct", name: "Llama 4 Maverick (Novita)", category: "fast",     credits: 1 },
+  { provider: "novita", model: "deepseek-ai/deepseek-r1",                       name: "DeepSeek R1 (Novita)",      category: "reasoning",credits: 2 },
+  { provider: "novita", model: "meta-llama/llama-3.1-405b-instruct",            name: "Llama 3.1 405B (Novita)",   category: "flagship", credits: 2 },
+  // ── Lepton AI ─────────────────────────────────────────────────────────────
+  { provider: "lepton", model: "llama4-maverick", name: "Llama 4 Maverick (Lepton)", category: "fast",     credits: 1 },
+  { provider: "lepton", model: "deepseek-r1",     name: "DeepSeek R1 (Lepton)",      category: "reasoning",credits: 2 },
+  // ── Lambda Labs ───────────────────────────────────────────────────────────
+  { provider: "lambda", model: "llama4-maverick-instruct",     name: "Llama 4 Maverick (Lambda)", category: "fast",     credits: 1 },
+  { provider: "lambda", model: "hermes3-405b",                  name: "Hermes 3 405B (Lambda)",    category: "flagship", credits: 2 },
+  { provider: "lambda", model: "deepseek-r1-671b",              name: "DeepSeek R1 (Lambda)",      category: "reasoning",credits: 3 },
+  // ── Minimax AI ────────────────────────────────────────────────────────────
+  { provider: "minimax", model: "MiniMax-M2",   name: "MiniMax M2",    category: "flagship", credits: 2 },
+  { provider: "minimax", model: "MiniMax-M1",   name: "MiniMax M1",    category: "flagship", credits: 2 },
+  { provider: "minimax", model: "MiniMax-01",   name: "MiniMax-01",    category: "fast",     credits: 1 },
+  // ── Inception AI ─────────────────────────────────────────────────────────
+  { provider: "inception", model: "mercury-2",     name: "Mercury 2",         category: "fast", credits: 1 },
+  { provider: "inception", model: "mercury-coder", name: "Mercury Coder",     category: "code", credits: 1 },
+  // ── Arcee AI ─────────────────────────────────────────────────────────────
+  { provider: "arcee", model: "maestro-reasoning", name: "Arcee Maestro",        category: "reasoning", credits: 2 },
+  { provider: "arcee", model: "virtuoso-large",    name: "Arcee Virtuoso Large", category: "flagship",  credits: 2 },
+  { provider: "arcee", model: "spotlight",          name: "Arcee Spotlight",      category: "fast",      credits: 1 },
+  // ── Amazon Bedrock ────────────────────────────────────────────────────────
+  { provider: "amazon", model: "us.amazon.nova-pro-v1:0",    name: "Nova Pro (Amazon)",     category: "flagship", credits: 2 },
+  { provider: "amazon", model: "us.amazon.nova-lite-v1:0",   name: "Nova Lite (Amazon)",    category: "fast",     credits: 1 },
+  { provider: "amazon", model: "us.amazon.nova-micro-v1:0",  name: "Nova Micro (Amazon)",   category: "economy",  credits: 1 },
 ];
 
 import NotificationCenter from "../components/NotificationCenter";
@@ -54,6 +204,7 @@ import AgentCustomizePanel from "../components/AgentCustomizePanel";
 import MarkdownRenderer from "../components/MarkdownRenderer";
 import { ChatSearch } from "../components/chat/ChatSearch";
 import { Pin, Download as DownloadIcon, Copy, Check } from "lucide-react";
+import AgentAvatar from "../components/AgentAvatar";
 
 // Commander Group Chat Component - renders delegation as individual agent chat bubbles
 const CommanderGroupChat = ({ msg, msgIndex, generatedFiles, generateFile, generatingFile, currentAgent }) => {
@@ -268,6 +419,11 @@ const AgentChat = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [selectedModel, setSelectedModel] = useState("auto/auto");
+  const [chatModels, setChatModels] = useState(AVAILABLE_MODELS);
+  const [modelSearch, setModelSearch] = useState("");
+  const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
+  const [routerQuality, setRouterQuality] = useState("auto");   // auto | economy | standard | premium
+  const [routerTaskHint, setRouterTaskHint] = useState("auto"); // auto | code | math | reasoning | creative | translation | summary | research | data | chat
   const [attachments, setAttachments] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -295,6 +451,55 @@ const AgentChat = () => {
     document.body.style.cursor = 'col-resize';
     document.body.style.userSelect = 'none';
   };
+
+  // Fetch full model list from gateway API
+  useEffect(() => {
+    fetch(`${API}/v1/models`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (!d?.data?.length) return;
+        const mapped = d.data.map(m => {
+          const parts = m.id.split("/");
+          const modelPart = parts.slice(1).join("/");
+          // Derive a readable name from the model id
+          const rawName = modelPart || m.id;
+          const name = rawName
+            .replace(/[-_]/g, " ")
+            .replace(/\b(\w)/g, c => c.toUpperCase())
+            .replace(/\b(\d+)b\b/gi, "$1B")
+            .replace(/\bGpt\b/g, "GPT").replace(/\bLlm\b/g, "LLM")
+            .replace(/\bLlama\b/g, "Llama").replace(/\bGemma\b/g, "Gemma")
+            .replace(/\bDeepseek\b/g, "DeepSeek").replace(/\bQwen\b/g, "Qwen")
+            .replace(/\bGrok\b/g, "Grok").replace(/\bMistral\b/g, "Mistral")
+            .replace(/\bPhi\b/g, "Phi").replace(/\bNova\b/g, "Nova")
+            .replace(/\bGlm\b/g, "GLM").replace(/\bVl\b/g, "VL")
+            .replace(/\bMoe\b/g, "MoE").replace(/\bFp8\b/g, "FP8")
+            .replace(/\bA(\d+)B\b/g, "A$1B")
+            .trim();
+          // Infer category from description/id
+          const d2 = (m.description || "").toLowerCase();
+          const id2 = m.id.toLowerCase();
+          let category = "fast";
+          if (m.is_maars_router) category = "auto";
+          else if (/reason|r1|o4|o3|qwq|think/i.test(id2 + d2)) category = "reasoning";
+          else if (/vision|vl|pixtral|llava|idefics/i.test(id2 + d2)) category = "vision";
+          else if (/code|coder|starcoder|codestral/i.test(id2 + d2)) category = "code";
+          else if (/sonar|search|perplexity/i.test(id2 + d2)) category = "search";
+          else if (/opus|gpt-5|pro|large|max|ultra|405b|235b|70b/i.test(id2 + d2)) category = "flagship";
+          else if (/nano|mini|tiny|small|1b|3b|7b|8b|lite/i.test(id2 + d2)) category = "economy";
+          return {
+            provider: m.provider,
+            model: modelPart,
+            name,
+            category,
+            credits: m.credits_per_call || 1,
+            available: m.available !== false,
+          };
+        });
+        setChatModels(mapped);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -562,6 +767,8 @@ const AgentChat = () => {
         headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify({ content: userMessage.content,
           model_provider: isAuto ? "auto" : provider,
           model_name: isAuto ? "auto" : model,
+          quality_tier: isAuto ? routerQuality : null,
+          task_hint: isAuto && routerTaskHint !== "auto" ? routerTaskHint : null,
           attachments: userMessage.attachments,
           attachment_files: userMessage.attachment_files
         })
@@ -884,7 +1091,7 @@ const AgentChat = () => {
               className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium transition-colors ${color} border border-white/5`}
               data-testid={`gen-${type}-${msgId}`}
             >
-              {isGenerating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Icon className="w-3 h-3" />}
+              {isGenerating ? <div style={{ width: 11, height: 11, border: "1.5px solid rgba(255,255,255,.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "ac_spin .8s linear infinite" }} /> : <Icon size={11} />}
               {isGenerating ? "..." : label}
             </button>
           );
@@ -965,15 +1172,9 @@ const AgentChat = () => {
           <span className="font-semibold text-white">
             {selectedAgent?.name || "Chat"}
           </span>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={startNewChat}
-            className="text-indigo-400"
-            data-testid="mobile-new-chat-btn"
-          >
-            <Plus className="w-5 h-5" />
-          </Button>
+          <button onClick={startNewChat} style={{ background: "none", border: "none", cursor: "pointer", color: "#818cf8", display: "flex", padding: 4 }} data-testid="mobile-new-chat-btn">
+            <Plus size={20} />
+          </button>
         </div>
       </div>
 
@@ -1006,21 +1207,14 @@ const AgentChat = () => {
       {/* Desktop Sidebar */}
       <div className="hidden lg:flex flex-col bg-zinc-900/50 border-r border-white/[0.08] relative" style={{ width: sidebarWidth, minWidth: 200, maxWidth: 600 }}>
         <div className="p-3 border-b border-white/[0.06]">
-          <Button
-            onClick={startNewChat}
-            className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 h-9 text-sm"
-            data-testid="new-chat-btn"
-          >
-            <Plus className="w-4 h-4 mr-2" /> New Chat
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setShowSearch(!showSearch)}
-            className="w-full border-white/[0.08] text-zinc-500 hover:text-white mt-1.5 h-8 text-xs"
-            data-testid="chat-search-btn"
-          >
-            <Search className="w-3.5 h-3.5 mr-2" /> Search Chats
-          </Button>
+          <button onClick={startNewChat} data-testid="new-chat-btn"
+            style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 7, padding: "8px 0", borderRadius: 9, border: "none", background: "linear-gradient(135deg, #818cf8, #7c3aed)", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+            <Plus size={15} /> New Chat
+          </button>
+          <button onClick={() => setShowSearch(!showSearch)} data-testid="chat-search-btn"
+            style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 7, padding: "6px 0", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#71717a", fontSize: 12, cursor: "pointer", marginTop: 6 }}>
+            <Search size={13} /> Search Chats
+          </button>
         </div>
         {showSearch && (
           <ChatSearch
@@ -1072,38 +1266,31 @@ const AgentChat = () => {
         )}
         {/* Agent Header */}
         {selectedAgent && (
-          <div className="hidden lg:flex items-center justify-between px-4 py-3 border-b border-white/[0.06] shrink-0">
+          <div className="hidden lg:flex items-center justify-between px-4 py-3 border-b border-white/[0.06] shrink-0" style={{ background: "rgba(4,8,18,0.5)", backdropFilter: "blur(12px)" }}>
             <div className="flex items-center gap-3">
-              {selectedAgent.avatar ? (
-                <img
-                  src={selectedAgent.avatar}
-                  alt={selectedAgent.name}
-                  className="w-9 h-9 rounded-lg object-cover"
-                />
-              ) : (
-                <div className="w-9 h-9 rounded-lg bg-indigo-500/20 flex items-center justify-center text-xs font-bold text-indigo-400">
-                  {selectedAgent.name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
-                </div>
-              )}
+              <AgentAvatar agent={selectedAgent} size="md" status="online" animate showRing showPulse={sending} />
               <div>
-                <h2 className="font-semibold text-white text-sm">{selectedAgent.name}</h2>
-                <p className="text-xs text-zinc-500">{selectedAgent.role}</p>
+                <h2 className="font-semibold text-white text-sm" style={{ fontFamily: "Outfit, sans-serif" }}>{selectedAgent.name}</h2>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <p className="text-xs text-zinc-500">{selectedAgent.role}</p>
+                  {sending && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      {[0,1,2].map(i => (
+                        <div key={i} style={{ width: 3, height: 12, borderRadius: 2, background: "#4fd1c5", animation: `ac_wave 0.8s ease-in-out ${i * 0.12}s infinite alternate`, opacity: 0.8 }} />
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowCustomize(!showCustomize)}
-                className={`text-zinc-500 hover:text-indigo-400 h-7 text-xs ml-1 ${showCustomize ? 'text-indigo-400 bg-indigo-500/10' : ''}`}
-                data-testid="customize-agent-btn"
-              >
-                <Settings className="w-3.5 h-3.5 mr-1" />Customize
-              </Button>
+              <button onClick={() => setShowCustomize(!showCustomize)} data-testid="customize-agent-btn"
+                style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", borderRadius: 7, border: "none", background: showCustomize ? "rgba(129,140,248,.12)" : "transparent", color: showCustomize ? "#818cf8" : "#71717a", fontSize: 12, cursor: "pointer" }}>
+                <Settings size={13} />Customize
+              </button>
             </div>
             <div className="flex items-center gap-1.5">
               {currentChat && (
                 <>
-                  <Button
-                    variant="ghost" size="sm"
+                  <button data-testid="export-chat-btn"
                     onClick={async () => {
                       try {
                         const res = await fetch(`${API}/chats/${currentChat.chat_id}/export`, { headers: { Authorization: `Bearer ${token}` } });
@@ -1118,14 +1305,13 @@ const AgentChat = () => {
                         toast.success("Chat exported");
                       } catch { toast.error("Export failed"); }
                     }}
-                    className="text-zinc-400 hover:text-indigo-400 h-8"
-                    data-testid="export-chat-btn"
-                  >
-                    <DownloadIcon className="w-4 h-4 mr-1" />Export
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={shareChat} className="text-zinc-400 hover:text-indigo-400 h-8" data-testid="share-chat-btn">
-                    <Share2 className="w-4 h-4 mr-1" />Share
-                  </Button>
+                    style={{ display: "flex", alignItems: "center", gap: 4, padding: "5px 10px", borderRadius: 7, border: "none", background: "transparent", color: "#71717a", fontSize: 12, cursor: "pointer" }}>
+                    <Download size={13} />Export
+                  </button>
+                  <button onClick={shareChat} data-testid="share-chat-btn"
+                    style={{ display: "flex", alignItems: "center", gap: 4, padding: "5px 10px", borderRadius: 7, border: "none", background: "transparent", color: "#71717a", fontSize: 12, cursor: "pointer" }}>
+                    <Share2 size={13} />Share
+                  </button>
                 </>
               )}
             </div>
@@ -1136,23 +1322,17 @@ const AgentChat = () => {
         )}
 
         {/* Messages */}
-        <ScrollArea className="flex-1 p-4">
+        <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
           {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center p-8">
+            <div className="h-full flex flex-col items-center justify-center text-center p-8" style={{ position: "relative" }}>
+              {/* Ambient radial glow */}
+              <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%,-50%)", width: 320, height: 320, borderRadius: "50%", background: "radial-gradient(circle, rgba(79,209,197,0.04) 0%, transparent 70%)", pointerEvents: "none" }} />
               {selectedAgent && (
                 <>
-                  {selectedAgent.avatar ? (
-                    <img
-                      src={selectedAgent.avatar}
-                      alt={selectedAgent.name}
-                      className="w-16 h-16 rounded-xl object-cover mb-4"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-4 text-xl font-bold text-indigo-400">
-                      {selectedAgent.name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
-                    </div>
-                  )}
-                  <h3 className="text-lg font-semibold text-white mb-1 font-['Outfit']">
+                  <div style={{ marginBottom: 20 }}>
+                    <AgentAvatar agent={selectedAgent} size="2xl" status="online" animate showRing showPulse />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-1 font-['Outfit']" style={{ fontFamily: "Outfit, sans-serif" }}>
                     Chat with {selectedAgent.name}
                   </h3>
                   <p className="text-sm text-zinc-500 max-w-sm mb-5">{selectedAgent.description}</p>
@@ -1224,7 +1404,7 @@ const AgentChat = () => {
                         ) : (
                           <div className="rounded-xl px-4 py-3 bg-zinc-800/50 border border-indigo-500/20">
                             <div className="flex items-center gap-2 mb-2">
-                              <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
+                              <div style={{ width:14, height:14, border:"2px solid rgba(129,140,248,.4)", borderTopColor:"#818cf8", borderRadius:"50%", animation:"ac_spin .8s linear infinite" }} />
                               <span className="text-indigo-400 text-sm font-medium">Commander is coordinating specialists...</span>
                             </div>
                             <MarkdownRenderer content={msg.content} className="text-sm" />
@@ -1243,24 +1423,37 @@ const AgentChat = () => {
                   data-testid={`message-${i}`}
                 >
                   {msg.role === "assistant" && (
-                    (msg.agent_avatar || selectedAgent?.avatar) ? (
+                    <div style={{ position: "relative", flexShrink: 0 }}>
+                    {(msg.agent_avatar || selectedAgent?.avatar) ? (
                       <img
                         src={msg.agent_avatar || selectedAgent?.avatar}
                         alt=""
-                        className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
+                        style={{ width: 32, height: 32, borderRadius: 9, objectFit: "cover", border: "1px solid rgba(79,209,197,0.2)", boxShadow: "0 0 10px rgba(79,209,197,0.15)" }}
                       />
                     ) : (
-                      <div className="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-indigo-400">
+                      <div style={{ width: 32, height: 32, borderRadius: 9, background: "rgba(79,209,197,0.1)", border: "1px solid rgba(79,209,197,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: "#4fd1c5" }}>
                         {(selectedAgent?.name || "AI").split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
                       </div>
-                    )
+                    )}
+                    </div>
                   )}
                   <div
-                    className={`max-w-[80%] p-4 rounded-xl ${
-                      msg.role === "user"
-                        ? "bg-indigo-500/20 text-white"
-                        : "bg-zinc-800/50 text-zinc-100"
-                    }`}
+                    className={`max-w-[80%]`}
+                    style={{
+                      padding: "14px 18px",
+                      borderRadius: msg.role === "user" ? "14px 4px 14px 14px" : "4px 14px 14px 14px",
+                      background: msg.role === "user"
+                        ? "linear-gradient(135deg, rgba(79,209,197,0.15) 0%, rgba(37,99,235,0.12) 100%)"
+                        : "linear-gradient(145deg, rgba(10,18,36,0.88) 0%, rgba(8,14,28,0.92) 100%)",
+                      border: msg.role === "user"
+                        ? "1px solid rgba(79,209,197,0.25)"
+                        : "1px solid rgba(255,255,255,0.07)",
+                      backdropFilter: "blur(20px)",
+                      color: msg.role === "user" ? "#e2e8f0" : "#c8d4e6",
+                      boxShadow: msg.role === "user"
+                        ? "0 4px 24px rgba(79,209,197,0.10), inset 0 1px 0 rgba(79,209,197,0.12)"
+                        : "0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)",
+                    }}
                   >
                     {msg.attachments?.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-3">
@@ -1269,7 +1462,7 @@ const AgentChat = () => {
                             <div key={idx} className="relative group">
                               <img src={att} alt="attachment" className="max-w-[200px] max-h-[160px] rounded-lg border border-white/10 object-cover" />
                               {msg.role === "user" && (
-                                <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-black/60 text-[10px] text-indigo-300 flex items-center gap-1">
+                                <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-black/60 text-[10px] flex items-center gap-1" style={{ color: "#4fd1c5", border: "1px solid rgba(79,209,197,0.2)" }}>
                                   <Sparkles className="w-2.5 h-2.5" /> AI Vision
                                 </div>
                               )}
@@ -1292,21 +1485,25 @@ const AgentChat = () => {
                       <p className="whitespace-pre-wrap text-sm">{msg.content}</p>
                     )}
                     <div className="flex items-center gap-2 mt-2">
-                      {msg.model_used && (
-                        <div className="text-xs text-zinc-500 flex items-center gap-1">
-                          <Sparkles className="w-3 h-3" />
-                          <span>{msg.model_used}</span>
-                          {msg.auto_selected && msg.model_reason && (
-                            <span className="text-indigo-400 ml-1">• {msg.model_reason}</span>
-                          )}
-                          {msg.credits_deducted > 0 && (
-                            <span className="text-zinc-600 ml-1">• {msg.credits_deducted}cr</span>
-                          )}
-                          {msg.web_searched && (
-                            <span className="text-cyan-400 ml-1 flex items-center gap-0.5">• <Globe className="w-3 h-3" /> Web</span>
-                          )}
-                        </div>
-                      )}
+                      {msg.model_used && msg.role === "assistant" && (() => {
+                        const prov = msg.model_used.split("/")[0] || "";
+                        const pColor = PROVIDER_COLORS[prov] || "#64748b";
+                        return (
+                          <div className="text-xs text-zinc-500 flex items-center gap-1.5 flex-wrap">
+                            <span style={{ width: 6, height: 6, borderRadius: "50%", background: pColor, display: "inline-block", flexShrink: 0, boxShadow: `0 0 5px ${pColor}80` }} />
+                            <span style={{ color: pColor, opacity: 0.75, fontWeight: 500 }}>{msg.model_used.split("/").pop()}</span>
+                            {msg.auto_selected && msg.model_reason && (
+                              <span className="text-indigo-400">· {msg.model_reason}</span>
+                            )}
+                            {msg.credits_deducted > 0 && (
+                              <span className="text-zinc-600">· {msg.credits_deducted}cr</span>
+                            )}
+                            {msg.web_searched && (
+                              <span className="text-cyan-400 flex items-center gap-0.5">· <Globe className="w-3 h-3" /> web</span>
+                            )}
+                          </div>
+                        );
+                      })()}
                       {msg.role === "assistant" && (
                         <button
                           onClick={() => playTTS(msg.message_id || i, msg.content)}
@@ -1315,7 +1512,7 @@ const AgentChat = () => {
                           data-testid={`tts-btn-${i}`}
                           title="Read aloud"
                         >
-                          {ttsLoading === (msg.message_id || i) ? <Loader2 className="w-3 h-3 animate-spin" /> :
+                          {ttsLoading === (msg.message_id || i) ? <div style={{ width:11, height:11, border:"1.5px solid rgba(255,255,255,.3)", borderTopColor:"#fff", borderRadius:"50%", animation:"ac_spin .8s linear infinite" }} /> :
                            ttsPlaying === (msg.message_id || i) ? <VolumeX className="w-3 h-3 text-red-400" /> :
                            <Volume2 className="w-3 h-3" />}
                         </button>
@@ -1432,27 +1629,45 @@ const AgentChat = () => {
                     {msg.role === "assistant" && <FileGenButtons content={msg.content} msgId={msg.message_id || i} />}
                   </div>
                   {msg.role === "user" && (
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center flex-shrink-0">
-                      <span className="text-white text-sm font-semibold">
-                        {user?.name?.charAt(0) || "U"}
-                      </span>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center flex-shrink-0">
+                        <span className="text-white text-sm font-semibold">
+                          {user?.name?.charAt(0) || "U"}
+                        </span>
+                      </div>
+                      {msg.model_used && (
+                        <div style={{ fontSize: 9, color: "#475569", textAlign: "center", maxWidth: 56, lineHeight: 1.3, letterSpacing: "0.03em" }}>
+                          {msg.model_used.split("/").pop()?.split("-").slice(0, 2).join("-")}
+                          {msg.model_reason && <div style={{ color: "rgba(79,209,197,0.5)", fontSize: 8 }}>{msg.model_reason.split(" ").slice(0, 2).join(" ")}</div>}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
                 );
               })}
               {sending && (
-                <div className="flex gap-3">
-                  <img
-                    src={selectedAgent?.avatar}
-                    alt=""
-                    className="w-8 h-8 rounded-lg object-cover"
-                  />
-                  <div className="bg-zinc-800/50 p-4 rounded-xl">
-                    <div className="flex gap-1">
-                      <span className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce" />
-                      <span className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
-                      <span className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }} />
+                <div className="flex gap-3" data-testid="typing-indicator">
+                  <div style={{ position: "relative", flexShrink: 0 }}>
+                    {selectedAgent?.avatar ? (
+                      <img src={selectedAgent.avatar} alt="" style={{ width: 32, height: 32, borderRadius: 9, objectFit: "cover", border: "1px solid rgba(79,209,197,0.25)", boxShadow: "0 0 12px rgba(79,209,197,0.2)" }} />
+                    ) : (
+                      <div style={{ width: 32, height: 32, borderRadius: 9, background: "rgba(79,209,197,0.12)", border: "1px solid rgba(79,209,197,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Brain style={{ width: 14, height: 14, color: "#4fd1c5" }} />
+                      </div>
+                    )}
+                    <div style={{ position: "absolute", bottom: -2, right: -2, width: 8, height: 8, borderRadius: "50%", background: "#10b981", border: "2px solid #030712", animation: "neural-pulse-green 1.5s ease-in-out infinite" }} />
+                  </div>
+                  <div style={{ background: "rgba(10,18,36,0.9)", border: "1px solid rgba(79,209,197,0.18)", borderRadius: "4px 14px 14px 14px", padding: "12px 20px", backdropFilter: "blur(16px)", display: "flex", alignItems: "center", gap: 12, boxShadow: "0 4px 20px rgba(79,209,197,0.06), inset 0 0 0 1px rgba(79,209,197,0.06)" }}>
+                    <div className="waveform" style={{ height: 20 }}><span /><span /><span /><span /><span /></div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      <span style={{ fontSize: 11, color: "rgba(79,209,197,0.7)", letterSpacing: "0.1em", fontWeight: 600 }}>Processing</span>
+                      <span style={{ fontSize: 9, color: "#334155", letterSpacing: "0.06em" }}>{selectedAgent?.name?.split(" ")[0] || "Agent"} is thinking…</span>
+                    </div>
+                    <div style={{ marginLeft: "auto", display: "flex", gap: 3 }}>
+                      {[0,1,2].map(i => (
+                        <div key={i} style={{ width: 4, height: 4, borderRadius: "50%", background: `rgba(79,209,197,${0.3 + i*0.2})`, animation: `thinking-dot 1.4s ease-in-out ${i*0.2}s infinite` }} />
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -1460,7 +1675,7 @@ const AgentChat = () => {
               <div ref={messagesEndRef} />
             </div>
           )}
-        </ScrollArea>
+        </div>
 
         {/* Input - Always visible at bottom */}
         <div className="p-4 border-t border-white/10 shrink-0 bg-background">
@@ -1498,40 +1713,100 @@ const AgentChat = () => {
             </div>
           )}
           
-          {/* Model Selector */}
-          <div className="max-w-3xl mx-auto mb-3 flex items-center gap-3 flex-wrap">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-indigo-400" />
-              <span className="text-xs text-zinc-400">Model:</span>
+          {/* Model Selector + Router Calibration */}
+          <div className="max-w-3xl mx-auto mb-3 space-y-2">
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-indigo-400" />
+                <span className="text-xs text-zinc-400">Model:</span>
+              </div>
+              {/* Custom model dropdown */}
+              <div style={{ position: "relative" }}>
+                <button onClick={() => setModelDropdownOpen(v => !v)} data-testid="model-selector"
+                  style={{ display: "flex", alignItems: "center", gap: 7, width: 240, height: 32, padding: "0 10px", borderRadius: 8, border: `1px solid ${(PROVIDER_COLORS[selectedModel?.split("/")[0]] || "rgba(255,255,255,0.1)") + "30"}`, background: "rgba(9,9,26,.5)", cursor: "pointer", fontSize: 12, color: "#e2e8f0", boxSizing: "border-box" }}>
+                  {selectedModel && <span style={{ width: 6, height: 6, borderRadius: "50%", background: PROVIDER_COLORS[selectedModel.split("/")[0]] || "#64748b", flexShrink: 0, boxShadow: `0 0 6px ${PROVIDER_COLORS[selectedModel.split("/")[0]] || "#64748b"}88` }} />}
+                  <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textAlign: "left" }}>
+                    {chatModels.find(m => `${m.provider}/${m.model}` === selectedModel)?.name || selectedModel}
+                  </span>
+                  <ChevronDown size={11} style={{ color: "#71717a", flexShrink: 0 }} />
+                </button>
+                {modelDropdownOpen && (
+                  <div style={{ position: "absolute", top: "calc(100% + 4px)", left: 0, width: 300, maxHeight: 420, overflowY: "auto", background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, zIndex: 100, boxShadow: "0 8px 32px rgba(0,0,0,0.6)" }}>
+                    <div style={{ padding: "8px 10px", position: "sticky", top: 0, background: "#0f0f1a", borderBottom: "1px solid rgba(255,255,255,.05)", zIndex: 1 }}>
+                      <input autoFocus value={modelSearch} onChange={e => setModelSearch(e.target.value)} onKeyDown={e => e.stopPropagation()}
+                        placeholder="Search 175,000+ models..."
+                        style={{ width: "100%", background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.1)", borderRadius: 6, padding: "5px 9px", fontSize: 11, color: "#fff", outline: "none", boxSizing: "border-box" }} />
+                    </div>
+                    {(() => {
+                      const q = modelSearch.toLowerCase();
+                      const filtered = q ? chatModels.filter(m => m.name.toLowerCase().includes(q) || m.model.toLowerCase().includes(q) || m.provider.toLowerCase().includes(q)) : chatModels;
+                      const creditColor = (cr) => cr <= 1 ? { bg: "rgba(52,211,153,.12)", c: "#34d399" } : cr <= 2 ? { bg: "rgba(96,165,250,.12)", c: "#60a5fa" } : cr <= 3 ? { bg: "rgba(245,158,11,.12)", c: "#f59e0b" } : { bg: "rgba(239,68,68,.12)", c: "#ef4444" };
+                      const ModelBtn = ({ m }) => { const cc = creditColor(m.credits); return (
+                        <button onClick={() => { setSelectedModel(`${m.provider}/${m.model}`); setModelSearch(""); setModelDropdownOpen(false); }}
+                          style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, padding: "6px 12px", background: selectedModel === `${m.provider}/${m.model}` ? "rgba(129,140,248,.12)" : "transparent", border: "none", cursor: "pointer", textAlign: "left" }}>
+                          <span style={{ fontSize: 11, color: "#d4d4d8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.name}</span>
+                          <span style={{ fontSize: 9, fontWeight: 700, padding: "1px 6px", borderRadius: 20, background: cc.bg, color: cc.c, flexShrink: 0 }}>{m.credits}cr</span>
+                        </button>
+                      ); };
+                      if (!filtered.length) return <div style={{ padding: "16px 12px", fontSize: 11, color: "#71717a", textAlign: "center" }}>No models found</div>;
+                      if (q) return filtered.slice(0, 80).map(m => <ModelBtn key={`${m.provider}/${m.model}`} m={m} />);
+                      const autoModels = filtered.filter(m => m.category === "auto");
+                      const providers = [...new Set(filtered.filter(m => m.category !== "auto").map(m => m.provider))];
+                      return (<>
+                        {autoModels.map(m => <ModelBtn key={`${m.provider}/${m.model}`} m={m} />)}
+                        {providers.map(prov => {
+                          const provModels = filtered.filter(m => m.provider === prov);
+                          const label = prov.charAt(0).toUpperCase() + prov.slice(1);
+                          const pColor = PROVIDER_COLORS[prov] || "#64748b";
+                          return (<div key={prov}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "5px 12px 3px", borderTop: "1px solid rgba(255,255,255,.05)", marginTop: 2 }}>
+                              <div style={{ width: 6, height: 6, borderRadius: "50%", background: pColor, boxShadow: `0 0 6px ${pColor}88` }} />
+                              <span style={{ fontSize: 9, color: pColor, textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 700, opacity: 0.85 }}>{label}</span>
+                              <span style={{ fontSize: 9, color: "#475569", marginLeft: "auto" }}>{provModels.length}</span>
+                            </div>
+                            {provModels.map(m => <ModelBtn key={`${m.provider}/${m.model}`} m={m} />)}
+                          </div>);
+                        })}
+                      </>);
+                    })()}
+                  </div>
+                )}
+              </div>
+              {selectedModel === "auto/auto" ? (
+                <span className="text-xs text-indigo-400">Smart router — task & credit aware</span>
+              ) : (
+                <span className="text-xs text-zinc-500">
+                  {chatModels.find(m => `${m.provider}/${m.model}` === selectedModel)?.credits || 2} credits per message
+                </span>
+              )}
             </div>
-            <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger className="w-[260px] h-8 text-xs bg-zinc-900/50 border-white/10" data-testid="model-selector">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {AVAILABLE_MODELS.map((m) => (
-                  <SelectItem key={`${m.provider}/${m.model}`} value={`${m.provider}/${m.model}`}>
-                    <span className="flex items-center justify-between w-full gap-2">
-                      <span>{m.provider === "auto" ? "" : ""}{m.name}</span>
-                      {m.credits > 0 && (
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
-                          m.credits <= 1 ? "bg-emerald-500/15 text-emerald-400" :
-                          m.credits <= 2 ? "bg-blue-500/15 text-blue-400" :
-                          m.credits <= 3 ? "bg-amber-500/15 text-amber-400" :
-                          "bg-rose-500/15 text-rose-400"
-                        }`}>{m.credits}cr</span>
-                      )}
-                    </span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {selectedModel === "auto/auto" ? (
-              <span className="text-xs text-indigo-400">AI picks the best model (1-5 credits)</span>
-            ) : (
-              <span className="text-xs text-zinc-500">
-                {AVAILABLE_MODELS.find(m => `${m.provider}/${m.model}` === selectedModel)?.credits || 2} credits per message
-              </span>
+
+            {/* Router Calibration — shown only when Universal Auto is selected */}
+            {selectedModel === "auto/auto" && (
+              <div className="flex items-center gap-3 flex-wrap pl-6">
+                <div className="flex items-center gap-1.5">
+                  <Zap className="w-3 h-3 text-zinc-500" />
+                  <span className="text-[11px] text-zinc-500">Quality:</span>
+                  <div className="flex gap-1">
+                    {[["auto","Auto"],["economy","Economy"],["standard","Standard"],["premium","Premium"]].map(([v,l]) => (
+                      <button key={v} onClick={() => setRouterQuality(v)}
+                        className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${routerQuality===v ? "bg-indigo-500/20 border-indigo-500/40 text-indigo-300" : "border-white/10 text-zinc-500 hover:border-white/20"}`}>
+                        {l}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Brain className="w-3 h-3 text-zinc-500" />
+                  <span className="text-[11px] text-zinc-500">Task:</span>
+                  <select value={routerTaskHint} onChange={e => setRouterTaskHint(e.target.value)}
+                    style={{ height: 24, fontSize: 11, background: "rgba(9,9,26,.5)", border: "1px solid rgba(255,255,255,.1)", borderRadius: 6, color: "#d4d4d8", padding: "0 6px", outline: "none", cursor: "pointer", width: 130 }}>
+                    {[["auto","Auto-detect"],["code","Code / Dev"],["math","Math"],["reasoning","Reasoning"],["creative","Creative"],["translation","Translation"],["summary","Summary"],["research","Research"],["data","Data / Analytics"],["chat","Chat"]].map(([v,l]) => (
+                      <option key={v} value={v} style={{ background: "#0f0f1a" }}>{l}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             )}
           </div>
 
@@ -1544,39 +1819,15 @@ const AgentChat = () => {
               className="hidden"
               accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx,.webp,.heic"
             />
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploading}
-              className="border-white/10 hover:bg-white/5"
-              data-testid="attach-file-btn"
-            >
-              {uploading ? (
-                <div className="w-4 h-4 border-2 border-zinc-400 border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <Paperclip className="w-4 h-4" />
-              )}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={recording ? stopRecording : startRecording}
-              disabled={transcribing}
-              className={`border-white/10 ${recording ? "bg-red-500/20 border-red-500/50 text-red-400 animate-pulse" : "hover:bg-white/5"}`}
-              data-testid="mic-btn"
+            <button type="button" onClick={() => fileInputRef.current?.click()} disabled={uploading} data-testid="attach-file-btn"
+              style={{ width: 38, height: 38, borderRadius: 9, border: "1px solid rgba(255,255,255,.1)", background: "transparent", cursor: uploading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#71717a", flexShrink: 0 }}>
+              {uploading ? <div style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "ac_spin .8s linear infinite" }} /> : <Paperclip size={15} />}
+            </button>
+            <button type="button" onClick={recording ? stopRecording : startRecording} disabled={transcribing} data-testid="mic-btn"
               title={recording ? "Stop recording" : transcribing ? "Transcribing..." : "Voice input"}
-            >
-              {transcribing ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : recording ? (
-                <MicOff className="w-4 h-4" />
-              ) : (
-                <Mic className="w-4 h-4" />
-              )}
-            </Button>
+              style={{ width: 38, height: 38, borderRadius: 9, border: `1px solid ${recording ? "rgba(239,68,68,.5)" : "rgba(255,255,255,.1)"}`, background: recording ? "rgba(239,68,68,.15)" : "transparent", cursor: transcribing ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: recording ? "#ef4444" : "#71717a", flexShrink: 0, animation: recording ? "ac_pulse 1.5s ease infinite" : "none" }}>
+              {transcribing ? <div style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "ac_spin .8s linear infinite" }} /> : recording ? <MicOff size={15} /> : <Mic size={15} />}
+            </button>
             <textarea
               ref={textareaRef}
               value={input}
@@ -1629,17 +1880,19 @@ const AgentChat = () => {
               disabled={sending || !selectedAgent}
               data-testid="chat-input"
             />
-            <Button
-              type="submit"
-              disabled={sending || !input.trim() || !selectedAgent}
-              className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
-              data-testid="send-message-btn"
-            >
-              <Send className="w-4 h-4" />
-            </Button>
+            <button type="submit" disabled={sending || !input.trim() || !selectedAgent} data-testid="send-message-btn"
+              style={{ width: 38, height: 38, borderRadius: 9, border: "none", background: sending || !input.trim() || !selectedAgent ? "rgba(129,140,248,.25)" : "linear-gradient(135deg, #818cf8, #7c3aed)", cursor: sending || !input.trim() || !selectedAgent ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", flexShrink: 0 }}>
+              <Send size={15} />
+            </button>
           </form>
         </div>
       </div>
+      <style>{`
+        @keyframes ac_spin { to { transform: rotate(360deg); } }
+        @keyframes ac_wave { 0% { height: 4px; } 100% { height: 14px; } }
+        @keyframes thinking-dot { 0%,80%,100% { transform: scale(0.6); opacity: 0.3; } 40% { transform: scale(1.2); opacity: 1; } }
+        @keyframes neural-pulse-green { 0%,100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.8); } 60% { box-shadow: 0 0 0 6px rgba(16,185,129,0); } }
+      `}</style>
     </div>
   );
 };
@@ -1661,10 +1914,10 @@ const NET_COLORS = {
   core_platform: "#10b981", strategic_executive: "#a855f7", venture_creation: "#3b82f6",
   product_development: "#06b6d4", engineering: "#f59e0b", creative_brand: "#ec4899",
   growth_distribution: "#22c55e", sales_revenue: "#f97316", customer_experience: "#14b8a6",
-  operations: "#6366f1", finance_capital: "#eab308", investment_portfolio: "#8b5cf6",
+  operations: "#4fd1c5", finance_capital: "#eab308", investment_portfolio: "#8b5cf6",
   research_intelligence: "#0ea5e9", simulation_foresight: "#d946ef", legal_governance: "#f43f5e",
   security: "#ef4444", memory_knowledge: "#06b6d4", tooling_capability: "#84cc16",
-  execution: "#f97316", verification: "#6366f1", experimentation: "#a855f7",
+  execution: "#f97316", verification: "#4fd1c5", experimentation: "#a855f7",
   conflict_resolution: "#f43f5e", observability_incident: "#22d3ee", recovery_resilience: "#10b981",
   communication_reporting: "#3b82f6", web_search_intelligence: "#0ea5e9", industry_specific: "#f59e0b",
 };
@@ -1760,7 +2013,7 @@ const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent,
         {agentSearch && searchResults.length > 0 && (
           <div className="mt-1.5 max-h-56 overflow-y-auto space-y-0.5 bg-zinc-900/95 rounded-lg border border-white/10 p-1 shadow-xl" data-testid="search-results">
             {searchResults.map(agent => {
-              const netColor = NET_COLORS[agent.network] || "#6366f1";
+              const netColor = NET_COLORS[agent.network] || "#4fd1c5";
               return (
                 <button
                   key={agent.agent_id}
@@ -1814,7 +2067,7 @@ const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent,
           {sortedNetworks.map(netKey => {
             const isExpanded = expandedNet === netKey;
             const netAgents = networkGroups[netKey];
-            const netColor = NET_COLORS[netKey] || "#6366f1";
+            const netColor = NET_COLORS[netKey] || "#4fd1c5";
             return (
               <div key={netKey}>
                 <button
@@ -1861,7 +2114,7 @@ const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent,
       )}
 
       {/* Chat History */}
-      <ScrollArea className="flex-1">
+      <div style={{ flex: 1, overflowY: "auto" }}>
         <div className="px-3 pt-3">
           <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-2 px-1">Recent Chats</p>
           <div className="space-y-0.5">
@@ -1898,7 +2151,7 @@ const SidebarContent = ({ agents, chats, selectedAgent, setSelectedAgent,
             )}
           </div>
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 };

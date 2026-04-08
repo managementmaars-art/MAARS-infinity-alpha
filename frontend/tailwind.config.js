@@ -52,7 +52,21 @@ module.exports = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+  			/* ── Remap indigo → teal for system-wide accent consistency ── */
+  			indigo: {
+  				50:  "#f0fdfa",
+  				100: "#ccfbf1",
+  				200: "#99f6e4",
+  				300: "#5eead4",
+  				400: "#4fd1c5",
+  				500: "#4fd1c5",
+  				600: "#0d9488",
+  				700: "#0f766e",
+  				800: "#115e59",
+  				900: "#134e4a",
+  				950: "#042f2e",
+  			},
   		},
   		keyframes: {
   			'accordion-down': {

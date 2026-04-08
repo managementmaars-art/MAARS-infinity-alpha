@@ -30,6 +30,112 @@ from services.llm_service import MODEL_COSTS_MAP
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
+# Track portrait generation progress in memory
+_portrait_gen_state = {"running": False, "total": 0, "done": 0, "failed": 0, "last_updated": None}
+
+@router.get("/admin/generate-avatars/status")
+async def get_avatar_gen_status(admin: User = Depends(require_admin)):
+    return _portrait_gen_state
+
+@router.post("/admin/generate-avatars")
+async def trigger_avatar_generation(admin: User = Depends(require_admin)):
+    """Generate AI photorealistic portraits for all agents that still have SVG placeholder avatars."""
+    global _portrait_gen_state
+    if _portrait_gen_state["running"]:
+        return {"status": "already_running", **_portrait_gen_state}
+
+    # Find all SVG-avatar agents
+    agents_to_gen = await db.agents.find(
+        {"avatar": {"$regex": "^data:image/svg"}},
+        {"_id": 0, "agent_id": 1, "name": 1, "role": 1}
+    ).to_list(600)
+
+    # Also include agents with missing or empty avatar
+    no_avatar = await db.agents.find(
+        {"$or": [{"avatar": {"$exists": False}}, {"avatar": ""}]},
+        {"_id": 0, "agent_id": 1, "name": 1, "role": 1}
+    ).to_list(100)
+    agents_to_gen += no_avatar
+
+    # Filter out already-generated PNG files
+    from pathlib import Path
+    avatar_dir = Path(__file__).parent.parent / "static" / "avatars"
+    avatar_dir.mkdir(parents=True, exist_ok=True)
+    to_generate = [a for a in agents_to_gen if not (avatar_dir / f"{a['agent_id']}.png").exists()]
+
+    if not to_generate:
+        return {"status": "all_done", "message": "All agents already have portrait photos", **_portrait_gen_state}
+
+    _portrait_gen_state = {"running": True, "total": len(to_generate), "done": 0, "failed": 0, "last_updated": datetime.now(timezone.utc).isoformat()}
+
+    async def _run_generation():
+        global _portrait_gen_state
+        try:
+            from emergentintegrations.llm.openai.image_generation import OpenAIImageGeneration
+            import hashlib
+            llm_key = EMERGENT_LLM_KEY
+            if not llm_key:
+                _portrait_gen_state["running"] = False
+                _portrait_gen_state["error"] = "EMERGENT_LLM_KEY not configured"
+                return
+
+            image_gen = OpenAIImageGeneration(api_key=llm_key)
+            SKIN_TONES = ["light", "medium", "olive", "tan", "brown", "dark"]
+            HAIR_STYLES = ["short straight", "medium length", "curly", "slicked back", "shoulder length"]
+            HAIR_COLORS = ["black", "dark brown", "brown", "auburn", "blonde", "gray"]
+            ATTIRE = ["navy suit", "charcoal blazer", "white shirt", "gray turtleneck", "black blazer", "burgundy blazer"]
+            BACKGROUNDS = ["dark navy studio", "dark charcoal gradient", "deep slate gray", "midnight blue"]
+
+            sem = asyncio.Semaphore(3)
+
+            async def gen_one(agent, idx):
+                agent_id = agent["agent_id"]
+                name = agent.get("name") or "Agent"
+                role = agent.get("role") or ""
+                file_path = avatar_dir / f"{agent_id}.png"
+                if file_path.exists() and file_path.stat().st_size > 1000:
+                    await db.agents.update_one({"agent_id": agent_id}, {"$set": {"avatar": f"/api/static/avatars/{agent_id}.png"}})
+                    _portrait_gen_state["done"] += 1
+                    return
+                async with sem:
+                    try:
+                        hv = int(hashlib.md5(name.encode()).hexdigest(), 16)
+                        gender = "male" if hv % 2 == 0 else "female"
+                        age = ["late 20s","early 30s","mid 30s","early 40s"][hv % 4]
+                        skin = SKIN_TONES[hv % len(SKIN_TONES)]
+                        hair_s = HAIR_STYLES[(hv >> 4) % len(HAIR_STYLES)]
+                        hair_c = HAIR_COLORS[(hv >> 8) % len(HAIR_COLORS)]
+                        attire = ATTIRE[(hv >> 12) % len(ATTIRE)]
+                        bg = BACKGROUNDS[(hv >> 16) % len(BACKGROUNDS)]
+                        prompt = (f"Professional corporate headshot portrait of a {gender} professional in their {age}, "
+                                  f"{skin} skin tone, {hair_c} {hair_s} hair, wearing a {attire}, "
+                                  f"confident and approachable expression, studio lighting, {bg} background, "
+                                  f"4K photorealistic, sharp focus, business portrait style")
+                        images = await image_gen.generate_images(prompt=prompt, model="gpt-image-1", number_of_images=1)
+                        if images:
+                            file_path.write_bytes(images[0])
+                            await db.agents.update_one({"agent_id": agent_id}, {"$set": {"avatar": f"/api/static/avatars/{agent_id}.png"}})
+                            _portrait_gen_state["done"] += 1
+                        else:
+                            _portrait_gen_state["failed"] += 1
+                    except Exception as e:
+                        logger.warning(f"Avatar gen failed for {name}: {e}")
+                        _portrait_gen_state["failed"] += 1
+                    _portrait_gen_state["last_updated"] = datetime.now(timezone.utc).isoformat()
+                    await asyncio.sleep(0.3)
+
+            tasks = [gen_one(a, i) for i, a in enumerate(to_generate)]
+            await asyncio.gather(*tasks, return_exceptions=True)
+        except Exception as e:
+            logger.error(f"Avatar generation error: {e}")
+            _portrait_gen_state["error"] = str(e)
+        finally:
+            _portrait_gen_state["running"] = False
+            _portrait_gen_state["last_updated"] = datetime.now(timezone.utc).isoformat()
+
+    asyncio.create_task(_run_generation())
+    return {"status": "started", "agents_queued": len(to_generate)}
+
 @router.get("/admin/api-keys")
 async def admin_get_api_keys(admin: User = Depends(require_admin)):
     """Get current API key configuration (masked)"""
@@ -49,9 +155,14 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
     cost_reference = {
         "openai": {
             "models": [
-                {"name": "GPT-5.2", "input": "$2.50", "output": "$10.00"},
+                {"name": "GPT-5", "input": "$2.50", "output": "$10.00"},
+                {"name": "GPT-4.1", "input": "$2.00", "output": "$8.00"},
+                {"name": "GPT-4.1 Mini", "input": "$0.40", "output": "$1.60"},
+                {"name": "GPT-4.1 Nano", "input": "$0.10", "output": "$0.40"},
                 {"name": "GPT-4o", "input": "$2.50", "output": "$10.00"},
                 {"name": "GPT-4o Mini", "input": "$0.15", "output": "$0.60"},
+                {"name": "O4", "input": "$15.00", "output": "$60.00"},
+                {"name": "O4 Mini", "input": "$1.10", "output": "$4.40"},
                 {"name": "O3", "input": "$10.00", "output": "$40.00"},
                 {"name": "O3 Mini", "input": "$1.10", "output": "$4.40"},
                 {"name": "GPT Image 1", "input": "$0.02/img", "output": "1024x1024"},
@@ -62,6 +173,8 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
         },
         "anthropic": {
             "models": [
+                {"name": "Claude Opus 4.6", "input": "$15.00", "output": "$75.00"},
+                {"name": "Claude Sonnet 4.6", "input": "$3.00", "output": "$15.00"},
                 {"name": "Claude Sonnet 4.5", "input": "$3.00", "output": "$15.00"},
                 {"name": "Claude Opus 4.5", "input": "$15.00", "output": "$75.00"},
                 {"name": "Claude Haiku 4.5", "input": "$0.80", "output": "$4.00"},
@@ -70,9 +183,11 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
         },
         "gemini": {
             "models": [
+                {"name": "Gemini 2.5 Pro", "input": "$1.25", "output": "$10.00"},
+                {"name": "Gemini 2.5 Flash", "input": "$0.075", "output": "$0.30"},
+                {"name": "Gemini 2.5 Flash Lite", "input": "$0.038", "output": "$0.15"},
                 {"name": "Gemini 3 Flash", "input": "$0.075", "output": "$0.30"},
                 {"name": "Gemini 3 Pro", "input": "$1.25", "output": "$5.00"},
-                {"name": "Nano Banana 2 (3.1 Flash Image)", "input": "$0.02/img", "output": "1024x1024"},
             ],
             "unit": "per 1M tokens"
         },
@@ -86,8 +201,10 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
         },
         "deepseek": {
             "models": [
-                {"name": "DeepSeek Chat", "input": "$0.14", "output": "$0.28"},
-                {"name": "DeepSeek Reasoner", "input": "$0.55", "output": "$2.19"},
+                {"name": "DeepSeek V3 0324", "input": "$0.14", "output": "$0.28"},
+                {"name": "DeepSeek Chat (V3)", "input": "$0.14", "output": "$0.28"},
+                {"name": "DeepSeek R1 0528", "input": "$0.55", "output": "$2.19"},
+                {"name": "DeepSeek Reasoner (R1)", "input": "$0.55", "output": "$2.19"},
             ],
             "unit": "per 1M tokens"
         },
@@ -96,6 +213,9 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
                 {"name": "Mistral Large", "input": "$2.00", "output": "$6.00"},
                 {"name": "Mistral Medium", "input": "$0.40", "output": "$2.00"},
                 {"name": "Mistral Small", "input": "$0.10", "output": "$0.30"},
+                {"name": "Mistral Nemo", "input": "$0.15", "output": "$0.15"},
+                {"name": "Codestral", "input": "$0.30", "output": "$0.90"},
+                {"name": "Pixtral Large", "input": "$2.00", "output": "$6.00"},
             ],
             "unit": "per 1M tokens"
         },
@@ -103,11 +223,15 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
             "models": [
                 {"name": "Sonar", "input": "$1.00", "output": "$1.00"},
                 {"name": "Sonar Pro", "input": "$3.00", "output": "$15.00"},
+                {"name": "Sonar Reasoning", "input": "$1.00", "output": "$5.00"},
+                {"name": "Sonar Reasoning Pro", "input": "$2.00", "output": "$8.00"},
+                {"name": "Sonar Deep Research", "input": "$2.00", "output": "$8.00"},
             ],
             "unit": "per 1M tokens + $5/1K search"
         },
         "cohere": {
             "models": [
+                {"name": "Command A (Mar 2025)", "input": "$2.50", "output": "$10.00"},
                 {"name": "Command R+", "input": "$2.50", "output": "$10.00"},
                 {"name": "Command R", "input": "$0.15", "output": "$0.60"},
             ],
@@ -122,9 +246,12 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
         },
         "groq": {
             "models": [
-                {"name": "Llama 4 Scout", "input": "$0.11", "output": "$0.34"},
-                {"name": "Llama 4 Maverick", "input": "$0.50", "output": "$0.77"},
+                {"name": "Llama 4 Scout 17B", "input": "$0.11", "output": "$0.34"},
+                {"name": "Llama 4 Maverick 17B", "input": "$0.50", "output": "$0.77"},
                 {"name": "Llama 3.3 70B", "input": "$0.59", "output": "$0.79"},
+                {"name": "Llama 3.1 8B Instant", "input": "$0.05", "output": "$0.08"},
+                {"name": "Qwen QwQ 32B", "input": "$0.29", "output": "$0.39"},
+                {"name": "Gemma 2 9B", "input": "$0.20", "output": "$0.20"},
             ],
             "unit": "per 1M tokens"
         },
@@ -132,6 +259,8 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
             "models": [
                 {"name": "Llama 4 Maverick FP8", "input": "$0.27", "output": "$0.85"},
                 {"name": "Llama 3.3 70B Turbo", "input": "$0.88", "output": "$0.88"},
+                {"name": "Qwen 2.5 72B Turbo", "input": "$0.72", "output": "$0.72"},
+                {"name": "Qwen 3 235B A22B FP8", "input": "$0.20", "output": "$0.60"},
                 {"name": "DeepSeek R1", "input": "$3.00", "output": "$7.00"},
             ],
             "unit": "per 1M tokens"
@@ -140,6 +269,8 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
             "models": [
                 {"name": "Llama 4 Scout", "input": "$0.15", "output": "$0.60"},
                 {"name": "Llama 4 Maverick", "input": "$0.50", "output": "$0.77"},
+                {"name": "Qwen 3 30B A3B", "input": "$0.15", "output": "$0.60"},
+                {"name": "Phi-4", "input": "$0.90", "output": "$0.90"},
                 {"name": "DeepSeek V3", "input": "$0.56", "output": "$1.68"},
             ],
             "unit": "per 1M tokens"
@@ -150,6 +281,166 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
                 {"name": "Jamba Mini 1.7", "input": "$0.20", "output": "$0.40"},
             ],
             "unit": "per 1M tokens"
+        },
+        "cerebras": {
+            "models": [
+                {"name": "Llama 3.3 70B", "input": "$0.60", "output": "$0.60"},
+                {"name": "Llama 3.1 8B", "input": "$0.10", "output": "$0.10"},
+                {"name": "Qwen 3 32B", "input": "$0.40", "output": "$0.40"},
+            ],
+            "unit": "per 1M tokens (ultra-fast inference)"
+        },
+        "sambanova": {
+            "models": [
+                {"name": "Meta Llama 3.3 70B", "input": "$0.60", "output": "$0.60"},
+                {"name": "Qwen 2.5 72B", "input": "$0.70", "output": "$0.70"},
+                {"name": "DeepSeek R1 0528", "input": "$1.30", "output": "$1.30"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "nvidia": {
+            "models": [
+                {"name": "Nemotron Ultra 253B", "input": "$1.90", "output": "$1.90"},
+                {"name": "Nemotron Super 49B", "input": "$0.35", "output": "$0.35"},
+                {"name": "Llama 3.3 70B NIM", "input": "$0.60", "output": "$0.60"},
+                {"name": "Mistral NIM 7B", "input": "$0.20", "output": "$0.20"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "moonshot": {
+            "models": [
+                {"name": "Kimi K2", "input": "$0.60", "output": "$2.50"},
+                {"name": "Moonshot v1 8K", "input": "$1.63", "output": "$4.89"},
+                {"name": "Moonshot v1 32K", "input": "$3.26", "output": "$9.78"},
+                {"name": "Moonshot v1 128K", "input": "$8.16", "output": "$24.48"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "qwen": {
+            "models": [
+                {"name": "Qwen3 235B A22B", "input": "$0.22", "output": "$0.88"},
+                {"name": "Qwen3 32B", "input": "$0.07", "output": "$0.28"},
+                {"name": "Qwen2.5 72B Instruct", "input": "$0.40", "output": "$1.20"},
+                {"name": "QwQ 32B", "input": "$0.15", "output": "$0.60"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "yi": {
+            "models": [
+                {"name": "Yi-Large", "input": "$3.00", "output": "$3.00"},
+                {"name": "Yi-Medium", "input": "$0.80", "output": "$0.80"},
+                {"name": "Yi-Lightning", "input": "$0.14", "output": "$0.14"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "zhipu": {
+            "models": [
+                {"name": "GLM-4-Plus", "input": "$0.70", "output": "$0.70"},
+                {"name": "GLM-4-Air", "input": "$0.14", "output": "$0.14"},
+                {"name": "GLM-4-Flash", "input": "$0.01", "output": "$0.01"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "doubao": {
+            "models": [
+                {"name": "Doubao Pro 32K", "input": "$0.11", "output": "$0.28"},
+                {"name": "Doubao Lite 32K", "input": "$0.04", "output": "$0.07"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "hyperbolic": {
+            "models": [
+                {"name": "Llama 4 Scout", "input": "$0.10", "output": "$0.10"},
+                {"name": "Llama 3.3 70B", "input": "$0.40", "output": "$0.40"},
+                {"name": "Qwen 2.5 72B", "input": "$0.40", "output": "$0.40"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "upstage": {
+            "models": [
+                {"name": "Solar Pro", "input": "$2.00", "output": "$8.00"},
+                {"name": "Solar Mini", "input": "$0.15", "output": "$0.15"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "writer": {
+            "models": [
+                {"name": "Palmyra X5", "input": "$1.00", "output": "$5.00"},
+                {"name": "Palmyra X4", "input": "$0.50", "output": "$2.50"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "huggingface": {
+            "models": [
+                {"name": "Inference API (Free)", "input": "Free", "output": "rate limited"},
+                {"name": "Inference Endpoints", "input": "varies", "output": "per compute hour"},
+            ],
+            "unit": "Free tier available. PRO: $9/mo for priority"
+        },
+        "llama": {
+            "models": [
+                {"name": "Llama 4 Scout 17B", "input": "$0.11", "output": "$0.11"},
+                {"name": "Llama 4 Maverick 17B", "input": "$0.22", "output": "$0.88"},
+                {"name": "Llama 3.3 70B", "input": "$0.20", "output": "$0.20"},
+            ],
+            "unit": "per 1M tokens (Meta Llama API)"
+        },
+        "novita": {
+            "models": [
+                {"name": "Llama 3.3 70B", "input": "$0.23", "output": "$0.23"},
+                {"name": "DeepSeek R1", "input": "$0.55", "output": "$2.19"},
+                {"name": "Qwen 2.5 72B", "input": "$0.23", "output": "$0.23"},
+                {"name": "Llama 4 Scout", "input": "$0.12", "output": "$0.12"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "lepton": {
+            "models": [
+                {"name": "Llama 3.3 70B", "input": "$0.30", "output": "$0.30"},
+                {"name": "DeepSeek R1", "input": "$0.55", "output": "$2.19"},
+                {"name": "Qwen 2.5 72B", "input": "$0.30", "output": "$0.30"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "lambda": {
+            "models": [
+                {"name": "Llama 4 Scout", "input": "$0.17", "output": "$0.17"},
+                {"name": "Llama 4 Maverick", "input": "$0.65", "output": "$0.65"},
+                {"name": "Llama 3.3 70B", "input": "$0.30", "output": "$0.30"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "minimax": {
+            "models": [
+                {"name": "MiniMax Text 01", "input": "$0.20", "output": "$1.10"},
+                {"name": "MiniMax M1", "input": "$0.30", "output": "$1.65"},
+                {"name": "Abab 6.5s", "input": "$0.10", "output": "$0.10"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "inception": {
+            "models": [
+                {"name": "Mercury Coder Small", "input": "$0.25", "output": "$1.00"},
+                {"name": "Mercury Coder Mini", "input": "$0.10", "output": "$0.40"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "arcee": {
+            "models": [
+                {"name": "Arcee Blitz", "input": "$0.50", "output": "$0.50"},
+                {"name": "Virtuoso Large", "input": "$1.00", "output": "$1.00"},
+                {"name": "Coder Large", "input": "$1.00", "output": "$1.00"},
+            ],
+            "unit": "per 1M tokens"
+        },
+        "amazon": {
+            "models": [
+                {"name": "Nova Pro", "input": "$0.80", "output": "$3.20"},
+                {"name": "Nova Lite", "input": "$0.06", "output": "$0.24"},
+                {"name": "Nova Micro", "input": "$0.04", "output": "$0.14"},
+                {"name": "Titan Text Express", "input": "$0.80", "output": "$1.60"},
+            ],
+            "unit": "per 1M tokens (via Bedrock)"
         },
         "slack": {
             "models": [
@@ -218,7 +509,13 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
         },
     }
     
-    all_providers = ["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs", "groq", "together", "fireworks", "ai21"]
+    all_providers = [
+        "openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere",
+        "elevenlabs", "groq", "together", "fireworks", "ai21", "cerebras", "sambanova",
+        "nvidia", "moonshot", "qwen",
+        "yi", "zhipu", "doubao", "hyperbolic", "upstage", "writer", "huggingface", "llama",
+        "novita", "lepton", "lambda", "amazon", "minimax", "inception", "arcee",
+    ]
     result = {
         "active_provider": config.get("active_provider", "emergent"),
         "emergent_key_set": bool(EMERGENT_LLM_KEY),
@@ -243,7 +540,13 @@ async def admin_update_api_keys(request: Request, admin: User = Depends(require_
     }
     
     # Only update keys that are provided (non-empty)
-    all_providers = ["openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere", "elevenlabs", "groq", "together", "fireworks", "ai21"]
+    all_providers = [
+        "openai", "anthropic", "gemini", "xai", "deepseek", "mistral", "perplexity", "cohere",
+        "elevenlabs", "groq", "together", "fireworks", "ai21", "cerebras", "sambanova",
+        "nvidia", "moonshot", "qwen",
+        "yi", "zhipu", "doubao", "hyperbolic", "upstage", "writer", "huggingface", "llama",
+        "novita", "lepton", "lambda", "amazon", "minimax", "inception", "arcee",
+    ]
     for p in all_providers:
         if key_data.get(f"{p}_key"):
             update_doc[f"{p}_key"] = key_data[f"{p}_key"]
@@ -356,6 +659,78 @@ async def admin_test_api_key(request: Request, admin: User = Depends(require_adm
             "headers": {"Authorization": f"Bearer {api_key}"},
             "success_msg": lambda r: "Key verified! AI21 API access confirmed.",
             "help": "Get your key at https://studio.ai21.com/account/api-key"
+        },
+        "cerebras": {
+            "url": "https://api.cerebras.ai/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: f"Key verified! Cerebras access confirmed. {len(r.json().get('data', []))} models available.",
+            "help": "Get your key at https://cloud.cerebras.ai/"
+        },
+        "sambanova": {
+            "url": "https://api.sambanova.ai/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: f"Key verified! SambaNova access confirmed. {len(r.json().get('data', []))} models available.",
+            "help": "Get your key at https://cloud.sambanova.ai/apis"
+        },
+        "novita": {
+            "url": "https://api.novita.ai/v3/openai/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: f"Key verified! Novita AI access confirmed. {len(r.json().get('data', []))} models available.",
+            "help": "Get your key at https://novita.ai/settings"
+        },
+        "lepton": {
+            "url": "https://api.lepton.ai/api/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: f"Key verified! Lepton AI access confirmed.",
+            "help": "Get your key at https://dashboard.lepton.ai/"
+        },
+        "lambda": {
+            "url": "https://api.lambda.ai/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: f"Key verified! Lambda Labs access confirmed. {len(r.json().get('data', []))} models available.",
+            "help": "Get your key at https://lambdalabs.com/service/gpu-cloud/api-keys"
+        },
+        "minimax": {
+            "url": "https://api.minimaxi.chat/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: "Key verified! Minimax AI access confirmed.",
+            "help": "Get your key at https://platform.minimaxi.com/"
+        },
+        "inception": {
+            "url": "https://api.inception.ai/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: "Key verified! Inception AI (Mercury) access confirmed.",
+            "help": "Get your key at https://api.inception.ai/"
+        },
+        "arcee": {
+            "url": "https://api.arcee.ai/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: f"Key verified! Arcee AI access confirmed. {len(r.json().get('data', []))} models available.",
+            "help": "Get your key at https://app.arcee.ai/"
+        },
+        "amazon": {
+            "url": "https://bedrock-runtime.us-east-1.amazonaws.com/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: "Key verified! Amazon Bedrock access confirmed.",
+            "help": "Get AWS credentials at https://console.aws.amazon.com/bedrock/"
+        },
+        "nvidia": {
+            "url": "https://integrate.api.nvidia.com/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: f"Key verified! Nvidia NIM access confirmed. {len(r.json().get('data', []))} models available.",
+            "help": "Get your key at https://build.nvidia.com/"
+        },
+        "moonshot": {
+            "url": "https://api.moonshot.cn/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: "Key verified! Moonshot AI (Kimi) access confirmed.",
+            "help": "Get your key at https://platform.moonshot.cn/"
+        },
+        "qwen": {
+            "url": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: "Key verified! Qwen / Alibaba DashScope access confirmed.",
+            "help": "Get your key at https://dashscope.aliyuncs.com/"
         },
     }
     
@@ -1558,7 +1933,7 @@ async def admin_test_smtp(request: Request, admin: User = Depends(require_admin)
 
     html = """
     <div style="font-family:Arial;padding:20px;background:#111;color:#fff;border-radius:12px;">
-        <h2 style="color:#ef4444;">MAARS Command - SMTP Test</h2>
+        <h2 style="color:#6366f1;">MAARS Command - SMTP Test</h2>
         <p>This is a test email from your MAARS Command platform.</p>
         <p>If you're seeing this, your Gmail SMTP is configured correctly!</p>
         <hr style="border-color:#333;"/>
@@ -1717,8 +2092,8 @@ async def get_branding(admin: User = Depends(require_admin)):
         "tagline": "AI-Powered Team Platform",
         "logo_url": "",
         "favicon_url": "",
-        "primary_color": "#ef4444",
-        "accent_color": "#f97316",
+        "primary_color": "#6366f1",
+        "accent_color": "#8b5cf6",
         "custom_domain": "",
         "custom_domain_status": "not_configured",
         "footer_text": "MAARS Global Corporation",
@@ -1804,8 +2179,8 @@ async def get_public_branding():
         "tagline": "AI-Powered Team Platform",
         "logo_url": "",
         "favicon_url": "",
-        "primary_color": "#ef4444",
-        "accent_color": "#f97316",
+        "primary_color": "#6366f1",
+        "accent_color": "#8b5cf6",
         "footer_text": "MAARS Global Corporation",
     }
     if config:
@@ -2306,3 +2681,592 @@ async def admin_revenue_trends(days: int = 30, admin: User = Depends(require_adm
     }
 
 
+# ─────────────────────────────────────────────
+# Client Visibility Settings
+# ─────────────────────────────────────────────
+
+@router.get("/admin/nav-visibility")
+async def get_nav_visibility(admin: User = Depends(require_admin)):
+    """Get which nav pages are visible to clients."""
+    config = await db.platform_config.find_one({"config_type": "nav_visibility"}, {"_id": 0})
+    if not config:
+        return {"visibility": {}}
+    return {"visibility": config.get("visibility", {})}
+
+
+@router.put("/admin/nav-visibility")
+async def update_nav_visibility(request: Request, admin: User = Depends(require_admin)):
+    """Update which nav pages are visible to clients."""
+    body = await request.json()
+    visibility = body.get("visibility", {})
+    await db.platform_config.update_one(
+        {"config_type": "nav_visibility"},
+        {"$set": {"config_type": "nav_visibility", "visibility": visibility}},
+        upsert=True,
+    )
+    return {"success": True}
+
+
+@router.get("/admin/nav-visibility/public")
+async def get_nav_visibility_public():
+    """Public endpoint — returns client nav visibility (no auth needed)."""
+    config = await db.platform_config.find_one({"config_type": "nav_visibility"}, {"_id": 0})
+    if not config:
+        return {"visibility": {}}
+    return {"visibility": config.get("visibility", {})}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UNIVERSAL GATEWAY ADMIN ENDPOINTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+@router.get("/admin/gateway/stats")
+async def admin_gateway_stats(current_user: User = Depends(require_admin)):
+    """Admin-only: aggregated Universal Gateway usage stats across ALL users."""
+    logs = await db.llm_usage_logs.find(
+        {"source": "universal_gateway"},
+        {"_id": 0}
+    ).sort("timestamp", -1).limit(5000).to_list(5000)
+
+    total_calls   = len(logs)
+    total_cost    = round(sum(l.get("cost_usd", 0) for l in logs), 6)
+    total_credits = sum(l.get("credits_used", 0) for l in logs)
+    fallback_cnt  = sum(1 for l in logs if l.get("fallback_used"))
+    avg_latency   = round(sum(l.get("latency_ms", 0) for l in logs) / max(total_calls, 1), 1)
+
+    by_provider: dict = {}
+    by_tier:     dict = {}
+    by_task:     dict = {}
+    by_budget:   dict = {}
+    by_user:     dict = {}
+
+    for l in logs:
+        p  = l.get("provider", "unknown")
+        t  = l.get("quality_tier", "standard")
+        tt = l.get("task_type", "general")
+        b  = l.get("credit_budget", "normal")
+        u  = l.get("user_id", "unknown")
+        by_provider[p]  = by_provider.get(p, 0) + 1
+        by_tier[t]      = by_tier.get(t, 0) + 1
+        by_task[tt]     = by_task.get(tt, 0) + 1
+        by_budget[b]    = by_budget.get(b, 0) + 1
+        by_user[u]      = by_user.get(u, 0) + 1
+
+    # Top 10 users by gateway calls
+    top_users = sorted(by_user.items(), key=lambda x: x[1], reverse=True)[:10]
+
+    return {
+        "total_calls":           total_calls,
+        "total_cost_usd":        total_cost,
+        "total_credits_used":    total_credits,
+        "avg_latency_ms":        avg_latency,
+        "fallback_count":        fallback_cnt,
+        "fallback_rate_pct":     round(fallback_cnt / max(total_calls, 1) * 100, 1),
+        "avg_cost_per_call_usd": round(total_cost / max(total_calls, 1), 8),
+        "calls_by_provider":     by_provider,
+        "calls_by_tier":         by_tier,
+        "calls_by_task_type":    by_task,
+        "calls_by_credit_budget":by_budget,
+        "top_users_by_calls":    [{"user_id": u, "calls": c} for u, c in top_users],
+    }
+
+
+@router.get("/admin/gateway/logs")
+async def admin_gateway_logs(
+    limit: int = 50,
+    current_user: User = Depends(require_admin)
+):
+    """Admin-only: last N routing decisions across all users."""
+    limit = min(max(limit, 1), 200)
+    logs = await db.llm_usage_logs.find(
+        {"source": "universal_gateway"},
+        {"_id": 0}
+    ).sort("timestamp", -1).limit(limit).to_list(limit)
+
+    # Enrich with user email where possible
+    user_ids = list({l.get("user_id") for l in logs if l.get("user_id")})
+    user_docs = await db.users.find(
+        {"user_id": {"$in": user_ids}}, {"_id": 0, "user_id": 1, "email": 1, "name": 1}
+    ).to_list(len(user_ids))
+    user_map = {u["user_id"]: u for u in user_docs}
+
+    result = []
+    for l in logs:
+        uid = l.get("user_id", "")
+        u = user_map.get(uid, {})
+        result.append({
+            "log_id":         l.get("log_id", ""),
+            "timestamp":      l.get("timestamp", ""),
+            "user_id":        uid,
+            "user_email":     u.get("email", ""),
+            "user_name":      u.get("name", ""),
+            "provider":       l.get("provider", ""),
+            "model":          l.get("model", ""),
+            "quality_tier":   l.get("quality_tier", ""),
+            "task_type":      l.get("task_type", "general"),
+            "task_complexity":l.get("task_complexity", ""),
+            "credit_budget":  l.get("credit_budget", ""),
+            "credits_used":   l.get("credits_used", 0),
+            "cost_usd":       l.get("cost_usd", 0),
+            "latency_ms":     l.get("latency_ms", 0),
+            "attempts":       l.get("attempts", 1),
+            "fallback_used":  l.get("fallback_used", False),
+            "prompt_words":   l.get("prompt_words", 0),
+        })
+
+    return {"logs": result, "count": len(result)}
+
+
+@router.get("/admin/gateway/health")
+async def admin_gateway_health(current_user: User = Depends(require_admin)):
+    """Admin-only: provider key configuration status for all 19 gateway providers."""
+    api_keys = await get_api_keys()
+
+    ALL_PROVIDERS = [
+        {"id": "openai",     "name": "OpenAI",          "models": ["GPT-5", "GPT-4.1", "O4"]},
+        {"id": "anthropic",  "name": "Anthropic",        "models": ["Claude Opus 4.6", "Claude Sonnet 4.6"]},
+        {"id": "gemini",     "name": "Google Gemini",    "models": ["Gemini 2.5 Pro", "Gemini 2.5 Flash"]},
+        {"id": "xai",        "name": "xAI (Grok)",       "models": ["Grok 3", "Grok 3 Mini"]},
+        {"id": "deepseek",   "name": "DeepSeek",         "models": ["DeepSeek V3", "DeepSeek R1"]},
+        {"id": "mistral",    "name": "Mistral AI",       "models": ["Mistral Large", "Codestral"]},
+        {"id": "perplexity", "name": "Perplexity",       "models": ["Sonar Pro", "Sonar Deep Research"]},
+        {"id": "cohere",     "name": "Cohere",           "models": ["Command A", "Command R+"]},
+        {"id": "groq",       "name": "Groq",             "models": ["Llama 4 Scout", "Llama 4 Maverick"]},
+        {"id": "cerebras",   "name": "Cerebras",         "models": ["Llama 3.3 70B", "Llama 3.1 70B"]},
+        {"id": "together",   "name": "Together AI",      "models": ["Llama 4 Maverick FP8", "DeepSeek R1"]},
+        {"id": "fireworks",  "name": "Fireworks AI",     "models": ["Llama 4 Scout", "DeepSeek V3"]},
+        {"id": "ai21",       "name": "AI21 (Jamba)",     "models": ["Jamba Large 1.7", "Jamba Mini 1.7"]},
+        {"id": "sambanova",  "name": "SambaNova",        "models": ["Llama 4 Maverick", "DeepSeek R1-0528"]},
+        {"id": "novita",     "name": "Novita AI",         "models": ["Llama 4 Scout", "Qwen3-235B", "DeepSeek R1"]},
+        {"id": "lepton",     "name": "Lepton AI",         "models": ["Llama 4 Maverick", "DeepSeek R1-0528"]},
+        {"id": "lambda",     "name": "Lambda Labs",       "models": ["Llama 4 Scout", "Hermes 3 405B"]},
+        {"id": "minimax",    "name": "Minimax AI",        "models": ["MiniMax-Text-01", "MiniMax-VL-01"]},
+        {"id": "inception",  "name": "Inception AI",      "models": ["Mercury Coder Small", "Mercury Coder Large"]},
+        {"id": "arcee",      "name": "Arcee AI",          "models": ["Arcee Maestro", "Arcee Blaze"]},
+        {"id": "amazon",     "name": "Amazon Bedrock",    "models": ["Nova Pro", "Nova Lite", "Nova Micro"]},
+        {"id": "nvidia",     "name": "Nvidia NIM",       "models": ["Nemotron Ultra 253B", "Nemotron Super 49B"]},
+        {"id": "moonshot",   "name": "Moonshot (Kimi)",  "models": ["Kimi Auto", "Kimi 128K"]},
+        {"id": "qwen",       "name": "Qwen / Alibaba",   "models": ["Qwen Max", "QwQ-32B"]},
+        {"id": "elevenlabs", "name": "ElevenLabs (TTS)", "models": ["Multilingual v2", "Turbo v2.5"]},
+    ]
+
+    has_emergent = bool(api_keys.get("emergent", ""))
+
+    providers = []
+    configured_count = 0
+    for p in ALL_PROVIDERS:
+        has_key = bool(api_keys.get(p["id"], ""))
+        # openai/anthropic/gemini can also use emergent key
+        can_use_emergent = p["id"] in ("openai", "anthropic", "gemini") and has_emergent
+        is_active = has_key or can_use_emergent
+        if is_active:
+            configured_count += 1
+        providers.append({
+            **p,
+            "has_direct_key":   has_key,
+            "can_use_emergent": can_use_emergent,
+            "is_active":        is_active,
+            "key_source":       "direct" if has_key else ("emergent" if can_use_emergent else "none"),
+        })
+
+    return {
+        "providers": providers,
+        "configured_count": configured_count,
+        "total_providers":  19,
+        "has_emergent_key": has_emergent,
+        "gateway_ready":    configured_count >= 1,
+    }
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CLIENT GATEWAY KEY MANAGEMENT  (admin-only)
+# Each client gets one MAARS API key auto-generated on registration/subscription.
+# Keys are invisible to clients — admin manages them all from here.
+# Budget = monthly_cap_usd from their plan (the AI cost slice of their subscription).
+# Profit = plan_price_usd - monthly_cap_usd (your margin, tracked per billing cycle).
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _generate_maars_key() -> str:
+    """Generate a MAARS API key: maars-sk- + 40 hex chars."""
+    import secrets
+    return f"maars-sk-{secrets.token_hex(20)}"
+
+
+async def _ensure_client_key(user_id: str, plan_id: str = "free") -> dict:
+    """Get or create the gateway key record for a user."""
+    existing = await db.client_gateway_keys.find_one({"user_id": user_id}, {"_id": 0})
+    if existing:
+        return existing
+    plan = SUBSCRIPTION_PLANS.get(plan_id, SUBSCRIPTION_PLANS["free"])
+    doc = {
+        "user_id":           user_id,
+        "key":               _generate_maars_key(),
+        "plan_id":           plan_id,
+        "monthly_budget_usd": plan.get("monthly_cap_usd", 0.0),
+        "used_usd":          0.0,
+        "cycle_start":       datetime.now(timezone.utc).isoformat(),
+        "status":            "active",
+        "created_at":        datetime.now(timezone.utc).isoformat(),
+        "notes":             "",
+    }
+    await db.client_gateway_keys.insert_one(doc)
+    return doc
+
+
+@router.get("/admin/gateway/client-keys")
+async def admin_list_client_keys(
+    search: str = "",
+    current_user: User = Depends(require_admin)
+):
+    """Admin: list all client gateway keys with spend, budget, and profit data."""
+    # Fetch all users
+    query = {}
+    if search:
+        query["$or"] = [
+            {"name":  {"$regex": search, "$options": "i"}},
+            {"email": {"$regex": search, "$options": "i"}},
+        ]
+    users = await db.users.find(query, {"_id": 0, "password_hash": 0}).to_list(500)
+
+    result = []
+    for u in users:
+        uid = u["user_id"]
+        # Get subscription
+        sub = await db.subscriptions.find_one({"user_id": uid}, {"_id": 0}) or {}
+        plan_id = sub.get("plan_id", "free")
+        plan = SUBSCRIPTION_PLANS.get(plan_id, SUBSCRIPTION_PLANS.get("free", {}))
+
+        # Get or create key record
+        key_doc = await _ensure_client_key(uid, plan_id)
+
+        # Recalculate actual spend from llm_usage_logs this cycle
+        cycle_start = key_doc.get("cycle_start", "")
+        spend_pipeline = [
+            {"$match": {"user_id": uid, "timestamp": {"$gte": cycle_start}}},
+            {"$group": {"_id": None, "total": {"$sum": "$cost_usd"}, "calls": {"$sum": 1}}},
+        ]
+        spend_agg = await db.llm_usage_logs.aggregate(spend_pipeline).to_list(1)
+        actual_spend = round((spend_agg[0]["total"] if spend_agg else 0), 6)
+        total_calls  = spend_agg[0]["calls"] if spend_agg else 0
+
+        monthly_budget  = key_doc.get("monthly_budget_usd", 0.0)
+        plan_price_usd  = plan.get("price_usd", 0.0)
+        # Profit = subscription revenue - AI budget allocation
+        # If actual spend < budget, the unused AI budget is also profit
+        gross_margin    = round(plan_price_usd - monthly_budget, 4)
+        ai_surplus      = round(max(monthly_budget - actual_spend, 0), 6)
+        total_profit    = round(gross_margin + ai_surplus, 4)
+
+        result.append({
+            "user_id":          uid,
+            "name":             u.get("name", ""),
+            "email":            u.get("email", ""),
+            "plan_id":          plan_id,
+            "plan_name":        plan.get("name", plan_id.capitalize()),
+            "plan_price_usd":   plan_price_usd,
+            "key":              key_doc["key"],
+            "key_status":       key_doc.get("status", "active"),
+            "monthly_budget_usd": monthly_budget,
+            "actual_spend_usd": actual_spend,
+            "budget_remaining_usd": round(max(monthly_budget - actual_spend, 0), 6),
+            "budget_used_pct":  round(actual_spend / monthly_budget * 100, 1) if monthly_budget > 0 else 0,
+            "total_calls":      total_calls,
+            "gross_margin_usd": gross_margin,
+            "ai_surplus_usd":   ai_surplus,
+            "total_profit_usd": total_profit,
+            "cycle_start":      cycle_start,
+            "notes":            key_doc.get("notes", ""),
+            "created_at":       key_doc.get("created_at", ""),
+        })
+
+    # Platform totals
+    total_revenue = sum(r["plan_price_usd"] for r in result)
+    total_ai_cost = sum(r["actual_spend_usd"] for r in result)
+    total_profit_all = sum(r["total_profit_usd"] for r in result)
+    total_budget_alloc = sum(r["monthly_budget_usd"] for r in result)
+
+    return {
+        "clients": result,
+        "count": len(result),
+        "platform_totals": {
+            "total_subscription_revenue_usd": round(total_revenue, 2),
+            "total_ai_budget_allocated_usd":  round(total_budget_alloc, 4),
+            "total_actual_ai_cost_usd":       round(total_ai_cost, 6),
+            "total_profit_usd":               round(total_profit_all, 4),
+            "overall_margin_pct":             round((total_profit_all / total_revenue * 100) if total_revenue > 0 else 0, 1),
+        },
+    }
+
+
+@router.post("/admin/gateway/client-keys/{user_id}/regenerate")
+async def admin_regenerate_client_key(
+    user_id: str,
+    current_user: User = Depends(require_admin)
+):
+    """Admin: generate a new key for a specific client (invalidates the old one)."""
+    new_key = _generate_maars_key()
+    await db.client_gateway_keys.update_one(
+        {"user_id": user_id},
+        {"$set": {"key": new_key, "updated_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True,
+    )
+    return {"user_id": user_id, "key": new_key, "status": "regenerated"}
+
+
+@router.put("/admin/gateway/client-keys/{user_id}")
+async def admin_update_client_key(
+    user_id: str,
+    body: dict = Body(...),
+    current_user: User = Depends(require_admin)
+):
+    """Admin: update budget, status, or notes for a client key."""
+    allowed = {"monthly_budget_usd", "status", "notes"}
+    update = {k: v for k, v in body.items() if k in allowed}
+    if not update:
+        raise HTTPException(status_code=400, detail="No valid fields to update")
+    update["updated_at"] = datetime.now(timezone.utc).isoformat()
+    await db.client_gateway_keys.update_one(
+        {"user_id": user_id},
+        {"$set": update},
+        upsert=True,
+    )
+    return {"user_id": user_id, "updated": list(update.keys())}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PAYG BILLING MANAGEMENT
+# ─────────────────────────────────────────────────────────────────────────────
+
+@router.put("/admin/gateway/client-keys/{user_id}/billing")
+async def admin_set_billing_mode(
+    user_id: str,
+    body: dict = Body(...),
+    current_user: User = Depends(require_admin)
+):
+    """Admin: configure billing mode, markup, and balance for a client key.
+
+    Fields:
+      billing_mode  — "subscription" | "payg" | "hybrid"
+      markup_pct    — float, margin % added on top of provider cost (e.g. 30 = 30%)
+      monthly_budget_usd — subscription cap (used in subscription/hybrid modes)
+      low_balance_threshold_usd — alert threshold for PAYG balance
+      auto_topup_enabled — bool
+    """
+    allowed = {
+        "billing_mode", "markup_pct", "monthly_budget_usd",
+        "low_balance_threshold_usd", "auto_topup_enabled", "rpm_limit",
+    }
+    update = {k: v for k, v in body.items() if k in allowed}
+    if "billing_mode" in update and update["billing_mode"] not in ("subscription", "payg", "hybrid"):
+        raise HTTPException(status_code=400, detail="billing_mode must be 'subscription', 'payg', or 'hybrid'")
+    if "markup_pct" in update:
+        try:
+            update["markup_pct"] = float(update["markup_pct"])
+        except (TypeError, ValueError):
+            raise HTTPException(status_code=400, detail="markup_pct must be a number")
+        if not (0 <= update["markup_pct"] <= 500):
+            raise HTTPException(status_code=400, detail="markup_pct must be between 0 and 500")
+    if not update:
+        raise HTTPException(status_code=400, detail="No valid fields to update")
+    update["updated_at"] = datetime.now(timezone.utc).isoformat()
+    result = await db.client_gateway_keys.find_one_and_update(
+        {"user_id": user_id},
+        {"$set": update},
+        return_document=True,
+        upsert=False,
+    )
+    if not result:
+        raise HTTPException(status_code=404, detail=f"No gateway key for user {user_id}")
+    await log_admin_action(current_user.email, "billing_mode_updated", {"user_id": user_id, "changes": update})
+    return {
+        "user_id":       user_id,
+        "billing_mode":  result.get("billing_mode", "subscription"),
+        "markup_pct":    result.get("markup_pct", 0.0),
+        "balance_usd":   result.get("balance_usd", 0.0),
+        "updated":       list(update.keys()),
+    }
+
+
+@router.post("/admin/gateway/client-keys/{user_id}/topup")
+async def admin_topup_balance(
+    user_id: str,
+    body: dict = Body(...),
+    current_user: User = Depends(require_admin)
+):
+    """Admin: add prepaid credit to a client's PAYG balance.
+
+    Body: { "amount_usd": float, "note": str (optional) }
+    """
+    amount = body.get("amount_usd")
+    if amount is None:
+        raise HTTPException(status_code=400, detail="amount_usd is required")
+    try:
+        amount = round(float(amount), 6)
+    except (TypeError, ValueError):
+        raise HTTPException(status_code=400, detail="amount_usd must be a number")
+    if amount <= 0:
+        raise HTTPException(status_code=400, detail="amount_usd must be positive")
+
+    result = await db.client_gateway_keys.find_one_and_update(
+        {"user_id": user_id},
+        {
+            "$inc":  {"balance_usd": amount},
+            "$set":  {"updated_at": datetime.now(timezone.utc).isoformat()},
+        },
+        return_document=True,
+    )
+    if not result:
+        raise HTTPException(status_code=404, detail=f"No gateway key for user {user_id}")
+
+    # Write a topup transaction record
+    await db.gateway_topups.insert_one({
+        "topup_id":   f"tu_{user_id[:8]}_{int(datetime.now(timezone.utc).timestamp()*1000)}",
+        "user_id":    user_id,
+        "amount_usd": amount,
+        "new_balance": result.get("balance_usd", 0.0),
+        "note":       body.get("note", "Admin top-up"),
+        "added_by":   current_user.email,
+        "timestamp":  datetime.now(timezone.utc).isoformat(),
+    })
+    await log_admin_action(current_user.email, "balance_topup", {
+        "user_id": user_id, "amount_usd": amount,
+        "new_balance": result.get("balance_usd", 0.0)
+    })
+    return {
+        "user_id":       user_id,
+        "amount_added":  amount,
+        "new_balance":   round(result.get("balance_usd", 0.0), 6),
+        "billing_mode":  result.get("billing_mode", "subscription"),
+    }
+
+
+@router.get("/admin/gateway/payg-overview")
+async def admin_payg_overview(current_user: User = Depends(require_admin)):
+    """Admin: PAYG revenue overview — active PAYG/hybrid clients, balances, markup revenue."""
+    payg_keys = await db.client_gateway_keys.find(
+        {"billing_mode": {"$in": ["payg", "hybrid"]}},
+        {"_id": 0}
+    ).to_list(1000)
+
+    total_balance   = round(sum(k.get("balance_usd", 0) for k in payg_keys), 4)
+    total_markup_rev = 0.0
+
+    # Aggregate markup revenue from usage logs this month
+    from datetime import datetime, timezone
+    cycle_floor = datetime.now(timezone.utc).replace(day=1, hour=0, minute=0, second=0).isoformat()
+    logs = await db.gateway_usage_logs.find(
+        {"billing_mode": {"$in": ["payg", "hybrid"]}, "timestamp": {"$gte": cycle_floor}},
+        {"cost_usd": 1, "billed_usd": 1, "_id": 0}
+    ).to_list(50000)
+
+    total_provider_cost = round(sum(l.get("cost_usd", 0) for l in logs), 6)
+    total_billed        = round(sum(l.get("billed_usd", l.get("cost_usd", 0)) for l in logs), 6)
+    total_markup_rev    = round(total_billed - total_provider_cost, 6)
+
+    clients = []
+    for k in payg_keys:
+        clients.append({
+            "user_id":      k.get("user_id"),
+            "key_prefix":   k.get("key", "")[:16],
+            "billing_mode": k.get("billing_mode"),
+            "balance_usd":  round(k.get("balance_usd", 0), 4),
+            "markup_pct":   k.get("markup_pct", 0.0),
+            "used_usd":     round(k.get("used_usd", 0), 4),
+            "total_calls":  k.get("total_calls", 0),
+            "status":       k.get("status", "active"),
+        })
+
+    return {
+        "object":               "payg_overview",
+        "total_payg_clients":   len(payg_keys),
+        "total_balance_held":   total_balance,
+        "this_month": {
+            "provider_cost_usd":  total_provider_cost,
+            "billed_to_clients":  total_billed,
+            "markup_revenue_usd": total_markup_rev,
+            "call_count":         len(logs),
+        },
+        "clients": clients,
+    }
+
+
+@router.get("/admin/gateway/topups")
+async def admin_topup_history(
+    limit: int = 50,
+    current_user: User = Depends(require_admin)
+):
+    """Admin: view top-up transaction history."""
+    topups = await db.gateway_topups.find({}, {"_id": 0}).sort("timestamp", -1).limit(limit).to_list(limit)
+    return {"object": "topup_list", "data": topups, "total": len(topups)}
+
+
+@router.post("/admin/gateway/client-keys/provision-all")
+async def admin_provision_all_keys(current_user: User = Depends(require_admin)):
+    """Admin: backfill — ensure every existing user has a gateway key record."""
+    users = await db.users.find({}, {"_id": 0, "user_id": 1}).to_list(10000)
+    created = 0
+    for u in users:
+        uid = u["user_id"]
+        sub = await db.subscriptions.find_one({"user_id": uid}, {"_id": 0}) or {}
+        existing = await db.client_gateway_keys.find_one({"user_id": uid})
+        if not existing:
+            await _ensure_client_key(uid, sub.get("plan_id", "free"))
+            created += 1
+    return {"provisioned": created, "total_users": len(users)}
+
+
+@router.post("/admin/gateway/playground")
+async def admin_gateway_playground(request: Request, admin: User = Depends(require_admin)):
+    """Admin playground — call gateway models using admin JWT."""
+    from routes.v1_gateway import (
+        _parse_model_id, _call_with_fallback, _extract_prompt_text,
+        _stream_response, _MAARS_ALIASES, _resolve_maars_alias,
+    )
+    from shared.utils import get_api_keys
+
+    try:
+        body = await request.json()
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid JSON")
+
+    model_raw   = body.get("model", "maars/auto")
+    messages    = body.get("messages", [{"role": "user", "content": "Hello"}])
+    stream      = body.get("stream", False)
+    params      = {}
+    for p in ["temperature", "top_p", "max_tokens", "stop", "seed"]:
+        val = body.get(p)
+        if val is not None:
+            params[p] = val
+    if "max_tokens" not in params:
+        params["max_tokens"] = 2048
+
+    api_keys = await get_api_keys()
+    prompt_text = _extract_prompt_text(messages)
+
+    if model_raw in _MAARS_ALIASES:
+        provider, native_id = await _resolve_maars_alias(model_raw, prompt_text, 100, api_keys)
+    else:
+        entry = _parse_model_id(model_raw)
+        if not entry:
+            raise HTTPException(status_code=400, detail=f"Unknown model: {model_raw}")
+        _, provider, native_id, _, _ = entry
+
+    api_key = api_keys.get(provider, "")
+
+    if stream:
+        from fastapi.responses import StreamingResponse
+        async def gen():
+            async for chunk in _stream_response(provider, native_id, "", messages, api_key, model_raw, params):
+                yield chunk
+        return StreamingResponse(gen(), media_type="text/event-stream",
+                                  headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+    import time as _time
+    start = _time.time()
+    data, actual_prov, actual_model, model_warning = await _call_with_fallback(
+        provider, native_id, messages, api_key, params, api_keys
+    )
+    latency = int((_time.time() - start) * 1000)
+    data["x_playground"] = {"actual_provider": actual_prov, "native_model": actual_model,
+                             "latency_ms": latency, "model_warning": model_warning}
+    return data

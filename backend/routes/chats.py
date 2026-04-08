@@ -144,10 +144,15 @@ async def get_chat(chat_id: str, current_user: User = Depends(get_current_user))
 
 @router.post("/chats/{chat_id}/messages")
 async def send_message(chat_id: str, message_data: MessageCreate, current_user: User = Depends(get_current_user)):
+    import time
+    _t0 = time.monotonic()
+    _req_id = uuid.uuid4().hex[:8]
+    logger.info(f"[{_req_id}] send_message start chat={chat_id} user={current_user.user_id}")
+
     chat = await db.chats.find_one({"chat_id": chat_id, "user_id": current_user.user_id}, {"_id": 0})
     if not chat:
         raise HTTPException(status_code=404, detail="Chat not found")
-    
+
     agent = await db.agents.find_one({"agent_id": chat["agent_id"]}, {"_id": 0})
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
@@ -191,13 +196,63 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     if credits_remaining <= 0 and not is_admin:
         raise HTTPException(status_code=402, detail="Insufficient credits. Please upgrade your plan or purchase more credits.")
     
+    # Pre-fetch API keys once — used for both routing and LLM calls below
+    api_keys = await get_api_keys()
+
     # Auto-select model if set to "auto" or not specified
     auto_selected = False
     model_reason = ""
     
     if message_data.model_provider == "auto" or (not message_data.model_provider and not message_data.model_name):
-        # Auto-select based on content and agent role
-        model_provider, model_name, model_reason = auto_select_model(message_data.content, agent.get("role", ""))
+        # Use universal smart router — task-aware, credit-budget-aware
+        from routes.universal import _smart_candidates, TASK_PREFERRED_MODELS, _MODEL_TO_TIER, _tier_order, _credit_budget
+
+        # Load saved user routing preferences
+        pref_cfg = await db.system_config.find_one(
+            {"user_id": current_user.user_id, "config_type": "llm_preference"}, {"_id": 0}
+        )
+        # Per-message overrides win; fall back to saved prefs
+        quality_override = message_data.quality_tier if message_data.quality_tier not in (None, "auto", "") else None
+        if not quality_override:
+            saved_q = (pref_cfg or {}).get("quality_tier", "")
+            quality_override = saved_q if saved_q not in ("", "auto") else None
+
+        task_hint = message_data.task_hint if message_data.task_hint not in (None, "auto", "") else None
+        if not task_hint:
+            saved_t = (pref_cfg or {}).get("task_hint", "")
+            task_hint = saved_t if saved_t not in ("", "auto") else None
+
+        candidates, task_info = _smart_candidates(message_data.content, credits_remaining, quality_override)
+
+        # Re-sort by task_hint if one is given
+        if task_hint:
+            budget = _credit_budget(credits_remaining)
+            allowed_tiers = _tier_order(task_hint, task_info["complexity"], budget, quality_override or "")
+            hint_preferred = TASK_PREFERRED_MODELS.get(task_hint, [])
+            seen: set = set()
+            reordered: list = []
+            for pair in hint_preferred:
+                if _MODEL_TO_TIER.get(pair[1], "standard") in allowed_tiers and pair not in seen:
+                    reordered.append(pair)
+                    seen.add(pair)
+            for pair in candidates:
+                if pair not in seen:
+                    reordered.append(pair)
+                    seen.add(pair)
+            candidates = reordered
+
+        # Pick first candidate that has an API key configured
+        model_provider, model_name = "openai", "gpt-5.2"
+        for prov, mdl in candidates:
+            if api_keys.get(prov) or api_keys.get("emergent"):
+                model_provider, model_name = prov, mdl
+                break
+        model_reason = (
+            f"Universal router: {task_info['type']} task, "
+            f"{task_info['complexity']} complexity"
+            + (f", quality={quality_override}" if quality_override else "")
+            + (f", hint={task_hint}" if task_hint else "")
+        )
         auto_selected = True
     else:
         model_provider = message_data.model_provider or "openai"
@@ -219,8 +274,8 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     
     # Get AI response
     try:
-        api_keys = await get_api_keys()
-        
+        # api_keys already fetched above for routing — reused here
+
         # Build conversation history for context
         chat_messages = chat.get("messages", [])
         history_lines = []
@@ -285,21 +340,52 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
             logger.error(f"Workspace brain error: {brain_err}")
         
         # RAG: Search agent's knowledge base and inject relevant context
+        # Also lazily ingests skills for any agent that hasn't been processed yet.
         try:
             from services.rag_service import search_knowledge_base, build_rag_context
-            kb_count = await db.knowledge_chunks.count_documents({"agent_id": agent.get("agent_id", "")})
+            agent_id_str = agent.get("agent_id", "")
+            kb_count = await db.knowledge_chunks.count_documents({"agent_id": agent_id_str})
+
+            # Lazy skill ingestion — covers agents created before ingest script ran
+            # and any custom agent whose background task hasn't completed yet.
+            if kb_count == 0:
+                import asyncio
+                async def _lazy_ingest():
+                    try:
+                        from pathlib import Path
+                        from services.skills_service import ensure_agent_skills, ensure_provider_skills
+                        skills_root = Path(__file__).parent.parent.parent / ".claude" / "skills"
+                        await ensure_agent_skills(agent, db, skills_root)
+                        await ensure_provider_skills(agent, db)
+                    except Exception:
+                        pass
+                asyncio.create_task(_lazy_ingest())
+
             if kb_count > 0:
                 rag_results = await search_knowledge_base(
-                    db, agent.get("agent_id", ""), message_data.content,
+                    db, agent_id_str, message_data.content,
                     top_k=5, threshold=0.10
                 )
                 if rag_results:
                     rag_context = build_rag_context(rag_results)
                     enhanced_agent_prompt += rag_context
-                    logger.info(f"RAG: Injected {len(rag_results)} knowledge chunks for {agent.get('agent_id')}")
+                    logger.info(f"RAG: Injected {len(rag_results)} knowledge chunks for {agent_id_str}")
         except Exception as rag_err:
             logger.error(f"RAG retrieval error: {rag_err}")
         
+        # Provider Skills: inject best-practices for the active LLM provider
+        try:
+            from data.provider_skills import get_provider_knowledge
+            prov_knowledge = get_provider_knowledge(model_provider or "")
+            if prov_knowledge:
+                enhanced_agent_prompt += (
+                    f"\n\n--- ACTIVE MODEL GUIDANCE ({model_provider}) ---\n"
+                    + prov_knowledge
+                )
+                logger.info(f"ProviderSkill: Injected {model_provider} guidance for {agent.get('agent_id')}")
+        except Exception as ps_err:
+            logger.error(f"Provider skill injection error: {ps_err}")
+
         # Apply user-specific agent overrides (personality, temperature, etc.)
         user_override = await db.user_agent_overrides.find_one(
             {"user_id": current_user.user_id, "agent_id": agent.get("agent_id")}, {"_id": 0}
@@ -380,8 +466,21 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
                 )
         
     except Exception as e:
-        logger.error(f"LLM error: {e}")
-        response_text = f"I apologize, but I'm having trouble processing your request right now. Error: {str(e)}"
+        logger.error(f"LLM error for chat {chat_id}: {type(e).__name__}: {e}", exc_info=True)
+        # Surface a clean, non-leaking error message to the user
+        err_str = str(e).lower()
+        if "rate limit" in err_str or "429" in err_str:
+            response_text = "The AI provider is currently rate-limited. The smart router will try an alternative model on your next message — or you can manually select a different model."
+        elif "context" in err_str and "length" in err_str:
+            response_text = "Your conversation has grown very long and exceeded the model's context window. Please start a new chat to continue."
+        elif "timeout" in err_str or "timed out" in err_str:
+            response_text = "The request timed out waiting for the AI provider. Please try again — the router will select a faster model."
+        elif "api key" in err_str or "unauthorized" in err_str or "401" in err_str:
+            response_text = "There's an issue with the AI provider credentials. Please contact support if this persists."
+        elif "insufficient" in err_str or "quota" in err_str:
+            response_text = "The AI provider quota has been reached for this model. Try selecting a different model or provider."
+        else:
+            response_text = "I ran into an issue processing your request. Please try again — if the problem persists, try switching to a different model."
     
     # Agent-to-Agent Collaboration: check if response contains consultation requests
     try:
@@ -759,6 +858,14 @@ Rules:
                 )
         asyncio.create_task(_bg_video_gen())
     
+    # Observability: log total request latency
+    _elapsed_ms = round((time.monotonic() - _t0) * 1000)
+    logger.info(
+        f"[{_req_id}] send_message done chat={chat_id} "
+        f"model={model_provider}/{model_name} "
+        f"credits={credits_to_deduct} elapsed={_elapsed_ms}ms"
+    )
+
     return {
         "user_message": user_msg,
         "assistant_message": assistant_msg,

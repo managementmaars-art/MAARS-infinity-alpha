@@ -1,9 +1,58 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../App";
-import { Shield, TrendingUp, TrendingDown, Activity, Zap, Clock, AlertTriangle, CheckCircle, Search, BarChart3, XCircle } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
+import {
+  Shield, TrendingUp, TrendingDown, Activity, Zap, AlertTriangle,
+  CheckCircle, Search, XCircle
+} from "lucide-react";
+import { AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const API = process.env.REACT_APP_BACKEND_URL;
+
+const T = {
+  bg: "#030712",
+  glass: "rgba(255,255,255,0.03)",
+  glass2: "rgba(255,255,255,0.06)",
+  border: "rgba(255,255,255,0.08)",
+  teal: "#4fd1c5",
+  violet: "#7c3aed",
+  amber: "#f59e0b",
+  green: "#34d399",
+  red: "#ef4444",
+  blue: "#60a5fa",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+`;
+
+function getTrustMeta(score) {
+  if (score >= 90) return { color: T.green,  bg: "rgba(52,211,153,0.10)",  label: "Excellent" };
+  if (score >= 70) return { color: T.blue,   bg: "rgba(96,165,250,0.10)",  label: "Good" };
+  if (score >= 50) return { color: T.amber,  bg: "rgba(245,158,11,0.10)",  label: "Fair" };
+  return              { color: T.red,    bg: "rgba(239,68,68,0.10)",   label: "Poor" };
+}
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (!active || !payload?.length) return null;
+  return (
+    <div style={{ background: "#0d1117", border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 14px", fontSize: 11 }}>
+      <div style={{ color: T.zinc, marginBottom: 4 }}>{label}</div>
+      {payload.map((p, i) => (
+        <div key={i} style={{ color: p.color || T.teal, fontWeight: 600 }}>{p.name}: {typeof p.value === "number" ? p.value.toFixed(1) : p.value}</div>
+      ))}
+    </div>
+  );
+};
+
+const glass = {
+  background: T.glass,
+  border: `1px solid ${T.border}`,
+  borderRadius: 16,
+  backdropFilter: "blur(12px)",
+};
 
 export default function TrustScores() {
   const { token } = useAuth();
@@ -26,20 +75,19 @@ export default function TrustScores() {
       .catch(() => setLoading(false));
   }, [token]);
 
-  const getAgent = (agentId) => agents.find(a => a.agent_id === agentId);
-  const getTrustColor = (score) => {
-    if (score >= 90) return { bg: "bg-emerald-500/10", text: "text-emerald-400", bar: "bg-emerald-500" };
-    if (score >= 70) return { bg: "bg-blue-500/10", text: "text-blue-400", bar: "bg-blue-500" };
-    if (score >= 50) return { bg: "bg-amber-500/10", text: "text-amber-400", bar: "bg-amber-500" };
-    return { bg: "bg-red-500/10", text: "text-red-400", bar: "bg-red-500" };
-  };
-
-  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }}>
+      <div style={{ width: 28, height: 28, border: `2px solid ${T.teal}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+      <style>{STYLES}</style>
+    </div>
+  );
 
   const scores = data?.scores || [];
   const trends = data?.trend_data || [];
   const anomalies = data?.anomalies || [];
   const summary = data?.summary || {};
+
+  const getAgent = (id) => agents.find(a => a.agent_id === id);
 
   const sortedScores = [...scores].sort((a, b) => {
     if (sortBy === "trust_score") return b.trust_score - a.trust_score;
@@ -53,153 +101,187 @@ export default function TrustScores() {
     return agent?.name?.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const healthColor = summary.health_status === "healthy" ? "text-emerald-400" : summary.health_status === "warning" ? "text-amber-400" : "text-red-400";
+  const healthMeta = summary.health_status === "healthy"
+    ? { color: T.green, bg: "rgba(52,211,153,0.1)" }
+    : summary.health_status === "warning"
+    ? { color: T.amber, bg: "rgba(245,158,11,0.1)" }
+    : { color: T.red, bg: "rgba(239,68,68,0.1)" };
+
+  const SUMMARY_STATS = [
+    { icon: Shield, label: "Avg Trust", value: `${summary.avg_trust_score || 0}%`, color: T.violet },
+    { icon: Activity, label: "Agents Scored", value: summary.total_agents_scored || 0, color: T.teal },
+    { icon: Zap, label: "Executions", value: summary.total_executions || 0, color: T.amber },
+    { icon: AlertTriangle, label: "Anomalies", value: summary.anomaly_count || 0, color: T.red },
+  ];
+
+  const DISTRIBUTION = [
+    { label: "Excellent (90–100)", min: 90, max: 100, color: T.green },
+    { label: "Good (70–89)",       min: 70, max: 89,  color: T.blue },
+    { label: "Fair (50–69)",       min: 50, max: 69,  color: T.amber },
+    { label: "Poor (<50)",         min: 0,  max: 49,  color: T.red },
+  ];
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6" data-testid="trust-analytics">
-      <div className="flex items-center justify-between">
+    <div style={{ maxWidth: 960, margin: "0 auto", animation: "fadeUp .4s ease" }} data-testid="trust-analytics">
+      <style>{STYLES}</style>
+
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
         <div>
-          <h1 className="text-xl font-bold text-white">Trust Analytics</h1>
-          <p className="text-sm text-zinc-500">Agent reliability scoring, trend analysis, and anomaly detection</p>
+          <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 26, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 4 }}>Trust Analytics</h1>
+          <p style={{ color: T.zinc, fontSize: 13, margin: 0 }}>Agent reliability scoring, trend analysis, and anomaly detection</p>
         </div>
-        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${summary.health_status === "healthy" ? "bg-emerald-500/10" : summary.health_status === "warning" ? "bg-amber-500/10" : "bg-red-500/10"}`}>
-          <div className={`w-2 h-2 rounded-full ${summary.health_status === "healthy" ? "bg-emerald-400" : summary.health_status === "warning" ? "bg-amber-400" : "bg-red-400"}`} />
-          <span className={`text-xs font-medium ${healthColor}`}>{(summary.health_status || "healthy").toUpperCase()}</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, background: healthMeta.bg, border: `1px solid ${healthMeta.color}40`, borderRadius: 20, padding: "6px 14px" }}>
+          <div style={{ width: 7, height: 7, borderRadius: "50%", background: healthMeta.color, animation: "pulse 2s infinite" }} />
+          <span style={{ fontSize: 11, fontWeight: 700, color: healthMeta.color, letterSpacing: ".08em" }}>{(summary.health_status || "healthy").toUpperCase()}</span>
         </div>
       </div>
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3" data-testid="trust-summary">
-        <SummaryCard icon={<Shield className="w-4 h-4 text-indigo-400" />} label="Avg Trust" value={`${summary.avg_trust_score || 0}%`} />
-        <SummaryCard icon={<Activity className="w-4 h-4 text-emerald-400" />} label="Agents Scored" value={summary.total_agents_scored || 0} />
-        <SummaryCard icon={<Zap className="w-4 h-4 text-amber-400" />} label="Total Executions" value={summary.total_executions || 0} />
-        <SummaryCard icon={<AlertTriangle className="w-4 h-4 text-red-400" />} label="Anomalies" value={summary.anomaly_count || 0} />
+      {/* Summary Cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }} data-testid="trust-summary">
+        {SUMMARY_STATS.map(s => (
+          <div key={s.label} style={{ ...glass, padding: "16px 18px", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: s.color, borderRadius: "16px 16px 0 0" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+              <s.icon size={14} style={{ color: s.color }} />
+              <span style={{ fontSize: 10, color: T.zinc, textTransform: "uppercase", letterSpacing: ".06em" }}>{s.label}</span>
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: "#fff" }}>{s.value}</div>
+          </div>
+        ))}
       </div>
 
-      {/* Trend Chart */}
+      {/* Main Trend Chart */}
       {trends.length > 0 && (
-        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-4" data-testid="trust-trend-chart">
-          <p className="text-xs font-semibold text-zinc-400 mb-3">Trust Score Trend (30 days)</p>
-          <ResponsiveContainer width="100%" height={200}>
+        <div style={{ ...glass, padding: "20px 20px 12px", marginBottom: 16 }} data-testid="trust-trend-chart">
+          <p style={{ fontSize: 12, fontWeight: 600, color: T.teal, margin: "0 0 16px", textTransform: "uppercase", letterSpacing: ".06em" }}>Trust Score Trend — 30 Days</p>
+          <ResponsiveContainer width="100%" height={180}>
             <AreaChart data={trends}>
               <defs>
                 <linearGradient id="trustGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                  <stop offset="5%" stopColor={T.teal} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={T.teal} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#71717a" }} tickFormatter={v => v.slice(5)} />
-              <YAxis tick={{ fontSize: 9, fill: "#71717a" }} domain={[60, 100]} />
-              <Tooltip contentStyle={{ background: "#18181b", border: "1px solid #27272a", borderRadius: "8px", fontSize: "11px" }} />
-              <Area type="monotone" dataKey="avg_trust" stroke="#6366f1" fill="url(#trustGrad)" strokeWidth={2} />
+              <XAxis dataKey="date" tick={{ fontSize: 9, fill: T.zinc }} tickFormatter={v => v.slice(5)} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 9, fill: T.zinc }} domain={[60, 100]} axisLine={false} tickLine={false} />
+              <Tooltip content={<CustomTooltip />} />
+              <Area type="monotone" dataKey="avg_trust" stroke={T.teal} fill="url(#trustGrad)" strokeWidth={2} name="Avg Trust" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
       )}
 
-      {/* Execution + Latency Chart */}
+      {/* Executions + Latency */}
       {trends.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-4">
-            <p className="text-xs font-semibold text-zinc-400 mb-3">Daily Executions</p>
-            <ResponsiveContainer width="100%" height={150}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
+          <div style={{ ...glass, padding: "18px 18px 10px" }}>
+            <p style={{ fontSize: 11, fontWeight: 600, color: T.green, margin: "0 0 14px", textTransform: "uppercase", letterSpacing: ".06em" }}>Daily Executions</p>
+            <ResponsiveContainer width="100%" height={120}>
               <AreaChart data={trends}>
-                <defs><linearGradient id="execGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#10b981" stopOpacity={0.3} /><stop offset="95%" stopColor="#10b981" stopOpacity={0} /></linearGradient></defs>
-                <XAxis dataKey="date" tick={{ fontSize: 8, fill: "#71717a" }} tickFormatter={v => v.slice(8)} />
-                <YAxis tick={{ fontSize: 8, fill: "#71717a" }} />
-                <Tooltip contentStyle={{ background: "#18181b", border: "1px solid #27272a", borderRadius: "8px", fontSize: "10px" }} />
-                <Area type="monotone" dataKey="total_executions" stroke="#10b981" fill="url(#execGrad)" strokeWidth={1.5} />
+                <defs>
+                  <linearGradient id="execGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={T.green} stopOpacity={0.3} />
+                    <stop offset="95%" stopColor={T.green} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="date" tick={{ fontSize: 8, fill: T.zinc }} tickFormatter={v => v.slice(8)} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 8, fill: T.zinc }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <Area type="monotone" dataKey="total_executions" stroke={T.green} fill="url(#execGrad)" strokeWidth={1.5} name="Executions" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
-          <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-4">
-            <p className="text-xs font-semibold text-zinc-400 mb-3">Avg Latency (ms)</p>
-            <ResponsiveContainer width="100%" height={150}>
+          <div style={{ ...glass, padding: "18px 18px 10px" }}>
+            <p style={{ fontSize: 11, fontWeight: 600, color: T.amber, margin: "0 0 14px", textTransform: "uppercase", letterSpacing: ".06em" }}>Avg Latency (ms)</p>
+            <ResponsiveContainer width="100%" height={120}>
               <LineChart data={trends}>
-                <XAxis dataKey="date" tick={{ fontSize: 8, fill: "#71717a" }} tickFormatter={v => v.slice(8)} />
-                <YAxis tick={{ fontSize: 8, fill: "#71717a" }} />
-                <Tooltip contentStyle={{ background: "#18181b", border: "1px solid #27272a", borderRadius: "8px", fontSize: "10px" }} />
-                <Line type="monotone" dataKey="avg_latency_ms" stroke="#f59e0b" strokeWidth={1.5} dot={false} />
+                <XAxis dataKey="date" tick={{ fontSize: 8, fill: T.zinc }} tickFormatter={v => v.slice(8)} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 8, fill: T.zinc }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <Line type="monotone" dataKey="avg_latency_ms" stroke={T.amber} strokeWidth={1.5} dot={false} name="Latency ms" />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
       )}
 
-      {/* Trust Distribution + Top/Bottom Performers */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3" data-testid="trust-distribution">
-        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-4">
-          <p className="text-xs font-semibold text-zinc-400 mb-3">Trust Distribution</p>
-          <div className="space-y-2">
-            {[
-              { label: "Excellent (90-100)", min: 90, max: 100, color: "bg-emerald-500" },
-              { label: "Good (70-89)", min: 70, max: 89, color: "bg-blue-500" },
-              { label: "Fair (50-69)", min: 50, max: 69, color: "bg-amber-500" },
-              { label: "Poor (<50)", min: 0, max: 49, color: "bg-red-500" },
-            ].map(range => {
+      {/* Distribution + Leaderboards */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 20 }} data-testid="trust-distribution">
+        {/* Distribution */}
+        <div style={{ ...glass, padding: 20 }}>
+          <p style={{ fontSize: 11, fontWeight: 600, color: T.zinc, margin: "0 0 16px", textTransform: "uppercase", letterSpacing: ".06em" }}>Distribution</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {DISTRIBUTION.map(range => {
               const count = scores.filter(s => s.trust_score >= range.min && s.trust_score <= range.max).length;
               const pct = scores.length ? Math.round((count / scores.length) * 100) : 0;
               return (
                 <div key={range.label}>
-                  <div className="flex justify-between text-[10px] mb-0.5">
-                    <span className="text-zinc-400">{range.label}</span>
-                    <span className="text-zinc-500">{count} ({pct}%)</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, marginBottom: 4 }}>
+                    <span style={{ color: T.zinc }}>{range.label}</span>
+                    <span style={{ color: range.color, fontWeight: 600 }}>{count} ({pct}%)</span>
                   </div>
-                  <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full ${range.color}`} style={{ width: `${pct}%` }} />
+                  <div style={{ height: 4, background: "rgba(255,255,255,.06)", borderRadius: 4, overflow: "hidden" }}>
+                    <div style={{ height: "100%", borderRadius: 4, background: range.color, width: `${pct}%`, transition: "width .6s ease" }} />
                   </div>
                 </div>
               );
             })}
           </div>
         </div>
-        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-4">
-          <p className="text-xs font-semibold text-emerald-400 mb-3">Top Performers</p>
-          <div className="space-y-1.5">
-            {scores.slice(0, 5).sort((a, b) => b.trust_score - a.trust_score).map((s, i) => {
+
+        {/* Top Performers */}
+        <div style={{ ...glass, padding: 20 }}>
+          <p style={{ fontSize: 11, fontWeight: 600, color: T.green, margin: "0 0 16px", textTransform: "uppercase", letterSpacing: ".06em" }}>Top Performers</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {[...scores].sort((a, b) => b.trust_score - a.trust_score).slice(0, 5).map((s, i) => {
               const agent = getAgent(s.agent_id);
               return (
-                <div key={s.agent_id} className="flex items-center gap-2">
-                  <span className="text-[10px] text-zinc-600 w-4">{i + 1}.</span>
-                  <span className="text-xs text-white truncate flex-1">{agent?.name || s.agent_id}</span>
-                  <span className="text-xs font-bold text-emerald-400">{Math.round(s.trust_score)}</span>
+                <div key={s.agent_id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 10, color: T.zinc, width: 16 }}>{i + 1}.</span>
+                  <span style={{ fontSize: 12, color: "#fff", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{agent?.name || s.agent_id}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: T.green }}>{Math.round(s.trust_score)}</span>
                 </div>
               );
             })}
-            {scores.length === 0 && <p className="text-[10px] text-zinc-600">No data yet</p>}
+            {scores.length === 0 && <p style={{ fontSize: 11, color: T.zinc }}>No data yet</p>}
           </div>
         </div>
-        <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-4">
-          <p className="text-xs font-semibold text-amber-400 mb-3">Needs Improvement</p>
-          <div className="space-y-1.5">
-            {scores.slice().sort((a, b) => a.trust_score - b.trust_score).slice(0, 5).map((s, i) => {
+
+        {/* Needs Improvement */}
+        <div style={{ ...glass, padding: 20 }}>
+          <p style={{ fontSize: 11, fontWeight: 600, color: T.amber, margin: "0 0 16px", textTransform: "uppercase", letterSpacing: ".06em" }}>Needs Improvement</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {[...scores].sort((a, b) => a.trust_score - b.trust_score).slice(0, 5).map((s, i) => {
               const agent = getAgent(s.agent_id);
-              const c = getTrustColor(s.trust_score);
+              const meta = getTrustMeta(s.trust_score);
               return (
-                <div key={s.agent_id} className="flex items-center gap-2">
-                  <span className="text-[10px] text-zinc-600 w-4">{i + 1}.</span>
-                  <span className="text-xs text-white truncate flex-1">{agent?.name || s.agent_id}</span>
-                  <span className={`text-xs font-bold ${c.text}`}>{Math.round(s.trust_score)}</span>
+                <div key={s.agent_id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 10, color: T.zinc, width: 16 }}>{i + 1}.</span>
+                  <span style={{ fontSize: 12, color: "#fff", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{agent?.name || s.agent_id}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: meta.color }}>{Math.round(s.trust_score)}</span>
                 </div>
               );
             })}
-            {scores.length === 0 && <p className="text-[10px] text-zinc-600">No data yet</p>}
+            {scores.length === 0 && <p style={{ fontSize: 11, color: T.zinc }}>No data yet</p>}
           </div>
         </div>
       </div>
 
       {/* Anomalies */}
       {anomalies.length > 0 && (
-        <div className="bg-red-950/20 border border-red-500/10 rounded-xl p-4" data-testid="trust-anomalies">
-          <p className="text-xs font-semibold text-red-400 mb-2">Anomalies Detected ({anomalies.length})</p>
-          <div className="space-y-2">
+        <div style={{ background: "rgba(239,68,68,0.04)", border: `1px solid rgba(239,68,68,0.15)`, borderRadius: 16, padding: 20, marginBottom: 20 }} data-testid="trust-anomalies">
+          <p style={{ fontSize: 11, fontWeight: 700, color: T.red, margin: "0 0 12px", textTransform: "uppercase", letterSpacing: ".08em" }}>
+            Anomalies Detected ({anomalies.length})
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {anomalies.map((a, i) => {
               const agent = getAgent(a.agent_id);
               return (
-                <div key={i} className="flex items-center gap-2 text-xs">
-                  <XCircle className={`w-3.5 h-3.5 ${a.severity === "high" ? "text-red-400" : "text-amber-400"}`} />
-                  <span className="text-zinc-300 font-medium">{agent?.name || a.agent_id}</span>
-                  <span className="text-zinc-500">{a.message}</span>
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12 }}>
+                  <XCircle size={14} style={{ color: a.severity === "high" ? T.red : T.amber, flexShrink: 0 }} />
+                  <span style={{ color: "#e4e4e7", fontWeight: 500 }}>{agent?.name || a.agent_id}</span>
+                  <span style={{ color: T.zinc }}>{a.message}</span>
                 </div>
               );
             })}
@@ -207,52 +289,86 @@ export default function TrustScores() {
         </div>
       )}
 
-      {/* Agent Scores */}
+      {/* Agent Scores Table */}
       <div>
-        <div className="flex items-center gap-3 mb-3">
-          <div className="relative flex-1 max-w-xs">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
-            <input value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Search agents..."
-              className="w-full pl-8 pr-3 py-1.5 bg-zinc-900/50 border border-white/5 rounded-lg text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/30" data-testid="trust-search" />
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
+          <div style={{ position: "relative", flex: 1, maxWidth: 280 }}>
+            <Search size={13} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: T.zinc }} />
+            <input
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              placeholder="Search agents..."
+              data-testid="trust-search"
+              style={{
+                width: "100%", boxSizing: "border-box",
+                paddingLeft: 32, paddingRight: 12, paddingTop: 7, paddingBottom: 7,
+                background: T.glass, border: `1px solid ${T.border}`, borderRadius: 10,
+                color: "#fff", fontSize: 12, outline: "none", fontFamily: "inherit",
+              }}
+            />
           </div>
-          <div className="flex gap-1">
+          <div style={{ display: "flex", gap: 4 }}>
             {[{ v: "trust_score", l: "Trust" }, { v: "executions", l: "Executions" }, { v: "latency", l: "Latency" }].map(s => (
-              <button key={s.v} onClick={() => setSortBy(s.v)} className={`px-2 py-1 rounded text-[10px] ${sortBy === s.v ? "bg-indigo-500/20 text-indigo-400" : "text-zinc-500 hover:text-zinc-300"}`}>{s.l}</button>
+              <button
+                key={s.v}
+                onClick={() => setSortBy(s.v)}
+                style={{
+                  padding: "5px 14px", borderRadius: 8, fontSize: 11, fontWeight: 500, cursor: "pointer",
+                  background: sortBy === s.v ? "rgba(79,209,197,0.12)" : "transparent",
+                  border: sortBy === s.v ? `1px solid rgba(79,209,197,0.35)` : `1px solid ${T.border}`,
+                  color: sortBy === s.v ? T.teal : T.zinc,
+                }}
+              >
+                {s.l}
+              </button>
             ))}
           </div>
         </div>
-        <div className="space-y-2" data-testid="trust-scores-list">
-          {filteredScores.length === 0 && <p className="text-xs text-zinc-600 text-center py-8">No trust score data yet. Execute agent tasks to build trust scores.</p>}
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }} data-testid="trust-scores-list">
+          {filteredScores.length === 0 && (
+            <div style={{ textAlign: "center", padding: "40px 0" }}>
+              <Shield size={36} style={{ color: "rgba(255,255,255,.08)", marginBottom: 12 }} />
+              <p style={{ fontSize: 13, color: T.zinc }}>No trust score data yet. Execute agent tasks to build trust scores.</p>
+            </div>
+          )}
           {filteredScores.map(s => {
             const agent = getAgent(s.agent_id);
-            const c = getTrustColor(s.trust_score);
+            const meta = getTrustMeta(s.trust_score);
+            const TrendIcon = s.trust_score >= 80 ? TrendingUp : s.trust_score >= 50 ? Activity : TrendingDown;
+            const trendColor = s.trust_score >= 80 ? T.green : s.trust_score >= 50 ? T.amber : T.red;
             return (
-              <div key={s.agent_id} className="flex items-center gap-3 px-4 py-3 rounded-xl border border-white/5 bg-zinc-900/30">
-                <div className={`w-9 h-9 rounded-lg flex items-center justify-center text-xs font-bold ${c.bg} ${c.text}`}>{Math.round(s.trust_score)}</div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{agent?.name || s.agent_id}</p>
-                  <p className="text-[10px] text-zinc-500">{s.total_executions} executions &middot; {s.avg_latency_ms}ms avg</p>
+              <div
+                key={s.agent_id}
+                style={{ display: "flex", alignItems: "center", gap: 14, padding: "12px 16px", borderRadius: 12, background: T.glass, border: `1px solid ${T.border}`, transition: "border-color .2s" }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(255,255,255,.14)"}
+                onMouseLeave={e => e.currentTarget.style.borderColor = T.border}
+              >
+                {/* Score badge */}
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: meta.bg, border: `1px solid ${meta.color}30`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: meta.color }}>{Math.round(s.trust_score)}</span>
                 </div>
-                <div className="w-24 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                  <div className={`h-full rounded-full ${c.bar}`} style={{ width: `${s.trust_score}%` }} />
+
+                {/* Info */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 13, fontWeight: 500, color: "#fff", margin: 0, marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{agent?.name || s.agent_id}</p>
+                  <p style={{ fontSize: 10, color: T.zinc, margin: 0 }}>{s.total_executions} executions · {s.avg_latency_ms}ms avg · <span style={{ color: meta.color }}>{meta.label}</span></p>
                 </div>
-                <div className="flex items-center gap-1">
-                  {s.trust_score >= 80 ? <TrendingUp className="w-3.5 h-3.5 text-emerald-400" /> : s.trust_score >= 50 ? <Activity className="w-3.5 h-3.5 text-amber-400" /> : <TrendingDown className="w-3.5 h-3.5 text-red-400" />}
+
+                {/* Trust bar */}
+                <div style={{ width: 96, flexShrink: 0 }}>
+                  <div style={{ height: 4, background: "rgba(255,255,255,.06)", borderRadius: 4, overflow: "hidden" }}>
+                    <div style={{ height: "100%", borderRadius: 4, background: meta.color, width: `${s.trust_score}%`, transition: "width .6s ease" }} />
+                  </div>
                 </div>
+
+                {/* Trend icon */}
+                <TrendIcon size={14} style={{ color: trendColor, flexShrink: 0 }} />
               </div>
             );
           })}
         </div>
       </div>
-    </div>
-  );
-}
-
-function SummaryCard({ icon, label, value }) {
-  return (
-    <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-3">
-      <div className="flex items-center gap-2 mb-1">{icon}<span className="text-[10px] text-zinc-500">{label}</span></div>
-      <p className="text-lg font-bold text-white">{value}</p>
     </div>
   );
 }

@@ -1,10 +1,44 @@
 import { useState, useEffect, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Button } from "../components/ui/button";
-import { Briefcase, TrendingUp, DollarSign, Target, ArrowUpRight, ArrowDownRight, Plus, BarChart3 } from "lucide-react";
+import { Briefcase, Target, Plus } from "lucide-react";
 
 const API = process.env.REACT_APP_BACKEND_URL;
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  violet: "#7c3aed",
+  indigo: "#818cf8",
+  green: "#34d399",
+  red: "#ef4444",
+  cyan: "#22d3ee",
+  amber: "#f59e0b",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+`;
+
+const STAGE_META = {
+  idea: { color: T.zinc, bg: "rgba(113,113,122,.15)" },
+  validation: { color: "#60a5fa", bg: "rgba(96,165,250,.15)" },
+  mvp: { color: T.cyan, bg: "rgba(34,211,238,.15)" },
+  growth: { color: T.green, bg: "rgba(52,211,153,.15)" },
+  scale: { color: "#a78bfa", bg: "rgba(167,139,250,.15)" },
+  mature: { color: T.amber, bg: "rgba(245,158,11,.15)" },
+  sunset: { color: T.red, bg: "rgba(239,68,68,.15)" },
+};
+
+const ACTION_COLORS = { scale: T.green, optimize: T.cyan, pivot: T.amber, pause: "#f97316", kill: T.red };
+
+const STAGES = ["idea","validation","mvp","growth","scale","mature","sunset"];
+
+const formInput = {
+  background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`,
+  borderRadius: 8, padding: "8px 12px", color: "#fff", fontSize: 13,
+  outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box",
+  transition: "border-color .2s",
+};
 
 export default function VenturePortfolio() {
   const [ventures, setVentures] = useState([]);
@@ -30,90 +64,101 @@ export default function VenturePortfolio() {
     fetchData();
   };
 
-  const stageColors = { idea: "bg-zinc-500/20 text-zinc-400", validation: "bg-blue-500/20 text-blue-400", mvp: "bg-cyan-500/20 text-cyan-400", growth: "bg-emerald-500/20 text-emerald-400", scale: "bg-violet-500/20 text-violet-400", mature: "bg-amber-500/20 text-amber-400", sunset: "bg-red-500/20 text-red-400" };
-  const actionColors = { scale: "text-emerald-400", optimize: "text-cyan-400", pivot: "text-amber-400", pause: "text-orange-400", kill: "text-red-400" };
+  const inputFocus = e => e.target.style.borderColor = "rgba(124,58,237,.5)";
+  const inputBlur = e => e.target.style.borderColor = T.border;
 
   return (
-    <div className="space-y-6 max-w-6xl" data-testid="venture-portfolio-page">
-      <div className="flex items-center justify-between">
+    <div style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 900, animation: "fadeUp .4s ease" }} data-testid="venture-portfolio-page">
+      <style>{STYLES}</style>
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div>
-          <h1 className="text-2xl font-bold text-white font-['Outfit'] flex items-center gap-2"><Briefcase className="w-6 h-6 text-violet-400" /> Venture Portfolio</h1>
-          <p className="text-sm text-zinc-400">Portfolio state machine — track, score, and decide: scale / optimize / pivot / kill</p>
+          <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 26, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 4, display: "flex", alignItems: "center", gap: 10 }}>
+            <Briefcase size={22} style={{ color: "#a78bfa" }} /> Venture Portfolio
+          </h1>
+          <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>Portfolio state machine — track, score, and decide: scale / optimize / pivot / kill</p>
         </div>
-        <Button onClick={() => setShowCreate(!showCreate)} className="bg-violet-500 hover:bg-violet-600" data-testid="create-venture-btn"><Plus className="w-4 h-4 mr-1" /> New Venture</Button>
+        <button onClick={() => setShowCreate(!showCreate)} data-testid="create-venture-btn"
+          style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 10, background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+          <Plus size={14} /> New Venture
+        </button>
       </div>
 
       {/* Summary */}
       {summary && (
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3" data-testid="portfolio-summary">
-          <Card className="bg-zinc-900/50 border-white/5"><CardContent className="p-4 text-center">
-            <p className="text-lg font-bold text-white">{summary.total_ventures}</p><p className="text-[10px] text-zinc-500">Ventures</p>
-          </CardContent></Card>
-          <Card className="bg-zinc-900/50 border-white/5"><CardContent className="p-4 text-center">
-            <p className="text-lg font-bold text-emerald-400">${(summary.total_revenue || 0).toLocaleString()}</p><p className="text-[10px] text-zinc-500">Revenue</p>
-          </CardContent></Card>
-          <Card className="bg-zinc-900/50 border-white/5"><CardContent className="p-4 text-center">
-            <p className="text-lg font-bold text-red-400">${(summary.total_costs || 0).toLocaleString()}</p><p className="text-[10px] text-zinc-500">Costs</p>
-          </CardContent></Card>
-          <Card className="bg-zinc-900/50 border-white/5"><CardContent className="p-4 text-center">
-            <p className="text-lg font-bold text-white">{(summary.avg_opportunity_score || 0).toFixed(0)}</p><p className="text-[10px] text-zinc-500">Avg Score</p>
-          </CardContent></Card>
-          <Card className="bg-zinc-900/50 border-white/5"><CardContent className="p-4 text-center">
-            <p className="text-lg font-bold text-cyan-400">{(summary.avg_runway || 0).toFixed(0)}mo</p><p className="text-[10px] text-zinc-500">Avg Runway</p>
-          </CardContent></Card>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 10 }} data-testid="portfolio-summary">
+          {[
+            { label: "Ventures", value: summary.total_ventures, color: T.violet },
+            { label: "Revenue", value: `$${(summary.total_revenue || 0).toLocaleString()}`, color: T.green },
+            { label: "Costs", value: `$${(summary.total_costs || 0).toLocaleString()}`, color: T.red },
+            { label: "Avg Score", value: (summary.avg_opportunity_score || 0).toFixed(0), color: "#fff" },
+            { label: "Avg Runway", value: `${(summary.avg_runway || 0).toFixed(0)}mo`, color: T.cyan },
+          ].map(s => (
+            <div key={s.label} style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "14px 0", textAlign: "center" }}>
+              <div style={{ fontSize: 20, fontWeight: 700, color: s.color }}>{s.value}</div>
+              <div style={{ fontSize: 10, color: T.zinc, marginTop: 3 }}>{s.label}</div>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Create Form */}
+      {/* Create form */}
       {showCreate && (
-        <Card className="bg-zinc-900/50 border-violet-500/20" data-testid="create-venture-form">
-          <CardContent className="p-4 space-y-3">
-            <input className="w-full bg-zinc-800 border border-white/10 rounded px-3 py-2 text-sm text-white" placeholder="Venture name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} data-testid="venture-name-input" />
-            <input className="w-full bg-zinc-800 border border-white/10 rounded px-3 py-2 text-sm text-white" placeholder="Description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} data-testid="venture-desc-input" />
-            <div className="flex gap-2">
-              <select className="bg-zinc-800 border border-white/10 rounded px-2 py-1 text-xs text-white" value={form.stage} onChange={e => setForm({...form, stage: e.target.value})} data-testid="venture-stage-select">
-                {["idea","validation","mvp","growth","scale","mature","sunset"].map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
-              <Button onClick={createVenture} size="sm" className="bg-violet-500 hover:bg-violet-600" data-testid="submit-venture-btn">Create</Button>
-            </div>
-          </CardContent>
-        </Card>
+        <div style={{ background: T.glass, border: `1px solid rgba(124,58,237,.2)`, borderRadius: 12, padding: "16px 18px", display: "flex", flexDirection: "column", gap: 10 }} data-testid="create-venture-form">
+          <input placeholder="Venture name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} style={formInput} data-testid="venture-name-input" onFocus={inputFocus} onBlur={inputBlur} />
+          <input placeholder="Description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} style={formInput} data-testid="venture-desc-input" onFocus={inputFocus} onBlur={inputBlur} />
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <select value={form.stage} onChange={e => setForm({...form, stage: e.target.value}) } style={{ ...formInput, cursor: "pointer", width: "auto" }} data-testid="venture-stage-select">
+              {STAGES.map(s => <option key={s} value={s} style={{ background: "#0f0f1a" }}>{s}</option>)}
+            </select>
+            <button onClick={createVenture} data-testid="submit-venture-btn"
+              style={{ padding: "8px 18px", borderRadius: 9, background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+              Create
+            </button>
+          </div>
+        </div>
       )}
 
-      {/* Ventures */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" data-testid="ventures-grid">
-        {ventures.map((v, i) => (
-          <Card key={i} className="bg-zinc-900/50 border-white/5 hover:border-white/10 transition-all" data-testid={`venture-card-${i}`}>
-            <CardContent className="p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-white">{v.name}</h3>
-                <Badge className={stageColors[v.stage] || ""}>{v.stage}</Badge>
+      {/* Ventures grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 14 }} data-testid="ventures-grid">
+        {ventures.length === 0 ? (
+          <p style={{ fontSize: 13, color: T.zinc, textAlign: "center", padding: "32px 0", gridColumn: "1 / -1" }}>No ventures yet. Create your first venture to get started.</p>
+        ) : ventures.map((v, i) => {
+          const sm = STAGE_META[v.stage] || STAGE_META.idea;
+          const actionColor = ACTION_COLORS[v.next_action] || T.zinc;
+          const profit = (v.revenue || 0) - (v.costs || 0);
+          return (
+            <div key={i} data-testid={`venture-card-${i}`}
+              style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, padding: "16px 18px", transition: "border-color .2s" }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(255,255,255,.14)"}
+              onMouseLeave={e => e.currentTarget.style.borderColor = T.border}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                <h3 style={{ fontSize: 14, fontWeight: 700, color: "#fff", margin: 0 }}>{v.name}</h3>
+                <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 20, background: sm.bg, color: sm.color }}>{v.stage}</span>
               </div>
-              <p className="text-xs text-zinc-400">{v.description}</p>
-              <div className="grid grid-cols-3 gap-2">
-                <div className="text-center p-2 rounded bg-zinc-800/40">
-                  <p className="text-sm font-bold text-emerald-400">${(v.revenue || 0).toLocaleString()}</p><p className="text-[10px] text-zinc-500">Revenue</p>
-                </div>
-                <div className="text-center p-2 rounded bg-zinc-800/40">
-                  <p className="text-sm font-bold text-red-400">${(v.costs || 0).toLocaleString()}</p><p className="text-[10px] text-zinc-500">Costs</p>
-                </div>
-                <div className="text-center p-2 rounded bg-zinc-800/40">
-                  <p className="text-sm font-bold text-white">{v.opportunity_score || 0}</p><p className="text-[10px] text-zinc-500">Score</p>
-                </div>
+              <p style={{ fontSize: 12, color: T.zinc, marginBottom: 12 }}>{v.description}</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8, marginBottom: 10 }}>
+                {[
+                  { label: "Revenue", value: `$${(v.revenue || 0).toLocaleString()}`, color: T.green },
+                  { label: "Costs", value: `$${(v.costs || 0).toLocaleString()}`, color: T.red },
+                  { label: "Score", value: v.opportunity_score || 0, color: profit >= 0 ? T.green : T.amber },
+                ].map(s => (
+                  <div key={s.label} style={{ textAlign: "center", padding: "8px 6px", borderRadius: 8, background: "rgba(255,255,255,.03)" }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: s.color }}>{s.value}</div>
+                    <div style={{ fontSize: 9, color: T.zinc }}>{s.label}</div>
+                  </div>
+                ))}
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <Target className="w-3 h-3 text-zinc-500" />
-                  <span className={`text-xs font-medium ${actionColors[v.next_action] || "text-zinc-400"}`}>
-                    {v.next_action?.toUpperCase()}
-                  </span>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                  <Target size={11} style={{ color: T.zinc }} />
+                  <span style={{ fontSize: 11, fontWeight: 700, color: actionColor }}>{v.next_action?.toUpperCase()}</span>
                 </div>
-                <span className="text-[10px] text-zinc-500">Runway: {v.runway_months || 0}mo</span>
+                <span style={{ fontSize: 10, color: T.zinc }}>Runway: {v.runway_months || 0}mo</span>
               </div>
-            </CardContent>
-          </Card>
-        ))}
-        {ventures.length === 0 && <p className="text-sm text-zinc-500 col-span-2 text-center py-8">No ventures yet. Create your first venture to get started.</p>}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

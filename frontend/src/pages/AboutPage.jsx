@@ -1,15 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth, API } from "../App";
-import { Card, CardContent } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Button } from "../components/ui/button";
 import {
   Rocket, Bot, Brain, Shield, Sparkles, Cpu, Activity, Radio, Code, Palette,
   PenTool, Gauge, Users, FileCheck, Zap, Mail, BarChart3, ChevronDown,
   ChevronRight, Globe, Lock, Eye, Target, Layers, Network, Server, Database,
-  Download, Loader2, Mic, FileCode, Archive, Terminal, Search, Heart,
+  Download, Mic, FileCode, Archive, Terminal, Search, Heart,
   Wrench, MessageSquare, RefreshCw, Briefcase, Building, TrendingUp,
-  CheckCircle, Package, DollarSign, Printer
+  CheckCircle, Package, DollarSign, Printer, Share2, Key
 } from "lucide-react";
 
 /* ── network label mapping ── */
@@ -63,7 +60,7 @@ const SYSTEMS = [
     icon: Brain, title: "Custom Brain Profiles", subtitle: "Personalizing How Each Agent Thinks", color: "text-violet-400",
     desc: "Every AI agent has its own \"brain profile\" -- a set of settings that control how it thinks, talks, and works. You can change these settings anytime. It's like adjusting the personality and skills of each team member. Want one agent to be super creative? Turn up its creativity. Want another to be very precise and careful? Turn down its creativity and pick a more accurate AI model.",
     details: [
-      "Each agent can use a different AI model (like GPT-5.2 for hard tasks, or a faster model for simple ones)",
+      "Each agent can use a different AI model (like GPT-5 for hard tasks, or a faster model for simple ones)",
       "Autonomy Level (1 to 10): Level 1 means the agent always asks you before doing anything. Level 10 means it does everything on its own",
       "Communication Style: You can set each agent to talk professionally, casually, technically, or creatively",
       "Tool Permissions: You decide what tools each agent can use -- web browsing, making images, running code, etc.",
@@ -78,21 +75,23 @@ const SYSTEMS = [
       "The Critic Module (powered by GPT-4o) automatically reviews every single task output",
       "It scores work on: completeness (did it finish everything?), accuracy (is it correct?), actionability (can you use it?), and professionalism (does it look good?)",
       "Each score is from 1 to 10. Higher is better",
-      "If a task fails, the system automatically tries again using different AI models in this order: GPT-5.2 first, then Claude Sonnet, then Gemini Pro, then GPT-4o",
+      "If a task fails, the system automatically tries again using different AI models in this order: GPT-5 first, then Claude Sonnet, then Gemini Pro, then GPT-4o",
       "If ALL retries fail, the task gets flagged and you receive a notification so you can review it yourself",
       "The Quality Dashboard shows you pass rates (what percentage of tasks succeed), average scores, and how often recovery was needed",
     ]
   },
   {
-    icon: Network, title: "Model-Agnostic LLM Router", subtitle: "Picking the Right AI Brain for Each Job", color: "text-cyan-400",
-    desc: "MAARS Command has access to 45+ different AI models from 13 companies. The Router is a smart traffic controller that looks at each task and automatically picks the best AI model for it. Easy questions go to fast, cheap models. Hard questions (like complex coding or legal analysis) go to the most powerful models. This saves money and gets better results at the same time.",
+    icon: Network, title: "Smart Universal AI Router", subtitle: "33 Providers, 600+ Models — Routing the Right Brain for Every Job", color: "text-cyan-400",
+    desc: "MAARS Command has access to 600+ different AI models from 29 companies via the MAARS Universal API Gateway. The Smart Router classifies your prompt's task type (code, math, reasoning, creative, translation, research, etc.) and your current credit balance, then automatically picks the ideal model. Easy chats go to blazing-fast Groq or Cerebras. Complex reasoning goes to O4-mini or DeepSeek R1. Research goes to Perplexity Deep Research first. Developers get a maars-sk-* key and can call any model through a single OpenAI-compatible endpoint at /developer.",
     details: [
-      "Premium Tier (for hard tasks): GPT-5.2, Claude Sonnet 4.5, Gemini 2.5 Pro -- these are the smartest but most expensive models",
-      "Standard Tier (for medium tasks): GPT-4o, GPT-4.1, Gemini 3 Flash -- good balance of speed and quality",
-      "Economy Tier (for easy tasks): GPT-4o-mini, Gemini Flash, Claude Haiku -- super fast and very cheap",
-      "The router looks at the task type (is it coding? writing? math? legal?), who the agent is, and how long the content is",
-      "You can override the router anytime and manually pick which model to use in Settings",
-      "Routing logs show you exactly which model was used for each task, so you can track costs",
+      "Premium Tier (hard tasks): O4, O4-mini, Claude Opus 4.6, Claude Sonnet 4.6, GPT-5, Grok 3 — smartest models for complex reasoning, legal, and research",
+      "Standard Tier (medium tasks): GPT-4.1, Gemini 2.5 Pro, DeepSeek R1, Mistral Large, Cohere Command A — balanced quality and cost",
+      "Economy Tier (easy tasks): Groq Llama 4 Scout, Cerebras Llama 3.3, Gemini Flash, DeepSeek Chat, Mistral Nemo — ultra-fast at rock-bottom cost",
+      "Task classification: the router scores your prompt against 11 keyword banks (code, math, reasoning, legal, creative, translation, summary, research, data, vision, chat) to find the best match",
+      "Credit-budget awareness: if you have ≤3 credits (micro), it routes to economy only. 11-50 credits = full routing. 51+ = best model, no restrictions",
+      "Per-task preferred models: code → GPT-4.1 or Claude Sonnet 4.6 first; math → O4-mini or DeepSeek R1; research → Perplexity Deep Research; translation → DeepSeek or Qwen",
+      "Manual override: pick any specific model in chat or set a default in Settings. Quality (economy/standard/premium) and task hint (code/math/etc.) can be saved as preferences",
+      "All 33 providers are accessed directly via their own API keys — the MAARS Universal Key also covers OpenAI, Anthropic, and Gemini as a fallback",
     ]
   },
   {
@@ -177,18 +176,23 @@ const SYSTEMS = [
     ]
   },
   {
-    icon: Server, title: "Flexible LLM Configuration", subtitle: "Choose Your AI Model From 13 Providers", color: "text-purple-400",
-    desc: "You can pick which AI company and which specific model you want MAARS Command to use. There are 45+ models to choose from across 13 providers. Your choice applies to all AI features (Content Generator, Vibe Coding, Reference Intelligence, etc.) unless the Router auto-selects a different model for a specific task. Think of it like choosing which engine to put in your car.",
+    icon: Server, title: "MAARS Universal API Gateway", subtitle: "600+ Models · 33 Providers · One OpenAI-Compatible Key", color: "text-purple-400",
+    desc: "MAARS is a self-hosted universal AI gateway — on steroids. A single maars-sk-* API key lets you call any of 175,000+ models across 33 providers using the same OpenAI SDK you already use. MAARS smart routing aliases (maars/auto, maars/code, maars/fast...) automatically pick the best model for your task and budget. The full Developer Portal is at /developer.",
     details: [
-      "OpenAI: GPT-5.2 (most powerful), GPT-5.1, GPT-4.1, GPT-4o (balanced), o3 and o4-mini (reasoning/math)",
-      "Anthropic: Claude Sonnet 4.5 (creative writing), Claude 4 Sonnet, Claude Haiku 4.5 (fast and cheap)",
-      "Google Gemini: Gemini 3 Flash (super fast), Gemini 2.5 Pro (research-grade)",
-      "Groq: Llama 4 Scout (ultra-fast), Llama 4 Maverick, Llama 3.3 70B (open-source)",
-      "Together AI: Llama 4 Maverick FP8, Llama 3.3 70B Turbo, DeepSeek R1 (reasoning)",
-      "Fireworks AI: Llama 4 Scout, Llama 4 Maverick, DeepSeek V3",
-      "AI21: Jamba Large 1.7 (256K context window -- can read very long documents), Jamba Mini 1.7",
-      "Also available: xAI Grok (1M context!), DeepSeek, Mistral, Perplexity (live web search), Cohere, ElevenLabs (voice)",
-      "All powered by the Emergent Universal Key -- one key that works with all 13 providers",
+      "OpenAI: GPT-5, GPT-4.1/mini/nano (1M ctx), GPT-4o, O4 & O4-mini & O3 & O3-pro (reasoning/math)",
+      "Anthropic: Claude Opus 4.6 & 4.5 (deepest reasoning), Claude Sonnet 4.6 & 3.7 (creative + code), Claude Haiku 4.5 (fast + cheap)",
+      "Google Gemini: Gemini 2.5 Pro (2M ctx research), Gemini 2.5 Flash (speed), Gemma 3 open models (1B–27B)",
+      "xAI Grok: Grok-4 & Grok-4 Fast Reasoning (256K ctx), Grok-3, Grok-2 Vision — made by Elon Musk's xAI",
+      "DeepSeek: DeepSeek V3-0324 (code + data, ultra cheap), DeepSeek R1-0528 (math + reasoning, open-source champ)",
+      "Mistral AI: Mistral Large, Magistral Medium (reasoning), Codestral (code-specialist, 256K ctx), Pixtral Large (vision)",
+      "Perplexity: Sonar Deep Research (live web research), Sonar Pro, Sonar Reasoning Pro — web-grounded answers",
+      "Cohere: Command A (enterprise docs), Command R+ — optimized for business document retrieval",
+      "Groq + Cerebras: blazing-fast open-source inference — Llama 4, Qwen QwQ-32B at sub-second latency",
+      "Together AI (39 models), Fireworks AI (20), SambaNova (14), NVIDIA NIM (12), Novita AI (12), Lepton AI (8), Lambda Labs (6): open-source hosting",
+      "AI21 Jamba (256K ctx), Moonshot Kimi (128K), Qwen/Alibaba (multilingual), Minimax AI, Inception AI (Mercury), Arcee AI, Amazon Bedrock (Nova), Yi, Zhipu, Doubao, Hyperbolic, Upstage, LLaMA, Writer, HuggingFace",
+      "10 MAARS smart routing aliases: maars/auto, maars/smart, maars/economy, maars/premium, maars/code, maars/vision, maars/reasoning, maars/search, maars/fast, maars/standard",
+      "Live model validation: before every call, the gateway checks the provider's live /models API and auto-fallbacks if a model is not yet live",
+      "Webhooks: register HTTPS endpoints for budget alerts (75%/90%/100%), rate limit events, and request completion — signed with HMAC-SHA256",
     ]
   },
   {
@@ -292,6 +296,22 @@ const SYSTEMS = [
     ]
   },
   {
+    icon: Terminal, title: "MAARS Developer API Gateway", subtitle: "One Key · 600+ Models · 33 Providers · OpenAI-Compatible", color: "text-indigo-400",
+    desc: "MAARS is a self-hosted universal AI gateway — on steroids. Every registered user gets a maars-sk-* API key. With one key and a single base_url change, developers can call any of 175,000+ AI models across 33 providers using their existing OpenAI SDK code. The gateway validates models live against provider APIs, automatically falls back when a model is unavailable, fires signed webhooks on budget thresholds, and lets you run side-by-side model comparisons in one request.",
+    details: [
+      "Developer Portal at /developer: 4 tabs — My API Key (masked/reveal/copy), Model Browser (175,000+ models, searchable, filterable), Playground (test any model in browser), Quickstart (copy-paste code for Python/JS/cURL)",
+      "OpenAI-compatible: POST /v1/chat/completions — change base_url from api.openai.com to your domain. No other code changes needed",
+      "609+ real models: OpenAI (35), Groq (35), Together AI (77), Novita AI (56), Fireworks AI (44), HuggingFace (38), Qwen/Alibaba (32), Mistral (31), Lepton AI (28), NVIDIA NIM (27), SambaNova (20), Lambda Labs (20), Cerebras (18), Google/Gemini (18), Hyperbolic (14), Anthropic (13), DeepSeek (12), xAI (11), Zhipu/GLM (11), ByteDance/Doubao (10), Cohere (9), Moonshot (8), Meta Llama API (6), Perplexity (6), 01.AI/Yi (5), Writer (5), AI21/Jamba (4), Amazon Bedrock (4), Minimax (4), Upstage (3), Arcee AI (3), Inception AI (2), ElevenLabs (voice)",
+      "10 MAARS smart routing aliases: maars/auto, maars/smart, maars/economy, maars/standard, maars/premium, maars/code, maars/vision, maars/reasoning, maars/search, maars/fast",
+      "Live model validation: before each call, checks provider's /models API (cached 1 hour). If model not found, skips to fallback and includes model_warning in response",
+      "Auto-fallback chain: tries up to 4 providers on failure — GPT-4.1 → Claude Sonnet → Gemini Flash → DeepSeek",
+      "Webhooks: register HTTPS endpoints for budget.75, budget.90, budget.100, rate_limit.exceeded, request.completed — all signed with HMAC-SHA256",
+      "Model comparison: POST /v1/models/compare runs the same prompt on up to 4 models in parallel and returns latency, cost, tokens, and content per model side-by-side",
+      "Real token billing from provider responses, not estimates. Full parameter passthrough: temperature, top_p, max_tokens, tools, vision, seed, response_format",
+      "Budget enforcement and per-key rate limiting (configurable RPM). All usage logged to gateway_usage_logs for admin P&L tracking",
+    ]
+  },
+  {
     icon: Briefcase, title: "Campaign Builder", subtitle: "Plan Multi-Channel Marketing Campaigns", color: "text-pink-400",
     desc: "Plan and run marketing campaigns across multiple channels (email, social media, web, ads) all in one place. Define your campaign goals, pick which channels to use, and let AI agents create content variations for each channel. Track how each campaign performs and let the AI optimize your budget allocation.",
     details: [
@@ -302,6 +322,40 @@ const SYSTEMS = [
       "Budget allocation: set your budget and let the AI suggest how to split it across channels",
       "Campaign templates and scheduling: plan campaigns in advance and have them launch automatically",
       "Works with Content Generator and Reference Intelligence for on-brand content",
+    ]
+  },
+  {
+    icon: Share2, title: "Social Media Command Center", subtitle: "10 Platforms · AI-Powered Posting, Messaging & Geo-Targeted Boosting", color: "text-teal-400",
+    desc: "MAARS agents can now operate across 10 major social media and messaging platforms simultaneously. From composing geo-targeted posts in the right language, to sending cold DMs, running multi-region ad boosts, broadcasting on WhatsApp and Telegram, and making cold calls via Twilio — all from a single command center. This isn't traditional social media management. It's an AI-driven omnichannel growth engine.",
+    details: [
+      "10 platforms connected: Facebook, Instagram, Twitter/X, TikTok, WhatsApp Business, Viber, LINE, LinkedIn, YouTube, Telegram",
+      "Post & Publish: agents auto-generate and publish content across all connected platforms in one click — with platform-specific formatting",
+      "Geographic Targeting: select target regions (North America, Southeast Asia, Middle East, etc.) and content is auto-published with the right language for each region",
+      "Non-Traditional Boosting: beyond basic boosts — A/B test ad creatives per region, TikTok Spark Ads, LinkedIn Lead Gen forms, Facebook dynamic creatives, YouTube TrueView campaigns",
+      "Auto-Translation: agents translate your content to Japanese (Japan), Arabic (Middle East), Thai (Southeast Asia), Hindi (South Asia), etc. — automatically matched to your target region",
+      "Cold Email Outreach: send personalized cold emails via SendGrid or Resend with geo-aware subject lines and body copy",
+      "Cold Calling: initiate Twilio voice calls with AI-generated scripts delivered in the target region's language (English, Spanish, French, Arabic, Hindi, and more)",
+      "Direct Messaging: send DMs on WhatsApp, Instagram, Viber, LINE, and Telegram — including WhatsApp Business templates and LINE rich messages",
+      "Reply to Everything: agents can reply to comments, mentions, and DMs across all platforms — in the right language",
+      "Scheduling: queue posts, calls, meetings, and campaigns for future dates with full calendar view",
+      "Multi-Platform Campaigns: one campaign name, content in, agents adapt and post across all selected platforms simultaneously",
+      "Omnichannel Analytics: track reach, impressions, clicks, and conversions per platform and per geographic region",
+    ]
+  },
+  {
+    icon: Key, title: "Universal Gateway Key — Pay As You Go", subtitle: "65% AI Budget · 35% Platform · Credits On Demand", color: "text-amber-400",
+    desc: "The MAARS Universal Key is now fully pay-as-you-go. Top up any amount — no subscriptions required. 65% of every payment goes directly to AI model costs (OpenAI, Anthropic, Google, and 30 other providers). The remaining 35% covers platform infrastructure, routing, failover, monitoring, and support. Credits are issued instantly. Each credit ≈ one LLM API call, priced by the model used.",
+    details: [
+      "Pay any amount from $5 to $10,000 USD (or BDT equivalent) — no monthly commitment",
+      "65% allocation: goes to your AI model budget — funds actual API calls to OpenAI, Anthropic, Google, DeepSeek, Groq, etc.",
+      "35% allocation: covers MAARS infrastructure — routing layer, failover logic, monitoring dashboards, logging, support, and platform development",
+      "Credits issued instantly: your AI budget is converted to MAARS credits at ~16.67 credits per $1 AI budget",
+      "Real-time tracking: watch your credit balance and USD AI budget update in real-time after every LLM call",
+      "One key, every provider: your maars-sk-* key unlocks access to all 33 providers and 600+ models — smart routing picks the best model for each task",
+      "Budget transparency: every top-up shows the exact split — how much goes to AI costs vs. platform. No hidden fees",
+      "Transaction history: full log of every top-up with amount paid, AI budget allocated, platform portion, and credits issued",
+      "Usage stats: see breakdowns by provider, model, task type, and quality tier — understand exactly how your credits are spent",
+      "Top-up anytime: credits never expire during your subscription period. Top up $10 today, $500 next month — fully flexible",
     ]
   },
 ];
@@ -322,26 +376,29 @@ const TIER_COLORS = {
 };
 
 const AI_PROVIDERS = [
-  { name: "OpenAI", color: "text-emerald-400", dotColor: "bg-emerald-400", desc: "The company behind ChatGPT. Their GPT-5.2 is one of the smartest AI models in the world.", models: [
-    { name: "GPT-5.2", tier: "Flagship", desc: "The most powerful model -- best for coding, writing, and complex thinking" },
-    { name: "GPT-4o", tier: "Fast", desc: "Great balance of speed and intelligence for everyday tasks" },
-    { name: "GPT-4o Mini", tier: "Economy", desc: "Super cheap and fast -- perfect for simple questions and quick answers" },
-    { name: "O3", tier: "Reasoning", desc: "Specialized for math, logic puzzles, and multi-step reasoning" },
-    { name: "O3 Mini", tier: "Reasoning", desc: "Lighter version of O3 for simpler analytical tasks" },
+  { name: "OpenAI", color: "text-emerald-400", dotColor: "bg-emerald-400", desc: "The company behind ChatGPT. Their GPT-5 is the world's most capable text model. O4 pushes reasoning to new limits.", models: [
+    { name: "GPT-5", tier: "Flagship", desc: "Most powerful all-around model — coding, writing, analysis" },
+    { name: "GPT-4.1 / Mini / Nano", tier: "Fast", desc: "Latest generation: 4.1 for quality, Mini for balance, Nano for speed" },
+    { name: "GPT-4o", tier: "Fast", desc: "Multimodal: understands images and text together" },
+    { name: "O4 / O4-mini", tier: "Reasoning", desc: "Next-gen deep reasoning — best for math, code, and logic" },
+    { name: "O3 / O3-mini", tier: "Reasoning", desc: "Frontier reasoning for hardest analytical tasks" },
   ]},
-  { name: "Anthropic", color: "text-orange-400", dotColor: "bg-orange-400", desc: "Makes the Claude family of AI models. Known for being very safe, thoughtful, and great at creative writing.", models: [
-    { name: "Claude Sonnet 4.5", tier: "Flagship", desc: "Excellent for creative writing, analysis, and nuanced conversations" },
-    { name: "Claude Opus 4.5", tier: "Premium", desc: "Their most powerful model for deep research and complex analysis" },
+  { name: "Anthropic", color: "text-orange-400", dotColor: "bg-orange-400", desc: "Makes the Claude 4.6 family. Known for being very safe, thoughtful, and exceptional at creative writing and nuanced reasoning.", models: [
+    { name: "Claude Sonnet 4.6", tier: "Flagship", desc: "Best balance of intelligence and speed — code, creative, legal" },
+    { name: "Claude Opus 4.6", tier: "Premium", desc: "Deepest reasoning and most thoughtful responses available" },
     { name: "Claude Haiku 4.5", tier: "Economy", desc: "Ultra-fast for quick summaries and simple responses" },
   ]},
-  { name: "Google Gemini", color: "text-blue-400", dotColor: "bg-blue-400", desc: "Google's AI models. Gemini can understand text, images, and code all at once.", models: [
-    { name: "Gemini 3 Flash", tier: "Fast", desc: "Lightning-fast responses -- one of the quickest AI models available" },
-    { name: "Gemini 3 Pro", tier: "Flagship", desc: "Powerful multimodal model for research and complex analysis" },
+  { name: "Google Gemini", color: "text-blue-400", dotColor: "bg-blue-400", desc: "Google's AI models. Gemini understands text, images, code, and data all at once.", models: [
+    { name: "Gemini 2.5 Flash", tier: "Fast", desc: "Lightning-fast with excellent quality — great default for most tasks" },
+    { name: "Gemini 2.5 Pro", tier: "Flagship", desc: "Research-grade: data analysis, vision, long documents" },
+    { name: "Gemini 3 Flash / Pro", tier: "Fast", desc: "Next-generation speed and multimodal capability" },
   ]},
-  { name: "xAI (Grok)", color: "text-sky-400", dotColor: "bg-sky-400", desc: "Made by Elon Musk's AI company. Grok 3 can read up to 1 million tokens (that's like a whole book!) at once.", models: [
-    { name: "Grok 3", tier: "Flagship", desc: "1 million token context window -- can read an entire book and answer questions about it" },
-    { name: "Grok 3 Mini", tier: "Economy", desc: "Affordable reasoning for everyday tasks" },
-    { name: "Grok 2", tier: "Fast", desc: "Competitive all-around model for general use" },
+  { name: "xAI (Grok)", color: "text-sky-400", dotColor: "bg-sky-400", desc: "Made by Elon Musk's xAI company. Grok-4 is xAI's frontier reasoning model with tool calling and vision. All models have 256K context.", models: [
+    { name: "Grok-4", tier: "Flagship", desc: "xAI's frontier reasoning model — tool calling, vision, 256K context" },
+    { name: "Grok-4 Fast / Reasoning", tier: "Fast", desc: "High-speed variants: non-reasoning for speed, reasoning for CoT" },
+    { name: "Grok-3", tier: "Premium", desc: "1 million token context — reads entire books, strong long-form reasoning" },
+    { name: "Grok-3 Mini", tier: "Economy", desc: "Affordable Grok for everyday tasks" },
+    { name: "Grok-2 Vision", tier: "Fast", desc: "Multimodal Grok with image understanding" },
   ]},
   { name: "DeepSeek", color: "text-teal-400", dotColor: "bg-teal-400", desc: "Chinese AI company offering incredibly affordable models. Great value for money.", models: [
     { name: "DeepSeek Chat", tier: "Economy", desc: "128K context, one of the cheapest AI models available anywhere" },
@@ -375,9 +432,105 @@ const AI_PROVIDERS = [
     { name: "Llama 4 Maverick", tier: "Fast", desc: "High-throughput Llama 4 for demanding workloads" },
     { name: "DeepSeek V3", tier: "Fast", desc: "Cost-efficient hosting of DeepSeek's latest model" },
   ]},
-  { name: "AI21 (Jamba)", color: "text-indigo-300", dotColor: "bg-indigo-300", desc: "Israeli AI company. Their Jamba model combines two different AI architectures for better long-document understanding.", models: [
-    { name: "Jamba Large 1.7", tier: "Flagship", desc: "256K context window -- reads very long documents with high accuracy" },
+  { name: "AI21 (Jamba)", color: "text-indigo-300", dotColor: "bg-indigo-300", desc: "Israeli AI company. Jamba combines transformer + Mamba architectures for exceptional long-document understanding.", models: [
+    { name: "Jamba Large 1.7", tier: "Flagship", desc: "256K context window -- reads entire books with high accuracy" },
     { name: "Jamba Mini 1.7", tier: "Economy", desc: "Lightweight model for everyday business tasks" },
+  ]},
+  { name: "Cerebras", color: "text-pink-400", dotColor: "bg-pink-400", desc: "World's fastest AI inference using custom wafer-scale chips. Sub-second responses even for 70B models.", models: [
+    { name: "Llama 3.3 70B", tier: "Fast", desc: "70B model running at speeds previously impossible — general tasks" },
+    { name: "Llama 3.1 70B", tier: "Fast", desc: "Reliable open-source model at ultra-low latency" },
+    { name: "Qwen 3-32B", tier: "Economy", desc: "Multilingual reasoning at blazing speed" },
+  ]},
+  { name: "SambaNova", color: "text-purple-400", dotColor: "bg-purple-400", desc: "Enterprise AI infrastructure running the latest DeepSeek and Llama models on dedicated hardware.", models: [
+    { name: "Llama 4 Maverick", tier: "Fast", desc: "128-expert MoE architecture for enterprise performance" },
+    { name: "DeepSeek R1-0528", tier: "Reasoning", desc: "Latest DeepSeek reasoning model on fast dedicated hardware" },
+    { name: "Qwen 2.5 72B", tier: "Fast", desc: "High-quality multilingual model" },
+  ]},
+  { name: "Novita AI", color: "text-violet-400", dotColor: "bg-violet-400", desc: "Cost-efficient open-source model hosting. Extensive catalog of Llama, Qwen, DeepSeek, and Hermes models at competitive prices.", models: [
+    { name: "Llama 4 Maverick", tier: "Fast", desc: "High-throughput Llama 4 for demanding workloads at low cost" },
+    { name: "Qwen 3 235B", tier: "Flagship", desc: "Largest Qwen model — multilingual reasoning powerhouse" },
+    { name: "DeepSeek R1", tier: "Reasoning", desc: "Open-source reasoning champion at Novita pricing" },
+  ]},
+  { name: "Lepton AI", color: "text-orange-400", dotColor: "bg-orange-400", desc: "Serverless AI inference platform. Run open-source models at scale without managing infrastructure.", models: [
+    { name: "Llama 4 Maverick", tier: "Fast", desc: "Serverless Llama 4 with instant cold-start" },
+    { name: "DeepSeek R1-0528", tier: "Reasoning", desc: "Latest DeepSeek reasoning on Lepton infrastructure" },
+  ]},
+  { name: "Lambda Labs", color: "text-cyan-400", dotColor: "bg-cyan-400", desc: "GPU cloud provider now offering hosted model inference. Known for research-grade compute and competitive pricing.", models: [
+    { name: "Hermes 3 405B", tier: "Flagship", desc: "405B instruction-tuned model — excellent for complex tasks" },
+    { name: "Llama 4 Scout", tier: "Economy", desc: "Efficient Llama 4 variant for budget-conscious workloads" },
+  ]},
+  { name: "Minimax AI", color: "text-sky-400", dotColor: "bg-sky-400", desc: "Chinese AI company with vision-capable models and long context. Strong multimodal capabilities.", models: [
+    { name: "MiniMax Text-01", tier: "Flagship", desc: "Flagship text model with long context and vision support" },
+    { name: "MiniMax VL-01", tier: "Fast", desc: "Vision-language model for image understanding tasks" },
+  ]},
+  { name: "Inception AI", color: "text-fuchsia-500", dotColor: "bg-fuchsia-500", desc: "Specializes in ultra-fast code generation. Mercury is the world's fastest code model using diffusion-based generation.", models: [
+    { name: "Mercury Coder Small", tier: "Code", desc: "World's fastest code model — diffusion-based generation" },
+    { name: "Mercury Coder Large", tier: "Code", desc: "Larger Mercury for complex multi-file code tasks" },
+  ]},
+  { name: "Arcee AI", color: "text-rose-400", dotColor: "bg-rose-400", desc: "Enterprise-focused AI with strong reasoning and agentic capabilities. Models fine-tuned for business workflows.", models: [
+    { name: "Arcee Maestro", tier: "Flagship", desc: "Top-tier reasoning — built for enterprise decision-making" },
+    { name: "Arcee Blaze", tier: "Fast", desc: "Fast and capable for everyday enterprise tasks" },
+    { name: "Arcee Spark", tier: "Economy", desc: "Lightweight model optimized for quick responses" },
+  ]},
+  { name: "Amazon Bedrock", color: "text-orange-500", dotColor: "bg-orange-500", desc: "Amazon's managed AI inference platform. Nova models are Amazon's own multimodal foundation models.", models: [
+    { name: "Nova Pro", tier: "Flagship", desc: "Amazon's flagship multimodal model — vision, text, and reasoning" },
+    { name: "Nova Lite", tier: "Fast", desc: "Balanced performance for everyday multimodal tasks" },
+    { name: "Nova Micro", tier: "Economy", desc: "Ultra-fast text-only model for high-volume workloads" },
+  ]},
+  { name: "Nvidia NIM", color: "text-green-400", dotColor: "bg-green-400", desc: "Nvidia's own AI inference platform. Run massive models on Nvidia's world-class GPU infrastructure.", models: [
+    { name: "Nemotron Ultra 253B", tier: "Premium", desc: "253 billion parameter model — Nvidia's most powerful for complex reasoning" },
+    { name: "Nemotron Super 49B", tier: "Standard", desc: "Fast 49B model optimized for enterprise tasks" },
+    { name: "Llama 3.3 70B", tier: "Fast", desc: "Meta's Llama 3.3 on Nvidia's infrastructure" },
+  ]},
+  { name: "Moonshot AI (Kimi)", color: "text-blue-300", dotColor: "bg-blue-300", desc: "Chinese AI startup specializing in ultra-long context. Kimi can read and understand documents up to 128,000 words.", models: [
+    { name: "Kimi Auto", tier: "Fast", desc: "Auto-selects the best context length for your task" },
+    { name: "Kimi 128K", tier: "Standard", desc: "128,000 token context — for very long documents and research" },
+    { name: "Kimi 32K", tier: "Economy", desc: "Balanced context length for most tasks" },
+  ]},
+  { name: "Qwen / Alibaba", color: "text-orange-300", dotColor: "bg-orange-300", desc: "Alibaba's world-class multilingual AI. Best for Chinese-English tasks, data analysis, and the QwQ reasoning model.", models: [
+    { name: "Qwen Max", tier: "Flagship", desc: "Most powerful Qwen model — data, reasoning, multilingual" },
+    { name: "Qwen Plus", tier: "Standard", desc: "Great for translation and code between languages" },
+    { name: "QwQ-32B", tier: "Reasoning", desc: "Dedicated reasoning model for step-by-step math and logic" },
+    { name: "Qwen Turbo", tier: "Economy", desc: "Ultra-fast for quick multilingual tasks" },
+  ]},
+  { name: "01.AI / Yi", color: "text-rose-300", dotColor: "bg-rose-300", desc: "Chinese AI lab behind the Yi model family. Yi Lightning is one of the cheapest capable models available.", models: [
+    { name: "Yi Lightning", tier: "Economy", desc: "Ultra-cheap fast model — 16K context, great for simple tasks" },
+    { name: "Yi Large FC", tier: "Standard", desc: "Function calling specialist — great for tool use and APIs" },
+    { name: "Yi Medium 200K", tier: "Long-Context", desc: "200,000 token context — reads entire codebases and books" },
+  ]},
+  { name: "Zhipu AI (GLM)", color: "text-emerald-300", dotColor: "bg-emerald-300", desc: "Chinese AI company behind the GLM model family. Strong multilingual and reasoning capabilities.", models: [
+    { name: "GLM-4-Plus", tier: "Flagship", desc: "Most powerful GLM — complex tasks, enterprise use" },
+    { name: "GLM-4-Air", tier: "Economy", desc: "Fast efficient GLM — everyday tasks at low cost" },
+    { name: "GLM-Z1-Air", tier: "Reasoning", desc: "GLM reasoning specialist for math and logic" },
+  ]},
+  { name: "ByteDance Doubao", color: "text-cyan-300", dotColor: "bg-cyan-300", desc: "ByteDance's (TikTok parent company) enterprise AI models. Strong at Chinese-language tasks.", models: [
+    { name: "Doubao Pro 128K", tier: "Flagship", desc: "ByteDance's flagship — 128K context, excellent Chinese tasks" },
+    { name: "Doubao Pro 32K", tier: "Standard", desc: "Balanced ByteDance model for most tasks" },
+    { name: "Doubao Lite 128K", tier: "Economy", desc: "Fast cheap 128K — large documents at low cost" },
+  ]},
+  { name: "Hyperbolic", color: "text-indigo-300", dotColor: "bg-indigo-300", desc: "High-performance open-source GPU hosting. Run Llama 405B and DeepSeek-R1 at competitive prices.", models: [
+    { name: "Llama 3.1 405B", tier: "Flagship", desc: "Largest open-source Llama — 405B parameters" },
+    { name: "DeepSeek-R1", tier: "Reasoning", desc: "Fast DeepSeek reasoning on Hyperbolic infrastructure" },
+    { name: "Llama 3.3 70B", tier: "Standard", desc: "Fast reliable 70B model" },
+  ]},
+  { name: "Upstage Solar", color: "text-yellow-300", dotColor: "bg-yellow-300", desc: "Korean AI company. Solar Pro achieves top benchmarks for its size.", models: [
+    { name: "Solar Pro", tier: "Enterprise", desc: "Top-tier commercial model — best-in-class benchmarks" },
+    { name: "Solar Mini", tier: "Economy", desc: "Efficient compact Upstage model" },
+  ]},
+  { name: "Writer Palmyra", color: "text-violet-300", dotColor: "bg-violet-300", desc: "Enterprise-focused AI models with domain-specific variants for healthcare and finance.", models: [
+    { name: "Palmyra X 004", tier: "Enterprise", desc: "General enterprise LLM — 128K context" },
+    { name: "Palmyra Med", tier: "Medical", desc: "Medical domain specialist — clinical notes, research" },
+    { name: "Palmyra Fin", tier: "Finance", desc: "Financial domain specialist — reports, analysis" },
+  ]},
+  { name: "Meta Llama API", color: "text-blue-200", dotColor: "bg-blue-200", desc: "Meta's official Llama API — direct access to Llama 4 models from the creators themselves.", models: [
+    { name: "Llama 4 Scout", tier: "Standard", desc: "17B params, 16 experts — fast and capable" },
+    { name: "Llama 4 Maverick", tier: "Flagship", desc: "17B params, 128 experts — best open Llama" },
+    { name: "Llama 3.3 70B", tier: "Economy", desc: "Proven 70B model from Meta's official API" },
+  ]},
+  { name: "HuggingFace Inference", color: "text-amber-200", dotColor: "bg-amber-200", desc: "Access hundreds of open-source models via HuggingFace's serverless Inference API.", models: [
+    { name: "Microsoft Phi-4", tier: "Compact Reasoning", desc: "16K context, excellent at math and reasoning despite small size" },
+    { name: "Gemma 2 9B", tier: "Economy", desc: "Google's open model, great at instruction following" },
+    { name: "Mistral 7B", tier: "Economy", desc: "Classic efficient multilingual open model" },
   ]},
   { name: "AI Media & Voice", color: "text-pink-400", dotColor: "bg-pink-400", desc: "These aren't text models -- they create images, videos, and voice audio from text descriptions.", models: [
     { name: "Nano Banana 2", tier: "Image Gen", desc: "Creates images from text descriptions using Gemini 3.1 Flash" },
@@ -391,7 +544,7 @@ const AI_PROVIDERS = [
 
 const COST_DATA = [
   { name: "OpenAI", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "GPT-5.2", input: "$2.50", output: "$10.00" },
+    { name: "GPT-5", input: "$2.50", output: "$10.00" },
     { name: "GPT-4o", input: "$2.50", output: "$10.00" },
     { name: "GPT-4o Mini", input: "$0.15", output: "$0.60" },
     { name: "O3", input: "$10.00", output: "$40.00" },
@@ -410,9 +563,10 @@ const COST_DATA = [
     { name: "Nano Banana 2", input: "$0.02/image", output: "1024x1024 px" },
   ]},
   { name: "xAI (Grok)", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "Grok 3", input: "$3.00", output: "$15.00" },
-    { name: "Grok 3 Mini", input: "$0.30", output: "$0.50" },
-    { name: "Grok 2", input: "$2.00", output: "$10.00" },
+    { name: "Grok-4", input: "$3.00", output: "$15.00" },
+    { name: "Grok-4 Fast", input: "$1.50", output: "$6.00" },
+    { name: "Grok-3", input: "$3.00", output: "$15.00" },
+    { name: "Grok-3 Mini", input: "$0.30", output: "$0.50" },
   ]},
   { name: "DeepSeek", unit: "Price per 1 million words (tokens) processed", models: [
     { name: "DeepSeek Chat", input: "$0.14", output: "$0.28" },
@@ -449,6 +603,95 @@ const COST_DATA = [
   { name: "AI21 (Jamba)", unit: "Price per 1 million words (tokens) processed", models: [
     { name: "Jamba Large 1.7", input: "$2.00", output: "$8.00" },
     { name: "Jamba Mini 1.7", input: "$0.20", output: "$0.40" },
+  ]},
+  { name: "Cerebras", unit: "Price per 1 million tokens (one of the cheapest anywhere)", models: [
+    { name: "Llama 3.3 70B", input: "$0.60", output: "$0.60" },
+    { name: "Llama 3.1 70B", input: "$0.60", output: "$0.60" },
+    { name: "Qwen 3-32B", input: "$0.40", output: "$0.40" },
+  ]},
+  { name: "SambaNova", unit: "Price per 1 million tokens", models: [
+    { name: "Llama 4 Maverick", input: "$0.50", output: "$1.50" },
+    { name: "DeepSeek R1-0528", input: "$1.30", output: "$1.30" },
+    { name: "Qwen 2.5 72B", input: "$0.70", output: "$0.70" },
+  ]},
+  { name: "Novita AI", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "Llama 4 Maverick", input: "$0.27", output: "$0.85" },
+    { name: "Qwen 3 235B", input: "$0.22", output: "$0.88" },
+    { name: "DeepSeek R1", input: "$0.55", output: "$2.19" },
+  ]},
+  { name: "Lepton AI", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "Llama 4 Maverick", input: "$0.27", output: "$0.85" },
+    { name: "DeepSeek R1-0528", input: "$0.55", output: "$2.19" },
+  ]},
+  { name: "Lambda Labs", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "Hermes 3 405B", input: "$0.80", output: "$0.80" },
+    { name: "Llama 4 Scout", input: "$0.18", output: "$0.59" },
+  ]},
+  { name: "Minimax AI", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "MiniMax Text-01", input: "$0.20", output: "$1.10" },
+    { name: "MiniMax VL-01", input: "$0.20", output: "$1.10" },
+  ]},
+  { name: "Inception AI", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "Mercury Coder Small", input: "$0.25", output: "$1.00" },
+    { name: "Mercury Coder Large", input: "$0.50", output: "$2.00" },
+  ]},
+  { name: "Arcee AI", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "Arcee Maestro", input: "$1.20", output: "$5.00" },
+    { name: "Arcee Blaze", input: "$0.50", output: "$1.50" },
+  ]},
+  { name: "Amazon Bedrock", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "Nova Pro", input: "$0.80", output: "$3.20" },
+    { name: "Nova Lite", input: "$0.06", output: "$0.24" },
+    { name: "Nova Micro", input: "$0.035", output: "$0.14" },
+  ]},
+  { name: "Nvidia NIM", unit: "Price per 1 million tokens on Nvidia infrastructure", models: [
+    { name: "Nemotron Ultra 253B", input: "$1.90", output: "$1.90" },
+    { name: "Nemotron Super 49B", input: "$0.35", output: "$0.35" },
+    { name: "Llama 3.3 70B", input: "$0.60", output: "$0.60" },
+  ]},
+  { name: "Moonshot AI (Kimi)", unit: "Price per 1 million tokens (USD equivalent)", models: [
+    { name: "Kimi 128K", input: "$0.73", output: "$0.73" },
+    { name: "Kimi 32K", input: "$0.44", output: "$0.44" },
+    { name: "Kimi 8K", input: "$0.18", output: "$0.18" },
+  ]},
+  { name: "Qwen / Alibaba", unit: "Price per 1 million tokens (DashScope API)", models: [
+    { name: "Qwen Max", input: "$6.00", output: "$6.00" },
+    { name: "Qwen Plus", input: "$0.80", output: "$0.80" },
+    { name: "Qwen Turbo", input: "$0.15", output: "$0.15" },
+    { name: "QwQ-32B", input: "$0.34", output: "$0.34" },
+  ]},
+  { name: "01.AI / Yi", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "Yi Lightning", input: "$0.14", output: "$0.14" },
+    { name: "Yi Large FC", input: "$3.00", output: "$3.00" },
+    { name: "Yi Medium 200K", input: "$12.00", output: "$12.00" },
+  ]},
+  { name: "Zhipu AI (GLM)", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "GLM-4-Plus", input: "$7.00", output: "$7.00" },
+    { name: "GLM-4-Air", input: "$0.13", output: "$0.13" },
+    { name: "GLM-Z1-Air", input: "$0.13", output: "$0.13" },
+  ]},
+  { name: "ByteDance Doubao", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "Doubao Pro 128K", input: "$0.80", output: "$0.80" },
+    { name: "Doubao Lite 32K", input: "$0.04", output: "$0.04" },
+  ]},
+  { name: "Hyperbolic", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "Llama 3.1 405B", input: "$2.00", output: "$2.00" },
+    { name: "DeepSeek-R1", input: "$0.50", output: "$2.18" },
+    { name: "Llama 3.3 70B", input: "$0.40", output: "$0.40" },
+  ]},
+  { name: "Upstage Solar", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "Solar Pro", input: "$9.00", output: "$9.00" },
+    { name: "Solar Mini", input: "$0.29", output: "$0.29" },
+  ]},
+  { name: "Writer Palmyra", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "Palmyra X 004", input: "$0.50", output: "$2.50" },
+    { name: "Palmyra Med", input: "$0.80", output: "$4.00" },
+    { name: "Palmyra Fin", input: "$0.80", output: "$4.00" },
+  ]},
+  { name: "Meta Llama API", unit: "Price per 1 million tokens (USD)", models: [
+    { name: "Llama 4 Scout", input: "$0.18", output: "$0.59" },
+    { name: "Llama 4 Maverick", input: "$0.27", output: "$0.85" },
+    { name: "Llama 3.3 70B", input: "$0.59", output: "$0.79" },
   ]},
   { name: "ElevenLabs Voice", unit: "Price per 1,000 characters of text spoken", models: [
     { name: "Multilingual v2", input: "$0.30/1K chars", output: "Audio file" },
@@ -554,9 +797,9 @@ const AboutPage = () => {
               <p className="text-[10px] text-zinc-600">by MAARS Global Corporation | Est. 2026</p>
             </div>
           </div>
-          <Button onClick={handlePrint} variant="outline" className="border-white/10 text-zinc-300 hover:bg-white/5 no-print" data-testid="download-pdf-btn">
+          <button onClick={handlePrint} className="border-white/10 text-zinc-300 hover:bg-white/5 no-print" data-testid="download-pdf-btn" style={{ display: "flex", alignItems: "center", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 8, padding: "6px 14px", background: "transparent", color: "rgb(212 212 216)", cursor: "pointer" }}>
             <Printer className="w-4 h-4 mr-2" />{printing ? "Preparing..." : "Download Docs"}
-          </Button>
+          </button>
         </div>
 
         <div className="bg-zinc-900/40 rounded-xl border border-white/5 p-4 mb-4">
@@ -567,15 +810,15 @@ const AboutPage = () => {
           </p>
           <p className="text-sm text-zinc-300 leading-relaxed mt-2">
             These agents are organized into <span className="text-emerald-400 font-medium">{uniqueNetworks || 27} specialized network categories</span> (like departments in a company).
-            They're powered by <span className="text-amber-400 font-medium">13 different AI providers with 45+ models</span> (like GPT-5.2, Claude, Gemini, and more).
+            They're powered by <span className="text-amber-400 font-medium">33 AI providers with 175,609+ models</span> (GPT-5, Claude Opus 4.6, Gemini 2.5, Grok-4, DeepSeek R1, Mistral, Perplexity, Groq, Cerebras, SambaNova, and more).
             The system automatically picks the right AI model for each task, controls costs, ensures quality, and even lets agents collaborate with each other -- all without you lifting a finger.
           </p>
         </div>
 
         <div className="flex gap-2 flex-wrap">
-          {["Multi-Agent Orchestration","Quality Control","Smart Model Router","Content Generation","App Builder","Memory System","Voice Commands","Code Explorer","Knowledge Graph","Workflow Builder","Campaign Builder","Integration Hub","Team Builder","Trust Analytics","Real-World Actions","Command Palette"].map((b, i) => {
+          {["Multi-Agent Orchestration","Quality Control","Smart Model Router","Developer API Gateway","600+ Models · 33 Providers","Content Generation","App Builder","Memory System","Voice Commands","Code Explorer","Knowledge Graph","Workflow Builder","Campaign Builder","Integration Hub","Team Builder","Trust Analytics","Real-World Actions","Command Palette"].map((b, i) => {
             const colors = ["indigo","emerald","amber","pink","cyan","violet","rose","sky","blue","teal","orange","red","green","purple","lime","yellow"];
-            return <Badge key={b} className={`bg-${colors[i % colors.length]}-500/20 text-${colors[i % colors.length]}-400 border-0`}>{b}</Badge>;
+            return <span key={b} className={`bg-${colors[i % colors.length]}-500/20 text-${colors[i % colors.length]}-400`} style={{ fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20, display: "inline-block" }}>{b}</span>;
           })}
         </div>
       </div>
@@ -586,17 +829,17 @@ const AboutPage = () => {
           { label: "AI Agents", value: `${agents.length || "458"}+`, color: "text-indigo-400", sub: "Specialized workers" },
           { label: "Networks", value: uniqueNetworks || 27, color: "text-emerald-400", sub: "Team categories" },
           { label: "Core Systems", value: SYSTEMS.length, color: "text-amber-400", sub: "Built-in tools" },
-          { label: "LLM Providers", value: "13", color: "text-violet-400", sub: "AI companies" },
-          { label: "AI Models", value: "45+", color: "text-cyan-400", sub: "Brain options" },
+          { label: "LLM Providers", value: "29", color: "text-violet-400", sub: "AI companies" },
+          { label: "AI Models", value: "600+", color: "text-cyan-400", sub: "Via gateway" },
           { label: "API Endpoints", value: "212+", color: "text-rose-400", sub: "Connection points" },
         ].map(s => (
-          <Card key={s.label} className="bg-zinc-900/50 border-white/5 print-card">
-            <CardContent className="p-3 text-center">
+          <div key={s.label} className="bg-zinc-900/50 border-white/5 print-card" style={{ borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
+            <div className="p-3 text-center">
               <p className={`text-2xl font-bold ${s.color} font-['Outfit']`}>{s.value}</p>
               <p className="text-[11px] text-zinc-400">{s.label}</p>
               <p className="text-[9px] text-zinc-600">{s.sub}</p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
 
@@ -607,7 +850,7 @@ const AboutPage = () => {
           {printing ? "" : " Click any network to see all the agents inside it."}
         </p>
         {loading ? (
-          <div className="flex items-center justify-center h-20"><Loader2 className="w-5 h-5 animate-spin text-indigo-400" /></div>
+          <div className="flex items-center justify-center h-20"><div className="w-5 h-5 rounded-full border-2 border-indigo-400 border-t-transparent animate-spin" /></div>
         ) : (
           <div className="space-y-2">
             {sortedNetworks.map(([netId, netAgents]) => {
@@ -622,7 +865,7 @@ const AboutPage = () => {
                     data-testid={`network-${netId}`}>
                     <Icon className={`w-4 h-4 ${colors.text}`} />
                     <span className="text-sm font-medium text-white flex-1 text-left">{meta.label}</span>
-                    <Badge className={`${colors.badge} border-0 text-[10px]`}>{netAgents.length} agents</Badge>
+                    <span className={`${colors.badge}`} style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20, display: "inline-block" }}>{netAgents.length} agents</span>
                     {isExpanded ? <ChevronDown className="w-4 h-4 text-zinc-500 no-print" /> : <ChevronRight className="w-4 h-4 text-zinc-500 no-print" />}
                   </button>
                   {isExpanded && (
@@ -639,8 +882,8 @@ const AboutPage = () => {
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
                               <p className="text-xs font-medium text-white">{agent.name}</p>
-                              <Badge className={`${colors.badge} border-0 text-[8px]`}>{agent.role}</Badge>
-                              {agent.autonomy_tier && <Badge className="bg-white/5 text-zinc-500 border-0 text-[8px]">Autonomy {agent.autonomy_tier}/10</Badge>}
+                              <span className={`${colors.badge}`} style={{ fontSize: 8, fontWeight: 700, padding: "2px 6px", borderRadius: 20, display: "inline-block" }}>{agent.role}</span>
+                              {agent.autonomy_tier && <span className="bg-white/5 text-zinc-500" style={{ fontSize: 8, fontWeight: 700, padding: "2px 6px", borderRadius: 20, display: "inline-block" }}>Autonomy {agent.autonomy_tier}/10</span>}
                             </div>
                             {agent.description && <p className="text-[10px] text-zinc-400 leading-relaxed mt-1 print-no-clamp">{agent.description}</p>}
                             {agent.capabilities?.length > 0 && (
@@ -729,8 +972,8 @@ const AboutPage = () => {
       <Section title="How MAARS Command Is Built" subtitle="The technology behind the scenes" icon={Database} color="bg-cyan-500/15" id="architecture">
         <p className="text-xs text-zinc-400 mb-3">MAARS Command is built with three main layers that work together, like a three-layer cake. Each layer has a specific job and they communicate constantly to deliver a seamless experience.</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <Card className="bg-zinc-900/50 border-white/5 print-card">
-            <CardContent className="p-4">
+          <div className="bg-zinc-900/50 border-white/5 print-card" style={{ borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
+            <div className="p-4">
               <div className="flex items-center gap-2 mb-2"><Server className="w-4 h-4 text-cyan-400" /><p className="text-sm font-medium text-white">Backend (The Engine)</p></div>
               <p className="text-[10px] text-zinc-500 mb-2">This is the part that runs on the server and does all the heavy work behind the scenes. It processes every request, manages data, and coordinates all 458+ agents.</p>
               <div className="space-y-1">
@@ -738,15 +981,15 @@ const AboutPage = () => {
                 <p className="text-xs text-zinc-400">MongoDB -- the database that stores all agents, teams, memories, and user data across 27+ collections</p>
                 <p className="text-xs text-zinc-400">212+ API endpoints -- connection points that the frontend uses to get and send data for every feature</p>
                 <p className="text-xs text-zinc-400">WebSocket -- a real-time connection for live updates like the Agent Activity Monitor and collaboration feeds</p>
-                <p className="text-xs text-zinc-400">Emergent Integrations SDK -- the unified library that connects to all 13 AI providers through a single interface</p>
+                <p className="text-xs text-zinc-400">MAARS Universal API Gateway: 175,000+ models across 33 direct providers, OpenAI-compatible /v1/chat/completions, live model validation, auto-fallback routing, webhooks, and model comparison endpoint</p>
                 <p className="text-xs text-zinc-400">Stripe Integration -- handles credit card payments, subscription billing, and cost tracking</p>
                 <p className="text-xs text-zinc-400">Background Task Queue -- manages long-running operations like batch agent deployments and report generation</p>
                 <p className="text-xs text-zinc-400">Circuit Breaker System -- automatically detects and isolates failing services to prevent cascade failures</p>
               </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-zinc-900/50 border-white/5 print-card">
-            <CardContent className="p-4">
+            </div>
+          </div>
+          <div className="bg-zinc-900/50 border-white/5 print-card" style={{ borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
+            <div className="p-4">
               <div className="flex items-center gap-2 mb-2"><Eye className="w-4 h-4 text-pink-400" /><p className="text-sm font-medium text-white">Frontend (What You See)</p></div>
               <p className="text-[10px] text-zinc-500 mb-2">This is the part that runs in your web browser -- all the pages, buttons, charts, and visuals that you interact with every day.</p>
               <div className="space-y-1">
@@ -759,38 +1002,38 @@ const AboutPage = () => {
                 <p className="text-xs text-zinc-400">Real-Time Charts & Visualizations -- live data rendered using Recharts for trust analytics and cost tracking</p>
                 <p className="text-xs text-zinc-400">Print-Ready Documentation -- the entire system documentation can be exported as a formatted document</p>
               </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-zinc-900/50 border-white/5 print-card">
-            <CardContent className="p-4">
+            </div>
+          </div>
+          <div className="bg-zinc-900/50 border-white/5 print-card" style={{ borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
+            <div className="p-4">
               <div className="flex items-center gap-2 mb-2"><Sparkles className="w-4 h-4 text-amber-400" /><p className="text-sm font-medium text-white">AI Layer (The Brains)</p></div>
               <p className="text-[10px] text-zinc-500 mb-2">This connects MAARS Command to all the AI providers that power the agents. It routes tasks to the best model automatically.</p>
               <div className="space-y-1">
-                <p className="text-xs text-zinc-400">OpenAI -- GPT-5.2, GPT-4o, o3, Whisper (speech-to-text), GPT Image 1 (images), Sora 2 (video generation)</p>
-                <p className="text-xs text-zinc-400">Anthropic -- Claude Sonnet 4.5, Opus 4.5, Haiku 4.5 for safe, thoughtful responses</p>
-                <p className="text-xs text-zinc-400">Google -- Gemini 3 Flash, Gemini 3 Pro, Nano Banana 2 for fast image generation</p>
-                <p className="text-xs text-zinc-400">Groq, Together AI, Fireworks AI -- ultra-fast open-source model hosting with Llama 4 variants</p>
-                <p className="text-xs text-zinc-400">xAI Grok 3 -- 1M token context for massive document understanding and analysis</p>
-                <p className="text-xs text-zinc-400">DeepSeek, Mistral, Perplexity, Cohere, AI21 -- specialized models for search, multilingual, and enterprise use</p>
-                <p className="text-xs text-zinc-400">ElevenLabs -- text-to-speech with natural-sounding multilingual voice generation</p>
-                <p className="text-xs text-zinc-400">Model-Agnostic Router -- automatically picks the best and cheapest model for each specific task</p>
+                <p className="text-xs text-zinc-400">OpenAI -- GPT-5, GPT-4.1/mini/nano (1M ctx), O4/O3 reasoning, Whisper STT, GPT Image 1, Sora 2</p>
+                <p className="text-xs text-zinc-400">Anthropic -- Claude Opus 4.6 & 4.5, Sonnet 4.6 & 3.7, Haiku 4.5 — 200K context, extended thinking</p>
+                <p className="text-xs text-zinc-400">Google -- Gemini 2.5 Pro (2M ctx), Gemini 2.5 Flash, Gemma 3 open models (1B–27B)</p>
+                <p className="text-xs text-zinc-400">xAI -- Grok-4 & Grok-4 Fast Reasoning (256K ctx), Grok-3 (1M ctx), Grok-2 Vision</p>
+                <p className="text-xs text-zinc-400">Groq, Cerebras -- sub-second inference on Llama 4, Qwen QwQ-32B</p>
+                <p className="text-xs text-zinc-400">Together AI (39), Fireworks AI (20), SambaNova (14), NVIDIA NIM (12), Novita AI (12), Lepton AI (8), Lambda Labs (6), Minimax AI (4), Inception AI (2), Arcee AI (3), Amazon Bedrock (4) -- direct provider hosting</p>
+                <p className="text-xs text-zinc-400">DeepSeek, Mistral, Perplexity, Cohere, AI21, Moonshot, Qwen, Yi, Zhipu, Doubao, Hyperbolic, Upstage, Writer, HuggingFace, LLaMA API</p>
+                <p className="text-xs text-zinc-400">Live model validation -- checks provider /models API before every call, auto-fallbacks on stale IDs</p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </Section>
 
       {/* AI Models & Providers */}
-      <Section title="All 13 AI Providers & 45+ Models" subtitle="Every AI brain available in MAARS Command" icon={Sparkles} color="bg-amber-500/15" id="providers">
+      <Section title="All 33 AI Providers & 609+ Models" subtitle="Every AI brain available via the MAARS Universal API Gateway" icon={Sparkles} color="bg-amber-500/15" id="providers">
         <p className="text-xs text-zinc-400 mb-4">
-          MAARS Command connects to 13 different AI companies, giving you access to 45+ different AI models. Each model has different strengths.
-          Some are super fast but less powerful. Some are incredibly smart but cost more. The LLM Router automatically picks the best one for each task,
-          but you can also choose manually. Here's every provider and every model available:
+          MAARS connects to 33 different AI companies, giving you access to 175,609+ models via a single <code className="text-indigo-300 bg-white/5 px-1 rounded">maars-sk-*</code> API key.
+          Each model has different strengths — some are super fast but less powerful, some are incredibly smart but cost more.
+          The Smart Router picks the best one automatically, or call any model directly via the Developer Portal at <code className="text-indigo-300 bg-white/5 px-1 rounded">/developer</code>.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {AI_PROVIDERS.map(provider => (
-            <Card key={provider.name} className="bg-zinc-900/50 border-white/5 print-card" data-testid={`provider-${provider.name}`}>
-              <CardContent className="p-4">
+            <div key={provider.name} className="bg-zinc-900/50 border-white/5 print-card" data-testid={`provider-${provider.name}`} style={{ borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
+              <div className="p-4">
                 <div className="flex items-center gap-2 mb-1">
                   <Sparkles className={`w-4 h-4 ${provider.color}`} />
                   <p className="text-sm font-bold text-white">{provider.name}</p>
@@ -803,15 +1046,15 @@ const AboutPage = () => {
                       <div>
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <span className="text-xs font-medium text-zinc-200">{m.name}</span>
-                          <Badge className={`text-[8px] px-1.5 py-0 border-0 ${TIER_COLORS[m.tier] || "bg-zinc-700 text-zinc-400"}`}>{m.tier}</Badge>
+                          <span className={`${TIER_COLORS[m.tier] || "bg-zinc-700 text-zinc-400"}`} style={{ fontSize: 8, fontWeight: 700, padding: "2px 6px", borderRadius: 20, display: "inline-block" }}>{m.tier}</span>
                         </div>
                         <p className="text-[10px] text-zinc-500">{m.desc}</p>
                       </div>
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       </Section>
@@ -831,15 +1074,15 @@ const AboutPage = () => {
             { title: "Trust Scoring", icon: Gauge, desc: "Every agent gets a trust score from 0 to 100 based on its complete performance history. The score factors in task completion rate, response quality, speed, error frequency, and user feedback. Agents that consistently deliver accurate, fast results earn higher scores over time. Agents that fail often, produce low-quality work, or generate errors get lower scores. Low-trust agents can be automatically restricted to simulation-only mode or flagged for human review. High-trust agents get priority assignment for critical tasks. The scoring algorithm is transparent -- you can see exactly why an agent has its current score." },
             { title: "Simulation Mode", icon: Eye, desc: "A system-wide safety switch that controls whether agents can take real-world actions. When Simulation Mode is ON (the default), all external actions -- sending emails, creating calendar events, making API calls, posting content -- return realistic fake responses instead of actually executing. This lets you safely test and review exactly what agents would do before going live. You can review simulated results, adjust agent configurations, and only flip to Execution Mode when you're confident everything works correctly. Individual agents can also be toggled independently between simulation and execution modes." },
           ].map(item => (
-            <Card key={item.title} className="bg-zinc-900/50 border-white/5 print-card">
-              <CardContent className="p-4">
+            <div key={item.title} className="bg-zinc-900/50 border-white/5 print-card" style={{ borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
+              <div className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <item.icon className="w-4 h-4 text-red-400" />
                   <p className="text-sm font-medium text-white">{item.title}</p>
                 </div>
                 <p className="text-xs text-zinc-400 leading-relaxed">{item.desc}</p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       </Section>
@@ -853,8 +1096,8 @@ const AboutPage = () => {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {COST_DATA.map(provider => (
-            <Card key={provider.name} className="bg-zinc-900/50 border-white/5 print-card">
-              <CardContent className="p-3">
+            <div key={provider.name} className="bg-zinc-900/50 border-white/5 print-card" style={{ borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
+              <div className="p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-bold text-white">{provider.name}</span>
                 </div>
@@ -870,17 +1113,17 @@ const AboutPage = () => {
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
-        <p className="text-[10px] text-zinc-600 mt-3 italic">* When using the Emergent Universal Key (which lets you use all providers with one key), there's a small convenience markup over these direct prices.</p>
+        <p className="text-[10px] text-zinc-600 mt-3 italic">* When using the MAARS AI Gateway (which lets you use all providers with one key), there's a small convenience markup over these direct prices.</p>
       </Section>
 
       {/* Footer */}
       <div className="text-center py-6 border-t border-white/5">
         <p className="text-xs text-zinc-400">MAARS Command v1.0 -- Autonomous AI Enterprise Operating System</p>
-        <p className="text-[10px] text-zinc-500 mt-1">{agents.length || 458}+ Agents | {uniqueNetworks || 27} Networks | {SYSTEMS.length} Core Systems | 13 Providers | 45+ Models | 212+ Endpoints</p>
+        <p className="text-[10px] text-zinc-500 mt-1">{agents.length || 458}+ Agents | {uniqueNetworks || 27} Networks | {SYSTEMS.length} Core Systems | 33 Providers | 600+ Models | 212+ Endpoints</p>
         <p className="text-[10px] text-zinc-500 mt-1">Built by MAARS Global Corporation | Est. 2026</p>
         <p className="text-[10px] text-zinc-500 mt-0.5">Contact: support.maars@marsgc.net</p>
       </div>

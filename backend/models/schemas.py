@@ -6,12 +6,12 @@ from datetime import datetime
 
 class UserCreate(BaseModel):
     email: EmailStr
-    password: str
-    name: str
+    password: str = Field(..., min_length=8, max_length=128)
+    name: str = Field(..., min_length=2, max_length=64)
 
 class UserLogin(BaseModel):
     email: EmailStr
-    password: str
+    password: str = Field(..., min_length=1, max_length=128)
 
 class User(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -46,14 +46,14 @@ class Agent(BaseModel):
     created_at: Optional[datetime] = None
 
 class AgentCreate(BaseModel):
-    name: str
-    description: str
-    avatar: Optional[str] = None
-    role: str
-    system_prompt: str
-    model_provider: str = "openai"
-    model_name: str = "gpt-5.2"
-    capabilities: List[str] = []
+    name: str = Field(..., min_length=1, max_length=128)
+    description: str = Field(..., min_length=1, max_length=2_000)
+    avatar: Optional[str] = Field(None, max_length=2_048)
+    role: str = Field(..., min_length=1, max_length=128)
+    system_prompt: str = Field(..., min_length=1, max_length=32_000)
+    model_provider: str = Field("openai", max_length=64)
+    model_name: str = Field("gpt-5.2", max_length=128)
+    capabilities: List[str] = Field(default_factory=list, max_length=50)
 
 class Message(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -93,11 +93,13 @@ class ChatCreate(BaseModel):
     title: Optional[str] = None
 
 class MessageCreate(BaseModel):
-    content: str
-    model_provider: Optional[str] = None
-    model_name: Optional[str] = None
-    attachments: Optional[List[str]] = None
-    attachment_files: Optional[List[dict]] = None
+    content: str = Field(..., min_length=1, max_length=32_000)
+    model_provider: Optional[str] = Field(None, max_length=64)
+    model_name: Optional[str] = Field(None, max_length=128)
+    quality_tier: Optional[str] = Field(None, pattern=r"^(economy|standard|premium|auto)?$")
+    task_hint: Optional[str] = Field(None, pattern=r"^(code|math|reasoning|creative|translation|summary|research|data|chat|auto)?$")
+    attachments: Optional[List[str]] = Field(None, max_length=10)
+    attachment_files: Optional[List[dict]] = Field(None, max_length=10)
 
 class SubscriptionCreate(BaseModel):
     plan_id: str
@@ -128,17 +130,17 @@ class Task(BaseModel):
     updated_at: datetime
 
 class TaskCreate(BaseModel):
-    title: str
-    description: str
-    priority: str = "medium"
-    assigned_agents: List[str] = []
+    title: str = Field(..., min_length=1, max_length=256)
+    description: str = Field(..., min_length=1, max_length=8_000)
+    priority: str = Field("medium", pattern=r"^(low|medium|high|critical)$")
+    assigned_agents: List[str] = Field(default_factory=list, max_length=20)
 
 class TaskUpdate(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    status: Optional[str] = None
-    priority: Optional[str] = None
-    assigned_agents: Optional[List[str]] = None
+    title: Optional[str] = Field(None, min_length=1, max_length=256)
+    description: Optional[str] = Field(None, min_length=1, max_length=8_000)
+    status: Optional[str] = Field(None, pattern=r"^(pending|in_progress|completed|failed|cancelled)?$")
+    priority: Optional[str] = Field(None, pattern=r"^(low|medium|high|critical)?$")
+    assigned_agents: Optional[List[str]] = Field(None, max_length=20)
 
 class TeamCreate(BaseModel):
     name: str
@@ -158,9 +160,9 @@ class MilestoneCreate(BaseModel):
     description: str = ""
 
 class ProjectCreate(BaseModel):
-    goal: str
-    execution_mode: str = "approval"  # draft, approval, autonomous
-    priority: str = "high"
+    goal: str = Field(..., min_length=1, max_length=4_000)
+    execution_mode: str = Field("approval", pattern=r"^(draft|approval|autonomous)$")
+    priority: str = Field("high", pattern=r"^(low|medium|high|critical)$")
 
 class ProjectUpdate(BaseModel):
     title: Optional[str] = None

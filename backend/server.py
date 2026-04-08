@@ -6,7 +6,60 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
+PROJECT_ROOT = ROOT_DIR.parent
+
+# Prefer root-level .env (documented setup), while still supporting backend/.env.
+load_dotenv(PROJECT_ROOT / '.env')
+load_dotenv(ROOT_DIR / '.env', override=False)
+
+# ==================== ENVIRONMENT VALIDATION ====================
+# Validate all critical environment variables before starting application
+def validate_environment():
+    """Validate that all required environment variables are set."""
+    required_vars = {
+        'MONGO_URL': 'MongoDB connection string (e.g., mongodb://localhost:27017)',
+        'DB_NAME': 'Database name (e.g., maars_infinity)',
+        'JWT_SECRET': 'JWT signing secret for authentication'
+    }
+    
+    environment = os.environ.get('ENVIRONMENT', 'development')
+    missing_vars = []
+    
+    for var, description in required_vars.items():
+        if not os.environ.get(var):
+            missing_vars.append(f"  • {var}: {description}")
+    
+    if missing_vars:
+        error_msg = (
+            f"\n{'='*80}\n"
+            f"STARTUP FAILED: Missing required environment variables\n"
+            f"{'='*80}\n"
+            f"\nThe following environment variables must be set in .env:\n"
+            f"{chr(10).join(missing_vars)}\n"
+            f"\nTo get started:\n"
+            f"  1. Copy .env.example to .env\n"
+            f"  2. Edit .env with your actual values\n"
+            f"  3. Restart the application\n"
+            f"\nFor local development:\n"
+            f"  MONGO_URL=mongodb://localhost:27017\n"
+            f"  DB_NAME=maars_infinity\n"
+            f"  JWT_SECRET=$(python -c 'import secrets; print(secrets.token_urlsafe(32))')\n"
+            f"{'='*80}\n"
+        )
+        raise ValueError(error_msg)
+    
+    if environment == 'production':
+        # Additional production safety checks
+        jwt_secret = os.environ.get('JWT_SECRET', '')
+        if len(jwt_secret) < 32:
+            raise ValueError(
+                "SECURITY ERROR: JWT_SECRET in production must be at least 32 characters long. "
+                "Generate a strong secret using: python -c \"import secrets; print(secrets.token_urlsafe(32))\""
+            )
+
+# Call validation immediately when module is imported
+validate_environment()
+# ==================================================================
 
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
@@ -46,6 +99,9 @@ from routes.kernel import router as kernel_router
 from routes.agent_teams import router as agent_teams_router
 from routes.infinity_routes import router as infinity_router
 from routes.infinity_ws import router as infinity_ws_router
+from routes.universal import router as universal_router
+from routes.v1_gateway import router as v1_gateway_router
+from routes.social_media import router as social_media_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -89,6 +145,9 @@ api_router.include_router(summary_router)
 api_router.include_router(kernel_router)
 api_router.include_router(agent_teams_router)
 api_router.include_router(infinity_router)
+api_router.include_router(universal_router)
+api_router.include_router(v1_gateway_router)
+api_router.include_router(social_media_router)
 
 app.include_router(api_router)
 
@@ -151,6 +210,10 @@ async def startup():
     await db.tool_registry.create_index("tool_id", unique=True)
     await db.agents.create_index("network")
     await db.agents.create_index("is_infinity")
+    await db.gateway_usage_logs.create_index([("user_id", 1), ("timestamp", -1)])
+    await db.gateway_usage_logs.create_index([("source", 1), ("timestamp", -1)])
+    await db.client_gateway_keys.create_index("user_id", unique=True)
+    await db.client_gateway_keys.create_index("key", unique=True)
     logger.info("MongoDB indexes ensured")
 
     # Load admin-configured pricing from DB (overrides hardcoded defaults)
@@ -185,7 +248,8 @@ _RATE_MAX = 120  # requests per window for infinity endpoints
 
 @app.middleware("http")
 async def rate_limit_middleware(request, call_next):
-    if request.url.path.startswith("/api/infinity/"):
+    path = request.url.path
+    if path.startswith("/api/infinity/") or path.startswith("/api/v1/"):
         ip = request.client.host if request.client else "unknown"
         now = _time.time()
         _RATE_LIMITS[ip] = [t for t in _RATE_LIMITS[ip] if now - t < _RATE_WINDOW]

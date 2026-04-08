@@ -1,13 +1,26 @@
 import { useState, useEffect, useCallback } from "react";
-import { Button } from "../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Input } from "../components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import {
-  BookOpen, Upload, Trash2, FileText, Loader2, Search, CheckCircle, XCircle, Clock, File
+  BookOpen, Upload, Trash2, FileText, Search, CheckCircle, XCircle, Clock, File
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  violet: "#7c3aed",
+  green: "#34d399",
+  amber: "#f59e0b",
+  red: "#ef4444",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+`;
 
 const KnowledgeBaseTab = () => {
   const { token } = useAuth();
@@ -22,22 +35,13 @@ const KnowledgeBaseTab = () => {
   const [searchResults, setSearchResults] = useState(null);
   const [searching, setSearching] = useState(false);
 
-  useEffect(() => {
-    fetchAgents();
-  }, []);
-
-  useEffect(() => {
-    if (selectedAgent) fetchDocs();
-  }, [selectedAgent]);
+  useEffect(() => { fetchAgents(); }, []);
+  useEffect(() => { if (selectedAgent) fetchDocs(); }, [selectedAgent]);
 
   const fetchAgents = async () => {
     try {
       const res = await fetch(`${API}/agents`, { headers });
-      if (res.ok) {
-        const data = await res.json();
-        setAgents(data);
-        if (data.length > 0) setSelectedAgent(data[0].agent_id);
-      }
+      if (res.ok) { const data = await res.json(); setAgents(data); if (data.length > 0) setSelectedAgent(data[0].agent_id); }
     } catch { toast.error("Failed to load agents"); }
   };
 
@@ -54,29 +58,20 @@ const KnowledgeBaseTab = () => {
   const handleUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file || !selectedAgent) return;
-
     setUploading(true);
     try {
       const formData = new FormData();
       formData.append("file", file);
-
       const res = await fetch(`${API}/agents/${selectedAgent}/knowledge/upload`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
+        method: "POST", headers: { Authorization: `Bearer ${token}` }, body: formData,
       });
-
       if (res.ok) {
         const data = await res.json();
-        toast.success(`"${data.title}" uploaded. Processing...`);
-        // Poll for status
+        toast.success(`"${data.title}" uploaded. Processing…`);
         setTimeout(() => fetchDocs(), 3000);
         setTimeout(() => fetchDocs(), 8000);
         setTimeout(() => fetchDocs(), 15000);
-      } else {
-        const err = await res.json().catch(() => ({}));
-        toast.error(err.detail || "Upload failed");
-      }
+      } else { const err = await res.json().catch(() => ({})); toast.error(err.detail || "Upload failed"); }
     } catch { toast.error("Upload failed"); }
     finally { setUploading(false); e.target.value = ""; }
   };
@@ -84,13 +79,8 @@ const KnowledgeBaseTab = () => {
   const handleDelete = async (docId, title) => {
     if (!confirm(`Delete "${title}" and all its data?`)) return;
     try {
-      const res = await fetch(`${API}/agents/${selectedAgent}/knowledge/${docId}`, {
-        method: "DELETE", headers
-      });
-      if (res.ok) {
-        toast.success("Document deleted");
-        fetchDocs();
-      }
+      const res = await fetch(`${API}/agents/${selectedAgent}/knowledge/${docId}`, { method: "DELETE", headers });
+      if (res.ok) { toast.success("Document deleted"); fetchDocs(); }
     } catch { toast.error("Delete failed"); }
   };
 
@@ -99,192 +89,152 @@ const KnowledgeBaseTab = () => {
     setSearching(true);
     try {
       const res = await fetch(`${API}/agents/${selectedAgent}/knowledge/search`, {
-        method: "POST",
-        headers: { ...headers, "Content-Type": "application/json" },
+        method: "POST", headers: { ...headers, "Content-Type": "application/json" },
         body: JSON.stringify({ query: searchQuery }),
       });
-      if (res.ok) {
-        const data = await res.json();
-        setSearchResults(data.results);
-      }
+      if (res.ok) { const data = await res.json(); setSearchResults(data.results); }
     } catch { toast.error("Search failed"); }
     finally { setSearching(false); }
   };
 
-  const statusIcon = (status) => {
-    if (status === "ready") return <CheckCircle className="w-4 h-4 text-emerald-400" />;
-    if (status === "processing" || status === "queued") return <Clock className="w-4 h-4 text-amber-400 animate-pulse" />;
-    return <XCircle className="w-4 h-4 text-red-400" />;
+  const StatusIcon = ({ status }) => {
+    if (status === "ready") return <CheckCircle size={14} style={{ color: T.green }} />;
+    if (status === "processing" || status === "queued") return <Clock size={14} style={{ color: T.amber, animation: "pulse 1.5s ease infinite" }} />;
+    return <XCircle size={14} style={{ color: T.red }} />;
   };
 
   const formatSize = (bytes) => {
     if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / 1048576).toFixed(1)} MB`;
   };
 
   const currentAgent = agents.find(a => a.agent_id === selectedAgent);
 
   return (
-    <div className="space-y-6" data-testid="knowledge-base-tab">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-white font-['Outfit']">Knowledge Base (RAG)</h2>
-          <p className="text-sm text-zinc-400 mt-1">
-            Upload documents to give agents access to specific knowledge. They'll cite sources in responses.
-          </p>
-        </div>
+    <div style={{ display: "flex", flexDirection: "column", gap: 22, animation: "fadeUp .4s ease" }} data-testid="knowledge-base-tab">
+      <style>{STYLES}</style>
+
+      <div>
+        <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 22, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 4 }}>Knowledge Base (RAG)</h2>
+        <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>Upload documents to give agents access to specific knowledge. They'll cite sources in responses.</p>
       </div>
 
-      <div className="flex items-center gap-4 flex-wrap">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-zinc-400">Agent:</span>
-          <Select value={selectedAgent} onValueChange={setSelectedAgent}>
-            <SelectTrigger className="w-[250px] bg-zinc-900/50 border-white/10" data-testid="kb-agent-select">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {agents.map((a) => (
-                <SelectItem key={a.agent_id} value={a.agent_id}>
-                  {a.name} — {a.role}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      {/* Controls */}
+      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 13, color: T.zinc }}>Agent:</span>
+          <select value={selectedAgent} onChange={e => setSelectedAgent(e.target.value)}
+            data-testid="kb-agent-select"
+            style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 9, padding: "7px 12px", color: "#fff", fontSize: 13, outline: "none", fontFamily: "inherit", cursor: "pointer", minWidth: 220 }}>
+            {agents.map(a => <option key={a.agent_id} value={a.agent_id} style={{ background: "#0f0f1a" }}>{a.name} — {a.role}</option>)}
+          </select>
         </div>
-
-        <label className="cursor-pointer">
-          <input
-            type="file"
-            className="hidden"
-            accept=".pdf,.txt,.md,.csv,.docx"
-            onChange={handleUpload}
-            disabled={uploading || !selectedAgent}
-          />
-          <Button
-            asChild
-            disabled={uploading}
-            className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
-            data-testid="kb-upload-btn"
-          >
-            <span>
-              {uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
-              Upload Document
-            </span>
-          </Button>
+        <label style={{ cursor: uploading || !selectedAgent ? "not-allowed" : "pointer" }} data-testid="kb-upload-btn">
+          <input type="file" style={{ display: "none" }} accept=".pdf,.txt,.md,.csv,.docx" onChange={handleUpload} disabled={uploading || !selectedAgent} />
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 18px", borderRadius: 10, background: uploading || !selectedAgent ? "rgba(129,140,248,.2)" : `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, color: "#fff", fontSize: 13, fontWeight: 700, pointerEvents: uploading || !selectedAgent ? "none" : "auto" }}>
+            {uploading
+              ? <div style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+              : <Upload size={14} />}
+            Upload Document
+          </span>
         </label>
       </div>
 
+      {/* Selected agent bar */}
       {currentAgent && (
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
-          <img src={currentAgent.avatar} alt="" className="w-8 h-8 rounded-lg object-cover" />
-          <div>
-            <span className="text-sm font-medium text-white">{currentAgent.name}</span>
-            <span className="text-xs text-zinc-400 ml-2">{docs.filter(d => d.status === "ready").length} documents ready</span>
-          </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(129,140,248,.08)", border: `1px solid rgba(129,140,248,.2)` }}>
+          <img src={currentAgent.avatar} alt="" style={{ width: 32, height: 32, borderRadius: 8, objectFit: "cover" }} />
+          <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{currentAgent.name}</span>
+          <span style={{ fontSize: 11, color: T.zinc }}>{docs.filter(d => d.status === "ready").length} documents ready</span>
         </div>
       )}
 
+      {/* Docs list */}
       {loading ? (
-        <div className="flex justify-center py-8">
-          <Loader2 className="w-6 h-6 text-indigo-400 animate-spin" />
+        <div style={{ display: "flex", justifyContent: "center", padding: "32px 0" }}>
+          <div style={{ width: 24, height: 24, border: `2px solid ${T.indigo}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
         </div>
       ) : docs.length === 0 ? (
-        <Card className="bg-zinc-900/50 border-white/10">
-          <CardContent className="flex flex-col items-center py-12">
-            <BookOpen className="w-12 h-12 text-zinc-600 mb-3" />
-            <p className="text-zinc-400 text-sm">No documents uploaded for this agent yet.</p>
-            <p className="text-zinc-500 text-xs mt-1">Upload PDFs, text files, or documents to build the knowledge base.</p>
-          </CardContent>
-        </Card>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 20px", background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14 }}>
+          <BookOpen size={44} style={{ color: "rgba(255,255,255,.06)", marginBottom: 12 }} />
+          <p style={{ fontSize: 13, color: T.zinc, marginBottom: 4 }}>No documents uploaded for this agent yet.</p>
+          <p style={{ fontSize: 11, color: "rgba(113,113,122,.5)" }}>Upload PDFs, text files, or documents to build the knowledge base.</p>
+        </div>
       ) : (
-        <div className="space-y-2">
-          {docs.map((doc) => (
-            <div
-              key={doc.doc_id}
-              className="flex items-center gap-3 p-3 rounded-lg bg-zinc-800/50 border border-white/5 hover:border-white/10 transition-colors"
-              data-testid={`kb-doc-${doc.doc_id}`}
-            >
-              <div className="flex-shrink-0">
-                {doc.file_type === ".pdf" ? (
-                  <FileText className="w-8 h-8 text-red-400" />
-                ) : (
-                  <File className="w-8 h-8 text-zinc-400" />
-                )}
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {docs.map(doc => (
+            <div key={doc.doc_id} data-testid={`kb-doc-${doc.doc_id}`}
+              style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,.03)", border: `1px solid ${T.border}`, transition: "border-color .2s" }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(255,255,255,.13)"}
+              onMouseLeave={e => e.currentTarget.style.borderColor = T.border}>
+              <div style={{ flexShrink: 0 }}>
+                {doc.file_type === ".pdf"
+                  ? <FileText size={28} style={{ color: T.red }} />
+                  : <File size={28} style={{ color: T.zinc }} />}
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-white truncate">{doc.title}</span>
-                  {statusIcon(doc.status)}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 3 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{doc.title}</span>
+                  <StatusIcon status={doc.status} />
                 </div>
-                <div className="flex items-center gap-3 text-xs text-zinc-500 mt-0.5">
+                <div style={{ display: "flex", gap: 10, fontSize: 11, color: T.zinc }}>
                   <span>{doc.filename}</span>
                   <span>{formatSize(doc.file_size || 0)}</span>
                   {doc.chunk_count > 0 && <span>{doc.chunk_count} chunks</span>}
-                  {doc.status === "error" && <span className="text-red-400">{doc.error?.slice(0, 80)}</span>}
+                  {doc.status === "error" && <span style={{ color: T.red }}>{doc.error?.slice(0, 80)}</span>}
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleDelete(doc.doc_id, doc.title)}
-                className="text-zinc-500 hover:text-red-400"
-                data-testid={`kb-delete-${doc.doc_id}`}
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
+              <button onClick={() => handleDelete(doc.doc_id, doc.title)} data-testid={`kb-delete-${doc.doc_id}`}
+                style={{ background: "none", border: "none", cursor: "pointer", color: T.zinc, padding: 6, transition: "color .2s" }}
+                onMouseEnter={e => e.currentTarget.style.color = T.red}
+                onMouseLeave={e => e.currentTarget.style.color = T.zinc}>
+                <Trash2 size={15} />
+              </button>
             </div>
           ))}
         </div>
       )}
 
+      {/* Search */}
       {docs.length > 0 && (
-        <Card className="bg-zinc-900/50 border-white/10">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-zinc-300 flex items-center gap-2">
-              <Search className="w-4 h-4" /> Test Knowledge Search
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex gap-2">
-              <Input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                placeholder="Ask a question to test retrieval..."
-                className="bg-zinc-800/50 border-white/10"
-                data-testid="kb-search-input"
-              />
-              <Button
-                onClick={handleSearch}
-                disabled={searching || !searchQuery.trim()}
-                className="bg-indigo-500 hover:bg-indigo-600"
-                data-testid="kb-search-btn"
-              >
-                {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-              </Button>
+        <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, padding: "16px 18px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+            <Search size={13} style={{ color: T.zinc }} />
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Test Knowledge Search</span>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()}
+              placeholder="Ask a question to test retrieval…"
+              data-testid="kb-search-input"
+              style={{ flex: 1, background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 8, padding: "8px 12px", color: "#fff", fontSize: 13, outline: "none", fontFamily: "inherit", transition: "border-color .2s" }}
+              onFocus={e => e.target.style.borderColor = "rgba(129,140,248,.5)"}
+              onBlur={e => e.target.style.borderColor = T.border} />
+            <button onClick={handleSearch} disabled={searching || !searchQuery.trim()} data-testid="kb-search-btn"
+              style={{ padding: "8px 14px", borderRadius: 8, background: searching || !searchQuery.trim() ? "rgba(129,140,248,.2)" : `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", cursor: searching || !searchQuery.trim() ? "not-allowed" : "pointer", display: "flex", alignItems: "center" }}>
+              {searching
+                ? <div style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+                : <Search size={14} />}
+            </button>
+          </div>
+          {searchResults !== null && (
+            <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+              {searchResults.length === 0 ? (
+                <p style={{ fontSize: 12, color: T.zinc }}>No relevant results found.</p>
+              ) : searchResults.map((r, i) => (
+                <div key={i} style={{ padding: "10px 14px", borderRadius: 9, background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}` }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 5 }}>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: T.indigo }}>
+                      {r.doc_title} {r.pages?.length > 0 && `(Page${r.pages.length > 1 ? "s" : ""} ${r.pages.join(", ")})`}
+                    </span>
+                    <span style={{ fontSize: 10, color: T.zinc }}>Score: {r.score}</span>
+                  </div>
+                  <p style={{ fontSize: 12, color: "#d4d4d8", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" }}>{r.text}</p>
+                </div>
+              ))}
             </div>
-            {searchResults !== null && (
-              <div className="mt-3 space-y-2">
-                {searchResults.length === 0 ? (
-                  <p className="text-xs text-zinc-500">No relevant results found.</p>
-                ) : (
-                  searchResults.map((r, i) => (
-                    <div key={i} className="p-3 rounded-lg bg-zinc-800/80 border border-white/5">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-medium text-indigo-400">
-                          {r.doc_title} {r.pages?.length > 0 && `(Page${r.pages.length > 1 ? 's' : ''} ${r.pages.join(', ')})`}
-                        </span>
-                        <span className="text-xs text-zinc-500">Score: {r.score}</span>
-                      </div>
-                      <p className="text-xs text-zinc-300 line-clamp-3">{r.text}</p>
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+          )}
+        </div>
       )}
     </div>
   );

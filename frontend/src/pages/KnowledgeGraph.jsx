@@ -5,7 +5,7 @@ import { Search, ZoomIn, ZoomOut, Maximize2, X, Circle, ArrowRight } from "lucid
 const API = process.env.REACT_APP_BACKEND_URL;
 
 const TYPE_COLORS = {
-  network: { fill: "#6366f1", stroke: "#818cf8", bg: "bg-indigo-500/10", text: "text-indigo-400" },
+  network: { fill: "#4fd1c5", stroke: "#6ee7df", bg: "bg-teal-500/10", text: "text-teal-400" },
   agent: { fill: "#10b981", stroke: "#34d399", bg: "bg-emerald-500/10", text: "text-emerald-400" },
   venture: { fill: "#f59e0b", stroke: "#fbbf24", bg: "bg-amber-500/10", text: "text-amber-400" },
   product: { fill: "#ec4899", stroke: "#f472b6", bg: "bg-pink-500/10", text: "text-pink-400" },
@@ -14,7 +14,7 @@ const TYPE_COLORS = {
 };
 
 const REL_COLORS = {
-  belongs_to: "#6366f1", supports: "#10b981", secures: "#ef4444", governs: "#f59e0b",
+  belongs_to: "#4fd1c5", supports: "#10b981", secures: "#ef4444", governs: "#f59e0b",
   drives: "#22c55e", creates_for: "#ec4899", informs: "#06b6d4", validates: "#8b5cf6",
   monitored_by: "#f97316", feeds: "#14b8a6", enables: "#84cc16", related_to: "#71717a",
 };

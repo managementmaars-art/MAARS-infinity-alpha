@@ -21,6 +21,7 @@ const IntegrationsTab = () => {
   const [showWizard, setShowWizard] = useState(false);
 
   const serviceIcons = {
+    // Productivity / Dev
     slack: "https://cdn.simpleicons.org/slack/E01E5A",
     github: "https://cdn.simpleicons.org/github/white",
     sendgrid: "https://cdn.simpleicons.org/sendgrid/1A82E2",
@@ -30,6 +31,17 @@ const IntegrationsTab = () => {
     calendly: "https://cdn.simpleicons.org/calendly/006BFF",
     giphy: "https://cdn.simpleicons.org/giphy/black",
     google_suite: "https://cdn.simpleicons.org/google/4285F4",
+    // Social Media
+    facebook: "https://cdn.simpleicons.org/facebook/1877F2",
+    instagram: "https://cdn.simpleicons.org/instagram/E4405F",
+    twitter: "https://cdn.simpleicons.org/x/white",
+    tiktok: "https://cdn.simpleicons.org/tiktok/white",
+    whatsapp: "https://cdn.simpleicons.org/whatsapp/25D366",
+    viber: "https://cdn.simpleicons.org/viber/7360F2",
+    line: "https://cdn.simpleicons.org/line/06C755",
+    linkedin: "https://cdn.simpleicons.org/linkedin/0A66C2",
+    youtube: "https://cdn.simpleicons.org/youtube/FF0000",
+    telegram: "https://cdn.simpleicons.org/telegram/2AABEE",
   };
 
   const keyLabels = {
@@ -41,6 +53,25 @@ const IntegrationsTab = () => {
     phone_number: "Phone Number",
     service_account_json: "Service Account JSON",
     delegate_email: "Delegate Email (sender)",
+    // Social media fields
+    page_access_token: "Page Access Token",
+    page_id: "Facebook Page ID",
+    app_id: "App ID",
+    app_secret: "App Secret",
+    instagram_business_account_id: "Instagram Business Account ID",
+    access_token: "Access Token",
+    api_secret: "API Secret",
+    access_token_secret: "Access Token Secret",
+    bearer_token: "Bearer Token",
+    advertiser_id: "Advertiser ID",
+    phone_number_id: "Phone Number ID",
+    waba_id: "WhatsApp Business Account ID",
+    channel_access_token: "Channel Access Token",
+    channel_secret: "Channel Secret",
+    organization_id: "Organization / Company ID",
+    oauth_client_id: "OAuth Client ID",
+    oauth_client_secret: "OAuth Client Secret",
+    channel_username: "Channel Username",
   };
 
   useEffect(() => {
@@ -94,7 +125,7 @@ const IntegrationsTab = () => {
     setTesting(prev => ({ ...prev, [svcId]: false }));
   };
 
-  if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-red-400" /></div>;
+  if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-indigo-400" /></div>;
 
   return (
     <div className="space-y-6" data-testid="integrations-tab">
@@ -121,7 +152,7 @@ const IntegrationsTab = () => {
               <Wand2 className="w-4 h-4 mr-2" />Quick Setup
             </Button>
           </div>
-          <p className="text-zinc-400 text-sm">Configure third-party services your AI agents can use as tools (Slack, GitHub, Email, SMS, etc.)</p>
+          <p className="text-zinc-400 text-sm">Configure all integrations — social media platforms, communications, email, scheduling, and development tools that AI agents can use as live tools</p>
         </CardHeader>
         <CardContent className="space-y-4">
           {Object.entries(integrations).map(([svcId, svc]) => {
@@ -130,7 +161,18 @@ const IntegrationsTab = () => {
               sendgrid: "https://app.sendgrid.com/settings/api_keys", resend: "https://resend.com/api-keys",
               twilio: "https://console.twilio.com/", airtable: "https://airtable.com/create/tokens",
               calendly: "https://calendly.com/integrations/api_webhooks", giphy: "https://developers.giphy.com/dashboard/",
-              google_suite: "https://console.cloud.google.com/iam-admin/serviceaccounts"
+              google_suite: "https://console.cloud.google.com/iam-admin/serviceaccounts",
+              // Social Media
+              facebook: "https://developers.facebook.com/apps/",
+              instagram: "https://developers.facebook.com/docs/instagram-api/",
+              twitter: "https://developer.twitter.com/en/portal/dashboard",
+              tiktok: "https://ads.tiktok.com/marketing_api/apps/",
+              whatsapp: "https://developers.facebook.com/docs/whatsapp/cloud-api/",
+              viber: "https://partners.viber.com/",
+              line: "https://developers.line.biz/console/",
+              linkedin: "https://www.linkedin.com/developers/apps",
+              youtube: "https://console.cloud.google.com/apis/credentials",
+              telegram: "https://t.me/BotFather",
             };
             return (
               <div key={svcId} className="p-4 rounded-lg bg-white/5 space-y-3" data-testid={`integration-card-${svcId}`}>

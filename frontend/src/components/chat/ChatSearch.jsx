@@ -49,7 +49,7 @@ export const ChatSearch = ({ onSelectChat, onClose }) => {
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
         {searching && (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-5 h-5 text-red-400 animate-spin" />
+            <Loader2 className="w-5 h-5 text-indigo-400 animate-spin" />
           </div>
         )}
 

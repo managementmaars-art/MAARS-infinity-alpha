@@ -16,32 +16,71 @@ PROVIDER_CATALOG = {
         "gpt-4o": {"tier": "balanced", "strengths": ["general", "multimodal", "speed"], "cost_per_1k_in": 0.005, "cost_per_1k_out": 0.015, "latency": "fast"},
         "gpt-4o-mini": {"tier": "economy", "strengths": ["general", "speed"], "cost_per_1k_in": 0.00015, "cost_per_1k_out": 0.0006, "latency": "fast"},
         "o3": {"tier": "reasoning", "strengths": ["deep_reasoning", "math", "logic"], "cost_per_1k_in": 0.01, "cost_per_1k_out": 0.04, "latency": "slow"},
+        "o4-mini": {"tier": "reasoning_economy", "strengths": ["deep_reasoning", "math", "speed"], "cost_per_1k_in": 0.003, "cost_per_1k_out": 0.012, "latency": "medium"},
     },
     "anthropic": {
-        "claude-sonnet-4.5": {"tier": "flagship", "strengths": ["safety", "reasoning", "coding", "analysis", "nuance"], "cost_per_1k_in": 0.003, "cost_per_1k_out": 0.015, "latency": "medium"},
-        "claude-opus-4.5": {"tier": "premium", "strengths": ["deep_reasoning", "safety", "nuance"], "cost_per_1k_in": 0.015, "cost_per_1k_out": 0.075, "latency": "slow"},
-        "claude-haiku-4.5": {"tier": "economy", "strengths": ["speed", "general"], "cost_per_1k_in": 0.0008, "cost_per_1k_out": 0.004, "latency": "fast"},
+        "claude-sonnet-4-6": {"tier": "flagship", "strengths": ["safety", "reasoning", "coding", "analysis", "nuance"], "cost_per_1k_in": 0.003, "cost_per_1k_out": 0.015, "latency": "medium"},
+        "claude-opus-4-6": {"tier": "premium", "strengths": ["deep_reasoning", "safety", "nuance", "long_context"], "cost_per_1k_in": 0.015, "cost_per_1k_out": 0.075, "latency": "slow"},
+        "claude-haiku-4-5": {"tier": "economy", "strengths": ["speed", "general", "summarization"], "cost_per_1k_in": 0.0008, "cost_per_1k_out": 0.004, "latency": "ultra_fast"},
     },
     "google": {
-        "gemini-3-flash": {"tier": "economy", "strengths": ["speed", "general", "multimodal", "search"], "cost_per_1k_in": 0.0001, "cost_per_1k_out": 0.0004, "latency": "fast"},
-        "gemini-3-pro": {"tier": "balanced", "strengths": ["reasoning", "multimodal", "analysis", "grounded_answers"], "cost_per_1k_in": 0.00125, "cost_per_1k_out": 0.005, "latency": "medium"},
+        "gemini-2.5-flash": {"tier": "economy", "strengths": ["speed", "general", "multimodal", "search"], "cost_per_1k_in": 0.0001, "cost_per_1k_out": 0.0004, "latency": "ultra_fast"},
+        "gemini-2.5-pro": {"tier": "balanced", "strengths": ["reasoning", "multimodal", "analysis", "grounded_answers", "long_context"], "cost_per_1k_in": 0.00125, "cost_per_1k_out": 0.005, "latency": "medium"},
+    },
+    "deepseek": {
+        "deepseek-r1": {"tier": "reasoning", "strengths": ["deep_reasoning", "math", "coding", "logic"], "cost_per_1k_in": 0.00055, "cost_per_1k_out": 0.00219, "latency": "medium"},
+        "deepseek-v3": {"tier": "flagship", "strengths": ["coding", "analysis", "reasoning", "general"], "cost_per_1k_in": 0.00027, "cost_per_1k_out": 0.0011, "latency": "fast"},
+        "deepseek-chat": {"tier": "economy", "strengths": ["general", "speed"], "cost_per_1k_in": 0.00014, "cost_per_1k_out": 0.00028, "latency": "fast"},
+    },
+    "mistral": {
+        "mistral-large": {"tier": "balanced", "strengths": ["reasoning", "coding", "multilingual", "analysis"], "cost_per_1k_in": 0.002, "cost_per_1k_out": 0.006, "latency": "fast"},
+        "mistral-medium": {"tier": "economy", "strengths": ["general", "speed", "multilingual"], "cost_per_1k_in": 0.0027, "cost_per_1k_out": 0.0081, "latency": "fast"},
+        "codestral": {"tier": "balanced", "strengths": ["coding", "code_completion", "technical"], "cost_per_1k_in": 0.001, "cost_per_1k_out": 0.003, "latency": "fast"},
+    },
+    "groq": {
+        "llama-4-maverick": {"tier": "balanced", "strengths": ["speed", "general", "reasoning"], "cost_per_1k_in": 0.0002, "cost_per_1k_out": 0.0006, "latency": "ultra_fast"},
+        "llama-4-scout": {"tier": "economy", "strengths": ["speed", "general"], "cost_per_1k_in": 0.00011, "cost_per_1k_out": 0.00034, "latency": "ultra_fast"},
+        "mixtral-8x7b": {"tier": "balanced", "strengths": ["general", "speed", "multilingual"], "cost_per_1k_in": 0.00024, "cost_per_1k_out": 0.00024, "latency": "ultra_fast"},
+    },
+    "xai": {
+        "grok-3": {"tier": "flagship", "strengths": ["reasoning", "analysis", "real_time", "humor"], "cost_per_1k_in": 0.005, "cost_per_1k_out": 0.015, "latency": "medium"},
+        "grok-3-mini": {"tier": "economy", "strengths": ["speed", "general", "real_time"], "cost_per_1k_in": 0.0003, "cost_per_1k_out": 0.0005, "latency": "fast"},
+    },
+    "perplexity": {
+        "sonar-pro": {"tier": "balanced", "strengths": ["search", "real_time", "grounded_answers", "research"], "cost_per_1k_in": 0.003, "cost_per_1k_out": 0.015, "latency": "medium"},
+        "sonar": {"tier": "economy", "strengths": ["search", "real_time", "grounded_answers"], "cost_per_1k_in": 0.001, "cost_per_1k_out": 0.001, "latency": "fast"},
+    },
+    "cohere": {
+        "command-r-plus": {"tier": "balanced", "strengths": ["rag", "analysis", "business", "multilingual"], "cost_per_1k_in": 0.003, "cost_per_1k_out": 0.015, "latency": "medium"},
+        "command-r": {"tier": "economy", "strengths": ["rag", "general", "speed"], "cost_per_1k_in": 0.00015, "cost_per_1k_out": 0.0006, "latency": "fast"},
+    },
+    "together": {
+        "qwen2.5-72b-instruct": {"tier": "balanced", "strengths": ["coding", "multilingual", "general", "reasoning"], "cost_per_1k_in": 0.0012, "cost_per_1k_out": 0.0012, "latency": "fast"},
+        "meta-llama-3.1-405b": {"tier": "premium", "strengths": ["reasoning", "coding", "general", "long_context"], "cost_per_1k_in": 0.0035, "cost_per_1k_out": 0.0035, "latency": "medium"},
     },
 }
 
 # Providers available via Emergent LLM key
-AVAILABLE_PROVIDERS = {"openai", "anthropic", "google"}
+AVAILABLE_PROVIDERS = {"openai", "anthropic", "google", "deepseek", "mistral", "groq", "xai", "perplexity", "cohere", "together"}
 
 # Task class → model preference mapping
 TASK_ROUTING_RULES = {
-    "coding": {"preferred_strengths": ["coding", "reasoning"], "preferred_tier": "flagship", "fallback_tier": "balanced"},
-    "architecture": {"preferred_strengths": ["deep_reasoning", "coding"], "preferred_tier": "flagship", "fallback_tier": "balanced"},
-    "research": {"preferred_strengths": ["search", "grounded_answers", "analysis"], "preferred_tier": "balanced", "fallback_tier": "economy"},
-    "legal_compliance": {"preferred_strengths": ["safety", "reasoning", "nuance"], "preferred_tier": "flagship", "fallback_tier": "balanced"},
-    "math_forecasting": {"preferred_strengths": ["deep_reasoning", "math", "logic"], "preferred_tier": "reasoning", "fallback_tier": "flagship"},
-    "summary": {"preferred_strengths": ["speed", "general"], "preferred_tier": "economy", "fallback_tier": "economy"},
-    "creative": {"preferred_strengths": ["general", "nuance"], "preferred_tier": "balanced", "fallback_tier": "economy"},
-    "real_time": {"preferred_strengths": ["speed"], "preferred_tier": "economy", "fallback_tier": "economy"},
-    "general": {"preferred_strengths": ["general", "reasoning"], "preferred_tier": "balanced", "fallback_tier": "economy"},
+    "coding":           {"preferred_strengths": ["coding", "reasoning"],                        "preferred_tier": "flagship",          "fallback_tier": "balanced"},
+    "architecture":     {"preferred_strengths": ["deep_reasoning", "coding"],                   "preferred_tier": "flagship",          "fallback_tier": "balanced"},
+    "research":         {"preferred_strengths": ["search", "grounded_answers", "analysis"],     "preferred_tier": "balanced",          "fallback_tier": "economy"},
+    "legal_compliance": {"preferred_strengths": ["safety", "reasoning", "nuance"],              "preferred_tier": "flagship",          "fallback_tier": "balanced"},
+    "math_forecasting": {"preferred_strengths": ["deep_reasoning", "math", "logic"],            "preferred_tier": "reasoning",         "fallback_tier": "flagship"},
+    "summary":          {"preferred_strengths": ["summarization", "speed", "general"],          "preferred_tier": "economy",           "fallback_tier": "economy"},
+    "creative":         {"preferred_strengths": ["general", "nuance"],                          "preferred_tier": "balanced",          "fallback_tier": "economy"},
+    "real_time":        {"preferred_strengths": ["real_time", "search", "speed"],               "preferred_tier": "economy",           "fallback_tier": "economy"},
+    "general":          {"preferred_strengths": ["general", "reasoning"],                       "preferred_tier": "balanced",          "fallback_tier": "economy"},
+    "data_analysis":    {"preferred_strengths": ["analysis", "reasoning", "coding"],            "preferred_tier": "balanced",          "fallback_tier": "flagship"},
+    "translation":      {"preferred_strengths": ["multilingual", "general"],                    "preferred_tier": "economy",           "fallback_tier": "balanced"},
+    "long_context":     {"preferred_strengths": ["long_context", "analysis"],                   "preferred_tier": "premium",           "fallback_tier": "flagship"},
+    "rag_retrieval":    {"preferred_strengths": ["rag", "analysis", "grounded_answers"],        "preferred_tier": "balanced",          "fallback_tier": "economy"},
+    "sales_marketing":  {"preferred_strengths": ["general", "nuance", "reasoning"],             "preferred_tier": "balanced",          "fallback_tier": "economy"},
+    "security":         {"preferred_strengths": ["safety", "reasoning", "coding"],              "preferred_tier": "flagship",          "fallback_tier": "balanced"},
+    "ultra_fast":       {"preferred_strengths": ["speed", "general"],                           "preferred_tier": "economy",           "fallback_tier": "economy"},
 }
 
 
@@ -50,20 +89,34 @@ def classify_task(task_description: str, metadata: dict = None):
     metadata = metadata or {}
     desc_lower = task_description.lower()
 
-    # Task type detection
+    # Task type detection (ordered by specificity — most specific first)
     task_type = "general"
-    if any(w in desc_lower for w in ["code", "implement", "debug", "program", "function", "api", "deploy"]):
-        task_type = "coding"
-    elif any(w in desc_lower for w in ["architect", "design system", "infrastructure"]):
+    if any(w in desc_lower for w in ["translate", "translation", "localiz", "multilingual", "language"]):
+        task_type = "translation"
+    elif any(w in desc_lower for w in ["security", "vulnerability", "pentest", "exploit", "audit security", "threat"]):
+        task_type = "security"
+    elif any(w in desc_lower for w in ["architect", "design system", "infrastructure", "microservice", "scalab"]):
         task_type = "architecture"
-    elif any(w in desc_lower for w in ["research", "analyze", "investigate", "market", "competitor"]):
-        task_type = "research"
-    elif any(w in desc_lower for w in ["legal", "compliance", "regulation", "policy", "contract"]):
+    elif any(w in desc_lower for w in ["code", "implement", "debug", "program", "function", "api", "deploy", "refactor"]):
+        task_type = "coding"
+    elif any(w in desc_lower for w in ["sql", "pandas", "data pipeline", "etl", "dashboard", "csv", "dataset", "analytics"]):
+        task_type = "data_analysis"
+    elif any(w in desc_lower for w in ["legal", "compliance", "regulation", "policy", "contract", "gdpr", "privacy law"]):
         task_type = "legal_compliance"
-    elif any(w in desc_lower for w in ["forecast", "calculate", "financial", "math", "quantitative"]):
+    elif any(w in desc_lower for w in ["forecast", "calculate", "financial model", "math", "quantitative", "statistical", "regression"]):
         task_type = "math_forecasting"
-    elif any(w in desc_lower for w in ["summarize", "brief", "tldr", "overview"]):
+    elif any(w in desc_lower for w in ["research", "analyze", "investigate", "market research", "competitor", "industry report"]):
+        task_type = "research"
+    elif any(w in desc_lower for w in ["real-time", "latest news", "current", "today", "live data", "stock price"]):
+        task_type = "real_time"
+    elif any(w in desc_lower for w in ["summarize", "brief", "tldr", "overview", "condense"]):
         task_type = "summary"
+    elif any(w in desc_lower for w in ["long document", "full book", "entire codebase", "extensive context"]):
+        task_type = "long_context"
+    elif any(w in desc_lower for w in ["marketing", "sales pitch", "campaign", "ad copy", "brand voice", "copywrite"]):
+        task_type = "sales_marketing"
+    elif any(w in desc_lower for w in ["creative", "write story", "fiction", "poem", "narrative"]):
+        task_type = "creative"
     elif any(w in desc_lower for w in ["creative", "write", "story", "brand", "campaign", "content"]):
         task_type = "creative"
 

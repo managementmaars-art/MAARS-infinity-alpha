@@ -1,14 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import { Card, CardContent } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Separator } from "../components/ui/separator";
 import {
   Bot, Users, MessageSquare, CreditCard, TrendingUp, Shield,
   LayoutDashboard, ListTodo, Settings, LogOut, Menu, X,
-  DollarSign, Activity, Key, Loader2,
-  BarChart3, Mail, Paintbrush, BookOpen, Package, ScrollText
+  DollarSign, Activity, Key,
+  BarChart3, Mail, Paintbrush, BookOpen, Package, ScrollText, Eye
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -26,12 +22,26 @@ import { ApiKeysTab } from "../components/admin/tabs/ApiKeysTab";
 import { PricingManagerTab } from "../components/admin/tabs/PricingManagerTab";
 import { PaymentSetupTab } from "../components/admin/tabs/PaymentSetupTab";
 import { AuditLogTab } from "../components/admin/tabs/AuditLogTab";
+import { ClientVisibilityTab } from "../components/admin/tabs/ClientVisibilityTab";
+import { UniversalGatewayTab } from "../components/admin/tabs/UniversalGatewayTab";
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  violet: "#7c3aed",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, token } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
-    const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [agents, setAgents] = useState([]);
   const [transactions, setTransactions] = useState([]);
@@ -44,14 +54,24 @@ const AdminDashboard = () => {
   const [calcResult, setCalcResult] = useState(null);
   const [calcInputs, setCalcInputs] = useState({ ai_cost_per_credit: 0.003, target_profit_margin: 200, bdt_exchange_rate: 107 });
   const [apiKeysConfig, setApiKeysConfig] = useState(null);
-  const [apiKeyInputs, setApiKeyInputs] = useState({ openai_key: "", anthropic_key: "", gemini_key: "", xai_key: "", deepseek_key: "", mistral_key: "", perplexity_key: "", cohere_key: "", elevenlabs_key: "", active_provider: "emergent" });
+  const [apiKeyInputs, setApiKeyInputs] = useState({
+    active_provider: "maars",
+    openai_key: "", anthropic_key: "", gemini_key: "", xai_key: "",
+    deepseek_key: "", mistral_key: "", perplexity_key: "", cohere_key: "",
+    elevenlabs_key: "", groq_key: "", together_key: "", fireworks_key: "",
+    ai21_key: "", cerebras_key: "", sambanova_key: "", nvidia_key: "",
+    moonshot_key: "", qwen_key: "",
+    yi_key: "", zhipu_key: "", doubao_key: "", hyperbolic_key: "",
+    upstage_key: "", writer_key: "", huggingface_key: "", llama_key: "",
+    novita_key: "", lepton_key: "", lambda_key: "", amazon_key: "",
+    minimax_key: "", inception_key: "", arcee_key: "",
+  });
   const [testingKey, setTestingKey] = useState(null);
   const [newAgent, setNewAgent] = useState({
     name: "", description: "", role: "", system_prompt: "",
     model_provider: "openai", model_name: "gpt-5.2", capabilities: ""
   });
 
-  // Live cost tracking state - auto-updates in background
   const [liveCost, setLiveCost] = useState({ avg_cost_per_credit: 0.003, total_cost_usd: 0, total_calls: 0, source: "default" });
   const liveCostRef = useRef(liveCost);
   liveCostRef.current = liveCost;
@@ -77,7 +97,6 @@ const AdminDashboard = () => {
     fetchAdminData();
   }, []);
 
-  // Background polling every 15s for live cost data
   useEffect(() => {
     fetchLiveCost();
     const interval = setInterval(fetchLiveCost, 15000);
@@ -119,10 +138,9 @@ const AdminDashboard = () => {
       if (keysRes.ok) {
         const k = await keysRes.json();
         setApiKeysConfig(k);
-        setApiKeyInputs(prev => ({...prev, active_provider: k.active_provider || "emergent"}));
+        setApiKeyInputs(prev => ({...prev, active_provider: k.active_provider || "maars"}));
       }
-      
-      // Fetch profit data and API usage
+
       const [profitRes, usageRes, avgCostRes, rateRes] = await Promise.all([
         fetch(`${API}/admin/profit`, { headers: authHeaders }),
         fetch(`${API}/admin/api-usage`, { headers: authHeaders }),
@@ -149,7 +167,8 @@ const AdminDashboard = () => {
       setLoading(false);
     }
   };
-const handleCreateAgent = async () => {
+
+  const handleCreateAgent = async () => {
     if (!newAgent.name || !newAgent.role || !newAgent.system_prompt) {
       toast.error("Name, role, and system prompt are required");
       return;
@@ -198,6 +217,7 @@ const handleCreateAgent = async () => {
   const tabs = [
     { id: "overview", label: "Overview", icon: Activity },
     { id: "analytics", label: "Analytics", icon: BarChart3 },
+    { id: "gateway", label: "Universal Gateway", icon: Shield },
     { id: "users", label: "Users", icon: Users },
     { id: "agents", label: "Agents", icon: Bot },
     { id: "transactions", label: "Transactions", icon: DollarSign },
@@ -209,13 +229,16 @@ const handleCreateAgent = async () => {
     { id: "knowledge", label: "Knowledge Base", icon: BookOpen },
     { id: "products", label: "Product Catalog", icon: Package },
     { id: "audit", label: "Audit Log", icon: ScrollText },
+    { id: "client-visibility", label: "Client Visibility", icon: Eye },
   ];
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-muted-foreground">Loading admin panel...</p>
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <style>{STYLES}</style>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+          <div style={{ width: 32, height: 32, border: `2px solid ${T.indigo}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+          <p style={{ color: T.zinc, fontSize: 13 }}>Loading admin panel...</p>
         </div>
       </div>
     );
@@ -223,78 +246,108 @@ const handleCreateAgent = async () => {
 
   return (
     <div data-testid="admin-dashboard">
-          {/* Header */}
-          <div className="mb-6">
-            <div className="flex items-center gap-3 mb-2">
-              <Shield className="w-6 h-6 text-red-400" />
-              <h1 className="text-2xl lg:text-3xl font-bold text-white font-['Outfit']">
-                Admin Control Panel
-              </h1>
-            </div>
-            <p className="text-zinc-400">Manage your platform, users, agents, and revenue</p>
-          </div>
+      <style>{STYLES}</style>
 
-          {/* Tabs */}
-          <div className="flex gap-1 mb-6 bg-zinc-900/50 p-1 rounded-lg border border-white/10 overflow-x-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-md text-sm font-medium transition-all whitespace-nowrap ${
-                  activeTab === tab.id
-                    ? "bg-gradient-to-r from-red-500 to-orange-500 text-white"
-                    : "text-zinc-400 hover:text-white hover:bg-white/5"
-                }`}
-                data-testid={`admin-tab-${tab.id}`}
-              >
-                <tab.icon className="w-4 h-4" />
-                {tab.label}
-              </button>
-            ))}
-          </div>
+      {/* Header */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
+          <Shield size={22} style={{ color: T.indigo }} />
+          <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 28, fontWeight: 700, color: "#fff", margin: 0 }}>Admin Control Panel</h1>
+        </div>
+        <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>Manage your platform, users, agents, and revenue</p>
+      </div>
 
-          {/* Tab Content */}
-          {activeTab === "overview" && <OverviewTab stats={stats} profitData={profitData} apiKeysConfig={apiKeysConfig} />}
-          {activeTab === "analytics" && <AnalyticsTab />}
-          {activeTab === "users" && <UsersTab users={users} />}
-          {activeTab === "agents" && (
-            <AgentsTab
-              agents={agents} setAgents={setAgents}
-              showCreateAgent={showCreateAgent} setShowCreateAgent={setShowCreateAgent}
-              newAgent={newAgent} setNewAgent={setNewAgent}
-              handleCreateAgent={handleCreateAgent} handleDeleteAgent={handleDeleteAgent}
-              token={token}
-            />
-          )}
-          {activeTab === "transactions" && <TransactionsTab transactions={transactions} />}
-          {activeTab === "pricing" && (
-            <>
-              <PricingManagerTab
-                pricingConfig={pricingConfig} setPricingConfig={setPricingConfig}
-                pricingEdit={pricingEdit} setPricingEdit={setPricingEdit}
-                calcInputs={calcInputs} setCalcInputs={setCalcInputs}
-                calcResult={calcResult} setCalcResult={setCalcResult}
-                liveCost={liveCost} token={token}
-              />
-              <div className="mt-6"><CustomPackagesTab /></div>
-            </>
-          )}
-          {activeTab === "apikeys" && (
-            <>
-              <ApiKeysTab
-                apiKeysConfig={apiKeysConfig} apiKeyInputs={apiKeyInputs} setApiKeyInputs={setApiKeyInputs}
-                apiUsage={apiUsage} testingKey={testingKey} setTestingKey={setTestingKey}
-                token={token} onRefresh={fetchAdminData}
-              />
-              <div className="mt-6"><IntegrationsTab /></div>
-            </>
-          )}
-          {activeTab === "payments" && <PaymentSetupTab token={token} />}
-          {activeTab === "smtp" && <SmtpConfigTab />}
-          {activeTab === "branding" && <BrandingTab />}
-          {activeTab === "knowledge" && <KnowledgeBaseTab />}
-          {activeTab === "products" && <AdminProductsTab token={token} />}
-          {activeTab === "audit" && <AuditLogTab />}
+      {/* Tabs */}
+      <div style={{ display: "flex", gap: 3, marginBottom: 24, background: "rgba(255,255,255,.02)", padding: 4, borderRadius: 12, border: `1px solid ${T.border}`, overflowX: "auto" }}>
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            data-testid={`admin-tab-${tab.id}`}
+            style={{
+              display: "flex", alignItems: "center", gap: 7, padding: "8px 14px", borderRadius: 8, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 600, whiteSpace: "nowrap", transition: "all .2s",
+              background: activeTab === tab.id ? `linear-gradient(135deg, ${T.indigo}, ${T.violet})` : "transparent",
+              color: activeTab === tab.id ? "#fff" : T.zinc,
+            }}
+            onMouseEnter={e => { if (activeTab !== tab.id) { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(255,255,255,.05)"; } }}
+            onMouseLeave={e => { if (activeTab !== tab.id) { e.currentTarget.style.color = T.zinc; e.currentTarget.style.background = "transparent"; } }}
+          >
+            <tab.icon size={14} />
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Content */}
+      {activeTab === "overview" && <OverviewTab stats={stats} profitData={profitData} apiKeysConfig={apiKeysConfig} />}
+      {activeTab === "analytics" && <AnalyticsTab />}
+      {activeTab === "gateway" && <UniversalGatewayTab token={token} />}
+      {activeTab === "users" && <UsersTab users={users} />}
+      {activeTab === "agents" && (
+        <AgentsTab
+          agents={agents} setAgents={setAgents}
+          showCreateAgent={showCreateAgent} setShowCreateAgent={setShowCreateAgent}
+          newAgent={newAgent} setNewAgent={setNewAgent}
+          handleCreateAgent={handleCreateAgent} handleDeleteAgent={handleDeleteAgent}
+          token={token}
+        />
+      )}
+      {activeTab === "transactions" && <TransactionsTab transactions={transactions} />}
+      {activeTab === "pricing" && (
+        <>
+          <PricingManagerTab
+            pricingConfig={pricingConfig} setPricingConfig={setPricingConfig}
+            pricingEdit={pricingEdit} setPricingEdit={setPricingEdit}
+            calcInputs={calcInputs} setCalcInputs={setCalcInputs}
+            calcResult={calcResult} setCalcResult={setCalcResult}
+            liveCost={liveCost} token={token}
+            onDeletePlan={async (planId) => {
+              if (!window.confirm(`Delete plan "${planId}"? This cannot be undone.`)) return;
+              try {
+                const res = await fetch(`${API}/admin/pricing/plans/${planId}`, {
+                  method: "DELETE",
+                  headers: { Authorization: `Bearer ${token}` },
+                });
+                if (res.ok) {
+                  setPricingEdit(prev => {
+                    const plans = { ...prev.plans };
+                    delete plans[planId];
+                    return { ...prev, plans };
+                  });
+                  toast.success(`Plan "${planId}" deleted`);
+                } else {
+                  const err = await res.json();
+                  toast.error(err.detail || "Failed to delete plan");
+                }
+              } catch { toast.error("Failed to delete plan"); }
+            }}
+            onAddPlan={async (id, planData) => {
+              setPricingEdit(prev => ({
+                ...prev,
+                plans: { ...prev.plans, [id]: planData },
+              }));
+            }}
+          />
+          <div style={{ marginTop: 24 }}><CustomPackagesTab /></div>
+        </>
+      )}
+      {activeTab === "apikeys" && (
+        <>
+          <ApiKeysTab
+            apiKeysConfig={apiKeysConfig} apiKeyInputs={apiKeyInputs} setApiKeyInputs={setApiKeyInputs}
+            apiUsage={apiUsage} testingKey={testingKey} setTestingKey={setTestingKey}
+            token={token} onRefresh={fetchAdminData}
+          />
+          <div style={{ marginTop: 24 }}><IntegrationsTab /></div>
+        </>
+      )}
+      {activeTab === "payments" && <PaymentSetupTab token={token} />}
+      {activeTab === "smtp" && <SmtpConfigTab />}
+      {activeTab === "branding" && <BrandingTab />}
+      {activeTab === "knowledge" && <KnowledgeBaseTab />}
+      {activeTab === "products" && <AdminProductsTab token={token} />}
+      {activeTab === "audit" && <AuditLogTab />}
+      {activeTab === "client-visibility" && <ClientVisibilityTab />}
     </div>
   );
 };
@@ -312,92 +365,66 @@ const AdminProductsTab = ({ token }) => {
     }).catch(() => setLoading(false));
   }, [token]);
 
-  if (loading) return <div className="flex items-center justify-center h-32"><Loader2 className="w-8 h-8 animate-spin text-red-400" /></div>;
+  if (loading) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 128 }}>
+      <div style={{ width: 32, height: 32, border: "2px solid #818cf8", borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+    </div>
+  );
 
   return (
-    <div className="space-y-6" data-testid="admin-products-tab">
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }} data-testid="admin-products-tab">
       <div>
-        <h2 className="text-xl font-bold text-white font-['Outfit']">Product Catalog (All Users)</h2>
-        <p className="text-zinc-400 text-sm mt-1">{products.length} products across all users</p>
+        <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 20, fontWeight: 700, color: "#fff", margin: 0 }}>Product Catalog (All Users)</h2>
+        <p style={{ fontSize: 13, color: "#71717a", marginTop: 4 }}>{products.length} products across all users</p>
       </div>
-      <Card className="bg-zinc-900/50 border-white/10">
-        <CardContent className="p-0">
-          <table className="w-full text-sm">
-            <thead className="border-b border-white/10">
-              <tr className="text-zinc-500 text-xs">
-                <th className="text-left p-4">Product</th>
-                <th className="text-left p-4">User</th>
-                <th className="text-left p-4">Category</th>
-                <th className="text-right p-4">Generated</th>
-                <th className="text-right p-4">Scanned</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map(p => (
-                <tr key={p.product_id} className="border-b border-white/5 hover:bg-white/5">
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      {p.images?.[0]?.thumbnail ? (
-                        <img src={p.images[0].thumbnail} alt="" className="w-10 h-10 rounded-lg object-cover" onError={e => { e.target.style.display = 'none'; }} />
-                      ) : (
-                        <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center"><Package className="w-5 h-5 text-zinc-600" /></div>
-                      )}
-                      <div>
-                        <p className="text-white font-medium">{p.name}</p>
-                        {p.brand && <p className="text-zinc-500 text-xs">{p.brand}</p>}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <p className="text-zinc-300 text-xs">{p.user_name || "Unknown"}</p>
-                    <p className="text-zinc-600 text-[10px]">{p.user_email}</p>
-                  </td>
-                  <td className="p-4"><Badge className="bg-indigo-500/20 text-indigo-300 text-[9px]">{p.category || "Uncategorized"}</Badge></td>
-                  <td className="p-4 text-right text-zinc-400">{p.generated_count || 0}</td>
-                  <td className="p-4 text-right text-zinc-500 text-xs">{p.last_scanned ? new Date(p.last_scanned).toLocaleDateString() : "-"}</td>
-                </tr>
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, overflow: "hidden" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+          <thead>
+            <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+              {["Product", "User", "Category", "Generated", "Scanned"].map((h, i) => (
+                <th key={h} style={{ padding: "10px 16px", textAlign: i >= 3 ? "right" : "left", fontSize: 11, color: "#71717a", fontWeight: 600 }}>{h}</th>
               ))}
-              {products.length === 0 && (
-                <tr><td colSpan="5" className="p-8 text-center text-zinc-500">No products saved by any user yet</td></tr>
-              )}
-            </tbody>
-          </table>
-        </CardContent>
-      </Card>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map(p => (
+              <tr key={p.product_id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", transition: "background .15s" }}
+                onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.03)"}
+                onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                <td style={{ padding: "12px 16px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    {p.images?.[0]?.thumbnail ? (
+                      <img src={p.images[0].thumbnail} alt="" style={{ width: 40, height: 40, borderRadius: 8, objectFit: "cover" }} onError={e => { e.target.style.display = "none"; }} />
+                    ) : (
+                      <div style={{ width: 40, height: 40, borderRadius: 8, background: "rgba(255,255,255,.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Package size={18} style={{ color: "#52525b" }} />
+                      </div>
+                    )}
+                    <div>
+                      <p style={{ color: "#fff", fontWeight: 600, margin: 0 }}>{p.name}</p>
+                      {p.brand && <p style={{ color: "#71717a", fontSize: 11, margin: 0 }}>{p.brand}</p>}
+                    </div>
+                  </div>
+                </td>
+                <td style={{ padding: "12px 16px" }}>
+                  <p style={{ color: "#d4d4d8", fontSize: 12, margin: 0 }}>{p.user_name || "Unknown"}</p>
+                  <p style={{ color: "#52525b", fontSize: 10, margin: 0 }}>{p.user_email}</p>
+                </td>
+                <td style={{ padding: "12px 16px" }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 9px", borderRadius: 20, background: "rgba(129,140,248,.15)", color: "#818cf8" }}>{p.category || "Uncategorized"}</span>
+                </td>
+                <td style={{ padding: "12px 16px", textAlign: "right", color: "#a1a1aa" }}>{p.generated_count || 0}</td>
+                <td style={{ padding: "12px 16px", textAlign: "right", color: "#71717a", fontSize: 11 }}>{p.last_scanned ? new Date(p.last_scanned).toLocaleDateString() : "—"}</td>
+              </tr>
+            ))}
+            {products.length === 0 && (
+              <tr><td colSpan="5" style={{ padding: 32, textAlign: "center", color: "#71717a", fontSize: 13 }}>No products saved by any user yet</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
 
-
-
-const StatCard = ({ title, value, icon: Icon, color }) => {
-  const colors = {
-    indigo: "bg-indigo-500/20 text-indigo-400",
-    violet: "bg-violet-500/20 text-violet-400",
-    emerald: "bg-emerald-500/20 text-emerald-400",
-    amber: "bg-amber-500/20 text-amber-400",
-    cyan: "bg-cyan-500/20 text-cyan-400",
-    pink: "bg-pink-500/20 text-pink-400",
-    orange: "bg-orange-500/20 text-orange-400",
-    teal: "bg-teal-500/20 text-teal-400",
-  };
-
-  return (
-    <Card className="bg-zinc-900/50 border-white/10">
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-zinc-400">{title}</p>
-            <p className="text-2xl font-bold text-white">{value}</p>
-          </div>
-          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${colors[color]}`}>
-            <Icon className="w-5 h-5" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
 export default AdminDashboard;
-

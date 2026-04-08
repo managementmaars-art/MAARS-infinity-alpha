@@ -10,6 +10,7 @@ from models.schemas import Agent, AgentCreate
 from shared.constants import SUBSCRIPTION_PLANS, CUSTOM_AGENT_CREDIT_COST
 from config import AGENT_TOOL_MAP, AGENT_TOOLS, DEFAULT_BRAIN_PROFILES
 from services.cache_service import cache
+from infinity_catalog import generate_rich_svg_avatar
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -26,6 +27,10 @@ async def get_agents_public():
     ).to_list(50)
     for agent in agents:
         agent["tools"] = AGENT_TOOL_MAP.get(agent.get("agent_id", ""), [])
+        if not agent.get("name"):
+            agent["name"] = agent.get("role", "Agent").split()[0] + " Agent"
+        if not agent.get("avatar"):
+            agent["avatar"] = generate_rich_svg_avatar(agent.get("name", "Agent"), "", 0)
     agents.sort(key=lambda a: (0 if a.get("agent_id") == "agent_commander" else 1, a.get("name", "")))
     cache.set("agents_public", agents, ttl=120)
     return agents
@@ -46,20 +51,43 @@ async def get_agents(current_user: User = Depends(get_current_user), network: st
         query["network"] = network
     agents = await db.agents.find(query, {"_id": 0}).to_list(500)
     
+    needs_avatar_patch = []
     for agent in agents:
         if isinstance(agent.get('created_at'), str):
             agent['created_at'] = datetime.fromisoformat(agent['created_at'])
         # Inject tools info from AGENT_TOOL_MAP or infinity tools
         if not agent.get("tools"):
             agent["tools"] = AGENT_TOOL_MAP.get(agent.get("agent_id", ""), [])
-    
+        # Ensure every agent has a name and avatar — patch on the fly if missing
+        if not agent.get("name"):
+            agent["name"] = agent.get("role", "Agent").split()[0] + " Agent"
+        if not agent.get("avatar"):
+            svg = generate_rich_svg_avatar(
+                agent.get("name", "Agent"),
+                agent.get("network", ""),
+                0
+            )
+            agent["avatar"] = svg
+            needs_avatar_patch.append({"agent_id": agent["agent_id"], "avatar": svg, "name": agent["name"]})
+
+    # Persist any patched avatars/names back to DB asynchronously (fire-and-forget)
+    if needs_avatar_patch:
+        import asyncio
+        async def _patch():
+            for p in needs_avatar_patch:
+                await db.agents.update_one(
+                    {"agent_id": p["agent_id"]},
+                    {"$set": {"avatar": p["avatar"], "name": p["name"]}}
+                )
+        asyncio.create_task(_patch())
+
     # Sort: Commander first, then original agents, then infinity agents
     agents.sort(key=lambda a: (
         0 if a.get("agent_id") == "agent_commander" else
         1 if not a.get("is_infinity") else 2,
         a.get("name", "")
     ))
-    
+
     return agents
 
 @router.get("/agents/{agent_id}", response_model=Agent)
@@ -67,10 +95,16 @@ async def get_agent(agent_id: str, current_user: User = Depends(get_current_user
     agent = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0})
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
-    
+
     if isinstance(agent.get('created_at'), str):
         agent['created_at'] = datetime.fromisoformat(agent['created_at'])
-    
+    if not agent.get("name"):
+        agent["name"] = agent.get("role", "Agent").split()[0] + " Agent"
+    if not agent.get("avatar"):
+        agent["avatar"] = generate_rich_svg_avatar(
+            agent.get("name", "Agent"), agent.get("network", ""), 0
+        )
+
     return agent
 
 @router.post("/agents", response_model=Agent)
@@ -126,7 +160,20 @@ async def create_agent(agent_data: AgentCreate, current_user: User = Depends(get
     }
     
     await db.agents.insert_one(agent_doc)
-    
+
+    # Ingest skills + provider knowledge for the new agent (fire-and-forget)
+    import asyncio
+    async def _ingest_new_agent():
+        try:
+            from pathlib import Path
+            from services.skills_service import ensure_agent_skills, ensure_provider_skills
+            skills_root = Path(__file__).parent.parent.parent / ".claude" / "skills"
+            await ensure_agent_skills(agent_doc, db, skills_root)
+            await ensure_provider_skills(agent_doc, db)
+        except Exception as e:
+            logger.warning(f"Skill ingestion for new agent {agent_id}: {e}")
+    asyncio.create_task(_ingest_new_agent())
+
     # Deduct credits for non-admin users
     if not is_admin:
         await db.subscriptions.update_one(

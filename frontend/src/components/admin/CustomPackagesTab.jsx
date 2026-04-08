@@ -323,7 +323,7 @@ const CustomPackagesTab = () => {
       </Card>
 
       <Button onClick={handleSave} disabled={saving}
-        className="bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 w-full"
+        className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 w-full"
         data-testid="save-custom-config-btn">
         {saving ? "Saving..." : "Save All Pricing"}
       </Button>

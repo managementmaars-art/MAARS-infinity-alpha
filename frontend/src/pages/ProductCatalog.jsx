@@ -2,16 +2,82 @@ import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
-import { Button } from "../components/ui/button";
-import { Card, CardContent } from "../components/ui/card";
-import { Input } from "../components/ui/input";
-import { Badge } from "../components/ui/badge";
 import {
   Package, Search, Plus, RefreshCw, Trash2, Video, FileText, Share2,
-  Megaphone, ChevronLeft, Loader2, ExternalLink, Clock, Scan, Bot,
-  LayoutDashboard, MessageSquare, Users, ListTodo, BarChart3, Settings,
-  Shield, LogOut, Menu, X
+  Megaphone, ChevronLeft, ExternalLink, Clock, Scan, MessageSquare,
 } from "lucide-react";
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  violet: "#7c3aed",
+  green: "#34d399",
+  amber: "#f59e0b",
+  red: "#ef4444",
+  cyan: "#22d3ee",
+  zinc: "#71717a",
+};
+
+const STYLES = `@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} } @keyframes spin { to{transform:rotate(360deg)} } @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }`;
+
+const formInput = {
+  background: "rgba(255,255,255,.04)",
+  border: "1px solid rgba(255,255,255,0.08)",
+  borderRadius: 8,
+  padding: "8px 12px",
+  color: "#fff",
+  fontSize: 13,
+  outline: "none",
+  fontFamily: "inherit",
+  width: "100%",
+  boxSizing: "border-box",
+  transition: "border-color .2s",
+};
+
+const btnPrimary = {
+  background: "linear-gradient(135deg,#6366f1,#7c3aed)",
+  border: "none",
+  borderRadius: 8,
+  color: "#fff",
+  fontSize: 13,
+  fontWeight: 600,
+  padding: "8px 16px",
+  cursor: "pointer",
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 6,
+  fontFamily: "inherit",
+};
+
+const btnOutline = {
+  background: "transparent",
+  border: "1px solid rgba(255,255,255,0.10)",
+  borderRadius: 8,
+  color: "#a1a1aa",
+  fontSize: 13,
+  fontWeight: 500,
+  padding: "8px 16px",
+  cursor: "pointer",
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 6,
+  fontFamily: "inherit",
+};
+
+const btnIconOutline = {
+  ...btnOutline,
+  padding: 0,
+  width: 32,
+  height: 32,
+  justifyContent: "center",
+};
+
+const card = {
+  background: T.glass,
+  border: "1px solid rgba(255,255,255,0.08)",
+  borderRadius: 14,
+};
 
 export default function ProductCatalog() {
   const { user, token } = useAuth();
@@ -24,7 +90,7 @@ export default function ProductCatalog() {
   const [generating, setGenerating] = useState(null);
   const [generatedContent, setGeneratedContent] = useState(null);
   const [rescanning, setRescanning] = useState(null);
-    const [showImport, setShowImport] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const [importFile, setImportFile] = useState(null);
   const [importing, setImporting] = useState(false);
   const [batchProgress, setBatchProgress] = useState(null);
@@ -135,327 +201,398 @@ export default function ProductCatalog() {
     !searchQuery || p.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     p.brand?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
   const contentTypes = [
-    { key: "video", label: "Video Prompt", icon: Video, color: "from-red-500 to-rose-500" },
-    { key: "ad_copy", label: "Ad Copy", icon: FileText, color: "from-blue-500 to-indigo-500" },
-    { key: "social_post", label: "Social Posts", icon: Share2, color: "from-purple-500 to-violet-500" },
-    { key: "full_campaign", label: "Full Campaign", icon: Megaphone, color: "from-amber-500 to-orange-500" },
+    { key: "video", label: "Video Prompt", icon: Video, gradient: "linear-gradient(135deg,#ef4444,#f43f5e)" },
+    { key: "ad_copy", label: "Ad Copy", icon: FileText, gradient: "linear-gradient(135deg,#3b82f6,#6366f1)" },
+    { key: "social_post", label: "Social Posts", icon: Share2, gradient: "linear-gradient(135deg,#a855f7,#7c3aed)" },
+    { key: "full_campaign", label: "Full Campaign", icon: Megaphone, gradient: "linear-gradient(135deg,#f59e0b,#f97316)" },
   ];
 
   return (
-    <div data-testid="products-page">
-        <div className="max-w-7xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-2xl font-bold text-white font-['Outfit']" data-testid="products-title">Product Catalog</h1>
-              <p className="text-zinc-400 text-sm mt-1">{products.length} product{products.length !== 1 ? "s" : ""} saved</p>
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={() => setShowImport(true)} variant="outline" className="border-white/10 text-zinc-300" data-testid="import-btn">
-                <Plus className="w-4 h-4 mr-2" />Import CSV
-              </Button>
-              <Button onClick={() => navigate("/chat")} className="bg-gradient-to-r from-indigo-500 to-violet-500" data-testid="scan-new-btn">
-                <Scan className="w-4 h-4 mr-2" />Scan New Product
-              </Button>
-            </div>
-          </div>
+    <div data-testid="products-page" style={{ animation: "fadeUp .4s ease" }}>
+      <style>{STYLES}</style>
+      <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", flexDirection: "column", gap: 24 }}>
 
-          {/* Search */}
-          <div className="relative mb-6">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-            <Input
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="pl-10 bg-zinc-900/50 border-white/10"
-              data-testid="product-search"
-            />
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 700, color: "#fff", margin: 0, fontFamily: "Outfit, sans-serif" }} data-testid="products-title">Product Catalog</h1>
+            <p style={{ fontSize: 13, color: "#71717a", margin: "4px 0 0" }}>{products.length} product{products.length !== 1 ? "s" : ""} saved</p>
           </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button style={btnOutline} onClick={() => setShowImport(true)} data-testid="import-btn">
+              <Plus style={{ width: 16, height: 16 }} />Import CSV
+            </button>
+            <button style={btnPrimary} onClick={() => navigate("/chat")} data-testid="scan-new-btn">
+              <Scan style={{ width: 16, height: 16 }} />Scan New Product
+            </button>
+          </div>
+        </div>
 
-          <div className="flex gap-6">
-            {/* Product Grid */}
-            <div className={`flex-1 ${selectedProduct ? 'hidden lg:block lg:w-1/2' : 'w-full'}`}>
-              {loading ? (
-                <div className="flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-indigo-400" /></div>
-              ) : filtered.length === 0 ? (
-                <Card className="bg-zinc-900/50 border-white/10">
-                  <CardContent className="flex flex-col items-center justify-center py-16">
-                    <Package className="w-12 h-12 text-zinc-600 mb-4" />
-                    <h3 className="text-white font-medium mb-2">{searchQuery ? "No products match" : "No products yet"}</h3>
-                    <p className="text-zinc-500 text-sm text-center mb-4">Upload a product image in any chat and ask the agent to scan it. Then save it here!</p>
-                    <Button onClick={() => navigate("/chat")} variant="outline" className="border-white/10"><MessageSquare className="w-4 h-4 mr-2" />Go to Chat</Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {filtered.map(product => (
-                    <Card
+        {/* Search */}
+        <div style={{ position: "relative" }}>
+          <Search style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", width: 16, height: 16, color: "#52525b" }} />
+          <input
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            style={{ ...formInput, paddingLeft: 38 }}
+            data-testid="product-search"
+          />
+        </div>
+
+        <div style={{ display: "flex", gap: 24 }}>
+          {/* Product Grid */}
+          <div style={{ flex: 1, minWidth: 0, display: selectedProduct ? undefined : "block" }}>
+            {loading ? (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }}>
+                <div style={{ width: 32, height: 32, border: "2px solid #6366f1", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+              </div>
+            ) : filtered.length === 0 ? (
+              <div style={{ ...card, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 64 }}>
+                <Package style={{ width: 48, height: 48, color: "#3f3f46", marginBottom: 16 }} />
+                <h3 style={{ fontSize: 15, fontWeight: 500, color: "#fff", margin: "0 0 8px" }}>{searchQuery ? "No products match" : "No products yet"}</h3>
+                <p style={{ fontSize: 13, color: "#52525b", textAlign: "center", margin: "0 0 16px" }}>Upload a product image in any chat and ask the agent to scan it. Then save it here!</p>
+                <button style={btnOutline} onClick={() => navigate("/chat")}>
+                  <MessageSquare style={{ width: 16, height: 16 }} />Go to Chat
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 16 }}>
+                {filtered.map(product => {
+                  const isSelected = selectedProduct?.product_id === product.product_id;
+                  return (
+                    <div
                       key={product.product_id}
-                      className={`bg-zinc-900/50 border-white/10 cursor-pointer hover:border-indigo-500/30 transition-all group ${selectedProduct?.product_id === product.product_id ? 'border-indigo-500/50 ring-1 ring-indigo-500/20' : ''}`}
+                      style={{
+                        ...card,
+                        cursor: "pointer",
+                        transition: "border-color .15s",
+                        border: isSelected ? "1px solid rgba(99,102,241,0.5)" : "1px solid rgba(255,255,255,0.08)",
+                        boxShadow: isSelected ? "0 0 0 1px rgba(99,102,241,0.2)" : "none",
+                      }}
                       onClick={() => { setSelectedProduct(product); setGeneratedContent(null); }}
                       data-testid={`product-card-${product.product_id}`}
+                      onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)"; }}
+                      onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
                     >
-                      <CardContent className="p-4">
-                        {/* Image */}
-                        <div className="aspect-square rounded-lg bg-zinc-800 mb-3 overflow-hidden">
+                      <div style={{ padding: 16 }}>
+                        <div style={{ aspectRatio: "1 / 1", borderRadius: 10, background: "#18181b", marginBottom: 12, overflow: "hidden" }}>
                           {product.images?.[0]?.url || product.images?.[0]?.thumbnail ? (
-                            <img src={product.images[0].thumbnail || product.images[0].url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onError={e => { e.target.style.display = 'none'; }} />
+                            <img
+                              src={product.images[0].thumbnail || product.images[0].url}
+                              alt={product.name}
+                              style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform .3s" }}
+                              onError={e => { e.target.style.display = "none"; }}
+                              onMouseEnter={e => e.target.style.transform = "scale(1.05)"}
+                              onMouseLeave={e => e.target.style.transform = "none"}
+                            />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center"><Package className="w-8 h-8 text-zinc-600" /></div>
+                            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                              <Package style={{ width: 32, height: 32, color: "#3f3f46" }} />
+                            </div>
                           )}
                         </div>
-                        <h3 className="text-white font-semibold text-sm truncate">{product.name}</h3>
-                        {product.brand && <p className="text-zinc-500 text-xs">{product.brand}</p>}
-                        <div className="flex items-center justify-between mt-2">
-                          {product.category && <Badge className="bg-indigo-500/20 text-indigo-300 text-[9px]">{product.category}</Badge>}
-                          <span className="text-zinc-600 text-[10px] flex items-center gap-1"><Clock className="w-3 h-3" />{new Date(product.created_at).toLocaleDateString()}</span>
+                        <h3 style={{ fontSize: 13, fontWeight: 600, color: "#fff", margin: 0, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{product.name}</h3>
+                        {product.brand && <p style={{ fontSize: 11, color: "#52525b", margin: "2px 0 0" }}>{product.brand}</p>}
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 8 }}>
+                          {product.category && (
+                            <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 9px", borderRadius: 20, background: "rgba(99,102,241,0.2)", color: "#a5b4fc" }}>
+                              {product.category}
+                            </span>
+                          )}
+                          <span style={{ fontSize: 10, color: "#3f3f46", display: "flex", alignItems: "center", gap: 3 }}>
+                            <Clock style={{ width: 10, height: 10 }} />{new Date(product.created_at).toLocaleDateString()}
+                          </span>
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Product Detail Panel */}
-            {selectedProduct && (
-              <div className="w-full lg:w-1/2 lg:sticky lg:top-6 space-y-4" data-testid="product-detail">
-                <button className="lg:hidden flex items-center gap-1 text-zinc-400 text-sm mb-2" onClick={() => setSelectedProduct(null)}>
-                  <ChevronLeft className="w-4 h-4" />Back to list
-                </button>
-
-                <Card className="bg-zinc-900/50 border-white/10">
-                  <CardContent className="p-5">
-                    {/* Images */}
-                    {selectedProduct.images?.length > 0 && (
-                      <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
-                        {selectedProduct.images.slice(0, 6).map((img, i) => (
-                          <img key={i} src={img.thumbnail || img.url} alt="" className="w-20 h-20 rounded-lg object-cover border border-white/10 flex-shrink-0" onError={e => { e.target.style.display = 'none'; }} />
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h2 className="text-xl font-bold text-white font-['Outfit']" data-testid="product-detail-name">{selectedProduct.name}</h2>
-                        {selectedProduct.brand && <p className="text-indigo-400 text-sm">{selectedProduct.brand}</p>}
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="border-white/10 text-zinc-400 h-8 w-8 p-0"
-                          onClick={() => rescanProduct(selectedProduct.product_id)}
-                          disabled={rescanning === selectedProduct.product_id}
-                          data-testid="rescan-btn">
-                          <RefreshCw className={`w-3.5 h-3.5 ${rescanning === selectedProduct.product_id ? 'animate-spin' : ''}`} />
-                        </Button>
-                        <Button variant="outline" size="sm" className="border-red-500/30 text-red-400 hover:bg-red-500/10 h-8 w-8 p-0"
-                          onClick={() => deleteProduct(selectedProduct.product_id)}
-                          data-testid="delete-product-btn">
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </Button>
                       </div>
                     </div>
-
-                    {selectedProduct.description && <p className="text-zinc-400 text-sm mb-3">{selectedProduct.description}</p>}
-                    {selectedProduct.specs && (
-                      <div className="p-3 rounded-lg bg-white/5 mb-3">
-                        <p className="text-[10px] text-zinc-500 font-medium mb-1">SPECIFICATIONS</p>
-                        <p className="text-zinc-300 text-xs whitespace-pre-wrap">{selectedProduct.specs.slice(0, 500)}</p>
-                      </div>
-                    )}
-                    {selectedProduct.price_info && (
-                      <div className="p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10 mb-3">
-                        <p className="text-[10px] text-emerald-500 font-medium mb-1">PRICE INFO</p>
-                        <p className="text-zinc-300 text-xs">{selectedProduct.price_info}</p>
-                      </div>
-                    )}
-
-                    <div className="text-[10px] text-zinc-600 flex items-center gap-3">
-                      <span>Scanned: {new Date(selectedProduct.last_scanned).toLocaleString()}</span>
-                      {selectedProduct.source_chat_id && (
-                        <Link to={`/chat?chat=${selectedProduct.source_chat_id}`} className="text-indigo-400 hover:underline flex items-center gap-1">
-                          <ExternalLink className="w-3 h-3" />Source chat
-                        </Link>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Quick Generate */}
-                <Card className="bg-zinc-900/50 border-white/10">
-                  <CardContent className="p-5">
-                    <h3 className="text-white font-semibold text-sm mb-3">Quick Generate</h3>
-                    <div className="grid grid-cols-2 gap-2">
-                      {contentTypes.map(ct => (
-                        <Button
-                          key={ct.key}
-                          onClick={() => generateContent(selectedProduct.product_id, ct.key)}
-                          disabled={generating !== null}
-                          className={`bg-gradient-to-r ${ct.color} text-white text-xs h-10 justify-start`}
-                          data-testid={`generate-${ct.key}-btn`}
-                        >
-                          {generating === ct.key ? <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" /> : <ct.icon className="w-3.5 h-3.5 mr-2" />}
-                          {ct.label}
-                        </Button>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Generated Content */}
-                {generatedContent && (
-                  <Card className="bg-zinc-900/50 border-white/10" data-testid="generated-content">
-                    <CardContent className="p-5">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-white font-semibold text-sm">
-                          Generated: {contentTypes.find(c => c.key === generatedContent.type)?.label}
-                        </h3>
-                        <Button variant="outline" size="sm" className="border-white/10 text-zinc-400 h-7 text-[10px]"
-                          onClick={() => { navigator.clipboard.writeText(generatedContent.content); toast.success("Copied!"); }}>
-                          Copy
-                        </Button>
-                      </div>
-                      <div className="p-3 rounded-lg bg-white/5 max-h-80 overflow-y-auto">
-                        <p className="text-zinc-300 text-sm whitespace-pre-wrap">{generatedContent.content}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {/* History */}
-                {selectedProduct.generated_content?.length > 0 && (
-                  <Card className="bg-zinc-900/50 border-white/10">
-                    <CardContent className="p-5">
-                      <h3 className="text-white font-semibold text-sm mb-3">Generation History</h3>
-                      <div className="space-y-2">
-                        {selectedProduct.generated_content.slice(-5).reverse().map((gen, i) => (
-                          <div key={gen.content_id || i} className="p-2 rounded bg-white/5 cursor-pointer hover:bg-white/10 transition-colors"
-                            onClick={() => setGeneratedContent({ type: gen.type, content: gen.content })}>
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs text-indigo-300">{contentTypes.find(c => c.key === gen.type)?.label || gen.type}</span>
-                              <span className="text-[10px] text-zinc-600">{new Date(gen.created_at).toLocaleDateString()}</span>
-                            </div>
-                            <p className="text-zinc-500 text-[10px] truncate mt-0.5">{gen.content?.slice(0, 80)}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+                  );
+                })}
               </div>
             )}
           </div>
 
-          {/* Batch Progress Tracker */}
-          {batchProgress && batchProgress.status === "processing" && (
-            <Card className="mt-6 bg-zinc-900/50 border-indigo-500/20" data-testid="batch-progress">
-              <CardContent className="p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
-                    <h3 className="text-white font-semibold text-sm">Batch Import in Progress</h3>
+          {/* Product Detail Panel */}
+          {selectedProduct && (
+            <div style={{ width: "100%", maxWidth: 400, flexShrink: 0, display: "flex", flexDirection: "column", gap: 16, position: "sticky", top: 24, alignSelf: "flex-start" }} data-testid="product-detail">
+              <button
+                style={{ display: "flex", alignItems: "center", gap: 4, color: "#71717a", fontSize: 13, background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: "inherit", marginBottom: 4 }}
+                onClick={() => setSelectedProduct(null)}
+              >
+                <ChevronLeft style={{ width: 16, height: 16 }} />Back to list
+              </button>
+
+              <div style={{ ...card, padding: 20 }}>
+                {selectedProduct.images?.length > 0 && (
+                  <div style={{ display: "flex", gap: 8, marginBottom: 16, overflowX: "auto", paddingBottom: 8 }}>
+                    {selectedProduct.images.slice(0, 6).map((img, i) => (
+                      <img
+                        key={i}
+                        src={img.thumbnail || img.url}
+                        alt=""
+                        style={{ width: 80, height: 80, borderRadius: 8, objectFit: "cover", border: "1px solid rgba(255,255,255,0.10)", flexShrink: 0 }}
+                        onError={e => { e.target.style.display = "none"; }}
+                      />
+                    ))}
                   </div>
-                  <span className="text-zinc-400 text-xs">
-                    {(batchProgress.completed || 0) + (batchProgress.failed || 0)}/{batchProgress.total} processed
-                  </span>
+                )}
+
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 12 }}>
+                  <div>
+                    <h2 style={{ fontSize: 20, fontWeight: 700, color: "#fff", margin: 0, fontFamily: "Outfit, sans-serif" }} data-testid="product-detail-name">{selectedProduct.name}</h2>
+                    {selectedProduct.brand && <p style={{ fontSize: 13, color: T.indigo, margin: "2px 0 0" }}>{selectedProduct.brand}</p>}
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button
+                      style={{ ...btnIconOutline, borderColor: "rgba(255,255,255,0.10)" }}
+                      onClick={() => rescanProduct(selectedProduct.product_id)}
+                      disabled={rescanning === selectedProduct.product_id}
+                      data-testid="rescan-btn"
+                    >
+                      <RefreshCw style={{ width: 14, height: 14, animation: rescanning === selectedProduct.product_id ? "spin 1s linear infinite" : "none" }} />
+                    </button>
+                    <button
+                      style={{ ...btnIconOutline, borderColor: "rgba(239,68,68,0.3)", color: "#f87171" }}
+                      onClick={() => deleteProduct(selectedProduct.product_id)}
+                      data-testid="delete-product-btn"
+                    >
+                      <Trash2 style={{ width: 14, height: 14 }} />
+                    </button>
+                  </div>
                 </div>
-                <div className="h-2 rounded-full bg-zinc-800 overflow-hidden mb-3">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-emerald-500 transition-all duration-500"
-                    style={{ width: `${Math.max(((batchProgress.completed || 0) + (batchProgress.failed || 0)) / batchProgress.total * 100, 3)}%` }}
-                  />
+
+                {selectedProduct.description && <p style={{ fontSize: 13, color: "#71717a", margin: "0 0 12px" }}>{selectedProduct.description}</p>}
+                {selectedProduct.specs && (
+                  <div style={{ padding: 12, borderRadius: 8, background: "rgba(255,255,255,0.05)", marginBottom: 12 }}>
+                    <p style={{ fontSize: 10, color: "#52525b", fontWeight: 500, marginBottom: 4 }}>SPECIFICATIONS</p>
+                    <p style={{ fontSize: 11, color: "#d4d4d8", margin: 0, whiteSpace: "pre-wrap" }}>{selectedProduct.specs.slice(0, 500)}</p>
+                  </div>
+                )}
+                {selectedProduct.price_info && (
+                  <div style={{ padding: 12, borderRadius: 8, background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.10)", marginBottom: 12 }}>
+                    <p style={{ fontSize: 10, color: "#10b981", fontWeight: 500, marginBottom: 4 }}>PRICE INFO</p>
+                    <p style={{ fontSize: 11, color: "#d4d4d8", margin: 0 }}>{selectedProduct.price_info}</p>
+                  </div>
+                )}
+
+                <div style={{ fontSize: 10, color: "#3f3f46", display: "flex", alignItems: "center", gap: 12 }}>
+                  <span>Scanned: {new Date(selectedProduct.last_scanned).toLocaleString()}</span>
+                  {selectedProduct.source_chat_id && (
+                    <Link to={`/chat?chat=${selectedProduct.source_chat_id}`} style={{ color: T.indigo, textDecoration: "none", display: "flex", alignItems: "center", gap: 3 }}>
+                      <ExternalLink style={{ width: 10, height: 10 }} />Source chat
+                    </Link>
+                  )}
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 max-h-48 overflow-y-auto">
-                  {(batchProgress.items || []).map((item, i) => (
-                    <div key={i} className={`p-2 rounded-lg text-[10px] border ${
-                      item.status === "done" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" :
-                      item.status === "scanning" ? "bg-amber-500/10 border-amber-500/20 text-amber-400" :
-                      item.status === "failed" ? "bg-red-500/10 border-red-500/20 text-red-400" :
-                      "bg-zinc-800/50 border-white/5 text-zinc-500"
-                    }`} data-testid={`batch-item-${i}`}>
-                      <p className="font-medium truncate">{item.name}</p>
-                      <p className="capitalize mt-0.5">
-                        {item.status === "scanning" && <Loader2 className="w-2.5 h-2.5 inline animate-spin mr-1" />}
-                        {item.status}
-                      </p>
-                    </div>
+              </div>
+
+              {/* Quick Generate */}
+              <div style={{ ...card, padding: 20 }}>
+                <h3 style={{ fontSize: 13, fontWeight: 600, color: "#fff", margin: "0 0 12px" }}>Quick Generate</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                  {contentTypes.map(ct => (
+                    <button
+                      key={ct.key}
+                      onClick={() => generateContent(selectedProduct.product_id, ct.key)}
+                      disabled={generating !== null}
+                      style={{
+                        background: ct.gradient,
+                        border: "none",
+                        borderRadius: 8,
+                        color: "#fff",
+                        fontSize: 11,
+                        fontWeight: 600,
+                        padding: "10px 12px",
+                        cursor: generating !== null ? "not-allowed" : "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                        fontFamily: "inherit",
+                        opacity: generating !== null ? 0.6 : 1,
+                        transition: "opacity .15s",
+                      }}
+                      data-testid={`generate-${ct.key}-btn`}
+                    >
+                      {generating === ct.key
+                        ? <div style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+                        : <ct.icon style={{ width: 14, height: 14 }} />
+                      }
+                      {ct.label}
+                    </button>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              </div>
 
-          {/* Completed batch summary */}
-          {batchProgress && batchProgress.status === "complete" && (
-            <Card className="mt-6 bg-zinc-900/50 border-emerald-500/20" data-testid="batch-complete">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                    <Package className="w-4 h-4 text-emerald-400" />
+              {/* Generated Content */}
+              {generatedContent && (
+                <div style={{ ...card, padding: 20 }} data-testid="generated-content">
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                    <h3 style={{ fontSize: 13, fontWeight: 600, color: "#fff", margin: 0 }}>
+                      Generated: {contentTypes.find(c => c.key === generatedContent.type)?.label}
+                    </h3>
+                    <button
+                      style={{ ...btnOutline, fontSize: 10, padding: "4px 10px" }}
+                      onClick={() => { navigator.clipboard.writeText(generatedContent.content); toast.success("Copied!"); }}
+                    >
+                      Copy
+                    </button>
                   </div>
-                  <div>
-                    <p className="text-white text-sm font-medium">Batch Import Complete</p>
-                    <p className="text-zinc-500 text-xs">{batchProgress.completed} scanned, {batchProgress.failed} failed</p>
+                  <div style={{ padding: 12, borderRadius: 8, background: "rgba(255,255,255,0.05)", maxHeight: 320, overflowY: "auto" }}>
+                    <p style={{ fontSize: 13, color: "#d4d4d8", margin: 0, whiteSpace: "pre-wrap" }}>{generatedContent.content}</p>
                   </div>
                 </div>
-                <Button variant="outline" size="sm" className="border-white/10 text-zinc-400" onClick={() => setBatchProgress(null)}>Dismiss</Button>
-              </CardContent>
-            </Card>
+              )}
+
+              {/* History */}
+              {selectedProduct.generated_content?.length > 0 && (
+                <div style={{ ...card, padding: 20 }}>
+                  <h3 style={{ fontSize: 13, fontWeight: 600, color: "#fff", margin: "0 0 12px" }}>Generation History</h3>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {selectedProduct.generated_content.slice(-5).reverse().map((gen, i) => (
+                      <div
+                        key={gen.content_id || i}
+                        style={{ padding: 8, borderRadius: 6, background: "rgba(255,255,255,0.05)", cursor: "pointer", transition: "background .15s" }}
+                        onClick={() => setGeneratedContent({ type: gen.type, content: gen.content })}
+                        onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.09)"}
+                        onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                          <span style={{ fontSize: 11, color: "#a5b4fc" }}>{contentTypes.find(c => c.key === gen.type)?.label || gen.type}</span>
+                          <span style={{ fontSize: 10, color: "#3f3f46" }}>{new Date(gen.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <p style={{ fontSize: 10, color: "#52525b", margin: "2px 0 0", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{gen.content?.slice(0, 80)}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
 
+        {/* Batch Progress Tracker */}
+        {batchProgress && batchProgress.status === "processing" && (
+          <div style={{ ...card, border: "1px solid rgba(99,102,241,0.2)", padding: 20, marginTop: 24 }} data-testid="batch-progress">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ width: 16, height: 16, border: "2px solid #818cf8", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+                <h3 style={{ fontSize: 13, fontWeight: 600, color: "#fff", margin: 0 }}>Batch Import in Progress</h3>
+              </div>
+              <span style={{ fontSize: 11, color: "#71717a" }}>
+                {(batchProgress.completed || 0) + (batchProgress.failed || 0)}/{batchProgress.total} processed
+              </span>
+            </div>
+            <div style={{ height: 8, borderRadius: 9999, background: "#27272a", overflow: "hidden", marginBottom: 12 }}>
+              <div style={{
+                height: "100%",
+                borderRadius: 9999,
+                background: "linear-gradient(90deg,#6366f1,#34d399)",
+                transition: "width 0.5s ease",
+                width: `${Math.max(((batchProgress.completed || 0) + (batchProgress.failed || 0)) / batchProgress.total * 100, 3)}%`,
+              }} />
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))", gap: 8, maxHeight: 192, overflowY: "auto" }}>
+              {(batchProgress.items || []).map((item, i) => {
+                const itemStyle = item.status === "done"
+                  ? { background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)", color: "#34d399" }
+                  : item.status === "scanning"
+                  ? { background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)", color: "#fbbf24" }
+                  : item.status === "failed"
+                  ? { background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171" }
+                  : { background: "rgba(39,39,42,0.5)", border: "1px solid rgba(255,255,255,0.05)", color: "#52525b" };
+                return (
+                  <div key={i} style={{ padding: 8, borderRadius: 8, fontSize: 10, ...itemStyle }} data-testid={`batch-item-${i}`}>
+                    <p style={{ fontWeight: 500, margin: 0, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{item.name}</p>
+                    <p style={{ textTransform: "capitalize", margin: "2px 0 0", display: "flex", alignItems: "center", gap: 3 }}>
+                      {item.status === "scanning" && <span style={{ display: "inline-block", width: 10, height: 10, border: "1.5px solid currentColor", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />}
+                      {item.status}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Completed batch summary */}
+        {batchProgress && batchProgress.status === "complete" && (
+          <div style={{ ...card, border: "1px solid rgba(16,185,129,0.2)", padding: 16, marginTop: 24, display: "flex", alignItems: "center", justifyContent: "space-between" }} data-testid="batch-complete">
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(16,185,129,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Package style={{ width: 16, height: 16, color: "#34d399" }} />
+              </div>
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 500, color: "#fff", margin: 0 }}>Batch Import Complete</p>
+                <p style={{ fontSize: 11, color: "#52525b", margin: "2px 0 0" }}>{batchProgress.completed} scanned, {batchProgress.failed} failed</p>
+              </div>
+            </div>
+            <button style={btnOutline} onClick={() => setBatchProgress(null)}>Dismiss</button>
+          </div>
+        )}
+      </div>
+
       {/* Import Modal */}
       {showImport && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" data-testid="import-modal">
-          <Card className="w-full max-w-md bg-zinc-900 border-white/10">
-            <CardContent className="p-6">
-              <h2 className="text-lg font-bold text-white font-['Outfit'] mb-1">Batch Product Import</h2>
-              <p className="text-zinc-400 text-sm mb-4">Upload a CSV or XLSX file with product data. Required column: <code className="text-indigo-400">name</code>. Optional: <code className="text-indigo-400">brand</code>, <code className="text-indigo-400">category</code>.</p>
+        <div style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }} data-testid="import-modal">
+          <div style={{ ...card, width: "100%", maxWidth: 448, padding: 24 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: "0 0 4px", fontFamily: "Outfit, sans-serif" }}>Batch Product Import</h2>
+            <p style={{ fontSize: 13, color: "#71717a", margin: "0 0 16px" }}>
+              Upload a CSV or XLSX file with product data. Required column: <code style={{ color: T.indigo }}>name</code>. Optional: <code style={{ color: T.indigo }}>brand</code>, <code style={{ color: T.indigo }}>category</code>.
+            </p>
 
-              <div
-                className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${importFile ? "border-emerald-500/40 bg-emerald-500/5" : "border-white/10 hover:border-indigo-500/30"}`}
-                onDragOver={e => e.preventDefault()}
-                onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) setImportFile(f); }}
+            <div
+              style={{
+                border: importFile ? "2px dashed rgba(16,185,129,0.4)" : "2px dashed rgba(255,255,255,0.10)",
+                borderRadius: 12,
+                padding: 32,
+                textAlign: "center",
+                background: importFile ? "rgba(16,185,129,0.05)" : "transparent",
+                transition: "border-color .2s, background .2s",
+              }}
+              onDragOver={e => e.preventDefault()}
+              onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) setImportFile(f); }}
+            >
+              {importFile ? (
+                <div>
+                  <Package style={{ width: 32, height: 32, color: "#34d399", margin: "0 auto 8px", display: "block" }} />
+                  <p style={{ fontSize: 13, fontWeight: 500, color: "#fff", margin: 0 }}>{importFile.name}</p>
+                  <p style={{ fontSize: 11, color: "#52525b", margin: "4px 0 0" }}>{(importFile.size / 1024).toFixed(1)} KB</p>
+                  <button style={{ fontSize: 11, color: "#f87171", background: "none", border: "none", cursor: "pointer", marginTop: 8, fontFamily: "inherit" }} onClick={() => setImportFile(null)}>Remove</button>
+                </div>
+              ) : (
+                <div>
+                  <Plus style={{ width: 32, height: 32, color: "#3f3f46", margin: "0 auto 8px", display: "block" }} />
+                  <p style={{ fontSize: 13, color: "#71717a", margin: 0 }}>Drag & drop your file here</p>
+                  <p style={{ fontSize: 11, color: "#3f3f46", margin: "4px 0 0" }}>or</p>
+                  <label style={{ display: "inline-block", marginTop: 8, padding: "6px 16px", borderRadius: 8, background: "rgba(255,255,255,0.10)", color: "#fff", fontSize: 13, cursor: "pointer", transition: "background .15s" }}>
+                    Browse Files
+                    <input type="file" accept=".csv,.xlsx,.xls" style={{ display: "none" }} onChange={e => { if (e.target.files[0]) setImportFile(e.target.files[0]); }} />
+                  </label>
+                </div>
+              )}
+            </div>
+
+            <div style={{ padding: 12, borderRadius: 8, background: "rgba(255,255,255,0.05)", marginTop: 16 }}>
+              <p style={{ fontSize: 10, color: "#52525b", fontWeight: 500, marginBottom: 4 }}>EXAMPLE CSV FORMAT</p>
+              <code style={{ fontSize: 11, color: "#71717a", display: "block" }}>name,brand,category<br />iPhone 16 Pro,Apple,Smartphone<br />Air Max 90,Nike,Footwear<br />Model Y,Tesla,Electric Vehicle</code>
+            </div>
+
+            <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
+              <button style={{ ...btnOutline, flex: 1, justifyContent: "center" }} onClick={() => { setShowImport(false); setImportFile(null); }}>Cancel</button>
+              <button
+                style={{ ...btnPrimary, flex: 1, justifyContent: "center", opacity: (!importFile || importing) ? 0.5 : 1, cursor: (!importFile || importing) ? "not-allowed" : "pointer" }}
+                disabled={!importFile || importing}
+                onClick={handleBatchImport}
+                data-testid="start-import-btn"
               >
-                {importFile ? (
-                  <div>
-                    <Package className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-                    <p className="text-white text-sm font-medium">{importFile.name}</p>
-                    <p className="text-zinc-500 text-xs mt-1">{(importFile.size / 1024).toFixed(1)} KB</p>
-                    <button className="text-red-400 text-xs mt-2 hover:underline" onClick={() => setImportFile(null)}>Remove</button>
-                  </div>
-                ) : (
-                  <div>
-                    <Plus className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
-                    <p className="text-zinc-400 text-sm">Drag & drop your file here</p>
-                    <p className="text-zinc-600 text-xs mt-1">or</p>
-                    <label className="inline-block mt-2 px-4 py-1.5 rounded-lg bg-white/10 text-white text-sm cursor-pointer hover:bg-white/20 transition-colors">
-                      Browse Files
-                      <input type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={e => { if (e.target.files[0]) setImportFile(e.target.files[0]); }} />
-                    </label>
-                  </div>
-                )}
-              </div>
-
-              <div className="p-3 rounded-lg bg-white/5 mt-4">
-                <p className="text-[10px] text-zinc-500 font-medium mb-1">EXAMPLE CSV FORMAT</p>
-                <code className="text-[11px] text-zinc-400 block">name,brand,category<br/>iPhone 16 Pro,Apple,Smartphone<br/>Air Max 90,Nike,Footwear<br/>Model Y,Tesla,Electric Vehicle</code>
-              </div>
-
-              <div className="flex gap-3 mt-5">
-                <Button variant="outline" className="flex-1 border-white/10 text-zinc-400" onClick={() => { setShowImport(false); setImportFile(null); }}>Cancel</Button>
-                <Button
-                  className="flex-1 bg-gradient-to-r from-indigo-500 to-violet-500"
-                  disabled={!importFile || importing}
-                  onClick={handleBatchImport}
-                  data-testid="start-import-btn"
-                >
-                  {importing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Scan className="w-4 h-4 mr-2" />}
-                  {importing ? "Importing..." : `Import ${importFile ? "& Scan" : ""}`}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                {importing
+                  ? <><div style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} /> Importing...</>
+                  : <><Scan style={{ width: 16, height: 16 }} /> {importFile ? "Import & Scan" : "Import"}</>
+                }
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

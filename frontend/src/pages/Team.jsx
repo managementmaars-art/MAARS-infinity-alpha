@@ -1,19 +1,60 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
-import { Label } from "../components/ui/label";
+import { useNavigate } from "react-router-dom";
 import {
-  Bot, Users, UserPlus, Crown, Shield, User, Mail, Trash2, LogOut,
-  LayoutDashboard, MessageSquare, ListTodo, Settings, Menu, X, Plus,
-  CheckCircle, XCircle, Loader2, Share2, ChevronRight, Package,
-  Activity, BarChart3
+  Users, UserPlus, Crown, Shield, User, Mail, Trash2, LogOut,
+  MessageSquare, Plus, CheckCircle, XCircle, Share2, ChevronRight,
+  Activity, BarChart3, X
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  violet: "#7c3aed",
+  amber: "#f59e0b",
+  green: "#34d399",
+  cyan: "#22d3ee",
+  red: "#ef4444",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
+
+const ROLE_META = {
+  owner: { icon: Crown, color: T.amber, bg: "rgba(245,158,11,.12)" },
+  admin: { icon: Shield, color: "#60a5fa", bg: "rgba(96,165,250,.12)" },
+  member: { icon: User, color: T.zinc, bg: "rgba(113,113,122,.1)" },
+};
+
+const formInput = {
+  background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`,
+  borderRadius: 8, padding: "8px 12px", color: "#fff", fontSize: 13,
+  outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box",
+  transition: "border-color .2s",
+};
+
+const Modal = ({ title, children, onClose }) => (
+  <div style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,.6)", backdropFilter: "blur(4px)" }} onClick={onClose} />
+    <div style={{ position: "relative", background: "#0f0f1a", border: `1px solid ${T.border}`, borderRadius: 16, padding: "24px", width: "100%", maxWidth: 440, margin: "0 16px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+        <h3 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 17, fontWeight: 700, color: "#fff", margin: 0 }}>{title}</h3>
+        <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: T.zinc, padding: 4 }}><X size={16} /></button>
+      </div>
+      {children}
+    </div>
+  </div>
+);
+
+const RoleBadge = ({ role }) => {
+  const rm = ROLE_META[role] || ROLE_META.member;
+  return <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: rm.bg, color: rm.color }}>{role}</span>;
+};
 
 const Team = () => {
   const navigate = useNavigate();
@@ -21,7 +62,7 @@ const Team = () => {
   const [teams, setTeams] = useState([]);
   const [pendingInvites, setPendingInvites] = useState([]);
   const [loading, setLoading] = useState(true);
-    const [createOpen, setCreateOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [teamName, setTeamName] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
@@ -33,13 +74,11 @@ const Team = () => {
 
   const headers = token ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } : {};
 
-  useEffect(() => { fetchAll(); }, []);
-
   const fetchAll = async () => {
     try {
       const [teamsRes, invitesRes] = await Promise.all([
         fetch(`${API}/teams`, { headers }).catch(() => null),
-        fetch(`${API}/teams/invites/pending`, { headers }).catch(() => null)
+        fetch(`${API}/teams/invites/pending`, { headers }).catch(() => null),
       ]);
       if (teamsRes?.ok) {
         const t = await teamsRes.json();
@@ -56,23 +95,18 @@ const Team = () => {
         }
       }
       if (invitesRes?.ok) setPendingInvites(await invitesRes.json());
-    } catch { /* silent */ } finally { setLoading(false); }
+    } catch {} finally { setLoading(false); }
   };
+
+  useEffect(() => { fetchAll(); }, []);
 
   const createTeam = async () => {
     if (!teamName.trim()) return toast.error("Enter a team name");
     setProcessing(true);
     try {
       const res = await fetch(`${API}/teams`, { method: "POST", headers, body: JSON.stringify({ name: teamName }) });
-      if (res.ok) {
-        toast.success("Team created!");
-        setCreateOpen(false);
-        setTeamName("");
-        fetchAll();
-      } else {
-        const err = await res.json().catch(() => ({}));
-        toast.error(err.detail || "Failed to create team");
-      }
+      if (res.ok) { toast.success("Team created!"); setCreateOpen(false); setTeamName(""); fetchAll(); }
+      else { const err = await res.json().catch(() => ({})); toast.error(err.detail || "Failed to create team"); }
     } catch { toast.error("Failed to create team"); } finally { setProcessing(false); }
   };
 
@@ -81,19 +115,9 @@ const Team = () => {
     if (!teams[0]) return toast.error("Create a team first");
     setProcessing(true);
     try {
-      const res = await fetch(`${API}/teams/${teams[0].team_id}/invite`, {
-        method: "POST", headers,
-        body: JSON.stringify({ email: inviteEmail, role: inviteRole })
-      });
-      if (res.ok) {
-        toast.success(`Invite sent to ${inviteEmail}`);
-        setInviteOpen(false);
-        setInviteEmail("");
-        fetchAll();
-      } else {
-        const err = await res.json().catch(() => ({}));
-        toast.error(err.detail || "Failed to send invite");
-      }
+      const res = await fetch(`${API}/teams/${teams[0].team_id}/invite`, { method: "POST", headers, body: JSON.stringify({ email: inviteEmail, role: inviteRole }) });
+      if (res.ok) { toast.success(`Invite sent to ${inviteEmail}`); setInviteOpen(false); setInviteEmail(""); fetchAll(); }
+      else { const err = await res.json().catch(() => ({})); toast.error(err.detail || "Failed to send invite"); }
     } catch { toast.error("Failed to send invite"); } finally { setProcessing(false); }
   };
 
@@ -101,10 +125,8 @@ const Team = () => {
     setProcessing(true);
     try {
       const res = await fetch(`${API}/teams/invites/${inviteId}/${action}`, { method: "POST", headers });
-      if (res.ok) {
-        toast.success(action === "accept" ? "You joined the team!" : "Invite declined");
-        fetchAll();
-      } else { toast.error("Failed to respond"); }
+      if (res.ok) { toast.success(action === "accept" ? "You joined the team!" : "Invite declined"); fetchAll(); }
+      else toast.error("Failed to respond");
     } catch { toast.error("Failed to respond"); } finally { setProcessing(false); }
   };
 
@@ -119,12 +141,8 @@ const Team = () => {
 
   const updateRole = async (teamId, userId, newRole) => {
     try {
-      const res = await fetch(`${API}/teams/${teamId}/members/${userId}`, {
-        method: "PUT", headers,
-        body: JSON.stringify({ role: newRole })
-      });
+      const res = await fetch(`${API}/teams/${teamId}/members/${userId}`, { method: "PUT", headers, body: JSON.stringify({ role: newRole }) });
       if (res.ok) { toast.success("Role updated"); fetchAll(); }
-      else { const err = await res.json().catch(() => ({})); toast.error(err.detail || "Failed"); }
     } catch { toast.error("Failed to update role"); }
   };
 
@@ -133,259 +151,307 @@ const Team = () => {
     try {
       const res = await fetch(`${API}/teams/${teamId}`, { method: "DELETE", headers });
       if (res.ok) { toast.success("Team deleted"); fetchAll(); }
-      else { toast.error("Failed to delete team"); }
+      else toast.error("Failed to delete team");
     } catch { toast.error("Failed"); }
-  };
-
-  const getRoleIcon = (role) => {
-    if (role === "owner") return <Crown className="w-3.5 h-3.5 text-amber-400" />;
-    if (role === "admin") return <Shield className="w-3.5 h-3.5 text-blue-400" />;
-    return <User className="w-3.5 h-3.5 text-zinc-400" />;
-  };
-
-  const getRoleBadge = (role) => {
-    const styles = { owner: "bg-amber-500/15 text-amber-400 border-amber-500/20", admin: "bg-blue-500/15 text-blue-400 border-blue-500/20", member: "bg-zinc-500/15 text-zinc-400 border-zinc-500/20" };
-    return <Badge className={`${styles[role] || styles.member} text-[10px] border`}>{role}</Badge>;
   };
 
   const myTeam = teams[0];
   const isOwner = myTeam?.owner_id === user?.user_id;
   const myRole = myTeam?.members?.find(m => m.user_id === user?.user_id)?.role;
   const canManage = myRole === "owner" || myRole === "admin";
-  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+
+  if (loading) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }}>
+      <div style={{ width: 28, height: 28, border: `2px solid ${T.indigo}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+      <style>{STYLES}</style>
+    </div>
+  );
+
+  const glassCard = { background: T.glass, border: `1px solid ${T.border}`, borderRadius: 14, padding: "16px 20px" };
 
   return (
-    <div data-testid="team-page">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl lg:text-3xl font-bold text-white mb-1 font-['Outfit']">Team</h1>
-              <p className="text-zinc-400 text-sm">Collaborate with your team members</p>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20, animation: "fadeUp .4s ease" }} data-testid="team-page">
+      <style>{STYLES}</style>
+
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div>
+          <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 26, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 3 }}>Team</h1>
+          <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>Collaborate with your team members</p>
+        </div>
+        {!myTeam && (
+          <button onClick={() => setCreateOpen(true)} data-testid="create-team-btn"
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 18px", borderRadius: 10, background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+            <Plus size={14} /> Create Team
+          </button>
+        )}
+      </div>
+
+      {/* Pending invites */}
+      {pendingInvites.length > 0 && (
+        <div style={{ ...glassCard, borderColor: "rgba(129,140,248,.2)", background: "rgba(129,140,248,.04)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+            <Mail size={14} style={{ color: T.indigo }} />
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>Pending Invitations ({pendingInvites.length})</span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {pendingInvites.map(inv => (
+              <div key={inv.invite_id} data-testid={`invite-${inv.invite_id}`}
+                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,.03)" }}>
+                <div>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: "#fff", margin: 0, marginBottom: 2 }}>{inv.team_name}</p>
+                  <p style={{ fontSize: 10, color: T.zinc, margin: 0 }}>Invited by {inv.invited_by_name} as {inv.role}</p>
+                </div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button onClick={() => respondInvite(inv.invite_id, "accept")} disabled={processing} data-testid={`accept-invite-${inv.invite_id}`}
+                    style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 12px", borderRadius: 8, background: "rgba(52,211,153,.12)", border: `1px solid rgba(52,211,153,.25)`, color: T.green, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                    <CheckCircle size={12} /> Accept
+                  </button>
+                  <button onClick={() => respondInvite(inv.invite_id, "decline")} disabled={processing} data-testid={`decline-invite-${inv.invite_id}`}
+                    style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 12px", borderRadius: 8, background: "transparent", border: `1px solid ${T.border}`, color: T.red, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                    <XCircle size={12} /> Decline
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Team card */}
+      {myTeam ? (
+        <>
+          <div style={glassCard}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Users size={18} style={{ color: T.indigo }} />
+                <span style={{ fontSize: 17, fontWeight: 700, color: "#fff" }}>{myTeam.name}</span>
+              </div>
+              <div style={{ display: "flex", gap: 8 }}>
+                {canManage && (
+                  <button onClick={() => setInviteOpen(true)} data-testid="invite-member-btn"
+                    style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 12px", borderRadius: 8, background: "rgba(129,140,248,.1)", border: `1px solid rgba(129,140,248,.2)`, color: T.indigo, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                    <UserPlus size={12} /> Invite
+                  </button>
+                )}
+                {isOwner && (
+                  <button onClick={() => deleteTeam(myTeam.team_id)} data-testid="delete-team-btn"
+                    style={{ padding: "5px 10px", borderRadius: 8, background: "transparent", border: `1px solid ${T.border}`, color: T.zinc, fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center" }}
+                    onMouseEnter={e => e.currentTarget.style.color = T.red}
+                    onMouseLeave={e => e.currentTarget.style.color = T.zinc}>
+                    <Trash2 size={13} />
+                  </button>
+                )}
+              </div>
             </div>
-            {!myTeam && (
-              <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-indigo-500 to-violet-500" data-testid="create-team-btn"><Plus className="w-4 h-4 mr-2" />Create Team</Button>
-                </DialogTrigger>
-                <DialogContent className="bg-zinc-900 border-white/10">
-                  <DialogHeader><DialogTitle className="text-white font-['Outfit']">Create a Team</DialogTitle></DialogHeader>
-                  <div className="space-y-4 mt-2">
-                    <div className="space-y-2"><Label className="text-zinc-300">Team Name</Label><Input value={teamName} onChange={e => setTeamName(e.target.value)} placeholder="e.g. MAARS Global Team" className="bg-zinc-800/50 border-white/10" data-testid="team-name-input" /></div>
-                    <Button onClick={createTeam} disabled={processing} className="w-full bg-gradient-to-r from-indigo-500 to-violet-500" data-testid="confirm-create-team">{processing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}Create Team</Button>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {myTeam.members?.map(member => {
+                const rm = ROLE_META[member.role] || ROLE_META.member;
+                return (
+                  <div key={member.user_id} data-testid={`team-member-${member.user_id}`}
+                    style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,.025)", transition: "background .2s" }}
+                    onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.04)"}
+                    onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,.025)"}>
+                    <div style={{ width: 34, height: 34, borderRadius: "50%", background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>{member.name?.charAt(0) || "?"}</span>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{member.name}</span>
+                        <RoleBadge role={member.role} />
+                      </div>
+                      <p style={{ fontSize: 10, color: T.zinc, margin: 0 }}>{member.email}</p>
+                    </div>
+                    {isOwner && member.user_id !== user?.user_id && (
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                        <select value={member.role} onChange={e => updateRole(myTeam.team_id, member.user_id, e.target.value)}
+                          data-testid={`role-select-${member.user_id}`}
+                          style={{ background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`, borderRadius: 6, padding: "3px 8px", fontSize: 10, color: "#a1a1aa", outline: "none", fontFamily: "inherit", cursor: "pointer" }}>
+                          <option value="member" style={{ background: "#0f0f1a" }}>Member</option>
+                          <option value="admin" style={{ background: "#0f0f1a" }}>Admin</option>
+                        </select>
+                        <button onClick={() => removeMember(myTeam.team_id, member.user_id, member.name)} data-testid={`remove-member-${member.user_id}`}
+                          style={{ background: "none", border: "none", cursor: "pointer", color: T.zinc, padding: 4 }}
+                          onMouseEnter={e => e.currentTarget.style.color = T.red}
+                          onMouseLeave={e => e.currentTarget.style.color = T.zinc}>
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    )}
+                    {!isOwner && member.user_id === user?.user_id && member.role !== "owner" && (
+                      <button onClick={() => removeMember(myTeam.team_id, member.user_id, "yourself")} data-testid="leave-team-btn"
+                        style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", borderRadius: 7, background: "transparent", border: `1px solid ${T.border}`, color: T.zinc, fontSize: 11, cursor: "pointer" }}>
+                        <LogOut size={11} /> Leave
+                      </button>
+                    )}
                   </div>
-                </DialogContent>
-              </Dialog>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Shared Chats */}
+          <div style={glassCard}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <Share2 size={14} style={{ color: T.green }} />
+              <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>Shared Chats ({sharedChats.length})</span>
+            </div>
+            {sharedChats.length === 0 ? (
+              <p style={{ fontSize: 12, color: T.zinc, textAlign: "center", padding: "16px 0" }}>No shared chats yet. Share a chat from the Chat page to make it visible to your team.</p>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {sharedChats.map(chat => (
+                  <button key={chat.chat_id} onClick={() => navigate(`/chat/${chat.agent_id}`)} data-testid={`shared-chat-${chat.chat_id}`}
+                    style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,.025)", border: "none", cursor: "pointer", textAlign: "left", transition: "background .2s" }}
+                    onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.04)"}
+                    onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,.025)"}>
+                    <MessageSquare size={14} style={{ color: T.indigo, flexShrink: 0 }} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 13, color: "#fff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{chat.title || "Untitled chat"}</p>
+                      <p style={{ fontSize: 10, color: T.zinc, margin: 0 }}>by {chat.owner_name}</p>
+                    </div>
+                    <ChevronRight size={13} style={{ color: T.zinc }} />
+                  </button>
+                ))}
+              </div>
             )}
           </div>
 
-          {/* Pending Invites */}
-          {pendingInvites.length > 0 && (
-            <Card className="bg-indigo-500/5 border-indigo-500/20">
-              <CardHeader className="pb-3"><CardTitle className="text-white text-base font-['Outfit'] flex items-center gap-2"><Mail className="w-4 h-4 text-indigo-400" />Pending Invitations ({pendingInvites.length})</CardTitle></CardHeader>
-              <CardContent className="space-y-3">
-                {pendingInvites.map(inv => (
-                  <div key={inv.invite_id} className="flex items-center justify-between p-3 rounded-lg bg-zinc-900/50" data-testid={`invite-${inv.invite_id}`}>
-                    <div>
-                      <p className="text-white text-sm font-medium">{inv.team_name}</p>
-                      <p className="text-zinc-500 text-xs">Invited by {inv.invited_by_name} as {inv.role}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button size="sm" onClick={() => respondInvite(inv.invite_id, "accept")} disabled={processing} className="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 h-8" data-testid={`accept-invite-${inv.invite_id}`}><CheckCircle className="w-3.5 h-3.5 mr-1" />Accept</Button>
-                      <Button size="sm" variant="ghost" onClick={() => respondInvite(inv.invite_id, "decline")} disabled={processing} className="text-red-400 hover:bg-red-500/10 h-8" data-testid={`decline-invite-${inv.invite_id}`}><XCircle className="w-3.5 h-3.5 mr-1" />Decline</Button>
-                    </div>
+          {/* Stats */}
+          {teamStats && (
+            <div style={glassCard} data-testid="team-stats-card">
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                <BarChart3 size={14} style={{ color: T.amber }} />
+                <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>Team Stats</span>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 14 }}>
+                {[
+                  { label: "Members", value: teamStats.member_count, color: T.indigo, bg: "rgba(129,140,248,.1)" },
+                  { label: "Total Chats", value: teamStats.total_chats, color: T.green, bg: "rgba(52,211,153,.1)" },
+                  { label: "Shared", value: teamStats.shared_chats, color: "#a78bfa", bg: "rgba(167,139,250,.1)" },
+                ].map(s => (
+                  <div key={s.label} style={{ padding: "12px 14px", borderRadius: 10, background: s.bg, textAlign: "center" }}>
+                    <div style={{ fontSize: 20, fontWeight: 700, color: "#fff" }}>{s.value}</div>
+                    <div style={{ fontSize: 10, color: s.color }}>{s.label}</div>
                   </div>
                 ))}
-              </CardContent>
-            </Card>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                {teamStats.members?.map(m => {
+                  const rm = ROLE_META[m.role] || ROLE_META.member;
+                  const RoleIcon = rm.icon;
+                  return (
+                    <div key={m.user_id} data-testid={`stat-member-${m.user_id}`}
+                      style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "7px 10px", borderRadius: 8, background: "rgba(255,255,255,.025)" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 7, minWidth: 0 }}>
+                        <RoleIcon size={12} style={{ color: rm.color }} />
+                        <span style={{ fontSize: 12, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.name}</span>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                        <span style={{ fontSize: 11, color: T.zinc }}>{m.chats} chats</span>
+                        <RoleBadge role={m.role} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           )}
 
-          {/* Team Card */}
-          {myTeam ? (
-            <>
-              <Card className="bg-zinc-900/50 border-white/10">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-white text-lg font-['Outfit'] flex items-center gap-2"><Users className="w-5 h-5 text-indigo-400" />{myTeam.name}</CardTitle>
-                    <div className="flex gap-2">
-                      {canManage && (
-                        <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-                          <DialogTrigger asChild><Button size="sm" className="bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/30 h-8" data-testid="invite-member-btn"><UserPlus className="w-3.5 h-3.5 mr-1" />Invite</Button></DialogTrigger>
-                          <DialogContent className="bg-zinc-900 border-white/10">
-                            <DialogHeader><DialogTitle className="text-white font-['Outfit']">Invite Team Member</DialogTitle></DialogHeader>
-                            <div className="space-y-4 mt-2">
-                              <div className="space-y-2"><Label className="text-zinc-300">Email Address</Label><Input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} placeholder="colleague@company.com" type="email" className="bg-zinc-800/50 border-white/10" data-testid="invite-email-input" /></div>
-                              <div className="space-y-2">
-                                <Label className="text-zinc-300">Role</Label>
-                                <div className="flex gap-2">
-                                  {["member", "admin"].map(r => (
-                                    <button key={r} onClick={() => setInviteRole(r)} className={`flex-1 p-3 rounded-lg border text-sm transition-colors ${inviteRole === r ? "bg-indigo-500/15 border-indigo-500/30 text-indigo-400" : "bg-zinc-800/50 border-white/5 text-zinc-400 hover:border-white/10"}`} data-testid={`invite-role-${r}`}>
-                                      <div className="flex items-center gap-2 justify-center">{r === "admin" ? <Shield className="w-4 h-4" /> : <User className="w-4 h-4" />}<span className="capitalize font-medium">{r}</span></div>
-                                      <p className="text-[10px] text-zinc-500 mt-1">{r === "admin" ? "Manage agents & members" : "Chat & create tasks"}</p>
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-                              <Button onClick={inviteMember} disabled={processing} className="w-full bg-gradient-to-r from-indigo-500 to-violet-500" data-testid="send-invite-btn">{processing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Mail className="w-4 h-4 mr-2" />}Send Invite</Button>
-                            </div>
-                          </DialogContent>
-                        </Dialog>
-                      )}
-                      {isOwner && <Button size="sm" variant="ghost" onClick={() => deleteTeam(myTeam.team_id)} className="text-red-400 hover:bg-red-500/10 h-8" data-testid="delete-team-btn"><Trash2 className="w-3.5 h-3.5" /></Button>}
+          {/* Activity */}
+          {teamActivity.length > 0 && (
+            <div style={glassCard} data-testid="team-activity-card">
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <Activity size={14} style={{ color: T.cyan }} />
+                <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>Recent Activity</span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 360, overflowY: "auto" }}>
+                {teamActivity.map((item, i) => (
+                  <button key={`${item.chat_id}-${i}`} onClick={() => item.agent_id && navigate(`/chat/${item.agent_id}?chat=${item.chat_id}`)}
+                    data-testid={`activity-item-${i}`}
+                    style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 12px", borderRadius: 10, background: "rgba(255,255,255,.025)", border: "none", cursor: "pointer", textAlign: "left" }}
+                    onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.04)"}
+                    onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,.025)"}>
+                    <div style={{ width: 28, height: 28, borderRadius: "50%", background: item.type === "shared_chat" ? "rgba(52,211,153,.12)" : "rgba(129,140,248,.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      {item.type === "shared_chat" ? <Share2 size={12} style={{ color: T.green }} /> : <MessageSquare size={12} style={{ color: T.indigo }} />}
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {myTeam.members.map(member => (
-                      <div key={member.user_id} className="flex items-center gap-3 p-3 rounded-lg bg-zinc-800/30 hover:bg-zinc-800/50 transition-colors" data-testid={`team-member-${member.user_id}`}>
-                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shrink-0">
-                          <span className="text-white font-semibold text-sm">{member.name?.charAt(0) || "?"}</span>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="text-sm font-medium text-white truncate">{member.name}</p>
-                            {getRoleBadge(member.role)}
-                          </div>
-                          <p className="text-xs text-zinc-500 truncate">{member.email}</p>
-                        </div>
-                        {isOwner && member.user_id !== user?.user_id && (
-                          <div className="flex items-center gap-1 shrink-0">
-                            <select
-                              value={member.role}
-                              onChange={e => updateRole(myTeam.team_id, member.user_id, e.target.value)}
-                              className="h-7 px-2 text-xs rounded bg-zinc-800 border border-white/10 text-zinc-300"
-                              data-testid={`role-select-${member.user_id}`}
-                            >
-                              <option value="member">Member</option>
-                              <option value="admin">Admin</option>
-                            </select>
-                            <Button size="sm" variant="ghost" onClick={() => removeMember(myTeam.team_id, member.user_id, member.name)} className="text-red-400 hover:bg-red-500/10 h-7 w-7 p-0" data-testid={`remove-member-${member.user_id}`}>
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </Button>
-                          </div>
-                        )}
-                        {!isOwner && member.user_id === user?.user_id && member.role !== "owner" && (
-                          <Button size="sm" variant="ghost" onClick={() => removeMember(myTeam.team_id, member.user_id, "yourself")} className="text-zinc-400 hover:text-red-400 hover:bg-red-500/10 h-7 text-xs" data-testid="leave-team-btn">
-                            <LogOut className="w-3.5 h-3.5 mr-1" />Leave
-                          </Button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Shared Chats */}
-              <Card className="bg-zinc-900/50 border-white/10">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-white text-base font-['Outfit'] flex items-center gap-2"><Share2 className="w-4 h-4 text-emerald-400" />Shared Chats ({sharedChats.length})</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {sharedChats.length === 0 ? (
-                    <p className="text-zinc-500 text-sm text-center py-4">No shared chats yet. Share a chat from the Chat page to make it visible to your team.</p>
-                  ) : (
-                    <div className="space-y-2">
-                      {sharedChats.map(chat => (
-                        <button key={chat.chat_id} onClick={() => navigate(`/chat/${chat.agent_id}`)} className="w-full flex items-center gap-3 p-3 rounded-lg bg-zinc-800/30 hover:bg-zinc-800/50 transition-colors text-left" data-testid={`shared-chat-${chat.chat_id}`}>
-                          <MessageSquare className="w-4 h-4 text-indigo-400 shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm text-white truncate">{chat.title || "Untitled chat"}</p>
-                            <p className="text-xs text-zinc-500">by {chat.owner_name}</p>
-                          </div>
-                          <ChevronRight className="w-4 h-4 text-zinc-600" />
-                        </button>
-                      ))}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 12, color: "#fff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.title}</p>
+                      <p style={{ fontSize: 10, color: T.zinc, margin: 0 }}>{item.user_name}{item.timestamp ? ` · ${new Date(item.timestamp).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}` : ""}</p>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Team Stats */}
-              {teamStats && (
-                <Card className="bg-zinc-900/50 border-white/10" data-testid="team-stats-card">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-white text-base font-['Outfit'] flex items-center gap-2">
-                      <BarChart3 className="w-4 h-4 text-amber-400" />Team Stats
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-3 gap-3 mb-4">
-                      <div className="p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-center">
-                        <p className="text-lg font-bold text-white">{teamStats.member_count}</p>
-                        <p className="text-[10px] text-indigo-400">Members</p>
-                      </div>
-                      <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-center">
-                        <p className="text-lg font-bold text-white">{teamStats.total_chats}</p>
-                        <p className="text-[10px] text-emerald-400">Total Chats</p>
-                      </div>
-                      <div className="p-3 rounded-lg bg-violet-500/10 border border-violet-500/20 text-center">
-                        <p className="text-lg font-bold text-white">{teamStats.shared_chats}</p>
-                        <p className="text-[10px] text-violet-400">Shared</p>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      {teamStats.members?.map(m => (
-                        <div key={m.user_id} className="flex items-center justify-between p-2 rounded-lg bg-white/5" data-testid={`stat-member-${m.user_id}`}>
-                          <div className="flex items-center gap-2 min-w-0">
-                            {getRoleIcon(m.role)}
-                            <span className="text-sm text-white truncate">{m.name}</span>
-                          </div>
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span className="text-xs text-zinc-400">{m.chats} chats</span>
-                            {getRoleBadge(m.role)}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Team Activity Feed */}
-              {teamActivity.length > 0 && (
-                <Card className="bg-zinc-900/50 border-white/10" data-testid="team-activity-card">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-white text-base font-['Outfit'] flex items-center gap-2">
-                      <Activity className="w-4 h-4 text-cyan-400" />Recent Activity
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                      {teamActivity.map((item, i) => (
-                        <button
-                          key={`${item.chat_id}-${i}`}
-                          onClick={() => item.agent_id && navigate(`/chat/${item.agent_id}?chat=${item.chat_id}`)}
-                          className="w-full flex items-start gap-3 p-3 rounded-lg bg-zinc-800/30 hover:bg-zinc-800/50 transition-colors text-left"
-                          data-testid={`activity-item-${i}`}
-                        >
-                          <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
-                            item.type === "shared_chat" ? "bg-emerald-500/15" : "bg-indigo-500/15"
-                          }`}>
-                            {item.type === "shared_chat" ? (
-                              <Share2 className="w-3.5 h-3.5 text-emerald-400" />
-                            ) : (
-                              <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm text-white truncate">{item.title}</p>
-                            <p className="text-xs text-zinc-500">{item.user_name} {item.timestamp ? `- ${new Date(item.timestamp).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}` : ""}</p>
-                          </div>
-                          <ChevronRight className="w-4 h-4 text-zinc-600 shrink-0 mt-1" />
-                        </button>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </>
-          ) : pendingInvites.length === 0 ? (
-            <div className="p-12 rounded-xl border border-dashed border-white/10 text-center">
-              <Users className="w-14 h-14 text-zinc-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2 font-['Outfit']">No Team Yet</h3>
-              <p className="text-zinc-400 mb-6 max-w-md mx-auto">Create a team to invite colleagues, share chats, and collaborate with your AI agents together.</p>
-              <Button onClick={() => setCreateOpen(true)} className="bg-gradient-to-r from-indigo-500 to-violet-500" data-testid="empty-create-team-btn"><Plus className="w-4 h-4 mr-2" />Create Your Team</Button>
+                    <ChevronRight size={12} style={{ color: T.zinc, flexShrink: 0, marginTop: 2 }} />
+                  </button>
+                ))}
+              </div>
             </div>
-          ) : null}
+          )}
+        </>
+      ) : pendingInvites.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "56px 20px", border: `1px dashed ${T.border}`, borderRadius: 16 }}>
+          <Users size={52} style={{ color: "rgba(255,255,255,.06)", marginBottom: 16 }} />
+          <h3 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 20, fontWeight: 700, color: "#fff", marginBottom: 8 }}>No Team Yet</h3>
+          <p style={{ fontSize: 13, color: T.zinc, marginBottom: 24, maxWidth: 380, margin: "0 auto 24px" }}>Create a team to invite colleagues, share chats, and collaborate with your AI agents together.</p>
+          <button onClick={() => setCreateOpen(true)} data-testid="empty-create-team-btn"
+            style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "10px 22px", borderRadius: 10, background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+            <Plus size={14} /> Create Your Team
+          </button>
+        </div>
+      ) : null}
+
+      {/* Create team modal */}
+      {createOpen && (
+        <Modal title="Create a Team" onClose={() => setCreateOpen(false)}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div>
+              <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 5, textTransform: "uppercase", letterSpacing: ".05em" }}>Team Name</label>
+              <input value={teamName} onChange={e => setTeamName(e.target.value)} placeholder="e.g. MAARS Global Team" style={formInput}
+                data-testid="team-name-input"
+                onFocus={e => e.target.style.borderColor = "rgba(129,140,248,.5)"}
+                onBlur={e => e.target.style.borderColor = T.border} />
+            </div>
+            <button onClick={createTeam} disabled={processing} data-testid="confirm-create-team"
+              style={{ width: "100%", padding: "10px 0", borderRadius: 10, background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 13, fontWeight: 700, cursor: processing ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
+              {processing ? <div style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> : null}
+              Create Team
+            </button>
+          </div>
+        </Modal>
+      )}
+
+      {/* Invite modal */}
+      {inviteOpen && (
+        <Modal title="Invite Team Member" onClose={() => setInviteOpen(false)}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div>
+              <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 5, textTransform: "uppercase", letterSpacing: ".05em" }}>Email Address</label>
+              <input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} placeholder="colleague@company.com" type="email" style={formInput}
+                data-testid="invite-email-input"
+                onFocus={e => e.target.style.borderColor = "rgba(129,140,248,.5)"}
+                onBlur={e => e.target.style.borderColor = T.border} />
+            </div>
+            <div>
+              <label style={{ display: "block", fontSize: 10, color: T.zinc, marginBottom: 8, textTransform: "uppercase", letterSpacing: ".05em" }}>Role</label>
+              <div style={{ display: "flex", gap: 8 }}>
+                {["member", "admin"].map(r => (
+                  <button key={r} onClick={() => setInviteRole(r)} data-testid={`invite-role-${r}`}
+                    style={{ flex: 1, padding: "10px 14px", borderRadius: 10, border: `1px solid ${inviteRole === r ? "rgba(129,140,248,.3)" : T.border}`, background: inviteRole === r ? "rgba(129,140,248,.08)" : T.glass, cursor: "pointer", textAlign: "center" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 4 }}>
+                      {r === "admin" ? <Shield size={13} style={{ color: T.indigo }} /> : <User size={13} style={{ color: T.zinc }} />}
+                      <span style={{ fontSize: 12, fontWeight: 600, color: inviteRole === r ? T.indigo : "#a1a1aa", textTransform: "capitalize" }}>{r}</span>
+                    </div>
+                    <p style={{ fontSize: 10, color: T.zinc, margin: 0 }}>{r === "admin" ? "Manage agents & members" : "Chat & create tasks"}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <button onClick={inviteMember} disabled={processing} data-testid="send-invite-btn"
+              style={{ width: "100%", padding: "10px 0", borderRadius: 10, background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 13, fontWeight: 700, cursor: processing ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
+              {processing ? <div style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> : <Mail size={13} />}
+              Send Invite
+            </button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

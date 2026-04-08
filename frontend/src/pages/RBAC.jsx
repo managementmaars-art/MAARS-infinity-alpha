@@ -1,15 +1,38 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../App";
-import { Shield, Users, Check, X, ChevronDown, ChevronRight, Lock, Unlock, Info } from "lucide-react";
-import { Button } from "../components/ui/button";
+import { Shield, Users, Check, X, ChevronRight, Lock } from "lucide-react";
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  indigo: "#818cf8",
+  cyan: "#22d3ee",
+  green: "#34d399",
+  red: "#ef4444",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
+
 const ROLE_COLORS = {
-  admin: { bg: "bg-red-500/10", text: "text-red-400", badge: "bg-red-500" },
-  manager: { bg: "bg-indigo-500/10", text: "text-indigo-400", badge: "bg-indigo-500" },
-  analyst: { bg: "bg-cyan-500/10", text: "text-cyan-400", badge: "bg-cyan-500" },
-  viewer: { bg: "bg-zinc-500/10", text: "text-zinc-400", badge: "bg-zinc-500" },
+  admin: { color: T.red, bg: "rgba(239,68,68,.1)" },
+  manager: { color: T.indigo, bg: "rgba(129,140,248,.1)" },
+  operator: { color: T.cyan, bg: "rgba(34,211,238,.1)" },
+  viewer: { color: T.zinc, bg: "rgba(113,113,122,.1)" },
+  analyst: { color: T.cyan, bg: "rgba(34,211,238,.1)" },
+};
+
+const ROLE_META = {
+  admin: { label: "Admin", description: "Full system access with all permissions" },
+  manager: { label: "Manager", description: "Manage agents, workflows, and campaigns" },
+  operator: { label: "Operator", description: "Execute workflows and campaigns" },
+  viewer: { label: "Viewer", description: "Read-only access across the platform" },
+  analyst: { label: "Analyst", description: "View analytics and reporting data" },
 };
 
 export default function RBAC() {
@@ -37,22 +60,11 @@ export default function RBAC() {
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       body: JSON.stringify({ role }),
     });
-    if (res.ok) {
-      setUsers(prev => prev.map(u => u.user_id === userId ? { ...u, role } : u));
-    }
+    if (res.ok) setUsers(prev => prev.map(u => u.user_id === userId ? { ...u, role } : u));
   };
 
-  // Normalize API data: roles can be array of strings OR object
   const roleNames = Array.isArray(config.roles) ? config.roles : Object.keys(config.roles || {});
   const permissionsMap = config.permissions || {};
-
-  // Build normalized role objects
-  const ROLE_META = {
-    admin: { label: "Admin", description: "Full system access with all permissions" },
-    manager: { label: "Manager", description: "Manage agents, workflows, and campaigns" },
-    operator: { label: "Operator", description: "Execute workflows and campaigns" },
-    viewer: { label: "Viewer", description: "Read-only access across the platform" },
-  };
 
   const roles = {};
   roleNames.forEach(name => {
@@ -63,7 +75,6 @@ export default function RBAC() {
     };
   });
 
-  // Extract unique resources and actions from permissions
   const resourceSet = new Set();
   const actionSet = new Set();
   Object.values(permissionsMap).forEach(perms => {
@@ -77,58 +88,66 @@ export default function RBAC() {
   const resources = Array.from(resourceSet);
   const actions = Array.from(actionSet).length > 0 ? Array.from(actionSet) : ["read", "write", "execute"];
 
-  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-6 h-6 border-2 border-red-500 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }}>
+      <div style={{ width: 24, height: 24, border: `2px solid ${T.red}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+      <style>{STYLES}</style>
+    </div>
+  );
 
   return (
-    <div className="space-y-6" data-testid="rbac-page">
+    <div style={{ display: "flex", flexDirection: "column", gap: 24, animation: "fadeUp .4s ease" }} data-testid="rbac-page">
+      <style>{STYLES}</style>
+
       <div>
-        <h1 className="text-2xl font-bold text-white font-['Outfit']">Access Control (RBAC)</h1>
-        <p className="text-sm text-zinc-400 mt-1">Manage roles, permissions, and user access across the MAARS Command system</p>
+        <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 26, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 4 }}>Access Control (RBAC)</h1>
+        <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>Manage roles, permissions, and user access across the MAARS Command system</p>
       </div>
 
-      {/* Role Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3" data-testid="role-cards">
+      {/* Role cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }} data-testid="role-cards">
         {Object.entries(roles).map(([key, role]) => {
           const rc = ROLE_COLORS[key] || ROLE_COLORS.viewer;
           const isSelected = selectedRole === key;
           const userCount = users.filter(u => u.role === key).length;
           return (
-            <button key={key} onClick={() => setSelectedRole(key)}
-              className={`text-left p-4 rounded-xl border transition-all ${isSelected ? `${rc.bg} border-white/10` : "bg-zinc-900/40 border-white/5 hover:border-white/10"}`}
-              data-testid={`role-card-${key}`}>
-              <div className="flex items-center gap-2 mb-2">
-                <div className={`w-2.5 h-2.5 rounded-full ${rc.badge}`} />
-                <span className={`text-sm font-semibold ${rc.text}`}>{role.label}</span>
+            <button key={key} onClick={() => setSelectedRole(key)} data-testid={`role-card-${key}`}
+              style={{ textAlign: "left", padding: "14px 16px", borderRadius: 12, border: `1px solid ${isSelected ? "rgba(255,255,255,.15)" : T.border}`, background: isSelected ? rc.bg : T.glass, cursor: "pointer", transition: "all .2s" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
+                <div style={{ width: 10, height: 10, borderRadius: "50%", background: rc.color }} />
+                <span style={{ fontSize: 13, fontWeight: 700, color: rc.color }}>{role.label}</span>
               </div>
-              <p className="text-[11px] text-zinc-500 mb-2">{role.description}</p>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] text-zinc-600">{(role.permissions || []).length === 1 && (role.permissions || [])[0] === "*" ? "All" : (role.permissions || []).length} permissions</span>
-                <span className="text-[10px] text-zinc-600">{userCount} users</span>
+              <p style={{ fontSize: 11, color: T.zinc, marginBottom: 8 }}>{role.description}</p>
+              <div style={{ display: "flex", gap: 10, fontSize: 10, color: "rgba(113,113,122,.7)" }}>
+                <span>{(role.permissions || []).length === 1 && (role.permissions || [])[0] === "*" ? "All" : (role.permissions || []).length} perms</span>
+                <span>{userCount} users</span>
               </div>
             </button>
           );
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Permission Matrix */}
-        <div className="bg-zinc-900/40 border border-white/5 rounded-xl p-4" data-testid="permission-matrix">
-          <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2"><Lock className="w-4 h-4 text-zinc-500" /> Permission Matrix — {roles[selectedRole]?.label}</h3>
-          <div className="space-y-1">
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        {/* Permission matrix */}
+        <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "14px 16px" }} data-testid="permission-matrix">
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+            <Lock size={13} style={{ color: T.zinc }} />
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Permission Matrix — {roles[selectedRole]?.label}</span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             {resources.map(resource => {
               const perms = roles[selectedRole]?.permissions || [];
               const hasWild = perms.includes("*");
               return (
-                <div key={resource} className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-white/[0.02]">
-                  <span className="text-xs text-zinc-300 w-32 truncate">{resource.replace(/_/g, " ")}</span>
-                  <div className="flex gap-1">
+                <div key={resource} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 8px", borderRadius: 7 }}>
+                  <span style={{ fontSize: 11, color: "#d4d4d8", width: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flexShrink: 0 }}>{resource.replace(/_/g, " ")}</span>
+                  <div style={{ display: "flex", gap: 4 }}>
                     {actions.map(action => {
-                      const perm = `${resource}:${action}`;
-                      const has = hasWild || perms.includes(perm);
+                      const has = hasWild || perms.includes(`${resource}:${action}`);
                       return (
-                        <div key={action} className={`w-12 h-6 rounded flex items-center justify-center text-[9px] font-medium ${has ? "bg-emerald-500/15 text-emerald-400" : "bg-zinc-800/50 text-zinc-600"}`}
-                          title={`${resource}:${action}`}>
-                          {has ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
+                        <div key={action} title={`${resource}:${action}`}
+                          style={{ width: 40, height: 22, borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center", background: has ? "rgba(52,211,153,.12)" : "rgba(255,255,255,.04)", color: has ? T.green : T.zinc }}>
+                          {has ? <Check size={11} /> : <X size={11} />}
                         </div>
                       );
                     })}
@@ -136,43 +155,53 @@ export default function RBAC() {
                 </div>
               );
             })}
-            <div className="flex items-center gap-2 pt-2 text-[9px] text-zinc-600">
-              {actions.map(a => <span key={a} className="w-12 text-center">{a}</span>)}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, paddingTop: 6 }}>
+              <div style={{ width: 120 }} />
+              {actions.map(a => <span key={a} style={{ width: 40, textAlign: "center", fontSize: 9, color: T.zinc }}>{a}</span>)}
             </div>
           </div>
         </div>
 
-        {/* User Assignments */}
-        <div className="bg-zinc-900/40 border border-white/5 rounded-xl p-4" data-testid="user-assignments">
-          <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2"><Users className="w-4 h-4 text-zinc-500" /> User Assignments</h3>
-          <div className="space-y-1.5">
-            {users.map(user => {
+        {/* User assignments */}
+        <div style={{ background: T.glass, border: `1px solid ${T.border}`, borderRadius: 12, padding: "14px 16px" }} data-testid="user-assignments">
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+            <Users size={13} style={{ color: T.zinc }} />
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>User Assignments</span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {users.length === 0 ? (
+              <p style={{ fontSize: 12, color: T.zinc, textAlign: "center", padding: "16px 0" }}>No users found</p>
+            ) : users.map(user => {
               const rc = ROLE_COLORS[user.role] || ROLE_COLORS.viewer;
               const isExpanded = expandedUser === user.user_id;
+              const initials = user.name?.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase() || "??";
               return (
-                <div key={user.user_id} className="bg-zinc-800/30 border border-white/[0.03] rounded-lg overflow-hidden" data-testid={`user-${user.user_id}`}>
+                <div key={user.user_id} data-testid={`user-${user.user_id}`}
+                  style={{ background: "rgba(255,255,255,.025)", border: `1px solid ${T.border}`, borderRadius: 10, overflow: "hidden" }}>
                   <button onClick={() => setExpandedUser(isExpanded ? null : user.user_id)}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/[0.02] transition-colors">
-                    <div className="w-7 h-7 rounded-lg bg-zinc-700/50 flex items-center justify-center text-[10px] font-bold text-zinc-300">
-                      {user.name?.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase() || "??"}
+                    style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: "none", border: "none", cursor: "pointer", transition: "background .2s" }}
+                    onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.02)"}
+                    onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                    <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,255,255,.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: "#d4d4d8" }}>
+                      {initials}
                     </div>
-                    <div className="flex-1 text-left min-w-0">
-                      <p className="text-xs text-white truncate">{user.name}</p>
-                      <p className="text-[10px] text-zinc-500 truncate">{user.email}</p>
+                    <div style={{ flex: 1, textAlign: "left", minWidth: 0 }}>
+                      <p style={{ fontSize: 12, color: "#fff", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.name}</p>
+                      <p style={{ fontSize: 10, color: T.zinc, margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email}</p>
                     </div>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${rc.bg} ${rc.text}`}>{user.role}</span>
-                    <ChevronRight className={`w-3 h-3 text-zinc-600 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
+                    <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 9px", borderRadius: 20, background: rc.bg, color: rc.color }}>{user.role}</span>
+                    <ChevronRight size={12} style={{ color: T.zinc, transform: isExpanded ? "rotate(90deg)" : "none", transition: "transform .2s" }} />
                   </button>
                   {isExpanded && (
-                    <div className="px-3 pb-3 pt-1 border-t border-white/[0.03]">
-                      <p className="text-[10px] text-zinc-500 mb-2">Change role:</p>
-                      <div className="flex gap-1.5">
+                    <div style={{ padding: "8px 14px 12px", borderTop: `1px solid ${T.border}` }}>
+                      <p style={{ fontSize: 10, color: T.zinc, marginBottom: 7 }}>Change role:</p>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                         {Object.entries(roles).map(([key, role]) => {
                           const c = ROLE_COLORS[key] || ROLE_COLORS.viewer;
+                          const active = user.role === key;
                           return (
-                            <button key={key} onClick={() => changeRole(user.user_id, key)}
-                              className={`px-2.5 py-1 rounded text-[10px] font-medium transition-colors ${user.role === key ? `${c.bg} ${c.text} ring-1 ring-current/30` : "bg-zinc-800 text-zinc-500 hover:text-zinc-300"}`}
-                              data-testid={`set-role-${key}-${user.user_id}`}>
+                            <button key={key} onClick={() => changeRole(user.user_id, key)} data-testid={`set-role-${key}-${user.user_id}`}
+                              style={{ padding: "4px 10px", borderRadius: 7, border: `1px solid ${active ? c.color : T.border}`, background: active ? c.bg : "transparent", color: active ? c.color : T.zinc, fontSize: 10, fontWeight: 600, cursor: "pointer", transition: "all .2s" }}>
                               {role.label}
                             </button>
                           );
@@ -183,7 +212,6 @@ export default function RBAC() {
                 </div>
               );
             })}
-            {users.length === 0 && <p className="text-xs text-zinc-600 text-center py-4">No users found</p>}
           </div>
         </div>
       </div>

@@ -1,14 +1,32 @@
 import { useState, useEffect } from "react";
 import { useAuth, API } from "../App";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Badge } from "../components/ui/badge";
 import {
   Brain, Building2, Target, Shield, Globe, PenLine, Clock, Save,
-  Loader2, Trash2, CheckCircle, Users, Swords, Tag, FileText
+  Loader2, Trash2, Tag, FileText, Swords, CheckCircle
 } from "lucide-react";
 import { toast } from "sonner";
+
+const T = {
+  glass: "rgba(255,255,255,0.03)",
+  border: "rgba(255,255,255,0.08)",
+  violet: "#7c3aed",
+  indigo: "#818cf8",
+  green: "#34d399",
+  red: "#ef4444",
+  zinc: "#71717a",
+};
+
+const STYLES = `
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+@keyframes spin { to{transform:rotate(360deg)} }
+`;
+
+const formInput = {
+  background: "rgba(255,255,255,.04)", border: `1px solid ${T.border}`,
+  borderRadius: 8, padding: "8px 12px", color: "#fff", fontSize: 13,
+  outline: "none", fontFamily: "inherit", width: "100%", boxSizing: "border-box",
+  transition: "border-color .2s",
+};
 
 const FIELDS = [
   { key: "company_name", label: "Company Name", icon: Building2, placeholder: "Acme Corp", type: "input" },
@@ -74,94 +92,142 @@ const WorkspaceBrain = () => {
     toast.success("Workspace Brain cleared");
   };
 
-  if (loading) return null;
+  if (loading) return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }}>
+      <div style={{ width: 28, height: 28, border: `2px solid ${T.violet}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin .8s linear infinite" }} />
+      <style>{STYLES}</style>
+    </div>
+  );
 
   const filledCount = FIELDS.filter(f => profile[f.key]?.trim?.()).length;
+  const pct = (filledCount / FIELDS.length) * 100;
 
   return (
-    <div className="space-y-6" data-testid="workspace-brain">
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-white font-['Outfit'] flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-violet-500/15 flex items-center justify-center">
-              <Brain className="w-5 h-5 text-violet-400" />
-            </div>
-            Workspace Brain
-          </h2>
-          <p className="text-zinc-400 text-sm mt-1">Configure your business profile. Every AI agent uses this context to tailor responses to your brand.</p>
+    <div style={{ display: "flex", flexDirection: "column", gap: 24, animation: "fadeUp .4s ease" }} data-testid="workspace-brain">
+      <style>{STYLES}</style>
+
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(124,58,237,.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Brain size={22} style={{ color: T.violet }} />
+          </div>
+          <div>
+            <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 26, fontWeight: 700, color: "#fff", margin: 0, marginBottom: 3 }}>Workspace Brain</h1>
+            <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>Configure your business profile — every agent uses this context to tailor responses to your brand</p>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className="border-white/10 text-zinc-400 text-xs">
-            {filledCount}/{FIELDS.length} configured
-          </Badge>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 12px", borderRadius: 20, background: T.glass, border: `1px solid ${T.border}` }}>
+            <CheckCircle size={11} style={{ color: pct === 100 ? T.green : T.zinc }} />
+            <span style={{ fontSize: 11, color: pct === 100 ? T.green : T.zinc, fontWeight: 600 }}>{filledCount}/{FIELDS.length} configured</span>
+          </div>
           {hasChanges && (
-            <Button onClick={handleSave} disabled={saving} className="bg-indigo-600 hover:bg-indigo-500 text-white" size="sm" data-testid="save-brain">
-              {saving ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Save className="w-4 h-4 mr-1" />}
-              Save
-            </Button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              data-testid="save-brain"
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 16px", borderRadius: 10, background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 13, fontWeight: 600, cursor: saving ? "not-allowed" : "pointer", opacity: saving ? .7 : 1 }}
+            >
+              {saving
+                ? <><div style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> Saving…</>
+                : <><Save size={13} /> Save</>}
+            </button>
           )}
         </div>
       </div>
 
-      {/* Completion indicator */}
-      <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-        <div
-          className="h-full bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full transition-all duration-500"
-          style={{ width: `${(filledCount / FIELDS.length) * 100}%` }}
-        />
+      {/* Completion bar */}
+      <div>
+        <div style={{ height: 6, background: "rgba(255,255,255,.06)", borderRadius: 6, overflow: "hidden", marginBottom: 6 }}>
+          <div style={{ height: "100%", borderRadius: 6, background: `linear-gradient(90deg, ${T.violet}, ${T.indigo})`, width: `${pct}%`, transition: "width .5s" }} />
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: T.zinc }}>
+          <span>{pct.toFixed(0)}% complete</span>
+          <span>{FIELDS.length - filledCount} fields remaining</span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* Fields grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 12 }}>
         {FIELDS.map(field => {
           const Icon = field.icon;
+          const isWide = field.type === "textarea";
           return (
-            <Card key={field.key} className={`bg-zinc-900/50 border-white/5 ${field.type === "textarea" ? "lg:col-span-2" : ""}`}>
-              <CardContent className="p-4">
-                <label className="flex items-center gap-2 text-sm text-zinc-300 mb-2">
-                  <Icon className="w-4 h-4 text-zinc-500" />
-                  {field.label}
-                </label>
-                {field.type === "textarea" ? (
-                  <textarea
-                    value={profile[field.key] || ""}
-                    onChange={e => handleChange(field.key, e.target.value)}
-                    placeholder={field.placeholder}
-                    className="w-full bg-zinc-800/50 border border-white/10 rounded-lg p-3 text-sm text-white placeholder:text-zinc-600 min-h-[80px] resize-none focus:outline-none focus:border-violet-500/50"
-                    data-testid={`brain-${field.key}`}
-                  />
-                ) : field.type === "select" ? (
-                  <select
-                    value={profile[field.key] || ""}
-                    onChange={e => handleChange(field.key, e.target.value)}
-                    className="w-full bg-zinc-800/50 border border-white/10 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-violet-500/50"
-                    data-testid={`brain-${field.key}`}
-                  >
-                    {field.options.map(o => <option key={o} value={o}>{o.charAt(0).toUpperCase() + o.slice(1)}</option>)}
-                  </select>
-                ) : (
-                  <Input
-                    value={profile[field.key] || ""}
-                    onChange={e => handleChange(field.key, e.target.value)}
-                    placeholder={field.placeholder}
-                    className="bg-zinc-800/50 border-white/10 text-white"
-                    data-testid={`brain-${field.key}`}
-                  />
-                )}
-              </CardContent>
-            </Card>
+            <div
+              key={field.key}
+              style={{
+                gridColumn: isWide ? "1 / -1" : undefined,
+                background: T.glass, border: `1px solid ${T.border}`,
+                borderRadius: 12, padding: "14px 16px",
+              }}
+            >
+              <label style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 11, color: T.zinc, marginBottom: 8, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".05em" }}>
+                <Icon size={12} style={{ color: T.zinc }} />
+                {field.label}
+              </label>
+              {field.type === "textarea" ? (
+                <textarea
+                  value={profile[field.key] || ""}
+                  onChange={e => handleChange(field.key, e.target.value)}
+                  placeholder={field.placeholder}
+                  data-testid={`brain-${field.key}`}
+                  style={{ ...formInput, minHeight: 72, resize: "vertical", lineHeight: 1.5 }}
+                  onFocus={e => e.target.style.borderColor = "rgba(124,58,237,.5)"}
+                  onBlur={e => e.target.style.borderColor = T.border}
+                />
+              ) : field.type === "select" ? (
+                <select
+                  value={profile[field.key] || ""}
+                  onChange={e => handleChange(field.key, e.target.value)}
+                  data-testid={`brain-${field.key}`}
+                  style={{ ...formInput, cursor: "pointer" }}
+                  onFocus={e => e.target.style.borderColor = "rgba(124,58,237,.5)"}
+                  onBlur={e => e.target.style.borderColor = T.border}
+                >
+                  {field.options.map(o => (
+                    <option key={o} value={o} style={{ background: "#1a1a2e" }}>{o.charAt(0).toUpperCase() + o.slice(1)}</option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  value={profile[field.key] || ""}
+                  onChange={e => handleChange(field.key, e.target.value)}
+                  placeholder={field.placeholder}
+                  data-testid={`brain-${field.key}`}
+                  style={formInput}
+                  onFocus={e => e.target.style.borderColor = "rgba(124,58,237,.5)"}
+                  onBlur={e => e.target.style.borderColor = T.border}
+                />
+              )}
+            </div>
           );
         })}
       </div>
 
-      <div className="flex justify-between pt-4 border-t border-white/5">
-        <Button variant="ghost" onClick={handleReset} className="text-zinc-500 hover:text-red-400" size="sm" data-testid="reset-brain">
-          <Trash2 className="w-4 h-4 mr-1" />Clear All Data
-        </Button>
+      {/* Footer actions */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 16, borderTop: `1px solid ${T.border}` }}>
+        <button
+          onClick={handleReset}
+          data-testid="reset-brain"
+          style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", borderRadius: 10, background: "transparent", border: `1px solid transparent`, color: T.zinc, fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all .2s" }}
+          onMouseEnter={e => { e.currentTarget.style.color = T.red; e.currentTarget.style.borderColor = "rgba(239,68,68,.3)"; }}
+          onMouseLeave={e => { e.currentTarget.style.color = T.zinc; e.currentTarget.style.borderColor = "transparent"; }}
+        >
+          <Trash2 size={13} /> Clear All Data
+        </button>
         {hasChanges && (
-          <Button onClick={handleSave} disabled={saving} className="bg-indigo-600 hover:bg-indigo-500 text-white" data-testid="save-brain-bottom">
-            {saving ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Save className="w-4 h-4 mr-1" />}
-            Save Workspace Brain
-          </Button>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            data-testid="save-brain-bottom"
+            style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 22px", borderRadius: 10, background: `linear-gradient(135deg, ${T.violet}, ${T.indigo})`, border: "none", color: "#fff", fontSize: 13, fontWeight: 700, cursor: saving ? "not-allowed" : "pointer", opacity: saving ? .7 : 1 }}
+          >
+            {saving
+              ? <><div style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .8s linear infinite" }} /> Saving…</>
+              : <><Save size={13} /> Save Workspace Brain</>}
+          </button>
         )}
       </div>
     </div>

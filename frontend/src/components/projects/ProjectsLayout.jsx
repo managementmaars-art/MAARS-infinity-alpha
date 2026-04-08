@@ -45,7 +45,7 @@ const ProjectsLayout = ({ children }) => {
       <div className={`fixed inset-y-0 left-0 w-64 bg-zinc-900/50 border-r border-white/5 z-30 transform transition-transform lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="p-4 border-b border-white/5">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
               <Rocket className="w-5 h-5 text-white" />
             </div>
             <div>
