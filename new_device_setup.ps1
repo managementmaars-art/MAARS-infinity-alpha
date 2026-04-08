@@ -1,11 +1,11 @@
 # MAARS Command — Fully Automated New Device Setup
-# One-liner to run on new device:
+# One-liner to run on new device (in PowerShell as Administrator):
 #   irm https://raw.githubusercontent.com/managementmaars-art/MAARS-infinity-alpha/main/new_device_setup.ps1 | iex
 
 $ErrorActionPreference = "Stop"
-$REPO_URL  = "https://github.com/managementmaars-art/MAARS-infinity-alpha.git"
-$BUNDLE_URL = "https://github.com/managementmaars-art/MAARS-infinity-alpha/releases/download/migration-v1/MAARS_MIGRATION_BUNDLE.zip"
-$PROJECT_DIR = "$env:USERPROFILE\MAARS-Command"
+$REPO_URL     = "https://github.com/managementmaars-art/MAARS-infinity-alpha.git"
+$RELEASE_BASE = "https://github.com/managementmaars-art/MAARS-infinity-alpha/releases/download/migration-v1"
+$PROJECT_DIR  = "$env:USERPROFILE\MAARS-Command"
 
 Write-Host "`n========================================" -ForegroundColor Cyan
 Write-Host "  MAARS Command — Device Setup" -ForegroundColor Cyan
@@ -13,6 +13,10 @@ Write-Host "========================================`n" -ForegroundColor Cyan
 
 function Step($msg) { Write-Host "`n>> $msg" -ForegroundColor Yellow }
 function OK($msg)   { Write-Host "   OK: $msg" -ForegroundColor Green }
+function Download($url, $dest) {
+    Write-Host "   Downloading $(Split-Path $dest -Leaf)..." -ForegroundColor Gray
+    Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
+}
 
 # ── 1. Git ────────────────────────────────────────────────────────────────────
 Step "Checking Git"
@@ -38,7 +42,21 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
 }
 OK "Node.js: $(node --version)"
 
-# ── 4. Clone repo ─────────────────────────────────────────────────────────────
+# ── 4. MongoDB ────────────────────────────────────────────────────────────────
+Step "Checking MongoDB"
+$mongoRunning = (Get-Service -Name MongoDB -ErrorAction SilentlyContinue)?.Status -eq "Running"
+if (-not $mongoRunning) {
+    $mongoInstalled = Get-Command mongod -ErrorAction SilentlyContinue
+    if (-not $mongoInstalled) {
+        Write-Host "   Installing MongoDB..." -ForegroundColor Yellow
+        winget install --id MongoDB.Server -e --source winget --silent
+    }
+    Start-Service MongoDB -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 3
+}
+OK "MongoDB ready"
+
+# ── 5. Clone repo ─────────────────────────────────────────────────────────────
 Step "Cloning repository"
 if (Test-Path $PROJECT_DIR) {
     Write-Host "   Pulling latest..." -ForegroundColor Yellow
@@ -52,39 +70,68 @@ git config user.email "management.maars@marsgc.net"
 git config user.name "managementmaars-art"
 OK "Repository ready at $PROJECT_DIR"
 
-# ── 5. Download credentials bundle ────────────────────────────────────────────
-Step "Downloading credentials bundle"
-$bundlePath = "$env:TEMP\MAARS_MIGRATION_BUNDLE.zip"
-$extractPath = "$env:TEMP\maars_bundle"
+# ── 6. Credentials bundle ─────────────────────────────────────────────────────
+Step "Installing credentials (.env files)"
+$tmp = "$env:TEMP\maars_migration"
+New-Item -ItemType Directory -Force -Path $tmp | Out-Null
 
-Write-Host "   Fetching from GitHub release..." -ForegroundColor Yellow
-Invoke-WebRequest -Uri $BUNDLE_URL -OutFile $bundlePath -UseBasicParsing
+$bundleZip = "$tmp\MAARS_MIGRATION_BUNDLE.zip"
+Download "$RELEASE_BASE/MAARS_MIGRATION_BUNDLE.zip" $bundleZip
+Expand-Archive -Path $bundleZip -DestinationPath "$tmp\bundle" -Force
 
-if (Test-Path $extractPath) { Remove-Item $extractPath -Recurse -Force }
-Expand-Archive -Path $bundlePath -DestinationPath $extractPath -Force
+$backendSrc  = "$tmp\bundle\backend\.env"
+$frontendSrc = "$tmp\bundle\frontend\.env.local"
+if (Test-Path $backendSrc)  { Copy-Item $backendSrc  "backend\.env" -Force; Copy-Item $backendSrc ".env" -Force }
+if (Test-Path $frontendSrc) { Copy-Item $frontendSrc "frontend\.env.local" -Force }
+OK "Credentials installed"
 
-# Copy .env files into the project
-$backendEnvSrc = Join-Path $extractPath "backend\.env"
-$frontendEnvSrc = Join-Path $extractPath "frontend\.env.local"
+# ── 7. Restore MongoDB data ───────────────────────────────────────────────────
+Step "Restoring MongoDB database"
+$dbZip = "$tmp\MAARS_DB_EXPORT.zip"
+Download "$RELEASE_BASE/MAARS_DB_EXPORT.zip" $dbZip
+Expand-Archive -Path $dbZip -DestinationPath "$tmp\db" -Force
 
-if (Test-Path $backendEnvSrc) {
-    Copy-Item $backendEnvSrc "backend\.env" -Force
-    Copy-Item $backendEnvSrc ".env" -Force
-    OK "backend/.env installed"
-} else {
-    Write-Host "   WARNING: backend/.env not found in bundle — you may need to create it manually." -ForegroundColor Red
-}
+# Use Python (already confirmed available) to restore
+$restoreScript = @"
+import pymongo, json, os, sys
 
-if (Test-Path $frontendEnvSrc) {
-    Copy-Item $frontendEnvSrc "frontend\.env.local" -Force
-    OK "frontend/.env.local installed"
-}
+client = pymongo.MongoClient('mongodb://localhost:27017', serverSelectionTimeoutMS=5000)
+export_root = sys.argv[1]
 
-# Cleanup
-Remove-Item $bundlePath -Force -ErrorAction SilentlyContinue
-Remove-Item $extractPath -Recurse -Force -ErrorAction SilentlyContinue
+restored = 0
+for db_name in os.listdir(export_root):
+    db_path = os.path.join(export_root, db_name)
+    if not os.path.isdir(db_path): continue
+    db = client[db_name]
+    for fname in os.listdir(db_path):
+        if not fname.endswith('.json'): continue
+        coll_name = fname[:-5]
+        with open(os.path.join(db_path, fname)) as f:
+            docs = json.load(f)
+        if docs:
+            db[coll_name].drop()
+            db[coll_name].insert_many(docs)
+            restored += len(docs)
+            print(f'  restored {db_name}.{coll_name}: {len(docs)} docs')
 
-# ── 6. Python virtual env + deps ─────────────────────────────────────────────
+print(f'Total restored: {restored} docs')
+"@
+$restoreScript | python - "$tmp\db\db_export"
+OK "MongoDB data restored"
+
+# ── 8. Restore uploads ────────────────────────────────────────────────────────
+Step "Restoring uploads"
+$uploadsZip = "$tmp\MAARS_UPLOADS.zip"
+Download "$RELEASE_BASE/MAARS_UPLOADS.zip" $uploadsZip
+
+New-Item -ItemType Directory -Force -Path "backend\uploads" | Out-Null
+Expand-Archive -Path $uploadsZip -DestinationPath "." -Force
+OK "Uploads restored"
+
+# ── 9. Cleanup temp ───────────────────────────────────────────────────────────
+Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
+
+# ── 10. Python dependencies ───────────────────────────────────────────────────
 Step "Installing Python dependencies"
 Set-Location "$PROJECT_DIR\backend"
 python -m venv venv
@@ -92,14 +139,14 @@ python -m venv venv
 .\venv\Scripts\pip install -r requirements.txt --quiet
 OK "Python dependencies installed"
 
-# ── 7. Node.js deps ───────────────────────────────────────────────────────────
+# ── 11. Node.js dependencies ──────────────────────────────────────────────────
 Step "Installing Node.js dependencies"
 Set-Location "$PROJECT_DIR\frontend"
 npm install --silent
 OK "Node.js dependencies installed"
 
-# ── 8. Start scripts ──────────────────────────────────────────────────────────
-Step "Creating start scripts"
+# ── 12. Start scripts ─────────────────────────────────────────────────────────
+Step "Creating launch shortcuts"
 Set-Location $PROJECT_DIR
 
 @"
@@ -141,8 +188,6 @@ Write-Host "  Start:    Double-click START_MAARS.bat"
 Write-Host "  Backend:  http://localhost:8000"
 Write-Host "  Frontend: http://localhost:3000"
 Write-Host "  API Docs: http://localhost:8000/docs"
-Write-Host ""
-Write-Host "  Ensure MongoDB is running before starting." -ForegroundColor Yellow
 Write-Host ""
 
 $launch = Read-Host "Launch MAARS now? (Y/n)"
