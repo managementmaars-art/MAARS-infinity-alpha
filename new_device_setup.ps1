@@ -193,16 +193,62 @@ if (Test-Path "$globalSrc\memory") {
 Remove-Item "$env:TEMP\maars_claude_global" -Recurse -Force -ErrorAction SilentlyContinue
 OK "Global Claude memory restored"
 
-# ── 11. Cleanup temp ──────────────────────────────────────────────────────────
+# ── 11. Restore AI tools (Claude credentials, Cline, Codex) ──────────────────
+Step "Restoring AI tool credentials (Claude, Cline, Codex)"
+$aiToolsZip = "$tmp\MAARS_AI_TOOLS.zip"
+Download "$RELEASE_BASE/MAARS_AI_TOOLS.zip" $aiToolsZip
+Expand-Archive -Path $aiToolsZip -DestinationPath "$tmp\ai_tools" -Force
+$at = "$tmp\ai_tools"
+
+# Claude Code credentials + global settings
+$claudeDest = "$env:USERPROFILE\.claude"
+New-Item -ItemType Directory -Force -Path $claudeDest | Out-Null
+if (Test-Path "$at\claude\.credentials.json") {
+    Copy-Item "$at\claude\.credentials.json" "$claudeDest\.credentials.json" -Force
+}
+if (Test-Path "$at\claude\settings.json") {
+    Copy-Item "$at\claude\settings.json" "$claudeDest\settings.json" -Force
+}
+if (Test-Path "$at\.claude.json") {
+    Copy-Item "$at\.claude.json" "$env:USERPROFILE\.claude.json" -Force
+}
+
+# Cline
+$clineDest = "$env:USERPROFILE\.cline\data"
+New-Item -ItemType Directory -Force -Path $clineDest | Out-Null
+if (Test-Path "$at\cline\data\secrets.json")     { Copy-Item "$at\cline\data\secrets.json"     "$clineDest\secrets.json"     -Force }
+if (Test-Path "$at\cline\data\globalState.json") { Copy-Item "$at\cline\data\globalState.json" "$clineDest\globalState.json" -Force }
+
+# Codex
+$codexDest = "$env:USERPROFILE\.codex"
+New-Item -ItemType Directory -Force -Path "$codexDest\skills" | Out-Null
+if (Test-Path "$at\codex\auth.json")   { Copy-Item "$at\codex\auth.json"   "$codexDest\auth.json"   -Force }
+if (Test-Path "$at\codex\config.toml") { Copy-Item "$at\codex\config.toml" "$codexDest\config.toml" -Force }
+if (Test-Path "$at\codex\skills") {
+    Copy-Item "$at\codex\skills\*" "$codexDest\skills\" -Recurse -Force
+}
+
+OK "AI tool credentials restored (Claude Code, Cline, Codex)"
+
+# ── 12. Restore screen recording ─────────────────────────────────────────────
+Step "Restoring screen recording"
+$recZip = "$tmp\MAARS_SCREEN_RECORDING.zip"
+Download "$RELEASE_BASE/MAARS_SCREEN_RECORDING.zip" $recZip
+$recDest = "$env:USERPROFILE\Videos\Screen Recordings"
+New-Item -ItemType Directory -Force -Path $recDest | Out-Null
+Expand-Archive -Path $recZip -DestinationPath $recDest -Force
+OK "Screen recording restored to Videos\Screen Recordings"
+
+# ── 13. Cleanup temp ──────────────────────────────────────────────────────────
 Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
 
-# ── 12. Node.js dependencies ──────────────────────────────────────────────────
+# ── 14. Node.js dependencies ──────────────────────────────────────────────────
 Step "Installing Node.js dependencies"
 Set-Location "$PROJECT_DIR\frontend"
 npm install --silent
 OK "Node.js dependencies installed"
 
-# ── 13. Start scripts ─────────────────────────────────────────────────────────
+# ── 15. Start scripts ─────────────────────────────────────────────────────────
 Step "Creating launch shortcuts"
 Set-Location $PROJECT_DIR
 
