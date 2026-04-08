@@ -85,10 +85,11 @@ OK "MongoDB ready"
 
 # ── 5. Clone repo ─────────────────────────────────────────────────────────────
 Step "Cloning repository"
-if (Test-Path $PROJECT_DIR) {
-    Write-Host "   Pulling latest..." -ForegroundColor Yellow
+if (Test-Path "$PROJECT_DIR\.git") {
+    Write-Host "   Repo exists — force-syncing to origin/main..." -ForegroundColor Yellow
     Set-Location $PROJECT_DIR
-    git pull origin main
+    git fetch origin
+    git reset --hard origin/main
 } else {
     git clone $REPO_URL $PROJECT_DIR
     Set-Location $PROJECT_DIR
@@ -112,13 +113,29 @@ if (Test-Path $backendSrc)  { Copy-Item $backendSrc  "backend\.env" -Force; Copy
 if (Test-Path $frontendSrc) { Copy-Item $frontendSrc "frontend\.env.local" -Force }
 OK "Credentials installed"
 
-# ── 7. Restore MongoDB data ───────────────────────────────────────────────────
+# ── 7. Restore uploads (no Python needed) ────────────────────────────────────
+Step "Restoring uploads"
+$uploadsZip = "$tmp\MAARS_UPLOADS.zip"
+Download "$RELEASE_BASE/MAARS_UPLOADS.zip" $uploadsZip
+New-Item -ItemType Directory -Force -Path "backend\uploads" | Out-Null
+Expand-Archive -Path $uploadsZip -DestinationPath "." -Force
+OK "Uploads restored"
+
+# ── 8. Python venv + dependencies (installs pymongo) ─────────────────────────
+Step "Installing Python dependencies"
+Set-Location "$PROJECT_DIR\backend"
+& $pythonExe -m venv venv
+& ".\venv\Scripts\python.exe" -m pip install --upgrade pip --quiet
+& ".\venv\Scripts\python.exe" -m pip install -r requirements.txt --quiet
+OK "Python dependencies installed"
+
+# ── 9. Restore MongoDB data (now pymongo is available in venv) ────────────────
 Step "Restoring MongoDB database"
+$venvPython = "$PROJECT_DIR\backend\venv\Scripts\python.exe"
 $dbZip = "$tmp\MAARS_DB_EXPORT.zip"
 Download "$RELEASE_BASE/MAARS_DB_EXPORT.zip" $dbZip
 Expand-Archive -Path $dbZip -DestinationPath "$tmp\db" -Force
 
-# Use Python (already confirmed available) to restore
 $restoreScript = @"
 import pymongo, json, os, sys
 
@@ -139,32 +156,15 @@ for db_name in os.listdir(export_root):
             db[coll_name].drop()
             db[coll_name].insert_many(docs)
             restored += len(docs)
-            print(f'  restored {db_name}.{coll_name}: {len(docs)} docs')
+            print('  restored ' + db_name + '.' + coll_name + ': ' + str(len(docs)) + ' docs')
 
-print(f'Total restored: {restored} docs')
+print('Total restored: ' + str(restored) + ' docs')
 "@
-$restoreScript | & $pythonExe - "$tmp\db\db_export"
+$restoreScript | & $venvPython - "$tmp\db\db_export"
 OK "MongoDB data restored"
 
-# ── 8. Restore uploads ────────────────────────────────────────────────────────
-Step "Restoring uploads"
-$uploadsZip = "$tmp\MAARS_UPLOADS.zip"
-Download "$RELEASE_BASE/MAARS_UPLOADS.zip" $uploadsZip
-
-New-Item -ItemType Directory -Force -Path "backend\uploads" | Out-Null
-Expand-Archive -Path $uploadsZip -DestinationPath "." -Force
-OK "Uploads restored"
-
-# ── 9. Cleanup temp ───────────────────────────────────────────────────────────
+# ── 10. Cleanup temp ──────────────────────────────────────────────────────────
 Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
-
-# ── 10. Python dependencies ───────────────────────────────────────────────────
-Step "Installing Python dependencies"
-Set-Location "$PROJECT_DIR\backend"
-& $pythonExe -m venv venv
-.\venv\Scripts\pip install --upgrade pip --quiet
-.\venv\Scripts\pip install -r requirements.txt --quiet
-OK "Python dependencies installed"
 
 # ── 11. Node.js dependencies ──────────────────────────────────────────────────
 Step "Installing Node.js dependencies"
