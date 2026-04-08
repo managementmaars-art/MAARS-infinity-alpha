@@ -5,7 +5,6 @@
 .vscode/
 
 # Claude Code — commit skills and settings, ignore session/local files
-.claude/settings.local.json
 .claude/sessions/
 .claude/file-history/
 .claude/shell-snapshots/
@@ -85,6 +84,7 @@ agenthub/agents/youtube/db
 # Archive files and large assets
 **/*.zip
 **/*.tar.gz
+!.claude/skills/**/*.tar.gz
 **/*.tar
 **/*.tgz
 *.pack

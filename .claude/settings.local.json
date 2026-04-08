@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l /c/Users/mirza/MAARS-Command/frontend/src/pages/*.jsx)"
+    ]
+  }
+}
