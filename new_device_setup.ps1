@@ -3,6 +3,9 @@
 #   irm https://raw.githubusercontent.com/managementmaars-art/MAARS-infinity-alpha/main/new_device_setup.ps1 | iex
 
 $ErrorActionPreference = "Stop"
+# Bypass SSL certificate validation globally (handles revocation check errors on restricted networks)
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
 $REPO_URL     = "https://github.com/managementmaars-art/MAARS-infinity-alpha.git"
 $RELEASE_BASE = "https://github.com/managementmaars-art/MAARS-infinity-alpha/releases/download/migration-v1"
 $PROJECT_DIR  = "$env:USERPROFILE\MAARS-Command"
@@ -17,22 +20,23 @@ function Download($url, $dest) {
     $name = Split-Path $dest -Leaf
     Write-Host "   Downloading $name..." -ForegroundColor Gray
     $ok = $false
-    # Try curl.exe first (handles large files well); --ssl-no-revoke bypasses revocation errors
-    if (Get-Command curl.exe -ErrorAction SilentlyContinue) {
-        curl.exe -L -o $dest $url --silent --show-error --retry 3 --ssl-no-revoke
-        if ($LASTEXITCODE -eq 0 -and (Test-Path $dest) -and (Get-Item $dest).Length -gt 100) { $ok = $true }
-    }
-    # Fallback: .NET WebClient (bypasses PS progress-bar overhead and SSL quirks)
+    # Primary: .NET WebClient with SSL validation disabled (works on restricted networks)
     if (-not $ok) {
-        Write-Host "   (curl failed, retrying with WebClient...)" -ForegroundColor Yellow
-        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
-        [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
-        $wc = New-Object System.Net.WebClient
-        $wc.DownloadFile($url, $dest)
-        $wc.Dispose()
-        if ((Test-Path $dest) -and (Get-Item $dest).Length -gt 100) { $ok = $true }
+        try {
+            $wc = New-Object System.Net.WebClient
+            $wc.DownloadFile($url, $dest)
+            $wc.Dispose()
+            if ((Test-Path $dest) -and (Get-Item $dest).Length -gt 100) { $ok = $true }
+        } catch { Write-Host "   (WebClient failed: $($_.Exception.Message))" -ForegroundColor Yellow }
     }
-    if (-not $ok) { throw "Download failed: $name" }
+    # Fallback: curl.exe with revocation check disabled
+    if (-not $ok) {
+        try {
+            curl.exe -L -o $dest $url --silent --show-error --retry 3 --ssl-no-revoke 2>&1 | Out-Null
+            if ((Test-Path $dest) -and (Get-Item $dest).Length -gt 100) { $ok = $true }
+        } catch { Write-Host "   (curl failed)" -ForegroundColor Yellow }
+    }
+    if (-not $ok) { throw "All download methods failed for: $name" }
     Write-Host "   Downloaded $name ($([math]::Round((Get-Item $dest).Length/1MB,1)) MB)" -ForegroundColor Gray
 }
 
