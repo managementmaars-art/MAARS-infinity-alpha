@@ -44,7 +44,8 @@ OK "Node.js: $(node --version)"
 
 # ── 4. MongoDB ────────────────────────────────────────────────────────────────
 Step "Checking MongoDB"
-$mongoRunning = (Get-Service -Name MongoDB -ErrorAction SilentlyContinue)?.Status -eq "Running"
+$mongoSvc = Get-Service -Name MongoDB -ErrorAction SilentlyContinue
+$mongoRunning = $mongoSvc -and $mongoSvc.Status -eq "Running"
 if (-not $mongoRunning) {
     $mongoInstalled = Get-Command mongod -ErrorAction SilentlyContinue
     if (-not $mongoInstalled) {
