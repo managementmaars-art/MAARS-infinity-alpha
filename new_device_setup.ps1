@@ -163,16 +163,41 @@ print('Total restored: ' + str(restored) + ' docs')
 $restoreScript | & $venvPython - "$tmp\db\db_export"
 OK "MongoDB data restored"
 
-# ── 10. Cleanup temp ──────────────────────────────────────────────────────────
+# ── 10. Restore .claude (skills + settings) ──────────────────────────────────
+Step "Restoring Claude skills and settings"
+$claudeZip = "$tmp\MAARS_CLAUDE_PROJECT.zip"
+Download "$RELEASE_BASE/MAARS_CLAUDE_PROJECT.zip" $claudeZip
+Expand-Archive -Path $claudeZip -DestinationPath $PROJECT_DIR -Force
+OK "Project .claude restored (skills + settings)"
+
+# Restore global Claude memory (~/.claude)
+$claudeGlobalZip = "$tmp\MAARS_CLAUDE_GLOBAL.zip"
+Download "$RELEASE_BASE/MAARS_CLAUDE_GLOBAL.zip" $claudeGlobalZip
+Expand-Archive -Path $claudeGlobalZip -DestinationPath "$env:TEMP\maars_claude_global" -Force
+
+$globalSrc = "$env:TEMP\maars_claude_global\claude_global"
+$globalDest = "$env:USERPROFILE\.claude"
+New-Item -ItemType Directory -Force -Path "$globalDest\projects\c--Users-$($env:USERNAME)-MAARS-Command\memory" | Out-Null
+
+if (Test-Path "$globalSrc\settings.json") {
+    Copy-Item "$globalSrc\settings.json" "$globalDest\settings.json" -Force
+}
+if (Test-Path "$globalSrc\memory") {
+    Copy-Item "$globalSrc\memory\*" "$globalDest\projects\c--Users-$($env:USERNAME)-MAARS-Command\memory\" -Force
+}
+Remove-Item "$env:TEMP\maars_claude_global" -Recurse -Force -ErrorAction SilentlyContinue
+OK "Global Claude memory restored"
+
+# ── 11. Cleanup temp ──────────────────────────────────────────────────────────
 Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
 
-# ── 11. Node.js dependencies ──────────────────────────────────────────────────
+# ── 12. Node.js dependencies ──────────────────────────────────────────────────
 Step "Installing Node.js dependencies"
 Set-Location "$PROJECT_DIR\frontend"
 npm install --silent
 OK "Node.js dependencies installed"
 
-# ── 12. Start scripts ─────────────────────────────────────────────────────────
+# ── 13. Start scripts ─────────────────────────────────────────────────────────
 Step "Creating launch shortcuts"
 Set-Location $PROJECT_DIR
 
