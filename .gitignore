@@ -33,8 +33,7 @@ node_modules/
 next-env.d.ts
 *.tsbuildinfo
 
-# Production builds
-/build
+# Production builds (keep frontend/build for migration)
 dist/
 dist
 
