@@ -111,7 +111,12 @@ $backendSrc  = "$tmp\bundle\backend\.env"
 $frontendSrc = "$tmp\bundle\frontend\.env.local"
 if (Test-Path $backendSrc)  { Copy-Item $backendSrc  "backend\.env" -Force; Copy-Item $backendSrc ".env" -Force }
 if (Test-Path $frontendSrc) { Copy-Item $frontendSrc "frontend\.env.local" -Force }
-OK "Credentials installed"
+$vscodeSrc = "$tmp\bundle\.vscode\settings.json"
+if (Test-Path $vscodeSrc) {
+    New-Item -ItemType Directory -Force -Path ".vscode" | Out-Null
+    Copy-Item $vscodeSrc ".vscode\settings.json" -Force
+}
+OK "Credentials + VS Code settings installed"
 
 # ── 7. Restore uploads (no Python needed) ────────────────────────────────────
 Step "Restoring uploads"
