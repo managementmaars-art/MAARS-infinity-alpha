@@ -14,8 +14,21 @@ Write-Host "========================================`n" -ForegroundColor Cyan
 function Step($msg) { Write-Host "`n>> $msg" -ForegroundColor Yellow }
 function OK($msg)   { Write-Host "   OK: $msg" -ForegroundColor Green }
 function Download($url, $dest) {
-    Write-Host "   Downloading $(Split-Path $dest -Leaf)..." -ForegroundColor Gray
-    Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
+    $name = Split-Path $dest -Leaf
+    Write-Host "   Downloading $name..." -ForegroundColor Gray
+    # Use curl.exe (built into Windows 10+) — handles large files reliably
+    if (Get-Command curl.exe -ErrorAction SilentlyContinue) {
+        curl.exe -L -o $dest $url --silent --show-error --retry 3
+    } else {
+        # Fallback: disable progress bar (speeds up IWR significantly)
+        $prev = $ProgressPreference
+        $ProgressPreference = 'SilentlyContinue'
+        Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
+        $ProgressPreference = $prev
+    }
+    $size = (Get-Item $dest).Length
+    if ($size -lt 100) { throw "Download failed or empty: $name ($size bytes)" }
+    Write-Host "   Downloaded $name ($([math]::Round($size/1MB,1)) MB)" -ForegroundColor Gray
 }
 
 # ── 1. Git ────────────────────────────────────────────────────────────────────
