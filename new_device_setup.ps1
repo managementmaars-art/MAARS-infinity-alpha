@@ -16,19 +16,24 @@ function OK($msg)   { Write-Host "   OK: $msg" -ForegroundColor Green }
 function Download($url, $dest) {
     $name = Split-Path $dest -Leaf
     Write-Host "   Downloading $name..." -ForegroundColor Gray
-    # Use curl.exe (built into Windows 10+) — handles large files reliably
+    $ok = $false
+    # Try curl.exe first (handles large files well); --ssl-no-revoke bypasses revocation errors
     if (Get-Command curl.exe -ErrorAction SilentlyContinue) {
-        curl.exe -L -o $dest $url --silent --show-error --retry 3
-    } else {
-        # Fallback: disable progress bar (speeds up IWR significantly)
-        $prev = $ProgressPreference
-        $ProgressPreference = 'SilentlyContinue'
-        Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
-        $ProgressPreference = $prev
+        curl.exe -L -o $dest $url --silent --show-error --retry 3 --ssl-no-revoke
+        if ($LASTEXITCODE -eq 0 -and (Test-Path $dest) -and (Get-Item $dest).Length -gt 100) { $ok = $true }
     }
-    $size = (Get-Item $dest).Length
-    if ($size -lt 100) { throw "Download failed or empty: $name ($size bytes)" }
-    Write-Host "   Downloaded $name ($([math]::Round($size/1MB,1)) MB)" -ForegroundColor Gray
+    # Fallback: .NET WebClient (bypasses PS progress-bar overhead and SSL quirks)
+    if (-not $ok) {
+        Write-Host "   (curl failed, retrying with WebClient...)" -ForegroundColor Yellow
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+        [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+        $wc = New-Object System.Net.WebClient
+        $wc.DownloadFile($url, $dest)
+        $wc.Dispose()
+        if ((Test-Path $dest) -and (Get-Item $dest).Length -gt 100) { $ok = $true }
+    }
+    if (-not $ok) { throw "Download failed: $name" }
+    Write-Host "   Downloaded $name ($([math]::Round((Get-Item $dest).Length/1MB,1)) MB)" -ForegroundColor Gray
 }
 
 # ── 1. Git ────────────────────────────────────────────────────────────────────
