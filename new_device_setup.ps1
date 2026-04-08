@@ -28,11 +28,37 @@ OK "Git: $(git --version)"
 
 # ── 2. Python ─────────────────────────────────────────────────────────────────
 Step "Checking Python"
-if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
-    winget install --id Python.Python.3.11 -e --source winget --silent
-    $env:PATH += ";$env:LOCALAPPDATA\Programs\Python\Python311;$env:LOCALAPPDATA\Programs\Python\Python311\Scripts"
+# Find real python.exe — search common install locations, ignore Windows Store alias
+$pythonExe = $null
+$pythonSearchPaths = @(
+    "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe",
+    "$env:LOCALAPPDATA\Programs\Python\Python311\python.exe",
+    "$env:LOCALAPPDATA\Programs\Python\Python310\python.exe",
+    "C:\Python312\python.exe",
+    "C:\Python311\python.exe",
+    "C:\Python310\python.exe",
+    "C:\Program Files\Python312\python.exe",
+    "C:\Program Files\Python311\python.exe"
+)
+foreach ($p in $pythonSearchPaths) {
+    if (Test-Path $p) { $pythonExe = $p; break }
 }
-OK "Python: $(python --version)"
+# Also try py launcher
+if (-not $pythonExe -and (Get-Command py -ErrorAction SilentlyContinue)) {
+    $pythonExe = (py -c "import sys; print(sys.executable)" 2>$null)
+}
+if (-not $pythonExe) {
+    Write-Host "   Installing Python 3.11 via winget..." -ForegroundColor Yellow
+    winget install --id Python.Python.3.11 -e --source winget --accept-package-agreements --accept-source-agreements
+    # Refresh PATH from registry
+    $env:PATH = [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("PATH","User")
+    foreach ($p in $pythonSearchPaths) {
+        if (Test-Path $p) { $pythonExe = $p; break }
+    }
+}
+if (-not $pythonExe) { Write-Host "ERROR: Python not found after install. Please install manually from python.org" -ForegroundColor Red; exit 1 }
+OK "Python: $($pythonExe) -- $( & $pythonExe --version)"
+Set-Alias -Name python -Value $pythonExe -Scope Script
 
 # ── 3. Node.js ────────────────────────────────────────────────────────────────
 Step "Checking Node.js"
@@ -117,7 +143,7 @@ for db_name in os.listdir(export_root):
 
 print(f'Total restored: {restored} docs')
 "@
-$restoreScript | python - "$tmp\db\db_export"
+$restoreScript | & $pythonExe - "$tmp\db\db_export"
 OK "MongoDB data restored"
 
 # ── 8. Restore uploads ────────────────────────────────────────────────────────
@@ -135,7 +161,7 @@ Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
 # ── 10. Python dependencies ───────────────────────────────────────────────────
 Step "Installing Python dependencies"
 Set-Location "$PROJECT_DIR\backend"
-python -m venv venv
+& $pythonExe -m venv venv
 .\venv\Scripts\pip install --upgrade pip --quiet
 .\venv\Scripts\pip install -r requirements.txt --quiet
 OK "Python dependencies installed"
