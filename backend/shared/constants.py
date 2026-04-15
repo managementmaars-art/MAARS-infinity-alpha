@@ -48,6 +48,15 @@ DIRECT_API_KEYS = {
     "minimax":   os.environ.get('MINIMAX_API_KEY', ''),
     "inception": os.environ.get('INCEPTION_API_KEY', ''),
     "arcee":     os.environ.get('ARCEE_API_KEY', ''),
+    # ── Regional & Enterprise ─────────────────────────────────────────────────
+    "yi":          os.environ.get('YI_API_KEY', '') or os.environ.get('ZERO_ONE_API_KEY', ''),
+    "zhipu":       os.environ.get('ZHIPU_API_KEY', '') or os.environ.get('GLM_API_KEY', ''),
+    "doubao":      os.environ.get('DOUBAO_API_KEY', '') or os.environ.get('VOLCENGINE_API_KEY', ''),
+    "hyperbolic":  os.environ.get('HYPERBOLIC_API_KEY', ''),
+    "upstage":     os.environ.get('UPSTAGE_API_KEY', '') or os.environ.get('SOLAR_API_KEY', ''),
+    "writer":      os.environ.get('WRITER_API_KEY', '') or os.environ.get('PALMYRA_API_KEY', ''),
+    "huggingface": os.environ.get('HUGGINGFACE_API_KEY', '') or os.environ.get('HF_TOKEN', ''),
+    "llama":       os.environ.get('LLAMA_API_KEY', '') or os.environ.get('META_API_KEY', ''),
     # ── Voice / TTS ───────────────────────────────────────────────────────────
     "elevenlabs": os.environ.get('ELEVENLABS_API_KEY', ''),
 }
@@ -438,6 +447,108 @@ INTEGRATION_SERVICES = {
         "capabilities": ["message", "broadcast", "channel", "group", "inline_keyboard", "media", "poll", "bot"],
         "oauth_url": "https://t.me/BotFather",
         "docs_url": "https://core.telegram.org/bots/api",
+    },
+
+    # —— Commerce / CRM / Knowledge / Ops ————————————————————————————————————————————————
+    "shopify": {
+        "name": "Shopify",
+        "key_fields": ["store_url", "access_token"],
+        "description": "Manage store data, products, customers, and order operations for commerce workflows",
+        "category": "commerce",
+        "capabilities": ["products", "orders", "customers", "inventory", "fulfillment", "analytics"],
+        "oauth_url": "https://partners.shopify.com/",
+        "docs_url": "https://shopify.dev/docs/api",
+    },
+    "hubspot": {
+        "name": "HubSpot",
+        "key_fields": ["access_token", "portal_id"],
+        "description": "Sync contacts, deals, and lifecycle events with HubSpot CRM and marketing tools",
+        "category": "crm",
+        "capabilities": ["contacts", "companies", "deals", "tickets", "pipelines", "campaigns"],
+        "oauth_url": "https://developers.hubspot.com/",
+        "docs_url": "https://developers.hubspot.com/docs/api/overview",
+    },
+    "salesforce": {
+        "name": "Salesforce",
+        "key_fields": ["instance_url", "client_id", "client_secret", "refresh_token"],
+        "description": "Connect sales, support, and revenue workflows to Salesforce data and automation",
+        "category": "crm",
+        "capabilities": ["leads", "opportunities", "accounts", "cases", "reports", "workflows"],
+        "oauth_url": "https://developer.salesforce.com/",
+        "docs_url": "https://developer.salesforce.com/docs",
+    },
+    "zapier": {
+        "name": "Zapier",
+        "key_fields": ["webhook_url"],
+        "description": "Trigger downstream automations and cross-system workflows with Zapier webhooks",
+        "category": "automation",
+        "capabilities": ["webhook", "trigger", "workflow", "fan_out", "notifications"],
+        "oauth_url": "https://zapier.com/app/developer",
+        "docs_url": "https://platform.zapier.com/docs",
+    },
+    "webhooks": {
+        "name": "Custom Webhooks",
+        "key_fields": ["webhook_url", "signing_secret"],
+        "description": "Push signed events to custom endpoints for internal systems and external automations",
+        "category": "automation",
+        "capabilities": ["webhook", "signing", "retries", "events", "callbacks"],
+        "docs_url": "https://webhooks.fyi/",
+    },
+    "notion": {
+        "name": "Notion",
+        "key_fields": ["integration_token"],
+        "description": "Read and write workspace pages, databases, and structured operating documents",
+        "category": "knowledge",
+        "capabilities": ["pages", "databases", "search", "comments", "knowledge_sync"],
+        "oauth_url": "https://www.notion.so/my-integrations",
+        "docs_url": "https://developers.notion.com/",
+    },
+    "jira": {
+        "name": "Jira",
+        "key_fields": ["base_url", "email", "api_token"],
+        "description": "Coordinate engineering and operations work through Jira issues, projects, and workflows",
+        "category": "knowledge",
+        "capabilities": ["issues", "projects", "sprints", "comments", "transitions"],
+        "oauth_url": "https://developer.atlassian.com/console/myapps/",
+        "docs_url": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/",
+    },
+    "confluence": {
+        "name": "Confluence",
+        "key_fields": ["base_url", "email", "api_token"],
+        "description": "Store playbooks, runbooks, and operating knowledge in Confluence spaces and pages",
+        "category": "knowledge",
+        "capabilities": ["pages", "spaces", "search", "comments", "attachments"],
+        "oauth_url": "https://developer.atlassian.com/console/myapps/",
+        "docs_url": "https://developer.atlassian.com/cloud/confluence/rest/v2/",
+    },
+    "stripe": {
+        "name": "Stripe",
+        "key_fields": ["secret_key", "webhook_secret"],
+        "description": "Inspect payments, customers, subscriptions, and billing events for revenue operations",
+        "category": "finance",
+        "capabilities": ["payments", "customers", "subscriptions", "billing", "webhooks"],
+        "oauth_url": "https://dashboard.stripe.com/apikeys",
+        "docs_url": "https://docs.stripe.com/api",
+    },
+    # ── Self-hosted automation backbone ─────────────────────────────────────
+    # The embedded browser is an integration that doesn't reach out to a
+    # third-party API — it IS the API surface MAARS uses to drive the open
+    # web. Agents, the orchestrator, and the human UI all share the same
+    # Chromium context per user, so logged-in sessions can be handed back
+    # and forth without re-authenticating. Chromium lives in backend/browser_data/
+    # (inside the MAARS install, not the host OS).
+    "browser": {
+        "name": "Embedded Browser",
+        "key_fields": [],  # no external credentials required
+        "description": "Self-hosted Chromium runtime. Agents and the human user share the same browser session to automate any website, complete OAuth flows, scrape data, fill forms, and handle 2FA handoffs.",
+        "category": "automation",
+        "capabilities": [
+            "navigate", "click", "fill", "type", "scroll", "extract_text",
+            "extract_html", "screenshot", "evaluate_js", "persistent_login",
+            "three_way_handoff", "live_stream", "cookie_vault",
+        ],
+        "oauth_url": "",
+        "docs_url": "/api/browser/health",
     },
 }
 

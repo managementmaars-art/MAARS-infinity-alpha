@@ -1020,6 +1020,16 @@ input:focus, textarea:focus {
   #costs .print-card .flex.gap-3 { gap: 6px !important; }
   .print-agent-card { page-break-inside: avoid !important; break-inside: avoid !important; margin-bottom: 4px !important; }
   [class*="backdrop-blur"] { backdrop-filter: none !important; }
+
+  /* FAQ + any other collapsible <details>: force fully expanded in print,
+     regardless of their current `open` state in the DOM. Without this, the
+     PDF would render only the <summary> (question), swallowing answers.  */
+  details { display: block !important; }
+  details > * { display: block !important; visibility: visible !important; height: auto !important; max-height: none !important; overflow: visible !important; }
+  details > summary { list-style: none !important; cursor: default !important; }
+  details > summary::-webkit-details-marker { display: none !important; }
+  details > summary svg { display: none !important; }   /* hide the chevron */
+  details { page-break-inside: avoid !important; break-inside: avoid !important; margin-bottom: 4px !important; }
 }
 
 /* ═══════════════════════════════════════════════════════════

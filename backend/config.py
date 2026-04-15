@@ -638,6 +638,34 @@ AGENT_TOOLS = {
         "category": "integration",
         "requires": "google_suite"
     },
+    "hubspot_action": {
+        "name": "hubspot_action",
+        "description": "Read or create HubSpot CRM records such as contacts.",
+        "parameters": "action (string): list_contacts/create_contact, properties (object): contact fields for create, limit (int): max list size",
+        "category": "integration",
+        "requires": "hubspot"
+    },
+    "salesforce_action": {
+        "name": "salesforce_action",
+        "description": "Query Salesforce accounts or create leads using the connected Salesforce org.",
+        "parameters": "action (string): query_accounts/create_lead, soql (string): optional SOQL query, lead (object): lead payload for create",
+        "category": "integration",
+        "requires": "salesforce"
+    },
+    "shopify_action": {
+        "name": "shopify_action",
+        "description": "List Shopify products or create a product in the connected store.",
+        "parameters": "action (string): list_products/create_product, limit (int): max list size, product (object): Shopify product payload",
+        "category": "integration",
+        "requires": "shopify"
+    },
+    "webhook_action": {
+        "name": "webhook_action",
+        "description": "Trigger a configured webhook or Zapier automation with structured payloads.",
+        "parameters": "method (string): POST/GET/etc, payload (object|string): webhook body, headers (object): optional headers",
+        "category": "integration",
+        "requires": "webhooks"
+    },
     "query_tasks": {
         "name": "query_tasks",
         "description": "Search and list tasks in the shared workspace. Use this to find tasks created by any agent or the user. You can filter by status.",
@@ -662,21 +690,93 @@ AGENT_TOOLS = {
         "parameters": "product_query (string, required): The product name/brand/model identified from the image, e.g. 'iPhone 16 Pro Max', 'Nike Air Max 90', 'Tesla Model Y'",
         "category": "core"
     },
+
+    # ── Embedded Browser Runtime (9 tools) ──────────────────────────────────
+    # Every tool drives the same in-process Chromium that lives under
+    # backend/browser_data/. Agents, the orchestrator, and the human UI share
+    # sessions — a session_id routes to a single Playwright context so cookies
+    # and login state are reused across callers.
+    "browser_open": {
+        "name": "browser_open",
+        "description": "Open a new embedded browser session for the current user. Returns a session_id you pass to every subsequent browser_* tool call. Session is shared across the user and any agents and persists cookies, so re-opening after login reuses the logged-in state.",
+        "parameters": "start_url (string, optional): initial URL to load",
+        "category": "browser"
+    },
+    "browser_navigate": {
+        "name": "browser_navigate",
+        "description": "Navigate the embedded browser to a URL. Use after browser_open. Blocks until DOM content loads.",
+        "parameters": "session_id (string, required); url (string, required)",
+        "category": "browser"
+    },
+    "browser_click": {
+        "name": "browser_click",
+        "description": "Click an element in the embedded browser. Prefer CSS/Playwright selectors with text content, e.g. 'button:has-text(\"Sign in\")'. Fails if the selector times out after 10s.",
+        "parameters": "session_id (string, required); selector (string, required)",
+        "category": "browser"
+    },
+    "browser_fill": {
+        "name": "browser_fill",
+        "description": "Fill a form input or textarea in the embedded browser. Use on text-like form fields; for keyboard typing use browser_type instead.",
+        "parameters": "session_id (string, required); selector (string, required); value (string, required)",
+        "category": "browser"
+    },
+    "browser_type": {
+        "name": "browser_type",
+        "description": "Type raw characters into whatever element currently has focus. Useful when you can't target a selector cleanly (e.g. contenteditable editors).",
+        "parameters": "session_id (string, required); text (string, required)",
+        "category": "browser"
+    },
+    "browser_extract": {
+        "name": "browser_extract",
+        "description": "Extract inner text from an element in the embedded browser. Defaults to the full <body>. Returns the raw text — caller decides how to parse.",
+        "parameters": "session_id (string, required); selector (string, optional, default 'body')",
+        "category": "browser"
+    },
+    "browser_screenshot": {
+        "name": "browser_screenshot",
+        "description": "Capture a PNG screenshot of the current page, returned as base64. Use when the agent needs to 'see' the page — pair with a vision-capable model for multi-modal reasoning.",
+        "parameters": "session_id (string, required)",
+        "category": "browser"
+    },
+    "browser_evaluate": {
+        "name": "browser_evaluate",
+        "description": "Run arbitrary JavaScript in the page context and return its result (JSON-serializable). Powerful — use for scraping structured data with document.querySelectorAll, not for navigation.",
+        "parameters": "session_id (string, required); expression (string, required)",
+        "category": "browser"
+    },
+    "browser_close": {
+        "name": "browser_close",
+        "description": "Close the embedded browser session and free resources. Cookies/localStorage persist and are replayed the next time browser_open is called for the same user.",
+        "parameters": "session_id (string, required)",
+        "category": "browser"
+    },
+    "browser_see_and_act": {
+        "name": "browser_see_and_act",
+        "description": "Capture a screenshot of the current page, ask a vision model what to do next toward a given goal, and (optionally) execute the action. Use when a single perception + action step is enough — otherwise use browser_run_goal for the full autonomous loop.",
+        "parameters": "session_id (string, required); goal (string, required); execute (bool, optional, default true)",
+        "category": "browser"
+    },
+    "browser_run_goal": {
+        "name": "browser_run_goal",
+        "description": "Hand a natural-language goal to the autonomous BrowserAgent. The agent will perceive the page, decide actions with a vision model, click/type/navigate on its own, and hand off to the human on 2FA / CAPTCHA / payment prompts. Returns the full event log once done.",
+        "parameters": "goal (string, required); start_url (string, optional); max_steps (int, optional, default 20); session_id (string, optional)",
+        "category": "browser"
+    },
 }
 
 # Map agents to their available tools
 AGENT_TOOL_MAP = {
-    "agent_commander": ["web_search", "create_task", "calculate", "analyze_data", "send_slack", "send_email", "send_sms", "github_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
+    "agent_commander": ["web_search", "create_task", "calculate", "analyze_data", "send_slack", "send_email", "send_sms", "github_action", "hubspot_action", "salesforce_action", "shopify_action", "webhook_action", "query_tasks", "update_task", "query_agent_history", "product_scan", "browser_open", "browser_navigate", "browser_click", "browser_fill", "browser_type", "browser_extract", "browser_screenshot", "browser_evaluate", "browser_close", "browser_see_and_act", "browser_run_goal"],
     "agent_secretary": ["create_task", "calculate", "send_email", "send_gmail", "schedule_meeting", "google_calendar", "send_sms", "query_tasks", "update_task", "query_agent_history", "product_scan"],
-    "agent_marketing": ["web_search", "analyze_data", "send_email", "search_gif", "send_slack", "query_tasks", "update_task", "query_agent_history", "product_scan"],
-    "agent_strategist": ["web_search", "calculate", "analyze_data", "airtable_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
+    "agent_marketing": ["web_search", "analyze_data", "send_email", "search_gif", "send_slack", "hubspot_action", "shopify_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
+    "agent_strategist": ["web_search", "calculate", "analyze_data", "airtable_action", "hubspot_action", "salesforce_action", "shopify_action", "webhook_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_webdesigner": ["web_search", "search_gif", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_appdev": ["web_search", "calculate", "github_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_copywriter": ["web_search", "send_email", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_seo": ["web_search", "analyze_data", "airtable_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
-    "agent_sales": ["web_search", "calculate", "send_email", "send_gmail", "send_sms", "schedule_meeting", "google_calendar", "query_tasks", "update_task", "query_agent_history", "product_scan"],
+    "agent_sales": ["web_search", "calculate", "send_email", "send_gmail", "send_sms", "schedule_meeting", "google_calendar", "hubspot_action", "salesforce_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_socialmedia": ["web_search", "analyze_data", "search_gif", "send_slack", "query_tasks", "update_task", "query_agent_history", "product_scan"],
-    "agent_analyst": ["web_search", "calculate", "analyze_data", "airtable_action", "google_calendar", "query_tasks", "update_task", "query_agent_history", "product_scan"],
+    "agent_analyst": ["web_search", "calculate", "analyze_data", "airtable_action", "google_calendar", "hubspot_action", "salesforce_action", "shopify_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_contentwriter": ["web_search", "search_gif", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_customerservice": ["web_search", "create_task", "send_email", "send_gmail", "send_sms", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_projectmanager": ["create_task", "calculate", "analyze_data", "send_slack", "google_calendar", "airtable_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
@@ -689,12 +789,12 @@ AGENT_TOOL_MAP = {
     "agent_video": ["web_search", "search_gif", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     # New agents
     "agent_cybersecurity": ["web_search", "analyze_data", "create_task", "query_tasks", "update_task", "query_agent_history"],
-    "agent_automation": ["web_search", "analyze_data", "create_task", "github_action", "airtable_action", "query_tasks", "update_task", "query_agent_history"],
+    "agent_automation": ["web_search", "analyze_data", "create_task", "github_action", "airtable_action", "webhook_action", "hubspot_action", "salesforce_action", "shopify_action", "query_tasks", "update_task", "query_agent_history"],
     "agent_growthhacker": ["web_search", "analyze_data", "calculate", "send_email", "query_tasks", "update_task", "query_agent_history"],
     "agent_compliance": ["web_search", "analyze_data", "create_task", "send_email", "query_tasks", "update_task", "query_agent_history"],
     "agent_aioptimizer": ["web_search", "analyze_data", "calculate", "query_tasks", "update_task", "query_agent_history"],
-    "agent_operations": ["web_search", "analyze_data", "calculate", "create_task", "airtable_action", "google_calendar", "query_tasks", "update_task", "query_agent_history"],
-    "agent_revenue": ["web_search", "analyze_data", "calculate", "send_email", "query_tasks", "update_task", "query_agent_history"],
+    "agent_operations": ["web_search", "analyze_data", "calculate", "create_task", "airtable_action", "google_calendar", "shopify_action", "webhook_action", "query_tasks", "update_task", "query_agent_history"],
+    "agent_revenue": ["web_search", "analyze_data", "calculate", "send_email", "hubspot_action", "salesforce_action", "query_tasks", "update_task", "query_agent_history"],
     # Phase 2 agents
     "agent_cso": ["web_search", "analyze_data", "calculate", "create_task", "query_tasks", "update_task", "query_agent_history"],
     "agent_investor": ["web_search", "analyze_data", "calculate", "send_email", "query_tasks", "update_task", "query_agent_history"],

@@ -167,7 +167,10 @@ async def create_agent(agent_data: AgentCreate, current_user: User = Depends(get
         try:
             from pathlib import Path
             from services.skills_service import ensure_agent_skills, ensure_provider_skills
-            skills_root = Path(__file__).parent.parent.parent / ".claude" / "skills"
+            repo_root = Path(__file__).parent.parent.parent
+            skills_root = repo_root / ".agents" / "skills"
+            if not skills_root.exists():
+                skills_root = repo_root / ".claude" / "skills"
             await ensure_agent_skills(agent_doc, db, skills_root)
             await ensure_provider_skills(agent_doc, db)
         except Exception as e:

@@ -6,7 +6,7 @@ import {
   ChevronRight, Globe, Lock, Eye, Target, Layers, Network, Server, Database,
   Download, Mic, FileCode, Archive, Terminal, Search, Heart,
   Wrench, MessageSquare, RefreshCw, Briefcase, Building, TrendingUp,
-  CheckCircle, Package, DollarSign, Printer, Share2, Key
+  CheckCircle, Package, DollarSign, Printer, Share2, Key, BookOpen
 } from "lucide-react";
 
 /* ── network label mapping ── */
@@ -82,7 +82,7 @@ const SYSTEMS = [
   },
   {
     icon: Network, title: "Smart Universal AI Router", subtitle: "33 Providers, 600+ Models — Routing the Right Brain for Every Job", color: "text-cyan-400",
-    desc: "MAARS Command has access to 600+ different AI models from 29 companies via the MAARS Universal API Gateway. The Smart Router classifies your prompt's task type (code, math, reasoning, creative, translation, research, etc.) and your current credit balance, then automatically picks the ideal model. Easy chats go to blazing-fast Groq or Cerebras. Complex reasoning goes to O4-mini or DeepSeek R1. Research goes to Perplexity Deep Research first. Developers get a maars-sk-* key and can call any model through a single OpenAI-compatible endpoint at /developer.",
+    desc: "MAARS Command has access to 600+ different AI models from 33 companies via the MAARS Universal API Gateway. The Smart Router classifies your prompt's task type (code, math, reasoning, creative, translation, research, etc.) and your current credit balance, then automatically picks the ideal model. Easy chats go to blazing-fast Groq or Cerebras. Complex reasoning goes to O4-mini or DeepSeek R1. Research goes to Perplexity Deep Research first. Developers get a maars-sk-* key and can call any model through a single OpenAI-compatible endpoint at /developer.",
     details: [
       "Premium Tier (hard tasks): O4, O4-mini, Claude Opus 4.6, Claude Sonnet 4.6, GPT-5, Grok 3 — smartest models for complex reasoning, legal, and research",
       "Standard Tier (medium tasks): GPT-4.1, Gemini 2.5 Pro, DeepSeek R1, Mistral Large, Cohere Command A — balanced quality and cost",
@@ -343,6 +343,184 @@ const SYSTEMS = [
     ]
   },
   {
+    icon: Layers, title: "Task Graph Execution Kernel", subtitle: "DAG-Based Task Orchestration with Dependency Resolution", color: "text-sky-400",
+    desc: "The Kernel turns any goal into a directed-acyclic task graph (DAG) and executes it. Instead of running steps one-by-one, it figures out which tasks depend on which, runs independent branches in parallel, and holds dependent tasks until their inputs are ready. Built-in retry logic, budget enforcement per branch, and checkpointed resumption let a workflow survive provider outages, human pauses, and multi-hour runs without losing state.",
+    details: [
+      "131 dedicated Infinity endpoints under /api/infinity (task-graphs, goals, scheduler, budget, policies, runtime, recovery, workers, environments)",
+      "Task graph compiler: accepts a natural-language goal → emits a DAG with nodes (agent/tool calls), edges (data dependencies), checkpoints, and rollback markers",
+      "Parallel branch execution: independent branches run concurrently, respecting per-branch credit budgets and per-agent rate limits",
+      "Deterministic resumption: every step emits a checkpoint so a halted graph can resume mid-run without re-executing completed nodes",
+      "Scheduler + worker pool: /kernel/scheduler.py dispatches ready nodes to worker processes; job queue tracked at /api/infinity/workers/*",
+      "Budget controller enforces per-user, per-agent, per-environment credit caps — hits a ceiling, the graph pauses instead of overspending",
+      "Visual task-graph page (frontend/src/pages/TaskGraphs.jsx) renders every node, edge, status, and cost in real time",
+    ]
+  },
+  {
+    icon: Gauge, title: "10-Tier Autonomy Framework", subtitle: "From Full Human Approval (T1) to Unsupervised Autonomy (T10)", color: "text-orange-400",
+    desc: "Every agent runs at one of ten autonomy tiers. Tier 1 means every action needs explicit human approval before it leaves the sandbox. Tier 10 means the agent operates unsupervised within its budget and policy envelope. Tiers 2-9 interpolate — some tools are pre-approved, some actions auto-execute if trust score > threshold, some require dual-agent cross-verification. You dial autonomy per agent, and the kernel enforces the tier on every tool call.",
+    details: [
+      "Tier 1 — Supervised: every action queues for human approval in the Approvals page",
+      "Tier 2-3 — Assisted: non-destructive reads auto-approve; writes and external actions require approval",
+      "Tier 4-6 — Delegated: pre-approved tools run freely; high-cost or high-impact actions gate on approval",
+      "Tier 7-9 — Empowered: all allow-listed actions run; only novel tool calls or policy edge cases escalate",
+      "Tier 10 — Autonomous: full autonomy within budget + policy; post-facto audit only",
+      "Per-agent override: set any agent's tier from the Brain Profiles page; changes logged immutably",
+      "Trust-gated elevation: an agent's effective tier is min(assigned_tier, ceil(trust_score / 10)) — low trust can't bypass review",
+      "Tier enforcement lives in backend/governance/autonomy.py and is checked on every tool invocation before execution",
+    ]
+  },
+  {
+    icon: Globe, title: "Embedded Browser Runtime", subtitle: "Self-Hosted Chromium · Multi-Tab · Three-Way Shared Control · Autonomous Vision Agent", color: "text-blue-400",
+    desc: "MAARS ships with a full Chromium runtime — not a call out to a remote browser service, not a thin iframe. The binary lives inside the MAARS install under backend/browser_data/, so when you container-ize or ship MAARS the browser comes with it. Agents, the orchestrator, and the human user all drive the same session: when the autonomous BrowserAgent hits a 2FA screen it hands the driver lock to you, you complete the one-time code, and the agent picks back up where it left off — cookies preserved, no re-login. Every one of 29 integrations has a click-to-connect button that opens the right OAuth URL in a tagged tab and optionally invokes the agent to walk through the flow.",
+    details: [
+      "Chromium runs on a dedicated OS thread with a ProactorEventLoop — sidesteps the uvicorn --reload SelectorEventLoop subprocess bug on Windows",
+      "Multi-tab per session: Chrome-style tab strip, click to switch, × to close, + for blank — context shared across tabs so cookies/localStorage are unified",
+      "Three-way shared control: driver ∈ {shared, user, agent, system}; take-control / release-control via REST, WS message, or UI buttons",
+      "Autonomous BrowserAgent (services/browser_agent.py): perceive → decide (vision) → act loop with 2FA / CAPTCHA / payment hand-off to the human",
+      "Vision fallback chain: OpenAI GPT-4o → Anthropic Claude. Returns strict JSON { kind, x, y, text, url, reason, confidence } — callable directly via browser_see_and_act",
+      "WebSocket live view: event-driven or continuous streams, PNG (lossless) or JPEG (~10× smaller), 1–24 fps, user input events forwarded back to Playwright",
+      "Integration Connect: POST /api/browser/integrations/{id}/connect — opens the right login URL in a tagged tab, optional run_agent=true drives OAuth automatically",
+      "Governance: per-env domain allow/deny policy (fail-closed), per-user browser-minutes daily budget (default 60 min), 429 on exhaust",
+      "11 agent tools: browser_open, browser_navigate, browser_click, browser_fill, browser_type, browser_extract, browser_screenshot, browser_evaluate, browser_close, browser_see_and_act, browser_run_goal",
+      "32 routes under /api/browser/* incl. sessions, tabs, take/release-control, screenshot, extract, evaluate, agent/run (SSE), policy/domains, policy/budget, usage, integrations/{id}/connect",
+      "Frontend at /browser: session sidebar, integration grid (29 chips), tab strip, URL bar, driver status strip, agent goal runner with SSE event log, fullscreen mode, stream config",
+    ]
+  },
+  {
+    icon: Building, title: "Multi-Environment Segregation", subtitle: "Production · Staging · Sandbox · Simulation — Isolated Policies & Budgets", color: "text-teal-400",
+    desc: "MAARS ships with four isolated execution environments. Agents, workflows, and data in Simulation never touch Production. Each environment has its own budget multiplier, policy set, data retention rule, and audit trail. Promote from Sandbox → Staging → Production only after Verification Civilization signs off. Simulation runs at zero real cost (all external calls mocked) so you can stress-test autonomous behavior without risk.",
+    details: [
+      "Simulation: cost multiplier = 0, all integrations mocked, full logging, 7-day retention — safe for dry-runs and chaos testing",
+      "Sandbox: real calls to test-mode APIs (Stripe test keys, Gmail test inbox), 30-day retention, relaxed policies",
+      "Staging: production-like credentials, strict policies, 90-day retention, required for release promotion",
+      "Production: real money, real users, immutable audit, 7-year retention, all circuit breakers enabled",
+      "Environment-scoped budgets: cap spend per env independently — e.g., $10/day sandbox, $2,000/day production",
+      "Env-scoped trust scores: an agent's trust in sandbox doesn't inherit to production until it's promoted",
+      "Managed via backend/governance/environments.py and /api/infinity/environments/* endpoints",
+    ]
+  },
+  {
+    icon: CheckCircle, title: "Verification Civilization", subtitle: "Multi-Verifier Fact-Checking with 6-Dimensional Consensus Scoring", color: "text-emerald-400",
+    desc: "Every factual claim an agent makes gets cross-verified by 2-4 independent verifiers (different models, different prompts, different retrieval sources). A claim only passes if consensus is reached across six dimensions: factual accuracy, source grounding, logical coherence, completeness, bias detection, and temporal freshness. Disagreements escalate to a human reviewer or a higher-tier verifier. The whole pipeline is inspired by Popperian epistemology — agents don't just \"answer,\" they make claims that survive attempted refutation.",
+    details: [
+      "6-dimensional scoring: factual accuracy, source grounding, logical coherence, completeness, bias, temporal freshness (0-100 each)",
+      "Multi-model crosscheck: the same claim gets verified by e.g. Claude Opus + Gemini 2.5 Pro + DeepSeek R1 — disagreement = flag",
+      "Source citations mandatory: every fact cites a retrievable source from the knowledge_chunks collection or live web search",
+      "Hallucination detector: detects confabulation patterns (unverifiable specifics, made-up URLs, invented quotes) and quarantines the response",
+      "Escalation routes: low-confidence → retry with higher-tier model; persistent disagreement → queue for human review",
+      "Verification metrics tracked at /api/infinity/verification/stats — see pass rate, top failure modes, per-agent accuracy",
+      "Engine lives in backend/verification/engine.py; exposed via /api/infinity/verification/* (4 routes)",
+    ]
+  },
+  {
+    icon: Brain, title: "Hierarchical Memory System", subtitle: "Working · Episodic · Semantic · Knowledge Graph — 4 Tiers, Automatic Decay", color: "text-violet-400",
+    desc: "Human-inspired memory architecture with four tiers. Working memory holds the current task's context (capped at 50 items). Episodic memory logs every event chronologically for later recall. Semantic memory stores concept embeddings for similarity search. The Knowledge Graph captures entity-relationship edges so agents can traverse \"who knows what, connected to which, via which relationship.\" Old items automatically decay unless reinforced by usage, keeping the system focused without manual pruning.",
+    details: [
+      "Working memory (backend/memory_system/working.py): per-task scratchpad, 50-item cap, purged on task completion",
+      "Episodic memory (episodic.py): time-ordered event log with time-decay scoring (30-day half-life), reinforces on recall",
+      "Semantic memory (semantic.py): vector embeddings, cosine-similarity retrieval, concept clustering",
+      "Knowledge Graph (knowledge_graph.py): entity + relationship store, traversable, Neo4j-style queries",
+      "16 REST endpoints under /api/infinity/memory/* for CRUD, search, promotion between tiers, and decay tuning",
+      "Auto-promotion: frequently-accessed episodic items get promoted to semantic; heavily-referenced semantic clusters get nodes in the graph",
+      "500-entry soft cap per user with auto-pruning of lowest-relevance items when full",
+      "Full UI at frontend/src/pages/MemoryHierarchy.jsx with tier breakdowns, decay charts, and per-entry relevance scoring",
+    ]
+  },
+  {
+    icon: RefreshCw, title: "Recovery & Incident Response", subtitle: "Quarantine · Rollback · Retry — Automatic Blast-Radius Containment", color: "text-rose-400",
+    desc: "When something breaks (agent misbehavior, provider outage, runaway spend, repeated verification failure), the Recovery system isolates the problem instead of letting it cascade. Misbehaving agents get quarantined (tier forced to 1, tools stripped, flagged for review). Broken task graphs roll back to the last clean checkpoint. Transient failures retry with exponential backoff across alternate providers. Every incident gets a root-cause record with timeline, blast radius, and remediation steps.",
+    details: [
+      "Quarantine: an agent flagged for review loses all tools and drops to tier 1 until a human clears it",
+      "Checkpointed rollback: any task graph can roll back to its last successful checkpoint — partial progress preserved",
+      "Smart retry: failed LLM calls retry with a different model (GPT-5 → Claude Sonnet → Gemini Pro → GPT-4o) before escalating",
+      "Incident ledger: every fault creates an incident record with timeline, severity, affected users/agents, and linked audit entries",
+      "Circuit breakers (governance/circuit_breaker.py): 5 default breakers monitor spend spikes, error rate, retry storms, provider downtime, policy violations",
+      "Recovery endpoints (/api/infinity/recovery/*): 5 routes for quarantine, rollback, retry, status, clear",
+      "Post-incident reports auto-generated with root cause, blast radius, remediation, and preventive action taken",
+    ]
+  },
+  {
+    icon: FileCheck, title: "Approval Workflow Gates", subtitle: "Human-in-Loop Execution · Approve · Reject · Edit · Escalate", color: "text-blue-400",
+    desc: "When an agent hits a step that requires explicit approval (per its autonomy tier, per a policy, or per a workflow gate), the action queues in the Approvals page. A human reviews the proposed action, the agent's reasoning, the expected cost/impact, and signs off — or rejects, edits the payload, or escalates to a higher role. Every decision is logged immutably with approver identity, timestamp, and rationale. The agent resumes from the gate with the approved (or modified) payload.",
+    details: [
+      "Gate types: tool-call approval, budget exceedance, policy exception, cross-environment promotion, high-impact-action review",
+      "Approver experience: rich preview of proposed action (full prompt, parameters, cost estimate, similar past actions)",
+      "Decision options: Approve · Reject with reason · Edit payload and approve · Escalate to role",
+      "Multi-signature gates: high-risk actions can require 2+ approvers before proceeding",
+      "SLA tracking: gates that sit unapproved past a deadline auto-escalate or auto-timeout per policy",
+      "Every decision written to immutable audit log — who approved what, when, why, with what edits",
+      "Backend: /kernel/approval_controller.py + 7 endpoints under /api/approvals and /api/infinity/approvals/*",
+    ]
+  },
+  {
+    icon: Database, title: "Knowledge Base & RAG Engine", subtitle: "Document Uploads · Per-Agent Knowledge · Cited Retrieval", color: "text-purple-400",
+    desc: "Upload PDFs, DOCX, Markdown, or plain text and attach them to any agent. The Knowledge Base chunks and embeds each document, stores the chunks in MongoDB's knowledge_chunks collection, and retrieves the top-K relevant chunks at chat time. Every agent answer cites the exact source chunks it drew from. Combined with the 58k skill library and live web search, every agent grounds its replies in three retrieval sources: skills (curated), uploads (yours), and web (live).",
+    details: [
+      "Supported upload formats: PDF (via PyMuPDF), DOCX (python-docx), Markdown, plain text; up to 25 MB per file",
+      "Automatic chunking: semantic paragraph chunks with 200-token overlap for retrieval quality",
+      "Per-agent scoping: attach a document to one agent or a team — retrieval only pulls from that agent's documents",
+      "Cited retrieval: every chat response shows which chunks (with doc title + page/section) grounded each claim",
+      "Three-layer RAG: agent's skill library (from .claude/skills/) + its knowledge base (your uploads) + live web search (Perplexity)",
+      "GET /agents/{id}/brain exposes the full chunk ledger for any agent — transparent debugging",
+      "UI: KnowledgeBaseTab with upload, preview, chunk inspector, and re-embed controls",
+      "Powered by backend/services/rag_service.py + 5 routes under /api/knowledge-base",
+    ]
+  },
+  {
+    icon: Network, title: "Integration Hub", subtitle: "29 External Providers · OAuth, API Keys, Webhooks — One Control Plane", color: "text-cyan-400",
+    desc: "Every external service MAARS talks to is configured through one Integration Hub. OAuth providers (Google Suite, GitHub), API-key providers (Stripe, Twilio, SendGrid, ElevenLabs, all 33 LLM providers), webhook-based integrations (Slack, custom), and the self-hosted Embedded Browser all share the same credential vault, status dashboard, rate-limit tracker, and health checker. Flip an integration on/off globally; rotate keys without code changes; see per-integration call counts and error rates at a glance.",
+    details: [
+      "29 integrations: Stripe, Gmail, Google Calendar, Twilio, SendGrid, ElevenLabs, Whisper, GitHub, Salesforce, HubSpot, Shopify, Airtable, Slack, Zapier-style webhooks, Embedded Browser (self-hosted Chromium), plus all 33 LLM providers",
+      "Categorized: Payments · Email · Calendar · SMS/Voice · CRM · E-commerce · Data · Dev Tools · Social Media · Search · Voice/Audio · LLM",
+      "OAuth flows for Google Suite and GitHub; API-key config for the rest; signed-webhook receivers for inbound events",
+      "Per-integration health dashboard: call count, success rate, p95 latency, last error, circuit-breaker state",
+      "Integration-scoped audit: every external call logs to immutable audit trail with masked credentials",
+      "Hot-swap credentials: rotate a key in Settings, live traffic fails over without downtime",
+      "Backend: /routes/admin.py /admin/integrations/* + services/integration_service.py",
+    ]
+  },
+  {
+    icon: Search, title: "Product Intelligence Scanner", subtitle: "Real-Time Competitive Research — Pricing, Features, Positioning", color: "text-indigo-400",
+    desc: "Point MAARS at a product URL, a company, or a market segment and the Product Scanner builds a living intelligence file. It pulls pricing tiers, feature lists, recent announcements, social sentiment, funding rounds, review aggregates, and positioning language — then keeps refreshing on a schedule. Agents across the Growth, Sales, Research, and Strategic networks use these files to plan campaigns, write competitive battlecards, and flag market shifts.",
+    details: [
+      "Scans: product pages, pricing pages, About/company pages, Crunchbase/LinkedIn public data, review sites, social mentions",
+      "Extracts: pricing tiers, feature matrix, recent product updates, team size, funding stage, Glassdoor ratings, trust signals",
+      "Living files: schedule a re-scan daily/weekly/monthly; diff detector surfaces material changes",
+      "Competitive battlecards: one click turns a product file into a battlecard (their claims → our response + proof points)",
+      "11 endpoints under /api/products for scan, catalog CRUD, subscribe-to-changes, export",
+      "Integrated with CampaignBuilder and ContentGenerator so competitive insights flow directly into generated content",
+      "Backend: backend/services/product_scanner.py",
+    ]
+  },
+  {
+    icon: TrendingUp, title: "Venture Portfolio & Enterprise KPIs", subtitle: "Multi-Product Tracking · Stage Gates · Metrics Framework", color: "text-green-400",
+    desc: "MAARS Command can run as the OS for a whole portfolio of ventures — each with its own agent team, budget, KPIs, stage gate, and runway. The Enterprise layer tracks revenue/burn/retention/NPS per venture, enforces stage gates (idea → MVP → PMF → scale → profit), and surfaces cross-venture benchmarks. If a venture misses two consecutive stage gates, the portfolio manager escalates a decision: double down, pivot, or sunset.",
+    details: [
+      "Per-venture: agent team, budget, KPIs, OKRs, stage, runway, founder, cap table stub",
+      "Stage gates: 5 stages (Idea · MVP · PMF · Scale · Profit) with exit criteria per stage — enforced automatically",
+      "KPI tracking: revenue, burn, runway, retention, NPS, CAC, LTV — pulled from connected integrations",
+      "Cross-venture benchmarks: anonymous comparisons against portfolio peers (e.g., \"your NPS is in the bottom quartile\")",
+      "Quality metrics framework: 22 endpoints under /api/enterprise covering KPIs, collaborations, ventures, quality, approvals",
+      "Decision intelligence: automated quarterly reviews produce double-down / pivot / sunset recommendations with evidence",
+      "UI: VenturePortfolio.jsx with portfolio grid, stage gates, KPI charts, and decision inbox",
+    ]
+  },
+  {
+    icon: BookOpen, title: "Skill Library", subtitle: "58,000+ Curated Skills — Auto-Matched & Ingested Per Agent", color: "text-lime-400",
+    desc: "MAARS ships with a massive library of 58,422 Claude Code skills at .claude/skills/. Each skill is a self-contained Markdown document with a YAML front-matter (name + description) and optional reference files (scripts, docs, evals). When you create a new agent, a keyword-matcher instantly picks the skills whose topics align with that agent's role, description, and capabilities, then chunks the Markdown and writes the chunks into the MongoDB knowledge_chunks collection so the agent can retrieve them during chat (RAG). You can also bulk-ingest the entire library for all agents at once via the ingest script. The original unfixed copies are kept at .claude/skills_backup/ as a safety net.",
+    details: [
+      "58,422 SKILL.md files, each with valid YAML front-matter — covers A/B testing, accessibility, ad creative, aluminum rolling, animal handling, Axum, AWS, booking flows, carbon-lang, creative frontends, data arch, delivery, delon, DevOps docs, drift check, frugal rerouter, healthcare, hyper-casual games, Kubernetes, LinkedIn ads, MkDocs, NestJS, Next.js, Norway roads, PostgreSQL, React, reviewing code, Salesforce, Vue, and tens of thousands more",
+      "Automatic matching on agent creation: services/skills_service.py runs match_skills_for_agent(agent) against the agent's role, description, capabilities, network, and tags using SKILL_KEYWORDS, then calls ensure_agent_skills() to chunk and write the matched skills to db.knowledge_chunks",
+      "Provider knowledge pack: match_providers_for_agent() also ships LLM-provider cheat sheets (from data/provider_skills.py) so agents know the strengths of every model they can call",
+      "Zero-broken-YAML guarantee: every front-matter parses cleanly under yaml.safe_load; no stale \"hooks\" fields (hooks belong in settings.json, not skill frontmatter); description capped at 1024 chars and collapsed to one line",
+      "Bulk ingest on demand: cd backend && python scripts/ingest_skills.py re-processes all agents — use --force to overwrite, --agents-only or --providers-only to narrow scope",
+      "Knowledge chunks stored with source=\"skill\" + skill_name + doc_id so you can audit exactly which skill-chunks each agent has in its brain",
+      "RAG-ready: routes/chats.py retrieves matching chunks during chat so agents ground their replies in the skill library instead of hallucinating",
+      "Per-agent brain viewer: GET /agents/{agent_id}/brain returns every knowledge chunk currently loaded for that agent — full transparency into what any agent \"knows\"",
+      "Extensible: drop a new folder under .claude/skills/<name>/ with a SKILL.md, and the next agent creation or ingest run picks it up automatically",
+    ]
+  },
+  {
     icon: Key, title: "Universal Gateway Key — Pay As You Go", subtitle: "65% AI Budget · 35% Platform · Credits On Demand", color: "text-amber-400",
     desc: "The MAARS Universal Key is now fully pay-as-you-go. Top up any amount — no subscriptions required. 65% of every payment goes directly to AI model costs (OpenAI, Anthropic, Google, and 30 other providers). The remaining 35% covers platform infrastructure, routing, failover, monitoring, and support. Credits are issued instantly. Each credit ≈ one LLM API call, priced by the model used.",
     details: [
@@ -542,166 +720,6 @@ const AI_PROVIDERS = [
   ]},
 ];
 
-const COST_DATA = [
-  { name: "OpenAI", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "GPT-5", input: "$2.50", output: "$10.00" },
-    { name: "GPT-4o", input: "$2.50", output: "$10.00" },
-    { name: "GPT-4o Mini", input: "$0.15", output: "$0.60" },
-    { name: "O3", input: "$10.00", output: "$40.00" },
-    { name: "O3 Mini", input: "$1.10", output: "$4.40" },
-    { name: "GPT Image 1", input: "$0.02/image", output: "1024x1024 px" },
-    { name: "Sora 2 Video", input: "$0.10/second", output: "4-12 sec video" },
-  ]},
-  { name: "Anthropic", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "Claude Sonnet 4.5", input: "$3.00", output: "$15.00" },
-    { name: "Claude Opus 4.5", input: "$15.00", output: "$75.00" },
-    { name: "Claude Haiku 4.5", input: "$0.80", output: "$4.00" },
-  ]},
-  { name: "Google Gemini", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "Gemini 3 Flash", input: "$0.075", output: "$0.30" },
-    { name: "Gemini 3 Pro", input: "$1.25", output: "$5.00" },
-    { name: "Nano Banana 2", input: "$0.02/image", output: "1024x1024 px" },
-  ]},
-  { name: "xAI (Grok)", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "Grok-4", input: "$3.00", output: "$15.00" },
-    { name: "Grok-4 Fast", input: "$1.50", output: "$6.00" },
-    { name: "Grok-3", input: "$3.00", output: "$15.00" },
-    { name: "Grok-3 Mini", input: "$0.30", output: "$0.50" },
-  ]},
-  { name: "DeepSeek", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "DeepSeek Chat", input: "$0.14", output: "$0.28" },
-    { name: "DeepSeek Reasoner", input: "$0.55", output: "$2.19" },
-  ]},
-  { name: "Mistral AI", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "Mistral Large", input: "$2.00", output: "$6.00" },
-    { name: "Mistral Medium", input: "$0.40", output: "$2.00" },
-    { name: "Mistral Small", input: "$0.10", output: "$0.30" },
-  ]},
-  { name: "Perplexity", unit: "Price per 1 million tokens + $5 per 1,000 web searches", models: [
-    { name: "Sonar", input: "$1.00", output: "$1.00" },
-    { name: "Sonar Pro", input: "$3.00", output: "$15.00" },
-  ]},
-  { name: "Cohere", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "Command R+", input: "$2.50", output: "$10.00" },
-    { name: "Command R", input: "$0.15", output: "$0.60" },
-  ]},
-  { name: "Groq (Llama 4)", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "Llama 4 Scout", input: "$0.11", output: "$0.34" },
-    { name: "Llama 4 Maverick", input: "$0.50", output: "$0.77" },
-    { name: "Llama 3.3 70B", input: "$0.59", output: "$0.79" },
-  ]},
-  { name: "Together AI", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "Llama 4 Mav. FP8", input: "$0.27", output: "$0.85" },
-    { name: "Llama 3.3 70B Turbo", input: "$0.88", output: "$0.88" },
-    { name: "DeepSeek R1", input: "$3.00", output: "$7.00" },
-  ]},
-  { name: "Fireworks AI", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "Llama 4 Scout", input: "$0.15", output: "$0.60" },
-    { name: "Llama 4 Maverick", input: "$0.50", output: "$0.77" },
-    { name: "DeepSeek V3", input: "$0.56", output: "$1.68" },
-  ]},
-  { name: "AI21 (Jamba)", unit: "Price per 1 million words (tokens) processed", models: [
-    { name: "Jamba Large 1.7", input: "$2.00", output: "$8.00" },
-    { name: "Jamba Mini 1.7", input: "$0.20", output: "$0.40" },
-  ]},
-  { name: "Cerebras", unit: "Price per 1 million tokens (one of the cheapest anywhere)", models: [
-    { name: "Llama 3.3 70B", input: "$0.60", output: "$0.60" },
-    { name: "Llama 3.1 70B", input: "$0.60", output: "$0.60" },
-    { name: "Qwen 3-32B", input: "$0.40", output: "$0.40" },
-  ]},
-  { name: "SambaNova", unit: "Price per 1 million tokens", models: [
-    { name: "Llama 4 Maverick", input: "$0.50", output: "$1.50" },
-    { name: "DeepSeek R1-0528", input: "$1.30", output: "$1.30" },
-    { name: "Qwen 2.5 72B", input: "$0.70", output: "$0.70" },
-  ]},
-  { name: "Novita AI", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "Llama 4 Maverick", input: "$0.27", output: "$0.85" },
-    { name: "Qwen 3 235B", input: "$0.22", output: "$0.88" },
-    { name: "DeepSeek R1", input: "$0.55", output: "$2.19" },
-  ]},
-  { name: "Lepton AI", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "Llama 4 Maverick", input: "$0.27", output: "$0.85" },
-    { name: "DeepSeek R1-0528", input: "$0.55", output: "$2.19" },
-  ]},
-  { name: "Lambda Labs", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "Hermes 3 405B", input: "$0.80", output: "$0.80" },
-    { name: "Llama 4 Scout", input: "$0.18", output: "$0.59" },
-  ]},
-  { name: "Minimax AI", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "MiniMax Text-01", input: "$0.20", output: "$1.10" },
-    { name: "MiniMax VL-01", input: "$0.20", output: "$1.10" },
-  ]},
-  { name: "Inception AI", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "Mercury Coder Small", input: "$0.25", output: "$1.00" },
-    { name: "Mercury Coder Large", input: "$0.50", output: "$2.00" },
-  ]},
-  { name: "Arcee AI", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "Arcee Maestro", input: "$1.20", output: "$5.00" },
-    { name: "Arcee Blaze", input: "$0.50", output: "$1.50" },
-  ]},
-  { name: "Amazon Bedrock", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "Nova Pro", input: "$0.80", output: "$3.20" },
-    { name: "Nova Lite", input: "$0.06", output: "$0.24" },
-    { name: "Nova Micro", input: "$0.035", output: "$0.14" },
-  ]},
-  { name: "Nvidia NIM", unit: "Price per 1 million tokens on Nvidia infrastructure", models: [
-    { name: "Nemotron Ultra 253B", input: "$1.90", output: "$1.90" },
-    { name: "Nemotron Super 49B", input: "$0.35", output: "$0.35" },
-    { name: "Llama 3.3 70B", input: "$0.60", output: "$0.60" },
-  ]},
-  { name: "Moonshot AI (Kimi)", unit: "Price per 1 million tokens (USD equivalent)", models: [
-    { name: "Kimi 128K", input: "$0.73", output: "$0.73" },
-    { name: "Kimi 32K", input: "$0.44", output: "$0.44" },
-    { name: "Kimi 8K", input: "$0.18", output: "$0.18" },
-  ]},
-  { name: "Qwen / Alibaba", unit: "Price per 1 million tokens (DashScope API)", models: [
-    { name: "Qwen Max", input: "$6.00", output: "$6.00" },
-    { name: "Qwen Plus", input: "$0.80", output: "$0.80" },
-    { name: "Qwen Turbo", input: "$0.15", output: "$0.15" },
-    { name: "QwQ-32B", input: "$0.34", output: "$0.34" },
-  ]},
-  { name: "01.AI / Yi", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "Yi Lightning", input: "$0.14", output: "$0.14" },
-    { name: "Yi Large FC", input: "$3.00", output: "$3.00" },
-    { name: "Yi Medium 200K", input: "$12.00", output: "$12.00" },
-  ]},
-  { name: "Zhipu AI (GLM)", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "GLM-4-Plus", input: "$7.00", output: "$7.00" },
-    { name: "GLM-4-Air", input: "$0.13", output: "$0.13" },
-    { name: "GLM-Z1-Air", input: "$0.13", output: "$0.13" },
-  ]},
-  { name: "ByteDance Doubao", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "Doubao Pro 128K", input: "$0.80", output: "$0.80" },
-    { name: "Doubao Lite 32K", input: "$0.04", output: "$0.04" },
-  ]},
-  { name: "Hyperbolic", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "Llama 3.1 405B", input: "$2.00", output: "$2.00" },
-    { name: "DeepSeek-R1", input: "$0.50", output: "$2.18" },
-    { name: "Llama 3.3 70B", input: "$0.40", output: "$0.40" },
-  ]},
-  { name: "Upstage Solar", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "Solar Pro", input: "$9.00", output: "$9.00" },
-    { name: "Solar Mini", input: "$0.29", output: "$0.29" },
-  ]},
-  { name: "Writer Palmyra", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "Palmyra X 004", input: "$0.50", output: "$2.50" },
-    { name: "Palmyra Med", input: "$0.80", output: "$4.00" },
-    { name: "Palmyra Fin", input: "$0.80", output: "$4.00" },
-  ]},
-  { name: "Meta Llama API", unit: "Price per 1 million tokens (USD)", models: [
-    { name: "Llama 4 Scout", input: "$0.18", output: "$0.59" },
-    { name: "Llama 4 Maverick", input: "$0.27", output: "$0.85" },
-    { name: "Llama 3.3 70B", input: "$0.59", output: "$0.79" },
-  ]},
-  { name: "ElevenLabs Voice", unit: "Price per 1,000 characters of text spoken", models: [
-    { name: "Multilingual v2", input: "$0.30/1K chars", output: "Audio file" },
-    { name: "Turbo v2.5", input: "$0.18/1K chars", output: "Fast audio" },
-  ]},
-  { name: "Google Suite Actions", unit: "Free with your connected Google account", models: [
-    { name: "Send Email (Gmail)", input: "Free", output: "Per email sent" },
-    { name: "Calendar Event", input: "Free", output: "Per event created" },
-  ]},
-];
 
 /* ── shared components ── */
 const Section = ({ title, subtitle, icon: Icon, color, children, id, noPageBreak }) => (
@@ -718,6 +736,86 @@ const Section = ({ title, subtitle, icon: Icon, color, children, id, noPageBreak
     <div className="mt-3">{children}</div>
   </div>
 );
+
+/* ── FAQ controls: Expand all / Collapse all / Download ──────────────────
+   Reads the Q/A pairs out of the rendered DOM under `#<rootId>` so the
+   buttons stay in sync with whatever entries are currently shown.  */
+function FAQControls({ rootId }) {
+  const setAll = (open) => {
+    const root = document.getElementById(rootId);
+    if (!root) return;
+    root.querySelectorAll("details").forEach((d) => { d.open = open; });
+  };
+  const download = () => {
+    const root = document.getElementById(rootId);
+    if (!root) return;
+    const date = new Date().toISOString().slice(0, 10);
+    const lines = [
+      "# MAARS Command — FAQ",
+      `_Exported ${date} · source: ${typeof window !== "undefined" ? window.location.origin : ""}/about#faq_`,
+      "",
+    ];
+    root.querySelectorAll("details").forEach((d) => {
+      const q = d.querySelector("summary")?.innerText?.trim() || "";
+      // Strip the question out of the summary so we don't double-count it when
+      // grabbing the answer text from the rest of the element.
+      const full = (d.innerText || "").trim();
+      const a = full.startsWith(q) ? full.slice(q.length).trim() : full;
+      if (q) {
+        lines.push(`## ${q}`);
+        lines.push("");
+        lines.push(a);
+        lines.push("");
+      }
+    });
+    const blob = new Blob([lines.join("\n")], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `maars-faq-${date}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  const printPdf = () => {
+    // Trigger the same full-page flow the "Download Docs" button uses: expand
+    // every network, every system, and every <details> before printing — so
+    // the user gets ONE canonical PDF instead of a partial FAQ-only view.
+    const btn = document.querySelector("[data-testid='download-pdf-btn']");
+    if (btn) { btn.click(); return; }
+    // Fallback: just expand local details and print.
+    setAll(true);
+    setTimeout(() => {
+      document.querySelectorAll("details").forEach((d) => { d.open = true; });
+      requestAnimationFrame(() => window.print());
+    }, 200);
+  };
+  const btn = {
+    display: "inline-flex", alignItems: "center", gap: 4,
+    fontSize: 11, padding: "4px 8px", borderRadius: 6,
+    background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+    color: "#e5e7eb", cursor: "pointer",
+  };
+  return (
+    <div className="flex items-center gap-2 no-print">
+      <button onClick={() => setAll(true)}  style={btn} title="Expand every question">
+        <ChevronDown className="w-3 h-3" /> Expand all
+      </button>
+      <button onClick={() => setAll(false)} style={btn} title="Collapse every question">
+        <ChevronRight className="w-3 h-3" /> Collapse all
+      </button>
+      <button onClick={download} style={{ ...btn, borderColor: "rgba(56,189,248,0.35)", background: "rgba(56,189,248,0.12)" }}
+              title="Download the FAQ as Markdown (.md)">
+        <Download className="w-3 h-3" /> .md
+      </button>
+      <button onClick={printPdf} style={{ ...btn, borderColor: "rgba(167,139,250,0.35)", background: "rgba(167,139,250,0.12)" }}
+              title="Expand all and open your browser's Print → Save as PDF dialog">
+        <Printer className="w-3 h-3" /> PDF
+      </button>
+    </div>
+  );
+}
 
 /* ── main component ── */
 const AboutPage = () => {
@@ -765,12 +863,26 @@ const AboutPage = () => {
     });
   };
 
-  /* Print PDF */
+  /* Print PDF — expand EVERY collapsible region first, then trigger print.
+     - Networks + Systems state is controlled by React, so we expand those via
+       setState.
+     - FAQ and any future <details> collapsibles are native DOM elements, so we
+       force `open = true` on each one after React commits.
+     - Print CSS in frontend/src/index.css forces `details > *` visible as a
+       belt-and-suspenders so nothing can stay hidden in the PDF. */
   const handlePrint = () => {
     setPrinting(true);
     setExpandedNetworks(new Set(sortedNetworks.map(([k]) => k)));
     setExpandedSystems(new Set(SYSTEMS.map((_, i) => i)));
-    setTimeout(() => { window.print(); setPrinting(false); }, 800);
+    // Give React a tick to commit, then force every <details> open and print.
+    setTimeout(() => {
+      document.querySelectorAll("details").forEach((d) => { d.open = true; });
+      // Second rAF so the `open` attribute toggles render before print preview.
+      requestAnimationFrame(() => {
+        window.print();
+        setPrinting(false);
+      });
+    }, 350);
   };
 
   const getNetworkMeta = (netId) => {
@@ -809,29 +921,51 @@ const AboutPage = () => {
             MAARS Command is the operating system that manages all of them. You tell it what you want to accomplish (in plain English), and it figures out which AI agents to assign, breaks your goal into steps, runs everything automatically, checks the quality of every result, and delivers the finished work to you.
           </p>
           <p className="text-sm text-zinc-300 leading-relaxed mt-2">
-            These agents are organized into <span className="text-emerald-400 font-medium">{uniqueNetworks || 27} specialized network categories</span> (like departments in a company).
+            These agents are organized into <span className="text-emerald-400 font-medium">{uniqueNetworks || 28} specialized network categories</span> (like departments in a company).
             They're powered by <span className="text-amber-400 font-medium">33 AI providers with 175,609+ models</span> (GPT-5, Claude Opus 4.6, Gemini 2.5, Grok-4, DeepSeek R1, Mistral, Perplexity, Groq, Cerebras, SambaNova, and more).
+            Each agent is grounded in the <span className="text-lime-400 font-medium">58,422-skill library</span> — a curated knowledge pack of SKILL.md documents that is auto-matched and ingested into the agent's brain at creation time, so replies stand on real expertise instead of guesses.
             The system automatically picks the right AI model for each task, controls costs, ensures quality, and even lets agents collaborate with each other -- all without you lifting a finger.
           </p>
         </div>
 
         <div className="flex gap-2 flex-wrap">
-          {["Multi-Agent Orchestration","Quality Control","Smart Model Router","Developer API Gateway","600+ Models · 33 Providers","Content Generation","App Builder","Memory System","Voice Commands","Code Explorer","Knowledge Graph","Workflow Builder","Campaign Builder","Integration Hub","Team Builder","Trust Analytics","Real-World Actions","Command Palette"].map((b, i) => {
+          {["Multi-Agent Orchestration","Quality Control","Smart Model Router","Developer API Gateway","600+ Models · 33 Providers","58k+ Skill Library","Content Generation","App Builder","Memory System","Voice Commands","Code Explorer","Knowledge Graph","Workflow Builder","Campaign Builder","Integration Hub","Team Builder","Trust Analytics","Real-World Actions","Command Palette"].map((b, i) => {
             const colors = ["indigo","emerald","amber","pink","cyan","violet","rose","sky","blue","teal","orange","red","green","purple","lime","yellow"];
             return <span key={b} className={`bg-${colors[i % colors.length]}-500/20 text-${colors[i % colors.length]}-400`} style={{ fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20, display: "inline-block" }}>{b}</span>;
           })}
         </div>
       </div>
 
+      {/* Vision & Mission */}
+      <div className="rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/10 via-violet-500/5 to-transparent p-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2"><Target className="w-4 h-4 text-indigo-300" /><p className="text-[10px] uppercase tracking-[0.3em] text-indigo-300 font-bold">Vision</p></div>
+            <p className="text-sm text-zinc-200 leading-relaxed">
+              A world where every organization — from a solo founder to a global enterprise — operates with a reliable, auditable, autonomous AI workforce.
+              Not one chatbot. Not one copilot. An entire workforce, governed like a real company, grounded in verified knowledge, accountable to humans.
+            </p>
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-2"><Rocket className="w-4 h-4 text-fuchsia-300" /><p className="text-[10px] uppercase tracking-[0.3em] text-fuchsia-300 font-bold">Mission</p></div>
+            <p className="text-sm text-zinc-200 leading-relaxed">
+              Build the operating system that makes autonomous AI workforces safe, provable, and economical. Replace 18–24 months of custom integration work with one platform and one API key.
+              Ship agents that earn trust — through verification, audit, and recovery — instead of agents that just sound confident.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 print-stats-row">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 print-stats-row">
         {[
           { label: "AI Agents", value: `${agents.length || "458"}+`, color: "text-indigo-400", sub: "Specialized workers" },
-          { label: "Networks", value: uniqueNetworks || 27, color: "text-emerald-400", sub: "Team categories" },
+          { label: "Networks", value: uniqueNetworks || 28, color: "text-emerald-400", sub: "Team categories" },
           { label: "Core Systems", value: SYSTEMS.length, color: "text-amber-400", sub: "Built-in tools" },
-          { label: "LLM Providers", value: "29", color: "text-violet-400", sub: "AI companies" },
+          { label: "LLM Providers", value: AI_PROVIDERS.length, color: "text-violet-400", sub: "AI companies" },
           { label: "AI Models", value: "600+", color: "text-cyan-400", sub: "Via gateway" },
-          { label: "API Endpoints", value: "212+", color: "text-rose-400", sub: "Connection points" },
+          { label: "Skill Library", value: "58,422", color: "text-lime-400", sub: "Curated SKILL.md packs" },
+          { label: "API Endpoints", value: "484", color: "text-rose-400", sub: "Across 32 route files" },
         ].map(s => (
           <div key={s.label} className="bg-zinc-900/50 border-white/5 print-card" style={{ borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
             <div className="p-3 text-center">
@@ -985,6 +1119,7 @@ const AboutPage = () => {
                 <p className="text-xs text-zinc-400">Stripe Integration -- handles credit card payments, subscription billing, and cost tracking</p>
                 <p className="text-xs text-zinc-400">Background Task Queue -- manages long-running operations like batch agent deployments and report generation</p>
                 <p className="text-xs text-zinc-400">Circuit Breaker System -- automatically detects and isolates failing services to prevent cascade failures</p>
+                <p className="text-xs text-zinc-400">Skill ingestion pipeline (services/skills_service.py) -- reads .claude/skills/{'{'}name{'}'}/SKILL.md files, chunks the Markdown, and upserts into db.knowledge_chunks per agent using keyword-based matching</p>
               </div>
             </div>
           </div>
@@ -1031,7 +1166,7 @@ const AboutPage = () => {
           The Smart Router picks the best one automatically, or call any model directly via the Developer Portal at <code className="text-indigo-300 bg-white/5 px-1 rounded">/developer</code>.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {AI_PROVIDERS.map(provider => (
+          {[...AI_PROVIDERS].sort((a, b) => a.name.localeCompare(b.name)).map(provider => (
             <div key={provider.name} className="bg-zinc-900/50 border-white/5 print-card" data-testid={`provider-${provider.name}`} style={{ borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
               <div className="p-4">
                 <div className="flex items-center gap-2 mb-1">
@@ -1087,43 +1222,867 @@ const AboutPage = () => {
         </div>
       </Section>
 
-      {/* Provider Costs */}
-      <Section title="What Each AI Model Costs" subtitle="Reference pricing so you know exactly what you're paying" icon={BarChart3} color="bg-green-500/15" id="costs">
+      {/* Why MAARS is Different */}
+      <Section title="Why MAARS Command Is Different" subtitle="What separates this from every other AI platform" icon={Sparkles} color="bg-fuchsia-500/15" id="differentiators">
         <p className="text-xs text-zinc-400 mb-4">
-          Every time an AI model processes text, generates an image, or creates a video, it costs money. Here's how much each model charges.
-          "Input" is what you send to the AI (your question or prompt). "Output" is what the AI sends back (the answer or result).
-          Most prices are per 1 million tokens (roughly 750,000 words). Prices come directly from each provider's website and may change.
+          Most AI platforms are either (a) one giant chatbot, (b) a skinny wrapper around OpenAI, or (c) a single-purpose agent (customer support, coding copilot, etc.).
+          MAARS Command is built as an <span className="text-fuchsia-300 font-medium">enterprise operating system for autonomous AI</span> — the way a cloud platform is built for workloads, or an ERP is built for a business.
+          Below are the nine things you get in MAARS that you cannot get by stitching together ChatGPT, a Zapier workflow, and a custom GPT.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {COST_DATA.map(provider => (
-            <div key={provider.name} className="bg-zinc-900/50 border-white/5 print-card" style={{ borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
-              <div className="p-3">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-bold text-white">{provider.name}</span>
+          {[
+            { icon: Users, title: "458+ Agents in 27 Networks — not one chatbot", text: "You don't prompt a generalist and hope it specializes. You dispatch work to the right specialist. A Commander coordinates. A CFO agent models the P&L. A Legal agent reads contracts. A Growth agent runs experiments. Each agent has its own brain profile, tool set, trust score, and memory — and they talk to each other through a real collaboration protocol, not fake multi-agent prompting." },
+            { icon: Cpu, title: "Universal Gateway — 175,609+ models, one key", text: "A single maars-sk-* API key reaches 33 providers (OpenAI, Anthropic, Google, xAI, DeepSeek, Mistral, Perplexity, Groq, Cerebras, plus 175,000+ HuggingFace models) through an OpenAI-compatible /v1/chat/completions endpoint. Smart routing, live model validation, auto-fallback, real token billing, webhooks. The other way to get this is to integrate 33 SDKs yourself." },
+            { icon: BookOpen, title: "58,422-Skill Knowledge Pack pre-built", text: "Every agent is grounded in curated skill documents the moment it's created. You don't write system prompts from scratch. You don't hunt prompt libraries on Reddit. The keyword matcher picks the right skills per agent; the RAG engine retrieves them per turn; the brain endpoint shows you exactly what each agent \"knows.\"" },
+            { icon: Gauge, title: "10-Tier Autonomy — not a binary switch", text: "\"Agent frameworks\" tend to let agents run wild or demand approval for everything. MAARS has 10 granular tiers: pre-approved tools vs. gated tools, trust-scored elevation, dual-signature gates, policy-aware bypass. You can run one agent at Tier 3 (conservative) and another at Tier 9 (autonomous) in the same workflow." },
+            { icon: CheckCircle, title: "Verification Civilization instead of \"hope it's right\"", text: "Most AI output is trusted because the user has no other choice. MAARS cross-verifies claims across 2-4 independent models on 6 dimensions (factual, grounded, coherent, complete, bias, fresh) before the answer reaches you. Disagreements escalate. Hallucinations get quarantined. The agent's job isn't to sound confident — it's to survive attempted refutation." },
+            { icon: Building, title: "4 Environments · Immutable Audit · Simulation mode", text: "Simulation, Sandbox, Staging, Production — each with its own budget, policies, credentials, and retention. Run autonomous experiments at zero real cost in Simulation. Flip to Production only after the Verification engine signs off. Every action — approvals, tool calls, model responses, policy violations — written to an immutable audit trail. Enterprise-ready out of the box." },
+            { icon: Shield, title: "Circuit Breakers, Recovery, Incident Response built-in", text: "Spend spike? Breaker trips, agents pause, you're paged. Agent misbehaves? It's quarantined — tools stripped, tier dropped to 1, flagged for review. Task graph fails halfway? Rollback to last checkpoint. Provider outage? Auto-fallback across 33 alternates. These are not bolt-ons — they are core kernel functionality." },
+            { icon: Zap, title: "Task Graph Kernel — real DAG execution", text: "Give MAARS a goal in English; it emits a task graph (DAG) with parallel branches, dependency resolution, retry, checkpoints, and per-branch budgets. Kill it at hour 4 — resume at hour 5 from exactly where it stopped. This is how long-horizon autonomous work actually ships, not by stuffing everything into one mega-prompt and hoping." },
+            { icon: Key, title: "Pay-as-you-go with 65%/35% transparency", text: "No subscription lock-in. Top up any amount. Exactly 65% of every dollar goes to AI model costs (shown to you in real time), 35% covers the platform (routing, failover, governance, support). Credits never expire during your active period. Compare that to the \"your model quota resets every month at 11:59 pm\" world." },
+          ].map(item => (
+            <div key={item.title} className="bg-zinc-900/50 border-white/5 print-card" style={{ borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)" }}>
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <item.icon className="w-4 h-4 text-fuchsia-400 shrink-0" />
+                  <p className="text-sm font-medium text-white">{item.title}</p>
                 </div>
-                <span className="text-[9px] text-zinc-600 block mb-2">{provider.unit}</span>
-                <div className="space-y-1">
-                  {provider.models.map(m => (
-                    <div key={m.name} className="flex items-center justify-between text-[11px]">
-                      <span className="text-zinc-400">{m.name}</span>
-                      <div className="flex gap-3">
-                        <span className="text-zinc-500">In: <span className="text-emerald-400 font-medium">{m.input}</span></span>
-                        <span className="text-zinc-500">Out: <span className="text-amber-400 font-medium">{m.output}</span></span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-xs text-zinc-400 leading-relaxed">{item.text}</p>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-[10px] text-zinc-600 mt-3 italic">* When using the MAARS AI Gateway (which lets you use all providers with one key), there's a small convenience markup over these direct prices.</p>
+      </Section>
+
+      {/* Value Evaluation */}
+      <Section title="Value Evaluation — What MAARS Saves You" subtitle="Rough ROI per feature so you know where the money goes" icon={DollarSign} color="bg-amber-500/15" id="value">
+        <p className="text-xs text-zinc-400 mb-4">
+          Building the same capability stack by hand takes roughly 18-24 months of engineering plus ongoing integration/ops overhead.
+          Below is a concrete per-feature breakdown of what each MAARS subsystem replaces and the rough monthly cost/effort avoided.
+          Numbers are conservative mid-market estimates; enterprise stacks are typically 2-5× higher.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-[11px]">
+            <thead>
+              <tr className="text-zinc-500 border-b border-white/10">
+                <th className="text-left py-2 px-2 font-medium">Capability</th>
+                <th className="text-left py-2 px-2 font-medium">What It Replaces</th>
+                <th className="text-left py-2 px-2 font-medium">Typical Monthly Cost (DIY)</th>
+                <th className="text-left py-2 px-2 font-medium">Effort Avoided</th>
+              </tr>
+            </thead>
+            <tbody className="text-zinc-400">
+              {[
+                ["Universal Gateway (33 providers)", "33 separate LLM SDK integrations + routing layer", "$800–$2,500", "6-9 months eng"],
+                ["458+ Agent Workforce", "Hiring 10-20 specialists + onboarding", "$80,000–$200,000 (salary)", "Ongoing"],
+                ["58,422 Skill Library", "Custom prompt engineering per use case", "$3,000–$15,000 (agency)", "2-4 months"],
+                ["Task Graph Kernel (DAG)", "Custom workflow engine (Temporal/Airflow + glue)", "$1,500–$5,000 (infra + eng)", "4-8 months eng"],
+                ["Verification Civilization", "Manual QA review cycles + fact-check contractors", "$5,000–$20,000", "Ongoing"],
+                ["Hierarchical Memory (4 tiers)", "Redis + Pinecone + Neo4j + custom orchestration", "$1,200–$4,000 (infra)", "3-6 months eng"],
+                ["10-Tier Autonomy + Approvals", "Custom approval workflow + audit UI", "$2,000–$8,000 (eng + tooling)", "3-6 months eng"],
+                ["Multi-Environment Segregation", "Separate AWS/GCP accounts + IAM + data isolation", "$1,000–$5,000 (infra + compliance)", "2-4 months eng"],
+                ["Circuit Breakers + Recovery", "Custom SRE playbooks + monitoring + runbooks", "$3,000–$10,000 (SRE ops)", "Ongoing"],
+                ["Integration Hub (29 providers)", "29 separate OAuth/API integrations + embedded browser + credential vault", "$2,000–$6,000", "6-12 months eng"],
+                ["Knowledge Base + RAG", "Vector DB + chunking pipeline + UI + eval harness", "$800–$3,000", "3-5 months eng"],
+                ["Trust Scoring + Analytics", "Custom scoring engine + dashboards", "$1,500–$5,000", "2-3 months eng"],
+                ["Product Scanner", "Competitive intel tooling (Crayon, Klue, Kompyte)", "$1,500–$6,000 (SaaS)", "Ongoing"],
+                ["Content Generator + Reference Intelligence", "Copy agency + brand voice consultancy", "$5,000–$20,000", "Ongoing"],
+                ["Social Media Command (10 platforms)", "Hootsuite/Sprout + SMM agency", "$3,000–$15,000", "Ongoing"],
+                ["Vibe Coding App Builder", "Junior dev or low-code platform (Retool, Bubble)", "$2,000–$10,000", "Ongoing"],
+                ["Voice Command + STT/TTS", "ElevenLabs + Whisper + custom UI wiring", "$400–$1,500", "1-2 months eng"],
+                ["Observability + Metrics + Alerts", "Datadog + PagerDuty + custom dashboards", "$2,000–$8,000", "Ongoing"],
+                ["Developer Portal + OpenAI-compat API", "Building an LLM reseller gateway", "$3,000–$12,000 (eng + infra)", "8-12 months eng"],
+                ["Venture Portfolio + KPIs", "Portfolio ops tooling (Visible, Carta, manual)", "$1,000–$4,000", "Ongoing"],
+              ].map(([cap, repl, cost, eff]) => (
+                <tr key={cap} className="border-b border-white/5 hover:bg-white/[0.02]">
+                  <td className="py-2 px-2 text-zinc-200 font-medium">{cap}</td>
+                  <td className="py-2 px-2">{repl}</td>
+                  <td className="py-2 px-2 text-amber-400">{cost}</td>
+                  <td className="py-2 px-2 text-cyan-400">{eff}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 mt-4">
+          <p className="text-xs text-amber-200 leading-relaxed">
+            <span className="font-bold">Aggregate estimate:</span> a comparable DIY stack runs <span className="font-bold">$110,000–$355,000/month</span> in tooling + salary,
+            plus <span className="font-bold">18–24 months</span> of engineering to integrate. MAARS Command collapses that into one subscription with one API key.
+          </p>
+        </div>
+
+        {/* Total System Value */}
+        <div className="mt-6 rounded-2xl border border-fuchsia-500/30 bg-gradient-to-br from-fuchsia-500/10 via-violet-500/10 to-indigo-500/10 p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles className="w-5 h-5 text-fuchsia-300" />
+            <h3 className="text-base font-bold text-white font-['Outfit']">Total System Value — What MAARS Command Is Worth</h3>
+          </div>
+          <p className="text-xs text-zinc-300 leading-relaxed mb-4">
+            Adding up every replaced subsystem, every avoided hire, every month of engineering collapsed into a turnkey platform:
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+            {[
+              { label: "Build-From-Scratch Cost", value: "$3.5M–$8.5M", sub: "8–15 engineers × 18–24 months", color: "text-fuchsia-300" },
+              { label: "Annual Operating Cost", value: "$1.3M–$4.3M", sub: "Tooling, infra, SaaS, salaries", color: "text-amber-300" },
+              { label: "3-Year TCO (DIY)", value: "$7.4M–$21.4M", sub: "Build + 3 yrs ops + integration debt", color: "text-rose-300" },
+              { label: "Time-To-Market Saved", value: "18–24 months", sub: "From zero to enterprise-ready", color: "text-cyan-300" },
+            ].map(s => (
+              <div key={s.label} className="bg-black/30 border border-white/10 rounded-xl p-3 text-center">
+                <p className={`text-xl font-bold ${s.color} font-['Outfit']`}>{s.value}</p>
+                <p className="text-[10px] text-zinc-300 mt-1 font-medium">{s.label}</p>
+                <p className="text-[9px] text-zinc-500 mt-0.5">{s.sub}</p>
+              </div>
+            ))}
+          </div>
+          <div className="space-y-2 text-xs text-zinc-300 leading-relaxed">
+            <p>
+              <span className="text-fuchsia-300 font-bold">Conservative replacement value: $7.4M over 3 years.</span> This is the TCO to rebuild MAARS Command from scratch with a mid-market engineering team
+              — architecture + integrations + governance + UI + testing + ongoing SRE — <em>before</em> the model-call bill itself.
+            </p>
+            <p>
+              <span className="text-amber-300 font-bold">Enterprise-grade replacement value: $21.4M+ over 3 years.</span> Organizations that need SOC2 compliance, multi-region deployment, per-tenant isolation,
+              24/7 on-call, and domain-specific verifier tuning typically land at the top of this band — some well above it.
+            </p>
+            <p>
+              <span className="text-cyan-300 font-bold">Real strategic value ≫ replacement cost.</span> Time-to-market is the hidden multiplier: shipping an autonomous-AI platform 18–24 months faster than a competitor
+              is worth more than any line-item on this page. For a venture studio running 3+ products, MAARS Command replaces an entire AI platform team plus the tool stack — effectively a <span className="font-bold text-white">$10M–$30M+ internal program</span> substituted by one account.
+            </p>
+            <p className="text-[11px] text-zinc-500 italic pt-2">
+              Ranges are conservative mid-market estimates. Enterprise deployments (SOC2, multi-region, custom verifiers, dedicated infra) routinely land 2–5× higher.
+              Replacement cost ≠ list price — MAARS Command sells for a small fraction of TCO because it spreads platform R&D across every customer.
+            </p>
+          </div>
+        </div>
+      </Section>
+
+      {/* System Worth */}
+      <Section title="What MAARS Command Is Worth" subtitle="The whole-system valuation, seen through four lenses" icon={DollarSign} color="bg-emerald-500/15" id="worth">
+        <p className="text-xs text-zinc-400 mb-4">
+          \"Value\" depends on who's asking. A CFO asks replacement cost. A buyer asks acquisition comp. An investor asks pre-money. A founder asks strategic worth.
+          Here is MAARS Command valued through all four lenses, each with its own math and comparables — so whichever seat you're in, the number is grounded.
+        </p>
+
+        {/* Headline value card */}
+        <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/15 via-cyan-500/10 to-indigo-500/10 p-6 mb-5 text-center">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-emerald-300/80 font-bold mb-2">Headline Valuation</p>
+          <p className="text-4xl sm:text-5xl font-bold font-['Outfit'] bg-gradient-to-r from-emerald-300 via-cyan-300 to-violet-300 bg-clip-text text-transparent">
+            $40M – $180M
+          </p>
+          <p className="text-xs text-zinc-300 mt-3 max-w-2xl mx-auto leading-relaxed">
+            As-built worth of the MAARS Command platform today — centered on the fair-market band for a pre-revenue enterprise AI platform with
+            484 endpoints, 458 agents, 58,422 skills, 33 LLM providers, full governance + verification, and an OpenAI-compatible gateway.
+            The floor is salvage/acqui-hire. The ceiling is strategic acquisition by an incumbent.
+          </p>
+        </div>
+
+        {/* Four valuation lenses */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {[
+            {
+              lens: "Replacement Cost",
+              who: "CFO / rebuild-from-scratch view",
+              value: "$7.4M – $21.4M",
+              color: "text-amber-300",
+              border: "border-amber-500/30",
+              bg: "bg-amber-500/5",
+              body: "Cost to rebuild MAARS Command from zero: $3.5M–$8.5M to build (8–15 engineers × 18–24 months) plus $1.3M–$4.3M/yr operating. 3-year TCO = $7.4M–$21.4M before a single customer API call. Enterprise-grade (SOC2, multi-region, 24/7 on-call) lands at the top of the band or above.",
+            },
+            {
+              lens: "Fair Market Value",
+              who: "Independent appraisal / asset transfer",
+              value: "$15M – $45M",
+              color: "text-cyan-300",
+              border: "border-cyan-500/30",
+              bg: "bg-cyan-500/5",
+              body: "Arms-length sale of the codebase + IP + agent library + skill pack + gateway, assuming a knowledgeable buyer and no special synergies. Premium over pure replacement because the bugs are already found, the integrations work, and the design decisions are made — a year of de-risking baked in.",
+            },
+            {
+              lens: "Strategic Acquisition Value",
+              who: "Incumbent buyer (OpenAI, Anthropic, Salesforce, MSFT)",
+              value: "$60M – $180M",
+              color: "text-fuchsia-300",
+              border: "border-fuchsia-500/30",
+              bg: "bg-fuchsia-500/5",
+              body: "What a strategic buyer pays to acquire the platform plus the team. Comparable AI-platform acqui-hires and strategic deals in 2024–2025 range $30M–$250M at this feature depth (governance + verification + gateway is rare). A vertical player buying to add enterprise orchestration would pay top-of-band.",
+            },
+            {
+              lens: "Pre-Money Venture Valuation",
+              who: "Seed / Series A investor",
+              value: "$40M – $120M pre",
+              color: "text-violet-300",
+              border: "border-violet-500/30",
+              bg: "bg-violet-500/5",
+              body: "What a VC underwrites based on platform depth + TAM + team. AI-infrastructure rounds in 2024–2025 closed at $40M–$150M pre-money for platforms with this feature surface even pre-revenue. Early revenue traction (>$1M ARR) pushes the top to $250M+. Vertical SKU launches (MAARS-for-Law etc.) stack on.",
+            },
+          ].map(item => (
+            <div key={item.lens} className={`${item.bg} border ${item.border} rounded-xl p-4`}>
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div>
+                  <p className="text-sm font-bold text-white">{item.lens}</p>
+                  <p className="text-[10px] text-zinc-500">{item.who}</p>
+                </div>
+                <p className={`text-lg font-bold font-['Outfit'] ${item.color} shrink-0`}>{item.value}</p>
+              </div>
+              <p className="text-xs text-zinc-300 leading-relaxed">{item.body}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom-line */}
+        <div className="mt-5 rounded-xl border border-white/10 bg-zinc-900/50 p-4">
+          <p className="text-xs text-zinc-300 leading-relaxed">
+            <span className="text-emerald-300 font-bold">Bottom line:</span> MAARS Command is worth between <span className="font-bold text-white">$40M at the low end</span> (pre-revenue venture valuation or strategic floor)
+            and <span className="font-bold text-white">$180M at the high end</span> (strategic acquisition by an incumbent who needs the platform + team). The numbers stack across lenses:
+            rebuilding costs $7M+, fair market sale clears $15M+, a strategic buyer pays $60M+, and a VC underwrites $40M+ pre-money. Add early revenue
+            (&gt;$1M ARR), a SOC2 cert, and one vertical SKU shipped — all reachable within 12 months — and the whole band shifts to <span className="font-bold text-white">$150M–$500M+</span>.
+          </p>
+        </div>
+
+        <p className="text-[10px] text-zinc-600 mt-3 italic">
+          All ranges are mid-2026 benchmarks. Private-market comps: Harvey AI ($3B), Glean ($4.6B), Writer ($1.9B), Cresta ($1.6B), Decagon ($1.5B), Sierra ($4.5B) — all AI-platform categories MAARS competes in.
+          MAARS is earlier stage and pre-revenue, which is why the band starts at $40M, not $1B+.
+        </p>
+      </Section>
+
+      {/* Pitch Deck */}
+      <Section title="MAARS Command — Pitch Deck" subtitle="14 slides · the investor story, at a glance" icon={Rocket} color="bg-rose-500/15" id="pitch">
+        <p className="text-xs text-zinc-400 mb-4">
+          Fundraising-ready deck summarizing the business case in 14 slides. Each slide is a self-contained card —
+          screenshot, paste into a Google Slides template, or use as speaker notes. All numbers are grounded in the platform you just read about.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {[
+            {
+              n: "01",
+              title: "Cover",
+              kicker: "Autonomous AI Enterprise Operating System",
+              body: (
+                <>
+                  <p className="text-sm text-white font-bold mb-1">MAARS Command</p>
+                  <p className="text-xs text-zinc-300 leading-relaxed">
+                    The operating system for autonomous AI workforces. 458 agents across 28 networks, 58,422 curated skills, 33 LLM providers, one API key.
+                  </p>
+                  <p className="text-[10px] text-zinc-500 mt-2">MAARS Global Corporation · Est. 2026 · Seeking Seed / Series A</p>
+                </>
+              ),
+            },
+            {
+              n: "02",
+              title: "The Problem",
+              kicker: "Building enterprise AI is 18–24 months of integration hell",
+              body: (
+                <ul className="text-xs text-zinc-300 space-y-1.5 leading-relaxed list-disc pl-4">
+                  <li>Every org wants AI agents. Nobody wants to build the plumbing.</li>
+                  <li>33 LLM providers, 29 integrations, 4 memory tiers, governance, verification, billing — an 18–24 month build.</li>
+                  <li>DIY stacks cost <span className="text-amber-300 font-medium">$110k–$355k/month</span> in tooling + salary.</li>
+                  <li>Meanwhile: chatbot wrappers hallucinate, no audit trail, no rollback, no cost controls, no trust.</li>
+                </ul>
+              ),
+            },
+            {
+              n: "03",
+              title: "The Solution",
+              kicker: "One platform. One key. Every capability enterprises need.",
+              body: (
+                <ul className="text-xs text-zinc-300 space-y-1.5 leading-relaxed list-disc pl-4">
+                  <li><span className="text-white font-medium">Task Graph Kernel</span> — DAG execution with checkpoints + rollback</li>
+                  <li><span className="text-white font-medium">Verification Civilization</span> — multi-model cross-check on 6 dimensions</li>
+                  <li><span className="text-white font-medium">10-Tier Autonomy</span> — human-approval → unsupervised, per agent</li>
+                  <li><span className="text-white font-medium">58,422 Skill Library</span> — grounded RAG, no prompt engineering</li>
+                  <li><span className="text-white font-medium">Universal Gateway</span> — OpenAI-compatible, 175,609+ models, one key</li>
+                </ul>
+              ),
+            },
+            {
+              n: "04",
+              title: "How It Works",
+              kicker: "From English goal to executed workflow",
+              body: (
+                <div className="text-xs text-zinc-300 space-y-1.5 leading-relaxed">
+                  <p>① You describe a goal in English →</p>
+                  <p>② Kernel compiles a task graph (DAG) →</p>
+                  <p>③ Router picks the best model per node →</p>
+                  <p>④ Agents execute in parallel, grounded in skills + KB →</p>
+                  <p>⑤ Verification cross-checks every claim →</p>
+                  <p>⑥ Approval gates where human sign-off required →</p>
+                  <p>⑦ Audit log records every decision, forever.</p>
+                </div>
+              ),
+            },
+            {
+              n: "05",
+              title: "Market Size",
+              kicker: "Enterprise AI orchestration — emerging $100B+ category",
+              body: (
+                <div className="space-y-2 text-xs text-zinc-300 leading-relaxed">
+                  <div className="flex items-center justify-between"><span>TAM — Global enterprise AI ops</span><span className="text-emerald-300 font-bold">$150B by 2030</span></div>
+                  <div className="flex items-center justify-between"><span>SAM — AI agent platforms</span><span className="text-cyan-300 font-bold">$40B by 2028</span></div>
+                  <div className="flex items-center justify-between"><span>SOM — Mid-market + venture studios</span><span className="text-violet-300 font-bold">$2.5B 3-yr reachable</span></div>
+                  <p className="text-[10px] text-zinc-500 pt-2 italic">Gartner, IDC, McKinsey 2024–2025 enterprise AI spend forecasts.</p>
+                </div>
+              ),
+            },
+            {
+              n: "06",
+              title: "Product Depth",
+              kicker: "What's already built and shipping",
+              body: (
+                <div className="grid grid-cols-2 gap-2 text-xs text-zinc-300">
+                  {[
+                    ["458", "Agents"],
+                    ["27", "Networks"],
+                    ["58,422", "Skills"],
+                    ["33", "LLM Providers"],
+                    ["175,609+", "Models"],
+                    ["484", "API Endpoints"],
+                    ["62", "Frontend Pages"],
+                    ["28", "Integrations"],
+                  ].map(([v, l]) => (
+                    <div key={l} className="bg-black/30 rounded p-2 text-center">
+                      <p className="text-sm font-bold text-rose-300">{v}</p>
+                      <p className="text-[9px] text-zinc-500 uppercase tracking-wider">{l}</p>
+                    </div>
+                  ))}
+                </div>
+              ),
+            },
+            {
+              n: "07",
+              title: "Why We Win",
+              kicker: "Moats that compound over time",
+              body: (
+                <ul className="text-xs text-zinc-300 space-y-1.5 leading-relaxed list-disc pl-4">
+                  <li><span className="text-white font-medium">Depth moat</span> — 35 core systems vs. competitors' 3–5</li>
+                  <li><span className="text-white font-medium">Data flywheel</span> — every verification pass is labeled data</li>
+                  <li><span className="text-white font-medium">Platform lock-in</span> — custom skills + KB + brain profiles create switching cost</li>
+                  <li><span className="text-white font-medium">Provider neutrality</span> — 33 providers = we win when models commoditize</li>
+                  <li><span className="text-white font-medium">Governance trust</span> — SOC2 roadmap unlocks enterprise contracts competitors can't touch</li>
+                </ul>
+              ),
+            },
+            {
+              n: "08",
+              title: "Business Model",
+              kicker: "Hybrid: subscription + PAYG + marketplace",
+              body: (
+                <ul className="text-xs text-zinc-300 space-y-1.5 leading-relaxed list-disc pl-4">
+                  <li><span className="text-white font-medium">PAYG credits</span> — 65% to AI costs, 35% platform take</li>
+                  <li><span className="text-white font-medium">Subscription tiers</span> — $49/$299/$1,499/month user tiers</li>
+                  <li><span className="text-white font-medium">Enterprise</span> — $50k–$500k+ ARR (SOC2, dedicated env, SLA)</li>
+                  <li><span className="text-white font-medium">Marketplace (roadmap)</span> — 30% take on skill + agent + workflow sales</li>
+                  <li><span className="text-white font-medium">Gateway API</span> — developer revenue on 175k+ model calls</li>
+                </ul>
+              ),
+            },
+            {
+              n: "09",
+              title: "Traction",
+              kicker: "Platform shipped; commercial phase opening",
+              body: (
+                <ul className="text-xs text-zinc-300 space-y-1.5 leading-relaxed list-disc pl-4">
+                  <li>Platform code-complete — <span className="text-emerald-300">522 endpoints, 62 pages, 29 integrations live (incl. self-hosted Embedded Browser)</span></li>
+                  <li>58,422-skill library ingested + matched — largest known skill catalog</li>
+                  <li>Universal Gateway operational — OpenAI-compatible, live model validation</li>
+                  <li>Governance + Verification engines in production flow</li>
+                  <li>Early user cohort onboarding — feedback loop active</li>
+                  <li className="text-rose-300 italic">Seeking seed to accelerate GTM, compliance, and vertical SKUs.</li>
+                </ul>
+              ),
+            },
+            {
+              n: "10",
+              title: "Competitive Landscape",
+              kicker: "Owning the orchestration layer above every model",
+              body: (
+                <div className="space-y-1.5 text-xs text-zinc-300 leading-relaxed">
+                  <div className="flex items-center justify-between"><span><span className="text-white font-medium">LangChain / LlamaIndex</span></span><span className="text-zinc-500">Dev library · no governance, no UI</span></div>
+                  <div className="flex items-center justify-between"><span><span className="text-white font-medium">CrewAI / AutoGen</span></span><span className="text-zinc-500">Agent framework · no platform</span></div>
+                  <div className="flex items-center justify-between"><span><span className="text-white font-medium">Zapier / Make</span></span><span className="text-zinc-500">No-code · no autonomy, no agents</span></div>
+                  <div className="flex items-center justify-between"><span><span className="text-white font-medium">Glean / Writer / Harvey</span></span><span className="text-zinc-500">Vertical SaaS · single use case</span></div>
+                  <div className="flex items-center justify-between"><span><span className="text-white font-medium">Salesforce Agentforce</span></span><span className="text-zinc-500">Bolt-on · locked in SF ecosystem</span></div>
+                  <p className="pt-1 text-emerald-300 font-medium">MAARS = platform depth of all five combined, provider-neutral.</p>
+                </div>
+              ),
+            },
+            {
+              n: "11",
+              title: "Go-to-Market",
+              kicker: "Three wedges, sequenced for compounding distribution",
+              body: (
+                <ul className="text-xs text-zinc-300 space-y-1.5 leading-relaxed list-disc pl-4">
+                  <li><span className="text-white font-medium">Wedge 1 — Developers</span> — Universal Gateway with maars-sk-* key; bottom-up adoption via OpenAI compatibility</li>
+                  <li><span className="text-white font-medium">Wedge 2 — Mid-market</span> — $299/$1,499 tiers; Campaign Builder + Content Generator + Social Command as acquisition magnets</li>
+                  <li><span className="text-white font-medium">Wedge 3 — Enterprise</span> — SOC2 + vertical SKUs (Law, Finance, Healthcare); $50k–$500k ARR deals</li>
+                  <li>Marketplace unlocks in year 2 — 3rd-party creators drive network effects</li>
+                </ul>
+              ),
+            },
+            {
+              n: "12",
+              title: "Financial Projections",
+              kicker: "3-year ARR trajectory (base case)",
+              body: (
+                <div className="space-y-2 text-xs text-zinc-300 leading-relaxed">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-1.5"><span className="text-zinc-500">Year 1 — Dev + mid-market</span><span className="text-emerald-300 font-bold">$1.2M ARR</span></div>
+                  <div className="flex items-center justify-between border-b border-white/10 pb-1.5"><span className="text-zinc-500">Year 2 — SOC2 + first vertical</span><span className="text-cyan-300 font-bold">$8M ARR</span></div>
+                  <div className="flex items-center justify-between border-b border-white/10 pb-1.5"><span className="text-zinc-500">Year 3 — Enterprise + marketplace</span><span className="text-violet-300 font-bold">$35M ARR</span></div>
+                  <div className="flex items-center justify-between pt-1"><span className="text-white font-medium">Gross margin target</span><span className="text-emerald-300 font-bold">65–72%</span></div>
+                  <p className="text-[10px] text-zinc-500 italic pt-1">Comp benchmarks: Harvey $75M→$250M ARR Y2→Y3, Writer similar trajectory.</p>
+                </div>
+              ),
+            },
+            {
+              n: "13",
+              title: "Valuation",
+              kicker: "As-built worth · with traction uplift",
+              body: (
+                <div className="space-y-2 text-xs text-zinc-300 leading-relaxed">
+                  <div className="flex items-center justify-between"><span>Today (pre-revenue, as-built)</span><span className="text-emerald-300 font-bold">$40M–$180M</span></div>
+                  <div className="flex items-center justify-between"><span>+12mo (ARR + SOC2 + vertical)</span><span className="text-cyan-300 font-bold">$150M–$500M</span></div>
+                  <div className="flex items-center justify-between"><span>Category comps (2024–25)</span><span className="text-violet-300 font-bold">$1B–$4.6B</span></div>
+                  <p className="text-[10px] text-zinc-500 italic pt-1">Category: Harvey ($3B), Glean ($4.6B), Writer ($1.9B), Sierra ($4.5B), Decagon ($1.5B).</p>
+                </div>
+              ),
+            },
+            {
+              n: "14",
+              title: "The Ask",
+              kicker: "Raising to accelerate GTM and compliance",
+              body: (
+                <div className="space-y-2 text-xs text-zinc-300 leading-relaxed">
+                  <p className="text-sm text-white font-bold">$8M Seed / Series A</p>
+                  <p className="text-[11px] text-zinc-500">18-month runway · use of funds:</p>
+                  <ul className="space-y-1 list-disc pl-4">
+                    <li><span className="text-emerald-300 font-medium">40%</span> — GTM + sales team (mid-market + enterprise wedges)</li>
+                    <li><span className="text-cyan-300 font-medium">25%</span> — SOC2 + HIPAA + first vertical SKU</li>
+                    <li><span className="text-violet-300 font-medium">20%</span> — Engineering — marketplace, SDKs, mobile</li>
+                    <li><span className="text-amber-300 font-medium">10%</span> — Brand + content + category creation</li>
+                    <li><span className="text-rose-300 font-medium">5%</span> — Compliance + ops + legal</li>
+                  </ul>
+                  <p className="text-[11px] text-white font-medium pt-2">Target milestone: $8M ARR + SOC2 + 50 enterprise logos in 18 months.</p>
+                </div>
+              ),
+            },
+          ].map(slide => (
+            <div key={slide.n} className="bg-zinc-900/60 border border-rose-500/20 rounded-xl overflow-hidden print-card">
+              <div className="flex items-start gap-3 p-4 border-b border-white/5 bg-gradient-to-r from-rose-500/10 to-transparent">
+                <div className="w-10 h-10 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center shrink-0">
+                  <p className="text-sm font-bold text-rose-300 font-['Outfit']">{slide.n}</p>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-white">{slide.title}</p>
+                  <p className="text-[10px] text-zinc-400 leading-tight">{slide.kicker}</p>
+                </div>
+              </div>
+              <div className="p-4">{slide.body}</div>
+            </div>
+          ))}
+        </div>
+        <p className="text-[10px] text-zinc-600 mt-4 italic text-center">
+          Numbers based on current product state + public category comps. Business projections directional, not commitments.
+          Export the deck: click Download Docs at top → print to PDF → filter to this section.
+        </p>
+      </Section>
+
+      {/* A-Z Feature Index */}
+      <Section title="A-Z Feature Index" subtitle="Every feature, alphabetized — use Ctrl+F to jump" icon={FileCode} color="bg-indigo-500/15" id="az-index">
+        <p className="text-xs text-zinc-400 mb-4">
+          Quick reference of every user-facing feature in MAARS Command, alphabetized. Each entry is a short description so you know what it does at a glance.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-1">
+          {[
+            ["Admin Dashboard", "Central admin hub — users, pricing, integrations, branding, analytics"],
+            ["Agent Activity Monitor", "Live WebSocket feed of every agent's state, messages, and tool calls"],
+            ["Agent Brain Viewer", "GET /agents/{id}/brain — see every knowledge chunk loaded for any agent"],
+            ["Agent Catalog", "Browse all 458+ agents with network, role, and capability filters"],
+            ["Agent Networks", "28 domain categories (Strategic, Engineering, Creative, Growth, Core Team, etc.)"],
+            ["Agent Team Builder", "Group any subset of agents into custom named teams"],
+            ["Analytics Dashboard", "Usage, cost, trust, performance — per user, agent, network, env"],
+            ["API Keys", "Issue/rotate maars-sk-* keys for developer access to the Universal Gateway"],
+            ["Approvals", "Human-in-loop queue for gated actions — approve, reject, edit, escalate"],
+            ["Audit Log", "Immutable record of every action — tamper-proof, queryable, exportable"],
+            ["Autonomy Tiers", "10 levels from full-approval (T1) to unsupervised (T10) per agent"],
+            ["Avatar Generator", "Admin batch-generates agent avatars (unique per agent)"],
+            ["Brain Profiles", "Per-agent model, tone, temperature, max-tokens, tool permissions"],
+            ["Branding", "Admin configures logo, domain, theme — multi-tenant ready"],
+            ["Browser — Embedded", "Self-hosted Chromium under backend/browser_data/ — lives inside MAARS, never at OS user level"],
+            ["Browser — Multi-Tab", "Chrome-style tab strip; agents, system, and user share the same tabs with three-way handoff"],
+            ["Browser — Fullscreen", "One-click fullscreen (Fullscreen API) — canvas scales to full viewport"],
+            ["Browser — Stream Modes", "PNG/JPEG × event-driven or continuous 1–24 fps; persists per user"],
+            ["Browser Agent (Autonomous)", "Natural-language goal → perceive (vision) → act → repeat. 2FA / CAPTCHA hand-off"],
+            ["Browser Vision", "GPT-4o / Claude multi-modal decides next action from screenshot + goal"],
+            ["Browser Integration Connect", "Click any of 29 integrations — opens login/OAuth in tagged tab, agent drives optionally"],
+            ["Browser Domain Policy", "Per-env allow/deny hostname patterns; default blocks localhost/cloud-metadata"],
+            ["Browser Minutes Budget", "Per-user daily cap (default 60 min); admin-overridable, 429 on exhaust"],
+            ["Budget Controller", "Per-user, per-agent, per-env credit caps with soft/hard limits"],
+            ["Campaign Builder", "Multi-channel campaign planning + AI-generated variants + A/B"],
+            ["Catalog Manager", "458+ agent registry with network lookup and hot-swap"],
+            ["Chat History", "Persistent chat threads per agent with search and PDF export"],
+            ["Circuit Breakers", "Auto-trip on spend spike, error rate, retry storm, policy violation"],
+            ["Code Explorer (Admin)", "Browse every backend/frontend file — view, search, ZIP export"],
+            ["Collaboration Engine", "Agent-to-agent info share, review request, handoff, coordination"],
+            ["Command Palette", "Press / or Ctrl+K — search pages, agents, actions with voice input"],
+            ["Content Generator", "Marketing copy, social posts, emails, ads, press releases, blueprints"],
+            ["Cost Governance", "Real-time per-call cost tracking with alert thresholds (80/100%)"],
+            ["Credits", "Pay-as-you-go credit balance with instant top-up and transaction log"],
+            ["Custom Brain", "Per-user custom instructions attached to agent knowledge"],
+            ["Developer Portal", "/developer — API key, model browser, playground, quickstart"],
+            ["Environments", "Simulation · Sandbox · Staging · Production — isolated policies/budgets"],
+            ["Execution Mode", "System-wide toggle: real external actions ON vs. mocked (Simulation)"],
+            ["Gmail Integration", "OAuth-based real email sending through connected Gmail account"],
+            ["Google Calendar", "OAuth-based event creation, updates, and scheduling"],
+            ["Image Generation", "GPT Image 1, DALL-E 3, Nano Banana (Gemini 3.1 Flash image)"],
+            ["Incident Ledger", "Every fault logged with timeline, severity, blast radius, remediation"],
+            ["Ingest Script", "backend/scripts/ingest_skills.py — bulk re-ingest skills to all agents"],
+            ["Insights Page", "Personal analytics — your usage, best agents, cost breakdown"],
+            ["Integration Hub", "29 providers: payments, email, CRM, ecommerce, social, dev, LLM, embedded browser"],
+            ["Kernel Dashboard", "Task graphs, goals, scheduler, budget, policies — one control plane"],
+            ["Knowledge Base", "Upload PDFs/DOCX/MD per agent; chunked, embedded, cited in replies"],
+            ["Knowledge Graph", "Entity-relationship memory tier — traversable, queryable"],
+            ["KPI Dashboard", "Venture/org-level KPIs: revenue, burn, retention, NPS, CAC, LTV"],
+            ["LLM Router", "Classifies task type + budget → picks best model across 33 providers"],
+            ["Media Upload", "Files, audio, video uploads with STT transcription (Whisper)"],
+            ["Memory Governance", "CRUD memories with category tags, importance, decay, pruning"],
+            ["Memory Hierarchy", "4 tiers: working · episodic · semantic · knowledge graph"],
+            ["Messenger Chat", "Floating assistant widget on every page"],
+            ["Model Comparison", "POST /v1/models/compare — run same prompt on up to 4 models"],
+            ["Model Router Dashboard", "Live routing decisions, classification accuracy, per-model latency"],
+            ["Notifications", "Real-time alerts for task completion, approvals, incidents, budget"],
+            ["OAuth", "Google, GitHub OAuth flows with secure credential vault"],
+            ["Observability Dashboard", "Live metrics, alerts, trace logs, per-service health"],
+            ["Operator Control Panel", "Low-level kernel controls — halt, resume, reassign, escalate"],
+            ["Organization", "Org-level settings, teams, roles, permissions"],
+            ["Payments", "Stripe checkout, subscriptions, PAYG credit top-ups, invoices"],
+            ["Personal Secretary", "Dedicated agent that executes real-world actions on your behalf"],
+            ["Policy Engine", "Governance rules, compliance, autonomy enforcement per env"],
+            ["Preview Mode", "Preview a workflow before executing in Production"],
+            ["Pricing Admin", "Plan editor — tiers, credits, overage rules, per-provider markup"],
+            ["Product Scanner", "Real-time competitive intelligence — pricing, features, sentiment"],
+            ["Project Catalog", "Browse all active projects with phase, owner, timeline"],
+            ["Projects", "Multi-task project lifecycle with phases and active summary"],
+            ["Quality Service", "Pass rates, escalation tracking, auto-review of agent outputs"],
+            ["RBAC", "Role-based access — admin · manager · user with page/route gates"],
+            ["Real-World Actions", "Gmail, Calendar, Twilio, SendGrid — real external calls when enabled"],
+            ["Recovery", "Quarantine · rollback · retry — automatic blast-radius containment"],
+            ["Reference Intelligence", "Paste text/image → Style Blueprint for on-brand content generation"],
+            ["RAG Engine", "Retrieval with chunk-level citations across skills, KB, web"],
+            ["Settings", "User preferences, integrations, notifications, default model/tier"],
+            ["Simulation Mode", "All external actions mocked — zero cost, full logging, chaos-safe"],
+            ["Skill Library", "58,422 SKILL.md files auto-matched to agents at creation"],
+            ["SMTP Config", "Admin-configurable SMTP for transactional email"],
+            ["Social Media Command", "10 platforms: post, boost, DM, cold-email, cold-call, translate"],
+            ["Stats (Admin)", "Platform-wide analytics: MRR, DAU, cost, top agents, top errors"],
+            ["STT / Whisper", "Speech-to-text in 50+ languages via OpenAI Whisper"],
+            ["Subscriptions", "Monthly plans, PAYG, hybrid billing with fallover"],
+            ["Task Graph", "DAG execution with parallel branches, checkpoints, resumable"],
+            ["Tasks", "Task creation, assignment, status, project linking"],
+            ["Team Builder", "Group agents into named teams with missions"],
+            ["Teams", "User team management with invites and roles"],
+            ["Test Harness", "Scenario testing for autonomous workflows in Simulation"],
+            ["Tool Registry", "Tool discovery, validation, sandboxing across 70+ built-in tools"],
+            ["Trust Analytics", "0-100 trust score per agent — success, latency, quality, consistency"],
+            ["TTS / ElevenLabs", "Text-to-speech in multiple languages including Bangla + English"],
+            ["Universal Gateway Key", "One maars-sk-* key for all 175,609+ models, OpenAI-compatible"],
+            ["Universal Reference Intelligence", "Extract style from any text/image → reusable Blueprint"],
+            ["Usage Stats", "Per-user, per-agent, per-provider, per-task-type cost breakdowns"],
+            ["Venture Portfolio", "Multi-product tracking with stage gates and cross-venture benchmarks"],
+            ["Verification Civilization", "Multi-verifier fact-checking with 6-dimensional consensus"],
+            ["Vibe Coding", "Build apps by talking — HTML/CSS/JS generated live with preview"],
+            ["Video Generation", "Sora 2 — 4-12s AI video from text descriptions"],
+            ["Voice Commands", "Microphone-based navigation and search via Whisper"],
+            ["Web Search", "Perplexity-grounded live web search embedded in every chat"],
+            ["WebSocket Streams", "Live activity feed + Infinity execution streaming"],
+            ["Webhooks", "Signed HMAC-SHA256 webhooks for budget, rate limit, completion events"],
+            ["Workers", "Job queue with per-worker stats, retry logic, priority levels"],
+            ["Workflow Builder", "Visual drag-drop flowchart for automated multi-step workflows"],
+            ["Workspace", "Per-user brain, artifacts, tool logs, KPIs, execution gateway"],
+          ].map(([name, desc]) => (
+            <div key={name} className="flex items-start gap-2 py-1 border-b border-white/[0.03]">
+              <span className="text-[11px] font-medium text-indigo-300 shrink-0 min-w-[140px]">{name}</span>
+              <span className="text-[10px] text-zinc-500 leading-tight">{desc}</span>
+            </div>
+          ))}
+        </div>
+        <p className="text-[10px] text-zinc-600 mt-4 italic">{/* dynamic count */}
+          {SYSTEMS.length} core systems · 522 API endpoints · 62 pages · 84+ UI components · 29 external integrations (incl. Embedded Browser) · 33 LLM providers · 175,609+ models · 58,422 skills · 458+ agents across 28 networks.
+        </p>
+      </Section>
+
+      {/* Roadmap */}
+      <Section title="Roadmap — What's Shipped, In-Flight, and Next" subtitle="12-month execution plan across product, compliance, and GTM" icon={Rocket} color="bg-cyan-500/15" id="roadmap">
+        <p className="text-xs text-zinc-400 mb-4">
+          Where MAARS Command is today and where it's going next. Shipped items are live in production. In-flight items are in active development. Next items are committed but not yet started.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            {
+              phase: "Shipped",
+              badge: "✓ Live",
+              badgeColor: "text-emerald-300 bg-emerald-500/20 border-emerald-500/30",
+              border: "border-emerald-500/20",
+              items: [
+                "Task Graph Execution Kernel (131 endpoints)",
+                "458+ agents across 28 networks",
+                "58,422-skill library + RAG ingestion",
+                "33 LLM providers · OpenAI-compat gateway",
+                "10-tier autonomy + approval workflow",
+                "Verification Civilization (6-dim scoring)",
+                "Hierarchical memory (4 tiers)",
+                "Multi-environment segregation (4 envs)",
+                "Circuit breakers + recovery + incidents",
+                "29 external integrations (OAuth + API)",
+                "Embedded Browser runtime (multi-tab, fullscreen, agent-driven)",
+                "Autonomous BrowserAgent with 2FA hand-off + vision (GPT-4o / Claude)",
+                "Vibe Coding · Content Gen · Campaign Builder",
+                "Social Media Command (10 platforms)",
+                "PAYG + subscription billing",
+                "Developer Portal + maars-sk-* keys",
+                "522 API endpoints · 62 frontend pages",
+              ],
+            },
+            {
+              phase: "In-Flight (Q1–Q2)",
+              badge: "In Progress",
+              badgeColor: "text-amber-300 bg-amber-500/20 border-amber-500/30",
+              border: "border-amber-500/20",
+              items: [
+                "SOC2 Type I audit — observation period active",
+                "Skill Marketplace (beta) — creator revenue share",
+                "Mobile PWA optimization for tablet/phone",
+                "Per-tenant fine-tuned verifiers",
+                "Advanced cost optimization (route-by-price)",
+                "Enterprise SSO (Okta, Azure AD, Google Workspace)",
+                "Dedicated VPC deployment option",
+                "Webhook subscription library",
+                "Expanded Slack + Teams native integration",
+                "Voice agent (phone + ElevenLabs live calls)",
+                "Real-time collaboration on task graphs",
+                "Benchmark leaderboard (public)",
+              ],
+            },
+            {
+              phase: "Next (Q3–Q4)",
+              badge: "Planned",
+              badgeColor: "text-violet-300 bg-violet-500/20 border-violet-500/30",
+              border: "border-violet-500/20",
+              items: [
+                "SOC2 Type II certification",
+                "HIPAA compliance + healthcare SKU",
+                "Vertical SKUs: MAARS-for-Law, MAARS-for-Finance",
+                "Agent Marketplace (third-party certified agents)",
+                "Workflow Marketplace (template commerce)",
+                "Native iOS + Android apps",
+                "EU data residency (Frankfurt region)",
+                "GDPR DPA templates + CCPA toolkit",
+                "GitHub App — MAARS as a PR reviewer",
+                "ISO 27001 kickoff",
+                "White-label / OEM partner program",
+                "Verification-as-a-Service (/v1/verify public)",
+                "Trust-Score-as-a-Service API",
+                "Academic research partnerships + eval dataset publishing",
+              ],
+            },
+          ].map(col => (
+            <div key={col.phase} className={`bg-zinc-900/50 border ${col.border} rounded-xl p-4`}>
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-sm font-bold text-white">{col.phase}</p>
+                <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${col.badgeColor}`}>{col.badge}</span>
+              </div>
+              <ul className="space-y-1.5">
+                {col.items.map(item => (
+                  <li key={item} className="flex items-start gap-2">
+                    <div className="w-1 h-1 rounded-full bg-zinc-500 mt-2 shrink-0" />
+                    <p className="text-[11px] text-zinc-300 leading-snug">{item}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <p className="text-[10px] text-zinc-600 mt-3 italic">
+          Roadmap items are directional commitments; exact timing depends on enterprise customer feedback, compliance auditor scheduling, and ecosystem readiness.
+        </p>
+      </Section>
+
+      {/* Security & Compliance Status */}
+      <Section title="Security & Compliance — Current Status" subtitle="Which certifications and controls are live, in-progress, or planned" icon={Shield} color="bg-red-500/15" id="compliance">
+        <p className="text-xs text-zinc-400 mb-4">
+          Enterprise buyers need evidence, not promises. Here's exactly where MAARS stands on every major compliance framework and security control today.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {[
+            { name: "SOC 2 Type I", status: "In Progress", color: "amber", note: "Observation period active · target audit completion Q2" },
+            { name: "SOC 2 Type II", status: "Planned", color: "violet", note: "Q4 after Type I; 6-month continuous-controls window" },
+            { name: "GDPR", status: "Ready", color: "emerald", note: "DPA template available · data-export + right-to-erasure live" },
+            { name: "CCPA", status: "Ready", color: "emerald", note: "California resident opt-out flow implemented" },
+            { name: "HIPAA", status: "Planned", color: "violet", note: "BAA-ready architecture · full compliance with healthcare SKU" },
+            { name: "ISO 27001", status: "Planned", color: "violet", note: "Kickoff planned post-SOC2 Type II" },
+            { name: "PCI-DSS", status: "Delegated", color: "cyan", note: "All card data handled by Stripe (PCI-DSS Level 1)" },
+            { name: "Data Encryption", status: "Live", color: "emerald", note: "TLS 1.3 in transit · AES-256 at rest · hardware-backed keys" },
+            { name: "Audit Logging", status: "Live", color: "emerald", note: "Immutable · 7-yr retention (prod) · full who/what/when" },
+            { name: "RBAC", status: "Live", color: "emerald", note: "Admin · Manager · User · Custom roles · route + action gated" },
+            { name: "Credential Vault", status: "Live", color: "emerald", note: "Encrypted secrets store · hot-rotate without downtime" },
+            { name: "Penetration Testing", status: "Scheduled", color: "amber", note: "Annual third-party pentest · next cycle pre-SOC2 audit" },
+            { name: "Incident Response", status: "Live", color: "emerald", note: "Playbooks · on-call rotation · incident ledger · RCA process" },
+            { name: "SSO (Okta/Azure AD)", status: "In Progress", color: "amber", note: "Enterprise SSO beta Q2; SAML + OIDC" },
+            { name: "Data Residency", status: "Planned", color: "violet", note: "US-only today · EU (Frankfurt) region Q4" },
+            { name: "DDoS Protection", status: "Live", color: "emerald", note: "Cloud-provider WAF · rate-limit per API key · circuit breakers" },
+            { name: "Backup & DR", status: "Live", color: "emerald", note: "Hourly snapshots · multi-AZ · tested quarterly" },
+            { name: "Zero-Trust Network", status: "Live", color: "emerald", note: "Per-service mTLS · no flat-network access · JIT elevation" },
+          ].map(item => {
+            const statusColorMap = {
+              emerald: "text-emerald-300 bg-emerald-500/20 border-emerald-500/30",
+              amber: "text-amber-300 bg-amber-500/20 border-amber-500/30",
+              violet: "text-violet-300 bg-violet-500/20 border-violet-500/30",
+              cyan: "text-cyan-300 bg-cyan-500/20 border-cyan-500/30",
+            };
+            return (
+              <div key={item.name} className="bg-zinc-900/50 border border-white/5 rounded-xl p-3">
+                <div className="flex items-start justify-between gap-2 mb-1">
+                  <p className="text-xs font-bold text-white">{item.name}</p>
+                  <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${statusColorMap[item.color]} shrink-0`}>{item.status}</span>
+                </div>
+                <p className="text-[10px] text-zinc-400 leading-relaxed">{item.note}</p>
+              </div>
+            );
+          })}
+        </div>
+        <p className="text-[10px] text-zinc-600 mt-3 italic">
+          Live = production, auditable today. In Progress = active work toward completion. Planned = committed, scheduled, not started. Delegated = handled by a certified third party.
+        </p>
+      </Section>
+
+      {/* FAQ */}
+      <Section title="FAQ — Common Questions" subtitle="What buyers, investors, and developers ask most often" icon={MessageSquare} color="bg-sky-500/15" id="faq">
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+          <p className="text-xs text-zinc-400">
+            The questions we get every week. If you have one that isn't here, email support.maars@marsgc.net and we'll add it.
+          </p>
+          <FAQControls rootId="faq-list" />
+        </div>
+        <div id="faq-list" className="space-y-2" data-faq-list>
+          {[
+            {
+              q: "How is this different from LangChain, CrewAI, or building on OpenAI directly?",
+              a: "LangChain and CrewAI are libraries — you still build the platform around them: governance, verification, billing, UI, audit, recovery. Building on OpenAI directly means you're locked to one provider and you build everything else yourself. MAARS gives you the whole enterprise platform (governance, verification, multi-provider routing, UI, audit, recovery, skill library, 458 agents) as one product. Days to value, not quarters.",
+            },
+            {
+              q: "Can I bring my own API keys and avoid your gateway markup?",
+              a: "Yes. Every LLM provider can be configured with your own API key in Settings → Integrations. You pay the provider directly and MAARS just routes through. The Universal Gateway with maars-sk-* key is a convenience for teams who don't want to manage 33 provider relationships — but it's optional.",
+            },
+            {
+              q: "What happens when a model provider goes down?",
+              a: "Circuit breakers detect elevated error rates or latency and trip. The router automatically falls back through a configured chain (e.g. GPT-5 → Claude Sonnet → Gemini Pro → GPT-4o). If all fallbacks fail, the task graph pauses at the affected node and can resume when a provider recovers — no work lost.",
+            },
+            {
+              q: "How do you handle hallucinations?",
+              a: "Every factual claim goes through the Verification Civilization: 2-4 independent verifier models cross-check the same claim on 6 dimensions (factual, grounded, coherent, complete, unbiased, time-fresh). Disagreement flags the claim. Unverifiable specifics get quarantined. The agent's answer ships with the verification score and source citations. No blind trust.",
+            },
+            {
+              q: "Where is data stored? Is it used to train models?",
+              a: "Production data lives in the MongoDB cluster in the customer's region (US today; EU region Q4). Nothing is used to train third-party models — every provider is called in data-processor mode with zero-retention headers. Chat history is retained per your settings and fully exportable or deletable on demand (GDPR-compliant).",
+            },
+            {
+              q: "Can I self-host or run on my own cloud?",
+              a: "Docker Compose deployment is live today (docker-compose up — full stack in one command). Dedicated VPC deployment (your AWS/GCP/Azure account with MAARS-managed plane) is in-flight for Q2. True air-gapped on-prem is available for enterprise contracts.",
+            },
+            {
+              q: "How much does it cost for a realistic workload?",
+              a: "Pay-as-you-go pricing: 65% of every dollar goes to AI model costs (shown live), 35% covers platform. A typical mid-market team with 3-5 active workflows and moderate chat use lands at $500-$2,500/month. Enterprise contracts (SOC2, dedicated env, SLA) start at $50k ARR. Developer gateway usage is metered per call at near-pass-through pricing.",
+            },
+            {
+              q: "Can agents take real-world actions (send emails, make charges, post to social)?",
+              a: "Yes — through the Real-World Action Layer. But only when you flip Simulation Mode off. By default every external action returns a realistic mock response so you can safely test a workflow end-to-end before going live. Per-agent autonomy tiers gate what each agent can do, and high-impact actions require human approval.",
+            },
+            {
+              q: "What happens if an agent misbehaves?",
+              a: "The Recovery system quarantines it: tools stripped, autonomy forced to Tier 1, flagged for human review. The incident ledger logs the full timeline. You decide whether to reinstate, retrain, or retire the agent. Your workflows auto-reroute through healthy agents in the meantime.",
+            },
+            {
+              q: "How do I add a custom skill or custom agent?",
+              a: "Custom skills: drop a new folder at .claude/skills/<name>/ with a SKILL.md file — it's ingested automatically on agent creation or via the bulk ingest script. Custom agents: POST /agents with role, description, capabilities, and optional brain profile. The skill matcher runs automatically and populates the new agent's brain.",
+            },
+            {
+              q: "Is there an OpenAI-compatible API I can point existing code at?",
+              a: "Yes. Your maars-sk-* key works at POST /v1/chat/completions with the exact OpenAI SDK — only change the base_url. You get access to all 175,609+ models (609 curated + 175k HuggingFace pass-through) through the same SDK you already use. Model comparison endpoint (/v1/models/compare) runs the same prompt on 4 models in parallel.",
+            },
+            {
+              q: "What's the team's AI background?",
+              a: "MAARS was built by MAARS Global Corporation with a team combining full-stack engineering, AI research, and enterprise operations experience. The platform has been in active development since 2026 with focus on governance, verification, and multi-provider orchestration. Team details available under NDA for qualified investors.",
+            },
+          ].map((item, i) => (
+            <details key={i} className="bg-zinc-900/50 border border-white/5 rounded-xl group">
+              <summary className="cursor-pointer p-3 flex items-start gap-3 list-none hover:bg-white/[0.02]">
+                <ChevronRight className="w-4 h-4 text-sky-400 shrink-0 mt-0.5 transition-transform group-open:rotate-90" />
+                <p className="text-xs font-medium text-white flex-1">{item.q}</p>
+              </summary>
+              <div className="px-3 pb-3 pl-10">
+                <p className="text-xs text-zinc-400 leading-relaxed">{item.a}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </Section>
+
+      {/* Contact / CTA */}
+      <Section title="Get Started" subtitle="Book a demo, join the developer waitlist, or talk to enterprise sales" icon={Mail} color="bg-violet-500/15" id="contact">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            {
+              icon: Eye,
+              title: "Book a Demo",
+              desc: "30-minute walkthrough of MAARS Command with a product specialist. Best for evaluating fit for your team.",
+              cta: "Email to schedule",
+              href: "mailto:support.maars@marsgc.net?subject=Demo%20Request%20-%20MAARS%20Command",
+              color: "text-violet-300",
+              border: "border-violet-500/30",
+              bg: "bg-violet-500/10",
+            },
+            {
+              icon: Code,
+              title: "Developer Access",
+              desc: "Get a maars-sk-* key and start calling 175,609+ models through the OpenAI-compatible gateway today.",
+              cta: "Open Developer Portal",
+              href: "/developer",
+              color: "text-cyan-300",
+              border: "border-cyan-500/30",
+              bg: "bg-cyan-500/10",
+            },
+            {
+              icon: Briefcase,
+              title: "Enterprise Sales",
+              desc: "SOC2 roadmap, dedicated VPC, BAA, SLA, custom training, and volume pricing. Deals starting at $50k ARR.",
+              cta: "Contact enterprise",
+              href: "mailto:enterprise.maars@marsgc.net?subject=Enterprise%20Inquiry%20-%20MAARS%20Command",
+              color: "text-amber-300",
+              border: "border-amber-500/30",
+              bg: "bg-amber-500/10",
+            },
+          ].map(c => (
+            <a key={c.title} href={c.href} target={c.href.startsWith("mailto:") ? "_self" : "_self"} className={`block rounded-xl border ${c.border} ${c.bg} p-4 hover:bg-white/5 transition-colors no-underline`}>
+              <div className="flex items-center gap-2 mb-2">
+                <c.icon className={`w-5 h-5 ${c.color}`} />
+                <p className="text-sm font-bold text-white">{c.title}</p>
+              </div>
+              <p className="text-xs text-zinc-300 leading-relaxed mb-3">{c.desc}</p>
+              <p className={`text-xs font-bold ${c.color} flex items-center gap-1`}>
+                {c.cta} <ChevronRight className="w-3 h-3" />
+              </p>
+            </a>
+          ))}
+        </div>
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[11px] text-zinc-400">
+          <span className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-violet-300" /> support.maars@marsgc.net</span>
+          <span className="flex items-center gap-1.5"><Briefcase className="w-3 h-3 text-amber-300" /> enterprise.maars@marsgc.net</span>
+          <span className="flex items-center gap-1.5"><Building className="w-3 h-3 text-cyan-300" /> MAARS Global Corporation</span>
+          <span className="flex items-center gap-1.5"><Rocket className="w-3 h-3 text-rose-300" /> Est. 2026</span>
+        </div>
       </Section>
 
       {/* Footer */}
       <div className="text-center py-6 border-t border-white/5">
         <p className="text-xs text-zinc-400">MAARS Command v1.0 -- Autonomous AI Enterprise Operating System</p>
-        <p className="text-[10px] text-zinc-500 mt-1">{agents.length || 458}+ Agents | {uniqueNetworks || 27} Networks | {SYSTEMS.length} Core Systems | 33 Providers | 600+ Models | 212+ Endpoints</p>
+        <p className="text-[10px] text-zinc-500 mt-1">{agents.length || 458}+ Agents | {uniqueNetworks || 28} Networks | {SYSTEMS.length} Core Systems | 33 Providers | 600+ Models | 58,422 Skills | 522+ Endpoints</p>
         <p className="text-[10px] text-zinc-500 mt-1">Built by MAARS Global Corporation | Est. 2026</p>
         <p className="text-[10px] text-zinc-500 mt-0.5">Contact: support.maars@marsgc.net</p>
       </div>

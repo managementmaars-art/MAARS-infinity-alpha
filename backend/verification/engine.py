@@ -179,10 +179,49 @@ def _score_completeness(output: str, context: dict) -> float:
 
 
 def _score_correctness(output: str, context: dict) -> float:
-    # Base score — will be LLM-verified in Phase 2
+    """Heuristic correctness score. Phase 2 will swap this for LLM-based
+    fact-checking; today we grade the output on signals that correlate with
+    well-formed factual writing."""
     if not output:
         return 0.0
-    return 7.0  # Default baseline
+    text = output.strip()
+    score = 6.0
+
+    # Hedging / uncertainty language deducts — a confident correct answer
+    # rarely needs to say "I'm not sure" or "this might be".
+    hedges = ("i'm not sure", "i am not sure", "might be wrong", "not certain",
+              "possibly incorrect", "i think maybe", "could be wrong", "unsure")
+    for h in hedges:
+        if h in text.lower():
+            score -= 0.8
+
+    # Explicit self-correction or contradiction markers suggest reasoning
+    # about correctness (good) but also signal the first draft was wrong.
+    if "actually, " in text.lower() or "correction:" in text.lower():
+        score -= 0.3
+
+    # Citations, references, or source markers boost correctness confidence.
+    citation_markers = ("[source]", "http://", "https://", "doi:", "see ref", "according to")
+    cites = sum(1 for m in citation_markers if m in text.lower())
+    score += min(2.0, cites * 0.5)
+
+    # Presence of concrete factual anchors (numbers, dates, proper nouns with
+    # capitals mid-sentence) is weak evidence of a grounded answer.
+    import re
+    numbers = len(re.findall(r"\b\d[\d,\.]{1,}\b", text))
+    score += min(1.5, numbers * 0.15)
+
+    # Context-provided ground truth: if a caller includes an expected answer
+    # or reference output, boost score for overlap.
+    expected = context.get("expected_answer") or context.get("ground_truth") or ""
+    if expected:
+        expected_tokens = set(expected.lower().split())
+        output_tokens = set(text.lower().split())
+        if expected_tokens:
+            overlap = len(expected_tokens & output_tokens) / len(expected_tokens)
+            score = 0.5 * score + 0.5 * (overlap * 10.0)
+
+    return round(max(0.0, min(10.0, score)), 2)
 
 
 def _score_source_grounding(output: str, context: dict) -> float:

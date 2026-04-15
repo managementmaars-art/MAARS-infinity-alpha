@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../App";
 import { Network, ChevronRight, Users, Layers, Search, Bot, MessageSquare } from "lucide-react";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "http://localhost:8000";
 
 const LAYER_COLORS = {
   infrastructure: "emerald",
@@ -155,7 +155,7 @@ export default function AgentNetworks() {
             <div className="bg-zinc-900/20 border border-dashed border-white/5 rounded-xl p-12 flex flex-col items-center justify-center text-center">
               <Network className="w-12 h-12 text-zinc-700 mb-3" />
               <p className="text-sm text-zinc-500">Select a network to view its agents</p>
-              <p className="text-xs text-zinc-600 mt-1">27 networks with 417+ specialized agents</p>
+              <p className="text-xs text-zinc-600 mt-1">28 networks with 458+ specialized agents</p>
             </div>
           )}
         </div>

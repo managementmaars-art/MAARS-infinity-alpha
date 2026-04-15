@@ -1,9 +1,21 @@
 """MAARS Command Backend - Thin application shell.
 All business logic is in routes/ and services/."""
 import os
+import sys
+import asyncio
 import logging
 from pathlib import Path
+from datetime import datetime, timezone
 from dotenv import load_dotenv
+
+# On Windows, force the ProactorEventLoop so asyncio.create_subprocess_exec
+# works — it's required by Playwright (embedded browser) and anything else
+# that spawns OS subprocesses. Uvicorn's --reload mode otherwise uses
+# SelectorEventLoop, which raises NotImplementedError on subprocess_exec.
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+
+from services.health_service import REQUIRED_ENV_VARS
 
 ROOT_DIR = Path(__file__).parent
 PROJECT_ROOT = ROOT_DIR.parent
@@ -16,11 +28,7 @@ load_dotenv(ROOT_DIR / '.env', override=False)
 # Validate all critical environment variables before starting application
 def validate_environment():
     """Validate that all required environment variables are set."""
-    required_vars = {
-        'MONGO_URL': 'MongoDB connection string (e.g., mongodb://localhost:27017)',
-        'DB_NAME': 'Database name (e.g., maars_infinity)',
-        'JWT_SECRET': 'JWT signing secret for authentication'
-    }
+    required_vars = REQUIRED_ENV_VARS
     
     environment = os.environ.get('ENVIRONMENT', 'development')
     missing_vars = []
@@ -61,12 +69,18 @@ def validate_environment():
 validate_environment()
 # ==================================================================
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from starlette.middleware.cors import CORSMiddleware
 
 from db import db, client
 import shared.constants as constants
 from services.agent_service import seed_default_agents, backfill_usage_logs
+from services.health_service import (
+    build_api_health_response,
+    build_liveness_response,
+    build_readiness_response,
+    build_root_health_response,
+)
 from services.kernel_service import seed_default_tools
 
 # Route imports
@@ -102,11 +116,27 @@ from routes.infinity_ws import router as infinity_ws_router
 from routes.universal import router as universal_router
 from routes.v1_gateway import router as v1_gateway_router
 from routes.social_media import router as social_media_router
+from routes.browser import router as browser_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="MAARS Command API")
+SERVICE_NAME = "MAARS Command"
+STARTUP_STATE = {
+    "ready": False,
+    "started_at": datetime.now(timezone.utc).isoformat(),
+    "completed_at": None,
+    "last_error": None,
+    "tasks": {
+        "seed_default_agents": False,
+        "backfill_usage_logs": False,
+        "seed_default_tools": False,
+        "seed_governance_defaults": False,
+        "ensure_mongodb_indexes": False,
+        "load_pricing_config": False,
+    },
+}
 
 # Serve generated avatar images
 from fastapi.staticfiles import StaticFiles
@@ -148,6 +178,7 @@ api_router.include_router(infinity_router)
 api_router.include_router(universal_router)
 api_router.include_router(v1_gateway_router)
 api_router.include_router(social_media_router)
+api_router.include_router(browser_router)
 
 app.include_router(api_router)
 
@@ -158,73 +189,98 @@ app.include_router(infinity_ws_router, prefix="/api")
 
 @app.on_event("startup")
 async def startup():
-    await seed_default_agents()
-    await backfill_usage_logs()
-    await seed_default_tools()
+    STARTUP_STATE["started_at"] = datetime.now(timezone.utc).isoformat()
+    STARTUP_STATE["completed_at"] = None
+    STARTUP_STATE["last_error"] = None
+    STARTUP_STATE["ready"] = False
+    for task_name in STARTUP_STATE["tasks"]:
+        STARTUP_STATE["tasks"][task_name] = False
 
-    # Seed MAARS Infinity defaults
-    from kernel.policy_engine import seed_default_policies
-    from governance.circuit_breaker import seed_default_breakers
-    await seed_default_policies()
-    await seed_default_breakers()
+    try:
+        await seed_default_agents()
+        STARTUP_STATE["tasks"]["seed_default_agents"] = True
 
-    # Create MongoDB indexes for performance
-    await db.chats.create_index([("user_id", 1), ("updated_at", -1)])
-    await db.chats.create_index([("agent_id", 1)])
-    await db.chats.create_index("created_at")
-    await db.tasks.create_index([("user_id", 1), ("status", 1)])
-    await db.tasks.create_index("created_at")
-    await db.usage_logs.create_index("created_at")
-    await db.usage_logs.create_index([("user_id", 1), ("created_at", -1)])
-    await db.usage_logs.create_index("model")
-    await db.notifications.create_index([("user_id", 1), ("read", 1)])
-    await db.products.create_index([("user_id", 1), ("status", 1)])
-    await db.payment_transactions.create_index([("user_id", 1), ("created_at", -1)])
-    await db.subscriptions.create_index("user_id", unique=True)
-    await db.users.create_index("email", unique=True)
-    await db.audit_log.create_index([("created_at", -1)])
-    await db.projects.create_index([("user_id", 1), ("status", 1)])
-    await db.projects.create_index([("user_id", 1), ("created_at", -1)])
-    await db.tasks.create_index([("project_id", 1)])
-    await db.workspace_profiles.create_index([("user_id", 1)], unique=True)
-    await db.approvals.create_index([("user_id", 1), ("status", 1)])
-    await db.tool_logs.create_index([("user_id", 1), ("created_at", -1)])
-    await db.knowledge_docs.create_index([("agent_id", 1)])
-    await db.agent_brains.create_index([("user_id", 1), ("agent_id", 1)], unique=True)
-    await db.collaborations.create_index([("user_id", 1), ("project_id", 1)])
-    await db.kpi_store.create_index([("user_id", 1)])
-    await db.quality_reviews.create_index([("user_id", 1), ("project_id", 1)])
-    await db.system_config.create_index([("user_id", 1)])
-    await db.reference_analyses.create_index([("user_id", 1), ("created_at", -1)])
-    await db.vibe_projects.create_index([("user_id", 1), ("created_at", -1)])
-    await db.google_tokens.create_index([("user_id", 1)], unique=True)
-    await db.generated_content.create_index([("user_id", 1), ("created_at", -1)])
-    await db.routing_logs.create_index([("user_id", 1), ("created_at", -1)])
-    await db.memory_entries.create_index([("user_id", 1), ("created_at", -1)])
-    await db.memory_entries.create_index([("user_id", 1), ("agent_id", 1)])
-    # MAARS Infinity indexes
-    await db.task_graphs.create_index([("user_id", 1), ("status", 1)])
-    await db.task_graphs.create_index([("user_id", 1), ("updated_at", -1)])
-    await db.execution_logs.create_index([("user_id", 1), ("created_at", -1)])
-    await db.execution_logs.create_index([("agent_id", 1)])
-    await db.tool_registry.create_index("tool_id", unique=True)
-    await db.agents.create_index("network")
-    await db.agents.create_index("is_infinity")
-    await db.gateway_usage_logs.create_index([("user_id", 1), ("timestamp", -1)])
-    await db.gateway_usage_logs.create_index([("source", 1), ("timestamp", -1)])
-    await db.client_gateway_keys.create_index("user_id", unique=True)
-    await db.client_gateway_keys.create_index("key", unique=True)
-    logger.info("MongoDB indexes ensured")
+        await backfill_usage_logs()
+        STARTUP_STATE["tasks"]["backfill_usage_logs"] = True
 
-    # Load admin-configured pricing from DB (overrides hardcoded defaults)
-    saved_pricing = await db.platform_config.find_one({"config_type": "pricing"}, {"_id": 0})
-    if saved_pricing and saved_pricing.get("plans"):
-        constants.SUBSCRIPTION_PLANS.update(saved_pricing["plans"])
-        logger.info("Loaded pricing from database")
-    if saved_pricing and "custom_agent_credit_cost" in saved_pricing:
-        constants.CUSTOM_AGENT_CREDIT_COST = saved_pricing["custom_agent_credit_cost"]
+        await seed_default_tools()
+        STARTUP_STATE["tasks"]["seed_default_tools"] = True
 
-    logger.info("MAARS Global AI Team Backend started")
+        # Seed MAARS Infinity defaults
+        from kernel.policy_engine import seed_default_policies
+        from governance.circuit_breaker import seed_default_breakers
+
+        await seed_default_policies()
+        await seed_default_breakers()
+        STARTUP_STATE["tasks"]["seed_governance_defaults"] = True
+
+        # Create MongoDB indexes for performance
+        await db.chats.create_index([("user_id", 1), ("updated_at", -1)])
+        await db.chats.create_index([("agent_id", 1)])
+        await db.chats.create_index("created_at")
+        await db.tasks.create_index([("user_id", 1), ("status", 1)])
+        await db.tasks.create_index("created_at")
+        await db.usage_logs.create_index("created_at")
+        await db.usage_logs.create_index([("user_id", 1), ("created_at", -1)])
+        await db.usage_logs.create_index("model")
+        await db.notifications.create_index([("user_id", 1), ("read", 1)])
+        await db.products.create_index([("user_id", 1), ("status", 1)])
+        await db.payment_transactions.create_index([("user_id", 1), ("created_at", -1)])
+        await db.subscriptions.create_index("user_id", unique=True)
+        await db.users.create_index("email", unique=True)
+        await db.audit_log.create_index([("created_at", -1)])
+        await db.projects.create_index([("user_id", 1), ("status", 1)])
+        await db.projects.create_index([("user_id", 1), ("created_at", -1)])
+        await db.tasks.create_index([("project_id", 1)])
+        await db.workspace_profiles.create_index([("user_id", 1)], unique=True)
+        await db.approvals.create_index([("user_id", 1), ("status", 1)])
+        await db.tool_logs.create_index([("user_id", 1), ("created_at", -1)])
+        await db.artifacts.create_index([("user_id", 1), ("created_at", -1)])
+        await db.artifacts.create_index([("user_id", 1), ("artifact_type", 1)])
+        await db.knowledge_docs.create_index([("agent_id", 1)])
+        await db.agent_brains.create_index([("user_id", 1), ("agent_id", 1)], unique=True)
+        await db.collaborations.create_index([("user_id", 1), ("project_id", 1)])
+        await db.kpi_store.create_index([("user_id", 1)])
+        await db.quality_reviews.create_index([("user_id", 1), ("project_id", 1)])
+        await db.system_config.create_index([("user_id", 1)])
+        await db.reference_analyses.create_index([("user_id", 1), ("created_at", -1)])
+        await db.vibe_projects.create_index([("user_id", 1), ("created_at", -1)])
+        await db.google_tokens.create_index([("user_id", 1)], unique=True)
+        await db.generated_content.create_index([("user_id", 1), ("created_at", -1)])
+        await db.routing_logs.create_index([("user_id", 1), ("created_at", -1)])
+        await db.memory_entries.create_index([("user_id", 1), ("created_at", -1)])
+        await db.memory_entries.create_index([("user_id", 1), ("agent_id", 1)])
+        # MAARS Infinity indexes
+        await db.task_graphs.create_index([("user_id", 1), ("status", 1)])
+        await db.task_graphs.create_index([("user_id", 1), ("updated_at", -1)])
+        await db.execution_logs.create_index([("user_id", 1), ("created_at", -1)])
+        await db.execution_logs.create_index([("agent_id", 1)])
+        await db.tool_registry.create_index("tool_id", unique=True)
+        await db.agents.create_index("network")
+        await db.agents.create_index("is_infinity")
+        await db.gateway_usage_logs.create_index([("user_id", 1), ("timestamp", -1)])
+        await db.gateway_usage_logs.create_index([("source", 1), ("timestamp", -1)])
+        await db.client_gateway_keys.create_index("user_id", unique=True)
+        await db.client_gateway_keys.create_index("key", unique=True)
+        STARTUP_STATE["tasks"]["ensure_mongodb_indexes"] = True
+        logger.info("MongoDB indexes ensured")
+
+        # Load admin-configured pricing from DB (overrides hardcoded defaults)
+        saved_pricing = await db.platform_config.find_one({"config_type": "pricing"}, {"_id": 0})
+        if saved_pricing and saved_pricing.get("plans"):
+            constants.SUBSCRIPTION_PLANS.update(saved_pricing["plans"])
+            logger.info("Loaded pricing from database")
+        if saved_pricing and "custom_agent_credit_cost" in saved_pricing:
+            constants.CUSTOM_AGENT_CREDIT_COST = saved_pricing["custom_agent_credit_cost"]
+        STARTUP_STATE["tasks"]["load_pricing_config"] = True
+
+        STARTUP_STATE["ready"] = True
+        STARTUP_STATE["completed_at"] = datetime.now(timezone.utc).isoformat()
+        logger.info("MAARS Global AI Team Backend started")
+    except Exception as exc:
+        STARTUP_STATE["last_error"] = f"{type(exc).__name__}: {exc}"
+        logger.exception("Backend startup failed")
+        raise
 
 
 @app.on_event("shutdown")
@@ -232,9 +288,28 @@ async def shutdown_db_client():
     client.close()
 
 
+@app.get("/health")
+async def root_health_check():
+    return build_root_health_response(SERVICE_NAME, STARTUP_STATE)
+
+
 @app.get("/api/health")
 async def health_check():
-    return {"status": "ok", "service": "MAARS Command"}
+    return build_api_health_response(SERVICE_NAME, STARTUP_STATE)
+
+
+@app.get("/health/live")
+@app.get("/api/health/live")
+async def live_check():
+    return build_liveness_response(SERVICE_NAME)
+
+
+@app.get("/health/ready")
+@app.get("/api/health/ready")
+async def readiness_check(response: Response):
+    payload = await build_readiness_response(SERVICE_NAME, STARTUP_STATE)
+    response.status_code = 200 if payload["ready"] else 503
+    return payload
 
 
 # ── Rate Limiting Middleware ──
@@ -289,4 +364,5 @@ app.add_middleware(
     allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
     allow_methods=["*"],
     allow_headers=["*"],
+    max_age=60,  # short preflight cache so route additions don't get stuck
 )

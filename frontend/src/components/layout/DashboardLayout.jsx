@@ -18,7 +18,7 @@ import PreviewModeBanner from "../PreviewModeBanner";
 import { usePreviewMode, PREVIEW_PLANS } from "../PreviewModeContext";
 import MessengerChat from "../MessengerChat";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "http://localhost:8000";
 
 /* ─── Palette tokens ──────────────────────────────────────────────────────── */
 const T = {
@@ -254,6 +254,7 @@ const navSections = [
     { icon: Workflow,  label: "Workflow Builder", to: "/workflow-builder" },
     { icon: Megaphone, label: "Campaign Builder", to: "/campaigns"        },
     { icon: Plug,      label: "Integrations",     to: "/integrations"     },
+    { icon: Globe,     label: "Embedded Browser", to: "/browser"          },
     { icon: Satellite, label: "Social Media",     to: "/social"           },
     { icon: Key,       label: "Universal Key",    to: "/universal-key"    },
     { icon: PieChart,  label: "Analytics",        to: "/analytics"        },

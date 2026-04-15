@@ -57,6 +57,7 @@ import AgentCatalog from "./pages/AgentCatalog";
 import DeveloperPortal from './pages/DeveloperPortal';
 import SocialMediaCommand from './pages/SocialMediaCommand';
 import UniversalKeyPage from './pages/UniversalKeyPage';
+import BrowserPanel from './pages/BrowserPanel';
 import {
   AdminOverviewPage, AdminAnalyticsPage, AdminUsersPage, AdminAgentsPage,
   AdminTransactionsPage, AdminPricingManagerPage, AdminApiKeysPage,
@@ -68,8 +69,12 @@ import { Watermark } from "./components/Watermark";
 import { BrandingProvider } from "./components/BrandingProvider";
 import { PreviewModeProvider } from "./components/PreviewModeContext";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL?.trim() || "http://localhost:8000";
-export const API = `${BACKEND_URL}/api`;
+// In development, CRA's dev server (setupProxy.js) forwards /api/* to the
+// backend — so the browser can talk to the backend as same-origin and Chrome
+// never has to deal with cross-origin preflight edge cases. In production,
+// REACT_APP_BACKEND_URL is baked into the bundle and used directly.
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL?.trim() || "";
+export const API = BACKEND_URL ? `${BACKEND_URL}/api` : "/api";
 
 // Auth Context
 const AuthContext = createContext(null);
@@ -348,6 +353,7 @@ const AppRouter = () => {
       <Route path="/memory-hierarchy" element={<ProtectedRoute><DashboardLayout><MemoryHierarchy /></DashboardLayout></ProtectedRoute>} />
       <Route path="/campaigns" element={<ProtectedRoute><DashboardLayout><CampaignBuilder /></DashboardLayout></ProtectedRoute>} />
       <Route path="/integrations" element={<ProtectedRoute><DashboardLayout><IntegrationHub /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/browser" element={<ProtectedRoute><DashboardLayout><BrowserPanel /></DashboardLayout></ProtectedRoute>} />
       <Route path="/social" element={<ProtectedRoute><DashboardLayout><SocialMediaCommand /></DashboardLayout></ProtectedRoute>} />
       <Route path="/universal-key" element={<ProtectedRoute><DashboardLayout><UniversalKeyPage /></DashboardLayout></ProtectedRoute>} />
       <Route path="/organization" element={<ProtectedRoute><DashboardLayout><Organization /></DashboardLayout></ProtectedRoute>} />

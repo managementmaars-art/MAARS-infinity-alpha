@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Bot, MessageSquare, ListTodo, Sparkles, Plus, ChevronRight,
   Trash2, Zap, Users, Terminal, ArrowRight, Activity, Brain,
   Flame, Trophy, Radio, Cpu, Command, TrendingUp, Shield,
-  Network, Layers, GitBranch, Eye, Radar, Globe, Bolt
+  Network, Layers, GitBranch, Eye, Radar, Bolt
 } from "lucide-react";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
@@ -101,7 +101,7 @@ const TICKER_MSGS = [
   "▸ 175,000+ AI models available via Universal Key",
   "▸ Enterprise trust scoring active — all agent actions audited",
   "▸ Real-time multi-agent collaboration engine online",
-  "▸ 27 specialized networks — strategy, creative, engineering, finance, legal…",
+  "▸ 28 specialized networks — strategy, creative, engineering, finance, legal…",
   "▸ Zero-downtime model switching across 33 LLM providers",
   "▸ Knowledge graph continuously updated with new intelligence",
 ];
@@ -374,12 +374,27 @@ function NeuralActivityFeed({ agents }) {
 }
 
 /* ─── System health panel ─────────────────────────────────── */
-function SystemHealth({ agents, stats }) {
+function formatRuntime(seconds = 0) {
+  if (!seconds) return "Just started";
+  if (seconds < 60) return `${Math.round(seconds)}s uptime`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ${Math.round(seconds % 60)}s uptime`;
+  return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m uptime`;
+}
+
+function SystemHealth({ agents, stats, health, readiness }) {
+  const visibleAgents = agents.filter(a=>!a.hidden).length;
+  const tasksTotal = Math.max(stats?.total_tasks || 1, 1);
+  const readinessSummary = readiness?.summary || { passed: 0, total: 3 };
+  const config = health?.configuration || {};
+  const dbCheck = readiness?.checks?.database;
+  const isReady = readiness?.ready ?? health?.ready ?? false;
+  const statusColor = isReady ? T.green : T.red;
+  const statusLabel = isReady ? "READY" : "ATTENTION";
   const metrics = [
-    { label:"Agents Online",   value: agents.filter(a=>!a.hidden).length, max:458, accent:T.teal,   icon:Bot },
-    { label:"Tasks Completed", value: stats?.completed_tasks||0,           max:Math.max(stats?.total_tasks||1,1), accent:T.green,  icon:Sparkles },
-    { label:"Model Providers", value:33, max:33,                          accent:T.blue,   icon:Globe },
-    { label:"Networks Active", value:27, max:27,                          accent:"#a78bfa", icon:Network },
+    { label:"Agents Online", value: visibleAgents, max:Math.max(agents.length || 1, 1), accent:T.teal, icon:Bot, detail:`${agents.length || 0} total` },
+    { label:"Tasks Completed", value: stats?.completed_tasks || 0, max:tasksTotal, accent:T.green, icon:Sparkles, detail:`${stats?.total_tasks || 0} tracked` },
+    { label:"Startup Checks", value: readinessSummary.passed || 0, max:Math.max(readinessSummary.total || 1, 1), accent:T.blue, icon:Shield, detail:isReady ? "startup healthy" : "needs review" },
+    { label:"Integrations Ready", value: config.integrations_configured || 0, max:Math.max(config.integrations_total || 1, 1), accent:"#a78bfa", icon:Network, detail:`${config.partial_integrations || 0} partial` },
   ];
   return (
     <div data-3d data-3d-strength="8" data-3d-lift="5" style={{background:T.glass,border:`1px solid ${T.border}`,borderRadius:18,backdropFilter:"blur(16px)",overflow:"hidden"}}>
@@ -387,8 +402,8 @@ function SystemHealth({ agents, stats }) {
         <Shield style={{width:15,height:15,color:T.teal}} />
         <span style={{fontSize:11,fontWeight:700,color:"#e2e8f0"}}>System Health</span>
         <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:5}}>
-          <span style={{width:6,height:6,borderRadius:"50%",background:T.green,display:"inline-block",animation:"db_pulse_g 2s ease infinite"}} />
-          <span style={{fontSize:9,fontWeight:700,color:T.green}}>NOMINAL</span>
+          <span style={{width:6,height:6,borderRadius:"50%",background:statusColor,display:"inline-block",animation:"db_pulse_g 2s ease infinite"}} />
+          <span style={{fontSize:9,fontWeight:700,color:statusColor}}>{statusLabel}</span>
         </div>
       </div>
       <div style={{padding:"14px 18px",display:"flex",flexDirection:"column",gap:14}}>
@@ -401,7 +416,10 @@ function SystemHealth({ agents, stats }) {
                   <m.icon style={{width:12,height:12,color:m.accent}} />
                   <span style={{fontSize:11,color:"#94a3b8"}}>{m.label}</span>
                 </div>
-                <span style={{fontSize:12,fontWeight:700,color:"#f1f5f9",fontVariantNumeric:"tabular-nums"}}>{m.value.toLocaleString()}</span>
+                <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:1}}>
+                  <span style={{fontSize:12,fontWeight:700,color:"#f1f5f9",fontVariantNumeric:"tabular-nums"}}>{m.value.toLocaleString()}</span>
+                  <span style={{fontSize:9,color:"#64748b"}}>{m.detail}</span>
+                </div>
               </div>
               <div style={{height:4,borderRadius:4,background:"rgba(255,255,255,0.06)",overflow:"hidden"}}>
                 <div style={{
@@ -416,6 +434,22 @@ function SystemHealth({ agents, stats }) {
             </div>
           );
         })}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(2, minmax(0, 1fr))",gap:10,marginTop:2}}>
+          <div style={{padding:"10px 12px",borderRadius:12,background:"rgba(255,255,255,0.03)",border:`1px solid ${T.border}`}}>
+            <p style={{fontSize:9,letterSpacing:"0.12em",textTransform:"uppercase",color:"#64748b",margin:"0 0 6px"}}>Runtime</p>
+            <p style={{fontSize:12,fontWeight:700,color:"#e2e8f0",margin:"0 0 3px"}}>{formatRuntime(health?.uptime_seconds)}</p>
+            <p style={{fontSize:10,color:"#94a3b8",margin:0}}>{(health?.environment || "development").toUpperCase()}</p>
+          </div>
+          <div style={{padding:"10px 12px",borderRadius:12,background:"rgba(255,255,255,0.03)",border:`1px solid ${T.border}`}}>
+            <p style={{fontSize:9,letterSpacing:"0.12em",textTransform:"uppercase",color:"#64748b",margin:"0 0 6px"}}>Database</p>
+            <p style={{fontSize:12,fontWeight:700,color:dbCheck?.connected ? T.green : T.red,margin:"0 0 3px"}}>
+              {dbCheck?.connected ? "Connected" : "Unavailable"}
+            </p>
+            <p style={{fontSize:10,color:"#94a3b8",margin:0}}>
+              {dbCheck?.latency_ms ? `${dbCheck.latency_ms} ms ping` : dbCheck?.error || "Readiness pending"}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -764,7 +798,7 @@ const INSIGHT_ITEMS = [
   { icon: TrendingUp, color: "#4fd1c5", title: "Fleet Performance",   getDesc: (agents, stats) => `${agents.filter(a=>!a.hidden).length} agents active · ${((stats?.completed_tasks||0)/Math.max((stats?.total_tasks||1),1)*100).toFixed(0)}% task completion rate` },
   { icon: Brain,      color: "#a78bfa", title: "Knowledge Coverage",  getDesc: () => "33 skill domains · Provider guides injected per agent · RAG pipeline live" },
   { icon: Shield,     color: "#34d399", title: "Governance Status",   getDesc: () => "Trust scoring active · Audit logs running · All actions metered" },
-  { icon: Network,    color: "#60a5fa", title: "Agent Networks",       getDesc: () => "27 specialized networks · Commander orchestration ready · Multi-agent chains enabled" },
+  { icon: Network,    color: "#60a5fa", title: "Agent Networks",       getDesc: () => "28 specialized networks · Commander orchestration ready · Multi-agent chains enabled" },
   { icon: Zap,        color: "#f59e0b", title: "Model Infrastructure",getDesc: () => "175k+ models available · Smart routing active · 33 providers connected" },
   { icon: Radar,      color: "#f472b6", title: "Recommendations",     getDesc: (agents, stats) => stats?.total_chats===0 ? "Start your first chat to activate agent learning" : `${stats?.total_chats} conversations logged · ${agents.filter(a=>a.is_custom).length} custom agents built` },
 ];
@@ -866,26 +900,38 @@ const Dashboard = () => {
   const [agents,      setAgents]      = useState([]);
   const [recentChats, setRecentChats] = useState([]);
   const [stats,       setStats]       = useState(null);
+  const [health,      setHealth]      = useState(null);
+  const [readiness,   setReadiness]   = useState(null);
   const [loading,     setLoading]     = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const headers = token ? { Authorization:`Bearer ${token}` } : {};
+  const headers = useMemo(() => (token ? { Authorization:`Bearer ${token}` } : {}), [token]);
+
+  const fetchDashboardData = useCallback(async () => {
+    try {
+      const [ar, cr, sr, hr, rr] = await Promise.all([
+        fetch(`${API}/agents`,{headers}).catch(()=>null),
+        fetch(`${API}/chats`, {headers}).catch(()=>null),
+        fetch(`${API}/stats`, {headers}).catch(()=>null),
+        fetch(`${API}/health`).catch(()=>null),
+        fetch(`${API}/health/ready`).catch(()=>null),
+      ]);
+      if (ar?.ok) setAgents(await ar.json());
+      if (cr?.ok) { const d=await cr.json(); setRecentChats(d.chats||d); }
+      if (sr?.ok) setStats(await sr.json());
+      if (hr) {
+        try { setHealth(await hr.json()); } catch {}
+      }
+      if (rr) {
+        try { setReadiness(await rr.json()); } catch {}
+      }
+    } catch { toast.error("Failed to load dashboard"); }
+    finally  { setLoading(false); }
+  }, [headers]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const [ar, cr, sr] = await Promise.all([
-          fetch(`${API}/agents`,{headers}).catch(()=>null),
-          fetch(`${API}/chats`, {headers}).catch(()=>null),
-          fetch(`${API}/stats`, {headers}).catch(()=>null),
-        ]);
-        if (ar?.ok) setAgents(await ar.json());
-        if (cr?.ok) { const d=await cr.json(); setRecentChats(d.chats||d); }
-        if (sr?.ok) setStats(await sr.json());
-      } catch { toast.error("Failed to load dashboard"); }
-      finally  { setLoading(false); }
-    })();
+    fetchDashboardData();
     if (user && !user.onboarding_completed) setShowOnboarding(true);
-  }, []);
+  }, [fetchDashboardData, user]);
 
   const handleDeleteChat = async (chatId) => {
     const res = await fetch(`${API}/chats/${chatId}`,{method:"DELETE",headers:{Authorization:`Bearer ${token}`}});
@@ -950,7 +996,7 @@ const Dashboard = () => {
 
         {/* Right column */}
         <div style={{display:"flex",flexDirection:"column",gap:16}}>
-          <SystemHealth agents={agents} stats={stats} />
+          <SystemHealth agents={agents} stats={stats} health={health} readiness={readiness} />
           <NeuralActivityFeed agents={agents} />
           <LiveAgentRoster agents={agents} recentChats={recentChats} onChat={id=>navigate(`/chat/${id}`)} />
         </div>

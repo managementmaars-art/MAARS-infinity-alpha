@@ -93,7 +93,13 @@ async def main():
     providers_only= "--providers-only" in sys.argv
 
     repo_root   = Path(__file__).parent.parent.parent
-    skills_root = repo_root / ".claude" / "skills"
+    # Canonical skills source (.agents/skills/) — surfaced to 30+ AI tools via
+    # per-tool symlink dirs (.claude, .continue, .windsurf, .augment, etc.).
+    # Ingest from the real directory so we capture the full document set per
+    # skill, not just SKILL.md.
+    skills_root = repo_root / ".agents" / "skills"
+    if not skills_root.exists():
+        skills_root = repo_root / ".claude" / "skills"  # legacy fallback
 
     if not skills_root.exists():
         log.error(f"Skills root not found: {skills_root}")

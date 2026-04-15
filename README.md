@@ -10,6 +10,21 @@
 - MongoDB 5.0+
 - API keys for LLM providers (optional based on your use case)
 
+### Git hooks — one-time setup per clone
+
+This repo ships a `post-commit` hook under `.githooks/` that auto-appends
+every commit to the audit trail in `.claude/MEMORY.md`. Enable it once
+per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The hook is idempotent (won't re-log the same commit) and never blocks a
+commit on failure. Hand-written audit sections (`## Audit NNN`) still sit
+above the `## Commit log` divider; the hook only maintains the commit
+trail below it.
+
 ### Local Development (5 minutes)
 
 #### 1. Clone & Setup Backend
@@ -73,14 +88,21 @@ MAARS-Command/
 │   ├── tailwind.config.js      # Tailwind CSS configuration
 │   └── craco.config.js         # Custom build configuration
 │
+├── .claude/
+│   ├── skills/                 # 58k+ cleaned Claude Code skills (name + description YAML)
+│   │                           # Loaded by backend at agent creation (see services/skills_service.py)
+│   ├── skills_backup/          # Original unfixed skills — kept as backup
+│   └── settings.json           # Claude Code permissions
+├── scripts/legacy/             # Archived one-off migration scripts (batch creators, fetchers)
 ├── design_guidelines.json      # Brand identity and design system
 ├── agents.md                   # Project architecture documentation
 ├── memory/                     # Documentation and project notes
-└── test_reports/              # Test iteration results
+└── test_reports/               # Test iteration results
 ```
 
 ## Core Features
 
+- **Skill Library** — 58k+ curated skills at `.claude/skills/` automatically matched to agents and ingested as knowledge chunks
 - **Multi-Agent Orchestration** — 458+ agents across 28 networks managed via Commander Orion
 - **Task Graph Execution** — DAG-based task decomposition and parallel execution
 - **Governance & Approvals** — Policy engine, audit logs, trust scoring, and circuit breakers

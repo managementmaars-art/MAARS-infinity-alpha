@@ -118,9 +118,9 @@ const agents = [
 ];
 
 const features = [
-  { icon: Bot, title: "458+ Specialized AI Agents", desc: "Pre-built expert agents across 27 networks — engineering, finance, legal, creative, and more.", accent: C.teal },
+  { icon: Bot, title: "458+ Specialized AI Agents", desc: "Pre-built expert agents across 28 networks — engineering, finance, legal, creative, and more.", accent: C.teal },
   { icon: Sparkles, title: "175,000+ AI Models", desc: "609 curated models + all of HuggingFace's open-source catalogue via universal pass-through.", accent: "#a78bfa" },
-  { icon: Users, title: "Agent Collaboration", desc: "Multiple agents working in concert across 27 specialized networks to tackle complex goals.", accent: C.blue },
+  { icon: Users, title: "Agent Collaboration", desc: "Multiple agents working in concert across 28 specialized networks to tackle complex goals.", accent: C.blue },
   { icon: MessageSquare, title: "Chat with Any Agent", desc: "Natural conversation with 458+ context-aware AI agents, each with unique expertise and tools.", accent: C.teal },
   { icon: BarChart3, title: "Trust Scores & Governance", desc: "Every action governed, metered, and audited. Agent trust scores built from live execution history.", accent: "#a78bfa" },
   { icon: Zap, title: "One Key. All Providers.", desc: "Single OpenAI-compatible endpoint for all 33 providers. Drop-in replace base_url and you're done.", accent: C.blue },

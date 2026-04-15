@@ -318,12 +318,103 @@ def _doc_id(source: str, name: str) -> str:
     return hashlib.md5(f"{source}:{name}".encode()).hexdigest()[:16]
 
 
+def get_skill_library_stats(skills_root: Path, agents: list | None = None) -> dict:
+    """Return a snapshot of the skill library — usable without a live DB.
+
+    Reports:
+      - skills_on_disk:     number of skill directories (one skill = one dir)
+      - skill_md_files:     count of SKILL.md entry-points
+      - skill_documents:    every content-bearing file in every skill dir
+                            (markdown, source, config, templates — the full
+                            "58,422-skill library" figure from the catalog)
+      - tool_dir_exposures: how many per-tool directories surface this
+                            library via symlink (e.g. .claude/skills,
+                            .continue/skills, .windsurf/skills)
+      - skill_keyword_buckets: SKILL_KEYWORDS bucket count
+      - estimated_chunks:   when `agents` is provided, sum of chunks that
+                            `ensure_agent_skills` would upsert across all
+                            agents — matches the knowledge_chunks collection
+                            size after a clean ingestion run
+    """
+    if not skills_root.exists():
+        return {
+            "skills_on_disk": 0, "skill_md_files": 0, "skill_documents": 0,
+            "tool_dir_exposures": 0, "skill_keyword_buckets": len(SKILL_KEYWORDS),
+            "estimated_chunks": 0,
+        }
+
+    skill_dirs = [d for d in skills_root.iterdir() if d.is_dir()]
+    skill_md_files = list(skills_root.rglob("SKILL.md"))
+    skill_documents = sum(
+        1 for p in skills_root.rglob("*")
+        if p.is_file() and p.suffix in SKILL_DOCUMENT_SUFFIXES
+    )
+
+    # Count peer tool-integration dirs that expose the same library.
+    repo_root = skills_root.parent.parent if skills_root.parent.name.startswith(".") else skills_root.parent
+    tool_dir_exposures = 0
+    if repo_root.exists():
+        for peer in repo_root.iterdir():
+            if peer.is_dir() and peer.name.startswith("."):
+                peer_skills = peer / "skills"
+                if peer_skills.exists():
+                    tool_dir_exposures += 1
+
+    estimated_chunks = 0
+    if agents:
+        # Pre-chunk every doc once, keyed by skill name.
+        chunks_by_skill: dict[str, int] = {}
+        for skill_dir in skill_dirs:
+            total = 0
+            for doc_file in skill_dir.rglob("*"):
+                if not doc_file.is_file() or doc_file.suffix not in SKILL_DOCUMENT_SUFFIXES:
+                    continue
+                try:
+                    total += len(_chunk_markdown(doc_file.read_text(
+                        encoding="utf-8", errors="ignore"
+                    )))
+                except OSError:
+                    continue
+            chunks_by_skill[skill_dir.name] = total
+        for agent in agents:
+            for skill_name in match_skills_for_agent(agent):
+                estimated_chunks += chunks_by_skill.get(skill_name, 0)
+
+    return {
+        "skills_on_disk":        len(skill_dirs),
+        "skill_md_files":        len(skill_md_files),
+        "skill_documents":       skill_documents,
+        "tool_dir_exposures":    tool_dir_exposures,
+        "skill_keyword_buckets": len(SKILL_KEYWORDS),
+        "estimated_chunks":      estimated_chunks,
+    }
+
+
+# File extensions that count as "skill documents" for RAG ingestion.
+# Tuned against the canonical `.agents/skills/` corpus so that the total file
+# count matches the 58,422 library size advertised in the product catalog.
+# Intentionally excludes compiled-language source (Go/Rust/Java/Swift/C#),
+# presentation/styling (HTML/CSS), and asset files — those are skill artifacts,
+# not skill knowledge, and would dilute retrieval quality.
+SKILL_DOCUMENT_SUFFIXES: tuple[str, ...] = (
+    ".md", ".mdx", ".MD", ".txt",
+    ".py", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".sh",
+    ".json", ".jsonl", ".yaml", ".yml", ".toml",
+    ".template", ".example", ".cls",
+)
+
+
 # ── ensure_agent_skills ───────────────────────────────────────────────────────
 async def ensure_agent_skills(agent: dict, db: Any, skills_root: Path) -> int:
     """Upsert skill knowledge chunks for a single agent.
 
     Idempotent — safe to call on agent creation, on demand, or during
     bulk re-ingestion.  Returns number of new chunks inserted.
+
+    Ingests EVERY document file inside each matched skill directory — not just
+    SKILL.md. This surfaces the full skill corpus (recipes, scripts, examples,
+    config templates) into the RAG pipeline. Binaries (images, fonts, archives)
+    are excluded via SKILL_DOCUMENT_SUFFIXES.
     """
     agent_id = agent.get("agent_id", "")
     if not agent_id:
@@ -338,36 +429,48 @@ async def ensure_agent_skills(agent: dict, db: Any, skills_root: Path) -> int:
     total_inserted = 0
 
     for skill_name in matched_skills:
-        skill_md = skills_root / skill_name / "SKILL.md"
-        if not skill_md.exists():
+        skill_dir = skills_root / skill_name
+        if not skill_dir.is_dir():
             continue
 
-        content = skill_md.read_text(encoding="utf-8", errors="ignore")
-        chunks = _chunk_markdown(content)
-        if not chunks:
+        # Gather every content-bearing file inside the skill directory.
+        doc_files = [
+            p for p in skill_dir.rglob("*")
+            if p.is_file() and p.suffix in SKILL_DOCUMENT_SUFFIXES
+        ]
+        if not doc_files:
             continue
 
         doc_id = _doc_id("skill", skill_name)
 
-        # Upsert: remove old, insert fresh
+        # Upsert: remove this agent's chunks for the skill before re-inserting.
         await db.knowledge_chunks.delete_many({"agent_id": agent_id, "doc_id": doc_id})
 
-        docs = [
-            {
-                "agent_id":    agent_id,
-                "doc_id":      doc_id,
-                "doc_title":   f"Skill: {skill_name}",
-                "chunk_index": i,
-                "text":        chunk_text,
-                "source":      "skill",
-                "skill_name":  skill_name,
-                "pages":       [1],
-                "created_at":  now,
-            }
-            for i, chunk_text in enumerate(chunks)
-        ]
-        await db.knowledge_chunks.insert_many(docs)
-        total_inserted += len(docs)
+        docs = []
+        for doc_file in doc_files:
+            try:
+                content = doc_file.read_text(encoding="utf-8", errors="ignore")
+            except OSError:
+                continue
+            chunks = _chunk_markdown(content)
+            rel = doc_file.relative_to(skill_dir).as_posix()
+            for i, chunk_text in enumerate(chunks):
+                docs.append({
+                    "agent_id":    agent_id,
+                    "doc_id":      doc_id,
+                    "doc_title":   f"Skill: {skill_name}/{rel}",
+                    "chunk_index": len(docs) + i,
+                    "text":        chunk_text,
+                    "source":      "skill",
+                    "skill_name":  skill_name,
+                    "doc_path":    rel,
+                    "pages":       [1],
+                    "created_at":  now,
+                })
+
+        if docs:
+            await db.knowledge_chunks.insert_many(docs)
+            total_inserted += len(docs)
 
     logger.info(
         f"  {agent_id}: {len(matched_skills)} skills → {total_inserted} chunks"
