@@ -672,6 +672,8 @@ DELETE /sessions/{id}           → cleaned up
 
 _Auto-appended by `.githooks/post-commit`. Newest commits first._
 
+- 2026-04-15 00:41Z · `f224a373` · Ship Embedded Browser Runtime + 9 PDF-vs-code audits · _Mirza Arafat Abbas_
+
 - 2026-04-15 00:20Z · `9996f01b` · Add frontend/build: branding, icons, manifest, service worker · _managementmaars-art_
 
 

@@ -12,6 +12,19 @@
 .claude/backups/
 .claude/ide/
 
+# MAARS Embedded Browser runtime assets — Chromium + FFMPEG binaries
+# (hundreds of MB; re-downloaded by `playwright install chromium` on any
+# fresh clone). Session cookies/localStorage live here too — privacy-sensitive.
+backend/browser_data/
+
+# Generic binary / opaque blobs that should never get auto-staged
+*.dll
+*.exe
+*.pak
+*.bin
+*.dylib
+*.so
+
 # Dependencies
 node_modules/
 /node_modules
