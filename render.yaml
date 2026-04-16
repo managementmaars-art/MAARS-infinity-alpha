@@ -1,0 +1,119 @@
+# Render.com blueprint for MAARS Command
+# https://render.com/docs/blueprint-spec
+#
+# Deploys two services from this repo:
+#   - maars-backend  : FastAPI + uvicorn (Python web service)
+#   - maars-frontend : React (static site)
+#
+# Push this file to GitHub, then in Render dashboard:
+#   New + → Blueprint → connect this repo → click Apply.
+# Render reads this file, creates both services, prompts you for env vars
+# marked `sync: false` (the secret ones), and starts deploying.
+
+services:
+  # ───────────────────────────────────────────────── Backend
+  - type: web
+    name: maars-backend
+    runtime: python
+    region: oregon                # change to frankfurt / singapore if your users are there
+    plan: starter                 # starter $7/mo always-on; use 'free' for demo (sleeps after 15min)
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: true              # auto-deploy on every push to main
+    envVars:
+      # ── core (Render auto-generates) ────────────────────────────────────
+      - key: PORT
+        value: 10000
+      - key: ENVIRONMENT
+        value: production
+
+      # ── secrets (you'll paste into Render dashboard during first deploy) ─
+      - key: MONGO_URL
+        sync: false               # paste your Atlas connection string here
+      - key: DB_NAME
+        value: maars_infinity
+      - key: JWT_SECRET
+        generateValue: true       # Render auto-generates a 32+ char secret
+      - key: MAARS_API_KEY_PEPPER
+        generateValue: true
+      - key: ADMIN_API_KEY
+        generateValue: true
+
+      # ── provider keys (paste from your local .env) ──────────────────────
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+
+      # ── Stripe (production) ─────────────────────────────────────────────
+      - key: STRIPE_SECRET_KEY
+        sync: false               # use sk_live_... not rk_test_...
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false               # whsec_... from Stripe Dashboard → Webhooks
+
+      # ── CORS (allow the frontend) ───────────────────────────────────────
+      - key: CORS_ORIGINS
+        fromService:
+          name: maars-frontend
+          type: web
+          property: host
+          # Render injects "https://maars-frontend.onrender.com" or your custom domain
+
+      # ── frontend URL for redirects ──────────────────────────────────────
+      - key: FRONTEND_URL
+        fromService:
+          name: maars-frontend
+          type: web
+          property: host
+      - key: BACKEND_URL
+        fromService:
+          name: maars-backend
+          type: web
+          property: host
+
+      # ── hardening ────────────────────────────────────────────────────────
+      - key: MAARS_IP_RPM
+        value: "300"
+
+  # ───────────────────────────────────────────────── Frontend
+  - type: web
+    name: maars-frontend
+    runtime: static
+    region: oregon
+    plan: free
+    rootDir: frontend
+    buildCommand: yarn install --frozen-lockfile && yarn build
+    staticPublishPath: build
+    autoDeploy: true
+    envVars:
+      - key: REACT_APP_BACKEND_URL
+        fromService:
+          name: maars-backend
+          type: web
+          property: host
+      - key: NODE_VERSION
+        value: "20"
+      - key: GENERATE_SOURCEMAP
+        value: "false"
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /static/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
