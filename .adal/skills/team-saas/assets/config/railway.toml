@@ -1,0 +1,17 @@
+# ===========================================
+# Railway Deployment Configuration
+# ===========================================
+
+[build]
+# Use Dockerfile for builds (not Nixpacks)
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+# Health check on root path
+healthcheckPath = "/"
+# 5 minute timeout for health check (allows for cold starts)
+healthcheckTimeout = 300
+# Restart on failure with max 10 retries
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10

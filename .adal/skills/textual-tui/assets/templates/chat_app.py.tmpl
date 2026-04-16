@@ -1,0 +1,101 @@
+from __future__ import annotations
+
+import asyncio
+
+from textual import work
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal, VerticalScroll
+from textual.reactive import var
+from textual.widgets import Button, Footer, Header, Input, Markdown
+
+
+class MessageBubble(Markdown):
+    DEFAULT_CSS = """
+    MessageBubble {
+        margin: 0 0 1 0;
+        padding: 0 1;
+        border: round $primary;
+    }
+
+    MessageBubble.-user {
+        border: round $accent;
+    }
+
+    MessageBubble.-assistant {
+        border: round $success;
+    }
+    """
+
+
+class {{CLASS_NAME}}(App):
+    CSS_PATH = "{{MODULE}}.tcss"
+    TITLE = "{{APP_TITLE}}"
+    SUB_TITLE = "Streaming / chat starter"
+    BINDINGS = [
+        ("slash", "focus_prompt", "Prompt"),
+    ]
+
+    message_count = var(0)
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield VerticalScroll(id="history")
+        with Horizontal(id="composer"):
+            yield Input(placeholder="Ask something…", id="prompt")
+            yield Button("Send", id="send", variant="primary")
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.add_message("Welcome. Replace the fake worker with your real backend.", "assistant")
+        self.query_one("#prompt", Input).focus()
+
+    def add_message(self, markdown: str, role: str) -> None:
+        history = self.query_one("#history", VerticalScroll)
+        bubble = MessageBubble(markdown)
+        bubble.add_class("-{0}".format(role))
+        history.mount(bubble)
+        history.anchor()
+        self.message_count += 1
+
+    def submit_prompt(self, text: str) -> None:
+        text = text.strip()
+        if not text:
+            return
+        self.add_message(text, "user")
+        self.query_one("#prompt", Input).value = ""
+        self.generate_reply(text)
+
+    def on_input_submitted(self, event: Input.Submitted) -> None:
+        if event.input.id == "prompt":
+            self.submit_prompt(event.value)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "send":
+            self.submit_prompt(self.query_one("#prompt", Input).value)
+
+    @work(exclusive=True)
+    async def generate_reply(self, prompt: str) -> None:
+        await asyncio.sleep(0.05)
+        self.add_message(
+            "\n".join(
+                [
+                    "**Starter response**",
+                    "",
+                    "- Prompt: `{0}`".format(prompt),
+                    "- Replace this worker with your real async call.",
+                    "- Keep the history container anchored for streaming output.",
+                ]
+            ),
+            "assistant",
+        )
+
+    def action_focus_prompt(self) -> None:
+        self.query_one("#prompt", Input).focus()
+
+
+def main() -> None:
+    {{CLASS_NAME}}().run()
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,38 @@
+{
+  "skill_name": "lessons-learned",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm about to refactor a non-trivial auth flow. Before I touch the code, load any relevant lessons and tell me what constraints I should keep in mind.",
+      "expected_output": "Uses the recall phase before implementation, determines scope, consults the lessons index if present, and reports loaded lesson constraints or a no-match outcome without inventing cards.",
+      "files": [],
+      "expectations": [
+        "Determines whether lesson storage or index exists before attempting recall",
+        "Uses scope and ranked recall logic or explicitly reports that no lessons match",
+        "Does not invent lesson cards or claim nonexistent constraints"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Correction: the migration baseline must run before applying tenant migrations. Capture that so we don't repeat it.",
+      "expected_output": "Uses the capture phase, treats the correction as reusable, updates or creates the appropriate lesson card and index entry, and reports the capture compactly.",
+      "files": [],
+      "expectations": [
+        "Treats the user correction as a capture trigger",
+        "Applies create-vs-update logic instead of blindly creating duplicates",
+        "Reports the capture result in a compact created or updated summary"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I just finished a bug fix. The fix only worked because timeout had to be set before client initialization. Capture it if that should become a reusable lesson.",
+      "expected_output": "Evaluates capture criteria, captures only if non-obvious and reusable, keeps the workflow aligned with the documented card template and validation rules, and reports what happened.",
+      "files": [],
+      "expectations": [
+        "Evaluates whether the lesson is non-obvious and reusable before capturing",
+        "Keeps the lesson card behavior aligned with the documented schema and validation rules",
+        "Explains whether it captured, updated, or skipped the lesson and why"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "project-architect",
+  "version": "1.0.0",
+  "description": "Documentation-first project planning that produces Claude Code-ready prompts. Generates interconnected docs (SPECIFICATION, IMPLEMENTATION, TASKS, BRANDING) plus a single-shot PROMPT.md for Claude Code execution.",
+  "skills": [
+    "SKILL.md"
+  ]
+}

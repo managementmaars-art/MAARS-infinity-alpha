@@ -1,0 +1,43 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-01-27",
+  "description": "Allowlist for mock/fake/stub patterns. Only true platform boundaries and deterministic fixtures remain.",
+  "entries": [
+    {
+      "path": "src/sources/install.rs",
+      "pattern": "mock_system_info",
+      "rationale": "Fixture constructor for testing pure install method selection logic with deterministic inputs",
+      "owner": "sources-team",
+      "review_date": "2026-07-27",
+      "cfg_test_only": true,
+      "permanent": true,
+      "note": "Creates test SystemInfo struct for unit testing choose_method() and related pure functions. Complemented by real system probe tests."
+    },
+    {
+      "path": "src/sources/install.rs",
+      "pattern": "mock_resources",
+      "rationale": "Fixture constructor for testing pure resource checking logic with deterministic inputs",
+      "owner": "sources-team",
+      "review_date": "2026-07-27",
+      "cfg_test_only": true,
+      "permanent": true,
+      "note": "Creates test ResourceInfo struct for unit testing check_resources() and can_compile(). Complemented by real resource probe tests."
+    }
+  ],
+  "excluded_paths": [
+    "node_modules/",
+    "target/",
+    ".git/",
+    "tests/fixtures/",
+    "test-results/"
+  ],
+  "excluded_patterns": [
+    "mock-.*\\.jsonl$",
+    "mock-.*\\.html$"
+  ],
+  "notes": [
+    "Entries with permanent: true are allowed indefinitely (true OS/hardware boundaries or false positives)",
+    "See test-results/no_mock_audit.md for full audit report",
+    "Review dates are 6-month check-ins for fixture-based allowances"
+  ]
+}

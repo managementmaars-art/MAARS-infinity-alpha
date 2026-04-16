@@ -1,0 +1,18 @@
+{
+  "sessionId": "test-session-1",
+  "projectHash": "hash123",
+  "startTime": "2024-01-01T12:00:00Z",
+  "lastUpdated": "2024-01-01T12:05:00Z",
+  "messages": [
+    {
+      "type": "user",
+      "content": "Gemini hello",
+      "timestamp": "2024-01-01T12:00:00Z"
+    },
+    {
+      "type": "model",
+      "content": "Hello from Gemini!",
+      "timestamp": "2024-01-01T12:01:00Z"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "@memtensor/memos-cloud-skill",
+    "description": "MemOS Cloud Server API skill. Provides the agent with capabilities to add, search, delete messages and add feedback to MemOS cloud memory.",
+    "version": "1.0.0",
+    "scripts": {
+        "publish-beta": "npm publish --tag beta",
+        "publish-beta-patch": "npm version prepatch --preid=beta && npm publish --tag beta",
+        "publish-latest": "npm version $(node -p \"require('./package.json').version.split('-')[0]\") && npm publish",
+        "publish-latest-patch": "npm version patch && npm publish"
+    }
+}

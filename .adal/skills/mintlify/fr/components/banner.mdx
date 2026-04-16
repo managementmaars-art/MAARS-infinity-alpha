@@ -1,0 +1,102 @@
+---
+title: "Bannière"
+description: "Ajoutez une bannière dismissible en haut de votre site de documentation pour afficher des annonces importantes, des notes de version ou des notifications."
+keywords: ["bannière", "annonces", "à l'échelle du site"]
+---
+
+Utilisez des bannières pour afficher des annonces, des mises à jour ou des notifications importantes sur l'ensemble de votre site de documentation. Les bannières apparaissent en haut de chaque page, prennent en charge la mise en forme Markdown, et vous pouvez permettre aux utilisateurs de les masquer. Elles utilisent la couleur définie par la propriété `colors.dark` dans votre `docs.json`.
+
+Pour ajouter une bannière, utilisez la propriété `banner` dans votre `docs.json` :
+
+<CodeGroup>
+  ```json Product announcements wrap
+  "banner": {
+    "content": "🚀 La version 2.0 est disponible ! Consultez notre [journal des modifications](/changelog) pour plus de détails.",
+    "dismissible": true 
+  }
+  ```
+
+  ```json Maintenance notices wrap
+  "banner": {
+    "content": "⚠️ Maintenance planifiée : l'API sera indisponible le 15 décembre, de 2 h à 4 h UTC",
+    "dismissible": false
+  }
+  ```
+
+  ```json Required actions wrap
+  "banner": {
+    "content": "**Action requise :** migrez vers notre nouvelle version d'ici le 1er janvier. [Guide de migration](/migration)",
+    "dismissible": true
+  }
+  ```
+</CodeGroup>
+
+<Note>
+  Vous pouvez également configurer des bannières par langue en définissant `banner` dans `navigation.languages`. Consultez [Bannières propres à chaque langue](#language-specific-banners).
+</Note>
+
+<div id="properties">
+  ## Propriétés
+</div>
+
+<ResponseField name="content" type="string" required>
+  Le contenu textuel affiché dans la bannière. Prend en charge le formatage MDX de base, y compris les liens, le gras et l'italique. Les composants personnalisés ne sont pas pris en charge.
+</ResponseField>
+
+<ResponseField name="dismissible" type="boolean">
+  Indique si les utilisateurs peuvent fermer la bannière. Lorsque `true`, un bouton de fermeture apparaît. Si un utilisateur ferme la bannière, elle reste masquée pour lui jusqu'à ce que vous mettiez à jour le contenu de la bannière. Valeur par défaut : `false`.
+</ResponseField>
+
+<div id="language-specific-banners">
+  ## Bannières spécifiques à chaque langue
+</div>
+
+Configurez un contenu de bannière différent pour chaque langue de votre documentation. Définissez ces bannières spécifiques à chaque langue dans le tableau `navigation.languages` de votre fichier `docs.json`.
+
+```json
+{
+  "navigation": {
+    "languages": [
+      {
+        "language": "en",
+        "banner": {
+          "content": "🚀 La version 2.0 est en ligne ! Consultez notre [journal des modifications](/en/changelog) pour plus de détails.",
+          "dismissible": true
+        },
+        "groups": [
+          {
+            "group": "Premiers pas",
+            "pages": ["en/overview", "en/quickstart"]
+          }
+        ]
+      },
+      {
+        "language": "es",
+        "banner": {
+          "content": "🚀 ¡La versión 2.0 ya está disponible! Consulta nuestro [registro de cambios](/es/changelog) para más detalles.",
+          "dismissible": true
+        },
+        "groups": [
+          {
+            "group": "Premiers pas",
+            "pages": ["es/overview", "es/quickstart"]
+          }
+        ]
+      }
+    ]
+  },
+  "banner": {
+    "content": "🚀 La version 2.0 est en ligne !",
+    "dismissible": true
+  }
+}
+```
+
+<div id="fallback-behavior">
+  ### Comportement de repli
+</div>
+
+Les bannières suivent un ordre de priorité pour déterminer quel contenu afficher :
+
+1. **Bannière spécifique à une langue** : Si la langue actuelle dispose d'une configuration `banner`, celle-ci est prioritaire.
+2. **Bannière globale** : Si aucune bannière spécifique à une langue n'existe, la `banner` globale est affichée.

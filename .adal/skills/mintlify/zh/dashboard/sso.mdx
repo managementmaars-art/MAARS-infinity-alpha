@@ -1,0 +1,241 @@
+---
+title: "单点登录（SSO）"
+description: "使用 Okta、Azure AD 和 Google Workspace 等 SAML 或 OIDC 身份提供商设置单点登录，实现安全的团队身份验证。"
+keywords: ["SSO", "SAML 认证", "Okta 集成", "Microsoft Entra", "身份提供商", "JIT", "预配", "OIDC"]
+---
+
+<Info>
+  SSO 功能适用于 [企业套餐](https://mintlify.com/pricing?ref=sso)。
+</Info>
+
+企业管理员可以直接在 Mintlify 控制台中为 Okta 或 Microsoft Entra 配置基于 SAML 的 SSO。对于 Google Workspace 或 Okta OIDC 等其他提供商，请[联系我们](mailto:support@mintlify.com)，以设置 SSO。
+
+<div id="configure-sso">
+  ## 配置单点登录 (SSO)
+</div>
+
+<div id="okta">
+  ### Okta
+</div>
+
+<Steps>
+  <Step title="在 Mintlify 控制台中配置 Okta SSO">
+    1. 在 Mintlify 控制台中，前往 [Single Sign-On](https://dashboard.mintlify.com/settings/organization/sso) 页面。
+    2. 点击 **Configure**。
+    3. 选择 **Okta SAML**。
+    4. 复制 **Single sign on URL** 和 **Audience URI**。
+  </Step>
+  <Step title="在 Okta 中创建 SAML 应用">
+    1. 在 Okta 中，在 **Applications** 中使用 SAML 2.0 创建一个新的应用集成。
+    2. 输入来自 Mintlify 的以下信息：
+        * **Single sign on URL**：你从 Mintlify 控制台复制的 URL
+        * **Audience URI**：你从 Mintlify 控制台复制的 URI
+        * **Name ID Format**：`EmailAddress`
+
+    4. 添加以下属性声明：
+
+        | Name | Name format | Value |
+        | ---- | ----------- | ----- |
+        | `firstName` | Basic | `user.firstName` |
+        | `lastName` | Basic | `user.lastName` |
+  </Step>
+  <Step title="复制 Okta metadata URL">
+    在 Okta 中，进入你的应用的 **Sign On** 标签页，然后复制 metadata URL。
+  </Step>
+  <Step title="在 Mintlify 中保存">
+    回到 Mintlify 控制台，粘贴 metadata URL，然后点击 **保存更改**。
+  </Step>
+</Steps>
+
+<div id="microsoft-entra">
+  ### Microsoft Entra
+</div>
+
+<Steps>
+  <Step title="在 Mintlify 控制台中配置 Microsoft Entra SSO">
+    1. 在 Mintlify 控制台中，导航到 [Single Sign-On](https://dashboard.mintlify.com/settings/organization/sso) 页面。
+    2. 点击 **Configure**。
+    3. 选择 **Microsoft Entra ID SAML**。
+    4. 复制 **Single sign on URL** 和 **Audience URI**。
+  </Step>
+  <Step title="在 Microsoft Entra 中创建企业应用程序">
+    1. 在 Microsoft Entra 中，导航到 **Enterprise applications**。
+    2. 选择 **New application**。
+    3. 选择 **Create your own application**。
+    4. 选择 “Integrate any other application you don't find in the gallery (Non-gallery)”。
+  </Step>
+  <Step title="在 Microsoft Entra 中配置 SAML">
+    1. 在 Microsoft Entra 中，导航到 **Single Sign-On**。
+    2. 选择 **SAML**。
+    3. 在 **Basic SAML Configuration** 下，输入以下内容：
+        * **Identifier (Entity ID)**：来自 Mintlify 的 Audience URI
+        * **Reply URL (Assertion Consumer Service URL)**：来自 Mintlify 的 Single sign on URL
+
+    将其他值留空，然后选择 **Save**。
+  </Step>
+  <Step title="在 Microsoft Entra 中配置 Attributes & Claims">
+    1. 在 Microsoft Entra 中，导航到 **Attributes & Claims**。
+    2. 在 “Required Claim” 下选择 **Unique User Identifier (Name ID)**。
+    3. 将 Source 属性更改为 `user.primaryauthoritativeemail`。
+    4. 在 **Additional claims** 下创建以下内容：
+        | 名称 | 值 |
+        | ---- | ----- |
+        | `firstName` | `user.givenname` |
+        | `lastName` | `user.surname` |
+  </Step>
+  <Step title="复制 Microsoft Entra metadata URL">
+    在 **SAML Certificates** 下，复制 **App Federation Metadata URL**。
+  </Step>
+  <Step title="在 Mintlify 中保存">
+    返回 Mintlify 控制台，粘贴 metadata URL 并点击 **保存更改**。
+  </Step>
+  <Step title="分配用户">
+    在 Microsoft Entra 中，导航到 **Users and groups**，为需要访问 Mintlify 控制台的用户进行分配。
+  </Step>
+</Steps>
+
+<div id="jit-provisioning">
+  ## JIT 即时预配
+</div>
+
+当你启用 JIT（Just-in-time，即时）预配时，通过你的身份提供商登录的用户会被自动添加到你的 Mintlify 组织中。
+
+<Note>
+  JIT 预配仅适用于由 IdP 发起的登录。用户必须从你的身份提供商（Okta 控制台或 Microsoft Entra 门户）发起登录，而不是从 Mintlify 登录页面开始。
+</Note>
+
+要启用 JIT 预配，你必须先启用 SSO。前往控制台中的 [Single Sign-On](https://dashboard.mintlify.com/settings/organization/sso) 页面，完成 SSO 设置，然后启用 JIT 预配。
+
+<div id="map-rbac-roles-with-saml-groups">
+  ## 将 RBAC 角色映射到 SAML 组
+</div>
+
+根据用户在身份提供商中的组成员身份分配[角色](/zh/dashboard/roles)。当用户通过 SSO 登录时，Mintlify 会读取 SAML 断言中的 `groups` 属性，并将这些组映射到控制台角色。
+
+<div id="configure-group-attribute-statements">
+  ### 配置组属性声明
+</div>
+
+在你的 SAML 身份提供商配置中添加 `groups` 属性声明。该属性必须使用 `unspecified` 名称格式。
+
+生成的 SAML 断言应包含一个 `AttributeStatement`。
+
+```xml Example SAML assertion
+<saml2:AttributeStatement xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
+    <saml2:Attribute Name="groups" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified">
+        <saml2:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                              xsi:type="xs:string">Everyone</saml2:AttributeValue>
+        <saml2:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                              xsi:type="xs:string">Engineering</saml2:AttributeValue>
+        <saml2:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                              xsi:type="xs:string">Admins</saml2:AttributeValue>
+    </saml2:Attribute>
+</saml2:AttributeStatement>
+```
+
+**关键要求：**
+- 属性名称必须为 `groups`（区分大小写）
+- 名称格式必须为 `urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified`
+- 用户所属的每个组应为单独的 `AttributeValue` 元素
+
+<Tabs>
+  <Tab title="Okta">
+    在你的 Okta SAML 应用配置中，添加一个组属性声明：
+
+    | Name | Name format | Filter | Value |
+    | ---- | ----------- | ------ | ----- |
+    | `groups` | Unspecified | Matches regex | `.*` |
+
+    调整过滤器以匹配你希望发送到 Mintlify 的特定组。
+  </Tab>
+  <Tab title="Microsoft Entra">
+    在你的 Microsoft Entra 企业应用中：
+
+    1. 导航到 **Single Sign-On** > **Attributes & Claims**。
+    2. 选择 **Add a group claim**。
+    3. 选择要包含的组（所有组或特定组）。
+    4. 在 **Advanced options** 下，勾选 **Customize the name of the group claim** 并将名称设置为 `groups`。
+  </Tab>
+</Tabs>
+
+配置完成后，Mintlify 会将 SAML 断言中的组名称映射到你组织中的角色。要设置或修改组到角色的映射，请联系你的 Mintlify 客户代表。
+
+<div id="change-or-remove-sso-provider">
+  ## 更改或移除 SSO 提供商
+</div>
+
+1. 在控制台中前往 [Single Sign-On](https://dashboard.mintlify.com/settings/organization/sso) 页面。
+2. 点击 **Configure**。
+3. 选择你的首选 SSO 提供商，或选择不使用 SSO。
+
+如果你移除了 SSO，用户必须改为通过密码、magic link 或 Google OAuth 进行身份验证。
+
+<div id="other-providers">
+  ## 其他提供商
+</div>
+
+如果你使用 Microsoft Entra 或 Okta SAML 之外的其他提供商，请[联系我们](mailto:support@mintlify.com)以配置 SSO。
+
+<div id="google-workspace-with-saml">
+  ### 使用 SAML 的 Google Workspace
+</div>
+
+<Steps>
+  <Step title="创建应用">
+    1. 在 Google Workspace 中，进入 **Web and mobile apps**。
+    2. 从 **Add app** 下拉菜单中选择 **Add custom SAML app**。
+
+    <Frame>
+      ![Google Workspace SAML 应用创建页面的截图，其中高亮显示了“Add custom SAML app”菜单项](/images/gsuite-add-custom-saml-app.png)
+    </Frame>
+  </Step>
+
+  <Step title="向我们提供 IdP 信息">
+    复制提供的 SSO URL、Entity ID 和 x509 证书，并发送给 Mintlify 团队。
+
+    <Frame>
+      ![Google Workspace SAML 应用页面的截图，其中高亮显示了 SSO URL、Entity ID 和 x509 证书。每项的具体值均已模糊处理。](/images/gsuite-saml-metadata.png)
+    </Frame>
+  </Step>
+
+  <Step title="配置集成">
+    在 Service provider details 页面中，填写以下内容：
+
+    * ACS URL (由 Mintlify 提供) 
+    * Entity ID (由 Mintlify 提供) 
+    * Name ID format: `EMAIL`
+    * Name ID: `Basic Information > Primary email`
+
+    <Frame>
+      ![Service provider details 页面截图，其中高亮显示了 ACS URL 和 Entity ID 输入字段。](/images/gsuite-sp-details.png)
+    </Frame>
+
+    在下一页，输入以下属性声明：
+
+    | Google Directory Attribute | App Attribute |
+    | -------------------------- | ------------- |
+    | `First name`               | `firstName`   |
+    | `Last name`                | `lastName`    |
+
+    完成此步骤并将用户分配到该应用后，请告知我们的团队，我们将为您的账号启用 SSO。
+  </Step>
+</Steps>
+
+<div id="okta-oidc">
+  ### Okta (OIDC)
+</div>
+
+<Steps>
+  <Step title="创建应用">
+    在 Okta 的 **Applications** 中，创建一个使用 OIDC 的新应用集成。请选择 **Web Application** 应用类型。
+  </Step>
+  <Step title="配置集成">
+    选择授权码（authorization code）授权类型，并输入由 Mintlify 提供的重定向 URI（Redirect URI）。
+  </Step>
+  <Step title="将你的 IdP 信息发送给我们">
+    前往 **General** 标签页，找到 Client ID 和 Client Secret。请将这些信息以及你的 Okta 实例 URL（例如，`<your-tenant-name>.okta.com`）以安全方式提供给我们。你可以通过 1Password 或 SendSafely 等服务发送。
+  </Step>
+</Steps>

@@ -1,0 +1,19 @@
+{
+  "name": "result-bitable-reporter-skill",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Skill-local CLI for filtering SQLite capture results and reporting to Feishu Bitable.",
+  "scripts": {
+    "report": "tsx scripts/result_reporter.ts report",
+    "filter": "tsx scripts/result_reporter.ts filter",
+    "retry-reset": "tsx scripts/result_reporter.ts retry-reset"
+  },
+  "dependencies": {
+    "commander": "^13.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.1",
+    "typescript": "^5.8.2",
+    "tsx": "^4.20.3"
+  }
+}

@@ -1,0 +1,226 @@
+---
+name: cook-fast
+version: 1.0.0
+description: '[Implementation] Fast implementation - skip research, minimal planning'
+---
+
+> **[IMPORTANT]** Use `TaskCreate` to break ALL work into small tasks BEFORE starting — including tasks for each file read. This prevents context loss from long files. For simple tasks, AI MUST ATTENTION ask user whether to skip.
+
+<!-- SYNC:understand-code-first -->
+
+> **Understand Code First** — HARD-GATE: Do NOT write, plan, or fix until you READ existing code.
+>
+> 1. Search 3+ similar patterns (`grep`/`glob`) — cite `file:line` evidence
+> 2. Read existing files in target area — understand structure, base classes, conventions
+> 3. Run `python .claude/scripts/code_graph trace <file> --direction both --json` when `.code-graph/graph.db` exists
+> 4. Map dependencies via `connections` or `callers_of` — know what depends on your target
+> 5. Write investigation to `.ai/workspace/analysis/` for non-trivial tasks (3+ files)
+> 6. Re-read analysis file before implementing — never work from memory alone
+> 7. NEVER invent new patterns when existing ones work — match exactly or document deviation
+>
+> **BLOCKED until:** `- [ ]` Read target files `- [ ]` Grep 3+ patterns `- [ ]` Graph trace (if graph.db exists) `- [ ]` Assumptions verified with evidence
+
+<!-- /SYNC:understand-code-first -->
+
+- `docs/project-reference/domain-entities-reference.md` — Domain entity catalog, relationships, cross-service sync (read when task involves business entities/models) (content auto-injected by hook — check for [Injected: ...] header before reading)
+- `docs/test-specs/` — Test specifications by module (read existing TCs; generate/update test specs via `/tdd-spec` after implementation)
+
+<!-- SYNC:plan-quality -->
+
+> **Plan Quality** — Every plan phase MUST ATTENTION include test specifications.
+>
+> 1. Add `## Test Specifications` section with TC-{FEAT}-{NNN} IDs to every phase file
+> 2. Map every functional requirement to ≥1 TC (or explicit `TBD` with rationale)
+> 3. TC IDs follow `TC-{FEATURE}-{NNN}` format — reference by ID, never embed full content
+> 4. Before any new workflow step: call `TaskList` and re-read the phase file
+> 5. On context compaction: call `TaskList` FIRST — never create duplicate tasks
+> 6. Verify TC satisfaction per phase before marking complete (evidence must be `file:line`, not TBD)
+>
+> **Mode:** TDD-first → reference existing TCs with `Evidence: TBD`. Implement-first → use TBD → `/tdd-spec` fills after.
+
+<!-- /SYNC:plan-quality -->
+
+<!-- SYNC:rationalization-prevention -->
+
+> **Rationalization Prevention** — AI skips steps via these evasions. Recognize and reject:
+>
+> | Evasion                      | Rebuttal                                                      |
+> | ---------------------------- | ------------------------------------------------------------- |
+> | "Too simple for a plan"      | Simple + wrong assumptions = wasted time. Plan anyway.        |
+> | "I'll test after"            | RED before GREEN. Write/verify test first.                    |
+> | "Already searched"           | Show grep evidence with `file:line`. No proof = no search.    |
+> | "Just do it"                 | Still need TaskCreate. Skip depth, never skip tracking.       |
+> | "Just a small fix"           | Small fix in wrong location cascades. Verify file:line first. |
+> | "Code is self-explanatory"   | Future readers need evidence trail. Document anyway.          |
+> | "Combine steps to save time" | Combined steps dilute focus. Each step has distinct purpose.  |
+
+<!-- /SYNC:rationalization-prevention -->
+
+<!-- SYNC:red-flag-stop-conditions -->
+
+> **Red Flag Stop Conditions** — STOP and escalate to user via AskUserQuestion when:
+>
+> 1. Confidence drops below 60% on any critical decision
+> 2. Changes would affect >20 files (blast radius too large)
+> 3. Cross-service boundary is being crossed
+> 4. Security-sensitive code (auth, crypto, PII handling)
+> 5. Breaking change detected (interface, API contract, DB schema)
+> 6. Test coverage would decrease after changes
+> 7. Approach requires technology/pattern not in the project
+>
+> **NEVER proceed past a red flag without explicit user approval.**
+
+<!-- /SYNC:red-flag-stop-conditions -->
+
+> **Skill Variant:** Variant of `/cook` — fast implementation skipping research with minimal planning.
+
+## Quick Summary
+
+**Goal:** Implement features quickly with minimal research and streamlined planning.
+
+**Workflow:**
+
+1. **Scout** — Quick codebase scan for patterns
+2. **Plan** — Lightweight implementation plan
+3. **Implement** — Execute with code-simplifier review
+
+**Key Rules:**
+
+- Skip deep research; rely on codebase patterns
+- Still requires user approval before implementing
+- Break work into todo tasks; add final self-review task
+
+### Frontend/UI Context (if applicable)
+
+> When this task involves frontend or UI changes,
+
+<!-- SYNC:ui-system-context -->
+
+> **UI System Context** — For ANY task touching `.ts`, `.html`, `.scss`, or `.css` files:
+>
+> **MUST ATTENTION READ before implementing:**
+>
+> 1. `docs/project-reference/frontend-patterns-reference.md` — component base classes, stores, forms
+> 2. `docs/project-reference/scss-styling-guide.md` — BEM methodology, SCSS variables, mixins, responsive
+> 3. `docs/project-reference/design-system/README.md` — design tokens, component inventory, icons
+>
+> Reference `docs/project-config.json` for project-specific paths.
+
+<!-- /SYNC:ui-system-context -->
+
+- Component patterns: `docs/project-reference/frontend-patterns-reference.md`
+- Styling/BEM guide: `docs/project-reference/scss-styling-guide.md`
+- Design system tokens: `docs/project-reference/design-system/README.md`
+
+**Be skeptical. Apply critical thinking, sequential thinking. Every claim needs traced proof, confidence percentages (Idea should be more than 80%).**
+
+Start working on these tasks immediately with minimal planning:
+<tasks>$ARGUMENTS</tasks>
+
+**Mode:** FAST - Skip research, minimal planning, trust your knowledge.
+
+## Workflow
+
+1. **Quick Planning** (skip research phase)
+    - Analyze task requirements directly
+    - Create minimal todo list with `TaskCreate`
+    - NO researcher subagents, NO scout commands
+    - For non-trivial tasks: write brief analysis to `.ai/workspace/analysis/{task-name}.analysis.md` before implementing.
+
+<!-- SYNC:graph-assisted-investigation -->
+
+> **Graph-Assisted Investigation** — MANDATORY when `.code-graph/graph.db` exists.
+>
+> **HARD-GATE:** MUST ATTENTION run at least ONE graph command on key files before concluding any investigation.
+>
+> **Pattern:** Grep finds files → `trace --direction both` reveals full system flow → Grep verifies details
+>
+> | Task                | Minimum Graph Action                         |
+> | ------------------- | -------------------------------------------- |
+> | Investigation/Scout | `trace --direction both` on 2-3 entry files  |
+> | Fix/Debug           | `callers_of` on buggy function + `tests_for` |
+> | Feature/Enhancement | `connections` on files to be modified        |
+> | Code Review         | `tests_for` on changed functions             |
+> | Blast Radius        | `trace --direction downstream`               |
+>
+> **CLI:** `python .claude/scripts/code_graph {command} --json`. Use `--node-mode file` first (10-30x less noise), then `--node-mode function` for detail.
+
+<!-- /SYNC:graph-assisted-investigation -->
+
+> After implementing, run `python .claude/scripts/code_graph connections <file> --json` on modified files to verify no related files need updates.
+
+### Graph-Trace Quick Check
+
+When graph DB is available, run a quick downstream trace before implementing:
+
+- `python .claude/scripts/code_graph trace <file-to-modify> --direction downstream --json` — fast check for downstream impact
+
+2. **Rapid Implementation**
+    - Use `/code` directly on tasks
+    - Skip multi-step planning documents
+    - Focus on working code over documentation
+
+3. **Quick Validation**
+    - Run type-check and compile
+    - Manual spot-check over full test suite
+    - Skip code-reviewer subagent
+
+4. **Commit** (optional)
+    - Ask user if ready to commit via `AskUserQuestion`
+    - If yes, use `/commit`
+
+## When to Use
+
+- Simple features with clear requirements
+- Bug fixes with known solutions
+- Refactoring tasks
+- When user says "just do it"
+
+## Trade-offs
+
+| Aspect   | Fast Mode   | Full Mode       |
+| -------- | ----------- | --------------- |
+| Research | Skipped     | Multiple agents |
+| Planning | Minimal     | Full plan docs  |
+| Testing  | Quick check | Full test suite |
+| Review   | Skipped     | Code-reviewer   |
+| Speed    | ~2x faster  | Thorough        |
+
+---
+
+## Next Steps (Standalone: MUST ATTENTION ask user via `AskUserQuestion`. Skip if inside workflow.)
+
+> **MANDATORY IMPORTANT MUST ATTENTION — NO EXCEPTIONS:** If this skill was called **outside a workflow**, you MUST ATTENTION use `AskUserQuestion` to present these options. Do NOT skip because the task seems "simple" or "obvious" — the user decides:
+
+- **"Proceed with full workflow (Recommended)"** — I'll detect the best workflow to continue from here (feature implemented). This ensures review, testing, and docs steps aren't skipped.
+- **"/code-simplifier"** — Simplify and clean up implementation
+- **"/workflow-review-changes"** — Review changes before commit
+- **"Skip, continue manually"** — user decides
+
+> If already inside a workflow, skip — the workflow handles sequencing.
+
+## Closing Reminders
+
+- **MANDATORY IMPORTANT MUST ATTENTION** break work into small todo tasks using `TaskCreate` BEFORE starting
+- **MANDATORY IMPORTANT MUST ATTENTION** search codebase for 3+ similar patterns before creating new code
+- **MANDATORY IMPORTANT MUST ATTENTION** cite `file:line` evidence for every claim (confidence >80% to act)
+- **MANDATORY IMPORTANT MUST ATTENTION** add a final review todo task to verify work quality
+- **MANDATORY IMPORTANT MUST ATTENTION** validate decisions with user via `AskUserQuestion` — never auto-decide
+      <!-- SYNC:understand-code-first:reminder -->
+- **MANDATORY IMPORTANT MUST ATTENTION** search 3+ existing patterns and read code BEFORE any modification. Run graph trace when graph.db exists.
+  <!-- /SYNC:understand-code-first:reminder -->
+  <!-- SYNC:plan-quality:reminder -->
+- **MANDATORY IMPORTANT MUST ATTENTION** include `## Test Specifications` with TC IDs per phase. Call `TaskList` before creating new tasks.
+  <!-- /SYNC:plan-quality:reminder -->
+  <!-- SYNC:rationalization-prevention:reminder -->
+- **MANDATORY IMPORTANT MUST ATTENTION** follow ALL steps regardless of perceived simplicity. "Too simple to plan" is an evasion, not a reason.
+  <!-- /SYNC:rationalization-prevention:reminder -->
+  <!-- SYNC:red-flag-stop-conditions:reminder -->
+- **MANDATORY IMPORTANT MUST ATTENTION** STOP after 3 failed fix attempts. Report all attempts, ask user before continuing.
+  <!-- /SYNC:red-flag-stop-conditions:reminder -->
+  <!-- SYNC:ui-system-context:reminder -->
+- **MANDATORY IMPORTANT MUST ATTENTION** read frontend-patterns-reference, scss-styling-guide, design-system/README before any UI change.
+  <!-- /SYNC:ui-system-context:reminder -->
+  <!-- SYNC:graph-assisted-investigation:reminder -->
+- **MANDATORY IMPORTANT MUST ATTENTION** run at least ONE graph command on key files when graph.db exists. Pattern: grep → graph trace → grep verify.
+      <!-- /SYNC:graph-assisted-investigation:reminder -->

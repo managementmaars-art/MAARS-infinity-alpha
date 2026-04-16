@@ -1,0 +1,15 @@
+from __future__ import annotations
+
+import pytest
+
+from {{MODULE}} import {{CLASS_NAME}}
+
+@pytest.mark.asyncio
+async def test_dashboard_filter_flow() -> None:
+    app = {{CLASS_NAME}}()
+    async with app.run_test(size=(100, 30)) as pilot:
+        await pilot.click("#filter")
+        await pilot.press("q", "u", "e", "u", "e")
+        await pilot.pause()
+        table = app.query_one("#table")
+        assert table.row_count == 1

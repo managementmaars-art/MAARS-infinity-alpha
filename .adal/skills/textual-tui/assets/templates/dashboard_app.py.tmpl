@@ -1,0 +1,90 @@
+from __future__ import annotations
+
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal, Vertical
+from textual.widgets import DataTable, Footer, Header, Input, Log, Static
+
+ROWS = [
+    ("api-gateway", "healthy", "42 ms", "platform"),
+    ("queue-worker", "healthy", "77 ms", "ops"),
+    ("billing", "degraded", "240 ms", "finance"),
+    ("search", "healthy", "54 ms", "product"),
+    ("notifications", "incident", "—", "engage"),
+]
+
+
+class {{CLASS_NAME}}(App):
+    CSS_PATH = "{{MODULE}}.tcss"
+    TITLE = "{{APP_TITLE}}"
+    SUB_TITLE = "Service dashboard"
+    BINDINGS = [
+        ("slash", "focus_filter", "Filter"),
+        ("r", "reload_data", "Reload"),
+    ]
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Input(placeholder="Filter services…", id="filter")
+        with Horizontal(id="body"):
+            yield DataTable(id="table")
+            with Vertical(id="side"):
+                yield Static("Select a row to inspect it.", id="details")
+                yield Log(id="events")
+        yield Footer()
+
+    def on_mount(self) -> None:
+        table = self.query_one("#table", DataTable)
+        table.cursor_type = "row"
+        table.add_columns("Service", "Status", "Latency", "Owner")
+        self.load_rows(ROWS)
+        self.query_one("#filter", Input).focus()
+
+    def load_rows(self, rows) -> None:
+        table = self.query_one("#table", DataTable)
+        table.clear(columns=False)
+        table.add_rows(rows)
+        self.sub_title = "{0} rows".format(len(rows))
+        log = self.query_one("#events", Log)
+        log.write_line("Loaded {0} rows".format(len(rows)))
+
+    def filtered_rows(self, query: str):
+        query = query.strip().lower()
+        if not query:
+            return ROWS
+        return [row for row in ROWS if query in " ".join(row).lower()]
+
+    def on_input_changed(self, event: Input.Changed) -> None:
+        if event.input.id == "filter":
+            self.load_rows(self.filtered_rows(event.value))
+
+    def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
+        table = self.query_one("#table", DataTable)
+        service, status, latency, owner = table.get_row(event.row_key)
+        self.query_one("#details", Static).update(
+            "\n".join(
+                [
+                    "Service: {0}".format(service),
+                    "Status:  {0}".format(status),
+                    "Latency: {0}".format(latency),
+                    "Owner:   {0}".format(owner),
+                ]
+            )
+        )
+        self.query_one("#events", Log).write_line(
+            "Selected {0} ({1})".format(service, status)
+        )
+
+    def action_focus_filter(self) -> None:
+        self.query_one("#filter", Input).focus()
+
+    def action_reload_data(self) -> None:
+        self.query_one("#filter", Input).value = ""
+        self.load_rows(ROWS)
+
+
+def main() -> None:
+    {{CLASS_NAME}}().run()
+
+
+if __name__ == "__main__":
+    main()

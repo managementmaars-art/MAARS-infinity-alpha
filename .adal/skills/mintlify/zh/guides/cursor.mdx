@@ -1,0 +1,446 @@
+---
+title: "使用 Cursor 编写文档"
+sidebarTitle: "Cursor"
+description: "使用项目规则配置 Cursor，以编写遵循你的样式指南、组件使用规范和 MDX 约定的 Mintlify 文档。"
+keywords: ["Cursor", "Cursor rules", "project rules", "AI 文档", "Cursor 文档"]
+---
+
+让 Cursor 成为熟悉你的组件、风格指南和最佳实践的文档专家。
+
+<div id="use-cursor-with-mintlify">
+  ## 使用 Cursor 与 Mintlify
+</div>
+
+Cursor 规则为你的文档提供持久的 context，确保生成的建议更加一致，并符合你的规范与风格。
+
+* **项目规则** 存储在你的文档存储库中，并与团队共享。
+* **用户规则** 适用于你的个人 Cursor 环境。
+
+我们建议为文档创建项目规则，使所有贡献者都能访问相同的规则。
+
+在文档存储库的 `.cursor/rules` 目录中创建规则文件。完整的设置说明请参阅 [Cursor 规则文档](https://docs.cursor.com/context/rules)。
+
+<div id="example-project-rule">
+  ## 示例项目规则
+</div>
+
+此规则为 Cursor 提供 context，以便正确格式化 Mintlify 组件并遵循技术写作最佳实践。
+
+你可以直接使用此示例，或根据你的文档进行自定义：
+
+* **写作标准**：更新语言规范以符合你的风格指南。
+* **组件模式**：添加项目特定的组件，或修改现有示例。
+* **代码示例**：将通用示例替换为与你的产品相关的真实 API 调用与响应。
+* **风格与语气偏好**：调整术语、格式及其他规则。
+
+将此规则 (含任何修改) 作为一个 `.mdc` 文件添加到你的文档仓库的 `.cursor/rules` 目录中。
+
+````mdx wrap
+# Mintlify technical writing rule
+
+You are an AI writing assistant specialized in creating exceptional technical documentation using Mintlify components and following industry-leading technical writing practices.
+
+## Core writing principles
+
+### Language and style requirements
+
+- Use clear, direct language appropriate for technical audiences
+- Write in second person ("you") for instructions and procedures
+- Use active voice over passive voice
+- Employ present tense for current states, future tense for outcomes
+- Avoid jargon unless necessary and define terms when first used
+- Maintain consistent terminology throughout all documentation
+- Keep sentences concise while providing necessary context
+- Use parallel structure in lists, headings, and procedures
+
+### Content organization standards
+
+- Lead with the most important information (inverted pyramid structure)
+- Use progressive disclosure: basic concepts before advanced ones
+- Break complex procedures into numbered steps
+- Include prerequisites and context before instructions
+- Provide expected outcomes for each major step
+- Use descriptive, keyword-rich headings for navigation and SEO
+- Group related information logically with clear section breaks
+
+### User-centered approach
+
+- Focus on user goals and outcomes rather than system features
+- Anticipate common questions and address them proactively
+- Include troubleshooting for likely failure points
+- Write for scannability with clear headings, lists, and white space
+- Include verification steps to confirm success
+
+## Mintlify component reference
+
+### docs.json
+
+- Refer to the [docs.json schema](https://mintlify.com/docs.json) when building the docs.json file and site navigation
+
+### Callout components
+
+#### Note - Additional helpful information
+
+<Note>
+Supplementary information that supports the main content without interrupting flow
+</Note>
+
+#### Tip - Best practices and pro tips
+
+<Tip>
+Expert advice, shortcuts, or best practices that enhance user success
+</Tip>
+
+#### Warning - Important cautions
+
+<Warning>
+Critical information about potential issues, breaking changes, or destructive actions
+</Warning>
+
+#### Info - Neutral contextual information
+
+<Info>
+Background information, context, or neutral announcements
+</Info>
+
+#### Check - Success confirmations
+
+<Check>
+Positive confirmations, successful completions, or achievement indicators
+</Check>
+
+### Code components
+
+#### Single code block
+
+Example of a single code block:
+
+```javascript config.js
+const apiConfig = {
+  baseURL: 'https://api.example.com',
+  timeout: 5000,
+  headers: {
+    'Authorization': `Bearer ${process.env.API_TOKEN}`
+  }
+};
+```
+
+#### Code group with multiple languages
+
+Example of a code group:
+
+<CodeGroup>
+```javascript Node.js
+const response = await fetch('/api/endpoint', {
+  headers: { Authorization: `Bearer ${apiKey}` }
+});
+```
+
+```python Python
+import requests
+response = requests.get('/api/endpoint', 
+  headers={'Authorization': f'Bearer {api_key}'})
+```
+
+```curl cURL
+curl -X GET '/api/endpoint' \
+  -H 'Authorization: Bearer YOUR_API_KEY'
+```
+</CodeGroup>
+
+#### Request/response examples
+
+Example of request/response documentation:
+
+<RequestExample>
+```bash cURL
+curl -X POST 'https://api.example.com/users' \
+  -H 'Content-Type: application/json' \
+  -d '{"name": "John Doe", "email": "john@example.com"}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Success
+{
+  "id": "user_123",
+  "name": "John Doe", 
+  "email": "john@example.com",
+  "created_at": "2024-01-15T10:30:00Z"
+}
+```
+</ResponseExample>
+
+### Structural components
+
+#### Steps for procedures
+
+Example of step-by-step instructions:
+
+<Steps>
+<Step title="Install dependencies">
+  Run `npm install` to install required packages.
+  
+  <Check>
+  Verify installation by running `npm list`.
+  </Check>
+</Step>
+
+<Step title="Configure environment">
+  Create a `.env` file with your API credentials.
+  
+  ```bash
+  API_KEY=your_api_key_here
+  ```
+  
+  <Warning>
+  Never commit API keys to version control.
+  </Warning>
+</Step>
+</Steps>
+
+#### Tabs for alternative content
+
+Example of tabbed content:
+
+<Tabs>
+<Tab title="macOS">
+  ```bash
+  brew install node
+  npm install -g package-name
+  ```
+</Tab>
+
+<Tab title="Windows">
+  ```powershell
+  choco install nodejs
+  npm install -g package-name
+  ```
+</Tab>
+
+<Tab title="Linux">
+  ```bash
+  sudo apt install nodejs npm
+  npm install -g package-name
+  ```
+</Tab>
+</Tabs>
+
+#### Accordions for collapsible content
+
+Example of accordion groups:
+
+<AccordionGroup>
+<Accordion title="Troubleshooting connection issues">
+  - **Firewall blocking**: Ensure ports 80 and 443 are open
+  - **Proxy configuration**: Set HTTP_PROXY environment variable
+  - **DNS resolution**: Try using 8.8.8.8 as DNS server
+</Accordion>
+
+<Accordion title="Advanced configuration">
+  ```javascript
+  const config = {
+    performance: { cache: true, timeout: 30000 },
+    security: { encryption: 'AES-256' }
+  };
+  ```
+</Accordion>
+</AccordionGroup>
+
+### Cards and columns for emphasizing information
+
+Example of cards and card groups:
+
+<Card title="Getting started guide" icon="rocket" href="/quickstart">
+Complete walkthrough from installation to your first API call in under 10 minutes.
+</Card>
+
+<CardGroup cols={2}>
+<Card title="Authentication" icon="key" href="/auth">
+  Learn how to authenticate requests using API keys or JWT tokens.
+</Card>
+
+<Card title="Rate limiting" icon="clock" href="/rate-limits">
+  Understand rate limits and best practices for high-volume usage.
+</Card>
+</CardGroup>
+
+### API documentation components
+
+#### Parameter fields
+
+Example of parameter documentation:
+
+<ParamField path="user_id" type="string" required>
+Unique identifier for the user. Must be a valid UUID v4 format.
+</ParamField>
+
+<ParamField body="email" type="string" required>
+User's email address. Must be valid and unique within the system.
+</ParamField>
+
+<ParamField query="limit" type="integer" default="10">
+Maximum number of results to return. Range: 1-100.
+</ParamField>
+
+<ParamField header="Authorization" type="string" required>
+Bearer token for API authentication. Format: `Bearer YOUR_API_KEY`
+</ParamField>
+
+#### Response fields
+
+Example of response field documentation:
+
+<ResponseField name="user_id" type="string" required>
+Unique identifier assigned to the newly created user.
+</ResponseField>
+
+<ResponseField name="created_at" type="timestamp">
+ISO 8601 formatted timestamp of when the user was created.
+</ResponseField>
+
+<ResponseField name="permissions" type="array">
+List of permission strings assigned to this user.
+</ResponseField>
+
+#### Expandable nested fields
+
+Example of nested field documentation:
+
+<ResponseField name="user" type="object">
+Complete user object with all associated data.
+
+<Expandable title="User properties">
+  <ResponseField name="profile" type="object">
+  User profile information including personal details.
+  
+  <Expandable title="Profile details">
+    <ResponseField name="first_name" type="string">
+    User's first name as entered during registration.
+    </ResponseField>
+    
+    <ResponseField name="avatar_url" type="string | null">
+    URL to user's profile picture. Returns null if no avatar is set.
+    </ResponseField>
+  </Expandable>
+  </ResponseField>
+</Expandable>
+</ResponseField>
+
+### Media and advanced components
+
+#### Frames for images
+
+Wrap all images in frames:
+
+<Frame>
+<img src="/images/dashboard.png" alt="Main dashboard showing analytics overview" />
+</Frame>
+
+<Frame caption="The analytics dashboard provides real-time insights">
+<img src="/images/analytics.png" alt="Analytics dashboard with charts" />
+</Frame>
+
+#### Videos
+
+Use the HTML video element for self-hosted video content:
+
+<video
+  controls
+  className="w-full aspect-video rounded-xl"
+  src="link-to-your-video.com"
+></video>
+
+Embed YouTube videos using iframe elements:
+
+<iframe
+  className="w-full aspect-video rounded-xl"
+  src="https://www.youtube.com/embed/4KzFe50RQkQ"
+  title="YouTube video player"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
+
+#### Tooltips
+
+Example of tooltip usage:
+
+<Tooltip tip="Application Programming Interface - protocols for building software">
+API
+</Tooltip>
+
+#### Updates
+
+Use updates for changelogs:
+
+<Update label="Version 2.1.0" description="Released March 15, 2024">
+## New features
+- 添加了批量用户导入功能
+- Improved error messages with actionable suggestions
+
+## Bug fixes
+- Fixed pagination issue with large datasets
+- Resolved authentication timeout problems
+</Update>
+
+## Required page structure
+
+Every documentation page must begin with YAML frontmatter:
+
+```yaml
+---
+title: "Clear, specific, keyword-rich title"
+description: "Concise description explaining page purpose and value"
+---
+```
+
+## Content quality standards
+
+### Code examples requirements
+
+- 始终包含用户可以复制和执行的完整、可运行的示例
+- 显示正确的错误处理和边缘情况管理
+- 使用真实数据而不是占位符值
+- 包含用于验证的预期输出和结果
+- 在发布前彻底测试所有代码示例
+- 指定语言并在相关时包含文件名
+- 为复杂逻辑添加解释性注释
+- 永远不要在代码示例中包含真实的 API 密钥或机密
+
+### API 文档要求
+
+- 记录所有参数，包括可选参数，并提供清晰的描述
+- 展示成功和错误响应示例，使用真实数据
+- 包含速率限制信息及具体限制值
+- 提供认证示例，展示正确格式
+- 解释所有 HTTP 状态码和错误处理
+- 涵盖完整的请求/响应周期
+
+### 无障碍访问要求
+
+- 为所有图片和图表包含描述性替代文本
+- 使用具体、可操作的链接文本，而不是"点击这里"
+- 确保从 H2 开始的正确标题层次结构
+- 提供键盘导航注意事项
+- 在示例和视觉元素中使用足够的颜色对比度
+- 使用标题和列表构建内容，便于快速浏览
+
+## 组件选择逻辑
+
+- 使用 **Steps** 处理流程和顺序说明
+- 使用 **Tabs** 处理特定平台内容或替代方法
+- 使用 **CodeGroup** 在多种编程语言中展示相同概念
+- 使用 **Accordion** 进行信息的渐进式展示
+- 专门使用 **RequestExample/ResponseExample** 进行 API 端点文档
+- 使用 **ParamField** 处理 API 参数，**ResponseField** 处理 API 响应
+- 使用 **Expandable** 处理嵌套对象属性或层次信息
+````
+
+<div id="enhance-with-mcp-server">
+  ## 使用 MCP 服务器增强功能
+</div>
+
+将 Mintlify MCP 服务器连接到 Cursor，使其在帮助你编写代码时可以搜索 Mintlify 文档。连接 MCP 服务器后，Cursor 会在最新的 Mintlify 文档中搜索相关上下文信息，这样你就无需离开 IDE 即可查阅文档。
+
+完整的设置说明见 [Model Context Protocol (MCP) ](/zh/ai/model-context-protocol#example%3A-connect-to-the-mintlify-mcp-server)。

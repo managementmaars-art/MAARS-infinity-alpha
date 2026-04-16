@@ -1,0 +1,14 @@
+{
+  "name": "cass-perf-tests",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "perf": "node run_perf.js",
+    "perf:lighthouse": "node run_perf.js --lighthouse"
+  },
+  "dependencies": {
+    "chrome-launcher": "^1.1.0",
+    "lighthouse": "^12.0.0",
+    "playwright": "^1.50.0"
+  }
+}

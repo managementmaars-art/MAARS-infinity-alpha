@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conversion Sections</title>
+<style>
+  /* ==========================================================================
+     DESIGN SYSTEM & VARIABLES
+     ========================================================================== */
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:ital,wght@0,400;0,500;1,400&display=swap');
+
+  :root {
+    /* Color Palette */
+    --bg: #09090b; /* Very dark zinc */
+    --bg-surface: #18181b; /* Slightly lighter zinc */
+    --bg-surface-elevated: #27272a;
+    
+    --ink: #ffffff;
+    --ink-muted: #a1a1aa;
+    
+    --accent: #d9f99d; /* Lime/Neon Green */
+    --accent-hover: #bef264;
+    --accent-soft: rgba(217, 249, 157, 0.1);
+    
+    --border: #3f3f46;
+
+    /* Typography */
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+
+    /* Spacing & Layout */
+    --container: 1280px;
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  section {
+    padding: 8rem 2rem;
+    position: relative;
+  }
+
+  .container {
+    max-width: var(--container);
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Typography Utilities */
+  .text-display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .text-accent { color: var(--accent); }
+  .text-muted { color: var(--ink-muted); }
+
+  /* Base Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    border-radius: 100px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    border: none;
+    font-size: 1.125rem;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(217, 249, 157, 0.4);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--border);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--ink);
+    background: var(--bg-surface-elevated);
+  }
+
+  <!-- @@VARIANT:PRICING -->
+  /* ==========================================================================
+     SECTION A: PRICING TIERS
+     ========================================================================== */
+  .pricing-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .pricing-header h2 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Toggle UI */
+  .billing-toggle-wrapper {
+    display: inline-flex;
+    align-items: center;
+    background: var(--bg-surface);
+    padding: 0.5rem;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+
+  .billing-toggle-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 100px;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.3s;
+    position: relative;
+    z-index: 2;
+  }
+
+  .billing-toggle-btn.active {
+    color: var(--bg);
+  }
+
+  .toggle-indicator {
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    width: calc(50% - 0.5rem);
+    background: var(--accent);
+    border-radius: 100px;
+    transition: transform 0.4s cubic-bezier(0.85, 0, 0.15, 1);
+    z-index: 1;
+  }
+
+  [data-billing="annual"] .toggle-indicator {
+    transform: translateX(100%);
+  }
+
+  /* Pricing Grid */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  @media (min-width: 992px) {
+    .pricing-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+  }
+
+  .pricing-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.3s ease;
+  }
+
+  .pricing-card:not(.pro) {
+    z-index: 1;
+  }
+
+  @media (min-width: 992px) {
+    .pricing-card:first-child { border-right: none; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+    .pricing-card:last-child { border-left: none; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+  }
+
+  /* Pro Tier Overlay */
+  .pricing-card.pro {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    transform: translateY(-20px) scale(1.02);
+    z-index: 10;
+    box-shadow: 0 30px 60px -12px rgba(217, 249, 157, 0.15);
+    border-radius: var(--radius-xl);
+    padding: 4rem 2.5rem;
+    overflow: hidden;
+  }
+
+  .pricing-card.pro .text-muted { color: rgba(9, 9, 11, 0.6); }
+  .pricing-card.pro .btn { background: var(--bg); color: var(--ink); }
+  .pricing-card.pro .btn:hover { background: var(--bg-surface-elevated); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+  .pricing-card.pro .feature-icon { stroke: var(--bg); background: rgba(9, 9, 11, 0.1); }
+
+  /* Ribbon */
+  .ribbon-wrapper {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+  }
+  .ribbon {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    transform: rotate(45deg);
+    position: relative;
+    padding: 8px 0;
+    left: -5px;
+    top: 25px;
+    width: 170px;
+    background-color: var(--bg);
+    color: var(--accent);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  }
+
+  /* Card Content */
+  .plan-name {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-variant: small-caps;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  .price-wrapper {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+  }
+
+  .price-currency {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-right: 0.25rem;
+    transform: translateY(-1.5rem);
+  }
+
+  .price-amount {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .price-period {
+    margin-left: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .plan-desc {
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    min-height: 3rem;
+  }
+
+  .feature-list {
+    list-style: none;
+    margin-bottom: 3rem;
+    flex-grow: 1;
+  }
+
+  .feature-list li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+
+  .feature-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    stroke: var(--accent);
+    padding: 4px;
+  }
+
+  .pricing-card .btn { width: 100%; }
+
+  <!-- @@/VARIANT:PRICING -->
+
+  <!-- @@VARIANT:TESTIMONIALS -->
+  /* ==========================================================================
+     SECTION B: QUOTE WALL / TESTIMONIALS
+     ========================================================================== */
+  .testimonials-header {
+    margin-bottom: 4rem;
+  }
+
+  .testimonials-header h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    max-width: 600px;
+  }
+
+  .bento-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    grid-auto-flow: dense;
+  }
+
+  @media (min-width: 768px) {
+    .bento-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .bento-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .testimonial-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .testimonial-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(217, 249, 157, 0.06), transparent 40%);
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .testimonial-card:hover::before { opacity: 1; }
+  .testimonial-card:hover { border-color: rgba(217, 249, 157, 0.3); }
+
+  .testimonial-content { position: relative; z-index: 1; }
+
+  /* Asymmetric Layout Rules */
+  @media (min-width: 1024px) {
+    .tc-1 { grid-column: span 2; }
+    .tc-2 { grid-row: span 2; display: flex; flex-direction: column; }
+    .tc-3 { grid-column: span 1; }
+    .tc-4 { grid-column: span 1; }
+    .tc-featured { grid-column: span 2; }
+  }
+
+  .quote-mark {
+    position: absolute;
+    top: -1rem;
+    left: -1rem;
+    font-family: var(--font-display);
+    font-size: 6rem;
+    line-height: 1;
+    color: var(--bg-surface-elevated);
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  .pull-quote {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tc-2 .pull-quote { font-size: clamp(1.3rem, 2vw, 1.8rem); margin-top: auto; margin-bottom: auto; }
+
+  .testimonial-card.featured {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+  }
+
+  .testimonial-card.featured .quote-mark { color: rgba(9, 9, 11, 0.1); }
+  .testimonial-card.featured .pull-quote { font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 700; letter-spacing: -0.02em; }
+  .testimonial-card.featured .text-muted { color: rgba(9, 9, 11, 0.6); }
+
+  .attribution {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--bg-surface-elevated);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--ink-muted);
+  }
+
+  .testimonial-card.featured .avatar { background: rgba(9, 9, 11, 0.1); color: var(--bg); }
+
+  .author-meta { display: flex; flex-direction: column; }
+  .author-name { font-weight: 700; font-size: 1rem; }
+  .author-company { font-size: 0.875rem; }
+
+  <!-- @@/VARIANT:TESTIMONIALS -->
+
+  <!-- @@VARIANT:CTA -->
+  /* ==========================================================================
+     SECTION C: POWER CTA
+     ========================================================================== */
+  .section-cta {
+    padding: 10rem 2rem 8rem;
+    clip-path: polygon(0 8vw, 100% 0, 100% 100%, 0 100%);
+    background: var(--bg-surface);
+    margin-top: -8vw; /* Pull up to overlap */
+    overflow: hidden;
+  }
+
+  /* Radial Glow */
+  .cta-glow {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    width: 80vw;
+    height: 80vw;
+    background: radial-gradient(circle, rgba(217, 249, 157, 0.15) 0%, rgba(217, 249, 157, 0) 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .cta-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  @media (min-width: 992px) {
+    .cta-container {
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+    }
+  }
+
+  .cta-text-wrap { position: relative; }
+
+  .cta-headline {
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-headline span {
+    display: block;
+  }
+
+  .cta-headline .hl-accent {
+    color: var(--accent);
+    font-style: italic;
+    font-weight: 700;
+  }
+
+  .cta-subtext {
+    font-size: clamp(1.1rem, 2vw, 1.25rem);
+    color: var(--ink-muted);
+    max-width: 480px;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* SVG Abstract Arrow */
+  .cta-arrow {
+    position: absolute;
+    right: -100px;
+    bottom: -50px;
+    width: 200px;
+    height: 200px;
+    stroke: var(--accent);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.3;
+    pointer-events: none;
+    display: none;
+  }
+
+  @media (min-width: 992px) {
+    .cta-arrow { display: block; }
+  }
+
+  .cta-actions-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: flex-start;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  @media (min-width: 576px) {
+    .cta-actions {
+      flex-direction: row;
+      align-items: center;
+      width: auto;
+    }
+  }
+
+  .btn-magnetic {
+    position: relative;
+    display: inline-flex;
+    padding: 1.25rem 3rem;
+    font-size: 1.25rem;
+  }
+
+  .btn-ghost {
+    color: var(--ink-muted);
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s;
+  }
+
+  .btn-ghost::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--ink-muted);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+
+  .btn-ghost:hover { color: var(--ink); }
+  .btn-ghost:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+    background: var(--ink);
+  }
+
+  <!-- @@/VARIANT:CTA -->
+</style>
+</head>
+<body>
+
+<!-- @@VARIANT:PRICING -->
+<!-- GSAP: target class .js-pricing-card stagger -->
+<!-- FEATURE: Interactive Pricing Tier logic switching Monthly/Annual values -->
+<section class="section-pricing" id="pricing">
+  <div class="container">
+    <div class="pricing-header">
+      <h2 class="text-display">Transparent pricing.<br><span class="text-accent">Zero surprises.</span></h2>
+      
+      <div class="billing-toggle-wrapper js-billing-toggle" data-billing="monthly">
+        <div class="toggle-indicator"></div>
+        <button class="billing-toggle-btn active" data-target="monthly">Monthly</button>
+        <button class="billing-toggle-btn" data-target="annual">Annually (Save 20%)</button>
+      </div>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Tier 1 -->
+      <div class="pricing-card js-pricing-card">
+        <div class="plan-name text-muted">Hobbyist</div>
+        <div class="price-wrapper">
+          <span class="price-currency">$</span>
+          <span class="price-amount" data-monthly="0" data-annual="0">0</span>
+          <span class="price-period text-muted">/mo</span>
+        </div>
+        <p class="plan-desc text-muted">Perfect for individuals experimenting with the platform.</p>
+        
+        <ul class="feature-list">
+          <li>
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Up to 3 active projects</span>
+          </li>
+          <li>
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Community support</span>
+          </li>
+          <li>
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Basic analytics export</span>
+          </li>
+        </ul>
+        <button class="btn btn-outline">Start for free</button>
+      </div>
+
+      <!-- Tier 2 (Pro) -->
+      <div class="pricing-card pro js-pricing-card">
+        <div class="ribbon-wrapper"><div class="ribbon">Popular</div></div>
+        <div class="plan-name text-muted">Professional</div>
+        <div class="price-wrapper">
+          <span class="price-currency">$</span>
+          <span class="price-amount" data-monthly="49" data-annual="39">49</span>
+          <span class="price-period text-muted">/mo</span>
+        </div>
+        <p class="plan-desc text-muted">Everything you need to scale your production workflow.</p>
+        
+        <ul class="feature-list">
+          <li>
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Unlimited active projects</span>
+          </li>
+          <li>
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Priority 24/7 email support</span>
+          </li>
+          <li>
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Advanced custom API access</span>
+          </li>
+          <li>
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Custom domain mapping</span>
+          </li>
+        </ul>
+        <button class="btn btn-primary">Upgrade to Pro</button>
+      </div>
+
+      <!-- Tier 3 -->
+      <div class="pricing-card js-pricing-card">
+        <div class="plan-name text-muted">Scale</div>
+        <div class="price-wrapper">
+          <span class="price-currency">$</span>
+          <span class="price-amount" data-monthly="199" data-annual="159">199</span>
+          <span class="price-period text-muted">/mo</span>
+        </div>
+        <p class="plan-desc text-muted">Dedicated infrastructure for massive throughput.</p>
+        
+        <ul class="feature-list">
+          <li>
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Dedicated account manager</span>
+          </li>
+          <li>
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>SAML SSO integration</span>
+          </li>
+          <li>
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>99.99% Uptime SLA</span>
+          </li>
+        </ul>
+        <button class="btn btn-outline">Contact Sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- USAGE NOTE: Toggle logic is wired in JS below. Uses data-attributes to swap values. -->
+
+
+<!-- @@/VARIANT:PRICING -->
+
+<!-- @@VARIANT:TESTIMONIALS -->
+<!-- GSAP: target class .js-testimonial with grid stagger and autoAlpha -->
+<!-- FEATURE: Hover tracking glow effect on cards (CSS variable mapping via JS) -->
+<section class="section-testimonials">
+  <div class="container">
+    <div class="testimonials-header">
+      <h2 class="text-display">Don't just take our word for it.</h2>
+    </div>
+
+    <div class="bento-grid" id="testimonial-grid">
+      <!-- Card 1 -->
+      <div class="testimonial-card tc-1 js-testimonial">
+        <div class="quote-mark">"</div>
+        <div class="testimonial-content">
+          <p class="pull-quote">Since switching over, our deployment times have dropped by 40%. The CLI is just brutally fast and stays out of my way.</p>
+          <div class="attribution">
+            <div class="avatar">SJ</div>
+            <div class="author-meta">
+              <span class="author-name">Sarah Jenkins</span>
+              <span class="author-company text-muted">Lead Engineer, Vercel</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 (Tall) -->
+      <div class="testimonial-card tc-2 js-testimonial">
+        <div class="quote-mark">"</div>
+        <div class="testimonial-content">
+          <p class="pull-quote">It genuinely feels like having an extra senior developer on the team reviewing architecture before we ship.</p>
+          <div class="attribution">
+            <div class="avatar">MK</div>
+            <div class="author-meta">
+              <span class="author-name">Marcus King</span>
+              <span class="author-company text-muted">CTO, Nexus</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="testimonial-card tc-3 js-testimonial">
+        <div class="quote-mark">"</div>
+        <div class="testimonial-content">
+          <p class="pull-quote">The cleanest API documentation I have seen in a decade. Integrated it in an afternoon.</p>
+          <div class="attribution">
+            <div class="avatar">AL</div>
+            <div class="author-meta">
+              <span class="author-name">Aisha Lin</span>
+              <span class="author-company text-muted">Founder, Dataflow</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="testimonial-card tc-4 js-testimonial">
+        <div class="quote-mark">"</div>
+        <div class="testimonial-content">
+          <p class="pull-quote">No more fighting with config files. It just works out of the box.</p>
+          <div class="attribution">
+            <div class="avatar">DR</div>
+            <div class="author-meta">
+              <span class="author-name">David Ross</span>
+              <span class="author-company text-muted">DevOps, Stripe</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 (Featured) -->
+      <div class="testimonial-card featured tc-featured js-testimonial">
+        <div class="quote-mark">"</div>
+        <div class="testimonial-content">
+          <p class="pull-quote">We calculated the ROI after month one and immediately upgraded to Enterprise. The reduction in server costs alone pays for the platform tenfold. An absolute no-brainer for scaleups.</p>
+          <div class="attribution">
+            <div class="avatar">EM</div>
+            <div class="author-meta">
+              <span class="author-name">Elena Martinez</span>
+              <span class="author-company text-muted">VP of Engineering, Shopify</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- USAGE NOTE: Masonry effect achieved via CSS Grid spanning. JS adds dynamic radial hover glow. -->
+
+
+<!-- @@/VARIANT:TESTIMONIALS -->
+
+<!-- @@VARIANT:CTA -->
+<!-- GSAP: target class .js-cta-section for clip-path reveal and internal text scrub -->
+<!-- FEATURE: Magnetic button interaction and diagonal cut layout -->
+<section class="section-cta js-cta-section">
+  <div class="cta-glow"></div>
+  <div class="container">
+    <div class="cta-container">
+      
+      <div class="cta-text-wrap">
+        <h2 class="text-display cta-headline">
+          <span>Stop tweaking.</span>
+          <span class="hl-accent">Start shipping.</span>
+        </h2>
+        <p class="cta-subtext">Join 10,000+ developers who have already ditched legacy infrastructure for the modern edge.</p>
+        
+        <!-- Abstract SVG Swoosh pointing to button -->
+        <svg class="cta-arrow" viewBox="0 0 200 200">
+          <path d="M 20,20 C 100,20 180,80 160,160" />
+          <path d="M 120,160 L 160,160 L 160,120" />
+        </svg>
+      </div>
+
+      <div class="cta-actions-wrap">
+        <div class="cta-actions">
+          <button class="btn btn-primary btn-magnetic js-magnetic">Deploy your first app</button>
+          <a href="#docs" class="btn-ghost">or read the docs</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- USAGE NOTE: The diagonal top edge overlaps the previous section. Make sure previous section has adequate bottom padding. -->
+
+
+<!-- @@/VARIANT:CTA -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- SECTION A: Pricing Toggle Logic ---
+    const toggleWrapper = document.querySelector('.js-billing-toggle');
+    const toggleBtns = document.querySelectorAll('.billing-toggle-btn');
+    const priceAmounts = document.querySelectorAll('.price-amount');
+    const pricePeriods = document.querySelectorAll('.price-period');
+
+    if(toggleWrapper && toggleBtns.length) {
+      toggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // Update active state
+          toggleBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          const billingType = btn.getAttribute('data-target');
+          toggleWrapper.setAttribute('data-billing', billingType);
+
+          // Animate numbers
+          priceAmounts.forEach(el => {
+            const targetVal = el.getAttribute(`data-${billingType}`);
+            // Simple fade out/in effect for number change
+            el.style.opacity = 0;
+            setTimeout(() => {
+              el.textContent = targetVal;
+              el.style.opacity = 1;
+            }, 150);
+          });
+          
+          // Update period text logic (optional, kept /mo for both per SaaS standard, but could change to /yr)
+        });
+      });
+    }
+
+    // --- SECTION B: Testimonial Hover Glow ---
+    const cards = document.querySelectorAll('.js-testimonial:not(.featured)');
+    
+    cards.forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
+    });
+
+    // --- SECTION C: Magnetic Button ---
+    const magneticBtns = document.querySelectorAll('.js-magnetic');
+    
+    magneticBtns.forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const h = rect.width / 2;
+        const v = rect.height / 2;
+        
+        // Calculate distance from center
+        const x = e.clientX - rect.left - h;
+        const y = e.clientY - rect.top - v;
+        
+        // Apply transform (move max 15px)
+        const moveX = (x / h) * 15;
+        const moveY = (y / v) * 15;
+        
+        btn.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      });
+      
+      btn.addEventListener('mouseleave', () => {
+        // Reset with a spring-like ease via CSS transition
+        btn.style.transform = `translate(0px, 0px)`;
+      });
+    });
+
+  });
+</script>
+
+<!-- @@VARIANT:FAQ_A -->
+<!-- ================================================================= -->
+<!-- FAQ VARIANT A: 编辑排版型 (Editorial — sticky anchor + accordion) -->
+<!-- ================================================================= -->
+<!-- Left col: massive "FAQ" as visual anchor. Right col: accordion list.
+     GSAP: initLineReveal() on heading; section reveal with ScrollTrigger.
+     accordion handled by inline JS (data-open toggle). -->
+<style>
+.faq-section { font-family: var(--font-body); color: var(--ink); box-sizing: border-box; }
+.faq-section *, .faq-section *::before, .faq-section *::after { box-sizing: inherit; }
+
+.variant-a { background-color: var(--bg); padding: 6rem 5vw; }
+.v-a-container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 4rem; }
+@media (min-width: 900px) { .v-a-container { grid-template-columns: 4fr 6fr; gap: 8vw; } }
+.v-a-title {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 10vw, 9rem);
+  line-height: 0.9; font-weight: 400; margin: 0;
+  letter-spacing: -0.02em; color: var(--ink);
+  position: sticky; top: 6rem;
+}
+.v-a-right { display: flex; flex-direction: column; }
+.v-a-item { border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
+.v-a-item:last-child { border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
+.v-a-trigger {
+  width: 100%; background: transparent; border: none;
+  padding: 2.5rem 0; display: flex; justify-content: space-between;
+  align-items: center; cursor: pointer; color: var(--ink); text-align: left; gap: 2rem;
+}
+.v-a-trigger:hover .v-a-question { transform: translateX(10px); color: var(--accent); }
+.v-a-question {
+  font-size: clamp(1.25rem, 2vw, 1.75rem); font-weight: 400;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), color 0.3s ease;
+}
+.v-a-icon { width: 24px; height: 24px; flex-shrink: 0; color: var(--ink); }
+.v-a-icon line { stroke: currentColor; stroke-width: 1.5; transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease; transform-origin: center; }
+.v-a-item[data-open="true"] .v-a-icon .vertical { transform: rotate(90deg); opacity: 0; }
+.v-a-item[data-open="true"] .v-a-icon .horizontal { transform: rotate(180deg); }
+.v-a-content-grid { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.5s cubic-bezier(0.16,1,0.3,1); }
+.v-a-item[data-open="true"] .v-a-content-grid { grid-template-rows: 1fr; }
+.v-a-content-inner { overflow: hidden; }
+.v-a-answer { font-size: clamp(1rem,1.2vw,1.125rem); color: var(--ink-muted); line-height: 1.6; padding-bottom: 2.5rem; margin: 0; max-width: 85%; }
+</style>
+
+<!-- @@/VARIANT:FAQ_A -->
+
+<!-- @@VARIANT:FAQ_A -->
+<section class="faq-section variant-a">
+  <div class="v-a-container">
+    <div>
+      <h2 class="v-a-title js-hero-title">FAQ</h2>
+    </div>
+    <div class="v-a-right">
+      <div class="v-a-item js-faq-item" data-open="false">
+        <button class="v-a-trigger" aria-expanded="false">
+          <span class="v-a-question">How does pricing work?</span>
+          <svg class="v-a-icon" viewBox="0 0 24 24" fill="none"><line class="horizontal" x1="4" y1="12" x2="20" y2="12"/><line class="vertical" x1="12" y1="4" x2="12" y2="20"/></svg>
+        </button>
+        <div class="v-a-content-grid"><div class="v-a-content-inner">
+          <p class="v-a-answer">Replace with your pricing explanation. Mention seat-based, usage-based, or flat monthly billing as appropriate.</p>
+        </div></div>
+      </div>
+      <div class="v-a-item js-faq-item" data-open="false">
+        <button class="v-a-trigger" aria-expanded="false">
+          <span class="v-a-question">Is there a free trial?</span>
+          <svg class="v-a-icon" viewBox="0 0 24 24" fill="none"><line class="horizontal" x1="4" y1="12" x2="20" y2="12"/><line class="vertical" x1="12" y1="4" x2="12" y2="20"/></svg>
+        </button>
+        <div class="v-a-content-grid"><div class="v-a-content-inner">
+          <p class="v-a-answer">Replace with trial details — duration, whether a credit card is required, what features are included.</p>
+        </div></div>
+      </div>
+      <div class="v-a-item js-faq-item" data-open="false">
+        <button class="v-a-trigger" aria-expanded="false">
+          <span class="v-a-question">Can I cancel anytime?</span>
+          <svg class="v-a-icon" viewBox="0 0 24 24" fill="none"><line class="horizontal" x1="4" y1="12" x2="20" y2="12"/><line class="vertical" x1="12" y1="4" x2="12" y2="20"/></svg>
+        </button>
+        <div class="v-a-content-grid"><div class="v-a-content-inner">
+          <p class="v-a-answer">Replace with cancellation policy. Mention refund windows, data export options, and how long data is retained after cancellation.</p>
+        </div></div>
+      </div>
+      <div class="v-a-item js-faq-item" data-open="false">
+        <button class="v-a-trigger" aria-expanded="false">
+          <span class="v-a-question">Is my data secure?</span>
+          <svg class="v-a-icon" viewBox="0 0 24 24" fill="none"><line class="horizontal" x1="4" y1="12" x2="20" y2="12"/><line class="vertical" x1="12" y1="4" x2="12" y2="20"/></svg>
+        </button>
+        <div class="v-a-content-grid"><div class="v-a-content-inner">
+          <p class="v-a-answer">Replace with security details — encryption standards, compliance certifications, and data residency options.</p>
+        </div></div>
+      </div>
+      <div class="v-a-item js-faq-item" data-open="false">
+        <button class="v-a-trigger" aria-expanded="false">
+          <span class="v-a-question">Do you offer team or enterprise plans?</span>
+          <svg class="v-a-icon" viewBox="0 0 24 24" fill="none"><line class="horizontal" x1="4" y1="12" x2="20" y2="12"/><line class="vertical" x1="12" y1="4" x2="12" y2="20"/></svg>
+        </button>
+        <div class="v-a-content-grid"><div class="v-a-content-inner">
+          <p class="v-a-answer">Replace with team/enterprise plan details — volume discounts, SSO, admin controls, dedicated support, SLA guarantees.</p>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- @@/VARIANT:FAQ_A -->
+
+<!-- @@VARIANT:FAQ_B -->
+<!-- ================================================================= -->
+<!-- FAQ VARIANT B: 全宽焦点型 (Centered grid cards — expand in place) -->
+<!-- ================================================================= -->
+<!-- Full-width centered. 2-col card grid on desktop.
+     Each card expands in place on click. Plus rotates to X on open.
+     Bottom: "Still have questions?" CTA row. -->
+<style>
+.variant-b { background-color: var(--bg); padding: 6rem 5vw; }
+.v-b-container { max-width: 1200px; margin: 0 auto; }
+.v-b-header { text-align: center; margin-bottom: 5rem; }
+.v-b-eyebrow { display: block; font-size: clamp(0.75rem,1vw,0.875rem); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 1rem; }
+.v-b-title { font-family: var(--font-display); font-size: clamp(2.5rem,5vw,4.5rem); font-weight: 500; margin: 0; line-height: 1.1; letter-spacing: -0.01em; color: var(--ink); }
+.v-b-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 4rem; }
+@media (min-width: 768px) { .v-b-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; } }
+.v-b-card {
+  background-color: var(--bg-surface);
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, currentColor 8%, transparent);
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+.v-b-card:hover { border-color: color-mix(in srgb, currentColor 18%, transparent); }
+.v-b-trigger {
+  width: 100%; background: transparent; border: none;
+  padding: 2rem; display: flex; justify-content: space-between;
+  align-items: flex-start; cursor: pointer; color: var(--ink); text-align: left; gap: 1rem;
+}
+.v-b-question { font-size: clamp(1.125rem,1.5vw,1.25rem); font-weight: 500; line-height: 1.4; }
+.v-b-icon-wrap {
+  width: 32px; height: 32px; border-radius: 50%;
+  background-color: color-mix(in srgb, var(--ink) 8%, transparent);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  color: var(--ink); transition: background-color 0.3s, color 0.3s;
+}
+.v-b-card[data-open="true"] .v-b-icon-wrap { background-color: var(--accent); color: var(--bg); }
+.v-b-icon { width: 14px; height: 14px; transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+.v-b-card[data-open="true"] .v-b-icon { transform: rotate(45deg); }
+.v-b-content-grid { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.25,1,0.5,1); }
+.v-b-card[data-open="true"] .v-b-content-grid { grid-template-rows: 1fr; }
+.v-b-content-inner { overflow: hidden; }
+.v-b-answer { font-size: clamp(0.95rem,1.1vw,1.05rem); color: var(--ink-muted); line-height: 1.6; padding: 0 2rem 2rem; margin: 0; }
+.v-b-cta { text-align: center; padding-top: 4rem; border-top: 1px solid color-mix(in srgb, currentColor 8%, transparent); }
+.v-b-cta-text { font-size: clamp(1.125rem,1.5vw,1.25rem); margin-bottom: 1.5rem; font-weight: 500; color: var(--ink); }
+.v-b-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  background-color: var(--accent); color: var(--bg);
+  padding: 1rem 2.25rem; border-radius: 99px; text-decoration: none;
+  font-weight: 600; font-size: 0.9rem;
+  transition: transform 0.2s, filter 0.2s;
+}
+.v-b-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+</style>
+
+<!-- @@/VARIANT:FAQ_B -->
+
+<!-- @@VARIANT:FAQ_B -->
+<section class="faq-section variant-b">
+  <div class="v-b-container">
+    <div class="v-b-header">
+      <span class="v-b-eyebrow">Frequently Asked</span>
+      <h2 class="v-b-title js-hero-title">Everything you need to know.</h2>
+    </div>
+    <div class="v-b-grid">
+      <div class="v-b-card js-faq-item" data-open="false">
+        <button class="v-b-trigger" aria-expanded="false">
+          <span class="v-b-question">What is the onboarding process like?</span>
+          <span class="v-b-icon-wrap"><svg class="v-b-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="v-b-content-grid"><div class="v-b-content-inner"><p class="v-b-answer">Replace with onboarding details — guided setup, dedicated onboarding call, time to first value.</p></div></div>
+      </div>
+      <div class="v-b-card js-faq-item" data-open="false">
+        <button class="v-b-trigger" aria-expanded="false">
+          <span class="v-b-question">How does pricing scale with usage?</span>
+          <span class="v-b-icon-wrap"><svg class="v-b-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="v-b-content-grid"><div class="v-b-content-inner"><p class="v-b-answer">Replace with pricing scale details — prorated seats, usage overages, volume discounts.</p></div></div>
+      </div>
+      <div class="v-b-card js-faq-item" data-open="false">
+        <button class="v-b-trigger" aria-expanded="false">
+          <span class="v-b-question">Do you support single sign-on (SSO)?</span>
+          <span class="v-b-icon-wrap"><svg class="v-b-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="v-b-content-grid"><div class="v-b-content-inner"><p class="v-b-answer">Replace with SSO details — SAML 2.0, OIDC, supported identity providers, which plans include it.</p></div></div>
+      </div>
+      <div class="v-b-card js-faq-item" data-open="false">
+        <button class="v-b-trigger" aria-expanded="false">
+          <span class="v-b-question">Can I export my data?</span>
+          <span class="v-b-icon-wrap"><svg class="v-b-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="v-b-content-grid"><div class="v-b-content-inner"><p class="v-b-answer">Replace with export details — formats (JSON/CSV), how to trigger an export, data retention after cancellation.</p></div></div>
+      </div>
+      <div class="v-b-card js-faq-item" data-open="false">
+        <button class="v-b-trigger" aria-expanded="false">
+          <span class="v-b-question">What is your uptime SLA?</span>
+          <span class="v-b-icon-wrap"><svg class="v-b-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="v-b-content-grid"><div class="v-b-content-inner"><p class="v-b-answer">Replace with SLA details — uptime percentage, credit policy for downtime, status page link.</p></div></div>
+      </div>
+      <div class="v-b-card js-faq-item" data-open="false">
+        <button class="v-b-trigger" aria-expanded="false">
+          <span class="v-b-question">Do you offer discounts for startups or non-profits?</span>
+          <span class="v-b-icon-wrap"><svg class="v-b-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="v-b-content-grid"><div class="v-b-content-inner"><p class="v-b-answer">Replace with discount policy — eligibility criteria, discount amount, how to apply.</p></div></div>
+      </div>
+    </div>
+    <div class="v-b-cta">
+      <p class="v-b-cta-text">Still have questions? We're here to help.</p>
+      <a href="#" class="v-b-btn">Contact Support</a>
+    </div>
+  </div>
+</section>
+
+<!-- @@/VARIANT:FAQ_B -->
+
+<script>
+  /* FAQ accordion — works for both Variant A and B */
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.js-faq-item').forEach(item => {
+      const trigger = item.querySelector('button');
+      trigger.addEventListener('click', () => {
+        const isOpen = item.getAttribute('data-open') === 'true';
+        item.setAttribute('data-open', !isOpen);
+        trigger.setAttribute('aria-expanded', !isOpen);
+        /* Close siblings in same container (optional — comment out for independent expand) */
+        if (!isOpen) {
+          item.parentElement.querySelectorAll('.js-faq-item').forEach(sib => {
+            if (sib !== item) { sib.setAttribute('data-open','false'); sib.querySelector('button').setAttribute('aria-expanded','false'); }
+          });
+        }
+      });
+    });
+  });
+</script>
+<!-- @@VARIANT:COMPARE_PRICING -->
+<!-- CONVERSION: 对比定价表 -->
+<style>
+  .pricing-section {
+    font-family: var(--font-body);
+    color: var(--ink);
+    background-color: var(--bg);
+    padding: clamp(4rem, 8vw, 6rem) clamp(1rem, 5vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pricing-header {
+    text-align: center;
+    max-width: 600px;
+    margin-bottom: clamp(3rem, 5vw, 4rem);
+  }
+
+  .pricing-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    line-height: 1.1;
+    margin: 0 0 1rem 0;
+    letter-spacing: -0.02em;
+  }
+
+  .pricing-header p {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    color: var(--ink-muted);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .billing-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    font-weight: 500;
+  }
+
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 32px;
+  }
+
+  .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--bg-surface);
+    border: 2px solid var(--ink-muted);
+    transition: .3s;
+    border-radius: 34px;
+  }
+
+  .toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--ink);
+    transition: .3s;
+    border-radius: 50%;
+  }
+
+  input:checked + .toggle-slider {
+    border-color: var(--accent);
+  }
+
+  input:checked + .toggle-slider:before {
+    transform: translateX(28px);
+    background-color: var(--accent);
+  }
+
+  .save-badge {
+    background-color: var(--accent);
+    color: var(--bg);
+    padding: 0.25rem 0.5rem;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    align-items: stretch;
+  }
+
+  .pricing-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--ink-muted);
+    border-radius: 24px;
+    padding: clamp(2rem, 3vw, 2.5rem);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .pricing-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .pricing-card.pro-card {
+    border: 2px solid var(--accent);
+    background-color: var(--ink);
+    color: var(--bg);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+  }
+
+  .pricing-card.pro-card .plan-desc,
+  .pricing-card.pro-card .price-period {
+    color: var(--bg-surface);
+    opacity: 0.8;
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--accent);
+    color: var(--bg);
+    padding: 0.25rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .plan-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .plan-desc {
+    color: var(--ink-muted);
+    font-size: 0.9375rem;
+    margin: 0 0 2rem 0;
+    min-height: 2.8rem;
+  }
+
+  .plan-price-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .price-symbol {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .price-amount {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    line-height: 1;
+    font-weight: 700;
+  }
+
+  .price-period {
+    color: var(--ink-muted);
+    font-size: 0.875rem;
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2.5rem 0;
+    flex-grow: 1;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: clamp(0.9375rem, 1.5vw, 1rem);
+    line-height: 1.4;
+  }
+
+  .feature-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+  }
+
+  .icon-check { stroke: var(--accent); }
+  .icon-dash { stroke: var(--ink-muted); opacity: 0.5; }
+  .pro-card .icon-dash { stroke: var(--bg-surface); opacity: 0.4; }
+
+  .feature-excluded {
+    color: var(--ink-muted);
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .pro-card .feature-excluded {
+    color: var(--bg-surface);
+    opacity: 0.5;
+  }
+
+  .pricing-cta {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1.0625rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+  }
+
+  .btn-outline:hover {
+    background-color: var(--ink);
+    color: var(--bg);
+  }
+
+  .btn-primary {
+    background-color: var(--accent);
+    color: var(--bg);
+    border: 1px solid var(--accent);
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.1);
+  }
+
+  .pricing-bottom-row {
+    margin-top: 4rem;
+    width: 100%;
+    max-width: 1000px;
+    border-top: 1px solid var(--ink-muted);
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .bottom-row-title {
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+
+  .bottom-features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .bottom-feature {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--ink-muted);
+  }
+
+  .bottom-feature svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--ink);
+  }
+
+  @media (max-width: 768px) {
+    .pricing-grid { max-width: 400px; }
+    .bottom-features { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  }
+</style>
+
+<!-- @@/VARIANT:COMPARE_PRICING -->
+
+<!-- @@VARIANT:COMPARE_PRICING -->
+<section class="pricing-section">
+  <div class="pricing-header">
+    <h2>Plans that scale with you</h2>
+    <p>Simple, transparent pricing. Always know what you'll pay.</p>
+    
+    <div class="billing-toggle-wrapper">
+      <span id="label-monthly">Monthly</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="pricing-toggle-checkbox">
+        <span class="toggle-slider"></span>
+      </label>
+      <span id="label-yearly">Annually</span>
+      <span class="save-badge">Save 20%</span>
+    </div>
+  </div>
+
+  <div class="pricing-grid">
+    <div class="pricing-card js-conversion-item">
+      <h3 class="plan-name">Hobby</h3>
+      <p class="plan-desc">Perfect for side projects and personal experiments.</p>
+      
+      <div class="plan-price-wrapper">
+        <span class="price-symbol">$</span>
+        <span class="price-amount" data-monthly="0" data-yearly="0">0</span>
+        <span class="price-period">/mo</span>
+      </div>
+
+      <ul class="feature-list">
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Up to 3 active projects
+        </li>
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Basic analytics
+        </li>
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Community support
+        </li>
+        <li class="feature-item feature-excluded">
+          <svg class="feature-icon icon-dash" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Custom domains
+        </li>
+        <li class="feature-item feature-excluded">
+          <svg class="feature-icon icon-dash" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Team collaboration
+        </li>
+      </ul>
+
+      <a href="#" class="pricing-cta btn-outline">Start for free</a>
+    </div>
+
+    <div class="pricing-card pro-card js-conversion-item">
+      <div class="popular-badge">Most Popular</div>
+      <h3 class="plan-name">Professional</h3>
+      <p class="plan-desc">For creators and small teams ready to accelerate.</p>
+      
+      <div class="plan-price-wrapper">
+        <span class="price-symbol">$</span>
+        <span class="price-amount" data-monthly="29" data-yearly="24">29</span>
+        <span class="price-period">/mo per user</span>
+      </div>
+
+      <ul class="feature-list">
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Unlimited projects
+        </li>
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Advanced analytics dashboard
+        </li>
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Priority email support
+        </li>
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Custom domains
+        </li>
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Team collaboration tools
+        </li>
+      </ul>
+
+      <a href="#" class="pricing-cta btn-primary">Start 14-day trial</a>
+    </div>
+
+    <div class="pricing-card js-conversion-item">
+      <h3 class="plan-name">Enterprise</h3>
+      <p class="plan-desc">Custom security, compliance, and dedicated support.</p>
+      
+      <div class="plan-price-wrapper" style="align-items: center;">
+        <span class="price-amount" style="font-size: clamp(1.8rem, 3vw, 2.5rem);">Custom</span>
+      </div>
+
+      <ul class="feature-list">
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Everything in Professional
+        </li>
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          SSO & Advanced Security
+        </li>
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Dedicated Success Manager
+        </li>
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Custom SLA
+        </li>
+        <li class="feature-item">
+          <svg class="feature-icon icon-check" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Audit logs
+        </li>
+      </ul>
+
+      <a href="#" class="pricing-cta btn-outline">Contact Sales</a>
+    </div>
+  </div>
+
+  <div class="pricing-bottom-row">
+    <div class="bottom-row-title">All plans include:</div>
+    <div class="bottom-features">
+      <div class="bottom-feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        Bank-grade security
+      </div>
+      <div class="bottom-feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        99.9% Uptime guarantee
+      </div>
+      <div class="bottom-feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        Community forum access
+      </div>
+      <div class="bottom-feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.2 15c.7-1.2 1-2.5.7-3.9-.6-2-2.4-3.5-4.4-3.5h-1.2c-.7-3-3.2-5.2-6.2-5.6-3-.3-5.9 1.3-7.3 4-1.2 2.5-1 6.5.5 8.8m8.7-1.6V21"></path><path d="M16 16l-4-4-4 4"></path></svg>
+        Daily automated backups
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- @@/VARIANT:COMPARE_PRICING -->
+
+<!-- @@VARIANT:BRAND_WALL -->
+<!-- CONVERSION: 品牌墙 -->
+<style>
+  .logo-wall-section {
+    font-family: var(--font-body);
+    background-color: var(--bg);
+    color: var(--ink);
+    padding: clamp(4rem, 5vw, 6rem) clamp(1rem, 5vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .logo-wall-header {
+    text-align: center;
+    margin-bottom: clamp(3rem, 5vw, 4rem);
+    width: 100%;
+  }
+
+  .eyebrow-text {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .logo-wall-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .logo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(2rem, 4vw, 4rem);
+    max-width: 1100px;
+    margin-bottom: clamp(4rem, 6vw, 6rem);
+  }
+
+  .logo-item {
+    height: 40px;
+    opacity: 0.4;
+    filter: grayscale(100%);
+    transition: all 0.4s ease;
+    cursor: default;
+  }
+
+  .logo-item:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+    transform: scale(1.05);
+  }
+
+  .logo-item svg {
+    height: 100%;
+    width: auto;
+    fill: var(--ink);
+  }
+
+  .testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: clamp(1.5rem, 3vw, 2rem);
+    width: 100%;
+    max-width: 1200px;
+  }
+
+  .testimonial-card {
+    background-color: var(--bg-surface);
+    padding: clamp(2rem, 3vw, 2.5rem);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .testimonial-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .quote-icon {
+    width: 32px;
+    height: 32px;
+    fill: var(--accent);
+    opacity: 0.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .quote-text {
+    font-size: clamp(1.125rem, 1.5vw, 1.25rem);
+    line-height: 1.5;
+    font-style: italic;
+    margin: 0 0 2rem 0;
+    color: var(--ink);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .author-block {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-top: 1px solid var(--ink-muted);
+    padding-top: 1.5rem;
+  }
+
+  .author-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--ink);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    flex-shrink: 0;
+  }
+
+  .author-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .author-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--ink);
+  }
+
+  .author-title {
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    margin-top: 0.125rem;
+  }
+</style>
+
+<!-- @@/VARIANT:BRAND_WALL -->
+
+<!-- @@VARIANT:BRAND_WALL -->
+<section class="logo-wall-section">
+  <div class="logo-wall-header">
+    <span class="eyebrow-text">Industry Proven</span>
+    <h2>Trusted by forward-thinking teams</h2>
+  </div>
+
+  <div class="logo-grid">
+    <div class="logo-item" aria-label="Acme Corp">
+      <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="5" width="30" height="30" fill="none" stroke="currentColor" stroke-width="3"/>
+        <text x="40" y="28" font-family="sans-serif" font-weight="900" font-size="24" fill="currentColor" letter-spacing="1">ACME</text>
+      </svg>
+    </div>
+    <div class="logo-item" aria-label="Globex">
+      <svg viewBox="0 0 150 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="15" fill="none" stroke="currentColor" stroke-width="4" stroke-dasharray="10 5"/>
+        <text x="45" y="28" font-family="sans-serif" font-weight="800" font-size="22" fill="currentColor">GLOBEX</text>
+      </svg>
+    </div>
+    <div class="logo-item" aria-label="Initech">
+      <svg viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="20,5 35,35 5,35" fill="currentColor"/>
+        <text x="45" y="28" font-family="sans-serif" font-weight="700" font-size="24" fill="currentColor" letter-spacing="-1">INITECH</text>
+      </svg>
+    </div>
+    <div class="logo-item" aria-label="Soyuz">
+      <svg viewBox="0 0 140 40" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="20" x2="30" y2="20" stroke="currentColor" stroke-width="6"/>
+        <line x1="15" y1="5" x2="15" y2="35" stroke="currentColor" stroke-width="6"/>
+        <text x="45" y="28" font-family="serif" font-weight="bold" font-size="24" fill="currentColor">SOYUZ</text>
+      </svg>
+    </div>
+    <div class="logo-item" aria-label="Umbrella">
+      <svg viewBox="0 0 170 40" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5,20 Q20,0 35,20 L5,20" fill="currentColor"/>
+        <text x="45" y="28" font-family="sans-serif" font-weight="900" font-size="22" fill="currentColor" letter-spacing="2">UMBRELLA</text>
+      </svg>
+    </div>
+    <div class="logo-item" aria-label="Massive Dynamic">
+      <svg viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="10" width="10" height="20" fill="currentColor"/>
+        <rect x="15" y="5" width="10" height="25" fill="currentColor"/>
+        <rect x="30" y="15" width="10" height="15" fill="currentColor"/>
+        <text x="50" y="28" font-family="sans-serif" font-weight="800" font-size="24" fill="currentColor">MASSIVE</text>
+      </svg>
+    </div>
+    <div class="logo-item" aria-label="Stark Industries">
+      <svg viewBox="0 0 130 40" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="0,5 20,5 10,20 30,20 0,35" fill="currentColor"/>
+        <text x="40" y="28" font-family="sans-serif" font-weight="900" font-size="26" fill="currentColor" font-style="italic">STARK</text>
+      </svg>
+    </div>
+    <div class="logo-item" aria-label="Wayne Enterprises">
+      <svg viewBox="0 0 150 40" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,10 L15,30 L30,10 L20,30 L15,20 L10,30 Z" fill="currentColor"/>
+        <text x="40" y="28" font-family="serif" font-weight="400" font-size="24" fill="currentColor" letter-spacing="3">WAYNE</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="testimonial-grid">
+    <div class="testimonial-card js-conversion-item" style="transition-delay: 0.1s;">
+      <svg class="quote-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+      <p class="quote-text">"This platform entirely removed our infrastructure bottlenecks. Our deployment velocity increased by 40% in just two months."</p>
+      <div class="author-block">
+        <div class="author-avatar" style="background-color: var(--accent);">SJ</div>
+        <div class="author-info">
+          <span class="author-name">Sarah Jenkins</span>
+          <span class="author-title">VP of Engineering, INITECH</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card js-conversion-item" style="transition-delay: 0.2s;">
+      <svg class="quote-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+      <p class="quote-text">"The intuitive interface meant our non-technical team members were onboarding themselves without creating support tickets."</p>
+      <div class="author-block">
+        <div class="author-avatar">MR</div>
+        <div class="author-info">
+          <span class="author-name">Marcus Reed</span>
+          <span class="author-title">Product Lead, GLOBEX</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card js-conversion-item" style="transition-delay: 0.3s;">
+      <svg class="quote-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+      <p class="quote-text">"We evaluated five different vendors. Only this tool provided the enterprise-grade compliance features we absolutely required."</p>
+      <div class="author-block">
+        <div class="author-avatar" style="background-color: var(--accent);">EC</div>
+        <div class="author-info">
+          <span class="author-name">Elena Chen</span>
+          <span class="author-title">CTO, MASSIVE DYNAMIC</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- @@/VARIANT:BRAND_WALL -->
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "host_name": "new-laptop",
+  "reachable": true,
+  "connection_time_ms": 89,
+  "cass_status": {
+    "status": "installed_not_indexed",
+    "version": "0.1.60"
+  },
+  "detected_agents": [
+    {
+      "agent_type": "claude_code",
+      "path": "~/.claude/projects",
+      "estimated_sessions": 45,
+      "estimated_size_mb": 23
+    },
+    {
+      "agent_type": "aider",
+      "path": "~/.aider.chat.history.md",
+      "estimated_sessions": 1,
+      "estimated_size_mb": 2
+    }
+  ],
+  "system_info": {
+    "os": "darwin",
+    "arch": "aarch64",
+    "distro": null,
+    "has_cargo": true,
+    "has_cargo_binstall": false,
+    "has_curl": true,
+    "has_wget": false,
+    "remote_home": "/Users/developer"
+  },
+  "resources": {
+    "disk_available_mb": 128000,
+    "memory_total_mb": 16384,
+    "memory_available_mb": 8192,
+    "can_compile": true
+  },
+  "error": null
+}

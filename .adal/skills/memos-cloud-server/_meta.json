@@ -1,0 +1,8 @@
+{
+  "name": "memos-cloud-server",
+  "description": "MemOS Cloud Server API skill.",
+  "author": "OpenClaw",
+  "version": "1.0.0",
+  "type": "agent",
+  "entrypoint": "memos_cloud.py"
+}

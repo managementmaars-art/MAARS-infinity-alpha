@@ -1,0 +1,24 @@
+# FinData Toolkit — US Market Data Source Configuration
+# ====================================================
+# All primary sources are free and require NO API key.
+
+us_market:
+  primary:
+    stock_data: "yahoo_finance"     # yfinance — free, no key
+    filings: "sec_edgar"            # SEC EDGAR — free, no key
+    macro: "fred"                   # FRED — free, no key
+
+  # Optional: set API keys as environment variables
+  # export ALPHA_VANTAGE_API_KEY=your_key_here
+  optional:
+    alpha_vantage_key: "${ALPHA_VANTAGE_API_KEY}"
+
+# EDGAR requires a User-Agent header with your identity
+sec_edgar:
+  user_agent: "FinSkills research@example.com"
+
+# Rate limit settings (requests per second)
+rate_limits:
+  yahoo_finance: 2
+  sec_edgar: 10
+  fred: 5

@@ -1,0 +1,17 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+from {{MODULE}} import {{CLASS_NAME}}
+
+@pytest.mark.asyncio
+async def test_file_browser_show_file(tmp_path: Path) -> None:
+    target = tmp_path / "notes.txt"
+    target.write_text("hello from textual", encoding="utf-8")
+    app = {{CLASS_NAME}}(root_path=str(tmp_path))
+    async with app.run_test(size=(100, 30)) as pilot:
+        app.show_file(target)
+        await pilot.pause()
+        assert "hello from textual" in app.preview_text

@@ -1,0 +1,14 @@
+{
+  "name": "browser-automation",
+  "version": "1.0.0",
+  "description": "Playwright-based browser automation for OpenClaw",
+  "main": "index.js",
+  "openclaw": {
+    "name": "Browser Automation",
+    "description": "控制浏览器进行自动化操作，支持点击、填表、截图等",
+    "version": "1.0.0"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "轻推消息发送器"
+  short_description: "通过 macOS 轻推桌面版向指定联系人安全发送文本消息。"
+  default_prompt: "使用 $qingtui-message-sender，打开轻推并给指定联系人发送一段文本；如果联系人未精确匹配就停止，不要误发。"

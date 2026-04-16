@@ -1,0 +1,7 @@
+interface:
+  display_name: "Defrag"
+  short_description: "Rank the highest-value refactoring opportunities in code"
+  default_prompt: "Use $defrag to analyze this codebase or file, rank the top refactoring opportunities, and show before/after examples without applying changes."
+
+policy:
+  allow_implicit_invocation: true

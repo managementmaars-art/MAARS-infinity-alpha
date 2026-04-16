@@ -1,0 +1,4 @@
+interface:
+  display_name: "EliteForge统一框架"
+  short_description: "约束Java开发必须使用统一框架Starter及抽象API，禁止回退或绕过。"
+  default_prompt: "按EliteForge统一框架nightly手册回答：命中能力时必须同时给出框架内Starter和对应抽象API（如缓存必须CacheService），禁止推荐spring-boot-starter-*或StringRedisTemplate等绕过方案；未覆盖时仅给框架补齐/升级或自研扩展边界。"

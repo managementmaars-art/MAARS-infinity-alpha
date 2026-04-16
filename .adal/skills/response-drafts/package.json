@@ -1,0 +1,23 @@
+{
+  "name": "@openclaw/response-drafts",
+  "version": "1.0.0",
+  "description": "Draft support response suggestions with tone matching, KB integration, and solution suggestions",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "cli": "node dist/cli.js",
+    "watch": "tsc --watch"
+  },
+  "keywords": ["support", "drafts", "tickets", "responses", "helpdesk"],
+  "author": "OpenClaw",
+  "license": "MIT",
+  "dependencies": {
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

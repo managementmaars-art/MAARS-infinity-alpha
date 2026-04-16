@@ -1,0 +1,504 @@
+---
+title: "Model Context Protocol"
+description: "Connectez votre documentation et vos endpoints d'API aux outils d'IA comme Claude et Cursor avec un serveur Model Context Protocol (MCP) hébergé."
+keywords: ["MCP", "AI tools", "Claude", "Cursor"]
+---
+
+import { PreviewButton } from "/snippets/previewbutton.jsx"
+
+<div id="about-mcp-servers">
+  ## À propos des serveurs MCP
+</div>
+
+Le Model Context Protocol (MCP) est un protocole ouvert qui crée des connexions standardisées entre les applications d&#39;IA et des services externes, comme la documentation. Mintlify génère un serveur MCP à partir de votre documentation, en préparant votre contenu pour un écosystème d&#39;IA plus vaste dans lequel n&#39;importe quel client MCP comme Claude, Cursor, Goose, ChatGPT et d&#39;autres peut se connecter à votre documentation.
+
+Votre serveur MCP expose des outils permettant aux applications d'IA de rechercher dans votre documentation et de récupérer le contenu complet des pages. Vos utilisateurs doivent connecter votre serveur MCP à leurs outils.
+
+<div id="how-mcp-servers-work">
+  ### Fonctionnement des serveurs MCP
+</div>
+
+Lorsqu'une application d'IA se connecte à votre serveur MCP de documentation, elle peut rechercher dans votre documentation et récupérer le contenu complet des pages directement en réponse à la requête d'un utilisateur, au lieu de s'appuyer sur des informations issues de ses données d'entraînement ou d'effectuer une recherche générique sur le web. Votre serveur MCP donne accès à tout le contenu indexé de votre site de documentation.
+
+* Les applications d'IA peuvent rechercher de manière proactive dans votre documentation pendant qu'elles génèrent une réponse, même s'il ne leur a pas été explicitement demandé d'y rechercher une réponse.
+* Les applications d'IA déterminent quand utiliser les outils disponibles en fonction du contexte de la conversation et de la pertinence de votre documentation.
+* Chaque appel d'outil a lieu pendant le processus de génération, de sorte que l'application d'IA utilise des informations à jour de votre documentation pour générer sa réponse.
+
+<Tip>
+  Certains outils d&#39;IA comme Claude prennent en charge à la fois MCP et Skills. MCP donne à l&#39;IA accès au contenu de votre documentation, tandis que les Skills indiquent à l&#39;IA comment utiliser ce contenu efficacement. Ils sont complémentaires. MCP fournit les données et les Skills fournissent les instructions.
+</Tip>
+
+<div id="mcp-tools">
+  ### Outils MCP
+</div>
+
+Votre serveur MCP fournit deux outils que les applications d'IA peuvent utiliser :
+
+- **Search** : Recherche dans votre documentation pour trouver du contenu pertinent, en renvoyant des extraits avec des titres et des liens. Utilisez cet outil lorsque vous devez découvrir des informations ou trouver des pages correspondant à une requête.
+- **Get page** : Récupère le contenu complet d'une page de documentation spécifique par son chemin. Utilisez cet outil lorsque vous connaissez déjà le chemin de la page, par exemple à partir des résultats de recherche, et que vous avez besoin du contenu complet plutôt que d'un extrait.
+
+Les applications d'IA déterminent quand utiliser chaque outil en fonction du contexte de la conversation. Par exemple, une application d'IA peut d'abord rechercher dans votre documentation pour trouver des pages pertinentes, puis utiliser l'outil get page pour récupérer le contenu complet du résultat le plus pertinent.
+
+<div id="search-parameters">
+  ### Paramètres de recherche
+</div>
+
+L’outil de recherche MCP prend en charge des paramètres facultatifs que les applications d’IA utilisent pour contrôler et affiner les résultats de recherche.
+
+* **`pageSize`** : Nombre de résultats à renvoyer, entre 1 et 50. La valeur par défaut est 10.
+* **`scoreThreshold`** : Score de pertinence minimum entre 0 et 1. Ne renvoie que les résultats atteignant ou dépassant ce seuil. Utilisez ce paramètre pour filtrer les correspondances peu pertinentes.
+* **`version`** : Filtre les résultats pour une version spécifique de la documentation. Par exemple, `'v0.7'`. Ne renvoie que le contenu balisé avec la version spécifiée ou le contenu disponible dans toutes les versions.
+* **`language`** : Filtre les résultats pour un code de langue spécifique. Par exemple, `'en'`, `'zh'` ou `'es'`. Ne renvoie que le contenu dans la langue spécifiée ou le contenu disponible dans toutes les langues.
+
+Les applications d’IA déterminent quand appliquer ces paramètres en fonction du contexte de la requête de l’utilisateur. Par exemple, si un utilisateur pose une question sur une version spécifique d’une API, l’application d’IA peut appliquer automatiquement le filtre approprié pour fournir des résultats plus pertinents.
+
+<div id="get-page-parameters">
+  ### Paramètres de get page
+</div>
+
+L’outil get page accepte un paramètre obligatoire :
+
+- **`page`** : Le chemin de la page à récupérer, par exemple `'api-reference/create-customer'`. Utilisez les chemins de page renvoyés par les résultats de recherche.
+
+<div id="mcp-compared-to-web-search">
+  ### MCP par rapport à la recherche sur le web
+</div>
+
+Les outils d&#39;IA peuvent rechercher sur le web, mais MCP offre des avantages spécifiques pour la documentation.
+
+* **Accès direct à la source** : La recherche sur le web dépend de ce que les moteurs de recherche ont indexé, ce qui peut être obsolète ou incomplet. MCP interroge directement votre documentation indexée la plus à jour.
+* **Flux de travail intégré** : MCP permet à l&#39;IA de rechercher pendant la génération de la réponse plutôt que d&#39;effectuer une recherche web séparée.
+* **Aucun bruit de recherche** : Les algorithmes de référencement (SEO) et de classement influencent les résultats de la recherche sur le web. MCP accède directement au contenu de votre documentation.
+
+<div id="access-your-mcp-server">
+  ## Accéder à votre serveur MCP
+</div>
+
+Mintlify génère un serveur MCP pour votre documentation et l’héberge au chemin `/mcp` de l’URL de votre documentation. Par exemple, le serveur MCP de Mintlify est disponible à l’adresse `https://mintlify.com/docs/mcp`.
+
+* Pour la documentation publique, votre serveur MCP est accessible à tous. Il recherche dans toutes les pages publiques indexées.
+* Pour la documentation avec authentification partielle, où certaines pages sont publiques et d’autres nécessitent une connexion, vous devez activer votre serveur MCP avant que les utilisateurs puissent y accéder. Les utilisateurs non authentifiés peuvent rechercher dans le contenu public. Les utilisateurs qui s’authentifient peuvent rechercher dans tout le contenu auquel ils ont l’autorisation d’accéder en fonction de leurs [groupes d’utilisateurs](/fr/deploy/authentication-setup).
+* Pour la documentation où toutes les pages requièrent une authentification, vous devez activer votre serveur MCP avant qu’il soit accessible aux utilisateurs. Les utilisateurs doivent s’authentifier avant de se connecter à votre serveur MCP. Votre serveur MCP recherche uniquement dans le contenu auquel chaque utilisateur a accès en fonction de ses [groupes d’utilisateurs](/fr/deploy/authentication-setup).
+
+Vous pouvez afficher et copier l&#39;URL de votre serveur MCP sur la [page du serveur MCP](https://dashboard.mintlify.com/products/mcp) dans votre Dashboard.
+
+<Frame>
+  <img src="/images/mcp/mcp-server-page-light.png" alt="Page du serveur MCP dans le Dashboard." className="block dark:hidden" />
+
+  <img src="/images/mcp/mcp-server-page-dark.png" alt="Page du serveur MCP dans le Dashboard." className="hidden dark:block" />
+</Frame>
+
+<Note>
+  Les serveurs MCP hébergés utilisent les chemins `/mcp` et `/authed/mcp`. Les autres éléments de navigation ne peuvent pas utiliser ces chemins.
+</Note>
+
+<div id="enable-authenticated-mcp">
+  ### Activer le MCP avec authentification
+</div>
+
+Si votre documentation nécessite une authentification, votre serveur MCP demande aux utilisateurs de s’authentifier avant de se connecter. Lorsqu’un utilisateur ajoute l’URL de votre serveur MCP à son outil d’IA, il doit se connecter avec ses identifiants existants. Après l’authentification, une redirection le renvoie vers son outil. Le serveur MCP ne renvoie que le contenu auquel chaque utilisateur est autorisé à accéder en fonction de ses [groupes d’utilisateurs](/fr/deploy/authentication-setup).
+
+Si votre documentation utilise une authentification partielle avec des pages publiques et des pages protégées, vous disposez de deux endpoints de serveur MCP :
+
+- `/mcp` : Ne nécessite pas d’authentification. Renvoie uniquement le contenu public. Partagez-le avec les utilisateurs qui ont besoin d’accéder au contenu public.
+- `/authed/mcp` : Nécessite toujours une authentification. Renvoie le contenu en fonction des permissions de chaque utilisateur selon ses [groupes d’utilisateurs](/fr/deploy/authentication-setup). Partagez-le avec les utilisateurs qui ont besoin d’accéder au contenu protégé.
+
+L’endpoint `/authed/mcp` utilise son propre flux OAuth à `/authed/mcp/oauth/*`. Les domaines de redirection configurés pour votre serveur MCP s’appliquent à la fois à `/mcp` et à `/authed/mcp`.
+
+Par défaut, votre serveur MCP est uniquement disponible pour les outils localhost. Pour autoriser les outils web à se connecter, ajoutez les domaines de redirection des outils d’IA. Un domaine de redirection est le nom d’hôte qu’un outil d’IA utilise une fois l’authentification terminée, comme `claude.ai` ou `app.cursor.ai`. Les outils d’IA de vos utilisateurs ne peuvent pas finaliser l’authentification si leur domaine de redirection ne figure pas dans cette liste.
+
+<Steps>
+  <Step title="Activer le MCP avec authentification dans votre Dashboard">
+    1. Accédez à la [page du serveur MCP](https://dashboard.mintlify.com/products/mcp) dans votre Dashboard.
+    2. Cliquez sur le bouton bascule **Enable MCP Server**.
+  </Step>
+
+  <Step title="Ajouter des domaines de redirection">
+    Ajoutez les domaines de redirection des outils d’IA auxquels vous souhaitez donner accès à vos utilisateurs. Les outils d’IA de vos utilisateurs ne peuvent pas finaliser l’authentification si leur domaine de redirection ne figure pas dans cette liste. Les domaines de redirection courants incluent `claude.ai` et `vscode.dev/redirect`.
+
+    Par défaut, les domaines de redirection utilisent `https://`. Pour autoriser un schéma de protocole personnalisé, incluez le protocole complet dans l’entrée du domaine. Par exemple, un callback d’application native comme `myapp://callback`. Mintlify bloque toujours les protocoles dangereux tels que `javascript:`, `data:` et `file:`.
+
+    Les adresses loopback (`localhost`, `127.0.0.1`) sont toujours approuvées et n’ont pas besoin d’être ajoutées.
+  </Step>
+</Steps>
+
+<div id="client-credentials">
+  ### Identifiants client
+</div>
+
+Les identifiants client vous permettent de vous connecter à votre serveur MCP authentifié de manière programmatique, sans connexion via un navigateur. Utilisez les identifiants client pour les intégrations côté serveur, les pipelines CI/CD, les workflows automatisés et tout environnement dans lequel un utilisateur ne peut pas effectuer un flux OAuth interactif.
+
+Les identifiants client s'authentifient auprès de l'endpoint `/authed/mcp` et renvoient le même contenu qu'un utilisateur authentifié ayant accès à toutes les pages.
+
+<Steps>
+  <Step title="Créer un identifiant client">
+    1. Accédez à la [page du serveur MCP](https://dashboard.mintlify.com/products/mcp) dans votre Dashboard.
+    2. Dans la section **Client Credentials**, sélectionnez **Create credential**.
+    3. Saisissez un libellé pour l'identifiant afin d'en identifier l'usage.
+    4. Copiez le **client ID** et le **client secret**. Le client secret n'est affiché qu'une seule fois. Vous ne pourrez pas le récupérer ultérieurement.
+  </Step>
+  <Step title="Échanger les identifiants contre un jeton d'accès">
+    Envoyez une requête POST à l'endpoint de jeton de votre serveur MCP avec votre client ID et votre secret. Votre endpoint de jeton se trouve au chemin `/authed/mcp/oauth/token` de l'URL de votre documentation.
+
+    <CodeGroup>
+    ```bash cURL
+    curl -X POST https://your-docs.com/authed/mcp/oauth/token \
+      -H 'Content-Type: application/x-www-form-urlencoded' \
+      -d 'grant_type=client_credentials&client_id=CLIENT_ID&client_secret=CLIENT_SECRET'
+    ```
+
+    ```bash cURL (Basic Auth)
+    curl -X POST https://your-docs.com/authed/mcp/oauth/token \
+      -H 'Content-Type: application/x-www-form-urlencoded' \
+      -H 'Authorization: Basic BASE64_CLIENT_ID_COLON_SECRET' \
+      -d 'grant_type=client_credentials'
+    ```
+    </CodeGroup>
+
+    La réponse inclut un jeton d'accès :
+
+    ```json
+    {
+      "access_token": "eyJhbGciOi...",
+      "token_type": "Bearer",
+      "expires_in": 1209600,
+      "scope": "mcp:search"
+    }
+    ```
+
+    Les jetons d'accès expirent au bout de 14 jours. Demandez un nouveau jeton lorsque le jeton actuel expire.
+  </Step>
+  <Step title="Se connecter au serveur MCP">
+    Utilisez le jeton d'accès comme bearer token lors de la connexion à l'endpoint `/authed/mcp`.
+
+    <CodeGroup>
+    ```bash cURL
+    curl -X POST https://your-docs.com/authed/mcp \
+      -H 'Authorization: Bearer ACCESS_TOKEN' \
+      -H 'Content-Type: application/json' \
+      -H 'Accept: application/json, text/event-stream' \
+      -d '{
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-03-26",
+          "capabilities": {},
+          "clientInfo": {"name": "my-integration", "version": "1.0.0"}
+        }
+      }'
+    ```
+
+    ```bash Claude Code
+    claude mcp add --transport http \
+      --header "Authorization: Bearer ACCESS_TOKEN" \
+      my-docs https://your-docs.com/authed/mcp
+    ```
+    </CodeGroup>
+  </Step>
+</Steps>
+
+<div id="managing-client-credentials">
+  #### Gestion des identifiants client
+</div>
+
+Vous pouvez gérer vos identifiants client depuis la [page du serveur MCP](https://dashboard.mintlify.com/products/mcp) dans votre Dashboard.
+
+- **Supprimer un identifiant** pour révoquer définitivement l'accès. Cette action est irréversible.
+
+<Warning>
+  Traitez les client secrets comme des mots de passe. Ne les intégrez pas dans le contrôle de version et ne les exposez pas dans du code côté client. Utilisez des variables d'environnement ou un gestionnaire de secrets pour les stocker.
+</Warning>
+
+<div id="rate-limits">
+  ### Limites de débit
+</div>
+
+Pour protéger la disponibilité, Mintlify applique des limites de débit aux serveurs MCP.
+
+| Portée                             | Limite                   | Description                                                                                                |
+| :--------------------------------- | :----------------------- | :--------------------------------------------------------------------------------------------------------- |
+| Par utilisateur (adresse IP)       | 5 000 requêtes par heure | Limite la fréquence à laquelle un même utilisateur peut interroger la configuration de votre serveur MCP. |
+| Search par site de documentation (domain) | 10 000 requêtes par heure | Limite le nombre total d’appels à l’outil de recherche effectués par tous les utilisateurs de votre serveur MCP. |
+| Get page par site de documentation (domain) | 10 000 requêtes par heure | Limite le nombre total d’appels à l’outil get page effectués par tous les utilisateurs de votre serveur MCP. |
+| Search authentifié par site de documentation (domain) | 5 000 requêtes par heure | Limite le nombre total d’appels authentifiés à l’outil de recherche effectués par tous les utilisateurs de votre serveur MCP. |
+| Get page authentifié par site de documentation (domain) | 5 000 requêtes par heure | Limite le nombre total d’appels authentifiés à l’outil get page effectués par tous les utilisateurs de votre serveur MCP. |
+
+<div id="content-filtering-and-indexing">
+  ## Filtrage du contenu et indexation
+</div>
+
+Votre serveur MCP recherche le contenu que Mintlify indexe à partir de votre référentiel de documentation. Le traitement des fichiers et l’indexation pour la recherche déterminent quel contenu est disponible via votre serveur MCP.
+
+Pour la documentation nécessitant une authentification, votre serveur MCP indexe uniquement les pages des [groupes d’utilisateurs publics](/fr/deploy/authentication-setup#make-pages-public). Pour la documentation avec authentification partielle, votre serveur MCP indexe les pages publiques pour les utilisateurs non authentifiés ainsi que toutes les pages des groupes d’utilisateurs publics.
+
+<div id="file-processing-with-mintignore">
+  ### Traitement des fichiers avec `.mintignore`
+</div>
+
+Si des fichiers correspondent aux modèles définis dans [.mintignore](/fr/organize/mintignore), Mintlify ne les traite pas et ne les indexe pas. Ces fichiers ne sont pas disponibles via votre serveur MCP.
+
+<div id="search-indexing-with-docsjson">
+  ### Indexation pour la recherche avec `docs.json`
+</div>
+
+Par défaut, Mintlify n&#39;indexe, pour la recherche via votre serveur MCP, que les pages incluses dans la navigation de votre `docs.json`.
+
+Mintlify exclut les [pages masquées](/fr/organize/hidden-pages) (pages qui ne figurent pas dans votre navigation) de l&#39;index de recherche, sauf si vous choisissez d&#39;indexer toutes les pages. Pour inclure les pages masquées dans les résultats de recherche de votre serveur MCP, ajoutez la propriété `seo.indexing` à votre `docs.json`.
+
+```json
+"seo": {
+    "indexation": "all"
+}
+```
+
+Pour exclure une page donnée de l&#39;indexation par les moteurs de recherche, ajoutez `noindex: true` à son frontmatter.
+
+```mdx
+---
+title: "Page cachée"
+description: "Cette page ne figure pas dans la navigation et n'est pas accessible via la recherche."
+noindex: true
+---
+```
+
+<div id="use-your-mcp-server">
+  ## Utiliser votre serveur MCP
+</div>
+
+Vos utilisateurs doivent connecter votre serveur MCP à leurs outils d&#39;IA préférés.
+
+1. Rendez l&#39;URL de votre serveur MCP publique.
+2. Les utilisateurs copient l&#39;URL de votre serveur MCP et l&#39;ajoutent à leurs outils.
+3. Les utilisateurs accèdent à votre documentation depuis leurs outils.
+
+Voici quelques façons d&#39;aider vos utilisateurs à se connecter à votre serveur MCP :
+
+<Tabs>
+  <Tab title="Menu contextuel">
+    Ajoutez des options dans le [menu contextuel](/fr/ai/contextual-menu) pour permettre à vos utilisateurs de se connecter à votre serveur MCP depuis n&#39;importe quelle page de votre documentation.
+
+    | Option | Identifiant | Description |
+    | :----- | :--------- | :---------- |
+    | **Copier l&#39;URL du serveur MCP** | `mcp` | Copie l&#39;URL de votre serveur MCP dans le presse‑papiers de l&#39;utilisateur. |
+    | **Copier la commande d&#39;installation MCP** | `add-mcp` | Copie la commande `npx add-mcp` pour installer le serveur MCP. |
+    | **Se connecter à Cursor** | `cursor` | Installe votre serveur MCP dans Cursor. |
+    | **Se connecter à VS Code** | `vscode` | Installe votre serveur MCP dans VS Code. |
+  </Tab>
+
+  <Tab title="Claude">
+    <Steps>
+      <Step title="Obtenez l'URL de votre serveur MCP.">
+        Accédez à votre [Dashboard](https://dashboard.mintlify.com/products/mcp) et trouvez l&#39;URL de votre serveur MCP.
+      </Step>
+
+      <Step title="Publiez l'URL de votre serveur MCP pour vos utilisateurs.">
+        Créez un guide pour vos utilisateurs qui inclut l&#39;URL de votre serveur MCP et les étapes pour le connecter à Claude.
+
+        1. Accédez à la page [Connectors](https://claude.ai/settings/connectors) dans les paramètres de Claude.
+        2. Sélectionnez **Add custom connector**.
+        3. Ajoutez le nom et l&#39;URL de votre serveur MCP.
+        4. Sélectionnez **Add**.
+        5. Lors de l&#39;utilisation de Claude, sélectionnez le bouton des pièces jointes (l&#39;icône « plus »).
+        6. Sélectionnez votre serveur MCP.
+      </Step>
+    </Steps>
+
+    Voir la [documentation Model Context Protocol](https://modelcontextprotocol.io/docs/tutorials/use-remote-mcp-server#connecting-to-a-remote-mcp-server) pour plus de détails.
+  </Tab>
+
+  <Tab title="Claude Code">
+    <Steps>
+      <Step title="Obtenez l'URL de votre serveur MCP.">
+        Accédez à votre [Dashboard](https://dashboard.mintlify.com/products/mcp) et trouvez l&#39;URL de votre serveur MCP.
+      </Step>
+
+      <Step title="Publiez l'URL de votre serveur MCP pour vos utilisateurs.">
+        Créez un guide pour vos utilisateurs qui inclut l&#39;URL de votre serveur MCP et la commande pour le connecter à Claude Code.
+
+        ```bash
+        claude mcp add --transport http <name> <url>
+        ```
+      </Step>
+    </Steps>
+
+    Voir la [documentation Claude Code](https://docs.anthropic.com/en/docs/claude-code/mcp#installing-mcp-servers) pour plus de détails.
+  </Tab>
+
+  <Tab title="Cursor">
+    <Steps>
+      <Step title="Obtenez l'URL de votre serveur MCP.">
+        Accédez à votre [Dashboard](https://dashboard.mintlify.com/products/mcp) et trouvez l&#39;URL de votre serveur MCP.
+      </Step>
+
+      <Step title="Publiez l'URL de votre serveur MCP pour vos utilisateurs.">
+        Créez un guide pour vos utilisateurs qui inclut l&#39;URL de votre serveur MCP et les étapes pour le connecter à Cursor.
+
+        1. Utilisez <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> sous Windows) pour ouvrir la palette de commandes.
+        2. Recherchez « Open MCP settings ».
+        3. Sélectionnez **Add custom MCP**. Cela ouvre le fichier `mcp.json`.
+        4. Dans `mcp.json`, configurez votre serveur :
+
+        ```json
+        {
+          "mcpServers": {
+            "<your-mcp-server-name>": {
+              "url": "<your-mcp-server-url>"
+            }
+          }
+        }
+        ```
+      </Step>
+    </Steps>
+
+    Voir la [documentation Cursor](https://docs.cursor.com/en/context/mcp#installing-mcp-servers) pour plus de détails.
+  </Tab>
+
+  <Tab title="VS Code">
+    <Steps>
+      <Step title="Obtenez l'URL de votre serveur MCP.">
+        Accédez à votre [Dashboard](https://dashboard.mintlify.com/products/mcp) et trouvez l&#39;URL de votre serveur MCP.
+      </Step>
+
+      <Step title="Publiez l'URL de votre serveur MCP pour vos utilisateurs.">
+        Créez un guide pour vos utilisateurs qui inclut l&#39;URL de votre serveur MCP et les étapes pour le connecter à VS Code.
+
+        1. Créez un fichier `.vscode/mcp.json`.
+        2. Dans `mcp.json`, configurez votre serveur :
+
+        ```json
+        {
+          "servers": {
+            "<your-mcp-server-name>": {
+              "type": "http",
+              "url": "<your-mcp-server-url>"
+            }
+          }
+        }
+        ```
+      </Step>
+    </Steps>
+
+    Voir la [documentation VS Code](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) pour plus de détails.
+  </Tab>
+</Tabs>
+
+<div id="example-connect-to-the-mintlify-mcp-server">
+  ### Exemple : connexion au serveur MCP de Mintlify
+</div>
+
+Connectez-vous au serveur MCP de Mintlify pour rechercher sur ce site de documentation depuis votre outil d&#39;IA préféré. Vous obtiendrez ainsi des réponses plus précises sur l&#39;utilisation de Mintlify dans votre environnement local, et vous verrez comment aider vos utilisateurs à se connecter à votre serveur MCP.
+
+<Tabs>
+  <Tab title="Menu contextuel">
+    En haut de cette page, ouvrez le menu contextuel et choisissez **Connect to Cursor** ou **Connect to VS Code** pour connecter le serveur MCP de Mintlify à l&#39;IDE de votre choix.
+  </Tab>
+
+  <Tab title="Claude">
+    Pour utiliser le serveur MCP de Mintlify avec Claude :
+
+    <Steps>
+      <Step title="Ajouter le serveur MCP de Mintlify à Claude">
+        1. Accédez à la page [Connectors](https://claude.ai/settings/connectors) dans les paramètres de Claude.
+        2. Sélectionnez **Add custom connector**.
+        3. Ajoutez le serveur MCP de Mintlify :
+
+        * Name: `Mintlify`
+        * URL: `https://mintlify.com/docs/mcp`
+
+        4. Sélectionnez **Add**.
+      </Step>
+
+      <Step title="Accéder au serveur MCP dans votre chat">
+        1. Dans Claude, cliquez sur le bouton des pièces jointes (l&#39;icône &quot;plus&quot;).
+        2. Sélectionnez le serveur MCP de Mintlify.
+        3. Posez à Claude une question sur Mintlify.
+      </Step>
+    </Steps>
+
+    Consultez la [documentation Model Context Protocol](https://modelcontextprotocol.io/docs/tutorials/use-remote-mcp-server#connecting-to-a-remote-mcp-server) pour plus de détails.
+  </Tab>
+
+  <Tab title="Claude Code">
+    Pour utiliser le serveur MCP de Mintlify avec Claude Code, exécutez la commande suivante :
+
+    ```bash
+    claude mcp add --transport http Mintlify https://mintlify.com/docs/mcp
+    ```
+
+    Testez la connexion en exécutant :
+
+    ```bash
+    claude mcp list
+    ```
+
+    Consultez la [documentation Claude Code](https://docs.anthropic.com/en/docs/claude-code/mcp#installing-mcp-servers) pour plus de détails.
+  </Tab>
+
+  <Tab title="Cursor">
+    <PreviewButton href="cursor://anysphere.cursor-deeplink/mcp/install?name=mintlify&config=eyJ1cmwiOiJodHRwczovL21pbnRsaWZ5LmNvbS9kb2NzL21jcCJ9">Installer dans Cursor</PreviewButton>
+
+    Pour connecter le serveur MCP de Mintlify à Cursor, cliquez sur le bouton **Installer dans Cursor**. Ou, pour le connecter manuellement, suivez ces étapes :
+
+    <Steps>
+      <Step title="Ouvrir les paramètres MCP">
+        1. Utilisez <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> sous Windows) pour ouvrir la palette de commandes.
+        2. Recherchez « Open MCP settings ».
+        3. Sélectionnez **Add custom MCP**. Cela ouvre le fichier `mcp.json`.
+      </Step>
+
+      <Step title="Configurer le serveur MCP de Mintlify">
+        Dans `mcp.json`, ajoutez :
+
+        ```json
+        {
+          "mcpServers": {
+            "Mintlify": {
+              "url": "https://mintlify.com/docs/mcp"
+            }
+          }
+        }
+        ```
+      </Step>
+
+      <Step title="Tester la connexion">
+        Dans le chat de Cursor, demandez « What tools do you have available? ». Cursor doit afficher le serveur MCP de Mintlify comme outil disponible.
+      </Step>
+    </Steps>
+
+    Voir [Installing MCP servers](https://docs.cursor.com/en/context/mcp#installing-mcp-servers) dans la documentation de Cursor pour plus de détails.
+  </Tab>
+
+  <Tab title="VS Code">
+    <PreviewButton href="https://vscode.dev/redirect/mcp/install?name=mintlify&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmintlify.com%2Fdocs%2Fmcp%22%7D">Installer dans VS Code</PreviewButton>
+
+    Pour connecter le serveur MCP de Mintlify à VS Code, cliquez sur le bouton **Installer dans VS Code**. Ou, pour le connecter manuellement, créez un fichier `.vscode/mcp.json` et ajoutez :
+
+    ```json
+    {
+      "servers": {
+        "Mintlify": {
+          "type": "http",
+          "url": "https://mintlify.com/docs/mcp"
+        }
+      }
+    }
+    ```
+
+    Consultez la [documentation VS Code](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) pour plus de détails.
+  </Tab>
+</Tabs>
+
+<div id="using-multiple-mcp-servers">
+  ### Utiliser plusieurs serveurs MCP
+</div>
+
+Les utilisateurs peuvent connecter plusieurs serveurs MCP à leurs outils d’IA. Les serveurs MCP connectés ne consomment pas de contexte tant que l’IA n’appelle pas un outil de recherche. L’IA décide quand effectuer une recherche en fonction de la pertinence de la requête ; elle ne recherche donc pas sur chaque serveur connecté pour chaque question.
+
+Lorsque l’IA effectue une recherche, chaque requête renvoie plusieurs résultats qui s’ajoutent au contexte de la conversation. Si l’IA interroge plusieurs serveurs pour une seule question, cela peut consommer une quantité importante de contexte.
+
+Bonnes pratiques pour utiliser plusieurs serveurs MCP :
+
+* Connectez uniquement les serveurs MCP pertinents pour votre travail actuel.
+* Soyez précis dans vos prompts afin que l’IA interroge le serveur le plus pertinent.
+* Déconnectez les serveurs que vous n’utilisez pas activement pour réduire l’utilisation potentielle du contexte.

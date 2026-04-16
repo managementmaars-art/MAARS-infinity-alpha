@@ -1,0 +1,65 @@
+{
+  "name": "hermes-agent",
+  "version": "2.0.0",
+  "description": "NousResearch Hermes Agent 通用集成 Skill - 通过 CLI 调用 Hermes Agent 的核心能力（自改进技能、持久化记忆、子代理委托、MCP集成等）。支持一键安装，可在任意 WorkBuddy/Claw 实例间迁移。",
+  "author": "WorkBuddy AI",
+  "keywords": ["hermes", "agent", "ai", "nousresearch", "self-improving", "memory", "delegation", "mcp", "portable"],
+  "triggers": ["hermes", "使用 hermes", "调用 hermes", "hermes agent", "子代理委托", "技能学习", "记忆查询", "hermes run", "hermes delegate", "hermes memory", "hermes skills", "安装 hermes"],
+  "category": "ai-agents",
+  "permissions": {
+    "files": ["read", "write"],
+    "network": ["hermes-cli", "llm-providers", "github.com"],
+    "commands": ["bash"]
+  },
+  "dependencies": {
+    "required": [
+      {
+        "name": "hermes-cli",
+        "check": "command -v hermes && hermes --version || echo NOT_INSTALLED",
+        "install": "bash scripts/install_hermes.sh",
+        "install_docs": "运行 Skill 目录下的 scripts/install_hermes.sh 即可一键安装"
+      }
+    ],
+    "optional": [
+      {
+        "name": "jq",
+        "check": "command -v jq || echo NOT_INSTALLED",
+        "purpose": "JSON 输出格式化（可选，脚本有 fallback）"
+      },
+      {
+        "name": "ripgrep",
+        "check": "command -v rg || echo NOT_INSTALLED",
+        "purpose": "更快的文件搜索（可选，Hermes 会 fallback 到 grep）"
+      }
+    ]
+  },
+  "config": {
+    "config_dir": "~/.hermes",
+    "cli_entry": "~/.local/bin/hermes",
+    "default_timeout": 300,
+    "max_concurrent_delegates": 3,
+    "install_script": "scripts/install_hermes.sh",
+    "supported_providers": [
+      "openrouter",
+      "anthropic",
+      "openai",
+      "gemini",
+      "zai",
+      "kimi-coding",
+      "nous",
+      "custom"
+    ]
+  },
+  "portability": {
+    "type": "full",
+    "description": "完全可移植。包含一键安装脚本，任意 Claw 实例加载此 Skill 后运行 install_hermes.sh 即可使用。",
+    "migration_steps": [
+      "1. 将整个 hermes-agent Skill 目录复制到目标实例的 ~/.workbuddy/skills/",
+      "2. 运行 scripts/install_hermes.sh 安装 Hermes CLI",
+      "3. 配置 ~/.hermes/.env 添加 API Key",
+      "4. 运行 hermes doctor 验证安装"
+    ]
+  },
+  "created_at": "2026-04-11T20:46:00Z",
+  "updated_at": "2026-04-12T00:35:00Z"
+}

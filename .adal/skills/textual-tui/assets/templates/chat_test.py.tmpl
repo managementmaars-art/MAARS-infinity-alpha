@@ -1,0 +1,15 @@
+from __future__ import annotations
+
+import pytest
+
+from {{MODULE}} import {{CLASS_NAME}}
+
+@pytest.mark.asyncio
+async def test_chat_roundtrip() -> None:
+    app = {{CLASS_NAME}}()
+    async with app.run_test(size=(100, 30)) as pilot:
+        await pilot.click("#prompt")
+        await pilot.press("h", "e", "l", "l", "o")
+        await pilot.press("enter")
+        await pilot.pause(0.1)
+        assert app.message_count >= 3

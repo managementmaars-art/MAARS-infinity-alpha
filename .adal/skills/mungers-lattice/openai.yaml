@@ -1,0 +1,4 @@
+interface:
+  display_name: "Munger's Lattice"
+  short_description: "Analyze decisions with multidisciplinary models"
+  default_prompt: "Break down my decision using Munger-style multidisciplinary mental models and produce a rational, testable recommendation with key tradeoffs."

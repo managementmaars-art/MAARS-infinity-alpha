@@ -1,0 +1,23 @@
+{
+  "skill_name": "defrag",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use $defrag on this TypeScript file and identify the top 10 refactoring opportunities. Focus on long functions, duplicated logic, and missing tests.",
+      "expected_output": "A ranked analysis-only report with value scores, exact file line references, before/after snippets, and a final prompt asking whether to apply suggestions.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Run $defrag on the selected React component and tell me the highest-value cleanup opportunities. Include hotspot analysis from the last 30 days if git history is available.",
+      "expected_output": "A ranked list that includes structural refactors before cosmetic ones, mentions hotspot analysis behavior, and does not modify code.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Refactor review request: use $defrag on this Python module and show the most valuable 10 improvements with concise before and after code examples.",
+      "expected_output": "A top-10 refactoring review with scoring, rationale, before/after code blocks, and an explicit analysis-only stance.",
+      "files": []
+    }
+  ]
+}

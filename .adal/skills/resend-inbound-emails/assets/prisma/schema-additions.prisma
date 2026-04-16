@@ -1,0 +1,192 @@
+// ===========================================
+// RESEND INBOUND EMAILS - SCHEMA ADDITIONS
+// ===========================================
+// Add these models to your existing Prisma schema
+
+// ===========================================
+// USER MODEL ADDITIONS
+// ===========================================
+// Add these fields to your existing User model:
+//
+// model User {
+//   // ... existing fields ...
+//
+//   // Email preferences
+//   sendFromDomain     String?  // User's preferred sending domain
+//   notifyInboundEmail Boolean  @default(true) // Email me when a creator replies
+//   theme              String   @default("system") // "light", "dark", or "system"
+// }
+
+// ===========================================
+// TEAM MODEL ADDITIONS
+// ===========================================
+// Add these fields to your existing Team model:
+//
+// model Team {
+//   // ... existing fields ...
+//
+//   // Relations (REQUIRED)
+//   domains      TeamDomain[]
+//   inboxThreads InboxThread[]
+//
+//   // Relations (OPTIONAL - only if using personalization)
+//   emailReviews PersonalizedEmailPreview[]
+//
+//   // AI Personalization context (OPTIONAL - only if using personalization)
+//   personalizationAboutUs        String?  @db.Text // Team description for AI context
+//   personalizationModelId        String?  @default("google/gemini-3-flash") // AI model
+//   personalizationInstructions   String?  @db.Text // Custom AI instructions
+//   personalizationPreviewEnabled Boolean  @default(false) // Show preview before sending
+// }
+
+// ===========================================
+// TEAM DOMAIN MANAGEMENT
+// ===========================================
+
+model TeamDomain {
+  id     String @id @default(cuid())
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  resendDomainId String  @unique // Resend's domain ID
+  domain         String // e.g., "acme.com"
+  status         String  @default("not_started") // "not_started" | "pending" | "verified" | "invalid"
+  isActive       Boolean @default(false) // Only one domain can be active per team
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([teamId, domain])
+  @@index([teamId])
+}
+
+// ===========================================
+// INBOX THREADING
+// ===========================================
+
+model InboxThread {
+  id            String   @id @default(cuid())
+  teamId        String
+  creatorId     String?  // Link to your entity (creator, contact, etc.)
+  creatorEmail  String   // Primary email for this thread
+  primaryEmail  String?  // Original email the thread was created with
+  isRead        Boolean  @default(false)
+  isArchived    Boolean  @default(false)
+  lastMessageAt DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Track all emails that have participated in this thread
+  participantEmails String[] @default([])
+
+  team     Team           @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  creator  Creator?       @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  messages InboxMessage[]
+
+  @@index([teamId, lastMessageAt])
+  @@index([teamId, creatorId])
+}
+
+model InboxMessage {
+  id             String              @id @default(cuid())
+  threadId       String
+  direction      InboxDirection
+  from           String
+  to             String
+  subject        String?
+  textBody       String?             @db.Text
+  htmlBody       String?             @db.Text
+  resendEmailId  String?
+  messageId      String?             // RFC 5322 Message-ID
+  inReplyTo      String?             // RFC 5322 In-Reply-To
+  references     String[]            // RFC 5322 References chain
+  sentAt         DateTime?
+  receivedAt     DateTime?
+  deliveryStatus InboxDeliveryStatus @default(PENDING)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  thread      InboxThread       @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  attachments InboxAttachment[]
+  review      PersonalizedEmailPreview?
+
+  @@index([resendEmailId])
+  @@index([messageId])
+  @@index([threadId, createdAt])
+}
+
+model InboxAttachment {
+  id          String  @id @default(cuid())
+  messageId   String
+  filename    String
+  url         String
+  size        Int?
+  contentType String?
+
+  message InboxMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+}
+
+enum InboxDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum InboxDeliveryStatus {
+  PENDING
+  SENT
+  DELIVERED
+  BOUNCED
+  FAILED
+}
+
+// ===========================================
+// PERSONALIZATION REVIEW (OPTIONAL)
+// ===========================================
+// Only add this model if you're implementing AI personalization with review workflow.
+
+model PersonalizedEmailPreview {
+  id              String             @id @default(cuid())
+  teamId          String
+  creatorId       String?
+  createdById     String
+
+  originalSubject String
+  originalBody    String             @db.Text
+
+  personalizedSubject String
+  personalizedBody    String         @db.Text
+  explanation         String?        @db.Text
+
+  recipientEmail  String
+  recipientName   String?
+
+  status          EmailReviewStatus  @default(PENDING)
+
+  editedSubject   String?
+  editedBody      String?            @db.Text
+  wasEdited       Boolean            @default(false)
+
+  sentMessageId   String?            @unique
+  sentMessage     InboxMessage?      @relation(fields: [sentMessageId], references: [id], onDelete: SetNull)
+
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  expiresAt       DateTime           // 7 days from creation
+
+  team     Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  creator  Creator? @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  user     User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([teamId, status])
+  @@index([teamId, creatorId])
+  @@index([createdById])
+  @@index([expiresAt])
+}
+
+enum EmailReviewStatus {
+  PENDING
+  SENT
+  EXPIRED
+}

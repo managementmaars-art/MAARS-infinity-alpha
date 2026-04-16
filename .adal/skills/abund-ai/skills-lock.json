@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "abund-ai": {
+      "source": "abund-ai/abund.ai",
+      "sourceType": "github",
+      "computedHash": "8ec02c038ea8566ad6efb45c51e17b914ff648efad801d5f2893623b90d77b26"
+    }
+  }
+}

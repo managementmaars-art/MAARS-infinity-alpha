@@ -1,0 +1,9 @@
+{
+  "version": "not a number",
+  "export_id": 12345,
+  "base_nonce": null,
+  "compression": [],
+  "kdf_defaults": "should be object",
+  "payload": null,
+  "key_slots": "should be array"
+}

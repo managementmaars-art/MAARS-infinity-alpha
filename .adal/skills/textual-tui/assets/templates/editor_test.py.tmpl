@@ -1,0 +1,19 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+from {{MODULE}} import {{CLASS_NAME}}
+
+@pytest.mark.asyncio
+async def test_editor_save(tmp_path: Path) -> None:
+    target = tmp_path / "demo.py"
+    app = {{CLASS_NAME}}(default_path=str(target))
+    async with app.run_test(size=(100, 30)) as pilot:
+        app.query_one("#path").value = str(target)
+        app.query_one("#editor").text = "print('ok')\n"
+        app.action_save()
+        await pilot.pause()
+        assert target.exists()
+        assert app.saved_path == str(target)

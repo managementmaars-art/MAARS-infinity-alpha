@@ -1,0 +1,17 @@
+{
+  "skill_name": "renaissance-md-html",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "把下面这段 Markdown 转成文艺复兴风格的完整 HTML 文档字符串，标题用「测试页」：\\n\\n# 第一章\\n\\n一段**强调**正文。\\n\\n| a | b |\\n|---|---|\\n| 1 | 2 |",
+      "expected_output": "通过 md_to_renaissance_html 脚本生成，含 DOCTYPE、wmr-renaissance、表格与 strong 样式",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "用 skill 里的脚本读取项目里某篇 .md（若无可自建临时 md），输出 HTML 并确认包含代码块与引用块样式类作用域在 wmr-renaissance 下",
+      "expected_output": "blockquote 与 pre/code 在生成 HTML 中存在且样式由嵌入的 renaissance.css 控制",
+      "files": []
+    }
+  ]
+}

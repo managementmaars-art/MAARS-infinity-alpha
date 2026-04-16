@@ -1,0 +1,248 @@
+---
+name: user-input-protocol
+description: >-
+  Structured AWAITING_USER_INPUT checkpoint format for requesting human
+  decisions. When hitting a decision point, stop, present context, show 2-4
+  labeled options with implications, state a recommendation, and wait. Groups
+  related decisions into single multi-question checkpoints. Includes subagent
+  state-save-before-pause and resume-without-redoing-work patterns, plus
+  factory-mode urgency classification (blocking/next-review/informational).
+  Use when encountering business rule ambiguities, architecture trade-offs,
+  scope questions, destructive actions, or any point requiring human judgment.
+  Triggers on: "should I use X or Y", "which approach", "need a decision",
+  "before I proceed", "confirm this action", "trade-off", "destructive
+  change". Also activates when delegating to subagents that may hit decision
+  points. NOT for: implementation details with one correct answer, or
+  style choices covered by project conventions.
+license: CC0-1.0
+metadata:
+  author: jwilger
+  version: "1.2.1"
+  requires: []
+  context: []
+  phase: build
+  standalone: true
+effort: low
+---
+
+# User Input Protocol
+
+**Value:** Respect -- the developer's judgment governs all consequential
+decisions. The agent never assumes when it should ask.
+
+## Purpose
+
+Defines a structured format for agents to request human input at decision
+points. Prevents agents from making assumptions on the developer's behalf,
+ensures questions include enough context for informed decisions, and provides
+a pause-and-resume pattern for subagents that cannot directly prompt the user.
+
+## Practices
+
+### Stop and Present, Never Assume
+
+When you encounter a decision that requires human judgment, stop working
+immediately. Do not guess. Do not pick the "most likely" option. Present
+the decision clearly and wait.
+
+Decisions that require human input:
+- Business rule ambiguities (two valid interpretations exist)
+- Architecture trade-offs (performance vs. simplicity, etc.)
+- Scope questions (should this feature include X?)
+- Destructive actions (deleting files, force-pushing, dropping data)
+
+Decisions that do NOT require human input:
+- Implementation details with one clearly correct answer
+- Formatting, naming, or style choices covered by project conventions
+- Test structure when requirements are unambiguous
+
+### Use the AWAITING_USER_INPUT Format
+
+When you need input, output this structured checkpoint:
+
+```
+AWAITING_USER_INPUT
+---
+Context: [Why you are asking -- what you were doing and what you found]
+Decision needed: [The specific question, one sentence]
+Options:
+  A) [Label] -- [What this means and its implications]
+  B) [Label] -- [What this means and its implications]
+  C) [Label] -- [What this means and its implications]
+Recommendation: [Which option you suggest and why, or "No recommendation"]
+---
+```
+
+Rules for the checkpoint:
+- Context must explain what led to this question (not just "I need input")
+- Provide 2-4 specific options. Never ask open-ended "what should I do?"
+- Each option must include implications, not just a label
+- State your recommendation if you have one -- the developer can override
+
+**Example:**
+```
+AWAITING_USER_INPUT
+---
+Context: While implementing the login endpoint, I found two email validation
+patterns in the codebase. auth/validate.rs uses strict RFC 5322 parsing.
+signup/forms.rs uses a simple regex check. These produce different results
+for edge cases like "user+tag@example.com".
+Decision needed: Which email validation approach should be the project standard?
+Options:
+  A) Strict RFC 5322 -- rejects fewer valid addresses, more complex to maintain
+  B) Simple regex -- faster, but may accept malformed addresses
+  C) Context-dependent -- strict for auth, lenient for forms
+Recommendation: A) Strict RFC 5322, applied everywhere for consistency
+---
+```
+
+### Save State Before Pausing (Subagents)
+
+Subagents and background tasks typically cannot prompt the user directly.
+When a subagent needs input, it must save its progress before pausing so
+work can resume without starting over.
+
+State to save before pausing:
+1. What task you were performing
+2. What files you created or modified
+3. What analysis you completed
+4. The specific decision that blocked you
+5. Enough context to continue immediately when resumed
+
+Where to save state depends on your harness:
+- Task metadata (Claude Code: TaskUpdate with metadata)
+- File system (write a JSON checkpoint to a temp file)
+- Memory tools (MCP servers, if available)
+
+After saving state, output the AWAITING_USER_INPUT checkpoint and stop.
+The orchestrator or main conversation detects the pause, presents the
+question to the user, and resumes the subagent with the answer.
+
+### Resume Without Redoing Work
+
+When resumed with the user's answer:
+1. Retrieve your saved state
+2. Confirm you have the files and context you need
+3. Apply the user's decision
+4. Continue from where you stopped
+
+**Do not** re-analyze files you already analyzed. **Do not** re-read
+context you already saved. The purpose of state preservation is to make
+resumption instant.
+
+**Do:**
+- "You chose strict RFC 5322. Applying to the login endpoint now."
+
+**Do not:**
+- "Let me re-analyze the codebase to understand the email validation..."
+
+### Batch Decisions in Factory Mode
+
+When running inside a pipeline or factory workflow, avoid blocking the
+pipeline on every decision. Classify each decision and route accordingly:
+
+- **Gate-resolvable:** Never ask the human. Quality gates provide the
+  answer (test pass/fail, mutation score, CI status). These are fully
+  automated.
+- **Judgment-required:** Batch for the next human review cycle. Examples:
+  design trade-offs that surfaced during review, non-blocking review
+  findings that need prioritization, retrospective suggestions.
+- **Blocking:** Pause the pipeline immediately. Examples: security concern
+  raised during review, unrecoverable gate failure after 3 rework cycles,
+  ambiguous requirements that affect correctness.
+
+Gate-resolvable decisions never appear in AWAITING_USER_INPUT checkpoints.
+Judgment-required decisions are collected and presented as a single grouped
+checkpoint during the human review phase. Blocking decisions use the
+standard AWAITING_USER_INPUT format immediately.
+
+When emitting AWAITING_USER_INPUT in factory mode, include an `urgency`
+field after the separator:
+
+```
+AWAITING_USER_INPUT
+---
+Urgency: blocking | next-review | informational
+Context: ...
+Decision needed: ...
+Options: ...
+Recommendation: ...
+---
+```
+
+- `blocking` -- pipeline is halted, needs immediate attention
+- `next-review` -- batched for next scheduled human review
+- `informational` -- no action needed, for awareness only
+
+Standalone users can ignore the urgency field; the checkpoint format
+remains backward compatible.
+
+### Handle Multi-Question Checkpoints
+
+When multiple related decisions are needed, group them in one checkpoint
+rather than pausing repeatedly. Number each question.
+
+```
+AWAITING_USER_INPUT
+---
+Context: Setting up the test infrastructure for the new auth module.
+Decisions needed:
+
+1. Test framework?
+   A) Jest -- already used in 3 other modules
+   B) Vitest -- faster, but would introduce a second test runner
+   Recommendation: A) Jest for consistency
+
+2. Test file location?
+   A) Colocated (auth/__tests__/) -- matches signup module pattern
+   B) Top-level (tests/auth/) -- matches API module pattern
+   Recommendation: A) Colocated, to match the newer module convention
+---
+```
+
+## Enforcement Note
+
+- **Standalone mode**: Advisory. The agent self-enforces pause discipline.
+- **Pipeline mode**: Structural. AWAITING_USER_INPUT writes pipeline state
+  to disk and halts the current agent.
+
+**Hard constraints:**
+- Human input required for judgment decisions: `[RP]`
+
+## Constraints
+
+- **"Stop immediately, do not guess"**: "Stop" means stop the decision
+  path, not necessarily stop all work. If other unrelated work can proceed,
+  proceed with it. But do not make progress on the path that requires the
+  decision -- not even "preparing" code that assumes one option. Preparing
+  IS deciding.
+- **"2-4 specific options"**: Options must be genuinely distinct
+  alternatives, not variations of the same approach. "Use library A," "Use
+  library A with option X," "Use library A with option Y" is one option
+  with configuration choices, not three options. Each option should
+  represent a meaningfully different path.
+
+## Verification
+
+After applying this skill, verify:
+
+- [ ] Every decision requiring human judgment used AWAITING_USER_INPUT format
+- [ ] Each checkpoint included context, options with implications, and a recommendation
+- [ ] No open-ended questions were asked ("what should I do?")
+- [ ] Subagents saved state before pausing
+- [ ] Resumed work used saved state without re-analyzing
+- [ ] Related decisions were grouped into single checkpoints
+
+## Dependencies
+
+This skill works standalone. For enhanced workflows, it integrates with:
+
+- **tdd:** When test requirements are ambiguous, pause and clarify acceptance
+  criteria. In automated mode, the orchestrator detects paused subagents and
+  relays questions to the user.
+- **debugging-protocol:** When debugging reveals ambiguous root causes, pause and ask
+
+Missing a dependency? Install with:
+```
+npx skills add jwilger/agent-skills --skill tdd
+```

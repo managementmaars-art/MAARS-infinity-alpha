@@ -1,0 +1,166 @@
+# CASS Performance Limits and Constraints
+
+This document describes the tested performance limits and resource constraints for cass (Coding Agent Session Search).
+
+## Archive Size Limits
+
+| Archive Size | Conversations | Messages | Expected Performance |
+|--------------|---------------|----------|---------------------|
+| 10MB | 1,000 | 10,000 | Full performance, <1s search |
+| 100MB | 10,000 | 100,000 | Search under 5s |
+| 500MB | 50,000 | 500,000 | Search under 10s |
+| 1GB+ | 100,000+ | 1,000,000+ | May require increased timeouts |
+
+### Recommendations
+
+- For archives under 10,000 conversations, expect near-instant search results
+- For larger archives, use `--limit` to cap result count
+- Consider using `--fields minimal` for faster response times with large result sets
+
+## Message Size Limits
+
+| Scenario | Limit | Notes |
+|----------|-------|-------|
+| Single message content | 1MB | Larger messages indexed but may be truncated in display |
+| Messages per conversation | 10,000 | Practical limit for search performance |
+| Total message count | 1,000,000+ | Tested with streaming indexer |
+
+### Content Handling
+
+- Messages over 1MB: Indexed fully, but TUI display may truncate
+- Very long lines (>10,000 chars): Wrapped in display
+- Binary content: Skipped during indexing
+
+## Memory Usage
+
+| Operation | Expected Memory | Notes |
+|-----------|-----------------|-------|
+| Idle | ~50MB | Base application footprint |
+| Search (10K docs) | ~100MB | Includes result caching |
+| Search (100K docs) | ~200-300MB | May vary with result size |
+| Full index rebuild | 500MB-1GB | Temporary spike during indexing |
+
+### Memory Management
+
+- LRU cache automatically evicts old entries
+- Memory growth during search is bounded
+- Explicit cleanup on index close
+
+## Concurrent Operations
+
+| Scenario | Tested Configuration | Performance |
+|----------|---------------------|-------------|
+| Parallel searches | 8 threads, 100 queries each | 100% success rate |
+| Sustained load | 5 seconds continuous | Max latency <2s |
+| High concurrency | 32 threads | 95%+ success rate |
+| Search during indexing | Concurrent read/write | 90%+ search success |
+
+### Thread Safety
+
+- SearchClient is thread-safe (each thread should create its own instance)
+- Index updates are atomic
+- Reader reload is handled automatically
+
+## Query Complexity Limits
+
+| Query Type | Complexity | Expected Latency |
+|------------|------------|------------------|
+| Simple term | Low | <100ms |
+| Prefix wildcard (`foo*`) | Low | <100ms (edge n-gram optimized) |
+| Suffix wildcard (`*bar`) | Medium | <500ms |
+| Substring (`*foo*`) | High | <1s |
+| Boolean (AND/OR) | Medium | <500ms |
+| Complex boolean | High | <2s |
+
+### Query Recommendations
+
+- Prefer prefix wildcards over suffix/substring when possible
+- Use `--limit` to cap expensive queries
+- Combine filters with queries to reduce search space
+
+## Index Limits
+
+| Metric | Limit | Notes |
+|--------|-------|-------|
+| Tantivy segments | Auto-merged at 4+ | Configurable |
+| Schema changes | Trigger full rebuild | Versioned with hash |
+| Concurrent writers | 1 | Tantivy limitation |
+| Concurrent readers | Unlimited | Thread-safe |
+
+## Network/Sync Limits (Remote Sources)
+
+| Operation | Timeout | Notes |
+|-----------|---------|-------|
+| SSH connection | 10s | Configurable |
+| rsync transfer | 5 min | For large initial syncs |
+| SFTP fallback | Per-file | When rsync unavailable |
+
+## Environment Variable Overrides
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `CASS_CACHE_SHARD_CAP` | 256 | Max entries per cache shard |
+| `CASS_CACHE_TOTAL_CAP` | 2048 | Total cache entry limit |
+| `CASS_CACHE_BYTE_CAP` | 0 (disabled) | Total cache byte limit |
+| `CASS_PARALLEL_SEARCH` | 10000 | Threshold for parallel vector search |
+| `CASS_WARM_DEBOUNCE_MS` | 120 | Debounce for warm worker |
+| `CASS_SEMANTIC_EMBEDDER` | auto | Force hash/ml embedder |
+| `CASS_STREAMING_INDEX` | true | Enable streaming indexer |
+
+## Tested Configurations
+
+### Load Test Results (from P6.9)
+
+```
+Archive Size Tests:
+  - 1K conversations: PASS (search <1s)
+  - 10K conversations: PASS (search <5s)
+  - 50K conversations: PASS (search <10s)
+
+Message Size Tests:
+  - Large messages (1MB): PASS
+  - Many small messages (100/conv): PASS
+
+Memory Tests:
+  - Bounded search: <100MB growth over 500 searches
+  - Resource cleanup: <50MB retained after test
+
+Concurrent Tests:
+  - 8 threads parallel: 100% success
+  - Sustained 5s load: Max latency <2s
+  - 32 thread stress: 95%+ success
+```
+
+## Known Limitations
+
+1. **Single writer**: Only one process can write to the index at a time
+2. **No incremental schema migration**: Schema changes require full rebuild
+3. **Memory-mapped files**: Large indexes need sufficient virtual memory
+4. **macOS keychain**: ChatGPT decryption only works on macOS
+
+## Troubleshooting
+
+### Slow Searches
+
+1. Check index health: `cass health --json`
+2. Rebuild if needed: `cass index --full`
+3. Use `--limit` to cap results
+4. Try `--fields minimal` for faster response
+
+### High Memory Usage
+
+1. Reduce `CASS_CACHE_TOTAL_CAP`
+2. Set `CASS_CACHE_BYTE_CAP` to limit cache memory
+3. Restart to clear accumulated state
+
+### Index Corruption
+
+1. Run `cass health --json` to diagnose
+2. Rebuild with `cass index --full --force-rebuild`
+3. Check disk space availability
+
+## Version History
+
+| Version | Changes |
+|---------|---------|
+| 0.1.57 | Initial load testing documentation |

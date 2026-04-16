@@ -1,0 +1,7 @@
+{
+  "ownerId": "kn770tqcyvha41b4ftc482hr1s81b8xs",
+  "slug": "minimax-use",
+  "version": "1.0.0",
+  "publishedAt": 1774060900000,
+  "description": "使用 MiniMax 进行网络搜索和语音合成。触发条件：(1) 用户要求进行网络搜索、在线搜索、查找最新资讯 (2) 用户要求文本转语音、语音合成。其他功能（图像理解、视频生成、图片生成）需要用户明确指定使用 MiniMax 才会触发。"
+}

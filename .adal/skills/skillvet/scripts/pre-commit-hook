@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# pre-commit-hook — Git pre-commit hook for skillvet
+#
+# Scans any skill directories that have staged changes.
+# Install by symlinking into your repo's .git/hooks/:
+#
+#   ln -sf ../../scripts/pre-commit-hook .git/hooks/pre-commit
+#
+# Or copy it:
+#   cp scripts/pre-commit-hook .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+
+set -uo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Find the audit script relative to this hook
+if [ -f "$SCRIPT_DIR/skill-audit.sh" ]; then
+  AUDIT="$SCRIPT_DIR/skill-audit.sh"
+elif [ -f "$SCRIPT_DIR/../scripts/skill-audit.sh" ]; then
+  AUDIT="$SCRIPT_DIR/../scripts/skill-audit.sh"
+else
+  echo "skillvet: skill-audit.sh not found, skipping pre-commit scan"
+  exit 0
+fi
+
+# Find skill directories with staged changes
+SKILL_DIRS=$(git diff --cached --name-only | grep '^skills/' | cut -d/ -f1-2 | sort -u)
+
+if [ -z "$SKILL_DIRS" ]; then
+  exit 0
+fi
+
+BLOCKED=0
+while IFS= read -r skill_dir; do
+  [ -z "$skill_dir" ] && continue
+  [ ! -d "$skill_dir" ] && continue
+
+  result=$(bash "$AUDIT" --summary "$skill_dir" 2>&1)
+  exit_code=$?
+
+  echo "$result"
+
+  if [ $exit_code -eq 2 ]; then
+    BLOCKED=1
+  fi
+done <<< "$SKILL_DIRS"
+
+if [ $BLOCKED -eq 1 ]; then
+  echo ""
+  echo "Commit blocked: critical security findings in staged skills."
+  echo "Review findings above or use --no-verify to bypass (not recommended)."
+  exit 1
+fi
+
+exit 0

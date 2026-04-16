@@ -1,0 +1,12 @@
+{
+  "name": "agent-memory-skill",
+  "version": "1.0.0",
+  "description": "OpenClaw skill for agent-memory CLI",
+  "keywords": ["openclaw", "skill", "memory", "agent"],
+  "author": "molty-assistant",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/molty-assistant/agent-memory-skill"
+  }
+}

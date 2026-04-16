@@ -1,0 +1,181 @@
+# Architecture Validation Rules
+# Customize this file to define project-specific layer boundaries and rules
+
+# Architecture pattern (clean, hexagonal, layered, mvc)
+architecture: clean
+
+# Layer definitions
+layers:
+  # Domain Layer (innermost - pure business logic)
+  domain:
+    # Directories that belong to this layer
+    paths:
+      - src/domain
+      - src/core
+
+    # Modules this layer CAN import
+    can_import:
+      - domain
+      - typing
+      - __future__
+      - dataclasses
+      - enum
+      - abc
+
+    # Modules this layer CANNOT import (violations)
+    cannot_import:
+      - application
+      - infrastructure
+      - interfaces
+      - adapters
+
+  # Application Layer (use cases and orchestration)
+  application:
+    paths:
+      - src/application
+      - src/usecases
+
+    can_import:
+      - domain
+      - application
+      - typing
+      - __future__
+      - dataclasses
+
+    cannot_import:
+      - interfaces
+      - api
+      - cli
+      - mcp
+
+  # Infrastructure Layer (external implementations)
+  infrastructure:
+    paths:
+      - src/infrastructure
+      - src/adapters/secondary
+
+    can_import:
+      - domain
+      - application
+      - infrastructure
+      # Can import external libraries (Neo4j, SQLAlchemy, etc.)
+
+    cannot_import:
+      - interfaces
+      - api
+      - cli
+      - mcp
+
+  # Interface Layer (outermost - entry points)
+  interface:
+    paths:
+      - src/interfaces
+      - src/api
+      - src/cli
+      - src/mcp
+      - src/adapters/primary
+
+    can_import:
+      - application
+      - domain  # for type hints only
+      - interfaces
+
+    cannot_import: []  # Can import from anywhere except infrastructure directly
+
+# Severity levels for different violation types
+severity:
+  domain_importing_infrastructure: CRITICAL
+  domain_importing_application: CRITICAL
+  domain_importing_interfaces: CRITICAL
+  application_importing_interfaces: HIGH
+  application_importing_infrastructure: HIGH
+  circular_dependency: CRITICAL
+  business_logic_in_interface: CRITICAL
+  missing_dependency_inversion: MEDIUM
+  direct_database_in_domain: CRITICAL
+  hardcoded_dependencies: MEDIUM
+
+# Exceptions (patterns to ignore - use sparingly!)
+exceptions:
+  # Standard library imports are always allowed
+  - pattern: "from typing import"
+    reason: "Standard library, not architectural concern"
+
+  - pattern: "from dataclasses import"
+    reason: "Python built-in, not layer violation"
+
+  - pattern: "from enum import"
+    reason: "Standard library"
+
+  - pattern: "from abc import"
+    reason: "Standard library for protocols"
+
+  - pattern: "import pytest"
+    reason: "Test infrastructure"
+
+  - pattern: "from pytest"
+    reason: "Test infrastructure"
+
+  - pattern: "import unittest"
+    reason: "Test infrastructure"
+
+# File patterns to scan
+file_patterns:
+  - "**/*.py"
+  - "**/*.js"
+  - "**/*.ts"
+  - "**/*.tsx"
+
+# File patterns to exclude
+exclude_patterns:
+  - "**/node_modules/**"
+  - "**/.venv/**"
+  - "**/venv/**"
+  - "**/__pycache__/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/.git/**"
+  - "**/tests/**"  # Optionally exclude tests
+  - "**/.pytest_cache/**"
+
+# Validation options
+options:
+  # Strict mode: fail on any violation (not just critical/high)
+  strict: false
+
+  # Enable circular dependency detection (can be slow for large codebases)
+  detect_circular_dependencies: true
+
+  # Enable detailed import graph analysis
+  detailed_analysis: false
+
+  # Maximum depth for circular dependency detection (prevents infinite loops)
+  max_cycle_depth: 10
+
+# Custom rules (advanced)
+custom_rules:
+  # Example: Prevent specific imports in specific layers
+  - name: "No SQLAlchemy in Domain"
+    pattern: "from sqlalchemy"
+    layers: [domain]
+    severity: CRITICAL
+    message: "Domain layer must not depend on SQLAlchemy (ORM framework)"
+
+  - name: "No Flask in Application"
+    pattern: "from flask"
+    layers: [application]
+    severity: HIGH
+    message: "Application layer must not depend on Flask (web framework)"
+
+  - name: "No Direct Database Imports"
+    pattern: "from neo4j import|from pymongo import|from psycopg2 import"
+    layers: [domain, application]
+    severity: CRITICAL
+    message: "Use repository pattern instead of direct database access"
+
+# Notes:
+# - Paths are relative to project root
+# - Patterns use glob syntax (**/*.py matches all Python files recursively)
+# - can_import and cannot_import are cumulative (order matters)
+# - Standard library imports are generally allowed in all layers
+# - Use exceptions sparingly - prefer fixing violations over ignoring them

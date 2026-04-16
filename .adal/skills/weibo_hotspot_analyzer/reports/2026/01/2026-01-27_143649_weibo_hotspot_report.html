@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年01月27日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --accent-normal: #6C757D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .report-header h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+            margin-top: 32px;
+        }
+
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hotspot-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hotspot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .hotspot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .hotword {
+            font-weight: 600;
+            font-size: 16px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotness {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hotspot-detail {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .hotspot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+            transition: all 0.2s;
+        }
+
+        .idea-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .idea-card.excellent {
+            border-left-color: var(--accent-excellent);
+            background: linear-gradient(to right, rgba(255, 210, 63, 0.1), transparent);
+        }
+
+        .idea-card.good {
+            border-left-color: var(--accent-good);
+            background: linear-gradient(to right, rgba(6, 167, 125, 0.05), transparent);
+        }
+
+        .idea-card.normal {
+            border-left-color: var(--accent-normal);
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .idea-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .score-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.excellent {
+            background: var(--accent-excellent);
+            color: #333;
+        }
+
+        .badge.good {
+            background: var(--accent-good);
+            color: white;
+        }
+
+        .badge.normal {
+            background: var(--accent-normal);
+            color: white;
+        }
+
+        .idea-body p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .idea-body strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .idea-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .idea-body li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .score-breakdown {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .statistics h2 {
+            color: white;
+            border-left-color: white;
+            margin-top: 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ranking-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ranking-rank {
+            font-size: 24px;
+            font-weight: 700;
+            width: 40px;
+            text-align: center;
+        }
+
+        .ranking-rank.gold { color: #FFD700; }
+        .ranking-rank.silver { color: #C0C0C0; }
+        .ranking-rank.bronze { color: #CD7F32; }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .ranking-hotword {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .ranking-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .report-header { padding: 24px; }
+            .report-header h1 { font-size: 24px; }
+            .hotspot-list { grid-template-columns: 1fr; }
+            .idea-header { flex-direction: column; align-items: flex-start; }
+            .stat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>🤖 微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>📅 生成日期：2026-01-27</span>
+                <span>🔥 热搜总数：6</span>
+                <span>💡 创意总数：18</span>
+                <span>⏰ 生成时间：2026-01-27 14:36:49</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">微博之夜阵容官宣</span>
+                </div>
+                <div class="hotness">热度：盛典 1087438 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">50万亿存款</span>
+                </div>
+                <div class="hotness">热度：762408 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">2026逐梦中国</span>
+                </div>
+                <div class="hotness">热度：640720 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">微博之夜第二波阵容解密</span>
+                </div>
+                <div class="hotness">热度：盛典 345998 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">多地对国企近亲繁殖出手了</span>
+                </div>
+                <div class="hotness">热度：247223 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">我们的少年时代2</span>
+                </div>
+                <div class="hotness">热度：剧集 243076 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">国航辟谣女机长被解聘后养蜂卖蜜</span>
+                </div>
+                <div class="hotness">热度： </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">周大生店员反问顾客买得起吗</span>
+                </div>
+                <div class="hotness">热度：224150 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">为什么教师行业没有起床气</span>
+                </div>
+                <div class="hotness">热度：167146 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">导师一直叫我微信名怎么办</span>
+                </div>
+                <div class="hotness">热度：166915 <span class="tag">新</span></div>
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">1</span>
+                <span class="hotword" style="font-size: 18px;">微博之夜阵容官宣</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>1,087,438</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「微博之夜阵容官宣」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败: The read operation timed out</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败: The read operation timed out</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">2</span>
+                <span class="hotword" style="font-size: 18px;">50万亿存款</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>762,408</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「50万亿存款」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败: The read operation timed out</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败: The read operation timed out</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">3</span>
+                <span class="hotword" style="font-size: 18px;">2026逐梦中国</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>640,720</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「2026逐梦中国」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败: The read operation timed out</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败: The read operation timed out</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">4</span>
+                <span class="hotword" style="font-size: 18px;">微博之夜第二波阵容解密 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>345,998</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「微博之夜第二波阵容解密」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败: The read operation timed out</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败: The read operation timed out</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">5</span>
+                <span class="hotword" style="font-size: 18px;">多地对国企近亲繁殖出手了</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>247,223</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">职场显微镜</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>企业'含亲量'AI大数剧分析</li>
+                    <li>高管关系网可视化图谱</li>
+                    <li>匿名爆料与关系验证机制</li>
+                    <li>避雷指数排行榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-35岁求职者、应届毕业生、对职场公平敏感的互联网吃瓜群众</p>
+                        <p><strong>📝 产品描述：</strong>一款基于公开数据和用户众包的职场关系透视工具。利用AI分析上市国企年报及公开人事信息，计算企业内部同姓率及关联度，生成可视化的'关系网'，帮助求职者识别'近亲繁殖'高风险区，满足大众对'裙带关系'的窥探欲与避坑需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">平民升职记</span>
+                        <div class="score-info">
+                            <span class="score">83分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>Roguelike职场生存模拟</li>
+                    <li>随机触发'皇亲国戚'空降事件</li>
+                    <li>高情商/硬实力双线对抗系统</li>
+                    <li>职场爽文式结局生成器</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁职场新人、大学生、喜爱模拟经营游戏的泛娱乐用户</p>
+                        <p><strong>📝 产品描述：</strong>一款讽刺风格的文字模拟游戏。玩家扮演无背景的'职场小透明'，在充满了'二代'和'关系户'的虚拟国企中，利用策略艰难求生。通过黑色幽默的方式解构职场不公，提供情绪宣泄出口，极具话题传播属性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 35分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">绝对素人局</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>完全匿名蒙面直播面试</li>
+                    <li>变声器与虚拟形象替身</li>
+                    <li>纯技能维度的盲测挑战</li>
+                    <li>企业'无关系户'信用背书认证</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-40岁凭实力说话的专业技术人才、有人才紧缺痛点的中小企业主</p>
+                        <p><strong>📝 产品描述：</strong>主打'零背景、纯实力'的逆向招聘平台。借鉴综艺《蒙面唱将》模式，面试过程完全屏蔽外貌、姓名和背景信息，仅展示能力与过往案例。旨在打造对抗'熟人社会'的招聘净土，既具有真人秀般的观赏趣味，又解决怀才不遇的实际痛点。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 78分 × 80% + 有用度 85分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">6</span>
+                <span class="hotword" style="font-size: 18px;">我们的少年时代2 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>243,076</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「我们的少年时代2」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败: The read operation timed out</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败: The read operation timed out</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">7</span>
+                <span class="hotword" style="font-size: 18px;">国航辟谣女机长被解聘后养蜂卖蜜</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">离谱转行生成器</span>
+                        <div class="score-info">
+                            <span class="score">83分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI生成反差职业新闻海报</li>
+                    <li>内置“女机长养蜂”等热门模板</li>
+                    <li>一键生成“被解聘”凡尔赛文案</li>
+                    <li>朋友圈恶搞互动排行榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁，热衷玩梗、渴望社交货币的职场青年及大学生</p>
+                        <p><strong>📝 产品描述：</strong>一款基于AIGC的社交裂变小程序，利用“高端职业下凡”的反差感，生成用户专属的荒诞转行新闻，满足用户吐槽工作和社交娱乐的需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 35分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">停飞去野</span>
+                        <div class="score-info">
+                            <span class="score">81分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>搜索高反差体力劳动体验</li>
+                    <li>“机长级”高压人群专属疗愈</li>
+                    <li>周末短途“归田”向导预约</li>
+                    <li>助农产品溯源与认养</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-40岁，主要在一二线城市的高压脑力劳动者（程序员、金融、医疗人员）</p>
+                        <p><strong>📝 产品描述：</strong>主打“反差疗愈”的短期体验预订平台，让脑力劳动者在周末体验“养蜂、割稻”等纯粹体力劳动，通过身体疲惫置换精神放松。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">真相蜂巢</span>
+                        <div class="score-info">
+                            <span class="score">75分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>热点事件谣言粉碎看板</li>
+                    <li>“吃瓜”转“吃蜜”积分体系</li>
+                    <li>专业人士（如真机长）入驻辟谣</li>
+                    <li>谣言传播路径可视化追踪</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-50岁，关注社会热点、追求信息真实性的泛互联网用户</p>
+                        <p><strong>📝 产品描述：</strong>一个聚合类资讯查证社区，借用“养蜂酿蜜”概念，将去伪存真的过程游戏化，鼓励专业人士对离谱网络传言进行权威科普和辟谣。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 70分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">8</span>
+                <span class="hotword" style="font-size: 18px;">周大生店员反问顾客买得起吗</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>224,150</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">怼怼练功房</span>
+                        <div class="score-info">
+                            <span class="score">89分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI模拟各种刻薄柜姐语录</li>
+                    <li>回怼话术实时评分系统</li>
+                    <li>情绪压力抗性测试</li>
+                    <li>一键生成神回复表情包</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁社恐青年、曾经遭受服务歧视的消费者、寻找解压方式的职场人</p>
+                        <p><strong>📝 产品描述：</strong>一款基于大语言模型的社交模拟游戏。用户需在AI扮演的'势利眼店员'攻击下保持冷静并有力回击，既能宣泄情绪，又能低成本提升现实生活中的抗压与沟通能力。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">白眼雷达</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>基于LBS的'服务态度'红黑榜</li>
+                    <li>悬赏'神秘探店员'验证服务</li>
+                    <li>柜姐态度抓拍与声音波形分析</li>
+                    <li>附近'尊贵服务'店铺推荐</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-40岁注重消费体验的购物者、热衷分享避雷经验的探店博主</p>
+                        <p><strong>📝 产品描述：</strong>众包式服务体验地图。将'看人下菜碟'的店铺标记为雷区，用户可发起探店挑战，验证店员是否存在歧视行为，通过群体力量倒逼品牌提升服务，兼具吃瓜与避坑属性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">赛博验资机</span>
+                        <div class="score-info">
+                            <span class="score">75分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR扫描全身生成'身价'特效</li>
+                    <li>自定义'买得起'额度证书</li>
+                    <li>虚荣心嘲讽模式</li>
+                    <li>热门奢侈品虚拟试戴</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-25岁Z世代、短视频创作者、喜爱玩梗的潮流人群</p>
+                        <p><strong>📝 产品描述：</strong>一款极具讽刺意味的AR相机应用。针对店员'买得起吗'的质疑，用户可用APP扫描自己，生成夸张的虚拟资产特效和搞笑认证证书，用于朋友圈反向凡尔赛和玩梗传播。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 25分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">9</span>
+                <span class="hotword" style="font-size: 18px;">为什么教师行业没有起床气</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>167,146</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">班主任叫早</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI模拟班主任严厉声线叫醒</li>
+                    <li>不仅要起床，还需朗读一段正能量语录才能关闹钟</li>
+                    <li>迟到自动发朋友圈“检讨书”功能</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-30岁有拖延症的职场人、考研党、怀念校园生活的90后</p>
+                        <p><strong>📝 产品描述：</strong>一款利用“童年阴影”转化为起床动力的硬核闹钟。通过模拟由于还没起床而被班主任在窗户口凝视的压迫感，专治各种赖床和起床气，让用户瞬间清醒，找回上学时的紧迫感。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 72分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">怒气发电站</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>尖叫关闹钟：通过分贝检测释放起床气</li>
+                    <li>怒气值排行榜：全网比拼谁的起床怨气最重</li>
+                    <li>一键生成“今日不想上班”梗图表情包</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-28岁Z世代，早八大学生，高压互联网打工人</p>
+                        <p><strong>📝 产品描述：</strong>既然起床气无法避免，不如将其游戏化。这款App允许用户通过大喊大叫来关闭闹钟，并将捕捉到的声音波形转化为“怒气能量”喂养电子宠物，提供一个早起宣泄情绪的趣味出口。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 58分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">职业假笑面具</span>
+                        <div class="score-info">
+                            <span class="score">75分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>微笑打卡：摄像头识别到标准职业假笑才停止响铃</li>
+                    <li>一秒变名师AR滤镜：睡眼惺忪也能拍出精神抖擞</li>
+                    <li>随机生成“自我催眠”职业语录</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>服务行业人员、青年教师、销售等需要情绪劳动的群体</p>
+                        <p><strong>📝 产品描述：</strong>针对“教师没有起床气”这一梗的讽刺性延伸工具。它强迫用户在起床第一秒就进入“营业状态”，通过面部识别强制微笑来唤醒大脑，用黑色幽默的方式对抗职业倦怠。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 55分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">10</span>
+                <span class="hotword" style="font-size: 18px;">导师一直叫我微信名怎么办 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>166,915</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「导师一直叫我微信名怎么办」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败: The read operation timed out</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败: The read operation timed out</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h2>🏆 产品创意排行榜 (TOP20)</h2>
+        <div class="ranking-list">
+
+            <div class="ranking-item">
+                <span class="ranking-rank gold">#1</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">怼怼练功房</div>
+                    <div class="ranking-hotword">来源：周大生店员反问顾客买得起吗</div>
+                </div>
+                <span class="ranking-score">89分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank silver">#2</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">职场显微镜</div>
+                    <div class="ranking-hotword">来源：多地对国企近亲繁殖出手了</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank bronze">#3</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">班主任叫早</div>
+                    <div class="ranking-hotword">来源：为什么教师行业没有起床气</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">4</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">平民升职记</div>
+                    <div class="ranking-hotword">来源：多地对国企近亲繁殖出手了</div>
+                </div>
+                <span class="ranking-score">83分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">5</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">离谱转行生成器</div>
+                    <div class="ranking-hotword">来源：国航辟谣女机长被解聘后养蜂卖蜜</div>
+                </div>
+                <span class="ranking-score">83分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">6</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">白眼雷达</div>
+                    <div class="ranking-hotword">来源：周大生店员反问顾客买得起吗</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">7</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">怒气发电站</div>
+                    <div class="ranking-hotword">来源：为什么教师行业没有起床气</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">8</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">停飞去野</div>
+                    <div class="ranking-hotword">来源：国航辟谣女机长被解聘后养蜂卖蜜</div>
+                </div>
+                <span class="ranking-score">81分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">9</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">绝对素人局</div>
+                    <div class="ranking-hotword">来源：多地对国企近亲繁殖出手了</div>
+                </div>
+                <span class="ranking-score">79分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">10</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">真相蜂巢</div>
+                    <div class="ranking-hotword">来源：国航辟谣女机长被解聘后养蜂卖蜜</div>
+                </div>
+                <span class="ranking-score">75分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">11</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">赛博验资机</div>
+                    <div class="ranking-hotword">来源：周大生店员反问顾客买得起吗</div>
+                </div>
+                <span class="ranking-score">75分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">12</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">职业假笑面具</div>
+                    <div class="ranking-hotword">来源：为什么教师行业没有起床气</div>
+                </div>
+                <span class="ranking-score">75分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">13</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「微博之夜阵容官宣」分析失败</div>
+                    <div class="ranking-hotword">来源：微博之夜阵容官宣</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">14</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「50万亿存款」分析失败</div>
+                    <div class="ranking-hotword">来源：50万亿存款</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">15</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「2026逐梦中国」分析失败</div>
+                    <div class="ranking-hotword">来源：2026逐梦中国</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">16</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「微博之夜第二波阵容解密」分析失败</div>
+                    <div class="ranking-hotword">来源：微博之夜第二波阵容解密</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">17</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「我们的少年时代2」分析失败</div>
+                    <div class="ranking-hotword">来源：我们的少年时代2</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">18</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「导师一直叫我微信名怎么办」分析失败</div>
+                    <div class="ranking-hotword">来源：导师一直叫我微信名怎么办</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">18</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">8</span>
+                    <span class="stat-label">优秀创意 (&gt;80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">4</span>
+                    <span class="stat-label">良好创意 (60-80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">81.7</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🤖 本报告由 AI 自动生成 | 仅供参考</p>
+            <p>数据来源：天聚数行 API | AI 分析：Claude 3.5 Sonnet</p>
+            <p>生成时间：2026-01-27 14:36:49</p>
+        </footer>
+    </div>
+</body>
+</html>

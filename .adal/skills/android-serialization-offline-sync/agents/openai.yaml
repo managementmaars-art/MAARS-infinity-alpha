@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android Serialization Offline Sync"
+  short_description: "Coordinate serialization, caching, conflict handling, and offline-first sync flows in Android apps"
+  default_prompt: "Use $android-serialization-offline-sync when the request is about coordinate serialization, caching, conflict handling, and offline-first sync flows in Android apps."

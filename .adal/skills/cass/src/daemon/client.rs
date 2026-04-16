@@ -1,0 +1,699 @@
+//! Daemon client for connecting to the semantic model daemon.
+//!
+//! This client connects via Unix Domain Socket and provides methods for
+//! embedding and reranking. It implements the `DaemonClient` trait from
+//! `search::daemon_client` for integration with the fallback wrappers.
+
+use std::io::{Read, Write};
+use std::os::unix::net::UnixStream;
+use std::path::PathBuf;
+use std::process::{Child, Command, Stdio};
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::time::{Duration, Instant};
+
+use fs2::FileExt;
+use parking_lot::Mutex;
+use tracing::{debug, info, warn};
+
+use super::daemon_spawn_guard_lock_path;
+use super::protocol::{
+    EmbeddingJobInfo, ErrorCode, FramedMessage, HealthStatus, PROTOCOL_VERSION, Request, Response,
+    decode_message, default_socket_path, encode_message,
+};
+use super::worker::EmbeddingJobConfig;
+use crate::search::daemon_client::{DaemonClient, DaemonError};
+
+/// Configuration for the daemon client.
+#[derive(Debug, Clone)]
+pub struct DaemonClientConfig {
+    /// Path to the Unix socket.
+    pub socket_path: PathBuf,
+    /// Connection timeout.
+    pub connect_timeout: Duration,
+    /// Request timeout.
+    pub request_timeout: Duration,
+    /// Whether to auto-spawn daemon if not running.
+    pub auto_spawn: bool,
+    /// Path to the daemon binary (if auto-spawn is enabled).
+    pub daemon_binary: Option<PathBuf>,
+}
+
+impl Default for DaemonClientConfig {
+    fn default() -> Self {
+        Self {
+            socket_path: default_socket_path(),
+            connect_timeout: Duration::from_secs(2),
+            request_timeout: Duration::from_secs(30),
+            auto_spawn: true,
+            daemon_binary: None, // Will use current executable with --daemon flag
+        }
+    }
+}
+
+impl DaemonClientConfig {
+    /// Load config from environment variables.
+    pub fn from_env() -> Self {
+        let mut cfg = Self::default();
+
+        if let Ok(path) = dotenvy::var("CASS_DAEMON_SOCKET") {
+            cfg.socket_path = PathBuf::from(path);
+        }
+
+        if let Ok(val) = dotenvy::var("CASS_DAEMON_CONNECT_TIMEOUT_MS")
+            && let Ok(ms) = val.parse::<u64>()
+        {
+            cfg.connect_timeout = Duration::from_millis(ms);
+        }
+
+        if let Ok(val) = dotenvy::var("CASS_DAEMON_REQUEST_TIMEOUT_MS")
+            && let Ok(ms) = val.parse::<u64>()
+        {
+            cfg.request_timeout = Duration::from_millis(ms);
+        }
+
+        if let Ok(val) = dotenvy::var("CASS_DAEMON_AUTO_SPAWN") {
+            cfg.auto_spawn = val.eq_ignore_ascii_case("true") || val == "1";
+        }
+
+        if let Ok(path) = dotenvy::var("CASS_DAEMON_BINARY") {
+            cfg.daemon_binary = Some(PathBuf::from(path));
+        }
+
+        cfg
+    }
+}
+
+/// Unix Domain Socket client for the semantic daemon.
+pub struct UdsDaemonClient {
+    config: DaemonClientConfig,
+    connection: Mutex<Option<UnixStream>>,
+    available: AtomicBool,
+    request_counter: AtomicU64,
+    last_health_check: Mutex<Option<Instant>>,
+}
+
+impl UdsDaemonClient {
+    /// Create a new client with the given configuration.
+    pub fn new(config: DaemonClientConfig) -> Self {
+        Self {
+            config,
+            connection: Mutex::new(None),
+            available: AtomicBool::new(false),
+            request_counter: AtomicU64::new(0),
+            last_health_check: Mutex::new(None),
+        }
+    }
+
+    /// Create a client with default configuration.
+    pub fn with_defaults() -> Self {
+        Self::new(DaemonClientConfig::from_env())
+    }
+
+    /// Connect to the daemon, optionally spawning it if not running.
+    pub fn connect(&self) -> Result<(), DaemonError> {
+        // Try to connect to existing daemon
+        if let Ok(stream) = self.try_connect() {
+            *self.connection.lock() = Some(stream);
+            self.available.store(true, Ordering::SeqCst);
+            debug!(socket = %self.config.socket_path.display(), "Connected to existing daemon");
+            return Ok(());
+        }
+
+        // If auto-spawn is enabled and connection failed, try to spawn
+        if self.config.auto_spawn {
+            info!("Daemon not running, attempting to spawn");
+            self.spawn_daemon()?;
+
+            // Wait for daemon to start and retry connection
+            for attempt in 0..10 {
+                std::thread::sleep(Duration::from_millis(100 * (attempt + 1)));
+                if let Ok(stream) = self.try_connect() {
+                    *self.connection.lock() = Some(stream);
+                    self.available.store(true, Ordering::SeqCst);
+                    info!(
+                        socket = %self.config.socket_path.display(),
+                        attempts = attempt + 1,
+                        "Connected to newly spawned daemon"
+                    );
+                    return Ok(());
+                }
+            }
+
+            return Err(DaemonError::Unavailable(
+                "daemon failed to start within timeout".to_string(),
+            ));
+        }
+
+        Err(DaemonError::Unavailable(format!(
+            "daemon not running at {}",
+            self.config.socket_path.display()
+        )))
+    }
+
+    /// Try to connect to the daemon socket.
+    fn try_connect(&self) -> std::io::Result<UnixStream> {
+        let stream = UnixStream::connect(&self.config.socket_path)?;
+        stream.set_read_timeout(Some(self.config.request_timeout))?;
+        stream.set_write_timeout(Some(self.config.request_timeout))?;
+        Ok(stream)
+    }
+
+    /// Spawn the daemon process.
+    fn spawn_daemon(&self) -> Result<(), DaemonError> {
+        let binary = self
+            .config
+            .daemon_binary
+            .clone()
+            .or_else(|| std::env::current_exe().ok())
+            .ok_or_else(|| {
+                DaemonError::Unavailable("cannot determine daemon binary path".to_string())
+            })?;
+
+        // Use a file lock to prevent multiple processes from spawning the daemon simultaneously
+        let lock_path = daemon_spawn_guard_lock_path(&self.config.socket_path);
+        let lock_file = std::fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .truncate(false)
+            .open(&lock_path)
+            .map_err(|e| DaemonError::Unavailable(format!("failed to open spawn lock: {}", e)))?;
+
+        // Acquire exclusive lock (blocks until available) so concurrent clients
+        // don't all try to auto-spawn the daemon at once.
+        lock_file.lock_exclusive().map_err(|e| {
+            DaemonError::Unavailable(format!("failed to acquire spawn lock: {}", e))
+        })?;
+
+        // Re-check if daemon is already running now that we hold the lock
+        if UnixStream::connect(&self.config.socket_path).is_ok() {
+            debug!("Daemon already running, skipping spawn");
+            return Ok(());
+        }
+
+        // Remove existing socket if present (ignore NotFound — avoids TOCTOU race)
+        if let Err(e) = std::fs::remove_file(&self.config.socket_path)
+            && e.kind() != std::io::ErrorKind::NotFound
+        {
+            warn!(error = %e, "failed to remove stale daemon socket");
+        }
+
+        // Spawn daemon in background
+        let result = Command::new(&binary)
+            .arg("daemon")
+            .arg("--socket")
+            .arg(&self.config.socket_path)
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn();
+
+        match result {
+            Ok(mut child) => {
+                info!(
+                    pid = child.id(),
+                    binary = %binary.display(),
+                    socket = %self.config.socket_path.display(),
+                    "Spawned daemon process"
+                );
+                self.wait_for_spawned_daemon_ready(&mut child)?;
+                // Reap the child in a background thread to avoid zombie processes.
+                // The daemon is long-lived, so we just detach and let it run.
+                // ubs:ignore — detached reaper thread intentionally waits on the
+                // spawned daemon child so an auto-started daemon does not become
+                // a zombie when it eventually exits.
+                std::thread::spawn(move || {
+                    let _ = child.wait();
+                });
+                Ok(())
+            }
+            Err(e) => Err(DaemonError::Unavailable(format!(
+                "failed to spawn daemon: {}",
+                e
+            ))),
+        }
+    }
+
+    fn wait_for_spawned_daemon_ready(&self, child: &mut Child) -> Result<(), DaemonError> {
+        let ready_timeout = self.config.connect_timeout.max(Duration::from_secs(5));
+        let started = Instant::now();
+        while started.elapsed() < ready_timeout {
+            if UnixStream::connect(&self.config.socket_path).is_ok() {
+                return Ok(());
+            }
+            match child.try_wait() {
+                Ok(Some(status)) => {
+                    return Err(DaemonError::Unavailable(format!(
+                        "spawned daemon exited before becoming ready: {}",
+                        status
+                    )));
+                }
+                Ok(None) => {}
+                Err(error) => {
+                    warn!(
+                        error = %error,
+                        socket = %self.config.socket_path.display(),
+                        "failed to poll spawned daemon status while waiting for readiness"
+                    );
+                    break;
+                }
+            }
+            std::thread::sleep(Duration::from_millis(50));
+        }
+        Ok(())
+    }
+
+    /// Get a fresh connection, reconnecting if needed.
+    fn get_connection_locked(
+        &self,
+    ) -> Result<parking_lot::MutexGuard<'_, Option<UnixStream>>, DaemonError> {
+        // Try to use existing connection
+        let conn = self.connection.lock();
+        let is_valid = conn.as_ref().is_some_and(|s| s.peer_addr().is_ok());
+
+        if is_valid {
+            return Ok(conn);
+        }
+
+        // Connection is stale or missing, release lock and reconnect
+        drop(conn);
+
+        // Reconnect
+        self.available.store(false, Ordering::SeqCst);
+        self.connect()?;
+
+        let conn = self.connection.lock();
+        if conn.is_some() {
+            Ok(conn)
+        } else {
+            Err(DaemonError::Unavailable(
+                "connection not established".to_string(),
+            ))
+        }
+    }
+
+    /// Send a request and receive a response.
+    fn send_request(&self, request: Request) -> Result<Response, DaemonError> {
+        let request_id = format!(
+            "cass-{}",
+            self.request_counter.fetch_add(1, Ordering::Relaxed)
+        );
+        let msg = FramedMessage::new(&request_id, request);
+
+        let encoded = encode_message(&msg)
+            .map_err(|e| DaemonError::Failed(format!("failed to encode request: {}", e)))?;
+
+        let mut stream_guard = self.get_connection_locked()?;
+        let stream = stream_guard
+            .as_mut()
+            .ok_or_else(|| DaemonError::Unavailable("connection not established".to_string()))?;
+
+        // Send request
+        if let Err(e) = stream.write_all(&encoded) {
+            *stream_guard = None;
+            self.available.store(false, Ordering::SeqCst);
+            return Err(DaemonError::Unavailable(format!(
+                "failed to send request: {}",
+                e
+            )));
+        }
+
+        // Read length prefix
+        let mut len_buf = [0u8; 4];
+        if let Err(e) = stream.read_exact(&mut len_buf) {
+            *stream_guard = None;
+            self.available.store(false, Ordering::SeqCst);
+            if e.kind() == std::io::ErrorKind::TimedOut {
+                return Err(DaemonError::Timeout("response timeout".to_string()));
+            } else {
+                return Err(DaemonError::Unavailable(format!(
+                    "failed to read response length: {}",
+                    e
+                )));
+            }
+        }
+
+        let len = u32::from_be_bytes(len_buf) as usize;
+        // 10MB sanity limit - typical embedding responses are well under 1MB
+        const MAX_RESPONSE_SIZE: usize = 10 * 1024 * 1024;
+        if len > MAX_RESPONSE_SIZE {
+            *stream_guard = None;
+            warn!(
+                response_size = len,
+                max_size = MAX_RESPONSE_SIZE,
+                "Rejecting oversized daemon response"
+            );
+            return Err(DaemonError::Failed(format!(
+                "response too large: {} bytes (max {})",
+                len, MAX_RESPONSE_SIZE
+            )));
+        }
+
+        // Read response payload
+        let mut payload = vec![0u8; len];
+        if let Err(e) = stream.read_exact(&mut payload) {
+            *stream_guard = None;
+            self.available.store(false, Ordering::SeqCst);
+            if e.kind() == std::io::ErrorKind::TimedOut {
+                return Err(DaemonError::Timeout("response timeout".to_string()));
+            } else {
+                return Err(DaemonError::Unavailable(format!(
+                    "failed to read response: {}",
+                    e
+                )));
+            }
+        }
+
+        // Release connection lock before decoding
+        drop(stream_guard);
+
+        // Decode response
+        let response: FramedMessage<Response> = decode_message(&payload)
+            .map_err(|e| DaemonError::Failed(format!("failed to decode response: {}", e)))?;
+
+        // Check version compatibility
+        if response.version != PROTOCOL_VERSION {
+            return Err(DaemonError::Failed(format!(
+                "protocol version mismatch: expected {}, got {}",
+                PROTOCOL_VERSION, response.version
+            )));
+        }
+
+        // Handle error responses
+        match response.payload {
+            Response::Error(err) => {
+                let daemon_err = match err.code {
+                    ErrorCode::Overloaded => DaemonError::Overloaded {
+                        retry_after: err.retry_after_ms.map(Duration::from_millis),
+                        message: err.message,
+                    },
+                    ErrorCode::Timeout => DaemonError::Timeout(err.message),
+                    ErrorCode::InvalidInput => DaemonError::InvalidInput(err.message),
+                    _ => DaemonError::Failed(err.message),
+                };
+                Err(daemon_err)
+            }
+            other => Ok(other),
+        }
+    }
+
+    /// Check daemon health.
+    pub fn health(&self) -> Result<HealthStatus, DaemonError> {
+        match self.send_request(Request::Health)? {
+            Response::Health(status) => {
+                *self.last_health_check.lock() = Some(Instant::now());
+                Ok(status)
+            }
+            other => Err(DaemonError::Failed(format!(
+                "unexpected response: {:?}",
+                other
+            ))),
+        }
+    }
+
+    /// Request daemon shutdown.
+    pub fn shutdown(&self) -> Result<(), DaemonError> {
+        match self.send_request(Request::Shutdown)? {
+            Response::Shutdown { .. } => {
+                self.available.store(false, Ordering::SeqCst);
+                *self.connection.lock() = None;
+                Ok(())
+            }
+            other => Err(DaemonError::Failed(format!(
+                "unexpected response: {:?}",
+                other
+            ))),
+        }
+    }
+
+    /// Submit a background embedding job to the daemon.
+    pub fn submit_embedding_job(&self, config: EmbeddingJobConfig) -> Result<String, DaemonError> {
+        let response = self.send_request(Request::SubmitEmbeddingJob {
+            db_path: config.db_path,
+            index_path: config.index_path,
+            two_tier: config.two_tier,
+            fast_model: config.fast_model,
+            quality_model: config.quality_model,
+        })?;
+        match response {
+            Response::JobSubmitted { job_id, .. } => Ok(job_id),
+            other => Err(DaemonError::Failed(format!(
+                "unexpected response: {:?}",
+                other
+            ))),
+        }
+    }
+
+    /// Query the status of embedding jobs for a database.
+    pub fn embedding_job_status(&self, db_path: &str) -> Result<EmbeddingJobInfo, DaemonError> {
+        let response = self.send_request(Request::EmbeddingJobStatus {
+            db_path: db_path.to_string(),
+        })?;
+        match response {
+            Response::JobStatus(info) => Ok(info),
+            other => Err(DaemonError::Failed(format!(
+                "unexpected response: {:?}",
+                other
+            ))),
+        }
+    }
+
+    /// Cancel embedding jobs for a database.
+    pub fn cancel_embedding_job(
+        &self,
+        db_path: &str,
+        model_id: Option<&str>,
+    ) -> Result<usize, DaemonError> {
+        let response = self.send_request(Request::CancelEmbeddingJob {
+            db_path: db_path.to_string(),
+            model_id: model_id.map(|s| s.to_string()),
+        })?;
+        match response {
+            Response::JobCancelled { cancelled, .. } => Ok(cancelled),
+            other => Err(DaemonError::Failed(format!(
+                "unexpected response: {:?}",
+                other
+            ))),
+        }
+    }
+}
+
+impl DaemonClient for UdsDaemonClient {
+    fn id(&self) -> &str {
+        "uds-daemon"
+    }
+
+    fn is_available(&self) -> bool {
+        // Quick check without reconnect
+        if !self.available.load(Ordering::SeqCst) {
+            return false;
+        }
+
+        // Check if health was recently verified (5 second cache for faster failure detection)
+        if let Some(last) = *self.last_health_check.lock()
+            && last.elapsed() < Duration::from_secs(5)
+        {
+            return true;
+        }
+
+        // Verify with health check
+        match self.health() {
+            Ok(status) => status.ready,
+            Err(_) => {
+                self.available.store(false, Ordering::SeqCst);
+                false
+            }
+        }
+    }
+
+    fn embed(&self, text: &str, request_id: &str) -> Result<Vec<f32>, DaemonError> {
+        debug!(
+            request_id = request_id,
+            text_len = text.len(),
+            "Daemon embed request"
+        );
+
+        let response = self.send_request(Request::Embed {
+            texts: vec![text.to_string()],
+            model: "default".to_string(),
+            dims: None,
+        })?;
+
+        match response {
+            Response::Embed(embed) => {
+                if embed.embeddings.is_empty() {
+                    return Err(DaemonError::Failed("no embeddings returned".to_string()));
+                }
+                debug!(
+                    request_id = request_id,
+                    elapsed_ms = embed.elapsed_ms,
+                    dimension = embed.embeddings[0].len(),
+                    "Daemon embed completed"
+                );
+                // Safety: We've verified embeddings is not empty above
+                embed
+                    .embeddings
+                    .into_iter()
+                    .next()
+                    .ok_or_else(|| DaemonError::Failed("embedding unexpectedly empty".to_string()))
+            }
+            other => Err(DaemonError::Failed(format!(
+                "unexpected response: {:?}",
+                other
+            ))),
+        }
+    }
+
+    fn embed_batch(&self, texts: &[&str], request_id: &str) -> Result<Vec<Vec<f32>>, DaemonError> {
+        debug!(
+            request_id = request_id,
+            batch_size = texts.len(),
+            "Daemon embed batch request"
+        );
+
+        let response = self.send_request(Request::Embed {
+            texts: texts.iter().map(|s| s.to_string()).collect(),
+            model: "default".to_string(),
+            dims: None,
+        })?;
+
+        match response {
+            Response::Embed(embed) => {
+                if embed.embeddings.len() != texts.len() {
+                    return Err(DaemonError::Failed(format!(
+                        "embedding count mismatch: expected {}, got {}",
+                        texts.len(),
+                        embed.embeddings.len()
+                    )));
+                }
+                debug!(
+                    request_id = request_id,
+                    elapsed_ms = embed.elapsed_ms,
+                    batch_size = texts.len(),
+                    "Daemon embed batch completed"
+                );
+                Ok(embed.embeddings)
+            }
+            other => Err(DaemonError::Failed(format!(
+                "unexpected response: {:?}",
+                other
+            ))),
+        }
+    }
+
+    fn rerank(
+        &self,
+        query: &str,
+        documents: &[&str],
+        request_id: &str,
+    ) -> Result<Vec<f32>, DaemonError> {
+        debug!(
+            request_id = request_id,
+            query_len = query.len(),
+            doc_count = documents.len(),
+            "Daemon rerank request"
+        );
+
+        let response = self.send_request(Request::Rerank {
+            query: query.to_string(),
+            documents: documents.iter().map(|s| s.to_string()).collect(),
+            model: "default".to_string(),
+        })?;
+
+        match response {
+            Response::Rerank(rerank) => {
+                if rerank.scores.len() != documents.len() {
+                    return Err(DaemonError::Failed(format!(
+                        "score count mismatch: expected {}, got {}",
+                        documents.len(),
+                        rerank.scores.len()
+                    )));
+                }
+                debug!(
+                    request_id = request_id,
+                    elapsed_ms = rerank.elapsed_ms,
+                    doc_count = documents.len(),
+                    "Daemon rerank completed"
+                );
+                Ok(rerank.scores)
+            }
+            other => Err(DaemonError::Failed(format!(
+                "unexpected response: {:?}",
+                other
+            ))),
+        }
+    }
+}
+
+/// Connect to an existing daemon or spawn a new one.
+pub fn connect_or_spawn() -> Result<Arc<UdsDaemonClient>, DaemonError> {
+    let client = UdsDaemonClient::with_defaults();
+    client.connect()?;
+    Ok(Arc::new(client))
+}
+
+/// Try to connect to an existing daemon without spawning.
+pub fn try_connect() -> Option<Arc<UdsDaemonClient>> {
+    let mut config = DaemonClientConfig::from_env();
+    config.auto_spawn = false;
+    let client = UdsDaemonClient::new(config);
+    match client.connect() {
+        Ok(()) => Some(Arc::new(client)),
+        Err(_) => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_config_defaults() {
+        let config = DaemonClientConfig::default();
+        assert!(config.auto_spawn);
+        assert_eq!(config.connect_timeout, Duration::from_secs(2));
+        assert_eq!(config.request_timeout, Duration::from_secs(30));
+    }
+
+    #[test]
+    fn test_default_socket_path() {
+        let config = DaemonClientConfig::default();
+        let path_str = config.socket_path.to_string_lossy();
+        assert!(path_str.starts_with("/tmp/semantic-daemon-"));
+        assert!(path_str.ends_with(".sock"));
+    }
+
+    #[test]
+    fn test_client_not_available_initially() {
+        let config = DaemonClientConfig {
+            auto_spawn: false,
+            socket_path: PathBuf::from("/tmp/nonexistent-test-socket.sock"),
+            ..Default::default()
+        };
+
+        let client = UdsDaemonClient::new(config);
+        assert!(!client.is_available());
+    }
+
+    #[test]
+    fn test_request_counter_increments() {
+        let client = UdsDaemonClient::with_defaults();
+        let first = client.request_counter.fetch_add(1, Ordering::Relaxed);
+        let second = client.request_counter.fetch_add(1, Ordering::Relaxed);
+        assert_eq!(second, first + 1);
+    }
+
+    #[test]
+    fn test_spawn_guard_lock_path_is_distinct_from_run_lock() {
+        let socket = PathBuf::from("/tmp/cass-semantic.sock");
+        assert_ne!(
+            crate::daemon::daemon_spawn_guard_lock_path(&socket),
+            crate::daemon::daemon_run_lock_path(&socket)
+        );
+        assert_eq!(
+            crate::daemon::daemon_spawn_guard_lock_path(&socket),
+            PathBuf::from("/tmp/cass-semantic.spawn-guard.lock")
+        );
+    }
+}

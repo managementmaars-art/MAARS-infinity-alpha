@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alchemy Codex"
+  short_description: "Codex router for Alchemy auth and integration"
+  default_prompt: "Help me choose between an Alchemy API key and the gateway flow, then route me to the right Alchemy Codex skill."

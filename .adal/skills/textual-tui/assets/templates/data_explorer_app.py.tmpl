@@ -1,0 +1,86 @@
+from __future__ import annotations
+
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal, Vertical
+from textual.widgets import DataTable, Footer, Header, Input, Static
+
+RECORDS = [
+    {"service": "api", "environment": "prod", "requests": "13.2M", "error_rate": "0.12%"},
+    {"service": "api", "environment": "staging", "requests": "1.9M", "error_rate": "0.40%"},
+    {"service": "search", "environment": "prod", "requests": "8.8M", "error_rate": "0.09%"},
+    {"service": "billing", "environment": "prod", "requests": "3.1M", "error_rate": "0.31%"},
+    {"service": "worker", "environment": "prod", "requests": "27.0M", "error_rate": "0.03%"},
+]
+
+
+class {{CLASS_NAME}}(App):
+    CSS_PATH = "{{MODULE}}.tcss"
+    TITLE = "{{APP_TITLE}}"
+    SUB_TITLE = "Responsive data explorer"
+    HORIZONTAL_BREAKPOINTS = [
+        (0, "-narrow"),
+        (100, "-wide"),
+    ]
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Input(placeholder="Filter records…", id="filter")
+        with Horizontal(id="body"):
+            yield DataTable(id="table")
+            with Vertical(id="detail-pane"):
+                yield Static("Select a record for details.", id="details")
+                yield Static("Resize the terminal to see the breakpoint class switch.", id="hint")
+        yield Footer()
+
+    def on_mount(self) -> None:
+        table = self.query_one("#table", DataTable)
+        table.cursor_type = "row"
+        table.add_columns("Service", "Environment", "Requests", "Error rate")
+        self.load_rows(RECORDS)
+
+    def rows_for_query(self, query: str):
+        query = query.lower().strip()
+        if not query:
+            return RECORDS
+        return [
+            row
+            for row in RECORDS
+            if query in " ".join(row.values()).lower()
+        ]
+
+    def load_rows(self, rows) -> None:
+        table = self.query_one("#table", DataTable)
+        table.clear(columns=False)
+        table.add_rows(
+            [
+                (row["service"], row["environment"], row["requests"], row["error_rate"])
+                for row in rows
+            ]
+        )
+        self.sub_title = "{0} visible rows".format(len(rows))
+
+    def on_input_changed(self, event: Input.Changed) -> None:
+        if event.input.id == "filter":
+            self.load_rows(self.rows_for_query(event.value))
+
+    def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
+        table = self.query_one("#table", DataTable)
+        service, environment, requests, error_rate = table.get_row(event.row_key)
+        self.query_one("#details", Static).update(
+            "\n".join(
+                [
+                    "Service:      {0}".format(service),
+                    "Environment:  {0}".format(environment),
+                    "Requests/day: {0}".format(requests),
+                    "Error rate:   {0}".format(error_rate),
+                ]
+            )
+        )
+
+
+def main() -> None:
+    {{CLASS_NAME}}().run()
+
+
+if __name__ == "__main__":
+    main()

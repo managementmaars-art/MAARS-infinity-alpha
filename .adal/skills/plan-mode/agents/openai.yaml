@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan Mode"
+  short_description: "Planning-only skill for plan documents"
+  default_prompt: "Use $plan-mode to inspect the project, verify facts, and write a plan under .plan/ before implementation."

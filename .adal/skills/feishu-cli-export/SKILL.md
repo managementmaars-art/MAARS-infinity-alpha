@@ -1,0 +1,504 @@
+---
+name: feishu-cli-export
+description: >-
+  将飞书文档或知识库文档导出为 Markdown 文件，或导出为 PDF/Word 等格式（异步任务），
+  或下载文档素材（图片/画板缩略图）。
+  支持 docx（新版文档）和 sheet（电子表格）两种知识库文档类型的 Markdown 导出。
+  当用户请求"导出文档"、"导出为 Markdown"、"转换为 Markdown"、"保存为 md"、
+  "导出 PDF"、"导出 Word"、"下载文档"、"下载素材"、"下载文档图片"、
+  "下载画板缩略图"、"导出表格"、"表格转 Markdown"时使用。
+  本技能专注于导出操作。从本地 DOCX 文件导入请使用 feishu-cli-import。
+argument-hint: <document_id|node_token|url> [output_path]
+user-invocable: true
+allowed-tools: Bash, Read
+---
+
+# 飞书文档导出技能
+
+将飞书云文档或知识库文档导出为本地 Markdown 文件，或导出为 PDF/Word 等格式。支持 docx（新版文档）和 sheet（电子表格）两种知识库文档类型。
+
+## 前置条件
+
+- **feishu-cli**：如尚未安装，请前往 [riba2534/feishu-cli](https://github.com/riba2534/feishu-cli) 获取安装方式
+- 需要已配置飞书应用凭证（`FEISHU_APP_ID` / `FEISHU_APP_SECRET`），通过环境变量或 `~/.feishu-cli/config.yaml` 设置
+- App 权限：需要 `docx:document` 或 `docx:document:readonly`（文档导出）、`wiki:wiki:readonly`（知识库导出）
+- User Token 权限：若 App 无权访问他人文档，先去飞书开放平台的应用权限管理页面开通 `docx:document:readonly`，然后 `feishu-cli auth login` 授权，`doc export` 会自动读取保存的 User Token
+- 使用 `--expand-mentions` 展开 @用户时，还需 `contact:user.base:readonly` 权限
+
+## 核心概念
+
+**Markdown 作为中间格式**：飞书云文档的内容通过 Markdown 格式导出到本地。选择 Markdown 作为中间格式，是因为它结构清晰、便于 Claude 理解和处理文档内容，同时也方便用户进行二次编辑或版本管理。中间文件默认存储在 `/tmp` 目录中。
+
+## 使用方法
+
+```bash
+# 导出普通文档
+/feishu-export <document_id>
+/feishu-export <document_id> ./output.md
+
+# 导出知识库文档
+/feishu-export <wiki_url>
+```
+
+## 执行流程
+
+1. **解析参数**
+   - 判断 URL 类型：
+     - `/docx/` → 普通文档
+     - `/wiki/` → 知识库文档
+   - document_id：必需
+   - output_path：可选，默认 `/tmp/<id>.md`
+
+2. **执行导出**
+
+   **普通文档**:
+   ```bash
+   feishu-cli doc export <document_id> --output <output_path>
+   ```
+
+   **知识库文档**:
+   ```bash
+   feishu-cli wiki export <node_token> --output <output_path>
+   ```
+
+3. **验证结果**
+   - 读取导出的 Markdown 文件
+   - 显示文件大小和内容预览
+
+## 参数说明
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| document_id/node_token | 文档 ID 或知识库节点 Token | 必需 |
+| output_path | 输出文件路径 | `/tmp/<id>.md` |
+| --download-images | 下载文档中的图片和画板到本地（图片在飞书服务器以 token 形式存储，不下载则无法本地查看；画板自动导出为 PNG） | 否 |
+| --assets-dir | 图片和画板的保存目录 | `./assets` |
+| --front-matter | 添加 YAML front matter（标题和文档 ID） | 否 |
+| --highlight | 保留文本颜色和背景色（输出为 HTML `<span>` 标签） | 否 |
+| --expand-mentions | 展开 @用户为友好格式（需要 contact:user.base:readonly 权限） | 是（默认开启） |
+| --user-access-token | User Access Token（用于访问无 App 权限的文档，未指定时自动从 `auth login` 读取） | 自动读取 |
+
+## 支持的 URL 格式
+
+| URL 格式 | 类型 | 命令 |
+|---------|------|------|
+| `https://xxx.feishu.cn/docx/<id>` | 普通文档 | `doc export` |
+| `https://xxx.feishu.cn/wiki/<token>` | 知识库（docx/sheet） | `wiki export` |
+| `https://xxx.larkoffice.com/docx/<id>` | 普通文档 | `doc export` |
+| `https://xxx.larkoffice.com/wiki/<token>` | 知识库（docx/sheet） | `wiki export` |
+
+## 输出格式
+
+```
+已导出文档！
+  文件路径: /path/to/output.md
+  文件大小: 2.5 KB
+
+内容预览:
+---
+# 文档标题
+...
+```
+
+## 示例
+
+```bash
+# 导出普通文档
+/feishu-export <document_id>
+/feishu-export <document_id> ~/Documents/doc.md
+
+# 导出知识库文档
+/feishu-export https://xxx.feishu.cn/wiki/<node_token>
+/feishu-export <node_token> ./wiki_doc.md
+
+# 导出并下载图片
+/feishu-export <document_id> --download-images
+
+# 导出并添加 YAML front matter
+/feishu-export <document_id> -o doc.md --front-matter
+
+# 导出并保留文本高亮颜色
+/feishu-export <document_id> -o doc.md --highlight
+```
+
+### Front Matter 输出格式
+
+使用 `--front-matter` 时，导出的 Markdown 文件顶部会添加：
+
+```yaml
+---
+title: "文档标题"
+document_id: ABC123def456
+---
+```
+
+### 高亮颜色输出格式
+
+使用 `--highlight` 时，带颜色的文本会输出为 HTML `<span>` 标签：
+
+```html
+<span style="color: #ef4444">红色文本</span>
+<span style="background-color: #eff6ff">蓝色高亮背景</span>
+```
+
+支持的颜色：7 种字体颜色（红/橙/黄/绿/蓝/紫/灰）+ 14 种背景色（浅/深各 7 种）。
+
+## 图片处理（重要）
+
+导出文档时务必下载图片，以便后续理解图片内容：
+
+### 导出并下载图片
+
+```bash
+# 普通文档
+feishu-cli doc export <document_id> \
+  --output /tmp/doc.md \
+  --download-images \
+  --assets-dir /tmp/doc_assets
+
+# 知识库文档
+feishu-cli wiki export <node_token> \
+  --output /tmp/wiki.md \
+  --download-images \
+  --assets-dir /tmp/wiki_assets
+```
+
+### 查看和理解图片
+
+```bash
+# 查看下载的图片列表
+ls -la /tmp/doc_assets/
+
+# 使用 Read 工具读取图片（Claude 支持多模态）
+# Read /tmp/doc_assets/image_1.png
+# Read /tmp/doc_assets/image_2.png
+```
+
+### 完整流程
+
+1. **导出时添加图片参数**：`--download-images --assets-dir <dir>`
+2. **检查图片文件**：`ls <assets_dir>/`
+3. **读取图片内容**：使用 Read 工具逐个读取图片
+4. **整合分析**：将图片描述与文档文本结合
+
+## 错误处理与边界情况
+
+### 1. 常见错误
+
+| 错误 | 原因 | 解决 |
+|------|------|------|
+| `code=1770032, msg=forBidden` | App Token 无权限访问该文档 | 在飞书开放平台应用权限管理页面开通 `docx:document:readonly`，再 `auth login` 授权 User Token |
+| `code=99991679, msg=Unauthorized` | User Token 缺少 `docx:document:readonly` scope | 在飞书开放平台应用权限管理页面开通 `docx:document:readonly`，再重新 `auth login` |
+| `code=131002, param err` | 参数错误 | 检查 token 格式 |
+| `code=131001, node not found` | 节点不存在 | 检查 token 是否正确 |
+| `code=131003, no permission` | 无权限访问 | 确认应用有 docx:document 或 wiki:wiki:readonly 权限 |
+| `code=99991672, open api request rate limit` | API 限流 | 等待几秒后重试 |
+| `write /tmp/xxx.md: permission denied` | 文件权限问题 | 检查输出目录权限，更换输出路径 |
+
+### 2. 边界情况处理
+
+**情况 1：目录节点导出**
+- 知识库目录节点导出内容可能显示为 `[Wiki 目录...]`
+- 这是正常行为，表示该节点是目录而非实际文档
+- 使用 `wiki nodes <space_id> --parent <token>` 获取子节点
+
+**情况 2：文档内容为空**
+- 检查文档是否真的为空
+- 检查是否有权限查看内容
+- 检查是否是目录节点
+
+**情况 3：图片下载失败**
+- 检查 `--assets-dir` 目录是否存在且可写
+- 检查网络连接
+- 图片可能已被删除或权限不足
+
+**情况 4：导出中断**
+- 大型文档导出可能耗时较长
+- 如果中断，可以重新执行命令
+- 使用 `--output` 指定固定路径以便续传
+
+### 3. 重试机制
+
+如果遇到网络错误或 API 限流：
+
+```bash
+# 添加 --debug 查看详细错误信息
+feishu-cli doc export <doc_id> --debug
+
+# 等待几秒后重试
+sleep 5 && feishu-cli doc export <doc_id>
+```
+
+## 已知问题
+
+| 问题 | 说明 |
+|------|------|
+| 表格导出 | 文档内嵌表格（block_type 31）的单元格内容可能显示为 `<!-- Unknown block type: 32 -->`，这是块类型 32（表格单元格）的已知转换问题 |
+| 目录节点 | 知识库目录节点导出内容为 `[Wiki 目录...]`，需单独获取子节点 |
+
+## 已验证功能
+
+以下导出功能已通过测试验证：
+- 普通文档导出 ✅
+- 知识库文档导出（docx 类型）✅
+- 知识库电子表格导出（sheet 类型）✅ — 自动读取所有工作表，转为 Markdown 表格，富文本链接完整保留
+- 标题、段落、列表（含嵌套列表）、代码块、引用、分割线 ✅
+- 任务列表（Todo）✅
+- **图片下载** ✅（使用 `--download-images`）
+- **Callout 高亮块**（6 种类型）✅
+- **公式**（块级 + 行内）✅
+- **Front Matter** ✅（使用 `--front-matter`）
+- **文本高亮颜色** ✅（使用 `--highlight`）
+- **ISV 块**（Mermaid 绘图）✅
+- **AddOns/SyncedBlock 展开** ✅
+- **特殊字符转义** ✅
+- **@用户展开** ✅（使用 `--expand-mentions`，默认开启）
+- **新块类型**（Agenda/LinkPreview/SyncBlock/WikiCatalogV2/AITemplate）✅
+- 表格结构 ⚠️（内容可能丢失）
+- 飞书画板 → 画板链接/PNG 图片 ✅
+
+## 双向转换说明
+
+| 导入（Markdown → 飞书） | 导出（飞书 → Markdown） |
+|------------------------|------------------------|
+| Mermaid/PlantUML 代码块 → 飞书画板 | 飞书画板 → 画板链接/PNG 图片 |
+| 大表格 → 自动拆分为多个表格 | 多个表格 → 分开的表格 |
+| 缩进列表 → 嵌套父子块 | 嵌套列表 → 缩进 Markdown |
+| `> [!NOTE]` → Callout 高亮块 | Callout 高亮块 → `> [!NOTE]` |
+| `$formula$` → 行内公式 | 行内/块级公式 → `$formula$` |
+| `<u>下划线</u>` → 下划线样式 | 下划线样式 → `<u>下划线</u>` |
+
+**注意**：
+- Mermaid/PlantUML 图表导入后会转换为飞书画板，导出时生成的是画板链接而非原始图表代码
+- 飞书"文本绘图"小组件（TextDrawing/AddOns）导出时会自动还原为 Mermaid 或 PlantUML 代码块，保留图表源码
+
+---
+
+## 异步导出为 PDF/Word/Excel（doc export-file）
+
+将飞书云文档导出为 PDF、Word 等格式（异步三步流程）：
+
+### 执行流程
+
+```bash
+# 一条命令完成全部流程（内部自动创建任务→轮询→下载）
+feishu-cli doc export-file <doc_token> --type pdf -o output.pdf
+```
+
+### 支持的导出格式
+
+| --type | 格式 | 说明 |
+|--------|------|------|
+| `pdf` | PDF | 保留排版 |
+| `docx` | Word | 可编辑 |
+
+### 参数
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `<doc_token>` | 文档 Token | 必填 |
+| `--type` | 导出格式 | 必填 |
+| `-o, --output` | 输出文件路径 | 必填 |
+| `--user-access-token` | User Access Token（用于导出无 App 权限的文档） | 自动读取 |
+
+### 示例
+
+```bash
+# 导出为 PDF
+feishu-cli doc export-file JKbxdRez1oNWEKxPz14cWMpBnKh --type pdf -o /tmp/report.pdf
+
+# 导出为 Word
+feishu-cli doc export-file JKbxdRez1oNWEKxPz14cWMpBnKh --type docx -o /tmp/report.docx
+
+# 使用 User Token 导出（无 App 权限的文档）
+feishu-cli doc export-file JKbxdRez1oNWEKxPz14cWMpBnKh --type pdf -o /tmp/report.pdf --user-access-token u-xxx
+```
+
+---
+
+## 从本地文件导入为飞书云文档（doc import-file）
+
+将本地 DOCX/XLSX 等文件导入为飞书云文档（异步流程）：
+
+### 执行流程
+
+```bash
+# 一条命令完成全部流程（内部自动上传→创建任务→轮询）
+feishu-cli doc import-file local_file.docx --type docx --name "文档名称"
+```
+
+### 支持的导入格式
+
+| --type | 格式 | 说明 |
+|--------|------|------|
+| `docx` | Word 文档 | 转换为飞书文档 |
+
+### 参数
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `<local_path>` | 本地文件路径 | 必填 |
+| `--type` | 文件类型 | 必填 |
+| `--name` | 飞书文档名称 | 文件名 |
+| `--folder` | 目标文件夹 Token（**必须提供**，飞书 API 要求指定文档挂载点，不传会报 `field validation failed`） | — |
+
+### 示例
+
+```bash
+# 导入 Word 文档（必须指定 --folder）
+feishu-cli doc import-file ~/Documents/report.docx --type docx --name "季度报告" --folder fldcnXXX
+```
+
+---
+
+## 下载文档素材（doc media-download）
+
+下载文档中的素材文件，支持普通素材（图片、文件）和画板缩略图两种模式。
+
+### 普通素材下载
+
+下载文档中引用的图片或文件素材（通过 file_token）：
+
+```bash
+# 下载图片素材
+feishu-cli doc media-download <file_token> -o /tmp/image.png
+
+# 下载文件素材
+feishu-cli doc media-download <file_token> -o /tmp/attachment.pdf
+
+# 下载大文件，设置更长超时时间
+feishu-cli doc media-download <file_token> -o /tmp/large_image.png --timeout 10m
+```
+
+### 画板缩略图下载
+
+下载飞书画板（Whiteboard）的缩略图：
+
+```bash
+# 下载画板缩略图
+feishu-cli doc media-download <whiteboard_token> --type whiteboard -o /tmp/board.png
+```
+
+### 参数说明
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `<token>` | 素材 Token 或画板 Token | 必填 |
+| `--type` | 素材类型 `media`/`whiteboard` | `media` |
+| `-o, --output` | 输出文件路径 | — |
+| `--timeout` | 下载超时时间（Go duration 格式，如 `10m`、`30m`、`1h`） | `5m` |
+
+### 两种下载模式的区别
+
+| 维度 | 普通素材（media） | 画板缩略图（whiteboard） |
+|------|-------------------|------------------------|
+| Token 来源 | 文档导出解析的 `file_token` | 画板块的 `whiteboard_token` |
+| 下载内容 | 原始图片/文件 | 画板渲染的 PNG 缩略图 |
+| 适用场景 | 下载文档中的图片和附件 | 获取画板预览图 |
+
+> **提示**：如需批量下载文档中所有图片，推荐使用 `doc export --download-images --assets-dir <dir>` 命令，它会自动提取并下载所有图片和画板缩略图。
+
+---
+
+## 常见问题
+
+| 问题 | 原因 | 解决方法 |
+|------|------|----------|
+| `code=131003, no permission` | 应用未授权访问该文档 | 确认应用有 `docx:document` 或 `wiki:wiki:readonly` 权限，且文档对应用可见 |
+| `code=99991672, rate limit` | API 请求频率超限 | 等待几秒后重试 |
+| `field validation failed`（import-file） | 未传 `--folder` 参数 | 始终指定 `--folder fldcnXXX` |
+| 导出的 Markdown 中图片显示为 token 而非内容 | 未使用 `--download-images` | 添加 `--download-images --assets-dir <dir>` 参数 |
+| 表格单元格内容显示为 `<!-- Unknown block type: 32 -->` | 块类型 32（TableCell）的已知转换问题 | 暂无修复，手动补充内容 |
+| `--expand-mentions` 报权限错误 | 缺少 `contact:user.base:readonly` 权限 | 在飞书开放平台为应用申请该权限，或使用 `--expand-mentions=false` 关闭 |
+
+---
+
+## 附录：Block 类型映射参考
+
+以下是飞书文档块类型与导出 Markdown 格式的完整映射关系。
+
+| 飞书块类型 | 导出结果 | 说明 |
+|-----------|---------|------|
+| 标题 (Heading 1-6) | `# ~ ######` | |
+| 标题 (Heading 7-9) | `######` 或粗体段落 | 超出 H6 时降级 |
+| 段落 (Text) | 普通文本 | |
+| 无序列表 (Bullet) | `- item` | 支持无限深度嵌套 |
+| 有序列表 (Ordered) | `1. item` | 保留原始编号序列 |
+| 任务列表 (Todo) | `- [x]` / `- [ ]` | |
+| 代码块 (Code) | ` ```lang ``` ` | 使用原始文本，无转义 |
+| 引用 (Quote) | `> text` | |
+| 引用容器 (QuoteContainer) | `> text` | 支持嵌套引用 |
+| Callout 高亮块 | `> [!TYPE]` | 6 种类型 |
+| 公式 (Equation) | `$formula$` | 块级公式 |
+| 行内公式 | `$formula$` | 段落内嵌公式 |
+| 分割线 (Divider) | `---` | |
+| 表格 (Table) | Markdown 表格 | 管道符自动转义 |
+| 图片 (Image) | `![alt](feishu://media/<token>)` 或本地路径 | 使用 `--download-images` 时下载到本地 |
+| 链接 | `[text](url)` | URL 特殊字符自动编码 |
+| 画板 (Board) | `[画板/Whiteboard](feishu://board/...)` 或 PNG 图片 | 使用 `--download-images` 时自动导出为 PNG |
+| ISV 块 | 画板链接或 HTML 注释 | Mermaid 绘图/时间线 |
+| Iframe | `<iframe>` HTML 标签 | 嵌入内容 |
+| AddOns/TextDrawing | Mermaid/PlantUML 代码块 | 文本绘图小组件自动还原为图表源码 |
+| AddOns/SyncedBlock | 展开子块内容 | 透明展开 |
+| Wiki 目录 | `[Wiki 目录...]` | |
+| Agenda/AgendaItem | 展开子块内容 | 议程块 |
+| LinkPreview | 链接 | 链接预览 |
+| SyncSource/SyncReference | 展开子块内容 | 同步块 |
+| WikiCatalogV2 | `[知识库目录 V2]` | |
+| AITemplate | HTML 注释 | AI 模板块 |
+
+### Callout 高亮块导出
+
+Callout 块（飞书高亮块）导出为 GitHub-style alert 语法：
+
+```markdown
+> [!NOTE]
+> 这是一个提示信息。
+
+> [!WARNING]
+> 这是一个警告信息。
+```
+
+支持 6 种 Callout 类型（按背景色映射）：
+
+| 背景色 | 导出类型 | 说明 |
+|--------|---------|------|
+| 2 (红色) | `[!WARNING]` | 警告 |
+| 3 (橙色) | `[!CAUTION]` | 警示 |
+| 4 (黄色) | `[!TIP]` | 技巧 |
+| 5 (绿色) | `[!SUCCESS]` | 成功 |
+| 6 (蓝色) | `[!NOTE]` | 提示 |
+| 7 (紫色) | `[!IMPORTANT]` | 重要 |
+
+Callout 内部子块（段落、列表等）会在引用语法内逐行展示。
+
+### 公式导出
+
+- **块级公式**：独立行 `$formula$`
+- **行内公式**：段落内嵌 `$E = mc^2$`
+- 公式内容保持 LaTeX 原文，不做转义
+
+### HTML 标签导出格式
+
+以下飞书块类型导出为 HTML 标签格式（而非标准 Markdown），用于保留飞书原生属性，支持 roundtrip（导出→导入不丢失信息）。
+
+| 飞书块/元素 | 导出格式 | 说明 |
+|------------|---------|------|
+| MentionUser（@用户） | `<mention-user id="ou_xxx"/>` | 使用 `--expand-mentions` 时展开为友好名称，未命中缓存或关闭时输出此标签 |
+| MentionDoc（@文档） | `<mention-doc token="xxx" type="docx">标题</mention-doc>` | `type` 根据 ObjType 映射（docx/doc/sheet/bitable/wiki 等） |
+| Image（图片） | `<image token="xxx" width="800" height="600" align="center"/>` | 使用 `--download-images` 时下载为本地文件输出 `![alt](path)`，否则输出此标签 |
+| Grid（分栏） | `<grid cols="N"><column>内容</column>...</grid>` | 每个 GridColumn 子块递归导出 |
+| Board（画板） | `<whiteboard token="xxx" type="blank"/>` | 使用 `--download-images` 时导出为 PNG 图片，否则输出此标签 |
+| Sheet（电子表格块） | `<sheet token="xxx" rows="N" cols="N"/>` | 文档内嵌的电子表格块 |
+| Bitable（多维表格块） | `<bitable token="xxx" view="table"/>` | `view` 支持 table/kanban/calendar/gallery/gantt/form |
+| File（文件块） | `<file token="xxx" name="report.pdf" view-type="1"/>` | 文件附件块 |
+
+> 这些 HTML 标签可被 `doc import` 导入端解析还原为对应的飞书块类型，实现无损 roundtrip。
+
+### 特殊字符处理
+
+导出时自动处理以下 Markdown 特殊字符：
+- 普通文本中的 `* _ [ ] # ~ $ > |` 会自动添加 `\` 转义
+- 代码块内的文本不做转义（使用原始文本）
+- 表格单元格中的 `|` 会转义为 `\|`
+- URL 中的括号 `(` `)` 会编码为 `%28` `%29`

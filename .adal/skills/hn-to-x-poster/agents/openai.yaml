@@ -1,0 +1,4 @@
+interface:
+  display_name: "HN to X Poster"
+  short_description: "Scan HN top 30 and post a Chinese 3+ part thread to X"
+  default_prompt: "Use $hn-to-x-poster to scan HN top 30, pick software or AI items, and post a Chinese thread of at least 3 posts to X using a total-points-takeaway structure."

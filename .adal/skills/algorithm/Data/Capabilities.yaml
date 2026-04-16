@@ -1,0 +1,337 @@
+# THE ALGORITHM Capabilities Registry (v1.8.0)
+# Source of truth for all orchestratable capabilities
+# 25 capabilities across 6 sections, 8 effort tiers
+# Effort levels: INSTANT < FAST < STANDARD < EXTENDED < ADVANCED < DEEP < COMPREHENSIVE < LOOP
+
+version: "1.8.0"
+
+# === EFFORT TIERS ===
+effort_tiers:
+  INSTANT:
+    budget: "<10s"
+    when: "Trivial lookup, greeting, 'right now'"
+    phases: "No phases — minimal format only"
+    min_capabilities: 1
+    isc_range: "0-4"
+
+  FAST:
+    budget: "<1min"
+    when: "'quickly', simple fix, skill invocation"
+    phases: "OBSERVE 10s, BUILD 20s, EXECUTE 20s, VERIFY 10s"
+    min_capabilities: 2
+    isc_range: "4-8"
+
+  STANDARD:
+    budget: "<2min"
+    when: "Normal request, no time pressure stated (DEFAULT)"
+    phases: "OBSERVE 15s, THINK 15s, BUILD 30s, EXECUTE 30s, VERIFY 20s"
+    min_capabilities: 3
+    isc_range: "4-16"
+
+  EXTENDED:
+    budget: "<8min"
+    when: "Quality must be extraordinary, plan mode triggers"
+    phases: "Full phases, checkpoints every 1 min"
+    min_capabilities: 4
+    isc_range: "16-40"
+    plan_mode: true
+
+  ADVANCED:
+    budget: "<16min"
+    when: "Complex multi-system work"
+    phases: "Full phases, checkpoints every 1 min"
+    min_capabilities: 5
+    isc_range: "16-64"
+    plan_mode: true
+
+  DEEP:
+    budget: "<32min"
+    when: "Deep research or major architecture"
+    phases: "Full phases, checkpoints every 1 min"
+    min_capabilities: 6
+    isc_range: "32-150"
+    plan_mode: true
+
+  COMPREHENSIVE:
+    budget: "<120min"
+    when: "Don't feel rushed by time"
+    phases: "Full phases, no rush"
+    min_capabilities: 8
+    isc_range: "64-500+"
+    plan_mode: true
+
+  LOOP:
+    budget: "Unbounded"
+    when: "External loop, PRD iteration"
+    phases: "Orchestrator-driven via algorithm.ts"
+    min_capabilities: 1
+    isc_range: "Any"
+    prd_required: true
+
+# === SECTION A: FOUNDATION (Infrastructure — always available) ===
+foundation:
+  task_tool:
+    id: 1
+    name: "Task Tool"
+    description: "ISC creation, tracking, verification"
+    invocation: "TaskCreate, TaskUpdate, TaskList"
+    effort_min: INSTANT
+
+  ask_user_question:
+    id: 2
+    name: "AskUserQuestion"
+    description: "Resolve ambiguity before building wrong thing"
+    invocation: "Built-in tool"
+    effort_min: INSTANT
+
+  claude_code_sdk:
+    id: 3
+    name: "Claude Code SDK"
+    description: "Isolated execution via claude -p"
+    invocation: "Bash: claude -p 'prompt'"
+    effort_min: FAST
+
+  skills:
+    id: 4
+    name: "Skills (70+ — ACTIVE SCAN)"
+    description: "Domain-specific sub-algorithms — MUST scan index per task"
+    invocation: "Read skill-index.json, match triggers against task"
+    effort_min: INSTANT
+    note: "Requires active index scanning — bare 'N/A' without evidence is critical error"
+
+# === SECTION B: THINKING & ANALYSIS (Deepen understanding, improve ISC) ===
+thinking:
+  iterative_depth:
+    id: 5
+    name: "Iterative Depth"
+    description: "Multi-angle exploration: 2-8 lenses on the same problem"
+    invocation: "IterativeDepth skill"
+    effort_min: STANDARD
+
+  first_principles:
+    id: 6
+    name: "First Principles"
+    description: "Fundamental decomposition to root causes"
+    invocation: "FirstPrinciples skill"
+    effort_min: STANDARD
+
+  be_creative:
+    id: 7
+    name: "Be Creative"
+    description: "Extended thinking, divergent ideation"
+    invocation: "BeCreative skill"
+    effort_min: STANDARD
+
+  plan_mode:
+    id: 8
+    name: "Plan Mode"
+    description: "Structured ISC development and PRD writing"
+    invocation: "EnterPlanMode tool"
+    effort_min: EXTENDED
+
+  world_threat_model:
+    id: 9
+    name: "World Threat Model Harness"
+    description: "Test ideas against 11 time-horizon world models (6mo→50yr)"
+    invocation: "WorldThreatModelHarness skill"
+    effort_min: EXTENDED
+
+# === SECTION C: AGENTS (Specialized workers) ===
+agents:
+  algorithm_agents:
+    id: 10
+    name: "Algorithm Agents"
+    description: "ISC-specialized subagents"
+    invocation: "Task: subagent_type=Algorithm"
+    effort_min: STANDARD
+
+  engineer_agents:
+    id: 11
+    name: "Engineer Agents"
+    description: "Build and implement"
+    invocation: "Task: subagent_type=Engineer"
+    effort_min: STANDARD
+
+  architect_agents:
+    id: 12
+    name: "Architect Agents"
+    description: "Design, structure, system thinking"
+    invocation: "Task: subagent_type=Architect"
+    effort_min: EXTENDED
+
+  research_skill:
+    id: 13
+    name: "Research Skill (MANDATORY for research)"
+    description: "Multi-model parallel research with effort-level-matched depth"
+    invocation: "Research skill (match depth to current effort level)"
+    effort_min: STANDARD
+    note: "ALL research MUST go through Research skill — never spawn ad-hoc research agents"
+
+  custom_agents:
+    id: 14
+    name: "Custom Agents"
+    description: "Full-identity agents with unique name, voice, color, backstory"
+    invocation: "bun ComposeAgent.ts --task '...' --save, subagent_type=general-purpose"
+    effort_min: EXTENDED
+    note: "NEVER use built-in agent type names for custom agents — always general-purpose"
+
+# === SECTION D: COLLABORATION & CHALLENGE (Multiple perspectives) ===
+collaboration:
+  council:
+    id: 15
+    name: "Council"
+    description: "Multi-agent structured debate"
+    invocation: "Council skill"
+    effort_min: EXTENDED
+
+  red_team:
+    id: 16
+    name: "Red Team"
+    description: "Adversarial analysis, 32 agents"
+    invocation: "RedTeam skill"
+    effort_min: EXTENDED
+
+  agent_teams:
+    id: 17
+    name: "Agent Teams (Swarm)"
+    description: "Coordinated multi-agent with shared tasks"
+    invocation: "Say 'create an agent team' then TeamCreate + SendMessage"
+    effort_min: EXTENDED
+    note: "Requires env CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1"
+
+# === SECTION E: EXECUTION & VERIFICATION ===
+execution:
+  parallelization:
+    id: 18
+    name: "Parallelization"
+    description: "Multiple background agents"
+    invocation: "run_in_background: true"
+    effort_min: STANDARD
+
+  creative_branching:
+    id: 19
+    name: "Creative Branching"
+    description: "Divergent exploration of alternatives"
+    invocation: "Multiple agents, different approaches"
+    effort_min: EXTENDED
+
+  git_branching:
+    id: 20
+    name: "Git Branching"
+    description: "Isolated experiments in work trees"
+    invocation: "git worktree + branch"
+    effort_min: STANDARD
+
+  evals:
+    id: 21
+    name: "Evals"
+    description: "Automated comparison/bakeoffs"
+    invocation: "Evals skill"
+    effort_min: EXTENDED
+
+  browser:
+    id: 22
+    name: "Browser"
+    description: "Visual verification, screenshot-driven"
+    invocation: "Browser skill"
+    effort_min: STANDARD
+
+# === SECTION F: VERIFICATION & TESTING (Deterministic proof — prefer non-AI) ===
+verification:
+  test_runner:
+    id: 23
+    name: "Test Runner"
+    description: "Unit, integration, E2E test execution"
+    invocation: "bun test, vitest, jest, pytest"
+    effort_min: FAST
+
+  static_analysis:
+    id: 24
+    name: "Static Analysis"
+    description: "Type checking, linting, format verification"
+    invocation: "tsc --noEmit, ESLint, Biome, shellcheck, ruff"
+    effort_min: FAST
+
+  cli_probes:
+    id: 25
+    name: "CLI Probes"
+    description: "Deterministic endpoint/state/file checks"
+    invocation: "curl -f, jq ., diff, exit codes, file"
+    effort_min: FAST
+
+# === COMPUTE RESOURCES (model selection by effort) ===
+models:
+  haiku:
+    effort_min: FAST
+    description: "Fast, cheap execution"
+    use_for: "Parallel grunt work, simple execution, spotchecks"
+  sonnet:
+    effort_min: STANDARD
+    description: "Balanced reasoning"
+    use_for: "Analysis, planning, research, standard work"
+  opus:
+    effort_min: DEEP
+    description: "Maximum intelligence"
+    use_for: "Architecture, critical decisions, complex reasoning"
+
+# === PARALLEL EXECUTION ===
+parallel:
+  max_concurrent:
+    INSTANT: 0
+    FAST: 1
+    STANDARD: 3
+    EXTENDED: 4
+    ADVANCED: 8
+    DEEP: 16
+    COMPREHENSIVE: 16
+    LOOP: 8
+  background_enabled: true
+
+# === PRESERVED: Rob's custom capabilities ===
+custom:
+  ralph_loop:
+    type: iterative_loop
+    model: sonnet
+    effort_min: FAST
+    icon: "🔄"
+    keywords:
+      - "iterate until"
+      - "keep trying"
+      - "until tests pass"
+      - "until it works"
+      - "persistent"
+      - "ralph"
+    max_iterations_default: 10
+    use_when: "Need persistent iteration until success criteria met"
+
+# === CAPABILITY AUDIT REQUIREMENTS ===
+audit:
+  total_capabilities: 25
+  sections: 6
+  scan_requirement: "100% — every capability evaluated"
+  min_use_by_effort:
+    INSTANT: 1
+    FAST: 2
+    STANDARD: 3
+    EXTENDED: 4
+    ADVANCED: 5
+    DEEP: 6
+    COMPREHENSIVE: 8
+    LOOP: 1
+  dispositions:
+    - USE      # Will invoke during a specific phase
+    - DECLINE  # Would help but effort level prevents
+    - N/A      # Genuinely irrelevant to this task
+  rules:
+    - "Every capability gets exactly one disposition"
+    - "Count must sum to 25 — incomplete scan = critical failure"
+    - "Capability #4 (Skills) requires active index scanning"
+    - "ISC IMPROVEMENT (B+C+D) must be considered before execution capabilities"
+    - "Cross-section combination preferred over single-section selections"
+
+# === EFFORT LEVEL DECAY (Loop Mode) ===
+loop_decay:
+  iterations_1_3: "Use original effort level (full exploration)"
+  iterations_4_plus: "If >50% criteria passing, drop to Standard"
+  iterations_8_plus: "If >80% criteria passing, drop to Fast"
+  reset_trigger: "New failing criteria discovered → reset to original effort level"

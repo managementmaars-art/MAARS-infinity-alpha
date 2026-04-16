@@ -1,0 +1,57 @@
+# SSH test server for cass integration tests
+#
+# This container provides a minimal SSH server with rsync installed,
+# pre-populated with test agent session data for integration testing.
+#
+# Build: docker build -t cass-ssh-test -f tests/docker/Dockerfile.sshd tests/docker/
+# Run:   docker run -d -p 2222:22 cass-ssh-test
+#
+FROM alpine:3.19
+
+# Install SSH server and rsync (required for sync tests)
+RUN apk add --no-cache \
+    openssh \
+    rsync \
+    bash \
+    coreutils
+
+# Configure SSH server
+RUN ssh-keygen -A && \
+    mkdir -p /root/.ssh && \
+    chmod 700 /root/.ssh && \
+    echo "PermitRootLogin yes" >> /etc/ssh/sshd_config && \
+    echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config && \
+    echo "PasswordAuthentication no" >> /etc/ssh/sshd_config && \
+    echo "AuthorizedKeysFile .ssh/authorized_keys" >> /etc/ssh/sshd_config && \
+    echo "LogLevel DEBUG" >> /etc/ssh/sshd_config
+
+# Create test agent session directories with sample data
+# Claude Code sessions
+RUN mkdir -p /root/.claude/projects/test-project && \
+    echo '{"type":"user","message":{"content":"Write a hello world program"}}' > /root/.claude/projects/test-project/session.jsonl && \
+    echo '{"type":"assistant","message":{"content":"Here is a hello world program..."}}' >> /root/.claude/projects/test-project/session.jsonl
+
+# Codex sessions
+RUN mkdir -p /root/.codex/sessions && \
+    echo '{"role":"user","content":"Help me debug this code"}' > /root/.codex/sessions/session1.json
+
+# Gemini sessions
+RUN mkdir -p /root/.gemini/tmp && \
+    echo '{"role":"user","parts":[{"text":"Explain recursion"}]}' > /root/.gemini/tmp/chat1.json
+
+# Create a second project for more comprehensive testing
+RUN mkdir -p /root/.claude/projects/another-project && \
+    echo '{"type":"user","message":{"content":"Test message in second project"}}' > /root/.claude/projects/another-project/session.jsonl
+
+# Set correct permissions
+RUN chmod -R 755 /root/.claude /root/.codex /root/.gemini
+
+# Create a script to add authorized keys at runtime
+# (The test harness will inject keys before running tests)
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 22
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/usr/sbin/sshd", "-D", "-e"]

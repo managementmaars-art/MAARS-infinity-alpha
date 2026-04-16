@@ -1,0 +1,20 @@
+{
+  "requiredSemanticFields": [
+    "files changed or files likely to change",
+    "chosen Motion API or Framer Motion API",
+    "boundary strategy",
+    "package migration decision",
+    "reduced-motion handling",
+    "performance or bundle-size notes",
+    "validation or build notes",
+    "caveats or follow-up risks"
+  ],
+  "reviewQuestions": [
+    "Did the answer preserve the repo's existing package strategy unless migration was explicitly requested?",
+    "Did it choose the smallest viable Client Component boundary?",
+    "Did it avoid turning App Router layouts into client components unnecessarily?",
+    "Did it mention reduced motion for non-trivial movement?",
+    "Did it use route-aware guidance for App Router or Pages Router when transitions were requested?",
+    "Did it avoid index keys with AnimatePresence and mention LayoutGroup id when layoutId is reused?"
+  ]
+}

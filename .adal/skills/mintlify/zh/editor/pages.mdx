@@ -1,0 +1,158 @@
+---
+title: "创建和编辑页面"
+description: "在 Web 编辑器中创建、编辑和组织文档页面。"
+keywords: ["编辑器","内容","页面","文件"]
+---
+
+<div id="navigate-files">
+  ## 浏览文件
+</div>
+
+在左侧面板的 **Navigation** 标签页中浏览文档页面。
+
+* 点击导航元素以展开或折叠。
+* 点击页面将在编辑器中打开它。
+* 点击搜索 icon，或按下 <kbd>Cmd</kbd> + <kbd>K</kbd> (macOS) 或 <kbd>Ctrl</kbd> + <kbd>K</kbd> (Windows) ，搜索文件和内容。搜索会在文件名和页面内容中查找匹配项。
+* 点击工具栏中的隐藏侧边栏按钮以折叠侧边栏，为编辑器留出更多空间。
+
+<Note>
+  导航标签页按页面标题列出页面。文件标签页按页面的文件名和扩展名列出页面。
+</Note>
+
+<div id="create-new-pages">
+  ## 创建新页面
+</div>
+
+1. 在要添加页面的导航区域中，点击 <Icon icon="plus" /> 按钮。
+2. 点击 **Add a page**。
+3. 输入文件名，编辑器会自动添加 `.mdx` 扩展名。
+
+<div id="edit-content">
+  ## 编辑内容
+</div>
+
+使用工具栏中的开关在可视化模式和 Markdown 模式之间切换。切换模式时，Web 编辑器会保存你的更改。
+
+<Note>
+  API 规范文件（OpenAPI 和 AsyncAPI）在 Web 编辑器中为只读。你可以查看其内容，但无法直接编辑。要更新规范文件，请使用你偏好的代码编辑器进行编辑，然后将更改推送到你的文档仓库。
+</Note>
+
+<Frame>
+  <img src="/images/editor/mode-toggle-light.png" alt="工具栏中的模式切换开关。" className="block dark:hidden" />
+
+  <img src="/images/editor/mode-toggle-dark.png" alt="工具栏中的模式切换开关。" className="hidden dark:block" />
+</Frame>
+
+<div id="visual-mode">
+  ### 可视模式
+</div>
+
+在编辑内容时实时预览其发布后的效果。编辑器会使用你的浏览器内置的拼写检查功能，在你输入时高亮显示拼写错误的单词。
+
+* **添加文本**：在编辑器中输入，查看文本在发布后如何呈现。
+* **格式化文本**：使用工具栏将文本加粗、设置为斜体或应用其他格式。
+* **添加组件**：按下 <kbd>/</kbd> 打开组件菜单并选择组件。
+* **添加图片**：从 <kbd>/</kbd> 菜单中使用 image 组件，或输入 <kbd>/image</kbd>。
+* **添加视频**：输入 <kbd>/video</kbd> 来上传或选择视频。
+* **添加嵌入内容**：输入 <kbd>/youtube</kbd> 或 <kbd>/loom</kbd> 来嵌入视频，或输入 <kbd>/embed</kbd> 以插入自定义 HTML。详情参见 [Add media](/zh/editor/media)。
+* **添加 Mermaid 图表**：输入 <kbd>/mermaid</kbd> 来插入带有交互式预览、缩放/平移控件和代码编辑器的 Mermaid 图表。
+* **添加片段**：输入 <kbd>/snippet</kbd> 来搜索并插入可复用片段。编辑器会自动添加所需的 import 语句。
+* **添加数学公式**：输入 <kbd>/inline-math</kbd> 以插入行内 LaTeX 公式，或输入 <kbd>/block-math</kbd> 以插入居中的块级公式。请先在站点设置中[启用 LaTeX](/zh/editor/configurations)。
+* **添加 Prompt 块**：输入 <kbd>/prompt</kbd> 来插入带有复制操作的 AI Prompt 模板。
+* **编辑表格**：当光标位于表格内部时，使用浮动工具栏添加或删除行和列，或合并单元格。
+* **插入链接**：选中文本并按 <kbd>Cmd</kbd> + <kbd>K</kbd>，或将页面从导航树中拖入编辑器，以使用该页面标题创建链接。
+
+完整的可用组件列表请参见 [Components](/zh/components)。
+
+<div id="markdown-mode">
+  ### Markdown 模式
+</div>
+
+编辑 MDX 源代码。
+
+* **直接编辑 MDX**：编写 MDX 和 Markdown 语法，以精确控制内容。
+* **组件属性**：设置组件属性和配置。
+* **Frontmatter**：编辑文件顶部的页面元数据。
+
+有关 MDX 语法的更多信息，请参阅 [格式化文本](/zh/create/text) 和 [格式化代码](/zh/create/code)。
+
+<div id="configure-pages">
+  ## 配置页面
+</div>
+
+通过配置页面设置，可以控制页面在导航、搜索结果以及站点布局中的显示方式。
+
+将鼠标悬停在页面上，然后单击齿轮 icon。你也可以右键单击文件并选择 **Settings**。
+
+<Frame>
+  <img src="/images/editor/page-settings-light.png" alt="侧边栏中某个页面被高亮显示，以便看到设置齿轮 icon。" className="block dark:hidden" />
+
+  <img src="/images/editor/page-settings-dark.png" alt="侧边栏中某个页面被高亮显示，以便看到设置齿轮 icon。" className="hidden dark:block" />
+</Frame>
+
+<div id="customize-navigation-appearance">
+  ### 自定义导航外观
+</div>
+
+控制页面在站点导航侧边栏中的显示方式。
+
+* **标题**：设置主标题。会显示在导航、浏览器标签页和搜索结果中。
+* **Slug**：设置页面的 URL 路径。slug 默认是相对于存储库根目录且不包含文件扩展名的路径。例如，`guides/getting-started.mdx` 会变为 `guides/getting-started`。更改 slug 会重命名并移动文件，以匹配新路径。
+* **侧边栏标题**：当完整标题在侧边栏中过长时，可以在导航中显示更短的文本。
+* **Icon**：在页面旁边添加视觉标记，帮助用户快速识别。
+* **外部 URL**：链接到外部站点，而不是某个页面。使用此选项将外部资源添加到你的导航中。
+
+<div id="optimize-for-search-and-sharing">
+  ### 为搜索和分享进行优化
+</div>
+
+帮助用户找到你的页面，并优化页面在被分享时的展示效果。
+
+* **Description**：撰写简短摘要。会显示在搜索结果和 SEO (搜索引擎优化) 元标签中。
+* **Keywords**：添加相关搜索词，帮助用户更容易发现此页面。
+* **OG Image URL**：为社交媒体分享和链接预览设置自定义预览图片。
+
+<div id="control-page-layout">
+  ### 控制页面布局
+</div>
+
+根据你的内容需求选择页面的展示方式。
+
+* **标准布局** (`default`) ：带有侧边栏导航和目录的默认页面。
+* **全宽布局** (`wide`) ：隐藏目录，为表格、图表或其他内容提供更宽的布局。
+* **居中布局** (`center`) ：隐藏侧边栏和目录，以提升更新日志等文本较多页面的可读性。
+* **自定义宽度** (`custom`) ：仅保留顶部导航栏的极简布局，适用于着陆页或其他特殊布局。
+
+<div id="manage-pages">
+  ## 管理页面
+</div>
+
+<div id="move-pages">
+  ### 移动页面
+</div>
+
+拖放页面即可在导航中调整顺序，或在文件树中在不同文件夹之间移动文件。
+
+<div id="rename-pages">
+  ### 重命名页面
+</div>
+
+在文件浏览器中，右键点击文件并选择 **Rename**。编辑器会自动保留文件扩展名，你只需输入页面名称即可。
+
+<div id="duplicate-pages">
+  ### 复制页面
+</div>
+
+右键单击该页面，然后选择 **Duplicate**。
+
+<div id="delete-pages">
+  ### 删除页面
+</div>
+
+右键点击页面并选择 **Delete**。删除页面后，它会自动从导航中移除。
+
+<div id="hide-pages">
+  ### 隐藏页面
+</div>
+
+要在不删除文件的情况下将页面从导航中移除，请在页面设置中启用 **Hidden** 开关。该隐藏页面仍保留在你的存储库中，用户仍然可以通过直接访问该页面的 URL 来访问它。你可以在页面设置中取消隐藏页面，或将其添加到 `docs.json` 的导航中。

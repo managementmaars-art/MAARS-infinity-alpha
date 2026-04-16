@@ -1,0 +1,165 @@
+---
+title: "Configuración global"
+description: "Configura tu sitio de documentación Mintlify con docs.json, el archivo que controla la navegación, la apariencia y las integraciones."
+keywords: ["docs.json", "configuration", "setup", "mint.json"]
+---
+
+El archivo `docs.json` es el archivo de configuración central de tu sitio de documentación Mintlify. Controla la configuración global de tu sitio, incluyendo la identidad visual, la estructura de navegación, las integraciones, la configuración de la API y más. Piensa en él como el plano de tu sitio.
+
+## Campos obligatorios
+
+Debes definir cuatro campos para construir un sitio funcional.
+
+| Campo | Descripción |
+|---|---|
+| `name` | El nombre de tu proyecto u organización |
+| `theme` | El [tema](/es/customize/themes) de diseño de tu sitio |
+| `colors.primary` | El color principal de la marca como código hexadecimal |
+| `navigation` | La estructura de tu contenido |
+
+Todos los demás campos son opcionales. Agrégalos a medida que personalices y refines tu sitio.
+
+## Configuración mínima
+
+Para la mejor experiencia de edición, incluye la referencia `$schema` en la parte superior de tu `docs.json`. Esto habilita el autocompletado, la validación y la documentación en línea en la mayoría de los editores.
+
+```json docs.json
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Your project name",
+  "colors": {
+    "primary": "#ff0000"
+  },
+  "navigation": [
+    {
+      "group": "Home",
+      "pages": ["index"]
+    }
+  ]
+}
+```
+
+## Configuración
+
+<CardGroup cols={2}>
+  <Card title="Apariencia y marca" icon="palette" href="/es/organize/settings-appearance">
+    Personaliza la apariencia visual de tu sitio, incluyendo el tema, los colores, el logo, el favicon, las fuentes y el fondo.
+  </Card>
+  <Card title="Estructura del sitio" icon="layout-panel-left" href="/es/organize/settings-structure">
+    Diseña la arquitectura de información y la experiencia de usuario de tu sitio, incluyendo la barra de navegación, el pie de página, el banner, la navegación y las redirecciones.
+  </Card>
+  <Card title="Configuración de la API" icon="square-terminal" href="/es/organize/settings-api">
+    Controla la visualización y el comportamiento de la documentación de la API, incluyendo las especificaciones OpenAPI y AsyncAPI, el área de pruebas de la API y los ejemplos de código.
+  </Card>
+  <Card title="Integraciones" icon="plug" href="/es/organize/settings-integrations">
+    Conecta tu sitio a servicios de terceros para analytics, chat y más.
+  </Card>
+  <Card title="SEO y búsqueda" icon="search" href="/es/organize/settings-seo">
+    Controla cómo los motores de búsqueda indexan tu sitio, incluyendo las meta tags, la búsqueda y las marcas de tiempo de las páginas.
+  </Card>
+  <Card title="Referencia del esquema" icon="code" href="/es/organize/settings-reference">
+    Referencia completa de todas las propiedades de `docs.json`.
+  </Card>
+</CardGroup>
+
+<div id="split-configuration-with-ref">
+## Dividir la configuración con `$ref`
+</div>
+
+A medida que tu configuración crece, puedes dividir `docs.json` en archivos más pequeños usando referencias `$ref`. Cada referencia apunta a un archivo JSON separado que se resuelve en tiempo de compilación.
+
+Agrega una propiedad `$ref` con una ruta de archivo relativa en cualquier lugar de tu `docs.json`. Mintlify reemplaza el objeto `$ref` con el contenido del archivo referenciado.
+
+```json docs.json
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Acme Docs",
+  "colors": {
+    "primary": "#1a73e8"
+  },
+  "navigation": {
+    "$ref": "./config/navigation.json"
+  }
+}
+```
+
+```json config/navigation.json
+{
+  "groups": [
+    {
+      "group": "Get started",
+      "pages": ["index", "quickstart"]
+    },
+    {
+      "group": "Guides",
+      "pages": ["guides/first-steps", "guides/advanced"]
+    }
+  ]
+}
+```
+
+- Los archivos referenciados pueden contener sus propias referencias `$ref`. Las rutas anidadas se resuelven de forma relativa al archivo que las contiene, no de forma relativa a `docs.json`.
+- Las referencias deben apuntar a archivos JSON válidos.
+- Las rutas deben ser relativas y permanecer dentro de la raíz del proyecto. La navegación de rutas (por ejemplo, `../../outside`) no está permitida.
+- Las referencias circulares provocan un error de compilación.
+
+<div id="merging-sibling-keys">
+### Fusión de claves hermanas
+</div>
+
+Si un `$ref` resuelve a un objeto, Mintlify fusiona las claves hermanas del mismo bloque sobre el contenido referenciado, permitiendo que esas claves tengan prioridad sobre las claves coincidentes en la referencia. Si un `$ref` resuelve a un valor que no es un objeto, como un array, Mintlify ignora las claves hermanas.
+
+```json docs.json
+{
+  "appearance": {
+    "$ref": "./config/appearance.json",
+    "strict": true
+  }
+}
+```
+
+## Migración desde `mint.json`
+
+Si tu proyecto utiliza el archivo `mint.json` obsoleto, usa la [CLI](/es/cli) para migrar a `docs.json`.
+
+<Steps>
+  <Step title="Instalar o actualizar el CLI">
+    Si no has instalado el [CLI](/es/cli/install), instálalo ahora:
+
+    <CodeGroup>
+
+    ```bash npm
+    npm i -g mint
+    ```
+
+    ```bash yarn
+    yarn global add mint
+    ```
+
+    ```bash pnpm
+    pnpm add -g mint
+    ```
+
+    </CodeGroup>
+
+    Si ya tienes el CLI instalado, asegúrate de que esté actualizado:
+
+    ```bash
+    mint update
+    ```
+  </Step>
+  <Step title="Crear tu archivo docs.json">
+    En tu repositorio de documentación, ejecuta:
+
+    ```bash
+    mint dev
+    ```
+
+    Este comando crea un archivo `docs.json` a partir de tu `mint.json` existente. Revisa el archivo generado para asegurarte de que toda la configuración sea correcta.
+  </Step>
+  <Step title="Eliminar tu archivo mint.json">
+    Después de verificar que tu `docs.json` está configurado correctamente, puedes eliminar de forma segura tu antiguo archivo `mint.json`.
+  </Step>
+</Steps>

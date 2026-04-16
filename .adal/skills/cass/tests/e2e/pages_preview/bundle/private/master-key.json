@@ -1,0 +1,20 @@
+{
+  "export_id": "SOMOTckK1An03lFkCGLomg==",
+  "key_slots": [
+    {
+      "id": 0,
+      "slot_type": "password",
+      "kdf": "argon2id",
+      "salt": "VVFldGRFTjMrMGRPTzhBazcrUmpCZw==",
+      "wrapped_dek": "QvWvCXC6THrz1KCvJ3Y+BohY+8eEZ4qFtBuzJ6PpEiEvC9ZnfcvKe5p+3erbauYg",
+      "nonce": "PT6NRiEubJ31g09u",
+      "argon2_params": {
+        "memory_kb": 65536,
+        "iterations": 3,
+        "parallelism": 4
+      }
+    }
+  ],
+  "note": "This file contains the wrapped DEK. Keep it with your recovery secret.",
+  "generated_at": "2026-01-27T23:00:48.835168048+00:00"
+}

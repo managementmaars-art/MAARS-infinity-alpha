@@ -1,0 +1,4 @@
+interface:
+  display_name: "EliteForge 前端生成器"
+  short_description: "按线上规则生成 EliteForge 前端应用、组件库和 SDK 工程（必填参数显式提供，生成后执行 pnpm i）"
+  default_prompt: "使用 $eliteforge-frontend-generator 生成 EliteForge 前端工程；必须先让用户明确提供 project_type/company_name/product_name/service_name，禁止推断缺失必填参数。脚手架命令的 project_name 必须是 fe-<company>-<product>-<service>，不得丢失 fe- 前缀或追加 -app/-ui/-sdk 后缀。项目生成后进入该目录执行 pnpm i 完成初始化。"

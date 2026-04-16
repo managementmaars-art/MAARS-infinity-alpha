@@ -1,0 +1,60 @@
+---
+title: "Champs de réponse"
+description: "Documentez les champs de réponse d’une API à l’aide du composant ResponseField avec des annotations de type, des descriptions et des indicateurs obligatoire ou facultatif."
+keywords: ["sortie d’API", "valeurs de retour", "structure de réponse"]
+---
+
+Utilisez le composant `<ResponseField>` pour définir les valeurs de retour d’une API. De nombreuses documentations utilisent également `<ResponseField>` sur les pages lorsque vous devez lister les types de certains éléments.
+
+<ResponseField name="response" type="string" required>
+  Exemple de champ de réponse
+</ResponseField>
+
+```mdx
+<ResponseField name="response" type="string" required>
+  Exemple de champ de réponse
+</ResponseField>
+```
+
+
+<div id="props">
+  ## Props
+</div>
+
+<ResponseField name="name" type="string" required>
+  Nom de la valeur de réponse.
+</ResponseField>
+
+<ResponseField name="type" type="string" required>
+  Type attendu de la valeur de réponse — peut être n’importe quelle chaîne.
+</ResponseField>
+
+<ResponseField name="default" type="string">
+  Valeur par défaut.
+</ResponseField>
+
+<ResponseField name="required" type="boolean">
+  Afficher « required » à côté du nom du champ.
+</ResponseField>
+
+<ResponseField name="deprecated" type="boolean">
+  Indique si vous avez marqué un champ comme obsolète.
+</ResponseField>
+
+<ResponseField name="pre" type="string[]">
+  Étiquettes qui apparaissent avant le nom du champ
+</ResponseField>
+
+<ResponseField name="post" type="string[]">
+  Étiquettes qui apparaissent après le nom du champ
+</ResponseField>
+
+<RequestExample>
+
+```mdx Response Field Example
+<ResponseField name="response" type="string" required>
+  Exemple de champ de réponse
+</ResponseField>
+```
+
+</RequestExample>

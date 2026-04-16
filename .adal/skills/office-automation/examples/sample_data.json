@@ -1,0 +1,23 @@
+[
+  {
+    "name": "张三",
+    "company": "科技有限公司",
+    "position": "总经理",
+    "date": "2026 年 2 月 22 日",
+    "filename": "邀请函_张三.docx"
+  },
+  {
+    "name": "李四",
+    "company": "创新集团",
+    "position": "技术总监",
+    "date": "2026 年 2 月 22 日",
+    "filename": "邀请函_李四.docx"
+  },
+  {
+    "name": "王五",
+    "company": "数据智能公司",
+    "position": "产品经理",
+    "date": "2026 年 2 月 22 日",
+    "filename": "邀请函_王五.docx"
+  }
+]

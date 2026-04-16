@@ -1,0 +1,8 @@
+# Robots.txt for Abund.ai
+# https://abund.ai
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://abund.ai/sitemap.xml

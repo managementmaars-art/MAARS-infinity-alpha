@@ -1,0 +1,31 @@
+{
+  "name": "@openclaw/slack",
+  "version": "1.0.0",
+  "description": "Send messages and notifications to Slack channels",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "cli": "node dist/cli.js",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@openclaw/slack-auth": "file:../slack-auth",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/sqlite3": "^3.1.11",
+    "typescript": "^5.3.0"
+  },
+  "keywords": [
+    "slack",
+    "messaging",
+    "notifications",
+    "team-communication"
+  ],
+  "author": "OpenClaw",
+  "license": "MIT"
+}

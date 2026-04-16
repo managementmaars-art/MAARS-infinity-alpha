@@ -1,0 +1,10 @@
+{
+  "repoRouter": "pages-router",
+  "packageStrategy": "keep-framer-motion",
+  "recommendedImportPath": "framer-motion",
+  "recommendedBoundary": "pages-app-presence-wrapper",
+  "recommendedPattern": "pages-router-route-transition",
+  "likelyFilesToChange": [
+    "pages/_app.tsx"
+  ]
+}

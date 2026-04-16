@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android Performance Observability"
+  short_description: "Measure startup, rendering, memory, jank, vitals, logs, and crash signals for Android apps with actionable traces"
+  default_prompt: "Use $android-performance-observability when the request is about measure startup, rendering, memory, jank, vitals, logs, and crash signals for Android apps with actionable traces."

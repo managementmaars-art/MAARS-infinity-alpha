@@ -1,0 +1,27 @@
+{
+  "name": "telegram-reminders-convex",
+  "version": "2.0.0",
+  "description": "Send reminders and messages to Telegram with Convex backend",
+  "type": "module",
+  "scripts": {
+    "setup": "tsx scripts/setup.ts",
+    "send": "tsx scripts/send_message.ts",
+    "schedule": "tsx scripts/schedule_message.ts",
+    "list": "tsx scripts/list_scheduled.ts",
+    "cancel": "tsx scripts/cancel_message.ts",
+    "history": "tsx scripts/view_history.ts"
+  },
+  "dependencies": {
+    "chrono-node": "^2.9.0",
+    "convex": "^1.31.4",
+    "form-data": "^4.0.5",
+    "pino": "^9.9.0",
+    "pino-pretty": "^13.1.1",
+    "tsx": "^4.21.0",
+    "undici": "^7.18.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.6",
+    "typescript": "^5.7.3"
+  }
+}

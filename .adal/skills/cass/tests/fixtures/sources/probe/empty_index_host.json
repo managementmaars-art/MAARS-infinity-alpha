@@ -1,0 +1,29 @@
+{
+  "host_name": "test-vm",
+  "reachable": true,
+  "connection_time_ms": 167,
+  "cass_status": {
+    "status": "indexed",
+    "version": "0.1.58",
+    "session_count": 0,
+    "last_indexed": "2026-01-20T09:15:00Z"
+  },
+  "detected_agents": [],
+  "system_info": {
+    "os": "linux",
+    "arch": "x86_64",
+    "distro": "Fedora Linux 40 (Workstation Edition)",
+    "has_cargo": true,
+    "has_cargo_binstall": true,
+    "has_curl": true,
+    "has_wget": true,
+    "remote_home": "/home/tester"
+  },
+  "resources": {
+    "disk_available_mb": 52000,
+    "memory_total_mb": 4096,
+    "memory_available_mb": 2048,
+    "can_compile": true
+  },
+  "error": null
+}

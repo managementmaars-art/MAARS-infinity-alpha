@@ -1,0 +1,19 @@
+{
+  "name": "cn-web-search",
+  "version": "2.3.0",
+  "description": "中文网页搜索 - 聚合17个免费搜索引擎 + 债券/利率市场免费数据接口，无需API Key",
+  "author": "joansongjr",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joansongjr/cn-web-search"
+  },
+  "keywords": [
+    "search",
+    "chinese",
+    "web-search",
+    "openclaw",
+    "clawhub",
+    "skill"
+  ]
+}

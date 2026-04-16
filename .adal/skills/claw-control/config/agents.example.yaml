@@ -1,0 +1,36 @@
+# Claw Control - Example Agent Configuration
+# Copy this to agents.yaml and customize for your team!
+#
+# Fields:
+#   name: Display name (required)
+#   description: What this agent does
+#   role: Agent role/specialty  
+#   avatar: Emoji or path to image (e.g., "🤖" or "/avatars/agent1.png")
+#   status: Initial status (idle, working, offline) - default: idle
+
+agents:
+  - name: "Agent 1"
+    description: "Primary coordinator - manages team and delegates tasks"
+    role: "Coordinator"
+    avatar: "🤖"
+
+  - name: "Agent 2"
+    description: "Backend specialist - APIs and server development"
+    role: "Developer"
+    avatar: "💻"
+
+  - name: "Agent 3"
+    description: "DevOps engineer - infrastructure and deployments"
+    role: "DevOps"
+    avatar: "🔧"
+
+  - name: "Agent 4"
+    description: "Research analyst - documentation and investigation"
+    role: "Researcher"
+    avatar: "📖"
+
+# Add more agents as needed:
+#  - name: "Agent 5"
+#    description: "QA specialist"
+#    role: "Testing"
+#    avatar: "🧪"

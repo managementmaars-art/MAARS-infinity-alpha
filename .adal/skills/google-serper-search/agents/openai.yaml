@@ -1,0 +1,4 @@
+interface:
+  display_name: "Google Serper Search"
+  short_description: "Use Serper API for web, news, and image search"
+  default_prompt: "Search the web or images with Serper, then summarize the best results with source links"

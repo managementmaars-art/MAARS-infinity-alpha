@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android Room Database"
+  short_description: "Model Room entities, DAOs, transactions, migrations, schema exports, and test-safe local persistence"
+  default_prompt: "Use $android-room-database when the request is about model Room entities, DAOs, transactions, migrations, schema exports, and test-safe local persistence."

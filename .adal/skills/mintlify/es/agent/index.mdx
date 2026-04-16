@@ -1,0 +1,73 @@
+---
+title: "¿Qué es el agente?"
+description: "Automatiza las actualizaciones de documentación con el agente de Mintlify. Activa cambios desde mensajes de Slack, pull requests, issues de Linear o llamadas de API."
+keywords: ["automation", "automate", "AI", "autoupdate", "maintenance"]
+---
+
+<Info>
+  El agente está disponible en los [planes Pro y Enterprise](https://mintlify.com/pricing?ref=agent).
+</Info>
+
+El agente es una herramienta de IA que crea solicitudes de extracción (pull requests) con cambios propuestos para tu documentación a partir de tus indicaciones. Cuando envías una solicitud, el agente:
+
+* **Investiga**: Busca y lee tu documentación existente, los repositorios conectados y el contexto relevante.
+* **Planifica**: Crea una lista de tareas estructurada para trabajos de documentación complejos.
+* **Escribe**: Genera o actualiza contenido siguiendo los estándares y las mejores prácticas de redacción.
+* **Valida**: Ejecuta comprobaciones con Mintlify CLI para asegurarse de que la documentación se compile correctamente.
+* **Crea una PR**: Abre una solicitud de extracción con cambios propuestos para revisión.
+
+Todos los cambios pasan por solicitudes de extracción (pull requests). El agente nunca realiza confirmaciones directamente en tu branch principal.
+
+<div id="what-you-can-do-with-the-agent">
+  ## Qué puedes hacer con el agente
+</div>
+
+Usa el agente para:
+
+* Escribir contenido nuevo basado en tus prompts, solicitudes de extracción, issues de Linear, hilos de Slack o archivos adjuntos.
+* Actualizar documentación existente con nuevas funcionalidades o cambios en la API.
+* Procesar e incluir imágenes, diagramas y otros archivos a partir de archivos adjuntos de Slack.
+* Buscar y revisar ejemplos de código y referencias de API en toda tu documentación.
+* Automatizar el mantenimiento de la documentación mediante flujos de trabajo.
+* Responder preguntas sobre tu documentación y temas de redacción técnica.
+* Atender comentarios de revisión de código para mantener la calidad de la documentación.
+* Capturar conocimiento de conversaciones en Slack y solicitudes de extracción antes de que se pierda.
+* Navegar y coordinar cambios de forma eficiente en múltiples archivos y directorios.
+
+<div id="connect-your-github-account">
+  ## Conecta tu cuenta de GitHub
+</div>
+
+De forma predeterminada, el agente abre solicitudes de extracción a nombre del bot de Mintlify. Para que las solicitudes de extracción se atribuyan a ti, conecta tu cuenta de GitHub en la página [Mi perfil](https://dashboard.mintlify.com/settings/account) del dashboard.
+
+<div id="connect-repositories-as-context">
+  ## Conecta repositorios como contexto
+</div>
+
+El agente solo puede acceder a los repositorios que conectes mediante la Aplicación de GitHub de Mintlify. Configura a qué repositorios puede acceder el agente en la sección **Settings** del panel del agente o en la [configuración de la Aplicación de GitHub](https://github.com/apps/mintlify/installations/new).
+
+<div id="next-steps">
+  ## Próximos pasos
+</div>
+
+<Card title="Conectar Slack" horizontal icon="slack" href="/es/agent/slack">
+  Añade el agente a tu espacio de trabajo de Slack.
+</Card>
+<Card title="Conectar Linear" horizontal icon="linear" href="/es/agent/linear">
+  Añade el agente a tu espacio de trabajo de Linear.
+</Card>
+<Card title="Conectar Notion" horizontal icon="notion" href="/es/agent/notion">
+  Otorga al agente acceso a tu espacio de trabajo de Notion.
+</Card>
+
+<Card title="Personalizar comportamiento" horizontal icon="wrench" href="/es/agent/customize">
+  Configura el agente con un archivo `AGENTS.md`.
+</Card>
+
+<Card title="Escribir prompts eficaces" horizontal icon="pen" href="/es/agent/effective-prompts">
+  Obtén mejores resultados con prompts más específicos.
+</Card>
+
+<Card title="Automatizar con flujos de trabajo" horizontal icon="refresh-cw" href="/es/agent/workflows">
+  Automatiza tareas recurrentes y el mantenimiento de la documentación mediante flujos de trabajo.
+</Card>

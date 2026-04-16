@@ -1,0 +1,93 @@
+{
+  "skill_name": "writing-agents-md",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I ran `/init` in my repo and it generated a huge `AGENTS.md` with sections for scripts, architecture, folder layout, and a bunch of notes about React and our API layer. I want you to rewrite it so future agents stop wasting tokens on repo summaries. Keep anything that really needs to stay global, and tell me what should move into skills.",
+      "expected_output": "Recognizes `/init`-style noise, removes discoverable repo summary content, preserves only truly global and non-obvious constraints, and explicitly identifies workflow or domain guidance that should move into skills.",
+      "files": [],
+      "expectations": [
+        "Classifies content using keep, rewrite, delete, or move-to-skill reasoning",
+        "Deletes or heavily prunes scripts, architecture summaries, and directory tours",
+        "Explains why some guidance belongs in skills instead of always-on global files"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Please draft a new `CLAUDE.md` for this project. The only unusual things are: we use `uv` instead of `pip`, devs are on WSL so cross-platform paths can be weird, and `legacy/` still has production imports even though we want to migrate away from it. Everything else is visible in the repo. Keep it as short as possible.",
+      "expected_output": "Produces a tiny high-signal file that keeps the operationally important global constraints and avoids padding with tech stack, scripts, or architecture summary.",
+      "files": [],
+      "expectations": [
+        "Keeps `uv`, WSL path behavior, and `legacy/` as the main retained guidance",
+        "Avoids adding obvious repo facts such as framework, file structure, or command lists",
+        "Optimizes for a very short global file instead of inventing filler"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review this rule draft for `AGENTS.md`: 'We use React, Vite, TypeScript, package scripts are pnpm dev/build/test, backend services live in src/server, use our frontend review process, always run planning and verification skills, and note that tRPC is still around in some older endpoints.' Tell me what survives, what gets deleted, and what needs rewriting so the model does not get anchored to the wrong patterns.",
+      "expected_output": "Prunes broad repo facts, distinguishes task-specific workflow guidance from global rules, and rewrites the legacy technology note to reduce anchoring risk.",
+      "files": [],
+      "expectations": [
+        "Deletes framework, script, and directory-summary content as discoverable noise",
+        "Moves workflow-heavy guidance like planning or review process out of the global file",
+        "Rewrites the tRPC note so it is clearly marked as legacy rather than a preferred pattern"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I want a short `AGENTS.md`, but there are a few ugly landmines you must not lose: this repo uses `bun`, not `npm`; CI only passes if database tests run with `--runInBand`; and `old-billing/` looks abandoned but still powers production renewals. Everything else is already obvious from the repo. Rewrite the file so it stays minimal without dropping those traps.",
+      "expected_output": "Keeps a minimal file while preserving the few truly global, high-cost, non-obvious landmines instead of over-deleting them.",
+      "files": [],
+      "expectations": [
+        "Keeps `bun`, the `--runInBand` CI trap, and the `old-billing/` production warning as retained guidance",
+        "Does not pad the file with stack summaries, directory tours, or generic workflow advice",
+        "Shows that high-cost landmines can survive even when the rest of the file is aggressively pruned"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "We're setting up a new repo and someone asked me to add a `CLAUDE.md`, but honestly I don't think we have any weird global constraints yet. The repo is conventional, all commands are obvious from the files, and there are no special environment quirks or dangerous legacy areas. What should the file contain?",
+      "expected_output": "Prefers an extremely tiny file or recommends not creating the file yet, rather than inventing filler from normal repo facts.",
+      "files": [],
+      "expectations": [
+        "Explicitly allows a tiny file or no file when no real global constraints exist",
+        "Avoids inventing tech stack, scripts, architecture, or policy filler just to populate the file",
+        "Frames future AGENTS/CLAUDE content as something to add only when repeated agent mistakes or hidden landmines appear"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Please write a short `AGENTS.md` for this repo. Some teammates want to include that we use React, Next.js, TypeScript, `pnpm dev`, `pnpm test`, `apps/web`, `packages/ui`, and our frontend review checklist. I only care about what must stay global. The real traps are: CI gives false confidence unless web tests run as `pnpm test --filter web -- --runInBand`, and `legacy-auth/` looks abandoned but still handles production SSO callbacks. Keep it short and do not let the file steer agents toward the wrong defaults.",
+      "expected_output": "Produces a short global file that deletes discoverable stack and workflow filler, keeps the CI trap and legacy-auth warning, and rewrites the legacy note to reduce anchoring risk.",
+      "files": [],
+      "expectations": [
+        "Keeps the CI test command trap and `legacy-auth/` production warning as the main retained guidance",
+        "Deletes stack, scripts, directory names, and review-process filler from the global file",
+        "Marks `legacy-auth/` as legacy or do-not-extend rather than treating it as a normal default path"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Review this draft `CLAUDE.md` and tell me what survives, what gets deleted, and what must be rewritten:\n\n- We use React, TypeScript, and a monorepo layout\n- Main scripts are `pnpm dev`, `pnpm build`, `pnpm test`\n- Most backend work lives in `src/server` and frontend work lives in `apps/web`\n- Always run planning and verification skills\n- Use `mise`, not `asdf`, for tool versions\n- `payments-v1/` looks deprecated but still powers the production reconciliation job\n\nI want the final result to be minimal and to avoid anchoring the model to stale repo summaries.",
+      "expected_output": "Reviews the draft using keep/delete/rewrite reasoning, preserves only the non-obvious global constraints, deletes discoverable repo facts, and rewrites the legacy payments note to avoid anchoring.",
+      "files": [],
+      "expectations": [
+        "Keeps `mise`, not `asdf`, and the `payments-v1/` production warning as the only surviving global constraints",
+        "Deletes stack, scripts, and path-summary content as discoverable noise",
+        "Moves the planning or verification workflow guidance out of the global file and rewrites `payments-v1/` as legacy or do-not-extend guidance"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "You are updating `AGENTS.md` for this repository. Replace the file content. Do not explain your reasoning. Return only the new `AGENTS.md`.\n\nCurrent file:\n\n# AGENTS.md\n\n- This is a small monorepo with application code and automation.\n- Prefer existing scripts for validation.\n- Keep changes minimal and match the local style.\n- Avoid touching `legacy/` unless the task explicitly requires it.\n- When unsure, use the standard build/test/lint flow for the language in that directory.\n\nContext from the last week:\n- A few agent-written updates looked reasonable but were basically polish passes on the file above, and they still missed the instruction that would have prevented the last production incident.\n- That incident came from a path people still casually call \"legacy\". It is old code, but it is still on a live execution path and shows up in CI, so the current wording is sending the wrong signal.\n- Another repeated failure mode: agents turn vague cues like \"use the normal checks\" into confident repo-specific commands, and those commands age badly.\n- The file is also carrying low-value filler: obvious repo-shape / stack statements that do not change decisions.\n- Please make the replacement short, sharp, and actually useful for future agents. Every line should earn its place.",
+      "expected_output": "Rewrites the file instead of polishing it: removes generic filler, reframes `legacy/` as production-critical rather than merely old, and adds durable validation guidance that avoids inventing exact commands from vague cues.",
+      "files": [],
+      "expectations": [
+        "Deletes the obvious repo-shape filler instead of preserving or lightly polishing it",
+        "Rewrites `legacy/` as production-critical or live-path guidance rather than just old or avoid-if-possible wording",
+        "Adds durable validation guidance grounded in checked-in repo truth and does not invent exact build, test, or lint commands"
+      ]
+    }
+  ]
+}

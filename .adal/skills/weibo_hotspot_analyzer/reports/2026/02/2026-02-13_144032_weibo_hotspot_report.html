@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年02月13日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --accent-normal: #6C757D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .report-header h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+            margin-top: 32px;
+        }
+
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hotspot-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hotspot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .hotspot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .hotword {
+            font-weight: 600;
+            font-size: 16px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotness {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .hotspot-summary {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hotspot-detail {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .hotspot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+            transition: all 0.2s;
+        }
+
+        .idea-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .idea-card.excellent {
+            border-left-color: var(--accent-excellent);
+            background: linear-gradient(to right, rgba(255, 210, 63, 0.1), transparent);
+        }
+
+        .idea-card.good {
+            border-left-color: var(--accent-good);
+            background: linear-gradient(to right, rgba(6, 167, 125, 0.05), transparent);
+        }
+
+        .idea-card.normal {
+            border-left-color: var(--accent-normal);
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .idea-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .score-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.excellent {
+            background: var(--accent-excellent);
+            color: #333;
+        }
+
+        .badge.good {
+            background: var(--accent-good);
+            color: white;
+        }
+
+        .badge.normal {
+            background: var(--accent-normal);
+            color: white;
+        }
+
+        .idea-body p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .idea-body strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .idea-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .idea-body li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .score-breakdown {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .statistics h2 {
+            color: white;
+            border-left-color: white;
+            margin-top: 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ranking-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ranking-rank {
+            font-size: 24px;
+            font-weight: 700;
+            width: 40px;
+            text-align: center;
+        }
+
+        .ranking-rank.gold { color: #FFD700; }
+        .ranking-rank.silver { color: #C0C0C0; }
+        .ranking-rank.bronze { color: #CD7F32; }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .ranking-hotword {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .ranking-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .report-header { padding: 24px; }
+            .report-header h1 { font-size: 24px; }
+            .hotspot-list { grid-template-columns: 1fr; }
+            .idea-header { flex-direction: column; align-items: flex-start; }
+            .stat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>🤖 微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>📅 生成日期：2026-02-13</span>
+                <span>🔥 热搜总数：8</span>
+                <span>💡 创意总数：24</span>
+                <span>⏰ 生成时间：2026-02-13 22:40:32</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">豆包红包</span>
+                </div>
+                <div class="hotness">热度：1363019 </div>
+                <div class="hotspot-summary">字节跳动旗下AI豆包开启春节红包活动，用户通过AI互动瓜分现金。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">我家那小子首发阵容官宣</span>
+                </div>
+                <div class="hotness">热度：综艺 875603 </div>
+                <div class="hotspot-summary">湖南卫视代际观察综艺《我家那小子》新季嘉宾官宣，聚焦独居男艺人生活与亲情互动。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">回家路上随手拍</span>
+                </div>
+                <div class="hotness">热度：700485 </div>
+                <div class="hotspot-summary">网友分享通勤途中的风景见闻，记录平凡生活中的治愈瞬间。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">湖北精神病医院有关问题调查结果</span>
+                </div>
+                <div class="hotness">热度：550541 <span class="tag">新</span></div>
+                <div class="hotspot-summary">通报由于家庭纠纷导致男子被强行送医的调查结果，医院违规收治被处罚，引发对“被精神病”现象的关注。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">主人回应边牧凌晨下单100多个灯笼</span>
+                </div>
+                <div class="hotness">热度：243030 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">21岁孙子97岁奶奶都觉得对方很好带</span>
+                </div>
+                <div class="hotness">热度：242955 <span class="tag">新</span></div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">微博之夜 二刷</span>
+                </div>
+                <div class="hotness">热度：盛典 210308 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">官方回应湛江发现儒艮尸体</span>
+                </div>
+                <div class="hotness">热度：174177 </div>
+                <div class="hotspot-summary">湛江发现疑似已功能性灭绝的儒艮尸体，引发公众对海洋生态的关注。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">丞磊第20集6分47秒</span>
+                </div>
+                <div class="hotness">热度：剧集 173757 </div>
+                <div class="hotspot-summary">粉丝围观丞磊在热播剧特定时间点的微表情、穿帮或高光演技镜头。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">王者荣耀农家乐村晚</span>
+                </div>
+                <div class="hotness">热度：172644 </div>
+                <div class="hotspot-summary">王者荣耀结合乡村农家乐场景举办的接地气春晚，融合游戏元素与土味文化。</div>
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">1</span>
+                <span class="hotword" style="font-size: 18px;">豆包红包</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>1,363,019</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">豆包梗王挑战赛</span>
+                        <div class="score-info">
+                            <span class="score">91分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI段子评分系统</li>
+                    <li>方言语音红包互动</li>
+                    <li>梗图自动生成器</li>
+                    <li>好友PK排行榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-28岁Z世代，热衷网络热梗和社交互动的大学生及年轻白领。</p>
+                        <p><strong>📝 产品描述：</strong>一款结合AI互动的红包游戏。用户不再单纯点击领取，而是需要通过给AI讲笑话、用方言调戏AI（豆包）来赢取更高额度的现金红包，笑点由AI实时分析评分，趣味性极强。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">社恐拜年嘴替</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>亲戚关系图谱识别</li>
+                    <li>多风格祝福语生成</li>
+                    <li>红包回礼计算器</li>
+                    <li>一键生成表情包回复</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-35岁职场人士，春节期间面临复杂社交压力，害怕说错话的社恐人群。</p>
+                        <p><strong>📝 产品描述：</strong>基于豆包大模型的社交辅助工具。当用户收到长辈或领导红包不知如何回复时，AI根据对方身份和红包金额，自动生成既得体又幽默的“高情商”回复文案或语音，缓解社交焦虑。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 90分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">全网羊毛雷达</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>跨平台红包聚合</li>
+                    <li>最佳领取时间预测</li>
+                    <li>活动规则AI简化解读</li>
+                    <li>自动提醒闹钟</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>精打细算的“羊毛党”、家庭主妇以及有大量空闲时间的中老年群体。</p>
+                        <p><strong>📝 产品描述：</strong>利用AI抓取能力，聚合豆包、支付宝、微信等全网春节红包活动信息。AI将复杂的活动规则简化为“一句话攻略”，并提供领取地图和时间表，确保用户不错过任何一个亿。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">2</span>
+                <span class="hotword" style="font-size: 18px;">我家那小子首发阵容官宣</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>875,603</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">妈选有对象</span>
+                        <div class="score-info">
+                            <span class="score">92分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>双端联动：父母负责筛选主要条件，子女负责聊天</li>
+                    <li>云端观察室：亲友团可围观相亲过程并发送弹幕</li>
+                    <li>代际翻译器：AI自动润色长辈的尴尬提问</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>23-35岁面临催婚压力的单身青年及其焦虑的父母</p>
+                        <p><strong>📝 产品描述：</strong>一款将综艺模式搬进现实的相亲APP。让父母参与把关，既满足长辈控制欲，又通过“公开处刑”式的围观机制制造社交话题，解决相亲破冰难的问题。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">生活弹幕机</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>综艺特效：AR实时为生活场景添加综艺花字和音效</li>
+                    <li>AI观察员：模仿“毒舌嘉宾”对用户的行为进行实时吐槽</li>
+                    <li>独居挑战：生成“连续不点外卖”等趣味成就榜单</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-28岁喜欢分享生活、渴望被关注的独居Z世代</p>
+                        <p><strong>📝 产品描述：</strong>基于综艺后期风格的AR相机应用。能将平淡的独居生活瞬间变成综艺大片，通过AI生成的犀利点评满足用户的表演欲和吐槽欲，极具传播属性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">独居小子生存指北</span>
+                        <div class="score-info">
+                            <span class="score">78分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>一人食谱：通过冰箱剩余食材生成极简菜谱</li>
+                    <li>家务通告：将打扫卫生包装成“节目录制任务”</li>
+                    <li>噪音白名单：模拟有人陪伴的家庭背景音（做饭声、电视声）</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁在大城市打拼、缺乏生活技能的独居男性</p>
+                        <p><strong>📝 产品描述：</strong>一款针对“糙汉”独居痛点的实用工具。利用综艺IP的热度，将枯燥的生活技能游戏化，提供孤独感陪伴功能，解决独居男性生活质量低下的问题。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 90分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">3</span>
+                <span class="hotword" style="font-size: 18px;">回家路上随手拍</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>700,485</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">街角拾光</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>LBS风景碎片采集</li>
+                    <li>点亮通勤地图</li>
+                    <li>AR街景留言</li>
+                    <li>城市角落成就系统</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁城市青年，热衷Citywalk、摄影及游戏化社交。</p>
+                        <p><strong>📝 产品描述：</strong>一款将回家路变成RPG游戏的LBS应用。用户在通勤途中“拾取”他人留下的影像碎片，或在特定坐标“埋藏”美好瞬间，通过点亮地图迷雾，发现熟悉的城市中未曾注意的惊喜角落。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 72分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">交换黄昏</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>归途照片盲盒</li>
+                    <li>平行时空配对</li>
+                    <li>心情气象台</li>
+                    <li>限时阅后即焚</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-25岁大学生及独居白领，好奇心强，渴望轻量化陌生人社交。</p>
+                        <p><strong>📝 产品描述：</strong>主打陌生人影像交换的社交产品。用户上传一张回家路上的随手拍作为“门票”，随机交换世界另一端此时此刻的归途风景，在不暴露隐私的前提下，感受平行时空的陪伴与共鸣。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 68分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">下班电台</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI照片生成BGM</li>
+                    <li>地理位置歌单</li>
+                    <li>同路人共听</li>
+                    <li>日落倒计时滤镜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-35岁职场人士，通勤时间长，需要音乐治愈和情绪释放。</p>
+                        <p><strong>📝 产品描述：</strong>基于视觉与位置的音频伴侣。AI根据用户随手拍的街景照片色调与内容，自动生成契合当下心境的BGM；还能收听同一条路线上其他人留下的语音或歌曲，用声音温暖孤独的回家路。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 82分 × 80% + 有用度 67分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">4</span>
+                <span class="hotword" style="font-size: 18px;">湖北精神病医院有关问题调查结果 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>550,541</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">出院大作战</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>非对称竞技：扮演'医生'与'正常人'进行逻辑辩论</li>
+                    <li>AI逻辑判定：通过语音识别判定说话逻辑是否'清醒'</li>
+                    <li>信任投票机制：围观群众投票决定谁能'出院'</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-28岁大学生及年轻白领，喜爱剧本杀、狼人杀等社交推理游戏群体。</p>
+                        <p><strong>📝 产品描述：</strong>一款语音社交推理游戏。玩家需在模拟的“高压环境”中，通过逻辑表达证明自己是“正常人”而非“真病人”，讽刺现实中难以自证清醒的荒诞困境。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 72分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">精神状态认证中心</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>好友担保链：邀请3位好友为你的精神状态背书</li>
+                    <li>发疯指数生成：根据当日步数、屏幕使用时间生成'确诊报告'</li>
+                    <li>正常人证书：基于区块链技术的不可篡改'清醒'证书</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁互联网重度用户，热衷于“发疯文学”和社交分享的人群。</p>
+                        <p><strong>📝 产品描述：</strong>基于熟人社交的趣味DApp。利用热点话题的社交货币属性，让用户通过好友背书和趣味数据生成夸张的“精神鉴定书”，满足社交圈的自嘲与互动需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 58分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">逻辑自救指南</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>法律模拟器：模拟被强制收治时的法律自救流程</li>
+                    <li>紧急联系人盲盒：随机测试你的紧急联系人是否靠谱</li>
+                    <li>资产隔离沙盒：模拟家庭纠纷下的资产保护策略</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-40岁关注社会新闻、家庭伦理剧，且有一定资产焦虑的中产群体。</p>
+                        <p><strong>📝 产品描述：</strong>一款剧情模拟类文字游戏。将严肃的法律和医疗监管知识融入逃脱游戏中，玩家需在“被精神病”的剧本中利用法律漏洞和人际关系实现“绝地求生”。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">5</span>
+                <span class="hotword" style="font-size: 18px;">主人回应边牧凌晨下单100多个灯笼</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>243,030</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「主人回应边牧凌晨下单100多个灯笼」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbvMias-JOLZwV4sc_Ge5mY2PQ9xUqxpXAlLuRmYdqphIIPmMsTLmY32EKXjaFHXBGqZG6JTj7-WynhBcJ5i4HNhNSmy2VXD6KYcLntpsa0X1QP7UFXwuvOo1SAfKg7dR1sVjK1i&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbvMias-JOLZwV4sc_Ge5mY2PQ9xUqxpXAlLuRmYdqphIIPmMsTLmY32EKXjaFHXBGqZG6JTj7-WynhBcJ5i4HNhNSmy2VXD6KYcLntpsa0X1QP7UFXwuvOo1SAfKg7dR1sVjK1i&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbvMias-JOLZwV4sc_Ge5mY2PQ9xUqxpXAlLuRmYdqphIIPmMsTLmY32EKXjaFHXBGqZG6JTj7-WynhBcJ5i4HNhNSmy2VXD6KYcLntpsa0X1QP7UFXwuvOo1SAfKg7dR1sVjK1i&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbvMias-JOLZwV4sc_Ge5mY2PQ9xUqxpXAlLuRmYdqphIIPmMsTLmY32EKXjaFHXBGqZG6JTj7-WynhBcJ5i4HNhNSmy2VXD6KYcLntpsa0X1QP7UFXwuvOo1SAfKg7dR1sVjK1i&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">6</span>
+                <span class="hotword" style="font-size: 18px;">21岁孙子97岁奶奶都觉得对方很好带 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>242,955</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「21岁孙子97岁奶奶都觉得对方很好带」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsX9j8hfbfjlZIOgoZ--0Wcm7EzJhl9wYqnic3FbIX9fKsaidlGYO-08mIBGPK-ICin3m595wh7nznNji-qxKrQKXoj6jyAF0emVZVpX_6tvFFdYNAJU8eH2WfYwSx9NEwhloJk&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsX9j8hfbfjlZIOgoZ--0Wcm7EzJhl9wYqnic3FbIX9fKsaidlGYO-08mIBGPK-ICin3m595wh7nznNji-qxKrQKXoj6jyAF0emVZVpX_6tvFFdYNAJU8eH2WfYwSx9NEwhloJk&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsX9j8hfbfjlZIOgoZ--0Wcm7EzJhl9wYqnic3FbIX9fKsaidlGYO-08mIBGPK-ICin3m595wh7nznNji-qxKrQKXoj6jyAF0emVZVpX_6tvFFdYNAJU8eH2WfYwSx9NEwhloJk&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsX9j8hfbfjlZIOgoZ--0Wcm7EzJhl9wYqnic3FbIX9fKsaidlGYO-08mIBGPK-ICin3m595wh7nznNji-qxKrQKXoj6jyAF0emVZVpX_6tvFFdYNAJU8eH2WfYwSx9NEwhloJk&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">7</span>
+                <span class="hotword" style="font-size: 18px;">微博之夜 二刷</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>210,308</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「微博之夜 二刷」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: 无法解析 API 返回的 JSON: Expecting ',' delimiter: line 17 column 6 (char 437)</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: 无法解析 API 返回的 JSON: Expecting ',' delimiter: line 17 column 6 (char 437)</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">8</span>
+                <span class="hotword" style="font-size: 18px;">官方回应湛江发现儒艮尸体</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>174,177</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">云养美人鱼</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>濒危海洋生物数字化领养</li>
+                    <li>基于现实天气的海洋环境模拟</li>
+                    <li>科普图鉴与复活打卡</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁关注环保、喜爱养成游戏的Z世代用户</p>
+                        <p><strong>📝 产品描述：</strong>一款结合'儒艮即美人鱼'传说的虚拟养成APP。用户可'云领养'儒艮，通过现实生活中的低碳行为（如步数、减塑）换取虚拟食物，见证'美人鱼'的回归与繁衍。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">时空赶海</span>
+                        <div class="score-info">
+                            <span class="score">81分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR扫描海滩复原历史生态</li>
+                    <li>LBS地理位置稀有生物搜集</li>
+                    <li>海洋污染清理小游戏</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁沿海城市居民、亲子家庭及户外探险爱好者</p>
+                        <p><strong>📝 产品描述：</strong>利用AR技术，让用户在海边'扫描'出百年前该地活跃的海洋生物（如儒艮）。用户可在现实场景中捕捉并收集这些已消失的'幽灵物种'，寓教于乐。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">深海树洞</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>向海洋生物投递匿名心事</li>
+                    <li>AI模拟濒危生物回信</li>
+                    <li>漂流瓶式的陌生人治愈社交</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>16-28岁，有情感倾诉需求、喜欢治愈系内容的年轻群体</p>
+                        <p><strong>📝 产品描述：</strong>借儒艮温和沉默的形象，打造一个情绪宣泄平台。用户将秘密说给'儒艮'听，会收到基于生物习性的AI暖心回复或来自其他'潜水员'的匿名安慰。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">9</span>
+                <span class="hotword" style="font-size: 18px;">丞磊第20集6分47秒</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>173,757</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">显微镜追剧</span>
+                        <div class="score-info">
+                            <span class="score">89分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>4K画质帧放大</li>
+                    <li>微表情AI解读</li>
+                    <li>穿帮/细节标注圈子</li>
+                    <li>一键生成超清壁纸</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁追星族、剧情细节控，喜欢逐帧分析偶像颜值的粉丝。</p>
+                        <p><strong>📝 产品描述：</strong>一款针对视频特定帧进行深度解析的工具。利用AI增强特定秒数的画质，允许用户在画面上进行“涂鸦式”讨论，满足粉丝对偶像“每根睫毛都要看清”的极致需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">神秒针传送门</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>全网热搜时间轴聚合</li>
+                    <li>空降高能时刻</li>
+                    <li>该秒数弹幕云生成</li>
+                    <li>情绪共振评分</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁碎片化时间追剧党，只想看高潮部分的吃瓜群众。</p>
+                        <p><strong>📝 产品描述：</strong>聚合全网影视剧热搜提到的具体时间点（如6分47秒），提供“一键空降”功能。用户无需看全片，直接跳转至最热议的几秒钟，快速参与社交话题讨论。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 78分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">戏精复刻机</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>原片分屏合拍</li>
+                    <li>AI表情相似度打分</li>
+                    <li>魔性特效滤镜</li>
+                    <li>演技大赏排行榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-25岁短视频创作者、爱演戏的大学生、社交活跃分子。</p>
+                        <p><strong>📝 产品描述：</strong>基于热搜的“特定几秒”发起模仿挑战。用户可与丞磊原片段进行分屏合拍，AI实时分析表情神态相似度，将单一的观看行为转化为病毒式传播的短视频互动。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 50分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">10</span>
+                <span class="hotword" style="font-size: 18px;">王者荣耀农家乐村晚</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>172,644</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">峡谷土味滤镜</span>
+                        <div class="score-info">
+                            <span class="score">85分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>农具变武器AI识别</li>
+                    <li>大花袄皮肤一键换装</li>
+                    <li>村口大喇叭语音包</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁短视频创作者、游戏玩家，热衷玩梗和社交分享。</p>
+                        <p><strong>📝 产品描述：</strong>一款AR相机应用，能将用户的日常农具或家居用品实时识别并转化为王者荣耀英雄的'土味'装备，生成极具反差萌的短视频内容。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 55分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">荣耀农家游</span>
+                        <div class="score-info">
+                            <span class="score">83分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>实景沉浸式剧本杀预订</li>
+                    <li>农家野怪食材采摘</li>
+                    <li>村晚同款打卡地图</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁城市白领，周末寻求周边游及新奇体验的群体。</p>
+                        <p><strong>📝 产品描述：</strong>整合乡村旅游资源，打造'游戏+农家乐'的O2O体验平台，用户可预订还原游戏场景的农家院，体验真人版'打野'（采摘）和村晚聚餐。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">村局争霸赛</span>
+                        <div class="score-info">
+                            <span class="score">75分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>同城/同村赛事组局</li>
+                    <li>土味奖品赞助匹配</li>
+                    <li>趣味规则生成器</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>16-25岁小镇青年及返乡大学生，有社交和竞技需求。</p>
+                        <p><strong>📝 产品描述：</strong>一个轻量级赛事组织工具，帮助用户快速组织线下'村晚'风格的电竞比赛，提供趣味赛制模板及土特产奖品供应链对接。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 78分 × 80% + 有用度 62分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h2>🏆 产品创意排行榜 (TOP20)</h2>
+        <div class="ranking-list">
+
+            <div class="ranking-item">
+                <span class="ranking-rank gold">#1</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">妈选有对象</div>
+                    <div class="ranking-hotword">来源：我家那小子首发阵容官宣</div>
+                </div>
+                <span class="ranking-score">92分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank silver">#2</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">豆包梗王挑战赛</div>
+                    <div class="ranking-hotword">来源：豆包红包</div>
+                </div>
+                <span class="ranking-score">91分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank bronze">#3</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">显微镜追剧</div>
+                    <div class="ranking-hotword">来源：丞磊第20集6分47秒</div>
+                </div>
+                <span class="ranking-score">89分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">4</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">街角拾光</div>
+                    <div class="ranking-hotword">来源：回家路上随手拍</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">5</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">出院大作战</div>
+                    <div class="ranking-hotword">来源：湖北精神病医院有关问题调查结果</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">6</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">社恐拜年嘴替</div>
+                    <div class="ranking-hotword">来源：豆包红包</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">7</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">生活弹幕机</div>
+                    <div class="ranking-hotword">来源：我家那小子首发阵容官宣</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">8</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">神秒针传送门</div>
+                    <div class="ranking-hotword">来源：丞磊第20集6分47秒</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">9</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">峡谷土味滤镜</div>
+                    <div class="ranking-hotword">来源：王者荣耀农家乐村晚</div>
+                </div>
+                <span class="ranking-score">85分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">10</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">交换黄昏</div>
+                    <div class="ranking-hotword">来源：回家路上随手拍</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">11</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">云养美人鱼</div>
+                    <div class="ranking-hotword">来源：官方回应湛江发现儒艮尸体</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">12</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">荣耀农家游</div>
+                    <div class="ranking-hotword">来源：王者荣耀农家乐村晚</div>
+                </div>
+                <span class="ranking-score">83分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">13</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">精神状态认证中心</div>
+                    <div class="ranking-hotword">来源：湖北精神病医院有关问题调查结果</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">14</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">戏精复刻机</div>
+                    <div class="ranking-hotword">来源：丞磊第20集6分47秒</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">15</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">时空赶海</div>
+                    <div class="ranking-hotword">来源：官方回应湛江发现儒艮尸体</div>
+                </div>
+                <span class="ranking-score">81分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">16</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">全网羊毛雷达</div>
+                    <div class="ranking-hotword">来源：豆包红包</div>
+                </div>
+                <span class="ranking-score">79分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">17</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">下班电台</div>
+                    <div class="ranking-hotword">来源：回家路上随手拍</div>
+                </div>
+                <span class="ranking-score">79分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">18</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">独居小子生存指北</div>
+                    <div class="ranking-hotword">来源：我家那小子首发阵容官宣</div>
+                </div>
+                <span class="ranking-score">78分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">19</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">逻辑自救指南</div>
+                    <div class="ranking-hotword">来源：湖北精神病医院有关问题调查结果</div>
+                </div>
+                <span class="ranking-score">76分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">20</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">深海树洞</div>
+                    <div class="ranking-hotword">来源：官方回应湛江发现儒艮尸体</div>
+                </div>
+                <span class="ranking-score">76分</span>
+            </div>
+
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">24</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">15</span>
+                    <span class="stat-label">优秀创意 (&gt;80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">6</span>
+                    <span class="stat-label">良好创意 (60-80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">83.3</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🤖 本报告由 AI 自动生成 | 仅供参考</p>
+            <p>数据来源：天聚数行 API | AI 分析：Claude 4.5 Sonnet</p>
+            <p>生成时间：2026-02-13 22:40:32</p>
+        </footer>
+    </div>
+</body>
+</html>

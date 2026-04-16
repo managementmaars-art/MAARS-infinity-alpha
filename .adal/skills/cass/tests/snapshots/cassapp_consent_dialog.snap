@@ -1,0 +1,30 @@
+╭cass | Dark | Lexical/Standard────────────────────────────────────────────────────────────────────────────────────────╮
+│<type to search>                                                                                                      │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭Results (0)───────────────────────────────────────────────────╮╭Detail [Messages]─────────────────────────────────────╮
+│No results yet. Type a query and press Enter.                 ││Select a result to preview context and metadata.      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                            ╭───────────────────── Semantic Search ──────────────────────╮                            │
+│                            │ Semantic search requires a ~23 MB model download           │                            │
+│                            │ from HuggingFace (all-MiniLM-L6-v2).                       │                            │
+│                            │                                                            │                            │
+│                            │ The model runs locally after download.                     │                            │
+│                            │ No data leaves your machine during search.                 │                            │
+│                            │                                                            │                            │
+│                            │ [D]  Download model (~23 MB)    ││                         │                            │
+│                            │ [H]  Use hash mode (no download, lower quality)            │                            │
+│                            │ [Esc]  Cancel                   ││                         │                            │
+│                            │                                 ││                         │                            │
+│                            │                                 ││                         │                            │
+│                            │                                 ││                         │                            │
+│                            ╰────────────────────────────────────────────────────────────╯                            │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+╰──────────────────────────────────────────────────────────────╯╰──────────────────────────────────────────────────────╯
+ 0 hits | mode:fts | [LEX] | med | cozy | F2=theme D=density Ctrl+B=borders                                             

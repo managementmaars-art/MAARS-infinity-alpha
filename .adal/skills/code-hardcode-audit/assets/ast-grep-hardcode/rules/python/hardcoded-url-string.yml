@@ -1,0 +1,11 @@
+id: hardcoded-url-string
+language: python
+severity: warning
+message: >-
+  Hardcoded URL string — extract to constant or configuration.
+note: >-
+  URLs change across environments (dev/staging/prod). Move to a constants
+  module or BaseSettings class with env-var override.
+rule:
+  kind: string
+  regex: "^[\"']https?://"

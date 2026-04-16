@@ -1,0 +1,43 @@
+{
+  "company": {
+    "name": "YOUR COMPANY NAME",
+    "MatrNbr": "YOUR_MATRICULE_NUMBER",
+    "RCSNbr": "YOUR_RCS_NUMBER",
+    "VATNbr": "YOUR_VAT_NUMBER",
+    "eCDFPrefix": "YOUR_ECDF_PREFIX",
+    "address": "YOUR_COMPANY_ADDRESS"
+  },
+  "vat_settings": {
+    "default_vat_rate": 0.17,
+    "usd_to_eur_rate": 0.923,
+    "year": 2024
+  },
+  "provider_categories": {
+    "non_eu_services": [
+      "Midjourney",
+      "GitHub",
+      "X (Twitter)",
+      "Anthropic",
+      "OpenAI"
+    ],
+    "eu_services": {
+      "Scaleway": {
+        "country": "FR",
+        "vat_rate": 0.20,
+        "reverse_charge_rate": 0.17
+      },
+      "Google Cloud": {
+        "country": "IE",
+        "vat_rate": 0.23,
+        "reverse_charge_rate": 0.17
+      }
+    },
+    "luxembourg_suppliers": [
+      "The Office City",
+      "IKEA",
+      "LuxTrust"
+    ]
+  },
+  "csv_file": "expenses.csv",
+  "output_directory": "./output"
+}

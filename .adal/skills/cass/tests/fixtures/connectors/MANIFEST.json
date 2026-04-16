@@ -1,0 +1,136 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-01-26",
+  "description": "Provenance manifest for connector test fixtures",
+  "fixtures": {
+    "claude": {
+      "source": "tests/fixtures/claude_code_real",
+      "capture_date": "2025-11-25",
+      "redaction_policy": "usernames_anonymized",
+      "files": [
+        {
+          "path": "projects/-test-project/agent-test123.jsonl",
+          "description": "Real Claude Code session with matrix completion discussion",
+          "message_count": 2,
+          "captured_from": "anonymous_developer_session",
+          "sha256": "89dd0a299dd4e761d185a65b652d6a29982cbc71aa9e07cfa3aa07475696c202"
+        }
+      ]
+    },
+    "codex": {
+      "source": "tests/fixtures/codex_real",
+      "capture_date": "2025-11-25",
+      "redaction_policy": "usernames_anonymized",
+      "files": [
+        {
+          "path": "sessions/2025/11/25/rollout-test.jsonl",
+          "description": "Codex CLI session fixture",
+          "sha256": "e5bb852c2c52997ae721820519a991738f1a4088f23008872c9cf1d4dad3422d"
+        }
+      ]
+    },
+    "cline": {
+      "source": "tests/fixtures/cline",
+      "capture_date": "2025-12-01",
+      "redaction_policy": "paths_sanitized",
+      "files": [
+        {
+          "path": "task1/api_conversation_history.json",
+          "description": "Cline API conversation history",
+          "sha256": "f1861061e8e5fca859ff7abed8510fdcff066771691a9ea8357c34e6cd33dde5"
+        },
+        {
+          "path": "task1/task_metadata.json",
+          "description": "Cline task metadata",
+          "sha256": "8122afbc855aadb2f92267311b34fed7b63d949b483c4a832a20af026aa1f3fe"
+        },
+        {
+          "path": "task1/ui_messages.json",
+          "description": "Cline UI messages",
+          "sha256": "3a4cc8a0639d48454308f069480906f15359c51b9706d1374409cd3beabefc5f"
+        }
+      ]
+    },
+    "gemini": {
+      "source": "tests/fixtures/gemini",
+      "capture_date": "2025-12-01",
+      "redaction_policy": "paths_sanitized",
+      "files": [
+        {
+          "path": "hash123/chats/session-test.json",
+          "description": "Gemini CLI session fixture",
+          "sha256": "0bb8e45362af5ade44f2ee4f286d3f0cf3fea3bbb21d5ab35a8e2e534fe26e8f"
+        }
+      ]
+    },
+    "amp": {
+      "source": "tests/fixtures/amp",
+      "capture_date": "2025-12-01",
+      "redaction_policy": "paths_sanitized",
+      "files": [
+        {
+          "path": "thread-001.json",
+          "description": "AMP thread fixture",
+          "sha256": "b10dcefa8d8508a384896958f5a49bce9051759ca4ab84d54f7761d61ce758fe"
+        }
+      ]
+    },
+    "pi_agent": {
+      "source": "tests/fixtures/pi_agent",
+      "capture_date": "2025-12-01",
+      "redaction_policy": "paths_sanitized",
+      "files": [
+        {
+          "path": "sessions/--test-project--/2024-01-15T10-30-00-000Z_abc12345-1234-5678-9abc-def012345678.jsonl",
+          "description": "Pi-Agent session fixture",
+          "sha256": "cd53881d4813a436c54797a594c21a1df1e820bba5fd5427b2a609a6e23a91e8"
+        }
+      ]
+    },
+    "opencode": {
+      "source": "tests/fixtures/opencode_json",
+      "capture_date": "2025-12-01",
+      "redaction_policy": "paths_sanitized",
+      "files": [
+        {
+          "path": "session/proj1/ses_test1.json",
+          "description": "OpenCode session fixture",
+          "sha256": "b357f96488520379ba23f0ac938568313b4db0497a02155b11bd22378846cab9"
+        }
+      ]
+    },
+    "aider": {
+      "source": "tests/fixtures/aider",
+      "capture_date": "2025-12-01",
+      "redaction_policy": "paths_sanitized",
+      "files": [
+        {
+          "path": ".aider.chat.history.md",
+          "description": "Aider chat history fixture with /add command and refactoring request",
+          "message_count": 4,
+          "sha256": "898dd3f625a8a19b92315c2dea8794e81010368536b0bc5c702f14378cdb0e6e"
+        }
+      ]
+    }
+  },
+  "synthetic_fixtures": {
+    "note": "Some tests require synthetic data for edge cases (malformed JSON, encoding errors). These are documented below.",
+    "allowed_synthetic": [
+      {
+        "test_file": "tests/parse_errors.rs",
+        "reason": "Tests malformed JSONL handling - requires intentionally broken content",
+        "patterns": ["invalid JSON", "truncated line", "missing fields"]
+      },
+      {
+        "test_file": "tests/fs_errors.rs",
+        "reason": "Tests filesystem edge cases - requires dynamic file creation",
+        "patterns": ["permission errors", "symlinks", "long paths"]
+      }
+    ]
+  },
+  "naming_convention": {
+    "temp_dir_prefix": "fixture-",
+    "legacy_prefix": "mock-",
+    "migration_note": "All new tests should use 'fixture-<agent>' naming instead of 'mock-<agent>'"
+  }
+}

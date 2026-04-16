@@ -1,0 +1,23 @@
+{
+  "skill_name": "academic-pdf-to-gfm",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I downloaded a 40-page SSRN working paper in PDF — it's a finance paper about portfolio optimization with about 25 equations. When I copy text from it, the math symbols come through as Unicode (∑, π, σ, etc.). I want to put it on GitHub as a markdown file. Which extraction tool should I use, and how do I handle the math formulas?",
+      "expected_output": "Should identify this as a Type A Word-generated PDF based on the Unicode math copy-paste behavior. Should recommend pymupdf4llm for prose extraction. Should clearly state that marker-pdf will NOT work. Should explain that math must be manually transcribed from PDF screenshots since there is no automated LaTeX extraction for Word PDFs. Should mention the need to use $$...$$  for single-line equations and ```math...``` fenced blocks for multi-line equations with \\.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "prompt": "I pushed a markdown file to GitHub and my matrix equation is showing as raw LaTeX instead of rendered math. Here's what I wrote:\n\n$$\n\\begin{pmatrix}\na & b \\\\\nc & d\n\\end{pmatrix}\n$$\n\nWhat's wrong and how do I fix it?",
+      "expected_output": "Should identify the root cause: GitHub's Markdown pre-processor strips \\\\ before the math renderer sees it, which breaks the matrix line break. Should recommend converting to ```math fenced block syntax. Should provide the corrected version using ```math...``` instead of $$.  Should explain that this affects ANY equation with \\\\ line breaks.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I have a 200-line markdown file with about 50 math equations. Some are inline ($...$), some are display blocks ($$...$$), and a few are ```math fenced blocks. Before I push this to GitHub, how do I validate all the equations are syntactically correct? I want a CI-friendly solution.",
+      "expected_output": "Should recommend installing KaTeX (bun add -g katex or npm install -g katex). Should provide or reference the validate-math.mjs script that extracts all three block types and validates each with KaTeX. Should note it exits with code 1 on errors (CI-friendly). Should also note the important caveat: KaTeX passing does NOT guarantee GitHub renders correctly — the user must also ensure multi-line blocks use ```math not $$.",
+      "files": []
+    }
+  ]
+}

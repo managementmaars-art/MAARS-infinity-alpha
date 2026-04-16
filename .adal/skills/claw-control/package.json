@@ -1,0 +1,44 @@
+{
+  "name": "claw-control",
+  "version": "1.0.0",
+  "description": "Kanban for AI Agents - Coordinate your AI team with style",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@claw-control/backend & npm run dev --workspace=@claw-control/frontend",
+    "build": "npm run build --workspaces --if-present",
+    "build:frontend": "npm run build --workspace=@claw-control/frontend",
+    "start": "serve -s packages/frontend/dist -l $PORT",
+    "lint": "npm run lint --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "verify:autonomy:m8": "npm run verify:autonomy:m8 --workspace=@claw-control/backend"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.4",
+    "prettier": "^3.2.5",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adarshmishra07/claw-control.git"
+  },
+  "keywords": [
+    "kanban",
+    "ai-agents",
+    "mission-control",
+    "dashboard",
+    "task-management"
+  ],
+  "author": "OpenClaw Team",
+  "license": "MIT",
+  "dependencies": {
+    "serve": "^14.2.5"
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bluesky Cascade Fetch"
+  short_description: "Fetch Bluesky posts and reply cascades by time window"
+  default_prompt: "Use $bluesky-cascade-fetch to fetch Bluesky posts and thread cascades in a specific time window with retries, throttling, validation, and JSON artifacts."

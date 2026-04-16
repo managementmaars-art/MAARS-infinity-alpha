@@ -1,0 +1,16 @@
+{
+  "name": "ultraplan",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Deep multi-phase implementation planning skill for Claude Code with parallel agent exploration, iterative user interviews, and structured plan output.",
+  "keywords": [
+    "claude-code",
+    "skill",
+    "planning",
+    "architecture",
+    "implementation",
+    "multi-agent"
+  ],
+  "license": "MIT",
+  "author": "6missedcalls"
+}

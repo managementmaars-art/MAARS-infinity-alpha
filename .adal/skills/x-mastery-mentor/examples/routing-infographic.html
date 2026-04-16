@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans SC', 'Helvetica Neue', Arial, sans-serif;
+    background: #F5E6D3;
+    padding: 32px;
+    color: #1A1A1A;
+  }
+  .page {
+    width: 1080px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .header h1 {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+  .header h1 span { color: #FF3B4F; }
+  .header .sub {
+    font-size: 15px;
+    color: #666;
+    margin-top: 6px;
+    font-weight: 400;
+  }
+  .badge {
+    display: inline-block;
+    background: #1A1A1A;
+    color: #FFD700;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Entry */
+  .entry-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .entry-box {
+    background: #1A1A1A;
+    color: #fff;
+    padding: 12px 36px;
+    border: 4px solid #1A1A1A;
+    box-shadow: 6px 6px 0 #FF3B4F;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  /* Arrow */
+  .arrow {
+    text-align: center;
+    font-size: 28px;
+    color: #1A1A1A;
+    margin: 8px 0;
+    line-height: 1;
+  }
+
+  /* Router */
+  .router-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .router-box {
+    background: #FFD700;
+    border: 4px solid #1A1A1A;
+    box-shadow: 6px 6px 0 #1A1A1A;
+    padding: 14px 40px;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .router-box .small {
+    font-size: 12px;
+    font-weight: 400;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  /* 4 Scenario Cards */
+  .scenarios {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .s-card {
+    border: 4px solid #1A1A1A;
+    box-shadow: 5px 5px 0 #1A1A1A;
+    padding: 14px;
+  }
+  .s-card.a { background: #E8F0FE; }
+  .s-card.b { background: #E6F9E6; }
+  .s-card.c { background: #FFF3E0; }
+  .s-card.d { background: #FCE4EC; }
+
+  .s-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.6;
+  }
+  .s-title {
+    font-size: 20px;
+    font-weight: 900;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  .s-card.a .s-title { color: #1a56db; }
+  .s-card.b .s-title { color: #16a34a; }
+  .s-card.c .s-title { color: #ea580c; }
+  .s-card.d .s-title { color: #db2777; }
+
+  .s-trigger {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+
+  .step-list {
+    list-style: none;
+  }
+  .step-list li {
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #1A1A1A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 900;
+    margin-top: 1px;
+  }
+  .s-card.a .step-num { background: #1a56db; color: #fff; border-color: #1a56db; }
+  .s-card.b .step-num { background: #16a34a; color: #fff; border-color: #16a34a; }
+  .s-card.c .step-num { background: #ea580c; color: #fff; border-color: #ea580c; }
+  .s-card.d .step-num { background: #db2777; color: #fff; border-color: #db2777; }
+
+  .checkpoint {
+    display: inline-block;
+    background: #FFD700;
+    border: 2px solid #1A1A1A;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 6px;
+    margin-top: 2px;
+  }
+
+  /* Knowledge Base */
+  .kb-section {
+    border: 4px solid #1A1A1A;
+    background: #fff;
+    box-shadow: 6px 6px 0 #1A1A1A;
+    padding: 16px;
+  }
+  .kb-title {
+    font-size: 14px;
+    font-weight: 900;
+    margin-bottom: 12px;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  .kb-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+  }
+  .kb-item {
+    border: 3px solid #1A1A1A;
+    padding: 8px;
+    text-align: center;
+    position: relative;
+  }
+  .kb-item:nth-child(1) { background: #E8F0FE; }
+  .kb-item:nth-child(2) { background: #FFF3E0; }
+  .kb-item:nth-child(3) { background: #FCE4EC; }
+  .kb-item:nth-child(4) { background: #E6F9E6; }
+  .kb-item:nth-child(5) { background: #F3E8FF; }
+  .kb-item:nth-child(6) { background: #FFE8E8; }
+  .kb-item:nth-child(7) { background: #E8FFF0; }
+
+  .kb-name {
+    font-size: 13px;
+    font-weight: 900;
+    margin-bottom: 4px;
+  }
+  .kb-desc {
+    font-size: 9px;
+    color: #555;
+    line-height: 1.3;
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    font-size: 11px;
+    color: #999;
+  }
+  .footer .made {
+    background: #1A1A1A;
+    color: #FFD700;
+    padding: 3px 10px;
+    font-weight: 700;
+    font-size: 10px;
+  }
+
+  /* Connector lines */
+  .connector {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+  }
+  .connector .line {
+    width: 2px;
+    height: 16px;
+    background: #1A1A1A;
+  }
+  .fan-out {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+    position: relative;
+    height: 20px;
+  }
+  .fan-out::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(50% - 1px);
+    width: 2px;
+    height: 10px;
+    background: #1A1A1A;
+  }
+  .fan-out::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 12.5%;
+    right: 12.5%;
+    height: 2px;
+    background: #1A1A1A;
+  }
+  .fan-dots {
+    position: absolute;
+    top: 10px;
+    left: 12.5%;
+    right: 12.5%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .fan-dots .dot {
+    width: 2px;
+    height: 10px;
+    background: #1A1A1A;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <!-- Header -->
+  <div class="header">
+    <h1>X导师<span>.skill</span> 路由逻辑</h1>
+    <div class="sub">女娲的第一个「非人类」作品 · 基于6位顶级X创作者 + 开源算法数据</div>
+    <div class="badge">MADE WITH 女娲.SKILL</div>
+  </div>
+
+  <!-- Entry -->
+  <div class="entry-row">
+    <div class="entry-box">💬 用户输入</div>
+  </div>
+
+  <div class="arrow">▼</div>
+
+  <!-- Router -->
+  <div class="router-row">
+    <div class="router-box">
+      ⚡ 问题路由器
+      <div class="small">判断问题类型 → 分配到对应执行场景</div>
+    </div>
+  </div>
+
+  <!-- Fan out -->
+  <div class="fan-out">
+    <div class="fan-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- 4 Scenario Cards -->
+  <div class="scenarios">
+    <!-- A -->
+    <div class="s-card a">
+      <div class="s-tag">场景 A</div>
+      <div class="s-title">✍️ 写推文</div>
+      <div class="s-trigger">「帮我写条推文」「Thread怎么写」</div>
+      <ul class="step-list">
+        <li><div class="step-num">1</div><div>确认类型·受众·语言</div></li>
+        <li><div class="step-num">2</div><div>生成3版Hook<br><span class="checkpoint">⏸ 用户选或改</span></div></li>
+        <li><div class="step-num">3</div><div>完善正文（1/3/1节奏）</div></li>
+        <li><div class="step-num">4</div><div>质量检查 + 发帖建议</div></li>
+      </ul>
+    </div>
+
+    <!-- B -->
+    <div class="s-card b">
+      <div class="s-tag">场景 B</div>
+      <div class="s-title">💡 选题</div>
+      <div class="s-trigger">「今天发什么」「没灵感了」</div>
+      <ul class="step-list">
+        <li><div class="step-num">1</div><div>了解上下文·热点检查</div></li>
+        <li><div class="step-num">2</div><div>4A矩阵生成选题<br><span class="checkpoint">⏸ 用户选方向</span></div></li>
+        <li><div class="step-num">3</div><div>展开为写作brief</div></li>
+      </ul>
+    </div>
+
+    <!-- C -->
+    <div class="s-card c">
+      <div class="s-tag">场景 C</div>
+      <div class="s-title">🔍 审阅</div>
+      <div class="s-trigger">「帮我看看这条推文」</div>
+      <ul class="step-list">
+        <li><div class="step-num">1</div><div>判断内容类型</div></li>
+        <li><div class="step-num">2</div><div>四层诊断<br>算法→Hook→内容→CTA</div></li>
+        <li><div class="step-num">3</div><div>展示诊断<br><span class="checkpoint">⏸ 确认需要改写？</span></div></li>
+        <li><div class="step-num">4</div><div>审阅报告 + 改写版</div></li>
+      </ul>
+    </div>
+
+    <!-- D -->
+    <div class="s-card d">
+      <div class="s-tag">场景 D</div>
+      <div class="s-title">📈 增长</div>
+      <div class="s-trigger">「怎么涨粉」「涨粉变慢了」</div>
+      <ul class="step-list">
+        <li><div class="step-num">1</div><div>确认阶段 + Premium</div></li>
+        <li><div class="step-num">2</div><div>诊断瓶颈<br><span class="checkpoint">⏸ 确认瓶颈假设</span></div></li>
+        <li><div class="step-num">3</div><div>阶段行动计划 + 预期</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="arrow">▼ 执行时按需引用 ▼</div>
+
+  <!-- Knowledge Base -->
+  <div class="kb-section">
+    <div class="kb-title">📚 知识库</div>
+    <div class="kb-grid">
+      <div class="kb-item">
+        <div class="kb-name">心智模型</div>
+        <div class="kb-desc">精益验证 · 注意力工程 · 品类创造 · 价值前置 · 公开建造 · 系统复利</div>
+      </div>
+      <div class="kb-item">
+        <div class="kb-name">启发式×10</div>
+        <div class="kb-desc">先推后长 · Hook50% · 对话150x · 1/3/1 · 超级碗 · 4A矩阵</div>
+      </div>
+      <div class="kb-item">
+        <div class="kb-name">算法速查</div>
+        <div class="kb-desc">权重公式 · 负面信号 · TweepCred · 发帖参数</div>
+      </div>
+      <div class="kb-item">
+        <div class="kb-name">写作工坊</div>
+        <div class="kb-desc">Hook示例 · Thread×7模板 · 选题系统</div>
+      </div>
+      <div class="kb-item">
+        <div class="kb-name">AI赛道</div>
+        <div class="kb-desc">账号分型×6 · 内容矩阵 · 出海策略</div>
+      </div>
+      <div class="kb-item">
+        <div class="kb-name">反模式</div>
+        <div class="kb-desc">增长陷阱×7 · 平台风险×3</div>
+      </div>
+      <div class="kb-item">
+        <div class="kb-name">数据复盘</div>
+        <div class="kb-desc">指标体系 · 复盘节奏 · 诊断框架</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div>github.com/alchaincyf/x-mentor-skill</div>
+    <div>6位创作者 · 2475行调研 · 769行SKILL.md</div>
+    <div class="made">MADE WITH 女娲.SKILL</div>
+  </div>
+</div>
+</body>
+</html>

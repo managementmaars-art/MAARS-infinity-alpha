@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年02月16日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --accent-normal: #6C757D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .report-header h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+            margin-top: 32px;
+        }
+
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hotspot-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hotspot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .hotspot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .hotword {
+            font-weight: 600;
+            font-size: 16px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotness {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .hotspot-summary {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hotspot-detail {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .hotspot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+            transition: all 0.2s;
+        }
+
+        .idea-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .idea-card.excellent {
+            border-left-color: var(--accent-excellent);
+            background: linear-gradient(to right, rgba(255, 210, 63, 0.1), transparent);
+        }
+
+        .idea-card.good {
+            border-left-color: var(--accent-good);
+            background: linear-gradient(to right, rgba(6, 167, 125, 0.05), transparent);
+        }
+
+        .idea-card.normal {
+            border-left-color: var(--accent-normal);
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .idea-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .score-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.excellent {
+            background: var(--accent-excellent);
+            color: #333;
+        }
+
+        .badge.good {
+            background: var(--accent-good);
+            color: white;
+        }
+
+        .badge.normal {
+            background: var(--accent-normal);
+            color: white;
+        }
+
+        .idea-body p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .idea-body strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .idea-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .idea-body li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .score-breakdown {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .statistics h2 {
+            color: white;
+            border-left-color: white;
+            margin-top: 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ranking-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ranking-rank {
+            font-size: 24px;
+            font-weight: 700;
+            width: 40px;
+            text-align: center;
+        }
+
+        .ranking-rank.gold { color: #FFD700; }
+        .ranking-rank.silver { color: #C0C0C0; }
+        .ranking-rank.bronze { color: #CD7F32; }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .ranking-hotword {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .ranking-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .report-header { padding: 24px; }
+            .report-header h1 { font-size: 24px; }
+            .hotspot-list { grid-template-columns: 1fr; }
+            .idea-header { flex-direction: column; align-items: flex-start; }
+            .stat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>🤖 微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>📅 生成日期：2026-02-16</span>
+                <span>🔥 热搜总数：10</span>
+                <span>💡 创意总数：30</span>
+                <span>⏰ 生成时间：2026-02-16 12:36:51</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">明星红包</span>
+                </div>
+                <div class="hotness">热度：盛典 9306901 </div>
+                <div class="hotspot-summary">各大平台明星发放现金福利，引发粉丝跨平台蹲守、争抢与互动狂欢。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">口令红包</span>
+                </div>
+                <div class="hotness">热度：2029618 <span class="tag">新</span></div>
+                <div class="hotspot-summary">用户需输入特定文字或通过语音准确喊出指定文案才能领取的电子红包，常用于活跃群氛围、节日祝福或品牌营销，兼具社交互动性与趣味挑战。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">骏马贺新春电子贺卡</span>
+                </div>
+                <div class="hotness">热度：1558201 </div>
+                <div class="hotspot-summary">网友热传骏马主题电子贺卡，寓意新春马到成功，寄托美好祝福。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">千问除夕夜红包雨最高2888元</span>
+                </div>
+                <div class="hotness">热度： </div>
+                <div class="hotspot-summary">通义千问APP宣布除夕夜开启红包雨活动，发放最高2888元现金大奖，以此拉动用户活跃。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">红包分组</span>
+                </div>
+                <div class="hotness">热度：盛典 1547474 </div>
+                <div class="hotspot-summary">网友呼吁微信推好友分组发红包功能，实现春节精准且低负担的社交。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">今天又要集体洗头了</span>
+                </div>
+                <div class="hotness">热度：322482 <span class="tag">火热</span></div>
+                <div class="hotspot-summary">假期结束返工前夜，网友调侃为了见人必须洗头的社交仪式感。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">陈哲远 15万红包</span>
+                </div>
+                <div class="hotness">热度：286938 </div>
+                <div class="hotspot-summary">陈哲远在粉丝群空降豪掷15万元红包，因出手阔绰引发全网羡慕与热议。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">过年喝古井骐骥涛涛来</span>
+                </div>
+                <div class="hotness">热度： <span class="tag">热</span></div>
+                <div class="hotspot-summary">古井贡酒春节营销活动，借“骐骥”（千里马）和“涛涛”（财运福气）寓意，推广过年团圆饮酒场景。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">红包</span>
+                </div>
+                <div class="hotness">热度：盛典 272821 </div>
+                <div class="hotspot-summary">涉及节日庆典或平台活动，用户讨论抢红包运气、金额大小及社交礼仪。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">金色朋友圈怎么弄</span>
+                </div>
+                <div class="hotness">热度：234279 </div>
+                <div class="hotspot-summary">用户搜寻设置微信金色状态或九宫格图片的教程，追求独特的社交展示。</div>
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">1</span>
+                <span class="hotword" style="font-size: 18px;">明星红包</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>9,306,901</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">鉴粉提款机</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>自定义真爱粉题库</li>
+                    <li>语音声纹解锁</li>
+                    <li>假粉羞耻证书生成</li>
+                    <li>粉丝团排行榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-25岁饭圈女孩/男孩，后援会管理者，喜欢社交互动的年轻群体</p>
+                        <p><strong>📝 产品描述：</strong>拒绝“路人”薅羊毛！这是一款带锁的红包工具。发红包时设置关于该明星的硬核冷知识，领红包者必须在规定时间内答对题目或通过语音喊出应援口号才能解锁资金，答错将生成搞笑的“假粉证书”便于社交传播。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 62分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">欧气占星台</span>
+                        <div class="score-info">
+                            <span class="score">83分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>全网红包聚合地图</li>
+                    <li>AI今日欧气运势</li>
+                    <li>一键跳转抢包</li>
+                    <li>锦鲤还愿社区</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁喜爱“玄学”的年轻人，热衷薅羊毛的大学生及职场新人</p>
+                        <p><strong>📝 产品描述：</strong>将“抢红包”与“电子算命”结合。应用不仅实时聚合全网明星红包入口，还利用AI分析用户今日运势，推荐“吉时”和“吉利方位”去抢特定明星的红包，让枯燥的蹲点变成一种充满仪式感的玄学游戏。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">虚拟恋人投喂</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI角色扮演互动</li>
+                    <li>剧情式红包解锁</li>
+                    <li>专属语音彩蛋</li>
+                    <li>合成亲密合影</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁乙女游戏玩家，梦女/梦男群体，追求情感陪伴的用户</p>
+                        <p><strong>📝 产品描述：</strong>基于大模型的互动红包。用户并非直接领取，而是进入一个简短的AI剧情（如：霸道总裁、温柔学长），需要通过对话“攻略”AI明星，根据对话的情商得分来决定最终领到的红包金额大小，满足用户的情感幻想。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 40分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">2</span>
+                <span class="hotword" style="font-size: 18px;">口令红包 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>2,029,618</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">戏精声鉴红包</span>
+                        <div class="score-info">
+                            <span class="score">83分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI情绪识别（需哭腔/大笑/愤怒喊口令）</li>
+                    <li>分贝挑战模式（需窃窃私语或咆哮）</li>
+                    <li>鬼畜混音生成分享</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>16-30岁Z世代，热衷聚会、搞怪、追求社交货币的年轻群体</p>
+                        <p><strong>📝 产品描述：</strong>拒绝平铺直叙的念词！结合AI语音情感分析技术，用户必须用发红包者指定的情绪（如“痛哭流涕”地喊“恭喜发财”）或指定分贝才能解锁红包，生成的搞怪录音可一键制作成鬼畜视频传播。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 96分 × 80% + 有用度 30分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">拍图寻物口令</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI图像识别验证</li>
+                    <li>限时寻宝模式</li>
+                    <li>防作弊（禁止相册上传）</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>大学生、公司团建组织者、亲子家庭，需要破冰或互动游戏的场景</p>
+                        <p><strong>📝 产品描述：</strong>口令不再是文字，而是“物体”。发红包者设置题目（如“找一个红色的圆柱体”），抢红包者需在规定时间内拍摄符合描述的实物照片，经AI识别通过后自动入账，将线上红包变为线下寻宝游戏。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 55分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">方言十级考场</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>特定方言语音匹配</li>
+                    <li>地域难度分级（如温州话模式）</li>
+                    <li>发音标准度打分排行榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>同乡会社群、春节返乡人群、语言文化爱好者</p>
+                        <p><strong>📝 产品描述：</strong>针对春节返乡场景，发红包者录入一句地道方言作为“密钥”。抢红包者必须用极其标准的同款方言复述才能领取，系统根据发音相似度打分，分数越高金额越大，引发“烫嘴”笑料。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 28分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">3</span>
+                <span class="hotword" style="font-size: 18px;">骏马贺新春电子贺卡</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>1,558,201</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">赛马抢红包</span>
+                        <div class="score-info">
+                            <span class="score">92分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>群组赛马小游戏</li>
+                    <li>名次决定红包金额</li>
+                    <li>自定义马匹皮肤</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-40岁微信用户，春节期间有群发红包需求的人群</p>
+                        <p><strong>📝 产品描述：</strong>将传统微信红包转化为赛马游戏，发红包者设置总金额，抢红包者随机获得一匹赛马，根据赛跑名次分配金额，极强地提升了群聊活跃度和过年氛围。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">骏马AI写真</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>人脸融合国风骑手</li>
+                    <li>生成专属吉祥话</li>
+                    <li>一键制作动态贺卡</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁注重仪式感的年轻人，喜欢分享朋友圈</p>
+                        <p><strong>📝 产品描述：</strong>利用AIGC技术，用户上传照片即可生成身骑骏马的国风大片或动态视频贺卡，配以“马到成功”等定制祝福，满足用户在春节期间展示自我和独特社交的需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">马上解压木鱼</span>
+                        <div class="score-info">
+                            <span class="score">77分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>点击屏幕策马奔腾</li>
+                    <li>积攒功德/财运音效</li>
+                    <li>桌面小组件倒数日</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>16-30岁学生及职场新人，面临学业或工作压力</p>
+                        <p><strong>📝 产品描述：</strong>结合“电子木鱼”玩法的解压工具，点击屏幕让马跑得更快，伴随金币掉落音效，寓意“马上有钱/马上上岸”，既是春节倒数日历，也是心理抚慰玩具。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">4</span>
+                <span class="hotword" style="font-size: 18px;">千问除夕夜红包雨最高2888元</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">赛博欧气生成器</span>
+                        <div class="score-info">
+                            <span class="score">83分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>一键生成中了2888元的逼真截图</li>
+                    <li>AI算命分析今日抢红包最佳方位</li>
+                    <li>电子木鱼积攒'赛博功德'功能</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁喜欢玩梗、搞怪，并在朋友圈通过凡尔赛获得社交关注的年轻人。</p>
+                        <p><strong>📝 产品描述：</strong>一款满足虚荣心与恶搞需求的工具。用户若没抢到大额红包，可生成这一逼真的'中奖截图'发朋友圈整蛊好友，或通过敲击AI电子木鱼祈祷下轮好运，主打除夕夜的社交娱乐氛围。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 45分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">红包雨指尖私教</span>
+                        <div class="score-info">
+                            <span class="score">80分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>1:1复刻千问红包雨UI的练习模式</li>
+                    <li>APM（手速）实时测试与排名</li>
+                    <li>抢不到红包时的AI嘲讽语音包</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-35岁胜负欲强，希望能在大厂红包战中薅到羊毛的游戏化用户。</p>
+                        <p><strong>📝 产品描述：</strong>针对红包雨活动推出的'模拟考'游戏。让用户在活动开始前预热手速，配合魔性的AI嘲讽语音，将枯燥的等待时间转化为趣味的手速竞技游戏，缓解除夕抢不到红包的焦虑。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">千问神回复助手</span>
+                        <div class="score-info">
+                            <span class="score">77分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>根据红包金额自动生成高情商感谢语</li>
+                    <li>AI生成藏头诗向AI讨要红包</li>
+                    <li>亲戚群'讨红包'专用表情包生成</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁春节期间面临大量社交压力，不善言辞但想在群里活跃气氛的社畜。</p>
+                        <p><strong>📝 产品描述：</strong>利用热点中的'千问'AI属性，为用户提供除夕夜社交外挂。无论是向AI乞讨红包的骚话，还是家庭群感谢长辈的吉祥话，都能一键生成，解决'拿了钱不知道说什么'的痛点。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 85分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">5</span>
+                <span class="hotword" style="font-size: 18px;">红包分组</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>1,547,474</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">塑料情粉碎机</span>
+                        <div class="score-info">
+                            <span class="score">91分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI分析聊天记录自动生成'真爱'与'塑料'分组</li>
+                    <li>根据亲密度自动计算红包金额（亲疏有别）</li>
+                    <li>生成'社交含金量'年度趣味报告</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-30岁，深受无效社交困扰、预算有限的年轻职场人</p>
+                        <p><strong>📝 产品描述：</strong>基于热搜痛点，利用AI将好友按互动深度自动分组。对“点赞之交”自动匹配低额红包，对死党匹配大额红包，既解决了分组麻烦，又带有极强的恶搞和传播属性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">懂王鉴别令</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>设置私密问题作为红包领取门槛</li>
+                    <li>答对者自动归入'懂我'分组</li>
+                    <li>答错者进入'假粉'公开处刑榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-25岁大学生及泛二次元群体，追求社交认同感</p>
+                        <p><strong>📝 产品描述：</strong>将“分组”概念游戏化。发红包时设置只有特定圈层（如死党、同好）才知道的梗或问题，答对才能领。通过知识/默契度进行动态分组，把发红包变成一场社交提纯游戏。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">人情订阅制</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>建立'VIP好友位'，需好友发红包'续费'保留</li>
+                    <li>不同分组解锁朋友圈不同查看权限</li>
+                    <li>逾期未互动自动降级为'路人'分组</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>社交网络KOL、渴望清理朋友圈的社交达人</p>
+                        <p><strong>📝 产品描述：</strong>反向利用红包分组概念。用户设定核心朋友圈为VIP分组，好友需通过发红包或互动来“维持”在VIP组的资格，将被动的红包社交变为主动的会员制管理，极具话题性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 82分 × 80% + 有用度 67分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">6</span>
+                <span class="hotword" style="font-size: 18px;">今天又要集体洗头了 <span class="tag">火热</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>322,482</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">洗头性价比计算器</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>见面对象重要度评分</li>
+                    <li>戴帽vs洗头决策树</li>
+                    <li>洗头并不见人的亏损分析</li>
+                    <li>鸽子理由生成器</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁，崇尚“躺平”哲学，在此刻不想动弹的年轻职场人</p>
+                        <p><strong>📝 产品描述：</strong>一款趣味决策小程序。输入明天要见的人，算法基于“社交礼仪ROI”计算是否值得洗头，若不值得，自动生成高情商请假或拒绝理由。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 40分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">社畜复活急救包</span>
+                        <div class="score-info">
+                            <span class="score">81分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>周围理发店排队实况</li>
+                    <li>免洗喷雾同城闪送</li>
+                    <li>油头造型掩盖教程</li>
+                    <li>静音洗头服务预约</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-40岁，注重形象但极度疲惫，急需快速恢复状态的都市白领</p>
+                        <p><strong>📝 产品描述：</strong>针对返工焦虑的O2O服务聚合。提供免排队理发店地图、急救美发工具配送及“不用说话”的社恐友好型上门洗头服务。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 85分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">全员洗头打卡局</span>
+                        <div class="score-info">
+                            <span class="score">80分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>洗头前后颜值对比PK</li>
+                    <li>全国洗头热力图</li>
+                    <li>不想洗头吐槽弹幕</li>
+                    <li>谁是“油王”排行榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-25岁大学生及社交媒体重度用户，喜欢分享生活碎片</p>
+                        <p><strong>📝 产品描述：</strong>基于LBS的社交互动游戏。用户上传洗头前后的反差照片参与PK，或围观附近的“洗头困难户”，通过群体共鸣缓解假期结束的焦虑。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 50分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">7</span>
+                <span class="hotword" style="font-size: 18px;">陈哲远 15万红包</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>286,938</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">AI男友发包模拟器</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>模拟明星群聊界面</li>
+                    <li>AI角色沉浸式语音发红包</li>
+                    <li>虚拟货币兑换粉丝专属周边</li>
+                    <li>随机触发“巨额红包”彩蛋</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-28岁追星族、乙女游戏玩家，渴望与偶像互动的人群</p>
+                        <p><strong>📝 产品描述：</strong>一款基于大模型的虚拟社交游戏。用户可体验被“陈哲远”等AI偶像拉入群聊，沉浸式体验“霸总”狂发红包的快感，满足粉丝幻想，虚拟金额可用于解锁独家物料。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 50分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">聚会买单大转盘</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>“陈哲远同款”豪气买单模式</li>
+                    <li>趣味惩罚与真心话</li>
+                    <li>AR实景抢单小游戏</li>
+                    <li>群收款自动分账功能</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁喜爱线下聚会、桌游、KTV的年轻社交人群</p>
+                        <p><strong>📝 产品描述：</strong>蹭热点的聚会工具。当需要决定谁请客或发红包时，通过趣味小游戏决出“今日大款”。既解决了谁买单的尴尬，又利用“我也要发15万”的梗增加了聚会娱乐性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">今日欧皇鉴定仪</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>抢红包手气运势预测</li>
+                    <li>生成“身价含金量”趣味海报</li>
+                    <li>全网吸欧气许愿墙</li>
+                    <li>好友间运气PK排行榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>16-30岁热衷玄学、星座、转发锦鲤的社交媒体重度用户</p>
+                        <p><strong>📝 产品描述：</strong>一款病毒式传播的H5小程序。利用“陈哲远红包”的锦鲤效应，测试用户今日的“财运指数”和“抢包手速”，生成趣味报告引发朋友圈转发，满足用户的社交炫耀心理。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 35分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">8</span>
+                <span class="hotword" style="font-size: 18px;">过年喝古井骐骥涛涛来 <span class="tag">热</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">骐骥酒桌派</span>
+                        <div class="score-info">
+                            <span class="score">87分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR瑞兽助兴</li>
+                    <li>AI花式祝酒词</li>
+                    <li>涛涛成语接龙</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁在春节家庭聚会中容易感到社交尴尬的年轻人</p>
+                        <p><strong>📝 产品描述：</strong>一款酒桌破冰小程序。用户扫描古井酒瓶可召唤AR“骐骥”瑞兽送福，内置AI生成的幽默祝酒词库解决“词穷”痛点，配合“涛涛不绝”成语接龙等饮酒游戏，让传统酒局变得年轻有趣。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">涛涛运势签</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>听声摇运势</li>
+                    <li>财运壁纸生成</li>
+                    <li>酒局福气PK</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁热衷“赛博玄学”、喜爱转发好运内容的Z世代</p>
+                        <p><strong>📝 产品描述：</strong>结合品牌元素的春节电子求签H5。模拟“涛涛”酒声摇出新年上上签，解析生成带有骐骥元素的国潮财运壁纸。支持聚会模式，多人同摇比拼运势高低，运势最佳者喝“头彩酒”，极具社交传播力。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">骐骥归家路</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>返乡轨迹可视化</li>
+                    <li>里程兑换好礼</li>
+                    <li>家乡味地图</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁在外打拼、春节返乡心切的职场人士</p>
+                        <p><strong>📝 产品描述：</strong>一款情感化返乡记录工具。将用户的回乡路线渲染为“骐骥奔腾”的动画地图，累计的返乡里程和春节步数可兑换古井贡酒或周边，主打“卸下疲惫，喝杯家乡酒”的情感连接。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">9</span>
+                <span class="hotword" style="font-size: 18px;">红包</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>272,821</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">颜值鉴定红包</span>
+                        <div class="score-info">
+                            <span class="score">91分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI实时颜值打分决定金额</li>
+                    <li>夸夸群语音自动生成</li>
+                    <li>领取瞬间表情包抓拍</li>
+                    <li>好友颜值排行榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁Z世代，热衷社交分享和搞怪互动的年轻群体</p>
+                        <p><strong>📝 产品描述：</strong>一款结合AI视觉识别的娱乐红包工具。发红包时设定总额，领取者的金额由AI对其实时自拍的“颜值/喜庆度/搞怪度”打分决定，极具传播性和话题性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">全网接力许愿</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>六度人脉接力传递</li>
+                    <li>愿望众筹进度条</li>
+                    <li>陌生人随机寄语</li>
+                    <li>地图可视化传播路径</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁城市白领，寻求情感寄托或需要众筹小愿望的人群</p>
+                        <p><strong>📝 产品描述：</strong>基于“六度分离”理论的社交裂变红包。用户发起一个小愿望（如买Switch），通过转发红包接力众筹，每个转发者可截留小部分金额或添砖加瓦，让红包在陌生人中流动。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">人情计算器</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>各地份子钱大数据查询</li>
+                    <li>往来金额智能记账</li>
+                    <li>回礼时间智能提醒</li>
+                    <li>情感亲疏度分析建议</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-40岁适婚适育人群，面临频繁婚礼、满月酒等人情压力者</p>
+                        <p><strong>📝 产品描述：</strong>针对“红包社交压力”的实用工具。利用大数据提供不同地区、不同关系的红包金额建议，并自动记录人情往来账目，解决“给多少、记不住”的痛点。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 70分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">10</span>
+                <span class="hotword" style="font-size: 18px;">金色朋友圈怎么弄</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>234,279</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">朋友圈炼金术</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>一键全图流金滤镜</li>
+                    <li>智能九宫格金色切割</li>
+                    <li>伪装SVIP状态生成器</li>
+                    <li>动态金色粒子特效</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁，热衷追逐社交热点、不仅要美更要“显眼”的年轻群体</p>
+                        <p><strong>📝 产品描述：</strong>一款极致视觉工具，能将普通照片一键转化为当下最火的“土豪金”质感，并自动切割为霸屏九宫格。利用AI识别主体并镀金，满足用户在朋友圈“低成本炫耀”和跟风玩梗的心理需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 72分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">赛博镶金大师</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>万物皆可镶金边</li>
+                    <li>凡尔赛文案自动生成</li>
+                    <li>AR实景撒金币</li>
+                    <li>专属金色弹幕评论</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-25岁Z世代，喜欢搞怪、二次元、追求个性化表达的学生党</p>
+                        <p><strong>📝 产品描述：</strong>基于AR技术的恶搞相机，用户对着现实物品拍摄即可生成夸张的“镶金”效果，配合AI生成的“凡尔赛”文学，打造一种戏谑的奢华感，精准击中年轻人“讽刺性炫富”的社交幽默点。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 58分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">寻金大作战</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>朋友圈藏金互动</li>
+                    <li>点击图片挖金矿</li>
+                    <li>金色头像框兑换</li>
+                    <li>好友含金量排行榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁职场人，希望通过轻量级互动维持好友关系的社恐人群</p>
+                        <p><strong>📝 产品描述：</strong>将“金色朋友圈”转化为互动游戏。用户发布隐藏了“金砂”的图片，好友需点开大图寻找并点击收集，收集的虚拟金砂可兑换限定版金色头像框，用游戏化机制解决社交冷场尴尬。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h2>🏆 产品创意排行榜 (TOP20)</h2>
+        <div class="ranking-list">
+
+            <div class="ranking-item">
+                <span class="ranking-rank gold">#1</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">赛马抢红包</div>
+                    <div class="ranking-hotword">来源：骏马贺新春电子贺卡</div>
+                </div>
+                <span class="ranking-score">92分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank silver">#2</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">塑料情粉碎机</div>
+                    <div class="ranking-hotword">来源：红包分组</div>
+                </div>
+                <span class="ranking-score">91分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank bronze">#3</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">颜值鉴定红包</div>
+                    <div class="ranking-hotword">来源：红包</div>
+                </div>
+                <span class="ranking-score">91分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">4</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">骏马AI写真</div>
+                    <div class="ranking-hotword">来源：骏马贺新春电子贺卡</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">5</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">朋友圈炼金术</div>
+                    <div class="ranking-hotword">来源：金色朋友圈怎么弄</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">6</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">骐骥酒桌派</div>
+                    <div class="ranking-hotword">来源：过年喝古井骐骥涛涛来</div>
+                </div>
+                <span class="ranking-score">87分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">7</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">鉴粉提款机</div>
+                    <div class="ranking-hotword">来源：明星红包</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">8</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">懂王鉴别令</div>
+                    <div class="ranking-hotword">来源：红包分组</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">9</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">AI男友发包模拟器</div>
+                    <div class="ranking-hotword">来源：陈哲远 15万红包</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">10</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">全网接力许愿</div>
+                    <div class="ranking-hotword">来源：红包</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">11</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">虚拟恋人投喂</div>
+                    <div class="ranking-hotword">来源：明星红包</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">12</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">洗头性价比计算器</div>
+                    <div class="ranking-hotword">来源：今天又要集体洗头了</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">13</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">聚会买单大转盘</div>
+                    <div class="ranking-hotword">来源：陈哲远 15万红包</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">14</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">欧气占星台</div>
+                    <div class="ranking-hotword">来源：明星红包</div>
+                </div>
+                <span class="ranking-score">83分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">15</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">戏精声鉴红包</div>
+                    <div class="ranking-hotword">来源：口令红包</div>
+                </div>
+                <span class="ranking-score">83分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">16</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">赛博欧气生成器</div>
+                    <div class="ranking-hotword">来源：千问除夕夜红包雨最高2888元</div>
+                </div>
+                <span class="ranking-score">83分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">17</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">涛涛运势签</div>
+                    <div class="ranking-hotword">来源：过年喝古井骐骥涛涛来</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">18</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">赛博镶金大师</div>
+                    <div class="ranking-hotword">来源：金色朋友圈怎么弄</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">19</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">社畜复活急救包</div>
+                    <div class="ranking-hotword">来源：今天又要集体洗头了</div>
+                </div>
+                <span class="ranking-score">81分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">20</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">红包雨指尖私教</div>
+                    <div class="ranking-hotword">来源：千问除夕夜红包雨最高2888元</div>
+                </div>
+                <span class="ranking-score">80分</span>
+            </div>
+
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">30</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">19</span>
+                    <span class="stat-label">优秀创意 (&gt;80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">11</span>
+                    <span class="stat-label">良好创意 (60-80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">82.8</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🤖 本报告由 AI 自动生成 | 仅供参考</p>
+            <p>数据来源：天聚数行 API | AI 分析：Claude 4.5 Sonnet</p>
+            <p>生成时间：2026-02-16 12:36:51</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "skill_name": "article-translator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "翻译这篇文章 https://en.wikipedia.org/wiki/Artificial_intelligence ，保存到 /tmp/translated_articles/",
+      "expected_output": "中文Markdown文档，包含文章标题、原文链接、翻译日期，文章内容翻译为中文，图片保存到images目录",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "把 https://example.com 翻译成中文，读者画像是：对编程完全不懂的小白，要通俗易懂，保存到 /tmp/",
+      "expected_output": "科普风格的通俗中文翻译，Markdown格式输出",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "翻译 https://www.bbc.com/news/technology 并保存到 ~/Desktop/tech-news/ ，读者是科技行业从业者",
+      "expected_output": "专业风格的科技文章中文翻译，保持专业术语",
+      "files": []
+    }
+  ]
+}

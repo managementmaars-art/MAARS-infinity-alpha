@@ -1,0 +1,96 @@
+from __future__ import annotations
+
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal, Vertical
+from textual.reactive import var
+from textual.widgets import Button, Footer, Header, Input, Static, Switch
+
+
+class {{CLASS_NAME}}(App):
+    CSS_PATH = "{{MODULE}}.tcss"
+    TITLE = "{{APP_TITLE}}"
+    SUB_TITLE = "Profile form"
+    BINDINGS = [
+        ("ctrl+s", "save", "Save"),
+        ("ctrl+r", "reset", "Reset"),
+    ]
+
+    dirty = var(False)
+    saved = var(False)
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        with Vertical(id="form"):
+            yield Input(placeholder="Name", id="name")
+            yield Input(placeholder="Email", id="email")
+            with Horizontal(id="toggle-row"):
+                yield Static("Enable account", classes="label")
+                yield Switch(id="enabled")
+            with Horizontal(id="actions"):
+                yield Button("Save", id="save", variant="primary")
+                yield Button("Reset", id="reset")
+            yield Static(id="preview")
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.refresh_preview()
+        self.query_one("#name", Input).focus()
+
+    def payload(self) -> dict:
+        return {
+            "name": self.query_one("#name", Input).value,
+            "email": self.query_one("#email", Input).value,
+            "enabled": self.query_one("#enabled", Switch).value,
+        }
+
+    def refresh_preview(self) -> None:
+        payload = self.payload()
+        self.query_one("#preview", Static).update(
+            "\n".join(
+                [
+                    "Name:    {0}".format(payload["name"] or "—"),
+                    "Email:   {0}".format(payload["email"] or "—"),
+                    "Enabled: {0}".format("yes" if payload["enabled"] else "no"),
+                    "Dirty:   {0}".format("yes" if self.dirty else "no"),
+                    "Saved:   {0}".format("yes" if self.saved else "no"),
+                ]
+            )
+        )
+
+    def on_input_changed(self, _event: Input.Changed) -> None:
+        self.dirty = True
+        self.saved = False
+        self.refresh_preview()
+
+    def on_switch_changed(self, _event: Switch.Changed) -> None:
+        self.dirty = True
+        self.saved = False
+        self.refresh_preview()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "save":
+            self.action_save()
+        elif event.button.id == "reset":
+            self.action_reset()
+
+    def action_save(self) -> None:
+        self.saved = True
+        self.dirty = False
+        self.refresh_preview()
+        self.notify("Saved form data.", title="Profile")
+
+    def action_reset(self) -> None:
+        self.query_one("#name", Input).value = ""
+        self.query_one("#email", Input).value = ""
+        self.query_one("#enabled", Switch).value = False
+        self.saved = False
+        self.dirty = False
+        self.refresh_preview()
+
+
+def main() -> None:
+    {{CLASS_NAME}}().run()
+
+
+if __name__ == "__main__":
+    main()

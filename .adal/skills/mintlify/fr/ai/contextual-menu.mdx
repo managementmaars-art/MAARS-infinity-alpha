@@ -1,0 +1,190 @@
+---
+title: "Menu contextuel"
+description: "Ajoutez un menu contextuel à votre documentation avec des intégrations d'IA en un clic pour ChatGPT, Claude, Perplexity et plus."
+keywords: ["Outils d'IA", "ChatGPT", "Claude", "Perplexity", "MCP", "Grok", "Cursor", "vscode", "vs code", "Google AI Studio", "aistudio", "Devin", "Windsurf"]
+---
+
+import { PreviewButton } from "/snippets/previewbutton.jsx"
+import IconsRequired from "/snippets/fr/icons-required.mdx";
+
+Le menu contextuel offre un accès rapide à un objet optimisé par l’IA et à des intégrations directes avec des outils d’IA populaires. Lorsque les utilisateurs ouvrent le menu contextuel sur n’importe quelle page, ils peuvent copier l’objet comme context pour des outils d’IA ou lancer des conversations dans ChatGPT, Claude, Perplexity, Google AI Studio, Grok, Devin, Windsurf, ou un outil personnalisé de votre choix, avec votre documentation déjà chargée comme context.
+
+<div id="menu-options">
+  ## Options du menu
+</div>
+
+Le menu contextuel comprend plusieurs options prédéfinies que vous pouvez activer en ajoutant leur identifiant à votre configuration.
+
+| Option                                    | Identifiant  | Description                                                                           |
+| :---------------------------------------- | :----------- | :------------------------------------------------------------------------------------ |
+| **Copier la page**                        | `copy`       | Copie la page actuelle en Markdown pour la coller comme contexte dans des outils d’IA |
+| **Afficher en Markdown**                  | `view`       | Ouvre la page actuelle en Markdown                                                    |
+| **Demander à l’Assistant**                | `assistant`  | Ouvre l’[Assistant](/fr/ai/assistant) avec la page actuelle comme contexte               |
+| **Ouvrir dans ChatGPT**                   | `chatgpt`    | Crée une conversation ChatGPT avec la page actuelle comme contexte                    |
+| **Ouvrir dans Claude**                    | `claude`     | Crée une conversation Claude avec la page actuelle comme contexte                     |
+| **Ouvrir dans Perplexity**                | `perplexity` | Crée une conversation Perplexity avec la page actuelle comme contexte                 |
+| **Ouvrir dans Grok**                      | `grok`       | Crée une conversation Grok avec la page actuelle comme contexte                       |
+| **Ouvrir dans Google AI Studio**          | `aistudio`   | Crée une conversation Google AI Studio avec la page actuelle comme contexte           |
+| **Ouvrir dans Devin**                     | `devin`      | Crée une session Devin avec la page actuelle comme contexte                           |
+| **Ouvrir dans Windsurf**                  | `windsurf`   | Ouvre Windsurf Cascade avec la page actuelle comme contexte                           |
+| **Copier l’URL du serveur MCP**           | `mcp`        | Copie l’URL de votre serveur MCP dans le presse‑papiers                               |
+| **Copier la commande d’installation MCP** | `add-mcp`    | Copie la commande `npx add-mcp` pour installer le serveur MCP                         |
+| **Se connecter à Cursor**                 | `cursor`     | Installe votre serveur MCP hébergé dans Cursor                                        |
+| **Se connecter à VS Code**                | `vscode`     | Installe votre serveur MCP hébergé dans VS Code                                       |
+| **Se connecter à Devin**                  | `devin-mcp`  | Installe votre serveur MCP hébergé dans Devin                                         |
+| **Options personnalisées**                | Objet        | Ajoutez des options personnalisées au menu contextuel                                 |
+
+<Frame>
+  <img src="/images/contextual-menu/contextual-menu.png" alt="Le menu contextuel développé affichant les éléments Copier la page, Afficher en Markdown, Ouvrir dans ChatGPT et Ouvrir dans Claude." />
+</Frame>
+
+<div id="enabling-the-contextual-menu">
+  ## Activer le menu contextuel
+</div>
+
+Ajoutez le champ `contextual` à votre fichier `docs.json` et indiquez les options que vous souhaitez inclure.
+
+```json
+{
+ "contextual": {
+   "options": [
+     "copy",
+     "view",
+     "assistant",
+     "chatgpt",
+     "claude",
+     "perplexity",
+     "grok",
+      "aistudio",
+      "devin",
+      "windsurf",
+      "mcp",
+      "cursor",
+      "vscode",
+      "devin-mcp"
+    ]
+ }
+}
+```
+
+<div id="display-location">
+  ## Emplacement d’affichage
+</div>
+
+Par défaut, le menu contextuel apparaît dans l’en-tête de la page. Vous pouvez le configurer pour qu’il s’affiche à la place dans la barre latérale de la table des matières à l’aide de l’option `display`.
+
+```json
+{
+  "contextual": {
+    "options": ["copy", "view", "chatgpt", "claude"],
+    "display": "toc"
+  }
+}
+```
+
+| Valeur   | Description                                                                 |
+| :------- | :-------------------------------------------------------------------------- |
+| `header` | Affiche les options dans le menu contextuel en haut de la page (par défaut) |
+| `toc`    | Affiche les options dans la barre latérale de la table des matières         |
+
+<div id="adding-custom-options">
+  ## Ajout d’options personnalisées
+</div>
+
+Créez des options personnalisées dans le menu contextuel en ajoutant un objet au tableau `options`. Chaque option personnalisée requiert les propriétés suivantes :
+
+<ResponseField name="title" type="string" required>
+  Le titre de l’option.
+</ResponseField>
+
+<ResponseField name="description" type="string" required>
+  La description de l’option. Affichée sous le titre lorsque le menu contextuel se déroule.
+</ResponseField>
+
+<IconsRequired />
+
+<ResponseField name="href" type="string | object" required>
+  Le href de l’option. Utilisez une chaîne pour des liens simples ou un objet pour des liens dynamiques avec des paramètres de requête.
+
+  <Expandable title="href object">
+    <ResponseField name="base" type="string" required>
+      L’URL de base de l’option.
+    </ResponseField>
+
+    <ResponseField name="query" type="object" required>
+      Les paramètres de requête de l’option.
+
+      <Expandable title="query object">
+        <ResponseField name="key" type="string" required>
+          La key du paramètre de requête.
+        </ResponseField>
+
+        <ResponseField name="value" type="string" required>
+          La valeur du paramètre de requête. Mintlify remplace les espaces réservés suivants par les valeurs correspondantes :
+
+          * Utilisez `$page` pour insérer le contenu de la page actuelle en Markdown.
+          * Utilisez `$path` pour insérer le chemin de la page actuelle.
+          * Utilisez `$mcp` pour insérer l’URL du serveur MCP hébergé.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+Exemple d’option personnalisée :
+
+```json {9-14} wrap
+{
+    "contextual": {
+        "options": [
+            "copy",
+            "view",
+            "chatgpt",
+            "claude",
+            "perplexity",
+            {
+                "title": "Demander une fonctionnalité",
+                "description": "Rejoignez la discussion sur GitHub pour demander une nouvelle fonctionnalité",
+                "icon": "plus",
+                "href": "https://github.com/orgs/mintlify/discussions/categories/feature-requests"
+            }
+        ]
+    }
+}
+```
+
+<div id="custom-option-examples">
+  ### Exemples d’options personnalisées
+</div>
+
+<AccordionGroup>
+  <Accordion title="Lien simple">
+    ```json
+    {
+      "title": "Demander une fonctionnalité",
+      "description": "Rejoindre la discussion sur GitHub",
+      "icon": "plus",
+      "href": "https://github.com/orgs/mintlify/discussions/categories/feature-requests"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Lien dynamique avec le contenu de la page">
+    ```json
+    {
+      "title": "Partager sur X",
+      "description": "Partager cette page sur X",
+      "icon": "x",
+      "href": {
+        "base": "https://x.com/intent/tweet",
+        "query": [
+          {
+          "key": "text",
+          "value": "Découvrez cette documentation : $page"
+          }
+        ]
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>

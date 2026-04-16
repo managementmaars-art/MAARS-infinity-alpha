@@ -1,0 +1,14 @@
+from __future__ import annotations
+
+import pytest
+
+from {{MODULE}} import {{CLASS_NAME}}
+
+@pytest.mark.asyncio
+async def test_wizard_step_navigation() -> None:
+    app = {{CLASS_NAME}}()
+    async with app.run_test(size=(90, 24)) as pilot:
+        await pilot.click("#next")
+        await pilot.click("#next")
+        await pilot.pause()
+        assert app.step_index == 2

@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年01月26日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --accent-normal: #6C757D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .report-header h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+            margin-top: 32px;
+        }
+
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hotspot-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hotspot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .hotspot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .hotword {
+            font-weight: 600;
+            font-size: 16px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotness {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hotspot-detail {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .hotspot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+            transition: all 0.2s;
+        }
+
+        .idea-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .idea-card.excellent {
+            border-left-color: var(--accent-excellent);
+            background: linear-gradient(to right, rgba(255, 210, 63, 0.1), transparent);
+        }
+
+        .idea-card.good {
+            border-left-color: var(--accent-good);
+            background: linear-gradient(to right, rgba(6, 167, 125, 0.05), transparent);
+        }
+
+        .idea-card.normal {
+            border-left-color: var(--accent-normal);
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .idea-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .score-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.excellent {
+            background: var(--accent-excellent);
+            color: #333;
+        }
+
+        .badge.good {
+            background: var(--accent-good);
+            color: white;
+        }
+
+        .badge.normal {
+            background: var(--accent-normal);
+            color: white;
+        }
+
+        .idea-body p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .idea-body strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .idea-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .idea-body li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .score-breakdown {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .statistics h2 {
+            color: white;
+            border-left-color: white;
+            margin-top: 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ranking-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ranking-rank {
+            font-size: 24px;
+            font-weight: 700;
+            width: 40px;
+            text-align: center;
+        }
+
+        .ranking-rank.gold { color: #FFD700; }
+        .ranking-rank.silver { color: #C0C0C0; }
+        .ranking-rank.bronze { color: #CD7F32; }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .ranking-hotword {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .ranking-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .report-header { padding: 24px; }
+            .report-header h1 { font-size: 24px; }
+            .hotspot-list { grid-template-columns: 1fr; }
+            .idea-header { flex-direction: column; align-items: flex-start; }
+            .stat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>🤖 微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>📅 生成日期：2026-01-26</span>
+                <span>🔥 热搜总数：10</span>
+                <span>💡 创意总数：30</span>
+                <span>⏰ 生成时间：2026-01-26 04:08:00</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">尼帕病毒感染死亡率可达40%以上</span>
+                </div>
+                <div class="hotness">热度：1112902 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">印度疫情</span>
+                </div>
+                <div class="hotness">热度：810972 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">彩灯一亮年味就有了</span>
+                </div>
+                <div class="hotness">热度：626042 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">刘宇宁在京东超市年货节实现心愿</span>
+                </div>
+                <div class="hotness">热度： </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">两个00后刮腻子一年营收100多万</span>
+                </div>
+                <div class="hotness">热度：618998 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">男子发现妻子每天上厕所顺路存1000</span>
+                </div>
+                <div class="hotness">热度：306896 <span class="tag">火热</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">警方查明夫妻网购娃娃菜中毒毒源</span>
+                </div>
+                <div class="hotness">热度：304915 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">3人散播包钢爆炸事故谣言被处罚</span>
+                </div>
+                <div class="hotness">热度： <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">张艺凡这次是101不是303了</span>
+                </div>
+                <div class="hotness">热度：电影 266907 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">正缘的力量有多强大</span>
+                </div>
+                <div class="hotness">热度：217119 </div>
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">1</span>
+                <span class="hotword" style="font-size: 18px;">尼帕病毒感染死亡率可达40%以上</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>1,112,902</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">40%生还模拟器</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>文字冒险Roguelike玩法</li>
+                    <li>真实医疗常识植入</li>
+                    <li>结局生成与社交分享</li>
+                    <li>全球幸存者排行榜</li>
+                    <li>随机病毒变异事件</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁大学生及职场新人，喜爱策略游戏、对生存挑战类话题感兴趣。</p>
+                        <p><strong>📝 产品描述：</strong>一款基于尼帕病毒特性的文字生存游戏。玩家需在感染率高发的虚拟城市中，通过做出一系列医疗和生活决策（如饮食选择、防护措施）来挑战那60%的生还概率，寓教于乐。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 72分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">水果侦探AR</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR扫描水果识别风险（娱乐向）</li>
+                    <li>发现虚拟果蝠彩蛋</li>
+                    <li>食品卫生知识弹幕</li>
+                    <li>收集病毒图鉴</li>
+                    <li>超市大冒险模式</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁年轻家庭主妇/主夫，以及喜欢黑科技尝鲜的科技爱好者。</p>
+                        <p><strong>📝 产品描述：</strong>针对尼帕病毒通过被蝙蝠污染的水果传播的特性，开发一款趣味AR应用。扫描现实中的水果，随机出现“安全”或“虚拟病毒/蝙蝠”特效，科普清洗水果的重要性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 58分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">硬核保命计算器</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>生活习惯免疫力评分</li>
+                    <li>如果感染存活率预测</li>
+                    <li>定制化保命建议生成</li>
+                    <li>朋友圈PK生存指数</li>
+                    <li>每日健康打卡</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁注重健康的社畜，容易产生健康焦虑但缺乏专业知识的人群。</p>
+                        <p><strong>📝 产品描述：</strong>利用大数据和趣味算法，根据用户的睡眠、饮食、运动习惯，计算在面对高致死率病毒时的“理论存活率”。通过夸张幽默的评分报告引发传播，缓解焦虑同时提醒健康生活。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 82分 × 80% + 有用度 67分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">2</span>
+                <span class="hotword" style="font-size: 18px;">印度疫情</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>810,972</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">恒河免疫大挑战</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>病毒防御塔防玩法</li>
+                    <li>合成'恒河水'神秘道具</li>
+                    <li>全球玩家免疫力排行榜</li>
+                    <li>趣味科普病毒传播知识</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-28岁Z世代网民，喜欢玩梗、追求猎奇体验，关注社交媒体热点</p>
+                        <p><strong>📝 产品描述：</strong>一款基于印度疫情热点的塔防策略小游戏。玩家需利用各种带有'印度特色'（如瑜伽、香料、恒河水）的道具抵御病毒入侵，通过黑色幽默的方式缓解对疫情的焦虑，具有极强的社交传播属性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">蝴蝶效应推演器</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>全球供应链断裂模拟</li>
+                    <li>生活物价波动预测</li>
+                    <li>热门商品缺货预警</li>
+                    <li>趣味因果关系图谱</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-35岁理财爱好者及数码发烧友，关注宏观经济对个人生活的影响</p>
+                        <p><strong>📝 产品描述：</strong>基于印度是'世界药房'及代工大国的背景，以可视化的方式推演疫情如何影响全球供应链。用户可预测手机、药品等商品的价格波动，既满足了推演未来的智力快感，又具有指导囤货的实用价值。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">谣言粉碎连连看</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>真假新闻辨别闯关</li>
+                    <li>牛粪治病等离谱谣言库</li>
+                    <li>好友PK辟谣战力</li>
+                    <li>每日热点真相日报</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>全年龄段社交媒体重度用户，容易被标题党误导或喜欢转发资讯的人群</p>
+                        <p><strong>📝 产品描述：</strong>针对印度疫情期间满天飞的伪科学和离谱新闻，开发一款益智闯关应用。用户通过滑动判断新闻真伪进行'消除'，将枯燥的辟谣过程游戏化，利用人们的猎奇心理进行科学传播。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">3</span>
+                <span class="hotword" style="font-size: 18px;">彩灯一亮年味就有了</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>626,042</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">赛博电子彩灯</span>
+                        <div class="score-info">
+                            <span class="score">87分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>手机屏幕变身复古/霓虹灯笼</li>
+                    <li>多设备矩阵拼图显示巨型彩灯</li>
+                    <li>碰一碰交换彩灯皮肤</li>
+                    <li>LBS点亮小区地图</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-25岁Z世代，在校大学生，环保主义者及注重仪式感的租房族</p>
+                        <p><strong>📝 产品描述：</strong>一款将手机屏幕化身为可互动“电子灯笼”的社交APP。不仅能模拟传统彩灯的光影质感，支持多人手机拼接组成“灯墙”，还能通过地理位置点亮虚拟社区，解决年轻人无法燃放烟花或挂实物灯笼的遗憾，用科技重塑赛博年味。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 55分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">年味氛围制造机</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>声光同步春晚/聚会音频</li>
+                    <li>智能家居灯光一键除旧岁模式</li>
+                    <li>AR实景叠加虚拟彩灯装饰</li>
+                    <li>情绪灯光滤镜拍照</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-35岁独居青年或年轻小家庭，拥有少量智能家居设备，追求生活品质</p>
+                        <p><strong>📝 产品描述：</strong>基于IoT与音频分析的氛围工具。它能根据电视播放的春晚声音或喜庆音乐，自动控制家中的智能灯泡、电视背景光律动；对于没有智能灯具的用户，提供AR功能在手机镜头中给家里“挂”上虚拟彩灯，低成本瞬间拉满过年沉浸感。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">寻光CityWalk</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>全城彩灯/灯光秀热力地图</li>
+                    <li>AI夜景人像构图辅助</li>
+                    <li>避开拥挤人群的赏灯路线</li>
+                    <li>灯光打卡集福兑换周边</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁城市居民，摄影爱好者，情侣及亲子出游群体</p>
+                        <p><strong>📝 产品描述：</strong>针对春节期间线下赏灯需求的LBS工具产品。聚合城市内所有商圈、公园的灯光装置信息，提供不仅好看而且能“出片”的赏灯路线规划，解决“不知道去哪看灯”和“人多拍不出好照片”的市场痛点。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">4</span>
+                <span class="hotword" style="font-size: 18px;">刘宇宁在京东超市年货节实现心愿</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">宇宁AI心愿嘴替</span>
+                        <div class="score-info">
+                            <span class="score">90分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>明星AI语音生成</li>
+                    <li>高情商讨红包话术库</li>
+                    <li>心愿单自动转语音</li>
+                    <li>微信一键分享</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁，有“春节社交恐惧症”或是刘宇宁粉丝的年轻群体</p>
+                        <p><strong>📝 产品描述：</strong>利用AI技术合成刘宇宁语音，不仅能替社恐用户向亲戚“高情商”讨要京东年货或红包，还能生成专属的新年祝福视频。借明星之口说出不敢说的心愿，解决春节社交痛点，极具病毒传播潜力。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">星愿锦鲤盲盒</span>
+                        <div class="score-info">
+                            <span class="score">81分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>明星同款年货随机组</li>
+                    <li>隐藏款亲笔签名周边</li>
+                    <li>心愿必达即时配送</li>
+                    <li>开箱惊喜滤镜特效</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁，追求惊喜感和节日仪式感的女性消费者</p>
+                        <p><strong>📝 产品描述：</strong>结合“实现心愿”的主题，推出定制版京东超市年货盲盒。用户许愿一种口味或品类，收到包含刘宇宁同款推荐产品及隐藏周边的惊喜包裹，将普通的采买年货转化为一场期待“心愿成真”的游戏体验。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 85分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">AR年货许愿树</span>
+                        <div class="score-info">
+                            <span class="score">80分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR实景种植许愿树</li>
+                    <li>刘宇宁虚拟形象互动</li>
+                    <li>好友助力摘取年货券</li>
+                    <li>心愿达成弹幕投送</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-28岁，喜欢互动游戏和社交分享的学生及职场新人</p>
+                        <p><strong>📝 产品描述：</strong>一款基于LBS和AR的小程序游戏。用户在客厅“种”下虚拟许愿树，挂上想要的年货，刘宇宁虚拟形象会作为“园丁”出现。邀请好友点击助力（浇水）即可实现心愿（获得免单或大额券），增强年货节的社交互动性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">5</span>
+                <span class="hotword" style="font-size: 18px;">两个00后刮腻子一年营收100多万</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>618,998</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">CrossFit装修局</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>付费搬砖体验：用装修劳动代替健身房举铁</li>
+                    <li>薪资卡路里换算：计算你的劳动值多少钱 vs 消耗多少热量</li>
+                    <li>社畜解压认证：颁发“一级刮大白运动员”电子证书</li>
+                    <li>同城组队：周末职场人组团去工地“撸铁”</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>23-35岁城市白领，有健身习惯，渴望解压且对蓝领高薪充满好奇的群体。</p>
+                        <p><strong>📝 产品描述：</strong>一款将“刮腻子”包装成潮流运动的O2O体验平台。针对向往蓝领自由但无法脱产的白领，通过周末“工地健身”模式，既满足了对“年入百万”工作的好奇，又实现了高强度的解压与锻炼。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 72分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">暴富刮刮乐</span>
+                        <div class="score-info">
+                            <span class="score">83分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>沉浸式ASMR：超逼真的刮刀摩擦声与墙皮脱落音效</li>
+                    <li>百万营收模拟：随着刮墙进度，虚拟账户实时入账百万金额</li>
+                    <li>强迫症治愈模式：修复各种脏乱差的墙面，获得视觉满足</li>
+                    <li>职业图鉴：解锁从“学徒”到“装修界财阀”的进阶称号</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>16-30岁泛娱乐用户，喜欢解压类小游戏、模拟经营类游戏，有深夜焦虑的年轻人。</p>
+                        <p><strong>📝 产品描述：</strong>一款超解压的模拟经营手游。利用热搜中“刮腻子致富”的心理爽点，结合ASMR视听体验，让用户在手机上体验“刮一下赚一百”的虚拟快感，精准收割年轻人的解压与暴富幻想。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 35分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">你的手艺值百万</span>
+                        <div class="score-info">
+                            <span class="score">78分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI身价评估：拍摄你的手工作品（如拼装、绘画），AI估算你的蓝领潜力值</li>
+                    <li>冷门高薪榜单：实时更新像“刮腻子”一样不起眼但赚钱的职业数据</li>
+                    <li>拜师00后：连接年轻的新派工匠与想要学手艺的用户</li>
+                    <li>技能变现计算器：输入技能熟练度，预测兼职/全职收入</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-28岁大学生及职场新人，对目前薪资不满，寻求副业或职业转型的迷茫群体。</p>
+                        <p><strong>📝 产品描述：</strong>基于大数据的职业挖掘与评估工具。抓住大众对“不起眼暴利行业”的信息差需求，利用AI趣味测试降低蓝领职业的心理门槛，为年轻人提供实实在在的职业转型或副业灵感。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 90分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">6</span>
+                <span class="hotword" style="font-size: 18px;">男子发现妻子每天上厕所顺路存1000 <span class="tag">火热</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>306,896</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">生活过路费</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>自定义动作定价（如上厕所=50元，喝水=10元）</li>
+                    <li>扫码解锁场景（模拟真实过路费体验）</li>
+                    <li>强制定储功能（不支付无法解锁手机其他应用）</li>
+                    <li>成就徽章系统（'百次如厕大亨'）</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁，缺乏自律但热衷搞怪、喜爱游戏化生活的Z世代年轻人。</p>
+                        <p><strong>📝 产品描述：</strong>直接转化热搜痛点，将日常高频行为（如上厕所）游戏化为'收费站'。用户需向自己的储蓄账户支付'过路费'才能完成某项日常活动，利用荒诞感建立强制储蓄习惯，完美复刻新闻中的趣味存钱逻辑。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">变色龙账本</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>伪装界面（表面是计算器或日历，输入特定算式才进入账本）</li>
+                    <li>紧急切换按钮（摇一摇手机瞬间变回新闻App）</li>
+                    <li>虚假账单生成（用于掩盖真实资金流向）</li>
+                    <li>私房钱目标进度条</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁已婚人士，有建立'私房钱'需求或注重财务隐私的用户。</p>
+                        <p><strong>📝 产品描述：</strong>针对热搜中'秘密存钱'的核心痛点，开发一款极致伪装的记账理财App。它解决了家庭场景下财务隐私保护的刚需，满足了用户'想存私房钱但不被发现'的刺激心理，具有极强的话题传播性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 78分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">顺路存存</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>LBS地理围栏触发（经过银行、厕所、便利店自动扣款）</li>
+                    <li>无感小额定投（每次触发存入10-100元不等）</li>
+                    <li>存钱路径地图（生成每日存钱轨迹图分享朋友圈）</li>
+                    <li>愿望清单关联</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-35岁职场白领，有理财意识但缺乏执行力的'月光族'。</p>
+                        <p><strong>📝 产品描述：</strong>基于热搜中'顺路'这一关键词，利用地理位置服务（LBS）将存钱行为自动化。用户设定特定地点（如公司厕所、常去的咖啡店）作为触发点，只要到达该位置即自动划转小额资金，让存钱像上厕所一样自然且高频。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 90分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">7</span>
+                <span class="hotword" style="font-size: 18px;">警方查明夫妻网购娃娃菜中毒毒源</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>304,915</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">绝地求菜：生存模拟</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>Roguelike文字冒险玩法，模拟网购食材</li>
+                    <li>随机触发'中毒'、'物流延误'、'冰箱失效'等危机事件</li>
+                    <li>内置真实化学反应库，玩家需通过化学知识解毒</li>
+                    <li>排行榜功能：比拼谁能活得更久</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁网购重度用户、大学生、喜欢玩梗和生存游戏的群体</p>
+                        <p><strong>📝 产品描述：</strong>一款黑色幽默风格的生存模拟游戏。玩家扮演拮据的都市打工人，必须在廉价网购平台挑选食材并烹饪。不仅要鉴别'娃娃菜'等食材的潜在风险，还要利用化学常识化解危机，寓教于乐地普及食品安全知识。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">银针试毒AI</span>
+                        <div class="score-info">
+                            <span class="score">81分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI拍照食安'占卜'，生成趣味毒性分析报告</li>
+                    <li>基于位置和新闻热点的'今日避雷'推送</li>
+                    <li>食材相克与存储禁忌的'保命'提醒</li>
+                    <li>毒舌风格的食品安全科普短视频社区</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-35岁独居青年、做饭新手、关注生活品质的职场人</p>
+                        <p><strong>📝 产品描述：</strong>一款集娱乐与科普为一体的AI工具。用户拍摄食材，AI会以古代'银针试毒'的口吻生成一份包含玩梗吐槽与真实存储建议的报告（如：'此娃娃菜虽美，然甲醛难测，建议清洗三遍'），缓解焦虑同时提供实用建议。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">厨房法医实录</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>硬核解谜游戏，还原真实的食品毒源追踪过程</li>
+                    <li>显微镜/试纸模拟操作，体验检测员工作</li>
+                    <li>真实案例改编的'剧本杀'模式</li>
+                    <li>食品安全溯源知识百科图鉴</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-40岁悬疑推理迷、家长群体、对科普感兴趣的学生</p>
+                        <p><strong>📝 产品描述：</strong>基于热搜案件改编的互动解谜APP。用户化身警方或检测员，通过物流追踪、样本化验、嫌疑人问询等环节，抽丝剥茧找出'毒娃娃菜'背后的真相。满足推理瘾的同时，深度科普食品供应链安全知识。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">8</span>
+                <span class="hotword" style="font-size: 18px;">3人散播包钢爆炸事故谣言被处罚 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">赛博判官</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>新闻真实性押注机制</li>
+                    <li>谣言发布者'赛博处刑'特效</li>
+                    <li>晋升体系：从吃瓜群众到大法官</li>
+                    <li>热点事件真伪实时反转推送</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁，热衷于吃瓜、发表评论且胜负欲强的互联网重度用户</p>
+                        <p><strong>📝 产品描述：</strong>一款基于热点新闻的众包鉴伪游戏。用户对突发新闻的真伪进行“判决”押注，官方通报后结算积分。预测错误将被禁言或获得“造谣者”在大厅示众，满足用户对“正义执行”的快感。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">生活辟谣局</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>蓝底白字官方通报生成器</li>
+                    <li>AI自动生成一本正经的法律腔调侃</li>
+                    <li>朋友圈社死/澄清模板库</li>
+                    <li>一键生成'严正声明'海报</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁，喜欢玩梗、需要在社交媒体通过幽默方式表达生活琐事的职场人或学生</p>
+                        <p><strong>📝 产品描述：</strong>将严肃的“谣言处罚”新闻娱乐化。用户可针对“减肥失败”、“脱单假象”等生活琐事，一键生成极具官方既视感的“辟谣通报”或“处罚决定书”图片，用于朋友圈玩梗和社交互动。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 30分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">离谱传声筒</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI模拟谣言传播裂变过程</li>
+                    <li>多人在线'以讹传讹'接龙</li>
+                    <li>离谱指数可视化分析</li>
+                    <li>原始信息vs最终谣言对比回放</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-25岁，喜欢聚会游戏、对信息传播心理学感兴趣的学生群体</p>
+                        <p><strong>📝 产品描述：</strong>模拟谣言夸张变形过程的社交游戏。初始玩家输入一句话，经过AI或多名玩家的层层转述修饰，展示信息如何从“家中失火”演变成“核弹爆炸”，以荒诞有趣的方式科普谣言传播机制。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 40分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">9</span>
+                <span class="hotword" style="font-size: 18px;">张艺凡这次是101不是303了</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>266,907</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">变身101 (GlowUp 101)</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI一键生成'青涩vs蜕变'对比视频</li>
+                    <li>自动匹配'303宿舍风'与'101舞台风'滤镜</li>
+                    <li>粉丝专属的成长轨迹时间轴模板</li>
+                    <li>热门BGM卡点自动剪辑</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁喜爱追星、热衷于在抖音/小红书分享个人成长变迁的女性用户</p>
+                        <p><strong>📝 产品描述：</strong>一款基于热搜话题的AI视频特效工具，抓住'303到101'代表的成长与蜕变内核，让用户能一键生成自己从'素人时期'到'高光时刻'的对比大片，满足展示自我成长的心理需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">303号时光屋</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>构建虚拟的'303宿舍'怀旧空间</li>
+                    <li>粉丝协作装修与回忆碎片墙</li>
+                    <li>基于数字代号（如101、303）的兴趣匹配社交</li>
+                    <li>爱豆经典语录与名场面AR复现</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-25岁选秀节目粉丝、喜欢元宇宙社交和虚拟空间装饰的Z世代</p>
+                        <p><strong>📝 产品描述：</strong>利用热搜中的怀旧情绪，打造一个虚拟粉丝社区。用户可以重温'303宿舍'的温馨氛围，同时通过完成任务解锁'101舞台'的新场景，将追星回忆具象化、游戏化。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 55分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">数读星运</span>
+                        <div class="score-info">
+                            <span class="score">72分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>每日幸运数字与运势解析（关联101/303等热点数字）</li>
+                    <li>热搜关键词背后的数字玄学解读</li>
+                    <li>粉丝专属的'代号'生成器</li>
+                    <li>基于数字巧合的同好推荐</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-28岁关注星座运势、喜欢在社交媒体寻找'数字寓意'的泛娱乐人群</p>
+                        <p><strong>📝 产品描述：</strong>切入话题中的数字元素，开发一款娱乐向的'数字玄学'小程序。不仅解读'101不是303'背后的运势寓意，还为用户生成当天的幸运代号，增加社交话题的趣味性和神秘感。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">10</span>
+                <span class="hotword" style="font-size: 18px;">正缘的力量有多强大</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>217,119</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">正缘能量鉴定所</span>
+                        <div class="score-info">
+                            <span class="score">89分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI聊天记录情感能级分析</li>
+                    <li>关系滋养度/消耗度可视化图表</li>
+                    <li>生成'正缘体质'鉴定报告</li>
+                    <li>预测'在一起后'的面相变化模拟</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁关注玄学与心理学的年轻群体，处于暧昧期或恋爱迷茫期。</p>
+                        <p><strong>📝 产品描述：</strong>一款结合AI语义分析与趣味玄学的测试工具。通过分析两人的对话模式，判断对方是消耗你的'烂桃花'还是滋养你的'正缘'，直观展示这段关系带来的'能量变化'。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">恋爱养人时光机</span>
+                        <div class="score-info">
+                            <span class="score">85分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>上传照片生成'被爱后'的容貌预测</li>
+                    <li>正缘氛围感滤镜（眼神光/松弛感）</li>
+                    <li>对比生成'遇到Ta之前VS之后'的反差视频</li>
+                    <li>一键分享'接好运'社交海报</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-30岁喜爱社交分享、追求颜值提升与情感共鸣的女性用户。</p>
+                        <p><strong>📝 产品描述：</strong>紧扣'正缘养人'的热点痛点，利用AIGC技术，让用户直观看到拥有高质量亲密关系后自己可能变美、变自信的样子，满足用户对美好关系的幻想与社交炫耀心理。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 45分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">欧气漂流坐标</span>
+                        <div class="score-info">
+                            <span class="score">78分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>基于LBS标记'遇到正缘'的幸运地点</li>
+                    <li>匿名投递'正缘发生'的真实故事</li>
+                    <li>实地打卡'蹭欧气'AR寻宝玩法</li>
+                    <li>正缘磁场匹配度雷达</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-35岁单身群体，既相信缘分又渴望脱单，喜欢Citywalk。</p>
+                        <p><strong>📝 产品描述：</strong>一个反向相亲地图应用。不直接推荐人，而是推荐'发生过美好爱情的地点'。用户可以在地图上查看别人是在哪里遇到真爱的，去那些'磁场好'的地方打卡碰运气。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 82分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h2>🏆 产品创意排行榜 (TOP20)</h2>
+        <div class="ranking-list">
+
+            <div class="ranking-item">
+                <span class="ranking-rank gold">#1</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">宇宁AI心愿嘴替</div>
+                    <div class="ranking-hotword">来源：刘宇宁在京东超市年货节实现心愿</div>
+                </div>
+                <span class="ranking-score">90分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank silver">#2</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">正缘能量鉴定所</div>
+                    <div class="ranking-hotword">来源：正缘的力量有多强大</div>
+                </div>
+                <span class="ranking-score">89分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank bronze">#3</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">40%生还模拟器</div>
+                    <div class="ranking-hotword">来源：尼帕病毒感染死亡率可达40%以上</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">4</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">恒河免疫大挑战</div>
+                    <div class="ranking-hotword">来源：印度疫情</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">5</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">CrossFit装修局</div>
+                    <div class="ranking-hotword">来源：两个00后刮腻子一年营收100多万</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">6</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">生活过路费</div>
+                    <div class="ranking-hotword">来源：男子发现妻子每天上厕所顺路存1000</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">7</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">绝地求菜：生存模拟</div>
+                    <div class="ranking-hotword">来源：警方查明夫妻网购娃娃菜中毒毒源</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">8</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">赛博判官</div>
+                    <div class="ranking-hotword">来源：3人散播包钢爆炸事故谣言被处罚</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">9</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">变身101 (GlowUp 101)</div>
+                    <div class="ranking-hotword">来源：张艺凡这次是101不是303了</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">10</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">赛博电子彩灯</div>
+                    <div class="ranking-hotword">来源：彩灯一亮年味就有了</div>
+                </div>
+                <span class="ranking-score">87分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">11</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">变色龙账本</div>
+                    <div class="ranking-hotword">来源：男子发现妻子每天上厕所顺路存1000</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">12</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">恋爱养人时光机</div>
+                    <div class="ranking-hotword">来源：正缘的力量有多强大</div>
+                </div>
+                <span class="ranking-score">85分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">13</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">暴富刮刮乐</div>
+                    <div class="ranking-hotword">来源：两个00后刮腻子一年营收100多万</div>
+                </div>
+                <span class="ranking-score">83分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">14</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">水果侦探AR</div>
+                    <div class="ranking-hotword">来源：尼帕病毒感染死亡率可达40%以上</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">15</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">蝴蝶效应推演器</div>
+                    <div class="ranking-hotword">来源：印度疫情</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">16</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">年味氛围制造机</div>
+                    <div class="ranking-hotword">来源：彩灯一亮年味就有了</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">17</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">顺路存存</div>
+                    <div class="ranking-hotword">来源：男子发现妻子每天上厕所顺路存1000</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">18</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">生活辟谣局</div>
+                    <div class="ranking-hotword">来源：3人散播包钢爆炸事故谣言被处罚</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">19</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">星愿锦鲤盲盒</div>
+                    <div class="ranking-hotword">来源：刘宇宁在京东超市年货节实现心愿</div>
+                </div>
+                <span class="ranking-score">81分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">20</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">银针试毒AI</div>
+                    <div class="ranking-hotword">来源：警方查明夫妻网购娃娃菜中毒毒源</div>
+                </div>
+                <span class="ranking-score">81分</span>
+            </div>
+
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">30</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">20</span>
+                    <span class="stat-label">优秀创意 (&gt;80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">10</span>
+                    <span class="stat-label">良好创意 (60-80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">82.6</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🤖 本报告由 AI 自动生成 | 仅供参考</p>
+            <p>数据来源：天聚数行 API | AI 分析：Claude 3.5 Sonnet</p>
+            <p>生成时间：2026-01-26 04:08:00</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+name: technical-debt-visualizer
+version: 1.0.0
+description: Generates a heat-map and metrics report of a repository based on code complexity, lack of tests, and 'TODO/FIXME' density. Use when you need to identify high-risk areas for refactoring or when planning technical debt reduction sprints.
+inputs:
+  source_path:
+    type: string
+    description: The root directory of the codebase to analyze.
+    required: true
+  exclude_patterns:
+    type: array
+    items:
+      type: string
+    description: Files or directories to ignore (e.g., vendor, tests).
+  output_format:
+    type: string
+    enum: [markdown, html, json]
+    default: markdown
+outputs:
+  debt_report:
+    type: string
+    description: A visual or structured report highlighting technical debt hotspots.
+capabilities:
+  - Cyclomatic and cognitive complexity analysis.
+  - Test coverage correlation (if coverage data is provided).
+  - Sentiment and keyword analysis on comments (TODO, FIXME, HACK, XXX).
+  - File change frequency analysis via git history to identify 'fragile' files.
+constraints:
+  - Metrics are heuristic-based and may need contextual interpretation.
+  - Requires git history for 'fragile file' detection.
+security:
+  - Analyzes code structure and comments locally.
+  - Does not execute the analyzed source code.
+examples:
+  - input:
+      source_path: "./src"
+    output:
+      debt_report: "## Technical Debt Hotspots\n- **src/legacy_utils.py**: High complexity, No tests, Frequent changes."

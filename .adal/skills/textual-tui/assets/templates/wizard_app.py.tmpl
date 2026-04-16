@@ -1,0 +1,80 @@
+from __future__ import annotations
+
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal, Vertical
+from textual.reactive import reactive, var
+from textual.widgets import Button, ContentSwitcher, Footer, Header, Input, Static
+
+
+class {{CLASS_NAME}}(App):
+    CSS_PATH = "{{MODULE}}.tcss"
+    TITLE = "{{APP_TITLE}}"
+    SUB_TITLE = "Step-by-step workflow"
+
+    step_index = reactive(0)
+    finished = var(False)
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Static(id="progress")
+        with ContentSwitcher(initial="step-1", id="steps"):
+            with Vertical(id="step-1"):
+                yield Static("Step 1 — basic details")
+                yield Input(placeholder="Project name", id="project-name")
+            with Vertical(id="step-2"):
+                yield Static("Step 2 — environment")
+                yield Input(placeholder="Environment", id="environment")
+            with Vertical(id="step-3"):
+                yield Static("Step 3 — review")
+                yield Static(id="review")
+        with Horizontal(id="actions"):
+            yield Button("Back", id="back")
+            yield Button("Next", id="next", variant="primary")
+            yield Button("Finish", id="finish")
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.watch_step_index(self.step_index)
+
+    def watch_step_index(self, step_index: int) -> None:
+        switcher = self.query_one("#steps", ContentSwitcher)
+        switcher.current = "step-{0}".format(step_index + 1)
+        self.query_one("#progress", Static).update("Step {0} of 3".format(step_index + 1))
+        self.query_one("#back", Button).disabled = step_index == 0
+        self.query_one("#next", Button).disabled = step_index == 2
+        self.query_one("#finish", Button).disabled = step_index != 2
+        if step_index == 2:
+            self.query_one("#review", Static).update(
+                "\n".join(
+                    [
+                        "Project: {0}".format(self.query_one("#project-name", Input).value or "—"),
+                        "Environment: {0}".format(self.query_one("#environment", Input).value or "—"),
+                    ]
+                )
+            )
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "back":
+            self.action_back_step()
+        elif event.button.id == "next":
+            self.action_next_step()
+        elif event.button.id == "finish":
+            self.action_finish()
+
+    def action_back_step(self) -> None:
+        self.step_index = max(0, self.step_index - 1)
+
+    def action_next_step(self) -> None:
+        self.step_index = min(2, self.step_index + 1)
+
+    def action_finish(self) -> None:
+        self.finished = True
+        self.notify("Wizard complete.", title="Workflow")
+
+
+def main() -> None:
+    {{CLASS_NAME}}().run()
+
+
+if __name__ == "__main__":
+    main()

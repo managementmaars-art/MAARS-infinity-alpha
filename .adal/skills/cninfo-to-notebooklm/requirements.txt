@@ -1,0 +1,3 @@
+httpx>=0.24.0
+notebooklm-py>=0.1.0
+playwright>=1.40.0

@@ -1,0 +1,10 @@
+{
+  "id": "ses_test1",
+  "title": "OpenCode JSON Session",
+  "directory": "/tmp/test-project",
+  "projectID": "proj1",
+  "time": {
+    "created": 1700000000000,
+    "updated": 1700000005000
+  }
+}

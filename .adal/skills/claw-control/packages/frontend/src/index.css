@@ -1,0 +1,185 @@
+/* OpenClaw Design System - Updated Fonts */
+/* DM Sans for headings, Fragment Mono for body */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fragment+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* shadcn/ui CSS Variables - Dark theme with Coral (#FF6B6B) accent */
+@layer base {
+  :root {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 100% 71%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 100% 71%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 17%;
+    --input: 0 0% 17%;
+    --ring: 0 100% 71%;
+    --radius: 0.5rem;
+    color-scheme: dark;
+  }
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-claw-bg text-gray-100 font-sans overflow-hidden antialiased;
+  font-family: 'Fragment Mono', 'JetBrains Mono', monospace;
+  /* Updated: coral/red gradients instead of green/cyan */
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 107, 107, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(239, 68, 68, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(232, 85, 85, 0.05) 0%, transparent 50%),
+    #0A0A0A;
+}
+
+/* Subtle noise texture overlay */
+.noise-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.3;
+}
+
+/* Modern scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-claw-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-accent-primary/30 rounded-full hover:bg-accent-primary/50 transition-colors;
+}
+
+/* Subtle glow effects - Updated to coral */
+.text-glow {
+  text-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+}
+
+.text-glow-coral {
+  text-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+}
+
+.text-glow-red {
+  text-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+/* Card glass effect */
+.glass {
+  @apply bg-claw-card/80 backdrop-blur-md border border-white/5;
+}
+
+.glass-hover {
+  @apply hover:bg-claw-card/90 hover:border-white/10 transition-all duration-200;
+}
+
+/* Status indicator pulse */
+.status-pulse {
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Safe area padding for notched phones */
+.safe-area-pb {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
+/* Smooth horizontal scrolling */
+.scrollbar-thin::-webkit-scrollbar {
+  height: 4px;
+}
+
+/* Touch manipulation for better mobile performance */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+/* Hide scrollbar on mobile for cleaner look */
+@media (max-width: 768px) {
+  .scrollbar-thin::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-thin {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Snap scrolling for kanban columns on mobile */
+@media (max-width: 768px) {
+  .snap-x {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .snap-center {
+    scroll-snap-align: center;
+  }
+}
+
+/* Animation utilities */
+.animate-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gradient border effect */
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  /* Updated: coral gradient instead of green/cyan */
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.3), rgba(239, 68, 68, 0.1), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Legacy CRT overlay - disabled but kept for reference */
+.crt-overlay::before,
+.crt-overlay::after {
+  display: none;
+}

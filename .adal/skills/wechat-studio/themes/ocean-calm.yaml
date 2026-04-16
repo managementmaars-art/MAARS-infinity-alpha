@@ -1,0 +1,35 @@
+# 深海静谧主题
+name: ocean-calm
+type: code
+description: "【深海静谧】深邃冷静，蓝色调，理性专业"
+version: "4.0"
+
+# 风格说明
+style_info:
+  mood: "深邃静谧"
+  colors: "蓝色调"
+  best_for: "技术文章、商业分析"
+
+# 颜色方案
+colors:
+  background: "#f0f4f8"
+  text: "#3a4150"
+  primary: "#4a7c9b"
+  secondary: "#3d6a8a"
+  quote_background: "#e8f0f8"
+
+# 渲染器配置（代码渲染，无需 AI）
+renderer:
+  h2_icon: "◆"
+  h2_icon_shadow: "0 0 10px rgba(74, 124, 155, 0.4)"
+  card_background_image: "linear-gradient(rgba(74, 124, 155, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(74, 124, 155, 0.03) 1px, transparent 1px)"
+  card_background_size: "24px 24px"
+  card_border: "1px solid rgba(74, 124, 155, 0.08)"
+  card_shadow: "0 8px 28px rgba(58, 65, 80, 0.06), 0 0 16px rgba(74, 124, 155, 0.15)"
+  card_border_radius: "14px"
+  font_size: "16px"
+  line_height: "1.8"
+  letter_spacing: "0.2px"
+  hr_style: "border: none; height: 1px; background: linear-gradient(90deg, transparent, rgba(74, 124, 155, 0.25), transparent);"
+
+

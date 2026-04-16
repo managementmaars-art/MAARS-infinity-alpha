@@ -1,0 +1,102 @@
+---
+title: "横幅"
+description: "在文档站点顶部添加可关闭的横幅，用于显示重要公告、发行说明或通知。"
+keywords: ["banner", "announcements", "site-wide"]
+---
+
+使用横幅在整个文档站点显示重要公告、更新或通知。横幅会显示在每个页面顶部，支持 Markdown 格式，并且你可以将其设置为可关闭。横幅使用你的 `docs.json` 中 `colors.dark` 属性定义的颜色。
+
+要添加横幅，请在你的 `docs.json` 中使用 `banner` 属性：
+
+<CodeGroup>
+  ```json Product announcements wrap
+  "banner": {
+    "content": "🚀 2.0 版本现已上线！查看我们的[更新日志](/changelog)了解详情。",
+    "dismissible": true 
+  }
+  ```
+
+  ```json Maintenance notices wrap
+  "banner": {
+    "content": "⚠️ 计划维护：API 将于 12 月 15 日 02:00–04:00（UTC）不可用",
+    "dismissible": false
+  }
+  ```
+
+  ```json Required actions wrap
+  "banner": {
+    "content": "**需要操作：** 请在 1 月 1 日前迁移到我们的新版本。[迁移指南](/migration)",
+    "dismissible": true
+  }
+  ```
+</CodeGroup>
+
+<Note>
+  你也可以通过在 `navigation.languages` 中设置 `banner` 来按语言配置横幅。参见[特定语言横幅](#language-specific-banners)。
+</Note>
+
+<div id="properties">
+  ## 属性
+</div>
+
+<ResponseField name="content" type="string" required>
+  横幅中显示的文本内容。支持基本的 MDX 格式，包括链接、粗体和斜体文本。不支持自定义组件。
+</ResponseField>
+
+<ResponseField name="dismissible" type="boolean">
+  是否允许用户关闭横幅。为 `true` 时，会显示关闭按钮。如果用户关闭了横幅，横幅将对该用户保持隐藏，直到你更新横幅内容。默认值为 `false`。
+</ResponseField>
+
+<div id="language-specific-banners">
+  ## 语言特定横幅
+</div>
+
+在文档中为每种语言配置不同的横幅内容。在 `docs.json` 的 `navigation.languages` 数组中定义语言特定的横幅。
+
+```json
+{
+  "navigation": {
+    "languages": [
+      {
+        "language": "en",
+        "banner": {
+          "content": "🚀 Version 2.0 is now live! See our [changelog](/en/changelog) for details.",
+          "dismissible": true
+        },
+        "groups": [
+          {
+            "group": "Getting started",
+            "pages": ["en/overview", "en/quickstart"]
+          }
+        ]
+      },
+      {
+        "language": "es",
+        "banner": {
+          "content": "🚀 ¡La versión 2.0 ya está disponible! Consulta nuestro [registro de cambios](/es/changelog) para más detalles.",
+          "dismissible": true
+        },
+        "groups": [
+          {
+            "group": "Getting started",
+            "pages": ["es/overview", "es/quickstart"]
+          }
+        ]
+      }
+    ]
+  },
+  "banner": {
+    "content": "🚀 Version 2.0 is now live!",
+    "dismissible": true
+  }
+}
+```
+
+<div id="fallback-behavior">
+  ### 回退行为
+</div>
+
+横幅在确定要显示哪个内容时遵循以下优先顺序：
+
+1. **特定语言横幅**：如果当前语言有 `banner` 配置，则以该配置为准。
+2. **全局横幅**：如果不存在特定语言横幅，则显示全局 `banner`。

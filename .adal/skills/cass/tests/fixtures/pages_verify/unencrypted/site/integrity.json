@@ -1,0 +1,42 @@
+{
+  "files": {
+    ".nojekyll": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "auth.js": {
+      "sha256": "ec6aceab65d121e4523317692f1fff0405b3c9fe9f823aa090bc8cec51ee8118",
+      "size": 21
+    },
+    "config.json": {
+      "sha256": "bf05c0a08e87990107fa860c22de9e00b36dc32983d853402005da2d67550cfa",
+      "size": 206
+    },
+    "index.html": {
+      "sha256": "01de0c97c60f1be2dbe53ea4ad28bf8db8520c64fd0c7fe3a754bb157686f0e0",
+      "size": 74
+    },
+    "payload/data.db": {
+      "sha256": "06b119646754d4fe739d7e5cdf8694105abdc0415bd12a6e71c38396f70845fa",
+      "size": 16
+    },
+    "robots.txt": {
+      "sha256": "331ea9090db0c9f6f597bd9840fd5b171830f6e0b3ba1cb24dfa91f0c95aedc1",
+      "size": 26
+    },
+    "styles.css": {
+      "sha256": "0bf4d668930b5ab1d543ab1d43785e7cbe4b5f29d95ed3593ea5e9953f7cca59",
+      "size": 34
+    },
+    "sw.js": {
+      "sha256": "7141c69784a2af738db01f7a3a78c90beabc62e5e7c676386741deb7430a6577",
+      "size": 44
+    },
+    "viewer.js": {
+      "sha256": "a81d116e1f319595aef991950e8c8c42fd86aa38d88420b695214f7c6dc99171",
+      "size": 23
+    }
+  },
+  "generated_at": "2025-01-01T00:00:00Z",
+  "version": 1
+}

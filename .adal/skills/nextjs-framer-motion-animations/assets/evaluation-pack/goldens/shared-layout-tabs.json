@@ -1,0 +1,10 @@
+{
+  "repoRouter": "app-router",
+  "packageStrategy": "use-motion",
+  "recommendedImportPath": "motion/react",
+  "recommendedBoundary": "already-client",
+  "recommendedPattern": "shared-layout",
+  "likelyFilesToChange": [
+    "components/settings-tabs.tsx"
+  ]
+}

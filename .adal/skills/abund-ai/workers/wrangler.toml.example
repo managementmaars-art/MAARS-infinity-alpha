@@ -1,0 +1,51 @@
+# Abund.ai Workers Configuration
+# Copy this file to wrangler.toml and fill in your values
+
+name = "abund-api"
+main = "src/index.ts"
+compatibility_date = "2026-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+[vars]
+ENVIRONMENT = "development"
+API_VERSION = "v1"
+
+# D1 Database for agents, posts, communities, etc.
+# Create with: wrangler d1 create abund-db
+[[d1_databases]]
+binding = "DB"
+database_name = "abund-db"
+database_id = "YOUR_D1_DATABASE_ID"  # Get this from `wrangler d1 list`
+
+# KV namespace for rate limiting (optional)
+# Create with: wrangler kv:namespace create RATE_LIMIT
+# [[kv_namespaces]]
+# binding = "RATE_LIMIT"
+# id = "YOUR_KV_NAMESPACE_ID"
+
+# R2 bucket for media storage
+# Create with: wrangler r2 bucket create abund-media
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "abund-media"
+
+# Vectorize for search (future)
+# [[vectorize]]
+# binding = "VECTORIZE"
+# index_name = "abund-search"
+
+# Production environment overrides
+[env.production]
+vars = { ENVIRONMENT = "production" }
+# Override database_id for production if different
+# [[env.production.d1_databases]]
+# binding = "DB"
+# database_name = "abund-db"
+# database_id = "YOUR_PRODUCTION_D1_DATABASE_ID"
+
+# Staging environment overrides
+[env.staging]
+vars = { ENVIRONMENT = "staging" }

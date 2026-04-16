@@ -1,0 +1,39 @@
+{
+  "topic": "Health Insurance",
+  "geo": "US",
+  "timeframe": "2004-01-01 2025-12-31",
+  "granularity": "weekly",
+  "analyzed_at": "2025-01-13T14:30:00Z",
+  "latest": 100,
+  "hist_max": 100,
+  "is_all_time_high": true,
+  "signal_type": "regime_shift",
+  "seasonality": {
+    "method": "stl",
+    "is_seasonal_pattern_detected": true,
+    "seasonal_strength": 0.42
+  },
+  "anomaly_detection": {
+    "method": "zscore",
+    "threshold": 2.5,
+    "latest_score": 3.1,
+    "is_anomaly": true
+  },
+  "drivers_from_related_queries": [
+    {"term": "open enrollment", "type": "rising", "value": "Breakout"},
+    {"term": "premium increase", "type": "rising", "value": "+350%"},
+    {"term": "Medicaid renewal", "type": "rising", "value": "+280%"},
+    {"term": "health insurance cost", "type": "rising", "value": "+220%"},
+    {"term": "COBRA insurance", "type": "rising", "value": "+180%"},
+    {"term": "lose health insurance", "type": "rising", "value": "+150%"},
+    {"term": "marketplace enrollment", "type": "top", "value": 95},
+    {"term": "health insurance quotes", "type": "top", "value": 88},
+    {"term": "affordable health insurance", "type": "top", "value": 82},
+    {"term": "health insurance plans", "type": "top", "value": 78}
+  ],
+  "interpretation": {
+    "summary": "Health Insurance 搜尋創歷史新高，且去季節化後仍顯著異常（z-score=3.1）。訊號類型判定為 regime_shift，表示長期關注度結構性上升。",
+    "primary_driver": "保費上漲壓力與 Medicaid 資格變動可能是主要驅動因素",
+    "caveat": "11-12 月為 Open Enrollment 期間，部分上升可歸因於季節性，但本次超出歷史同期範圍"
+  }
+}

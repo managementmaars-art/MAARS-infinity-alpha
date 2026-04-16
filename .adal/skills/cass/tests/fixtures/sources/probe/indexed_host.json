@@ -1,0 +1,48 @@
+{
+  "host_name": "dev-server",
+  "reachable": true,
+  "connection_time_ms": 142,
+  "cass_status": {
+    "status": "indexed",
+    "version": "0.1.61",
+    "session_count": 847,
+    "last_indexed": "2026-01-25T14:32:00Z"
+  },
+  "detected_agents": [
+    {
+      "agent_type": "claude_code",
+      "path": "~/.claude/projects",
+      "estimated_sessions": 512,
+      "estimated_size_mb": 245
+    },
+    {
+      "agent_type": "cursor",
+      "path": "~/.config/Cursor/User/globalStorage/saoudrizwan.claude-dev",
+      "estimated_sessions": 203,
+      "estimated_size_mb": 87
+    },
+    {
+      "agent_type": "codex",
+      "path": "~/.codex/sessions",
+      "estimated_sessions": 132,
+      "estimated_size_mb": 62
+    }
+  ],
+  "system_info": {
+    "os": "linux",
+    "arch": "x86_64",
+    "distro": "Ubuntu 24.04.1 LTS",
+    "has_cargo": true,
+    "has_cargo_binstall": true,
+    "has_curl": true,
+    "has_wget": true,
+    "remote_home": "/home/ubuntu"
+  },
+  "resources": {
+    "disk_available_mb": 45320,
+    "memory_total_mb": 32768,
+    "memory_available_mb": 24576,
+    "can_compile": true
+  },
+  "error": null
+}

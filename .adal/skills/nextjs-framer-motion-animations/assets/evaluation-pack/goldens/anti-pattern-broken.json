@@ -1,0 +1,14 @@
+{
+  "expectedRuleIds": [
+    "mixed-import-packages",
+    "root-layout-client",
+    "app-router-server-imports-client-motion",
+    "top-left-animation",
+    "animatepresence-index-key",
+    "layoutid-without-layoutgroup-id",
+    "motion-create-in-render",
+    "motion-react-client-with-hooks-or-client-directive",
+    "reorder-item-without-group"
+  ],
+  "minimumErrorCount": 4
+}

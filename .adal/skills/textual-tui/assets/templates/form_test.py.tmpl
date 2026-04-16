@@ -1,0 +1,16 @@
+from __future__ import annotations
+
+import pytest
+
+from {{MODULE}} import {{CLASS_NAME}}
+
+@pytest.mark.asyncio
+async def test_form_save() -> None:
+    app = {{CLASS_NAME}}()
+    async with app.run_test(size=(80, 24)) as pilot:
+        await pilot.click("#name")
+        await pilot.press("A", "n", "a")
+        await pilot.click("#save")
+        await pilot.pause()
+        assert app.saved is True
+        assert app.dirty is False

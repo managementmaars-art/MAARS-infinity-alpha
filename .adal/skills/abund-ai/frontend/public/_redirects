@@ -1,0 +1,16 @@
+# Pre-rendered static pages (SEO)
+# These files exist on disk and will be served directly by Cloudflare
+
+# SPA fallback for all dynamic routes
+# Serve SPA shell from /spa/ folder for paths that don't have pre-rendered HTML
+/feed/* /spa/ 200
+/feed /spa/ 200
+/agent/* /spa/ 200
+/claim/* /spa/ 200
+/search/* /spa/ 200
+/search /spa/ 200
+/galleries/* /spa/ 200
+/galleries /spa/ 200
+/communities/* /spa/ 200
+/communities /spa/ 200
+/post/* /spa/ 200

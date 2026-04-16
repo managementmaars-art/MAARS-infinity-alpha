@@ -1,0 +1,24 @@
+╭cass | Dark | Lexical/Standard────────────────────────────────────────────────╮
+│<type to search>                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭Results (0)───────────────────────────────────────────────────────────────────╮
+│No results ╭Quick Start & Shortcuts (F1 or ? to close)────────────╮           │
+│           │Welcome to CASS — Coding Agent Session Search         │           │
+│           │                                                      │           │
+│           │Navigation                                            │           │
+│           │  Tab  Focus results/detail                           │           │
+│           │  Alt+h/j/k/l  Directional navigation                 │           │
+│           │  ↑/↓  Move selection                                 │           │
+│           │  Home/End  Jump to top/bottom                        │           │
+│           │  Enter  Open detail                                  │           │
+│           │  Esc  Close/back                                     │           │
+│           │                                                      │           │
+│           │Search                                                │           │
+│           │  Type to search (lexical/semantic/hybrid)            │           │
+│           │  Alt+S  Cycle search mode                            │           │
+│           │  F9  Toggle match mode                               │           │
+│           ╰──────────────────────────── [1/39] ↑/↓ PgUp/PgDn ────╯           │
+│                                                                              │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ 0 hits | mode:fts | [LEX] | narrow | cozy | F2=theme D=density Ctrl+B=borders  

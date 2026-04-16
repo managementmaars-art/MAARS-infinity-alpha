@@ -1,0 +1,35 @@
+[
+  {
+    "name": "张伟",
+    "position": "技术总监",
+    "event_name": "2026 科技创新峰会",
+    "event_date": "2026 年 3 月 15 日 14:00",
+    "event_location": "北京国际会议中心 三层宴会厅",
+    "rsvp_date": "2026 年 3 月 10 日",
+    "company_name": "科技创新有限公司",
+    "date": "2026 年 2 月 22 日",
+    "filename": "邀请函_张伟.docx"
+  },
+  {
+    "name": "李娜",
+    "position": "产品总监",
+    "event_name": "2026 科技创新峰会",
+    "event_date": "2026 年 3 月 15 日 14:00",
+    "event_location": "北京国际会议中心 三层宴会厅",
+    "rsvp_date": "2026 年 3 月 10 日",
+    "company_name": "科技创新有限公司",
+    "date": "2026 年 2 月 22 日",
+    "filename": "邀请函_李娜.docx"
+  },
+  {
+    "name": "王强",
+    "position": "市场总监",
+    "event_name": "2026 科技创新峰会",
+    "event_date": "2026 年 3 月 15 日 14:00",
+    "event_location": "北京国际会议中心 三层宴会厅",
+    "rsvp_date": "2026 年 3 月 10 日",
+    "company_name": "科技创新有限公司",
+    "date": "2026 年 2 月 22 日",
+    "filename": "邀请函_王强.docx"
+  }
+]

@@ -1,0 +1,248 @@
+# Development Dockerfile with uv
+# Use: docker build -f Dockerfile.dev -t myapp-dev . && docker run -it -v $PWD:/app myapp-dev
+
+FROM python:3.12-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy uv binary from official image
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+WORKDIR /app
+
+# Copy project files
+COPY pyproject.toml uv.lock ./
+
+# Install all dependencies including dev, extras, and artifacts
+# Uses --frozen to ensure reproducibility
+RUN uv sync --frozen --all-extras --dev --group artifacts
+
+# Copy application code
+COPY . .
+
+# Activate virtual environment in PATH
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Set up shell for interactive development
+ENV SHELL=/bin/bash
+RUN echo 'source /app/.venv/bin/activate' >> ~/.bashrc
+
+# Expose common ports for development
+EXPOSE 8000 8888 5432
+
+# Default command: bash shell
+CMD ["bash"]
+
+# Usage examples:
+#
+# 1. Interactive shell:
+#    docker run -it -v $PWD:/app myapp-dev
+#
+# 2. Run tests:
+#    docker run --rm -v $PWD:/app myapp-dev pytest
+#
+# 3. Run linting:
+#    docker run --rm -v $PWD:/app myapp-dev ruff check .
+#
+# 4. Run with services:
+#    docker-compose -f docker-compose.dev.yml up
+#
+# 5. Mount as volume for hot reload:
+#    docker run -it -v $PWD/src:/app/src myapp-dev uvicorn main:app --reload
+
+---
+
+# Production Dockerfile with multi-stage build
+# Use: docker build -f Dockerfile -t myapp . && docker run -p 8000:8000 myapp
+
+# ===== STAGE 1: BUILDER =====
+# Build dependencies and install packages
+FROM python:3.12-slim AS builder
+
+# Copy uv from official image (single binary)
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+WORKDIR /app
+
+# Copy only dependency files
+# This layer caches if dependencies haven't changed
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies in .venv
+# --frozen: Fail if lockfile out of sync
+# --no-dev: Exclude development dependencies
+# --no-install-project: Don't install application code yet (it will be copied separately)
+RUN uv sync --frozen --no-dev --no-install-project
+
+# ===== STAGE 2: RUNTIME =====
+# Minimal image with only what's needed to run the application
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Copy virtual environment from builder
+# This is ~70% smaller than including all build artifacts
+COPY --from=builder /app/.venv /app/.venv
+
+# Copy application code
+COPY . .
+
+# Ensure virtual environment is in PATH
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Health check (customize for your app)
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD python -c "import requests; requests.get('http://localhost:8000/health')" || exit 1
+
+# Run application
+# Customize entry point for your app
+CMD ["python", "-m", "gunicorn", "main:app", "--bind", "0.0.0.0:8000", "--workers", "4"]
+
+# Usage:
+# docker build -t myapp .
+# docker run -p 8000:8000 myapp
+
+---
+
+# Advanced: Production with security hardening
+FROM python:3.12-slim AS builder
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+WORKDIR /app
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
+
+FROM python:3.12-slim
+
+# Create non-root user for security
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+WORKDIR /app
+
+COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
+COPY --chown=appuser:appuser . .
+
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Switch to non-root user
+USER appuser
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD python -c "import requests; requests.get('http://localhost:8000/health')" || exit 1
+
+CMD ["python", "-m", "gunicorn", "main:app", "--bind", "0.0.0.0:8000", "--workers", "4"]
+
+---
+
+# Docker Compose example for development
+# File: docker-compose.yml
+
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+      - "5555:5555"  # Jupyter
+    volumes:
+      - .:/app
+      - /app/.venv  # Preserve venv from image
+    environment:
+      - DEBUG=true
+      - DATABASE_URL=postgresql://user:password@db:5432/appdb
+    depends_on:
+      - db
+      - redis
+    command: >
+      sh -c "uv sync --all-extras --dev &&
+             python -m pytest tests/ &&
+             uvicorn main:app --reload --host 0.0.0.0"
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: appdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
+
+---
+
+# Docker Compose example for production simulation
+# File: docker-compose.prod.yml
+
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=false
+      - DATABASE_URL=postgresql://user:password@db:5432/appdb
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: appdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  postgres_data:

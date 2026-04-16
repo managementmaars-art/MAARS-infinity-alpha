@@ -1,0 +1,22 @@
+from __future__ import annotations
+
+import pytest
+
+from {{MODULE}} import {{CLASS_NAME}}
+
+@pytest.mark.asyncio
+async def test_download_demo_requests_text_delivery() -> None:
+    app = {{CLASS_NAME}}()
+    calls = []
+
+    def fake_deliver_text(*args, **kwargs):
+        calls.append((args, kwargs))
+        return "fake-key"
+
+    app.deliver_text = fake_deliver_text  # type: ignore[assignment]
+
+    async with app.run_test(size=(90, 24)) as pilot:
+        await pilot.click("#export-text")
+        await pilot.pause()
+        assert app.last_requested_delivery == "report"
+        assert len(calls) == 1

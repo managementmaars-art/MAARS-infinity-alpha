@@ -1,0 +1,33 @@
+{
+  "host_name": "legacy-box",
+  "reachable": true,
+  "connection_time_ms": 340,
+  "cass_status": {
+    "status": "unknown"
+  },
+  "detected_agents": [
+    {
+      "agent_type": "gemini",
+      "path": "~/.gemini/tmp",
+      "estimated_sessions": 12,
+      "estimated_size_mb": 5
+    }
+  ],
+  "system_info": {
+    "os": "linux",
+    "arch": "x86_64",
+    "distro": "CentOS Linux 7 (Core)",
+    "has_cargo": false,
+    "has_cargo_binstall": false,
+    "has_curl": true,
+    "has_wget": true,
+    "remote_home": "/home/admin"
+  },
+  "resources": {
+    "disk_available_mb": 15000,
+    "memory_total_mb": 2048,
+    "memory_available_mb": 512,
+    "can_compile": false
+  },
+  "error": null
+}
