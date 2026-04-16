@@ -1,0 +1,26 @@
+{
+  "shouldTrigger": [
+    "Add a smooth Framer Motion page transition between routes in my Next.js app.",
+    "Can you animate these cards in on scroll with Motion in App Router?",
+    "Fix why AnimatePresence exit animations are not working in my Next.js modal.",
+    "Make this button feel better with whileHover and reduced motion.",
+    "Help me migrate this Next.js repo from framer-motion to the motion package.",
+    "Use Motion layoutId for an animated tab underline in my Next app.",
+    "Add drag-to-reorder to this list with Framer Motion.",
+    "I need a lightweight route-content transition in the App Router dashboard.",
+    "Can you debug hydration issues caused by Motion in this Next.js component?",
+    "Wrap our design-system link component with Motion without breaking refs."
+  ],
+  "shouldNotTrigger": [
+    "Build a GSAP ScrollTrigger landing page animation.",
+    "Make this CSS hover effect snappier without adding JavaScript.",
+    "Animate this Three.js scene with camera movement.",
+    "Create a Lottie intro animation for the hero.",
+    "I need a plain Tailwind accordion, no Framer Motion.",
+    "Optimise this SQL query.",
+    "Write a Python script to resize images.",
+    "Create a Next.js project from scratch.",
+    "Make this SVG spin forever with CSS keyframes.",
+    "Help me choose between React Spring and GSAP."
+  ]
+}

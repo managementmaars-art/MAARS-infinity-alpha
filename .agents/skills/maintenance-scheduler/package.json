@@ -1,0 +1,28 @@
+{
+  "name": "@openclaw/maintenance-scheduler",
+  "version": "1.0.0",
+  "description": "Schedule recurring home maintenance tasks with seasonal templates",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@openclaw/reminders": "file:../reminders",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  },
+  "keywords": [
+    "home",
+    "maintenance",
+    "scheduler",
+    "reminders",
+    "openclaw"
+  ]
+}

@@ -1,0 +1,197 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "v*"  # Trigger on version tags (v1.0.0, v1.0.1, etc.)
+  workflow_dispatch:  # Allow manual triggering
+
+env:
+  PYTHONUNBUFFERED: 1
+  FORCE_COLOR: 1
+
+jobs:
+  # Extract version from tag for use in later steps
+  version:
+    name: Extract Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract.outputs.version }}
+      major: ${{ steps.extract.outputs.major }}
+      minor: ${{ steps.extract.outputs.minor }}
+    steps:
+      - name: Extract version from tag
+        id: extract
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "major=$(echo $VERSION | cut -d. -f1)" >> $GITHUB_OUTPUT
+          echo "minor=$(echo $VERSION | cut -d. -f2)" >> $GITHUB_OUTPUT
+
+  # Build the package distributions
+  build:
+    name: Build Package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Need full history for version detection
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Build source and wheel distributions
+        run: |
+          uv build
+          ls -lh dist/
+
+      - name: Verify distributions
+        run: |
+          uv run twine check dist/*
+        continue-on-error: true
+
+      - name: Upload distributions as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: distributions
+          path: dist/
+
+  # Publish to Test PyPI first (verification step)
+  publish-test:
+    name: Publish to Test PyPI
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/project/${{ github.event.repository.name }}/
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Download distributions
+        uses: actions/download-artifact@v3
+        with:
+          name: distributions
+          path: dist/
+
+      - name: Publish to Test PyPI
+        run: uv publish --index-url https://test.pypi.org/legacy/
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
+
+      - name: Wait for Test PyPI to update
+        run: sleep 10
+
+      - name: Verify Test PyPI publication
+        run: |
+          pip install --index-url https://test.pypi.org/simple/ \
+            --extra-index-url https://pypi.org/simple/ \
+            ${{ github.event.repository.name }} --force-reinstall
+
+  # Publish to PyPI (production)
+  publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: [build, publish-test]
+    environment:
+      name: pypi
+      url: https://pypi.org/project/${{ github.event.repository.name }}/
+    permissions:
+      id-token: write  # Required for trusted publishing (OIDC)
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Download distributions
+        uses: actions/download-artifact@v3
+        with:
+          name: distributions
+          path: dist/
+
+      - name: Publish to PyPI
+        run: uv publish
+        # Uses OIDC token from GitHub for authentication
+        # No credentials needed - must be configured in PyPI settings
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+          name: Release ${{ needs.version.outputs.version }}
+          body: |
+            ## Release ${{ needs.version.outputs.version }}
+
+            **PyPI:** https://pypi.org/project/${{ github.event.repository.name }}/${{ needs.version.outputs.version }}/
+
+            ### Installation
+            ```bash
+            pip install ${{ github.event.repository.name }}==${{ needs.version.outputs.version }}
+            ```
+
+            ### Changes
+            See [CHANGELOG](./CHANGELOG.md) for details.
+          draft: false
+          prerelease: contains(needs.version.outputs.version, 'a') || contains(needs.version.outputs.version, 'b')
+
+  # Notify Slack of successful publication
+  notify:
+    name: Notify
+    runs-on: ubuntu-latest
+    needs: [version, publish]
+    if: success()
+    steps:
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "✅ Published to PyPI: ${{ github.event.repository.name }} v${{ needs.version.outputs.version }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "✅ *Released to PyPI*\n*Package:* `${{ github.event.repository.name }}`\n*Version:* `${{ needs.version.outputs.version }}`\n*URL:* https://pypi.org/project/${{ github.event.repository.name }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: vars.SLACK_WEBHOOK_URL != ''
+
+---
+# Alternative: Simplified publishing workflow for smaller projects
+
+name: Simple Publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for OIDC
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Build and publish
+        run: |
+          uv build
+          uv publish
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*

@@ -1,0 +1,23 @@
+{
+    "name": "photoshop-automator",
+    "version": "1.2.4",
+    "description": "Professional Adobe Photoshop automation via COM/ExtendScript bridge (Cross-Platform).",
+    "author": "Abdul Karim Mia",
+    "homepage": "https://github.com/abdul-karim-mia/photoshop-automator",
+    "metadata": {
+        "openclaw": {
+            "requires": {
+                "bins": [
+                    "cscript",
+                    "osascript"
+                ],
+                "os": [
+                    "windows",
+                    "macos"
+                ],
+                "env": [],
+                "config": []
+            }
+        }
+    }
+}

@@ -1,0 +1,24 @@
+ ▐ Search ▌  · Analytics   · Sources  | Alt+A=analytics  Ctrl+Shift+S=sources  Ctrl+P=palette  F1=help  F2=theme        
+╭ ██ cass · Daylight · Hybrid · Prefix ────────────────────────────────────────────────────────────────────────────────╮
+│ ?? authenticatio│n regression                                                                                        │
+│○ agent:✎any ○ ws:✎any ○ time:✎all ○ source:✎all                                                                      │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭ Results · 1 ─────────────────────────────────────────────────────────────────────│╭ Detail · Messages ↩ ─────────────╮
+│ hits:1 · row:1/1 · exact:0 · fuzzy:1 · mix:  █                                   ││  ▐Messages▌  │  Snippets  │  Raw │
+│▶   1. ▼ @aider Large-snippet rendering edge case                                 ││ agent ✓ aider · src ⇄ ci-linux   │
+│      M█▇ 6.4 [ci-linux] mt suffix │ ws /workspace/cass │ ● 1 msg                 ││────────────────────────────────  │
+│      /workspace/cass/tests/regression/long_snippet.md:9                          ││Large-snippet rendering edge case │
+│    ╰─ ⇄ remote · score 0.640 (6.4/10) · idx 1 · ● 1 msg                          ││agent=aider │ ws=/workspace/cass ││
+│    │ The following snippet intentionally exceeds normal row budgets to exe...    ││source=ci-linux (remote) │ score= │
+│                                                                                  ││0.640 (6.4/10) │                  │
+│                                                                                  ││ws_orig=/mnt/build/cass           │
+│                                                                                  ││────────────────────────────────  │
+│                                                                                  ││  This is a deliberately long     │
+│                                                                                  ││snippet line that includes        │
+│                                                                                  ││repeated context windows, remote  │
+│                                                                                  ││provenance markers, and unicode   │
+│                                                                                  ││glyphs → λ Δ ✓ to stress wrapping │
+│1 sessions │ 1 msgs                                                               ││behavior.                         │
+╰──────────────────────────────────────────────────────────────────────────────────│╰──────────────────────────────────╯
+ status Theme: Daylight · hits 1 · view med/cozy · query HYB / PFX · perf lat:— cache:cold                              
+  | Enter=open Ctrl+X=select Alt+S=mode Tab=focus                                                                       

@@ -1,0 +1,88 @@
+from __future__ import annotations
+
+from functools import partial
+
+from textual.app import App, ComposeResult
+from textual.command import Hit, Hits, Provider
+from textual.widgets import DataTable, Footer, Header, Input, Static
+from textual.screen import Screen
+
+
+class ModeCommands(Provider):
+    async def search(self, query: str) -> Hits:
+        matcher = self.matcher(query)
+        for mode in ("overview", "jobs", "users"):
+            command = "open {0}".format(mode)
+            score = matcher.match(command)
+            if score > 0:
+                yield Hit(
+                    score,
+                    matcher.highlight(command),
+                    partial(self.app.action_go_to_mode, mode),
+                    help="Switch to the {0} mode".format(mode),
+                )
+
+
+class OverviewScreen(Screen):
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Static("Overview mode — use 1/2/3 or the command palette to move between stacks.", id="overview-copy")
+        yield Footer()
+
+
+class JobsScreen(Screen):
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield DataTable(id="jobs-table")
+        yield Footer()
+
+    def on_mount(self) -> None:
+        table = self.query_one("#jobs-table", DataTable)
+        table.add_columns("Job", "State", "Owner")
+        table.add_rows(
+            [
+                ("daily-etl", "running", "data"),
+                ("invoice-rollup", "queued", "finance"),
+                ("reindex", "failed", "search"),
+            ]
+        )
+
+
+class UsersScreen(Screen):
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Input(placeholder="Search users", id="user-search")
+        yield Static("Users mode — put a real list or table here.", id="users-copy")
+        yield Footer()
+
+
+class {{CLASS_NAME}}(App):
+    CSS_PATH = "{{MODULE}}.tcss"
+    TITLE = "{{APP_TITLE}}"
+    SUB_TITLE = "Modes + command palette"
+    COMMANDS = App.COMMANDS | {ModeCommands}
+    BINDINGS = [
+        ("1", "go_to_mode('overview')", "Overview"),
+        ("2", "go_to_mode('jobs')", "Jobs"),
+        ("3", "go_to_mode('users')", "Users"),
+    ]
+    MODES = {
+        "overview": OverviewScreen,
+        "jobs": JobsScreen,
+        "users": UsersScreen,
+    }
+
+    def on_mount(self) -> None:
+        self.action_go_to_mode("overview")
+
+    def action_go_to_mode(self, mode: str) -> None:
+        self.switch_mode(mode)
+        self.sub_title = "Current mode: {0}".format(mode)
+
+
+def main() -> None:
+    {{CLASS_NAME}}().run()
+
+
+if __name__ == "__main__":
+    main()

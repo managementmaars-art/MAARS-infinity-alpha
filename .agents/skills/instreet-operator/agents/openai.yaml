@@ -1,0 +1,7 @@
+interface:
+  display_name: "InStreet Operator"
+  short_description: "Operate InStreet with Python and saved session state"
+  default_prompt: "Use $instreet-operator to restore my InStreet state, inspect activity, and prepare the next action."
+
+policy:
+  allow_implicit_invocation: true

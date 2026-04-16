@@ -1,0 +1,33 @@
+{
+  "host_name": "build-server",
+  "reachable": true,
+  "connection_time_ms": 215,
+  "cass_status": {
+    "status": "not_found"
+  },
+  "detected_agents": [
+    {
+      "agent_type": "codex",
+      "path": "~/.codex/sessions",
+      "estimated_sessions": 78,
+      "estimated_size_mb": 34
+    }
+  ],
+  "system_info": {
+    "os": "linux",
+    "arch": "x86_64",
+    "distro": "Debian GNU/Linux 12 (bookworm)",
+    "has_cargo": false,
+    "has_cargo_binstall": false,
+    "has_curl": true,
+    "has_wget": true,
+    "remote_home": "/home/ci"
+  },
+  "resources": {
+    "disk_available_mb": 89600,
+    "memory_total_mb": 8192,
+    "memory_available_mb": 6144,
+    "can_compile": false
+  },
+  "error": null
+}

@@ -1,0 +1,22 @@
+[
+  { "query": "Help me define a Fluent table for tracking service requests with a priority column and a reference to the sys_user table", "should_trigger": true },
+  { "query": "Create a .now.ts file for an ACL that restricts read access on the incident table to users with the itil role", "should_trigger": true },
+  { "query": "Generate a ServiceNow SDK flow that triggers on incident update and sends a notification when priority changes to 1", "should_trigger": true },
+  { "query": "I need a BusinessRule .now.ts for the problem table that runs before insert and stamps the opened_at field", "should_trigger": true },
+  { "query": "Create a Fluent ScriptInclude called IncidentUtils with a method that returns all open incidents for a given user", "should_trigger": true },
+  { "query": "Write a ClientScript .now.ts that shows a warning message when the priority field is set to Critical on an incident form", "should_trigger": true },
+  { "query": "Generate a RestApi .now.ts for a custom endpoint that accepts POST and returns a JSON response with incident data", "should_trigger": true },
+  { "query": "I'm setting up a new ServiceNow scoped app using the SDK. How do I configure my now.config.json for the my_app scope?", "should_trigger": true },
+  { "query": "Create a UiAction .now.ts that adds a 'Close Incident' button to the incident form", "should_trigger": true },
+  { "query": "I need to add a DateTimeColumn and a ReferenceColumn to my existing Fluent table definition", "should_trigger": true },
+  { "query": "I need to write a GlideRecord query to find all open incidents assigned to me", "should_trigger": false },
+  { "query": "How do I create a Business Rule in ServiceNow using the platform UI?", "should_trigger": false },
+  { "query": "Write a JavaScript function that sorts an array of objects by date", "should_trigger": false },
+  { "query": "How do I set up OAuth 2.0 authentication in a Node.js Express app?", "should_trigger": false },
+  { "query": "I need to query the incident table using REST API with a Python requests script", "should_trigger": false },
+  { "query": "Create a ServiceNow catalog item with variable sets using Update Sets", "should_trigger": false },
+  { "query": "How do I write a scheduled job in ServiceNow using the classic scripting interface?", "should_trigger": false },
+  { "query": "Generate a Docker Compose file for a multi-service Node.js application", "should_trigger": false },
+  { "query": "How do I use GlideAjax to call a Script Include from a client script?", "should_trigger": false },
+  { "query": "Write a PowerShell script to export ServiceNow incidents to a CSV file", "should_trigger": false }
+]

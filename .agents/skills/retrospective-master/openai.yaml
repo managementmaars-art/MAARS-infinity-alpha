@@ -1,0 +1,4 @@
+interface:
+  display_name: "Retrospective Master"
+  short_description: "Run structured retrospectives with GRAI model"
+  default_prompt: "Guide me through a GRAI retrospective (Goal, Result, Analysis, Insight) and produce actionable improvements from the review."

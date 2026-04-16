@@ -1,0 +1,16 @@
+{
+  "name": "shader-sdf",
+  "description": "Signed Distance Functions (SDFs) in GLSL\u20142D/3D shape primitives, boolean operations (union, intersection, subtraction), smooth blending, repetition, and raymarching fundamentals. Use when creating procedural shapes, text effects, smooth morphing, or raymarched 3D scenes.",
+  "tags": [
+    "shaders",
+    "glsl",
+    "code-generation"
+  ],
+  "sub_skills": [],
+  "source": "claude-user",
+  "type": "template",
+  "depends_on": [
+    "shader-fundamentals"
+  ],
+  "enhances": []
+}

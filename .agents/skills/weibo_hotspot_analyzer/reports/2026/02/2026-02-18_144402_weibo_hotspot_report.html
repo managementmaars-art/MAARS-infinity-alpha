@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年02月18日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --accent-normal: #6C757D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .report-header h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+            margin-top: 32px;
+        }
+
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hotspot-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hotspot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .hotspot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .hotword {
+            font-weight: 600;
+            font-size: 16px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotness {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .hotspot-summary {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hotspot-detail {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .hotspot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+            transition: all 0.2s;
+        }
+
+        .idea-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .idea-card.excellent {
+            border-left-color: var(--accent-excellent);
+            background: linear-gradient(to right, rgba(255, 210, 63, 0.1), transparent);
+        }
+
+        .idea-card.good {
+            border-left-color: var(--accent-good);
+            background: linear-gradient(to right, rgba(6, 167, 125, 0.05), transparent);
+        }
+
+        .idea-card.normal {
+            border-left-color: var(--accent-normal);
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .idea-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .score-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.excellent {
+            background: var(--accent-excellent);
+            color: #333;
+        }
+
+        .badge.good {
+            background: var(--accent-good);
+            color: white;
+        }
+
+        .badge.normal {
+            background: var(--accent-normal);
+            color: white;
+        }
+
+        .idea-body p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .idea-body strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .idea-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .idea-body li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .score-breakdown {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .statistics h2 {
+            color: white;
+            border-left-color: white;
+            margin-top: 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ranking-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ranking-rank {
+            font-size: 24px;
+            font-weight: 700;
+            width: 40px;
+            text-align: center;
+        }
+
+        .ranking-rank.gold { color: #FFD700; }
+        .ranking-rank.silver { color: #C0C0C0; }
+        .ranking-rank.bronze { color: #CD7F32; }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .ranking-hotword {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .ranking-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .report-header { padding: 24px; }
+            .report-header h1 { font-size: 24px; }
+            .hotspot-list { grid-template-columns: 1fr; }
+            .idea-header { flex-direction: column; align-items: flex-start; }
+            .stat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>🤖 微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>📅 生成日期：2026-02-18</span>
+                <span>🔥 热搜总数：8</span>
+                <span>💡 创意总数：24</span>
+                <span>⏰ 生成时间：2026-02-18 22:44:02</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">徐梦桃金牌</span>
+                </div>
+                <div class="hotness">热度：7114642 </div>
+                <div class="hotspot-summary">四届老将徐梦桃在北京冬奥会自由式滑雪空中技巧决赛中夺冠，圆梦时刻的激情呐喊感动全网。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">苏翊鸣金牌</span>
+                </div>
+                <div class="hotness">热度：1597569 <span class="tag">热</span></div>
+                <div class="hotspot-summary">苏翊鸣在北京冬奥会单板滑雪大跳台项目中夺冠，赢得中国历史首金。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">2026春节消费市场红火开场</span>
+                </div>
+                <div class="hotness">热度：1200897 </div>
+                <div class="hotspot-summary">2026年春节经济强劲复苏，科技与传统融合，吃穿住行引发报复性消费狂潮。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">中国队米兰冬奥首金</span>
+                </div>
+                <div class="hotness">热度：731816 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">中国队第二金</span>
+                </div>
+                <div class="hotness">热度：592854 </div>
+                <div class="hotspot-summary">中国代表团在国际重大赛事中斩获第二枚金牌，引发全网沸腾与庆祝。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">初三一定记得睡懒觉</span>
+                </div>
+                <div class="hotness">热度：569614 </div>
+                <div class="hotspot-summary">传统民俗“赤狗日”忌拜年，年轻人借此表达春节社交疲惫，渴望补觉休息。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">首儿所制剂未授权第3方平台销售</span>
+                </div>
+                <div class="hotness">热度： </div>
+                <div class="hotspot-summary">首儿所发布声明严禁第三方平台销售其院内制剂，提醒家长警惕网络代购风险及假药隐患。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">徐梦桃 文能浪姐唱跳武能冬奥夺冠</span>
+                </div>
+                <div class="hotness">热度：561191 <span class="tag">新</span></div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">众星祝贺苏翊鸣</span>
+                </div>
+                <div class="hotness">热度：518014 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">苏翊鸣教练双膝跪地</span>
+                </div>
+                <div class="hotness">热度：352683 <span class="tag">热</span></div>
+                <div class="hotspot-summary">苏翊鸣冬奥夺冠，教练佐藤康弘激动掩面双膝跪地，展现极致师徒情。</div>
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">1</span>
+                <span class="hotword" style="font-size: 18px;">徐梦桃金牌</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>7,114,642</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">梦桃分贝大冒险</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>声控滑雪玩法</li>
+                    <li>呐喊音量控制腾空高度</li>
+                    <li>魔性解说音效包</li>
+                    <li>好友分贝PK榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁泛娱乐用户，喜欢解压小游戏和短视频互动的群体</p>
+                        <p><strong>📝 产品描述：</strong>一款声控跑酷微信小程序。用户通过模仿徐梦桃夺冠时的“呐喊”音量和音调来控制游戏中角色的翻转与落地，极其解压且具备极强的短视频传播属性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">冠军锦鲤日签</span>
+                        <div class="score-info">
+                            <span class="score">81分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>每日冠军金句抽取</li>
+                    <li>AR实景挂金牌</li>
+                    <li>水逆退散符生成</li>
+                    <li>坚持打卡兑换周边</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁考研党、职场新人，需要情感寄托和好运暗示的人群</p>
+                        <p><strong>📝 产品描述：</strong>结合“坚持”与“好运”元素的轻量级工具。将徐梦桃的奋斗史转化为每日激励，提供AR滤镜让用户体验“挂金牌”的视觉效果，满足用户求好运和自我激励的心理需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">全员空中技巧</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI人脸融合夺冠视频</li>
+                    <li>360度全景庆祝视角</li>
+                    <li>个性化获奖感言生成</li>
+                    <li>社交圈一键分发</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-45岁社交媒体重度用户，热衷于朋友圈晒图和蹭热点</p>
+                        <p><strong>📝 产品描述：</strong>基于AI换脸技术的H5活动页。用户上传照片，即可生成自己身穿国家队队服完成高难度动作并激情庆祝的逼真视频，让普通人也能体验“奥运冠军”的高光时刻。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">2</span>
+                <span class="hotword" style="font-size: 18px;">苏翊鸣金牌 <span class="tag">热</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>1,597,569</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">翊键起飞</span>
+                        <div class="score-info">
+                            <span class="score">81分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI滑雪动作美化</li>
+                    <li>摔跤秒变高难度特技特效</li>
+                    <li>金牌时刻专属BGM与解说生成的合成</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁短视频重度用户，滑雪初学者或“气氛组”选手</p>
+                        <p><strong>📝 产品描述：</strong>一款基于AI视觉技术的短视频特效工具。用户上传自己笨拙的滑雪视频，AI自动将其处理成苏翊鸣同款的空中转体1800度酷炫大片，满足朋友圈“凡尔赛”炫技需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 25分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">雪域元宇宙</span>
+                        <div class="score-info">
+                            <span class="score">78分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>1:1复刻首钢大跳台地图</li>
+                    <li>手指滑板操控模式</li>
+                    <li>虚拟装备DIY交易系统</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-25岁游戏爱好者，因冬奥对滑雪产生兴趣但无法实地体验的人群</p>
+                        <p><strong>📝 产品描述：</strong>一款轻量级手游/小程序。让用户在手机上也能体验在“雪飞天”赛道飞翔的快感，结合虚拟形象换装（冠军同款雪服），低门槛体验极限运动的魅力。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 40分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">冠军穿搭猎手</span>
+                        <div class="score-info">
+                            <span class="score">73分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>冬奥冠军同款装备识别</li>
+                    <li>全网库存监控与比价</li>
+                    <li>雪圈潮流穿搭评分</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁滑雪爱好者，追求潮流与装备品质的中产阶级</p>
+                        <p><strong>📝 产品描述：</strong>针对热搜带来的“苏翊鸣同款雪板/雪镜”抢购潮，利用图像识别技术快速定位明星装备，提供购买渠道聚合与平替推荐，解决粉丝“买不到”的痛点。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 70分 × 80% + 有用度 85分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">3</span>
+                <span class="hotword" style="font-size: 18px;">2026春节消费市场红火开场</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>1,200,897</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">凡尔赛消费年报</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>智能生成炫富文案</li>
+                    <li>全网消费排位赛</li>
+                    <li>隐形贫困认证徽章</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁，热衷社交分享、需要通过消费展示生活品质的年轻人</p>
+                        <p><strong>📝 产品描述：</strong>一款基于消费数据的社交生成器。在消费市场火爆背景下，能自动将你的春节账单转化为“低调炫富”的朋友圈海报，或生成幽默的“为GDP做贡献”证书，满足用户的社交虚荣心与吐槽欲。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 50分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">拼单过年搭子</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>高端局众筹拼单</li>
+                    <li>消费性格AI匹配</li>
+                    <li>临时家庭组建</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁单身群体，想体验高档消费但预算有限或怕孤独的人</p>
+                        <p><strong>📝 产品描述：</strong>针对春节高端消费市场火爆导致的价格上涨，为单身人群提供“众筹体验”服务。通过算法匹配消费观一致的陌生人，共同拼单顶级年夜饭或豪华旅游套餐，既分摊成本又解决社交需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">赛博年货照妖镜</span>
+                        <div class="score-info">
+                            <span class="score">80分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR实景透视比价</li>
+                    <li>智商税红色预警</li>
+                    <li>礼盒过度包装识别</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁，理性消费者、家庭采购负责人，厌恶被宰客</p>
+                        <p><strong>📝 产品描述：</strong>一款AR辅助购物工具。在火热且混乱的春节市场中，用户只需扫描商品，即可透视其“真实历史均价”与“全网差评”，用红色警报标记溢价严重的“智商税”商品，帮助用户在狂热市场中保持理性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 76分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">4</span>
+                <span class="hotword" style="font-size: 18px;">中国队米兰冬奥首金</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>731,816</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「中国队米兰冬奥首金」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3-pro-high"}},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"44s"}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3-pro-high"}},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"44s"}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">5</span>
+                <span class="hotword" style="font-size: 18px;">中国队第二金</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>592,854</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">AI夺金分身</span>
+                        <div class="score-info">
+                            <span class="score">91分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>夺金高光时刻AI换脸</li>
+                    <li>生成专属“金牌海报”</li>
+                    <li>一键分享至社交圈</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁社交媒体重度用户，乐于分享、追求参与感的爱国青年</p>
+                        <p><strong>📝 产品描述：</strong>利用AI技术，让用户将自己的脸无缝替换到夺金选手的精彩视频片段中，让每个人都能体验“夺冠”瞬间，极具病毒传播潜力。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">冠军同款雷达</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>夺金装备AI识别</li>
+                    <li>全网比价链接聚合</li>
+                    <li>冠军生活习惯揭秘</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁追求品质生活的消费者，运动爱好者及追星族</p>
+                        <p><strong>📝 产品描述：</strong>第一时间识别并推送冠军选手的穿搭、装备甚至使用的日常用品，满足用户“沾喜气”和模仿偶像的消费需求，解决搜索同款难的痛点。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">全网呐喊榜</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>语音分贝助威</li>
+                    <li>点亮城市热力图</li>
+                    <li>解锁品牌庆功券</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-30岁泛体育迷，喜欢集体活动和互动游戏的群体</p>
+                        <p><strong>📝 产品描述：</strong>一个H5互动小程序，用户对着手机呐喊助威，根据分贝值贡献热度，全国累计热度达标即全网撒落“夺金红包雨”，将情绪转化为流量。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">6</span>
+                <span class="hotword" style="font-size: 18px;">初三一定记得睡懒觉</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>569,614</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">初三免战牌</span>
+                        <div class="score-info">
+                            <span class="score">92分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI语音替身接听亲戚电话</li>
+                    <li>多平台一键同步“冬眠中”状态</li>
+                    <li>高情商“拒绝拜年”文案生成器</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁，厌倦春节高强度社交、急需独处空间的年轻人</p>
+                        <p><strong>📝 产品描述：</strong>一款春节社交防御工具。利用“初三睡懒觉”的民俗作为“挡箭牌”，通过AI代聊和状态同步，帮助用户优雅地拒绝不必要的社交打扰，捍卫合法赖床权。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">被窝运动会</span>
+                        <div class="score-info">
+                            <span class="score">85分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>超长待机睡眠时长排行榜</li>
+                    <li>花式赖床姿势AI评分</li>
+                    <li>生成“国家一级睡眠运动员”证书</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>16-28岁大学生及职场新人，喜欢玩梗、乐于在社交媒体分享生活</p>
+                        <p><strong>📝 产品描述：</strong>将“睡懒觉”游戏化的社交小程序。用户通过记录睡眠时长和赖床姿势参与全网PK，将“懒惰”转化为可炫耀的社交货币，满足假期的娱乐化表达需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">梦境盲盒机</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>懒觉梦境AI绘画生成</li>
+                    <li>匿名交换“初三怪梦”</li>
+                    <li>解梦师在线解读春节焦虑</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁城市白领，对心理学感兴趣，寻求精神共鸣</p>
+                        <p><strong>📝 产品描述：</strong>基于长时间睡眠产生的丰富梦境，利用AIGC将梦境可视化。用户睡醒后可生成梦境画作并匿名交换，将单纯的“睡懒觉”升华为深层潜意识的探索与社交。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 82分 × 80% + 有用度 67分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">7</span>
+                <span class="hotword" style="font-size: 18px;">首儿所制剂未授权第3方平台销售</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">成分照妖镜</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>明星制剂成分大起底</li>
+                    <li>OTC合法平替推荐</li>
+                    <li>成分党可视化的AR特效</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-35岁焦虑宝妈，追求科学育儿，对网红神药有需求但买不到。</p>
+                        <p><strong>📝 产品描述：</strong>针对买不到首儿所制剂的痛点，利用AI分析网红制剂成分，一键生成市面上成分相同的合法OTC替代品报告，用'照妖镜'滤镜粉碎神药滤镜，提供科学平替方案。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">鉴假大侦探</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>真假药包装找茬游戏</li>
+                    <li>代购话术鉴别挑战</li>
+                    <li>生成'防骗鉴定证书'</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁年轻父母，喜欢互动游戏，热衷于在社交媒体分享测试结果。</p>
+                        <p><strong>📝 产品描述：</strong>一款基于热搜新闻图片的'找茬'小程序。将正版制剂与网络假货图片混淆，让用户通过游戏学习辨别真伪细节，并在朋友圈晒出'鉴假十级学者'战绩，以游戏化方式普及法规。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 50分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">正版寻药图</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>互联网医院挂号直通攻略</li>
+                    <li>正规购药路径流程图</li>
+                    <li>黄牛黑名单社区曝光台</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>30-45岁实用主义家长，急需用药，不熟悉互联网医院操作。</p>
+                        <p><strong>📝 产品描述：</strong>聚合首儿所及各大医院内部制剂的官方获取渠道教程（如互联网医院邮寄流程），建立用户互助社区，标注正规渠道与曝光第三方违规店铺，做家长的'正道'导航仪。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 70分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">8</span>
+                <span class="hotword" style="font-size: 18px;">徐梦桃 文能浪姐唱跳武能冬奥夺冠 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>561,191</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「徐梦桃 文能浪姐唱跳武能冬奥夺冠」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3-pro-high"}},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"43s"}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3-pro-high"}},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"43s"}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">9</span>
+                <span class="hotword" style="font-size: 18px;">众星祝贺苏翊鸣</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>518,014</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「众星祝贺苏翊鸣」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3-pro-high"}},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"39s"}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3-pro-high"}},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"39s"}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">10</span>
+                <span class="hotword" style="font-size: 18px;">苏翊鸣教练双膝跪地 <span class="tag">热</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>352,683</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">破防记录仪</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>双向镜头同步录制</li>
+                    <li>心率激增自动抓拍</li>
+                    <li>夸张情绪特效包</li>
+                    <li>一键生成表情包</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁体育迷、电竞玩家及追星族</p>
+                        <p><strong>📝 产品描述：</strong>一款专注于记录“观众”反应的相机App。模仿教练跪地名场面，利用AI捕捉用户在观看比赛或开奖时的激动瞬间（如尖叫、跪地、掩面），自动剪辑成高燃Reaction视频。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 78分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">膝盖献给你</span>
+                        <div class="score-info">
+                            <span class="score">81分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR跪地膜拜生成</li>
+                    <li>万物皆可跪模板</li>
+                    <li>大神认证排行榜</li>
+                    <li>膝盖指数统计</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-25岁Z世代，网络重度冲浪用户</p>
+                        <p><strong>📝 产品描述：</strong>基于“双膝跪地”梗的社交互动工具。用户可用AR将“跪地小人”投射到大神作品、美食或偶像照片上，表达“我跪了”的最高敬意，将由于敬佩产生的膝盖损耗可视化。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 35分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">灵魂教头</span>
+                        <div class="score-info">
+                            <span class="score">75分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>情绪共鸣度匹配</li>
+                    <li>高光时刻互吹</li>
+                    <li>严师与慈父模式切换</li>
+                    <li>信任值成长体系</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-30岁正在学习技能或备考的年轻人</p>
+                        <p><strong>📝 产品描述：</strong>一款不仅匹配技能，更匹配“情感投入度”的导师寻找平台。致力于帮用户找到像佐藤教练那样，能为你的成功激动到跪地的良师益友，主打深度的精神陪伴与激励。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 70分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h2>🏆 产品创意排行榜 (TOP20)</h2>
+        <div class="ranking-list">
+
+            <div class="ranking-item">
+                <span class="ranking-rank gold">#1</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">初三免战牌</div>
+                    <div class="ranking-hotword">来源：初三一定记得睡懒觉</div>
+                </div>
+                <span class="ranking-score">92分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank silver">#2</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">AI夺金分身</div>
+                    <div class="ranking-hotword">来源：中国队第二金</div>
+                </div>
+                <span class="ranking-score">91分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank bronze">#3</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">梦桃分贝大冒险</div>
+                    <div class="ranking-hotword">来源：徐梦桃金牌</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">4</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">成分照妖镜</div>
+                    <div class="ranking-hotword">来源：首儿所制剂未授权第3方平台销售</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">5</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">凡尔赛消费年报</div>
+                    <div class="ranking-hotword">来源：2026春节消费市场红火开场</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">6</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">破防记录仪</div>
+                    <div class="ranking-hotword">来源：苏翊鸣教练双膝跪地</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">7</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">被窝运动会</div>
+                    <div class="ranking-hotword">来源：初三一定记得睡懒觉</div>
+                </div>
+                <span class="ranking-score">85分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">8</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">拼单过年搭子</div>
+                    <div class="ranking-hotword">来源：2026春节消费市场红火开场</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">9</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">全网呐喊榜</div>
+                    <div class="ranking-hotword">来源：中国队第二金</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">10</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">鉴假大侦探</div>
+                    <div class="ranking-hotword">来源：首儿所制剂未授权第3方平台销售</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">11</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">冠军锦鲤日签</div>
+                    <div class="ranking-hotword">来源：徐梦桃金牌</div>
+                </div>
+                <span class="ranking-score">81分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">12</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">翊键起飞</div>
+                    <div class="ranking-hotword">来源：苏翊鸣金牌</div>
+                </div>
+                <span class="ranking-score">81分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">13</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">膝盖献给你</div>
+                    <div class="ranking-hotword">来源：苏翊鸣教练双膝跪地</div>
+                </div>
+                <span class="ranking-score">81分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">14</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">赛博年货照妖镜</div>
+                    <div class="ranking-hotword">来源：2026春节消费市场红火开场</div>
+                </div>
+                <span class="ranking-score">80分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">15</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">冠军同款雷达</div>
+                    <div class="ranking-hotword">来源：中国队第二金</div>
+                </div>
+                <span class="ranking-score">79分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">16</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">梦境盲盒机</div>
+                    <div class="ranking-hotword">来源：初三一定记得睡懒觉</div>
+                </div>
+                <span class="ranking-score">79分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">17</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">雪域元宇宙</div>
+                    <div class="ranking-hotword">来源：苏翊鸣金牌</div>
+                </div>
+                <span class="ranking-score">78分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">18</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">全员空中技巧</div>
+                    <div class="ranking-hotword">来源：徐梦桃金牌</div>
+                </div>
+                <span class="ranking-score">76分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">19</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">正版寻药图</div>
+                    <div class="ranking-hotword">来源：首儿所制剂未授权第3方平台销售</div>
+                </div>
+                <span class="ranking-score">76分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">20</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">灵魂教头</div>
+                    <div class="ranking-hotword">来源：苏翊鸣教练双膝跪地</div>
+                </div>
+                <span class="ranking-score">75分</span>
+            </div>
+
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">24</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">13</span>
+                    <span class="stat-label">优秀创意 (&gt;80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">8</span>
+                    <span class="stat-label">良好创意 (60-80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">82.0</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🤖 本报告由 AI 自动生成 | 仅供参考</p>
+            <p>数据来源：天聚数行 API | AI 分析：Claude 4.5 Sonnet</p>
+            <p>生成时间：2026-02-18 22:44:02</p>
+        </footer>
+    </div>
+</body>
+</html>

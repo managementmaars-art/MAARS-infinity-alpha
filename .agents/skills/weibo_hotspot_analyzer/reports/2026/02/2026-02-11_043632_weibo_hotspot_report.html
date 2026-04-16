@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年02月11日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --accent-normal: #6C757D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .report-header h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+            margin-top: 32px;
+        }
+
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hotspot-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hotspot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .hotspot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .hotword {
+            font-weight: 600;
+            font-size: 16px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotness {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .hotspot-summary {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hotspot-detail {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .hotspot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+            transition: all 0.2s;
+        }
+
+        .idea-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .idea-card.excellent {
+            border-left-color: var(--accent-excellent);
+            background: linear-gradient(to right, rgba(255, 210, 63, 0.1), transparent);
+        }
+
+        .idea-card.good {
+            border-left-color: var(--accent-good);
+            background: linear-gradient(to right, rgba(6, 167, 125, 0.05), transparent);
+        }
+
+        .idea-card.normal {
+            border-left-color: var(--accent-normal);
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .idea-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .score-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.excellent {
+            background: var(--accent-excellent);
+            color: #333;
+        }
+
+        .badge.good {
+            background: var(--accent-good);
+            color: white;
+        }
+
+        .badge.normal {
+            background: var(--accent-normal);
+            color: white;
+        }
+
+        .idea-body p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .idea-body strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .idea-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .idea-body li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .score-breakdown {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .statistics h2 {
+            color: white;
+            border-left-color: white;
+            margin-top: 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ranking-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ranking-rank {
+            font-size: 24px;
+            font-weight: 700;
+            width: 40px;
+            text-align: center;
+        }
+
+        .ranking-rank.gold { color: #FFD700; }
+        .ranking-rank.silver { color: #C0C0C0; }
+        .ranking-rank.bronze { color: #CD7F32; }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .ranking-hotword {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .ranking-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .report-header { padding: 24px; }
+            .report-header h1 { font-size: 24px; }
+            .hotspot-list { grid-template-columns: 1fr; }
+            .idea-header { flex-direction: column; align-items: flex-start; }
+            .stat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>🤖 微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>📅 生成日期：2026-02-11</span>
+                <span>🔥 热搜总数：6</span>
+                <span>💡 创意总数：20</span>
+                <span>⏰ 生成时间：2026-02-11 12:36:32</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">微信9大更新</span>
+                </div>
+                <div class="hotness">热度：1164274 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">火箭回收</span>
+                </div>
+                <div class="hotness">热度：855567 <span class="tag">新</span></div>
+                <div class="hotspot-summary">SpaceX利用“筷子”机械臂成功在空中夹住回收助推器，上演科幻照进现实。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">到中国过年成为热潮</span>
+                </div>
+                <div class="hotness">热度：655864 </div>
+                <div class="hotspot-summary">受免签利好影响，大批外国游客涌入中国体验地道春节民俗与年味。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">马上有乾崑</span>
+                </div>
+                <div class="hotness">热度： <span class="tag">新</span></div>
+                <div class="hotspot-summary">华为智能汽车解决方案“乾崑”的营销话题，寓意立刻拥有高阶智驾技术与好运。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">沈腾找了个最帅的演自己</span>
+                </div>
+                <div class="hotness">热度：电影 645323 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">挪威选手冬奥摘铜后哭着自曝出轨</span>
+                </div>
+                <div class="hotness">热度：615036 <span class="tag">火热</span></div>
+                <div class="hotspot-summary">挪威选手冬奥摘铜后，情绪崩溃并在采访中哭诉自己出轨，引发哗然。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">孙海洋夫妇将名下公司转给孙卓</span>
+                </div>
+                <div class="hotness">热度：569857 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">第一次见双胞胎不是一个物种</span>
+                </div>
+                <div class="hotness">热度：488765 <span class="tag">新</span></div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">鹅鸭杀</span>
+                </div>
+                <div class="hotness">热度：252370 </div>
+                <div class="hotspot-summary">一款因直播效果爆火的免费狼人杀游戏，主打魔性画风与语音社交博弈。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">长征十号甲火箭</span>
+                </div>
+                <div class="hotness">热度：223380 <span class="tag">新</span></div>
+                
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">1</span>
+                <span class="hotword" style="font-size: 18px;">微信9大更新</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>1,164,274</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「微信9大更新」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsmhduuL8Cmpg7VxHWhJXLZ0n0_tWJ4vsGsa9VyZZJSocgVdX-raUo_eRXAsmSh-T-s53j2j1p9i0gnjhfkDA12bJyIYWXxQ9k21z7KywyirXGnT2zgn76y9dDauv3PPW_IpB43&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsmhduuL8Cmpg7VxHWhJXLZ0n0_tWJ4vsGsa9VyZZJSocgVdX-raUo_eRXAsmSh-T-s53j2j1p9i0gnjhfkDA12bJyIYWXxQ9k21z7KywyirXGnT2zgn76y9dDauv3PPW_IpB43&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsmhduuL8Cmpg7VxHWhJXLZ0n0_tWJ4vsGsa9VyZZJSocgVdX-raUo_eRXAsmSh-T-s53j2j1p9i0gnjhfkDA12bJyIYWXxQ9k21z7KywyirXGnT2zgn76y9dDauv3PPW_IpB43&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsmhduuL8Cmpg7VxHWhJXLZ0n0_tWJ4vsGsa9VyZZJSocgVdX-raUo_eRXAsmSh-T-s53j2j1p9i0gnjhfkDA12bJyIYWXxQ9k21z7KywyirXGnT2zgn76y9dDauv3PPW_IpB43&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">2</span>
+                <span class="hotword" style="font-size: 18px;">火箭回收 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>855,567</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">专注回收计划</span>
+                        <div class="score-info">
+                            <span class="score">87分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>火箭升空专注倒计时</li>
+                    <li>机械臂回收判定完成度</li>
+                    <li>专注失败爆炸特效</li>
+                    <li>成功回收勋章墙</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>16-35岁学生及职场人，难以集中注意力，喜爱游戏化工具</p>
+                        <p><strong>📝 产品描述：</strong>将番茄工作法可视化的效能工具。开启专注即发射火箭，中途玩手机则火箭爆炸，专注达标则触发“筷子夹火箭”的史诗级回收动画，用震撼感激励用户保持专注。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">筷子神手AR</span>
+                        <div class="score-info">
+                            <span class="score">80分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR实景捕捉跌落物</li>
+                    <li>自定义机械臂皮肤</li>
+                    <li>魔性物理引擎反馈</li>
+                    <li>一键生成朋友圈短视频</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-28岁喜欢跟风热梗、热爱分享短视频的年轻群体</p>
+                        <p><strong>📝 产品描述：</strong>一款超休闲AR游戏。用户通过手机摄像头，操作虚拟“筷子”机械臂，在现实场景中接住从天而降的各种物品（如甚至猫咪、作业本、前任照片），主打解压与社交分享。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 94分 × 80% + 有用度 24分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">逆境回收生成器</span>
+                        <div class="score-info">
+                            <span class="score">74分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>绝地反击视频模板</li>
+                    <li>火箭回收隐喻文案库</li>
+                    <li>人生至暗时刻打卡</li>
+                    <li>社区互助能量站</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁正处于低谷期或创业期的奋斗者，需要情感共鸣</p>
+                        <p><strong>📝 产品描述：</strong>借势火箭回收的“起死回生”寓意，提供视频剪辑模板与文案。用户上传自己失败后又成功的经历，自动合成带有“惊险回收”视觉元素的励志短片，传播正能量。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 70分 × 80% + 有用度 90分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">3</span>
+                <span class="hotword" style="font-size: 18px;">到中国过年成为热潮</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>655,864</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">蹭个年夜饭</span>
+                        <div class="score-info">
+                            <span class="score">90分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>中外家庭年夜饭匹配</li>
+                    <li>饮食禁忌智能互译</li>
+                    <li>社牛/社恐模式选择</li>
+                    <li>年俗礼物互换建议</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁热爱社交的外国游客，及好客的中国年轻家庭</p>
+                        <p><strong>📝 产品描述：</strong>一款主打'国民外交'的社交应用。连接想体验地道春节的外国游客与愿意开放自家餐桌的中国家庭，将'吃饺子'变成一场跨文化的双向奔赴，极具短视频传播爆点。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">老外春节闯关</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR寻找财神爷</li>
+                    <li>赶大集任务清单</li>
+                    <li>放鞭炮安全模拟</li>
+                    <li>亲戚称呼计算器(外语版)</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-28岁喜欢探索、拍Vlog的Z世代外国背包客</p>
+                        <p><strong>📝 产品描述：</strong>基于LBS的AR实景游戏。将逛庙会、贴春联、赶大集包装成'特种兵任务'，完成后生成'中国通'电子证书，满足外国游客在TikTok/Ins上的炫耀心理。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">年俗翻译官</span>
+                        <div class="score-info">
+                            <span class="score">78分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>方言实时转译</li>
+                    <li>菜单拍照识别与科普</li>
+                    <li>红包金额吉利数推荐</li>
+                    <li>春运抢票攻略</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>30-50岁深度游、对中国文化感兴趣的家庭型外国游客</p>
+                        <p><strong>📝 产品描述：</strong>专注于解决文化隔阂的实用工具。不仅翻译语言，更翻译'潜规则'（如为什么不能把筷子插饭里、红包该给多少），帮助外国游客深度融入春节，避免文化尴尬。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 90分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">4</span>
+                <span class="hotword" style="font-size: 18px;">马上有乾崑 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">乾崑好运生成器</span>
+                        <div class="score-info">
+                            <span class="score">87分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI生成专属智驾运势签</li>
+                    <li>乾崑品牌元素的转运壁纸</li>
+                    <li>好友助力解锁购车权益</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁关注科技潮流、喜爱玄学文化的年轻用户</p>
+                        <p><strong>📝 产品描述：</strong>结合“乾崑”谐音与赛博玄学，用户通过AI测算今日“智驾运势”，生成带有华为乾崑元素的创意好运符，不仅满足社交分享欲，还能抽取购车福利。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">马上乾崑AR</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR扫描实车识别智驾版</li>
+                    <li>虚拟乾崑组件改装小游戏</li>
+                    <li>收集图鉴兑换试驾礼包</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁汽车爱好者、科技尝鲜者及手游玩家</p>
+                        <p><strong>📝 产品描述：</strong>一款AR互动应用，用户扫描身边的汽车，即可在手机屏幕中为其“安装”虚拟乾崑智驾系统，体验炫酷的科技特效，通过收集不同车型图鉴赢取奖励。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 58分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">乾崑智驾路书</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>高阶智驾覆盖路线推荐</li>
+                    <li>用户实测智驾视频流</li>
+                    <li>一键预约沿途试驾车辆</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁有购车意向的中产阶级、自驾游爱好者</p>
+                        <p><strong>📝 产品描述：</strong>针对想体验“马上有乾崑”的用户，提供基于华为ADS覆盖范围的特色旅游路书，让用户在最适合的路段体验智驾功能，实现“所见即所得”的试驾体验。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 70分 × 80% + 有用度 98分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">5</span>
+                <span class="hotword" style="font-size: 18px;">沈腾找了个最帅的演自己</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>645,323</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「沈腾找了个最帅的演自己」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuO7gfrbdtj5-QE9B1Wt_RRJt9O7owqqoaOn1uI79V_vogH4IirzLMTyGfgXDuVomfzQ7vI5RqKqMKM_HNqVcaImkc4a313JQnSPannX9R08Zx12cXiglam4_2mBrOpBl27we09&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuO7gfrbdtj5-QE9B1Wt_RRJt9O7owqqoaOn1uI79V_vogH4IirzLMTyGfgXDuVomfzQ7vI5RqKqMKM_HNqVcaImkc4a313JQnSPannX9R08Zx12cXiglam4_2mBrOpBl27we09&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuO7gfrbdtj5-QE9B1Wt_RRJt9O7owqqoaOn1uI79V_vogH4IirzLMTyGfgXDuVomfzQ7vI5RqKqMKM_HNqVcaImkc4a313JQnSPannX9R08Zx12cXiglam4_2mBrOpBl27we09&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuO7gfrbdtj5-QE9B1Wt_RRJt9O7owqqoaOn1uI79V_vogH4IirzLMTyGfgXDuVomfzQ7vI5RqKqMKM_HNqVcaImkc4a313JQnSPannX9R08Zx12cXiglam4_2mBrOpBl27we09&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">6</span>
+                <span class="hotword" style="font-size: 18px;">挪威选手冬奥摘铜后哭着自曝出轨 <span class="tag">火热</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>615,036</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">塌房模拟器</span>
+                        <div class="score-info">
+                            <span class="score">92分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>危机公关RPG玩法</li>
+                    <li>情绪失控随机事件</li>
+                    <li>媒体采访模拟对答</li>
+                    <li>多结局：洗白成功或身败名裂</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁，热衷吃瓜、喜欢模拟经营类游戏的年轻群体</p>
+                        <p><strong>📝 产品描述：</strong>一款文字冒险游戏。玩家扮演获得荣誉却身负丑闻的运动员，需在领奖台、发布会等高光时刻进行极限微操，平衡荣誉值与道德值，体验“心虚”的刺激感。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">鳄鱼泪鉴别仪</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>微表情AI分析</li>
+                    <li>愧疚vs喜悦情绪图谱</li>
+                    <li>一键生成鉴定报告</li>
+                    <li>吃瓜群众投票打分</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁，情感敏锐、对伴侣行为有疑虑或喜欢分析八卦的用户</p>
+                        <p><strong>📝 产品描述：</strong>基于面部识别技术的娱乐工具。上传对象哭泣或情绪激动的视频，AI分析其微表情是源于纯粹的喜悦还是潜意识的愧疚（出轨/亏心事），让“演技”无处遁形。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">荣耀忏悔室</span>
+                        <div class="score-info">
+                            <span class="score">78分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>匿名阅后即焚</li>
+                    <li>成就解锁自爆权限</li>
+                    <li>围观群众审判庭</li>
+                    <li>心理压力释放向导</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-40岁，高压职场人士，表面光鲜但内心藏有秘密的群体</p>
+                        <p><strong>📝 产品描述：</strong>一个反向社交平台。用户必须上传某种“成功证明”（如奖状、offer）才能解锁发布“阴暗秘密”的权限，利用巨大的反差感进行匿名宣泄，满足“赢了比赛输了人品”的倾诉欲。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 50分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">7</span>
+                <span class="hotword" style="font-size: 18px;">孙海洋夫妇将名下公司转给孙卓</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>569,857</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「孙海洋夫妇将名下公司转给孙卓」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbvZYSRPH_qrfv56oRfo0hy9xwruGmwITam-uro32sRoWSH4kIjxBS1E923yMYuB76KXh7XTIX82jVVJj5hp9zfpWmzj4UUfWAB_cHQ0Ebw87XirpHL7Zghi6vHFjVgW8KvroJ_W&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbvZYSRPH_qrfv56oRfo0hy9xwruGmwITam-uro32sRoWSH4kIjxBS1E923yMYuB76KXh7XTIX82jVVJj5hp9zfpWmzj4UUfWAB_cHQ0Ebw87XirpHL7Zghi6vHFjVgW8KvroJ_W&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbvZYSRPH_qrfv56oRfo0hy9xwruGmwITam-uro32sRoWSH4kIjxBS1E923yMYuB76KXh7XTIX82jVVJj5hp9zfpWmzj4UUfWAB_cHQ0Ebw87XirpHL7Zghi6vHFjVgW8KvroJ_W&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbvZYSRPH_qrfv56oRfo0hy9xwruGmwITam-uro32sRoWSH4kIjxBS1E923yMYuB76KXh7XTIX82jVVJj5hp9zfpWmzj4UUfWAB_cHQ0Ebw87XirpHL7Zghi6vHFjVgW8KvroJ_W&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">8</span>
+                <span class="hotword" style="font-size: 18px;">第一次见双胞胎不是一个物种 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>488,765</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「第一次见双胞胎不是一个物种」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbvSZoU4EfqbywD1YJCiGsRkIDOo0OOYi9kbmllYvct2BC4eT4nE4lIZQp_DHJGJ7W7l3o52sCGWAnrkf349CRZCOiYyKtqrJ6ipkOeL84DgYE7-QWWCZf7SWykKTVaG24QHGfks&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbvSZoU4EfqbywD1YJCiGsRkIDOo0OOYi9kbmllYvct2BC4eT4nE4lIZQp_DHJGJ7W7l3o52sCGWAnrkf349CRZCOiYyKtqrJ6ipkOeL84DgYE7-QWWCZf7SWykKTVaG24QHGfks&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbvSZoU4EfqbywD1YJCiGsRkIDOo0OOYi9kbmllYvct2BC4eT4nE4lIZQp_DHJGJ7W7l3o52sCGWAnrkf349CRZCOiYyKtqrJ6ipkOeL84DgYE7-QWWCZf7SWykKTVaG24QHGfks&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbvSZoU4EfqbywD1YJCiGsRkIDOo0OOYi9kbmllYvct2BC4eT4nE4lIZQp_DHJGJ7W7l3o52sCGWAnrkf349CRZCOiYyKtqrJ6ipkOeL84DgYE7-QWWCZf7SWykKTVaG24QHGfks&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">9</span>
+                <span class="hotword" style="font-size: 18px;">鹅鸭杀</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>252,370</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">变声怪叫鹅</span>
+                        <div class="score-info">
+                            <span class="score">90分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>角色专属声线预设（如鹈鹕吞人音效）</li>
+                    <li>实时悬浮窗变声</li>
+                    <li>魔性表情包语音转文字</li>
+                    <li>游戏内近距离语音整蛊特效</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>16-30岁游戏玩家，特别是有直播需求或喜爱搞怪社交的用户。</p>
+                        <p><strong>📝 产品描述：</strong>专为鹅鸭杀设计的变声与音效辅助工具，内置各种角色的“梗”音效，让玩家在游戏语音环节能瞬间制造节目效果，提升社交乐趣。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">职场鹅鸭杀</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>职场角色一键代入（老板是鸭子，实习生是鹅）</li>
+                    <li>办公室生存模拟器</li>
+                    <li>匿名职场吐槽树洞</li>
+                    <li>生成“职场杀”四格漫画</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-35岁职场打工人，面临职场压力需要宣泄和共鸣的群体。</p>
+                        <p><strong>📝 产品描述：</strong>将游戏的热门逻辑映射到现实职场，通过生成趣味化的职场身份卡牌和吐槽内容，利用热梗帮助打工人解构职场焦虑，极具社交传播属性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 52分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">口袋鹅鸭聚会</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>线下无道具发牌助手</li>
+                    <li>AR实景搜证模式</li>
+                    <li>聚会惩罚大转盘</li>
+                    <li>蓝牙近距离语音模拟</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-28岁大学生及聚会爱好者，喜欢线下桌游社交。</p>
+                        <p><strong>📝 产品描述：</strong>将线上游戏体验搬到线下的聚会辅助APP，解决线下玩鹅鸭杀发牌繁琐的问题，结合AR技术让面对面聚会也能体验“做任务”的快乐。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">10</span>
+                <span class="hotword" style="font-size: 18px;">长征十号甲火箭 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>223,380</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「长征十号甲火箭」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbtmDMZFhORW7BVTUAwAQb8H0oPGLzJg0pb6OJuws202XJFnkR5MkKRP5mfpdegbjFXu7RO1kZoklKQ-hI34CYq-5T9_pPIh7bVAfMF-4g0B-J7PKnGxhnwLUOyF1HgIDIpRCeJC&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbtmDMZFhORW7BVTUAwAQb8H0oPGLzJg0pb6OJuws202XJFnkR5MkKRP5mfpdegbjFXu7RO1kZoklKQ-hI34CYq-5T9_pPIh7bVAfMF-4g0B-J7PKnGxhnwLUOyF1HgIDIpRCeJC&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbtmDMZFhORW7BVTUAwAQb8H0oPGLzJg0pb6OJuws202XJFnkR5MkKRP5mfpdegbjFXu7RO1kZoklKQ-hI34CYq-5T9_pPIh7bVAfMF-4g0B-J7PKnGxhnwLUOyF1HgIDIpRCeJC&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbtmDMZFhORW7BVTUAwAQb8H0oPGLzJg0pb6OJuws202XJFnkR5MkKRP5mfpdegbjFXu7RO1kZoklKQ-hI34CYq-5T9_pPIh7bVAfMF-4g0B-J7PKnGxhnwLUOyF1HgIDIpRCeJC&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h2>🏆 产品创意排行榜 (TOP20)</h2>
+        <div class="ranking-list">
+
+            <div class="ranking-item">
+                <span class="ranking-rank gold">#1</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">塌房模拟器</div>
+                    <div class="ranking-hotword">来源：挪威选手冬奥摘铜后哭着自曝出轨</div>
+                </div>
+                <span class="ranking-score">92分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank silver">#2</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">蹭个年夜饭</div>
+                    <div class="ranking-hotword">来源：到中国过年成为热潮</div>
+                </div>
+                <span class="ranking-score">90分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank bronze">#3</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">变声怪叫鹅</div>
+                    <div class="ranking-hotword">来源：鹅鸭杀</div>
+                </div>
+                <span class="ranking-score">90分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">4</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">专注回收计划</div>
+                    <div class="ranking-hotword">来源：火箭回收</div>
+                </div>
+                <span class="ranking-score">87分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">5</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">乾崑好运生成器</div>
+                    <div class="ranking-hotword">来源：马上有乾崑</div>
+                </div>
+                <span class="ranking-score">87分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">6</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">老外春节闯关</div>
+                    <div class="ranking-hotword">来源：到中国过年成为热潮</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">7</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">鳄鱼泪鉴别仪</div>
+                    <div class="ranking-hotword">来源：挪威选手冬奥摘铜后哭着自曝出轨</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">8</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">职场鹅鸭杀</div>
+                    <div class="ranking-hotword">来源：鹅鸭杀</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">9</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">马上乾崑AR</div>
+                    <div class="ranking-hotword">来源：马上有乾崑</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">10</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">筷子神手AR</div>
+                    <div class="ranking-hotword">来源：火箭回收</div>
+                </div>
+                <span class="ranking-score">80分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">11</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">年俗翻译官</div>
+                    <div class="ranking-hotword">来源：到中国过年成为热潮</div>
+                </div>
+                <span class="ranking-score">78分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">12</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">荣耀忏悔室</div>
+                    <div class="ranking-hotword">来源：挪威选手冬奥摘铜后哭着自曝出轨</div>
+                </div>
+                <span class="ranking-score">78分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">13</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">乾崑智驾路书</div>
+                    <div class="ranking-hotword">来源：马上有乾崑</div>
+                </div>
+                <span class="ranking-score">76分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">14</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">口袋鹅鸭聚会</div>
+                    <div class="ranking-hotword">来源：鹅鸭杀</div>
+                </div>
+                <span class="ranking-score">76分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">15</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">逆境回收生成器</div>
+                    <div class="ranking-hotword">来源：火箭回收</div>
+                </div>
+                <span class="ranking-score">74分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">16</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「微信9大更新」分析失败</div>
+                    <div class="ranking-hotword">来源：微信9大更新</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">17</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「沈腾找了个最帅的演自己」分析失败</div>
+                    <div class="ranking-hotword">来源：沈腾找了个最帅的演自己</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">18</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「孙海洋夫妇将名下公司转给孙卓」分析失败</div>
+                    <div class="ranking-hotword">来源：孙海洋夫妇将名下公司转给孙卓</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">19</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「第一次见双胞胎不是一个物种」分析失败</div>
+                    <div class="ranking-hotword">来源：第一次见双胞胎不是一个物种</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">20</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「长征十号甲火箭」分析失败</div>
+                    <div class="ranking-hotword">来源：长征十号甲火箭</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">20</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">9</span>
+                    <span class="stat-label">优秀创意 (&gt;80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">6</span>
+                    <span class="stat-label">良好创意 (60-80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">82.8</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🤖 本报告由 AI 自动生成 | 仅供参考</p>
+            <p>数据来源：天聚数行 API | AI 分析：Claude 4.5 Sonnet</p>
+            <p>生成时间：2026-02-11 12:36:32</p>
+        </footer>
+    </div>
+</body>
+</html>

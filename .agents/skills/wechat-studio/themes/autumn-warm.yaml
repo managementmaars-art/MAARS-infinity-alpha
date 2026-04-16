@@ -1,0 +1,35 @@
+# 秋日暖光主题
+name: autumn-warm
+type: code
+description: "【秋日暖光】温暖治愈，橙色调，文艺美学"
+version: "4.0"
+
+# 风格说明
+style_info:
+  mood: "温暖治愈"
+  colors: "橙色调"
+  best_for: "情感故事、生活随笔"
+
+# 颜色方案
+colors:
+  background: "#faf9f5"
+  text: "#4a413d"
+  primary: "#d97758"
+  secondary: "#c06b4d"
+  quote_background: "#fef4e7"
+
+# 渲染器配置（代码渲染，无需 AI）
+renderer:
+  h2_icon: "▶"
+  h2_icon_shadow: "0 0 12px rgba(217, 119, 88, 0.5)"
+  card_background_image: "linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px)"
+  card_background_size: "20px 20px"
+  card_border: "1px solid rgba(0, 0, 0, 0.05)"
+  card_shadow: "0 10px 30px rgba(0, 0, 0, 0.04), 0 0 15px rgba(217, 119, 88, 0.4)"
+  card_border_radius: "18px"
+  font_size: "16px"
+  line_height: "1.75"
+  letter_spacing: "0.5px"
+  hr_style: "border: none; height: 1px; background-color: rgba(74, 65, 61, 0.1);"
+
+

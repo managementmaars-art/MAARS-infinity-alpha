@@ -1,0 +1,45 @@
+# Claw Control - Agent Configuration
+# Define your AI agents here. Edit and reload without rebuilding!
+#
+# Fields:
+#   name: Display name (required)
+#   description: What this agent does
+#   role: Agent role/specialty
+#   avatar: Emoji or path to image (e.g., "🤖" or "/avatars/agent1.png")
+#   status: Initial status (idle, working, offline) - default: idle
+#
+# Example themes:
+#   - Customize with your favorite show characters
+#   - Use role-based names (Lead, Backend, Frontend, etc.)
+#   - Or keep it simple with Agent 1, Agent 2, etc.
+
+agents:
+  - name: "Coordinator"
+    description: "Team lead - delegates tasks and verifies completion"
+    role: "Lead"
+    avatar: "👑"
+
+  - name: "Backend"
+    description: "Server-side specialist - APIs, databases, business logic"
+    role: "Developer"
+    avatar: "💻"
+
+  - name: "Frontend"
+    description: "UI/UX specialist - components, styling, user experience"
+    role: "Developer"
+    avatar: "🎨"
+
+  - name: "DevOps"
+    description: "Infrastructure - deployments, CI/CD, cloud resources"
+    role: "Operations"
+    avatar: "🔧"
+
+  - name: "Researcher"
+    description: "Analysis & Documentation - investigation, docs, specs"
+    role: "Research"
+    avatar: "📚"
+
+  - name: "Tester"
+    description: "Quality assurance - testing, bug hunting, validation"
+    role: "QA"
+    avatar: "🧪"

@@ -1,0 +1,206 @@
+# Code Review Plan
+
+You are one iteration of an automated PR code review loop.
+Each invocation, you do exactly **one unit of work**, then stop.
+An external loop will re-invoke you in a fresh context for the next unit.
+
+---
+
+## What to do
+
+Check whether `PR_COMMENTS_PLAN.md` exists in the current directory.
+
+- **Does not exist** → run **Initialize** below.
+- **Exists** → run **Fix one comment** below.
+
+---
+
+## Initialize (first run only)
+
+1. Identify the current PR:
+   ```bash
+   gh pr view --json number,title,url,headRefName
+   ```
+
+2. Fetch all review threads, including resolution status (the REST API does not
+   expose this — use GraphQL):
+   ```bash
+   gh api graphql -f query='
+     query($owner: String!, $repo: String!, $number: Int!) {
+       repository(owner: $owner, name: $repo) {
+         pullRequest(number: $number) {
+           reviewThreads(first: 100) {
+             nodes {
+               isResolved
+               isOutdated
+               comments(first: 10) {
+                 nodes {
+                   id
+                   databaseId
+                   body
+                   path
+                   line
+                   author { login }
+                 }
+               }
+             }
+           }
+         }
+       }
+     }' \
+     -F owner=OWNER \
+     -F repo=REPO \
+     -F number=PR_NUMBER \
+     | jq '.data.repository.pullRequest.reviewThreads.nodes[]
+           | select(.isResolved == false and .isOutdated == false)'
+   ```
+   Only include threads where `isResolved` is `false`. Skip already-resolved
+   and outdated threads entirely.
+
+3. Triage every comment into one of:
+   - **MUST_FIX** — correctness bug, security flaw, broken build, or data loss risk
+   - **SHOULD_FIX** — non-blocking improvement worth addressing in this PR
+   - **PARK** — valid concern but out of scope; will open a follow-up issue
+   - **OUT_OF_SCOPE** — does not apply to this code; reply with reasoning
+   - **NEEDS_CLARIFICATION** — intent is genuinely ambiguous; will ask a focused question instead of guessing
+
+4. Write `PR_COMMENTS_PLAN.md` (see format at the bottom of this file).
+
+5. **Stop.** Do not fix anything on the first run.
+   The external loop will re-invoke you with a fresh context.
+
+---
+
+## Fix one comment
+
+1. Read `PR_COMMENTS_PLAN.md`. Find the topmost unresolved item:
+   - First: any MUST_FIX with `[ ]`
+   - Then: any SHOULD_FIX with `[ ]`
+   - Then: any NEEDS_CLARIFICATION with `[ ]`
+   - If none remain → write the file `PR_REVIEW_DONE` and print:
+     `"All comments addressed. Stopping loop."` then stop.
+
+   Before working on the selected item, verify it is still unresolved on GitHub
+   (it may have been resolved manually since the plan was written):
+   ```bash
+   gh api graphql -f query='
+     query($id: ID!) {
+       node(id: $id) {
+         ... on PullRequestReviewComment {
+           pullRequestReviewThread { isResolved }
+         }
+       }
+     }' \
+     -F id=COMMENT_NODE_ID
+   ```
+   If `isResolved` is `true`, mark the item `[x already resolved on GitHub]`
+   in `PR_COMMENTS_PLAN.md` and **stop** — let the loop pick the next item.
+
+2. Check for a `.pr-review/plan-<comment-id>.md` file — if it exists, a
+   previous session was interrupted mid-fix. Skip to step 5.
+
+3. Discover project safeguards by inspecting (if they exist):
+   `CLAUDE.md`, `AGENTS.md`, `Makefile`, `.github/workflows/`, `README.md`
+
+   Identify all required checks: tests, linting, compilation, formatting, etc.
+   Run all of them. If any fail, **stop and report** — do not touch code.
+
+4. Assess the fix complexity:
+   - Trivial (rename, one-liner, obvious fix): fix directly.
+   - Non-trivial: write a brief plan to `.pr-review/plan-<comment-id>.md` first.
+
+5. Implement the fix.
+
+6. Run all safeguards again. If any fail, revert your changes and report.
+
+7. Commit and push:
+   ```bash
+   git add <changed files>
+   git commit -m "<type>(<scope>): <description addressing the comment>"
+   git push
+   ```
+
+8. Reply to the comment on GitHub explaining what you changed and why.
+
+9. Resolve the comment on GitHub.
+
+10. Update `PR_COMMENTS_PLAN.md`:
+    - Change `[ ]` to `[x done: <commit-hash>]` for the comment you fixed.
+
+11. Delete `.pr-review/plan-<comment-id>.md` if you created one.
+
+12. **Stop.** Do not fix any other comments.
+    The external loop will re-invoke you with a fresh context.
+
+---
+
+## PARK handling
+
+1. Reply to the comment explaining why it is out of scope for this PR.
+2. Open a GitHub issue to track it:
+   ```bash
+   gh issue create --title "<brief description>" --body "<context>"
+   ```
+3. In `PR_COMMENTS_PLAN.md`, mark the item as `[parked → #<issue>]`.
+4. **Stop.**
+
+---
+
+## OUT_OF_SCOPE handling
+
+1. Reply to the comment explaining why it does not apply.
+2. In `PR_COMMENTS_PLAN.md`, mark the item as `[rejected: <reason>]`.
+3. **Stop.**
+
+---
+
+## NEEDS_CLARIFICATION handling
+
+1. Post one focused question as a reply to the comment. Do not implement anything.
+   ```bash
+   cat > /tmp/pr-review-reply-<comment-id>.md <<'EOF'
+   Thanks for the feedback! Before I make a change, I want to make sure I understand what you're after:
+
+   <one specific, focused question>
+   EOF
+
+   jq -n --rawfile body /tmp/pr-review-reply-<comment-id>.md '{body:$body}' \
+     > /tmp/pr-review-reply-<comment-id>.json
+
+   gh api repos/{owner}/{repo}/pulls/{pull_number}/comments/<comment-id>/replies \
+     --input /tmp/pr-review-reply-<comment-id>.json
+   ```
+   Ask exactly **one** question. Do not resolve the thread.
+2. In `PR_COMMENTS_PLAN.md`, mark the item as `[asked: <brief question summary>]`.
+3. **Stop.**
+
+---
+
+## PR_COMMENTS_PLAN.md format
+
+```markdown
+# PR Comments Plan
+PR: #<number> — <title>
+URL: <url>
+Fetched: <date>
+
+## MUST_FIX
+- [ ] <comment-id> — <description> — <file>:<line>
+- [x done: abc1234] <comment-id> — <description> — <file>:<line>
+
+## SHOULD_FIX
+- [ ] <comment-id> — <description>
+
+## PARK
+- [parked → #88] <comment-id> — <description>
+
+## OUT_OF_SCOPE
+- [rejected: unrelated to this PR] <comment-id> — <description>
+
+## NEEDS_CLARIFICATION
+- [ ] <comment-id> — <description>
+- [asked: which approach did you prefer?] <comment-id> — <description>
+```
+
+Keep the list ordered: topmost items are addressed first.
+Do not reorder items between sessions.

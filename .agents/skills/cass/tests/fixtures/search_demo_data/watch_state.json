@@ -1,0 +1,10 @@
+{
+  "pending_count": 3,
+  "last_check": 1700000000,
+  "connectors": {
+    "codex": {
+      "last_scan_ts": 1700000000,
+      "roots": []
+    }
+  }
+}

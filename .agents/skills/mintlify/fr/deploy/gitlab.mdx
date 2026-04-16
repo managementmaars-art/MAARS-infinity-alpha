@@ -1,0 +1,112 @@
+---
+title: "GitLab"
+description: "Connectez votre dépôt GitLab à Mintlify pour des déploiements automatisés, des prévisualisations de merge requests et une synchronisation continue."
+keywords: ["intégration GitLab", "jetons d'accès", "aperçus des merge requests", "auto-hébergé", "instance"]
+---
+
+Mintlify utilise des jetons d'accès et des webhooks pour authentifier et synchroniser les changements entre GitLab et Mintlify.
+
+- Mintlify utilise des jetons d'accès pour récupérer des informations depuis GitLab.
+- GitLab utilise des webhooks pour avertir Mintlify lorsque vous effectuez des changements, ce qui permet des déploiements de prévisualisation pour les merge requests.
+
+<div id="set-up-the-connection">
+  ## Configurer la connexion
+</div>
+
+<Steps>
+  <Step title="Trouver votre ID de projet">
+    Dans votre projet GitLab, accédez à **Settings** > **General** et repérez votre **Project ID**.
+    <Frame>
+      <img src="/images/gitlab/gitlab-project-id.png" alt="La page General Settings dans le tableau de bord GitLab. Le Project ID est mis en évidence." />
+    </Frame>
+  </Step>
+  <Step title="Générer un jeton d'accès">
+    Accédez à **Settings** > **Access Tokens** et sélectionnez **Add new token**.
+    
+    Configurez le jeton avec les paramètres suivants :
+    - **Name** : Mintlify
+    - **Role** : Maintainer (requis pour les référentiels privés)
+    - **Scopes** : `api` et `read_api`
+    
+    Cliquez sur **Create project access token** et copiez le jeton.
+
+    <Note>
+      Si les Project Access Tokens ne sont pas disponibles, vous pouvez utiliser un Personal Access Token. Notez que les Personal Access Tokens expirent et doivent être renouvelés.
+    </Note>
+
+    <Frame>
+      <img src="/images/gitlab/gitlab-project-access-token.png" alt="La page Access Tokens dans le tableau de bord GitLab. Les paramètres à configurer pour Mintlify sont mis en évidence." />
+    </Frame>
+
+  </Step>
+  <Step title="Configurer la connexion">
+    Dans le [Tableau de bord Mintlify](https://dashboard.mintlify.com/settings/deployment/git-settings) :
+    1. Saisissez votre ID de projet et votre jeton d'accès.
+    2. Si vous avez un monorepo et que votre documentation ne se trouve pas à la racine de votre référentiel, activez le toggle **Set up as monorepo** et saisissez le chemin relatif vers votre répertoire de documentation.
+    3. Si vous utilisez une instance GitLab auto-hébergée, activez l'option **Set up as self-hosted** et saisissez l'URL hôte de votre instance GitLab (par exemple, `https://gitlab.your-domain.com`). Votre instance doit être accessible publiquement pour que Mintlify puisse s'y connecter.
+    4. Sélectionnez la branche à partir de laquelle déployer votre documentation.
+    5. Cliquez sur **Save Changes**.
+    <Frame>
+      <img src="/images/gitlab/gitlab-config-light.png" alt="Le panneau de configuration GitLab sur la page Git Settings du Tableau de bord Mintlify." className="block dark:hidden" />
+      <img src="/images/gitlab/gitlab-config-dark.png" alt="Le panneau de configuration GitLab sur la page Git Settings du Tableau de bord Mintlify." className="hidden dark:block" />
+    </Frame>
+  </Step>
+</Steps>
+
+<div id="create-the-webhook">
+  ## Créer le webhook
+</div>
+
+Les webhooks notifient Mintlify lorsque vous poussez des modifications afin que les déploiements se déclenchent automatiquement.
+
+<Steps>
+  <Step title="Ajouter un nouveau webhook">
+  1. Dans GitLab, accédez à **Settings** > **Webhooks**.
+  2. Cliquez sur **Add new webhook**.
+    <Frame>
+      <img src="/images/gitlab/gitlab-webhook.png" alt="Capture d'écran de la page Webhooks dans le tableau de bord GitLab." />
+    </Frame>
+  </Step>
+  <Step title="Configurer l'URL et le webhook">
+    Nommez le webhook **Mintlify**.
+
+    Dans le champ **URL**, saisissez le point de terminaison `https://leaves.mintlify.com/gitlab-webhook`.
+  </Step>
+  <Step title="Récupérer le webtoken">
+    Dans votre Tableau de bord Mintlify, cliquez sur **Show Webtoken**. Copiez le webtoken.
+    <Frame>
+      <img src="/images/gitlab/show-webtoken-light.png" alt="Capture d'écran de la connexion GitLab dans le Tableau de bord Mintlify." className="block dark:hidden" />
+      <img src="/images/gitlab/show-webtoken-dark.png" alt="Capture d'écran de la connexion GitLab dans le Tableau de bord Mintlify." className="hidden dark:block" />
+    </Frame>
+  </Step>
+  <Step title="Coller le webtoken">
+    Dans GitLab, collez le webtoken depuis votre Tableau de bord Mintlify dans le champ **Secret token**.
+  </Step>
+  <Step title="Sélectionner les événements">
+    Sélectionnez les événements suivants pour déclencher le webhook :
+    - **Push events** (All branches)
+    - **Merge requests events**
+  </Step>
+  <Step title="Vérifier le webhook">
+    Vous devriez voir les paramètres suivants après avoir configuré le webhook :
+    
+    - **Name** : Mintlify
+    - **URL** : `https://leaves.mintlify.com/gitlab-webhook`
+    - **Secret token** : le webtoken depuis votre Tableau de bord Mintlify
+    - **Events** : **Push events** (All branches) et **Merge requests events**
+
+    Ajoutez le webhook.
+
+    <Frame>
+      <img src="/images/gitlab/gitlab-project-webtoken.png" alt="La page Webhooks dans le tableau de bord GitLab. Les paramètres à configurer pour Mintlify sont surlignés." />
+    </Frame>
+  </Step>
+  <Step title="Tester le webhook">
+    Après avoir créé le webhook, cliquez sur le menu déroulant **Test**. Cliquez sur **Push events** pour envoyer un payload d'exemple. Si le test renvoie `Hook executed successfully: HTTP 200`, vous avez correctement configuré le webhook.
+
+    <Frame>
+      <img src="/images/gitlab/gitlab-project-webtoken-test.png" alt="Capture d'écran de la page Webhooks de GitLab. L'élément de menu 'Push events' est surligné dans le menu 'Test'." />
+    </Frame>
+
+  </Step>
+</Steps>

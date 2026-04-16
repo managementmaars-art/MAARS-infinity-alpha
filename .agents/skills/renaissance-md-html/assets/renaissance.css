@@ -1,0 +1,177 @@
+/* 与 src/themes.ts 中 renaissanceStyles 对齐，作用域 .wmr-renaissance */
+.wmr-renaissance {
+  font-size: 15px;
+  color: #4a4a4a;
+  line-height: 1.6;
+  letter-spacing: 0.1em;
+  word-wrap: break-word;
+  box-sizing: border-box;
+  text-align: justify;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.wmr-renaissance *,
+.wmr-renaissance *::before,
+.wmr-renaissance *::after {
+  box-sizing: border-box;
+}
+
+.wmr-renaissance h1 {
+  font-size: 1.5em;
+  font-weight: 800;
+  color: #2c2c2c;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  line-height: 1.4;
+}
+
+.wmr-renaissance h2 {
+  font-size: 1.3em;
+  font-weight: 800;
+  color: #2c2c2c;
+  margin-top: 1.5em;
+  margin-bottom: 1em;
+  line-height: 1.4;
+  border-bottom: none;
+  padding-bottom: 0.3em;
+  text-align: left;
+  position: relative;
+}
+
+.wmr-renaissance h3 {
+  font-size: 1.1em;
+  font-weight: 800;
+  color: #4a4a4a;
+  margin-top: 1.2em;
+  margin-bottom: 0.8em;
+  line-height: 1.4;
+}
+
+.wmr-renaissance h4 {
+  font-size: 1em;
+  font-weight: bold;
+  color: #444;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.wmr-renaissance p {
+  margin-top: 0;
+  margin-bottom: 1.2em;
+  padding: 0 12px;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.wmr-renaissance a {
+  color: #8b5a2b;
+  text-decoration: none;
+  border-bottom: none;
+  font-size: 12px;
+  font-style: italic;
+  margin-left: 10px;
+}
+
+.wmr-renaissance strong {
+  font-weight: bold;
+  color: rgb(233, 105, 0);
+}
+
+.wmr-renaissance blockquote {
+  margin: 2em 0;
+  padding: 1em 2em;
+  color: #7a7a7a;
+  background-color: #fafafa;
+  border-left: none;
+  position: relative;
+  font-style: italic;
+}
+
+.wmr-renaissance ul {
+  margin-top: 0;
+  margin-bottom: 1.2em;
+  padding-left: 2em;
+  list-style-type: disc;
+}
+
+.wmr-renaissance ol {
+  margin-top: 0;
+  margin-bottom: 1.2em;
+  padding-left: 2em;
+  list-style-type: decimal;
+}
+
+.wmr-renaissance li {
+  margin-bottom: 0.5em;
+}
+
+.wmr-renaissance code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.85em;
+  background-color: rgb(211 211 211 / 50%);
+  padding: 2px 4px;
+  border-radius: 3px;
+  color: #e96900;
+}
+
+.wmr-renaissance pre {
+  background-color: rgb(50, 48, 46);
+  color: #abb2bf;
+  padding: 1.2em;
+  border-radius: 18px;
+  overflow-x: auto;
+  font-size: 0.7em;
+  line-height: 1.5;
+  margin-bottom: 1.2em;
+  border-bottom: 2px dashed #e1e1e1;
+  border-top: 2px dashed #eaeaea;
+}
+
+.wmr-renaissance pre code {
+  font-size: inherit;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+}
+
+.wmr-renaissance img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.2em auto;
+  border-radius: 4px;
+}
+
+.wmr-renaissance hr {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 2em 0;
+}
+
+.wmr-renaissance table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.2em;
+  font-size: 0.9em;
+}
+
+.wmr-renaissance th {
+  border: 1px solid #dfdfdf;
+  padding: 8px 12px;
+  background-color: #f5f5f5;
+  font-weight: bold;
+  color: #333;
+}
+
+.wmr-renaissance td {
+  border: 1px solid #dfdfdf;
+  padding: 8px 12px;
+}
+
+.wmr-renaissance del {
+  text-decoration: line-through;
+  opacity: 0.85;
+}

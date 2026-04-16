@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vibe Coding Workflow"
+  short_description: "Bootstrap document-first, memory-bank-driven AI project delivery"
+  default_prompt: "Use $vibe-coding-standard-workflow to turn this idea or repo into a document-first workflow with a memory-bank and one-step-at-a-time execution."

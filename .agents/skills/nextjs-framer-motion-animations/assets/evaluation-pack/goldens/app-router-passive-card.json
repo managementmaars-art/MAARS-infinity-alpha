@@ -1,0 +1,10 @@
+{
+  "repoRouter": "app-router",
+  "packageStrategy": "use-motion",
+  "recommendedImportPath": "motion/react-client",
+  "recommendedBoundary": "server-friendly-motion-react-client-candidate",
+  "recommendedPattern": "mount-reveal",
+  "likelyFilesToChange": [
+    "components/product-card.tsx"
+  ]
+}

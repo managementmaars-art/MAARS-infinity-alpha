@@ -1,0 +1,29 @@
+{
+  "name": "@openclaw/meetings",
+  "version": "1.0.0",
+  "description": "Coordinate meetings using calendar and email",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc --watch",
+    "cli": "node dist/cli.js",
+    "status": "node dist/cli.js status"
+  },
+  "keywords": ["meetings", "scheduling", "calendar", "email", "openclaw", "skill"],
+  "author": "OpenClaw",
+  "license": "MIT",
+  "dependencies": {
+    "@openclaw/auth-provider": "file:../auth-provider",
+    "@openclaw/calendar": "file:../calendar",
+    "@openclaw/email": "file:../email",
+    "@openclaw/google-oauth": "file:../google-oauth",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/sqlite3": "^3.1.11",
+    "typescript": "^5.3.3"
+  }
+}

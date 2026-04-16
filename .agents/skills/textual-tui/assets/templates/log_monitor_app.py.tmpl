@@ -1,0 +1,66 @@
+from __future__ import annotations
+
+import sys
+from datetime import datetime
+
+from textual import events
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal
+from textual.reactive import var
+from textual.widgets import Button, Footer, Header, Input, Log
+
+
+class {{CLASS_NAME}}(App):
+    CSS_PATH = "{{MODULE}}.tcss"
+    TITLE = "{{APP_TITLE}}"
+    SUB_TITLE = "Log / print capture"
+    BINDINGS = [
+        ("c", "clear_log", "Clear"),
+    ]
+
+    line_count = var(0)
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        with Horizontal(id="controls"):
+            yield Button("Emit stdout", id="emit-out", variant="primary")
+            yield Button("Emit stderr", id="emit-err")
+            yield Button("Clear", id="clear")
+            yield Input(placeholder="Filter text", id="filter")
+        yield Log(id="log")
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.begin_capture_print(self)
+
+    def on_print(self, event: events.Print) -> None:
+        query = self.query_one("#filter", Input).value.strip().lower()
+        text = event.text.rstrip()
+        if query and query not in text.lower():
+            return
+        prefix = "ERR" if event.stderr else "OUT"
+        self.query_one("#log", Log).write_line(
+            "{0} {1} {2}".format(prefix, datetime.now().strftime("%H:%M:%S"), text)
+        )
+        self.query_one("#log", Log).anchor()
+        self.line_count += 1
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "emit-out":
+            print("heartbeat ok")
+        elif event.button.id == "emit-err":
+            print("simulated failure", file=sys.stderr)
+        elif event.button.id == "clear":
+            self.action_clear_log()
+
+    def action_clear_log(self) -> None:
+        self.query_one("#log", Log).clear()
+        self.line_count = 0
+
+
+def main() -> None:
+    {{CLASS_NAME}}().run()
+
+
+if __name__ == "__main__":
+    main()

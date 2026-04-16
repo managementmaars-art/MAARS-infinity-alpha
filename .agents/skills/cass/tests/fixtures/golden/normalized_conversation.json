@@ -1,0 +1,51 @@
+{
+  "agent_slug": "claude_code",
+  "external_id": "sess-abc-123",
+  "title": "Fix authentication bug",
+  "workspace": "/home/user/myproject",
+  "source_path": "/home/user/.claude/projects/myproject/sess-abc-123.jsonl",
+  "started_at": 1700000000000,
+  "ended_at": 1700000010000,
+  "metadata": {
+    "source": "claude_code",
+    "model": "claude-3-opus",
+    "session_id": "sess-abc-123"
+  },
+  "messages": [
+    {
+      "idx": 0,
+      "role": "user",
+      "author": null,
+      "created_at": 1700000000000,
+      "content": "Fix the authentication bug in login.rs",
+      "extra": {"tool_calls": []},
+      "snippets": [
+        {
+          "file_path": "src/login.rs",
+          "start_line": 42,
+          "end_line": 55,
+          "language": "rust",
+          "snippet_text": "fn authenticate(user: &str) -> Result<Token> {\n    // BUG: missing validation\n}"
+        }
+      ]
+    },
+    {
+      "idx": 1,
+      "role": "assistant",
+      "author": "claude-3-opus",
+      "created_at": 1700000005000,
+      "content": "I'll fix the authentication bug by adding input validation.",
+      "extra": {"model": "claude-3-opus"},
+      "snippets": []
+    },
+    {
+      "idx": 2,
+      "role": "user",
+      "author": null,
+      "created_at": 1700000010000,
+      "content": "Thanks, that works!",
+      "extra": {},
+      "snippets": []
+    }
+  ]
+}

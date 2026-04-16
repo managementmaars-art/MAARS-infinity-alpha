@@ -1,0 +1,13 @@
+from __future__ import annotations
+
+import pytest
+
+from {{MODULE}} import {{CLASS_NAME}}
+
+@pytest.mark.asyncio
+async def test_log_monitor_captures_stdout() -> None:
+    app = {{CLASS_NAME}}()
+    async with app.run_test(size=(100, 30)) as pilot:
+        await pilot.click("#emit-out")
+        await pilot.pause()
+        assert app.line_count >= 1

@@ -1,0 +1,11 @@
+id: hardcoded-path-string
+language: python
+severity: warning
+message: >-
+  Hardcoded filesystem path — use pathlib or configuration.
+note: >-
+  Absolute paths break across machines and deployments. Use Path objects,
+  environment variables, or platformdirs for portable paths.
+rule:
+  kind: string
+  regex: "^[\"']/(tmp|var|etc|home|Users|opt)/"

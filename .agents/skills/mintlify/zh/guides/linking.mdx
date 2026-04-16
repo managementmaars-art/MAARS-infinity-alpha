@@ -1,0 +1,249 @@
+---
+title: "如何有效地链接文档页面"
+sidebarTitle: "链接"
+description: "在文档中创建内部链接、锚点链接和深层链接，并通过重定向和断链检查维护链接完整性。"
+keywords: ["文档链接", "内部链接", "锚点链接", "断链", "深层链接", "交叉引用"]
+---
+
+链接将你的文档连接成一个连贯的系统。它们帮助用户发现相关内容、高效导航，并沿着逻辑路径浏览复杂主题。糟糕的链接——模糊的锚文本、缺失的交叉引用、损坏的 URL——会使文档更难使用并损害 SEO。
+
+本指南介绍如何在 Mintlify 中创建不同类型的链接，以及如何随着文档的增长维护链接完整性。
+
+<div id="internal-links">
+## 内部链接
+</div>
+
+使用根相对路径链接到文档中的其他页面。根相对路径从文档目录的根目录开始，无论链接页面在目录结构中的位置如何，都能一致地工作。
+
+```mdx
+- [Quickstart guide](/quickstart)
+- [API overview](/api-playground/overview)
+- [Custom components](/customize/react-components)
+```
+
+避免使用相对路径，如 `../api-playground/overview`——当页面移动时它们会断裂，而且在审查时更难扫描。
+
+<div id="anchor-links">
+## 锚点链接
+</div>
+
+锚点链接指向页面内的特定部分。每个标题会根据其文本自动生成一个锚点。
+
+<div id="link-to-headers-on-the-same-page">
+### 链接到同一页面的标题
+</div>
+
+使用井号引用当前页面上的标题：
+
+```mdx
+[Jump to best practices](#best-practices)
+```
+
+<div id="link-to-headers-on-other-pages">
+### 链接到其他页面的标题
+</div>
+
+将页面路径与锚点组合：
+
+```mdx
+- [Customize your playground](/api-playground/overview#customize-your-playground)
+- [Cards properties](/components/cards#properties)
+```
+
+<div id="how-mintlify-generates-anchors">
+### Mintlify 如何生成锚点
+</div>
+
+Mintlify 通过将标题文本转换为小写、用连字符替换空格并删除特殊字符来自动创建锚点。
+
+| 标题文本 | 生成的锚点 |
+|---|---|
+| `## Getting Started` | `#getting-started` |
+| `### API Authentication` | `#api-authentication` |
+| `#### Step 1: Install` | `#step-1-install` |
+
+<Note>
+  带有 `noAnchor` 属性的标题不会生成锚点链接。详情请参阅[格式化文本](/zh/create/text#disabling-anchor-links)。
+</Note>
+
+<div id="custom-anchor-ids">
+### 自定义锚点 ID
+</div>
+
+通过在标题文本后附加 `{#custom-id}` 来覆盖任何标题的自动生成锚点：
+
+```mdx
+## Configuration options {#config}
+```
+
+此标题可通过 `#config` 访问，而不是 `#configuration-options`。自定义 ID 在你更新标题文本时保持锚点链接稳定——这对你经常链接到的标题很有用。详情请参阅[格式化文本](/zh/create/text#custom-heading-ids)。
+
+<div id="deep-links">
+## 深层链接
+</div>
+
+深层链接指向页面内的特定状态或位置，而不仅仅是页面本身。
+
+<div id="accordion-deep-links">
+### 手风琴深层链接
+</div>
+
+当用户打开手风琴时，URL 哈希会更新以反映打开状态。访问带有该哈希的 URL 会自动打开并滚动到该手风琴。
+
+默认情况下，哈希源自手风琴的 `title`。使用 `id` 属性设置自定义哈希：
+
+```mdx
+<Accordion title="Installation steps" id="install">
+  ...
+</Accordion>
+```
+
+此手风琴可通过 `#install` 访问，而不是自动生成的 `#installation-steps`。详情请参阅[手风琴](/zh/components/accordions)。
+
+<div id="api-playground-deep-links">
+### API playground 深层链接
+</div>
+
+要在链接中打开 API playground，请将 `?playground=open` 附加到任何端点页面 URL：
+
+```text
+https://your-docs-url/endpoint-path?playground=open
+```
+
+当用户打开或关闭 playground 时，URL 会更新。在支持对话或入门流程中使用 playground 深层链接，将用户直接发送到端点的交互式 playground。详情请参阅 [API playground](/zh/api-playground/overview#parameter-anchor-links) 了解参数锚点链接信息。
+
+<div id="external-links">
+## 外部链接
+</div>
+
+链接到外部资源时，编写能清楚说明目标的锚文本：
+
+```mdx
+See the [OpenAPI specification](https://swagger.io/specification/) in the Swagger documentation for details.
+```
+
+<div id="best-practices">
+## 最佳实践
+</div>
+
+<div id="write-descriptive-anchor-text">
+### 编写描述性锚文本
+</div>
+
+锚文本应在用户点击前告知他们要去往何处。模糊的短语如"点击这里"或"阅读更多"也是比描述性文本更弱的 SEO 信号。
+
+<CodeGroup>
+
+```mdx Good
+See [Hidden pages](/organize/hidden-pages) for more information.
+[Configure custom domains](/customize/custom-domain)
+```
+
+```mdx Avoid
+[Click here](/api-playground/overview)
+[Read more](/deploy/deployments)
+[See this page](/customize/custom-domain)
+```
+
+</CodeGroup>
+
+<div id="link-prerequisites-explicitly">
+### 明确链接先决条件
+</div>
+
+当页面假设已完成先前步骤时，在顶部链接到这些步骤，而不是假设用户会自己找到它们：
+
+```mdx
+## Prerequisites
+
+Before deploying your documentation, ensure you have:
+
+- Completed the [quickstart guide](/quickstart)
+- Configured your [custom domain](/customize/custom-domain)
+- Set up [authentication](/deploy/authentication-setup) if needed
+```
+
+<div id="build-topic-clusters">
+### 构建主题集群
+</div>
+
+将相关内容链接在一起，帮助用户——和搜索引擎——理解你的文档是如何组织的：
+
+```mdx
+## Related topics
+
+- [API authentication](/api-playground/overview#authentication)
+- [Adding SDK examples](/api-playground/adding-sdk-examples)
+- [Managing page visibility](/api-playground/managing-page-visibility)
+```
+
+<div id="check-for-broken-links">
+### 检查断链
+</div>
+
+在发布前运行 Mintlify CLI 以捕获损坏的内部和外部链接：
+
+```bash
+mint broken-links
+```
+
+<div id="update-links-when-reorganizing">
+### 重组时更新链接
+</div>
+
+移动或重命名页面时：
+
+1. 在导航配置中更新页面路径。
+2. 配置从旧路径到新路径的重定向。
+3. 在文档中搜索对旧路径的引用。
+4. 更新所有内部链接以使用新路径。
+5. 运行 `mint broken-links` 进行验证。
+
+<div id="use-redirects-for-moved-content">
+### 为已移动的内容使用重定向
+</div>
+
+永久移动内容时，添加重定向以防止已收藏或分享旧 URL 的用户遇到断链。
+
+```json
+{
+  "redirects": [
+    {
+      "source": "/old-path",
+      "destination": "/new-path"
+    }
+  ]
+}
+```
+
+详情请参阅[重定向](/zh/create/redirects)。
+
+<div id="frequently-asked-questions">
+## 常见问题
+</div>
+
+<AccordionGroup>
+<Accordion title="内部链接应该使用根相对路径还是绝对 URL？">
+根相对路径（以 `/` 开头）是 Mintlify 中内部链接的正确选择。无论链接页面在目录中的位置如何，它们都能一致地工作，而且如果你的文档域名更改也不会断裂。内部链接使用绝对 URL 会造成不必要的脆弱性。
+</Accordion>
+
+<Accordion title="更新标题时如何保持锚点链接稳定？">
+为你经常链接到的标题使用自定义锚点 ID。在标题上附加 `{#custom-id}` 可以将锚点与标题文本解耦，这样你就可以更新标题文本而不会破坏任何指向它的链接。这对于高流量参考部分中可能需要随时间改进文本的标题尤其有用。
+</Accordion>
+
+<Accordion title="重组文档时已收藏的链接会怎样？">
+如果没有重定向，已收藏和已分享的链接将变成 404 错误。每次移动或重命名页面时，都应在 `docs.json` 中设置重定向。重定向的添加成本很低，可以防止从外部来源（博客文章、Stack Overflow 回答、内部 wiki）链接到你文档的用户获得糟糕的体验。
+</Accordion>
+
+<Accordion title="一个页面应该有多少内部链接？">
+当相关概念在该时刻对用户确实有用时就进行链接——而不是为了达到某个配额。链接太少会让用户缺乏上下文或后续步骤。链接太多会把页面变成导航练习，使用户偏离他们正在尝试做的事情。作为粗略的经验法则，链接概念或工具的首次提及，不要在单个页面上多次重复相同的链接。
+</Accordion>
+</AccordionGroup>
+
+<div id="related-resources">
+## 相关资源
+</div>
+
+- [格式化文本](/zh/create/text)：Markdown 格式选项，包括标题 ID 和锚点行为。
+- [导航](/zh/organize/navigation)：配置文档结构。
+- [重定向](/zh/create/redirects)：为已移动的内容设置重定向。

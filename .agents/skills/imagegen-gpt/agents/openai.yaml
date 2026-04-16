@@ -1,0 +1,9 @@
+interface:
+  display_name: "ImageGen (gpt-image-1)"
+  short_description: "Gera imagens (posts, banners, mockups) via gpt-image-1 e salva em assets/generated."
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.png"
+  brand_color: "#3B82F6"
+  default_prompt: "Gere uma imagem a partir deste briefing: "
+dependencies:
+  tools: []

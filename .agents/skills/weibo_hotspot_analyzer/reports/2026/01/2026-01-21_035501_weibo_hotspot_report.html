@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年01月21日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --accent-normal: #6C757D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .report-header h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+            margin-top: 32px;
+        }
+
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hotspot-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hotspot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .hotspot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .hotword {
+            font-weight: 600;
+            font-size: 16px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotness {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hotspot-detail {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .hotspot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+            transition: all 0.2s;
+        }
+
+        .idea-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .idea-card.excellent {
+            border-left-color: var(--accent-excellent);
+            background: linear-gradient(to right, rgba(255, 210, 63, 0.1), transparent);
+        }
+
+        .idea-card.good {
+            border-left-color: var(--accent-good);
+            background: linear-gradient(to right, rgba(6, 167, 125, 0.05), transparent);
+        }
+
+        .idea-card.normal {
+            border-left-color: var(--accent-normal);
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .idea-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .score-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.excellent {
+            background: var(--accent-excellent);
+            color: #333;
+        }
+
+        .badge.good {
+            background: var(--accent-good);
+            color: white;
+        }
+
+        .badge.normal {
+            background: var(--accent-normal);
+            color: white;
+        }
+
+        .idea-body p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .idea-body strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .idea-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .idea-body li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .score-breakdown {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .statistics h2 {
+            color: white;
+            border-left-color: white;
+            margin-top: 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ranking-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ranking-rank {
+            font-size: 24px;
+            font-weight: 700;
+            width: 40px;
+            text-align: center;
+        }
+
+        .ranking-rank.gold { color: #FFD700; }
+        .ranking-rank.silver { color: #C0C0C0; }
+        .ranking-rank.bronze { color: #CD7F32; }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .ranking-hotword {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .ranking-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .report-header { padding: 24px; }
+            .report-header h1 { font-size: 24px; }
+            .hotspot-list { grid-template-columns: 1fr; }
+            .idea-header { flex-direction: column; align-items: flex-start; }
+            .stat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>🤖 微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>📅 生成日期：2026-01-21</span>
+                <span>🔥 热搜总数：10</span>
+                <span>💡 创意总数：30</span>
+                <span>⏰ 生成时间：2026-01-21 03:55:01</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">中国男足等了整整22年</span>
+                </div>
+                <div class="hotness">热度：1085205 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">太平年定档</span>
+                </div>
+                <div class="hotness">热度：剧集 801327 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">五个新概括2025年经济工作成绩单</span>
+                </div>
+                <div class="hotness">热度：627096 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">日本又要选首相了</span>
+                </div>
+                <div class="hotness">热度：562776 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">野狗骨头把雌竞改成了惺惺相惜</span>
+                </div>
+                <div class="hotness">热度：剧集 387096 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">这才是真的俩魔丸生了个灵珠</span>
+                </div>
+                <div class="hotness">热度：250531 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">U23国足3比0越南U23</span>
+                </div>
+                <div class="hotness">热度：196044 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">特朗普和马克龙吵翻</span>
+                </div>
+                <div class="hotness">热度：185773 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">周雨彤太平年定档海报</span>
+                </div>
+                <div class="hotness">热度：剧集 173303 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">拳打拜合拉木球员道歉</span>
+                </div>
+                <div class="hotness">热度：140416 </div>
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">1</span>
+                <span class="hotword" style="font-size: 18px;">中国男足等了整整22年</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>1,085,205</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">时光穿梭看台</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI生成2002年vs2024年球迷对比照</li>
+                    <li>生成'22年老粉'独家认证海报</li>
+                    <li>经典解说语录语音合成</li>
+                    <li>朋友圈'跨时空'合影功能</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>30-50岁资深球迷及跟风打卡的00后，喜欢怀旧和社交分享</p>
+                        <p><strong>📝 产品描述：</strong>基于22年时间跨度，利用AI生成用户22年前后的球迷形象对比，搭配'等到了'等情感文案，引爆朋友圈怀旧传播。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 72分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">赛博功德足球</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>敲击电子木鱼为国足'攒人品'</li>
+                    <li>进球瞬间自动播放'好运来'音效</li>
+                    <li>全网球迷'功德值'排行榜</li>
+                    <li>不仅能'骂'还能'祈福'的弹幕区</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁年轻球迷，热衷玩梗、玄学和解压游戏的互联网原住民</p>
+                        <p><strong>📝 产品描述：</strong>结合'敲木鱼'解压热点与足球迷信文化，让用户通过简单的点击交互宣泄情绪，用幽默消解长达22年的等待焦虑。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 30分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">理论出线模拟器</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>可视化推演接下来的出线概率</li>
+                    <li>极端情况模拟（如：若对手全输）</li>
+                    <li>一键生成'分析帝'战报长图</li>
+                    <li>历史22年'打平即可出线'魔咒回顾</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁理性球迷、数据控，喜欢分析局势和在群里指点江山</p>
+                        <p><strong>📝 产品描述：</strong>针对国足复杂的积分形势，提供傻瓜式且带有吐槽性质的算分工具，将复杂的数学题转化为可视化的'做梦'体验。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">2</span>
+                <span class="hotword" style="font-size: 18px;">太平年定档 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>801,327</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">朕要批奏折</span>
+                        <div class="score-info">
+                            <span class="score">91分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>沉浸式批阅：将剧集槽点/亮点包装成'奏折'供用户'朱批'（点赞/吐槽）</li>
+                    <li>圣旨生成器：一键生成带有剧集梗的诏书图片，用于社交圈分享</li>
+                    <li>百官群聊：基于剧情的AI角色扮演群聊室</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁网生代追剧党，热衷玩梗、二创及社交分享的群体。</p>
+                        <p><strong>📝 产品描述：</strong>一款配合《太平年》播出的第二屏互动应用。用户化身'皇帝'，将每日剧情作为'国事'进行批阅，通过极具仪式感和幽默感的方式宣泄情绪，打造剧集相关的社交货币。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">宋韵穿越机</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI换脸定妆：用户上传照片，一键生成剧中同款宋代服饰/妆容写真</li>
+                    <li>实景AR打卡：结合LBS技术，在现实景点叠加剧中宋代建筑滤镜</li>
+                    <li>同款识物：识别剧中宋代美学器物（茶具、瓷器），链接科普与购买</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁女性用户，汉服爱好者，古风审美追求者及短视频创作者。</p>
+                        <p><strong>📝 产品描述：</strong>基于剧集精美服化道的视觉体验类产品。利用AIGC技术让用户零成本体验'宋风雅韵'，借势剧集定档的热度，满足用户在社交媒体上展示个性化古风形象的需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 78分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">太平搞钱录</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>宋代经商模拟：内置轻量级经营小游戏，模拟剧中商贸背景</li>
+                    <li>国风记账本：将日常收支转化为'银两/贯钱'，剧集人物语音提醒记账</li>
+                    <li>定档锦鲤池：每日签到抽取'太平'吉利签，兑换剧集周边或合作品牌优惠</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-40岁职场白领，既关注娱乐热点又有理财/省钱需求的实用主义者。</p>
+                        <p><strong>📝 产品描述：</strong>借'太平年'寓意吉祥富足，将剧集IP与实用工具结合。既是沉浸式的国风记账工具，也是剧粉的福利中心，利用'祈福'和'搞钱'两大普世心理抓住流量。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 90分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">3</span>
+                <span class="hotword" style="font-size: 18px;">五个新概括2025年经济工作成绩单</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>627,096</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">汇报美学：废话升华器</span>
+                        <div class="score-info">
+                            <span class="score">89分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>一键“升华”：将“摸鱼”美化为“探索弹性工作新边界”</li>
+                    <li>五新风格滤镜：模仿热搜新闻语体，生成年度个人总结</li>
+                    <li>老板情绪预测：基于汇报内容分析老板满意度</li>
+                    <li>职场凡尔赛海报生成</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-35岁职场人，特别是需要写周报、年终总结的互联网大厂员工及体制内人员。</p>
+                        <p><strong>📝 产品描述：</strong>基于热搜“五个新概括”的官方修辞风格，利用AI将用户平平无奇的工作流水账，瞬间转化为高大上的“经济工作成绩单”风格，既是职场解压神器，又是周报救命稻草。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 78分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">我的2025荒诞财报</span>
+                        <div class="score-info">
+                            <span class="score">85分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>消费数据讽刺解读：将恩格尔系数高解读为“餐饮业新支柱”</li>
+                    <li>五个新标签：生成“新穷人”、“新熬夜冠军”等反向标签</li>
+                    <li>好友财力PK：基于消费习惯的趣味对战</li>
+                    <li>未来暴富指数预测</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁大学生及年轻白领，热衷于年末盘点、网易云/支付宝年度账单分享的用户。</p>
+                        <p><strong>📝 产品描述：</strong>反其道而行之的“个人经济工作会议”，利用热搜话题的热度，以幽默自嘲的方式解读用户的年度消费数据，生成极具传播力的“荒诞成绩单”H5。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">宏观调控模拟器</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>微型经济沙盒：玩家扮演“市长”制定五个新目标</li>
+                    <li>蝴蝶效应系统：调整奶茶价格可能导致年轻人“躺平率”上升</li>
+                    <li>热词解锁成就：达成特定指标解锁热搜同款称号</li>
+                    <li>现实映射：游戏事件与真实经济新闻实时联动</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁泛知识群体，喜欢模拟经营游戏，对时事热点有一定关注度的用户。</p>
+                        <p><strong>📝 产品描述：</strong>一款轻量级模拟经营小程序，让用户体验制定“2025经济成绩单”背后的决策难度，通过夸张搞笑的因果反馈，将枯燥的宏观经济概念游戏化、通俗化。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 78分 × 80% + 有用度 68分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">4</span>
+                <span class="hotword" style="font-size: 18px;">日本又要选首相了 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>562,776</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">躬匠精神生成器</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI生成标准的日式辞职/道歉信文案</li>
+                    <li>AR测量鞠躬角度是否符合'诚意标准'</li>
+                    <li>一键生成'我将会负责'的鬼畜表情包</li>
+                    <li>历史首相'谢罪'名场面百科</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁，喜爱网络玩梗的年轻人、需要写检讨的职场社畜</p>
+                        <p><strong>📝 产品描述：</strong>基于日本政坛频繁换人及道歉文化开发的恶搞工具。用户输入犯错场景（如迟到、把项目搞砸），AI自动生成极具'日式空气感'的辞职或道歉文案，将政治新闻娱乐化，满足用户的吐槽欲和社交分享需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">首相保质期竞猜</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>虚拟货币押注新首相在任天数</li>
+                    <li>可视化对比：新首相任期 vs 牛奶保质期/恋爱平均时长</li>
+                    <li>实时生成的'下台倒计时'桌面小组件</li>
+                    <li>历任首相在职时长排行榜（SSR卡牌收集模式）</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁，关注国际时事的吃瓜群众、数据可视化爱好者</p>
+                        <p><strong>📝 产品描述：</strong>一款结合时事热点的数据可视化与竞猜小程序。通过将严肃的政治任期与生活中易逝物品（如鲜花、奶茶）进行趣味对比，讽刺'走马灯'般的政坛现状，让枯燥的国际新闻变得直观且具有传播性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 50分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">职场权力的游戏</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>派系斗争模拟：测算你在公司的'派阀'归属</li>
+                    <li>老板去留计算器：基于多维度数据预测领导变动概率</li>
+                    <li>站队模拟训练营：职场情商互动文字游戏</li>
+                    <li>匿名吐槽区：'我的上司换得比日本首相还快'</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-45岁，身处大厂或复杂组织架构的职场人士</p>
+                        <p><strong>📝 产品描述：</strong>借势日本政坛'派阀斗争'热点，隐喻职场生存法则。通过模拟派系林立的政治环境，帮助用户分析自身职场处境，提供关于站队、领导更替应对策略的'黑色幽默'式职场生存指南。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">5</span>
+                <span class="hotword" style="font-size: 18px;">野狗骨头把雌竞改成了惺惺相惜</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>387,096</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">反转女配模拟器</span>
+                        <div class="score-info">
+                            <span class="score">91分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>经典雌竞桥段重写：用户通过选项将'互撕'剧情引向'互助'结局</li>
+                    <li>AI生成双女主海报：根据反转后的剧情自动生成唯美插画</li>
+                    <li>野狗骨头BGM卡点：一键生成剧情反转短视频，自动配乐</li>
+                    <li>角色性格重塑：将'恶毒'标签转化为'搞事业'或'直率'标签</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁女性用户，热爱追剧、同人文爱好者，厌倦传统宫斗/撕逼剧情。</p>
+                        <p><strong>📝 产品描述：</strong>一款基于热梗的互动文字游戏/短视频工具。专门捕捉影视剧中'雌竞'名场面，让用户扮演编剧进行'魔改'，将原本的嫉妒陷害转化为惺惺相惜的搞事业联盟，满足当下女性观众拒绝内耗、渴望女性友谊的心理需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">职场双女主</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>反内卷匹配机制：基于互补技能而非竞争岗位匹配职场搭子</li>
+                    <li>夸夸可视板：记录互相支持的时刻，生成'惺惺相惜'成就图</li>
+                    <li>情绪急救包：当用户感到嫉妒或焦虑时，提供心理互助话术</li>
+                    <li>野狗骨头勋章：奖励那些在职场中帮助女性竞争对手的用户</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-35岁职场女性，处于竞争激烈的行业，渴望真诚职场关系。</p>
+                        <p><strong>📝 产品描述：</strong>利用热搜中'把竞争变为欣赏'的核心价值观，打造一款职场互助社交App。旨在打破'女性职场皆是宫斗'的刻板印象，帮助用户寻找职场中的'盟友'而非'敌手'，建立共同成长的良性竞争关系。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 78分 × 80% + 有用度 98分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">脑补CP滤镜</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>氛围感重构：AI分析合照中两人的距离，自动填充'红线'、'眼神光'等特效</li>
+                    <li>台词气泡生成：识别画面情绪，将争吵画面配上'其实我懂你'等反转台词</li>
+                    <li>风格化滤镜：提供'野狗骨头'MV同款暗黑废土风+唯美柔光</li>
+                    <li>一键二创：支持上传两张不相关的爱豆照片，AI合成'惺惺相惜'同框图</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-25岁Z世代，追星族，嗑学家，热衷于在社交媒体分享二创图片。</p>
+                        <p><strong>📝 产品描述：</strong>一款针对图片/视频的AI滤镜工具。它能敏锐捕捉画面中的'张力'，通过AI技术将原本看起来剑拔弩张或毫无交集的两个人，修饰出'相爱相杀'或'互相救赎'的故事感，极大地降低了粉丝进行同人二创的门槛。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 62分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">6</span>
+                <span class="hotword" style="font-size: 18px;">这才是真的俩魔丸生了个灵珠 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>250,531</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">灵珠基因实验室</span>
+                        <div class="score-info">
+                            <span class="score">87分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>魔丸指数AI面部分析</li>
+                    <li>反差萌宝宝形象预测</li>
+                    <li>基因突变概率计算报告</li>
+                    <li>一键生成“反向遗传”海报</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁情侣、新婚夫妇及娱乐圈吃瓜群众，热衷于测试和社交分享。</p>
+                        <p><strong>📝 产品描述：</strong>一款基于AI面部融合的娱乐小程序。用户上传两张看似“狂野/不羁”（魔丸）的照片，AI预测并生成一个拥有完美五官和气质（灵珠）的后代形象，主打“负负得正”的视觉反差惊喜。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">反向带娃大赏</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>魔丸父母vs灵珠娃模版</li>
+                    <li>自动捕捉亲子反差瞬间</li>
+                    <li>戏精父母社区排行榜</li>
+                    <li>根据视频自动生成吐槽文案</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-35岁的新生代父母（90后/00后），这代父母主打“苦了孩子不能苦自己”的育儿风格。</p>
+                        <p><strong>📝 产品描述：</strong>短视频剪辑工具与社区。针对“父母一身反骨，孩子乖巧懂事”的热点现象，提供专属剪辑模版，帮助用户快速制作“魔丸父母生出灵珠”的搞笑反差视频，满足晒娃与自黑的双重需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 58分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">情绪大逆转日记</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>魔丸时刻（焦虑/暴躁）记录</li>
+                    <li>灵珠转化（平静/智慧）建议</li>
+                    <li>情绪怪兽可视化养成</li>
+                    <li>反差性格心理测试</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁职场人及学生，面临压力需要情绪宣泄，同时追求心理平衡的用户。</p>
+                        <p><strong>📝 产品描述：</strong>一款心理健康类Gamification应用。将用户的负面情绪（魔丸）具象化，通过完成简单任务将其转化为正向能量（灵珠），借用热梗概念降低心理调节的门槛，让情绪管理变得有趣。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 78分 × 80% + 有用度 82分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">7</span>
+                <span class="hotword" style="font-size: 18px;">U23国足3比0越南U23</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>196,044</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">预言粉碎机</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>经典语录二创：自动抓取范志毅'输越南'等历史名场面，生成反转鬼畜视频</li>
+                    <li>打脸特效生成：用户上传唱衰评论截图，生成被足球击碎的'打脸'动画</li>
+                    <li>一键朋友圈文案：生成'这就叫触底反弹'等带梗的高赞文案</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁泛球迷群体、喜欢玩梗的互联网原住民、朋友圈活跃用户</p>
+                        <p><strong>📝 产品描述：</strong>一款利用国足大胜越南制造'反差爽感'的Meme生成工具。精准捕捉用户'扬眉吐气'的心理，通过AI技术将历史上的唱衰言论与今日的3-0比分进行鬼畜拼接，提供极致的情绪宣泄价值。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">爽局体验卡</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI换脸进球：将用户面部替换为进球功臣，生成第一人称高光视频</li>
+                    <li>沉浸式解说：可选择名嘴（如黄健翔）为你的进球视频配音咆哮</li>
+                    <li>虚拟颁奖台：生成用户举起奖杯的AR合影</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁男性球迷、短视频重度用户、渴望在社交媒体展示高光时刻的人群</p>
+                        <p><strong>📝 产品描述：</strong>基于AIGC技术的短视频生成器。抓住球迷'恨铁不成钢'但又渴望亲自上场的心理，让用户通过简单的照片上传，即可在视频中化身U23球员亲历3-0大胜，满足虚拟荣誉感和社交炫耀需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 50分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">情绪对冲日历</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>好运借势打卡：以'国足都能3-0'为激励语，生成背单词/减肥打卡海报</li>
+                    <li>爆冷许愿池：用户许下'不可能实现'的愿望，利用大胜的运气加持</li>
+                    <li>折扣雷达：自动搜罗因国足赢球而打折的本地餐饮/电商优惠信息</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-30岁职场新人、考研/考公党、价格敏感型消费者</p>
+                        <p><strong>📝 产品描述：</strong>一款结合玄学与实用的生活工具。利用'国足大胜越南'这一小概率事件带来的正面情绪，转化为用户生活中的激励符号（既然国足都行，我也行），并附带赢球促销信息聚合，兼具精神激励与省钱价值。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 70分 × 80% + 有用度 100分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">8</span>
+                <span class="hotword" style="font-size: 18px;">特朗普和马克龙吵翻 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>185,773</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">懂王怼人模拟器</span>
+                        <div class="score-info">
+                            <span class="score">87分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI复刻特朗普/马克龙语调进行实时辩论</li>
+                    <li>用户通过输入关键词（如关税、北约）触发吵架剧本</li>
+                    <li>生成“吵架金句”海报一键分享朋友圈</li>
+                    <li>情绪分析器：实时显示双方怒气值与血压</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁网民，热衷鬼畜视频、关注国际时政、生活压力大需要解压的人群。</p>
+                        <p><strong>📝 产品描述：</strong>一款基于AI语音合成的解压应用。用户可围观AI模拟的两位领导人就“午餐吃什么”到“国际贸易”进行无厘头互怼，或亲自加入战局体验顶级“外交”施压。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 55分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">职场外交翻译官</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>“特式”直球模式：将委婉语翻译成霸道总裁式命令</li>
+                    <li>“马式”拉扯模式：将愤怒脏话转化为高情商外交辞令</li>
+                    <li>甚至能识别阴阳怪气指数</li>
+                    <li>内置“握手博弈”小游戏，测试你的职场气场</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-40岁职场白领，深受职场沟通困扰，需要提升话术或发泄情绪的用户。</p>
+                        <p><strong>📝 产品描述：</strong>借势外交吵架热点，解决职场沟通痛点。无论是想霸气回怼老板，还是优雅地拒绝同事，这款输入法皮肤/辅助工具都能帮你把话说到心坎里。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 90分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">世纪之握：手劲大作战</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>物理引擎模拟握手力度与尴尬时长</li>
+                    <li>通过快速点击屏幕维持“大国尊严”不被拉走</li>
+                    <li>收集各国领导人皮肤与背景（白宫、爱丽舍宫）</li>
+                    <li>AR模式：与朋友面对面进行虚空握手对决</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-30岁手游玩家，喜欢魔性小游戏、碎片化时间娱乐的用户。</p>
+                        <p><strong>📝 产品描述：</strong>取材于特朗普与马克龙经典的“握手杀”名场面。这是一款魔性休闲竞技手游，比拼的不是武力，而是握手时的耐力与指力，输者将在新闻头条中“颜面尽失”。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 20分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">9</span>
+                <span class="hotword" style="font-size: 18px;">周雨彤太平年定档海报</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>173,303</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">你的太平年·AI定档</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI人脸融合生成同款海报</li>
+                    <li>自定义'定档'文案（如：升职定档、恋爱定档）</li>
+                    <li>海报画风一键迁移滤镜</li>
+                    <li>社交平台一键分享卡片</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁社交活跃用户，喜欢追剧、玩梗、热衷于朋友圈晒图的年轻群体。</p>
+                        <p><strong>📝 产品描述：</strong>紧扣'定档海报'这一视觉热点，利用AI技术让用户上传照片即可生成周雨彤同款古装质感海报。核心玩法在于将'剧集定档'概念泛化为'人生大事定档'，满足用户在年末表达对明年'太平年'美好愿景的社交展示需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 40分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">古韵·妆造搜搜</span>
+                        <div class="score-info">
+                            <span class="score">78分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>海报高清妆容解析</li>
+                    <li>同色系国风彩妆一键试色</li>
+                    <li>周雨彤同款汉服/配饰识图链接</li>
+                    <li>宋韵美学色彩提取工具</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁女性用户，汉服爱好者、美妆达人及周雨彤的粉丝群体。</p>
+                        <p><strong>📝 产品描述：</strong>针对海报中精致的服化道（服装、化妆、道具），开发垂直美学工具。不仅解析海报中的'国色'美学，更直接连接电商，解决粉丝'求同款口红色号'、'求同款发簪'的实际痛点，将视觉热度转化为消费动力。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 90分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">太平签·电子祈福</span>
+                        <div class="score-info">
+                            <span class="score">74分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>抽取每日'太平'上上签</li>
+                    <li>剧集开播倒计时木鱼</li>
+                    <li>定制化电子平安符壁纸</li>
+                    <li>海报细节找茬小游戏</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>16-25岁学生及职场新人，喜爱'电子玄学'、需要情感寄托及解压的追剧党。</p>
+                        <p><strong>📝 产品描述：</strong>利用'太平年'这一剧名自带的吉祥寓意，结合当下流行的'电子木鱼'与'接好运'心理。用户可以通过互动抽取海报风格的电子签文和壁纸，既维持了剧集开播前的热度，又满足了用户祈求生活顺遂的情绪价值。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 30分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">10</span>
+                <span class="hotword" style="font-size: 18px;">拳打拜合拉木球员道歉</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>140,416</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">野球VAR判官</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>短视频上传争议判罚</li>
+                    <li>大众评审团在线投票出牌</li>
+                    <li>AI生成高情商道歉文案</li>
+                    <li>野球场暴力黑名单共享</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-40岁男性，业余足球爱好者，热衷体育社区互动的吃瓜群众</p>
+                        <p><strong>📝 产品描述：</strong>针对业余球场无裁判痛点，将线下的冲突争议上传云端，由网友进行VAR式全民公投裁决，并提供一键生成道歉信功能，将球场冲突娱乐化、规范化。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 72分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">一键滑跪道歉</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>针对不同惹祸场景的道歉模板</li>
+                    <li>诚意度AI评分系统</li>
+                    <li>虚拟下跪/悔过表情包生成</li>
+                    <li>全网名人道歉信查重</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-30岁Z世代，社交媒体重度用户，经常需要处理社交危机的职场新人或学生</p>
+                        <p><strong>📝 产品描述：</strong>蹭热点的社交辅助工具，利用AI生成既体面又带梗的“公关级”道歉文案，无论是球场犯规还是职场甩锅，都能用幽默化解尴尬，满足年轻人的玩梗社交需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 50分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">暴躁老哥降温仪</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>心率监测情绪预警</li>
+                    <li>脏话自动变声为赞美诗</li>
+                    <li>AR虚拟出拳发泄模式</li>
+                    <li>冷静期倒计时锁屏</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁易冲动人群，体育竞技参与者，需要情绪管理的职场人士</p>
+                        <p><strong>📝 产品描述：</strong>结合智能穿戴设备，在监测到用户（如球员）心率飙升即将“动手”时，强制播放大悲咒或搞笑语音进行干预，并提供AR虚拟发泄渠道，避免现实冲突。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h2>🏆 产品创意排行榜 (TOP20)</h2>
+        <div class="ranking-list">
+
+            <div class="ranking-item">
+                <span class="ranking-rank gold">#1</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">朕要批奏折</div>
+                    <div class="ranking-hotword">来源：太平年定档</div>
+                </div>
+                <span class="ranking-score">91分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank silver">#2</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">反转女配模拟器</div>
+                    <div class="ranking-hotword">来源：野狗骨头把雌竞改成了惺惺相惜</div>
+                </div>
+                <span class="ranking-score">91分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank bronze">#3</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">汇报美学：废话升华器</div>
+                    <div class="ranking-hotword">来源：五个新概括2025年经济工作成绩单</div>
+                </div>
+                <span class="ranking-score">89分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">4</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">时光穿梭看台</div>
+                    <div class="ranking-hotword">来源：中国男足等了整整22年</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">5</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">躬匠精神生成器</div>
+                    <div class="ranking-hotword">来源：日本又要选首相了</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">6</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">预言粉碎机</div>
+                    <div class="ranking-hotword">来源：U23国足3比0越南U23</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">7</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">野球VAR判官</div>
+                    <div class="ranking-hotword">来源：拳打拜合拉木球员道歉</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">8</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">灵珠基因实验室</div>
+                    <div class="ranking-hotword">来源：这才是真的俩魔丸生了个灵珠</div>
+                </div>
+                <span class="ranking-score">87分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">9</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">懂王怼人模拟器</div>
+                    <div class="ranking-hotword">来源：特朗普和马克龙吵翻</div>
+                </div>
+                <span class="ranking-score">87分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">10</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">宋韵穿越机</div>
+                    <div class="ranking-hotword">来源：太平年定档</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">11</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">脑补CP滤镜</div>
+                    <div class="ranking-hotword">来源：野狗骨头把雌竞改成了惺惺相惜</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">12</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">我的2025荒诞财报</div>
+                    <div class="ranking-hotword">来源：五个新概括2025年经济工作成绩单</div>
+                </div>
+                <span class="ranking-score">85分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">13</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">你的太平年·AI定档</div>
+                    <div class="ranking-hotword">来源：周雨彤太平年定档海报</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">14</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">赛博功德足球</div>
+                    <div class="ranking-hotword">来源：中国男足等了整整22年</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">15</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">太平搞钱录</div>
+                    <div class="ranking-hotword">来源：太平年定档</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">16</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">首相保质期竞猜</div>
+                    <div class="ranking-hotword">来源：日本又要选首相了</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">17</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">职场双女主</div>
+                    <div class="ranking-hotword">来源：野狗骨头把雌竞改成了惺惺相惜</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">18</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">反向带娃大赏</div>
+                    <div class="ranking-hotword">来源：这才是真的俩魔丸生了个灵珠</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">19</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">爽局体验卡</div>
+                    <div class="ranking-hotword">来源：U23国足3比0越南U23</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">20</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">职场外交翻译官</div>
+                    <div class="ranking-hotword">来源：特朗普和马克龙吵翻</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">30</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">21</span>
+                    <span class="stat-label">优秀创意 (&gt;80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">9</span>
+                    <span class="stat-label">良好创意 (60-80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">82.8</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🤖 本报告由 AI 自动生成 | 仅供参考</p>
+            <p>数据来源：天聚数行 API | AI 分析：Claude 3.5 Sonnet</p>
+            <p>生成时间：2026-01-21 03:55:01</p>
+        </footer>
+    </div>
+</body>
+</html>

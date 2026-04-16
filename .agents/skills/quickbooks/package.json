@@ -1,0 +1,26 @@
+{
+  "name": "@openclaw/quickbooks",
+  "version": "1.0.0",
+  "description": "QuickBooks Online integration for accounting sync",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc --watch",
+    "cli": "node dist/cli.js",
+    "status": "node dist/cli.js status"
+  },
+  "keywords": ["quickbooks", "accounting", "invoices", "sync", "openclaw", "skill"],
+  "author": "OpenClaw",
+  "license": "MIT",
+  "dependencies": {
+    "@openclaw/quickbooks-auth": "file:../quickbooks-auth",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/sqlite3": "^3.1.11",
+    "typescript": "^5.3.3"
+  }
+}

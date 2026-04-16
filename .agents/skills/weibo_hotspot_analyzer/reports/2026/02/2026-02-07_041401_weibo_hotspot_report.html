@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年02月07日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --accent-normal: #6C757D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .report-header h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+            margin-top: 32px;
+        }
+
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hotspot-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hotspot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .hotspot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .hotword {
+            font-weight: 600;
+            font-size: 16px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotness {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .hotspot-summary {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hotspot-detail {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .hotspot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+            transition: all 0.2s;
+        }
+
+        .idea-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .idea-card.excellent {
+            border-left-color: var(--accent-excellent);
+            background: linear-gradient(to right, rgba(255, 210, 63, 0.1), transparent);
+        }
+
+        .idea-card.good {
+            border-left-color: var(--accent-good);
+            background: linear-gradient(to right, rgba(6, 167, 125, 0.05), transparent);
+        }
+
+        .idea-card.normal {
+            border-left-color: var(--accent-normal);
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .idea-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .score-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.excellent {
+            background: var(--accent-excellent);
+            color: #333;
+        }
+
+        .badge.good {
+            background: var(--accent-good);
+            color: white;
+        }
+
+        .badge.normal {
+            background: var(--accent-normal);
+            color: white;
+        }
+
+        .idea-body p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .idea-body strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .idea-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .idea-body li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .score-breakdown {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .statistics h2 {
+            color: white;
+            border-left-color: white;
+            margin-top: 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ranking-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ranking-rank {
+            font-size: 24px;
+            font-weight: 700;
+            width: 40px;
+            text-align: center;
+        }
+
+        .ranking-rank.gold { color: #FFD700; }
+        .ranking-rank.silver { color: #C0C0C0; }
+        .ranking-rank.bronze { color: #CD7F32; }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .ranking-hotword {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .ranking-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .report-header { padding: 24px; }
+            .report-header h1 { font-size: 24px; }
+            .hotspot-list { grid-template-columns: 1fr; }
+            .idea-header { flex-direction: column; align-items: flex-start; }
+            .stat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>🤖 微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>📅 生成日期：2026-02-07</span>
+                <span>🔥 热搜总数：6</span>
+                <span>💡 创意总数：18</span>
+                <span>⏰ 生成时间：2026-02-07 12:14:01</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">千问</span>
+                </div>
+                <div class="hotness">热度：1256422 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">米兰开幕式 好正常好好看</span>
+                </div>
+                <div class="hotness">热度：865461 </div>
+                <div class="hotspot-summary">米兰冬奥八分钟表演因审美回归传统大气获赞，网友借此拉踩此前的抽象风格。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">大集里的中国年味</span>
+                </div>
+                <div class="hotness">热度：679705 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">潜水员戴夫手游上线</span>
+                </div>
+                <div class="hotness">热度： </div>
+                <div class="hotspot-summary">现象级像素风游戏《潜水员戴夫》推出移动版，随时随地捕鱼开店。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">吴京回应唇部紧急护理</span>
+                </div>
+                <div class="hotness">热度：电影 375643 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">昭阳公主</span>
+                </div>
+                <div class="hotness">热度：剧集 222467 <span class="tag">荐</span></div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">苏翊鸣回应奥运夺冠后飘了</span>
+                </div>
+                <div class="hotness">热度：219460 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">睡眠时间越长越好是谣言</span>
+                </div>
+                <div class="hotness">热度： <span class="tag">热</span></div>
+                <div class="hotspot-summary">专家科普睡眠过长不仅无效反而有害健康，打破了“多睡即养生”的传统误区。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">王安宇王玉雯二搭</span>
+                </div>
+                <div class="hotness">热度：电影 200141 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">冬奥会开幕式</span>
+                </div>
+                <div class="hotness">热度：158408 </div>
+                <div class="hotspot-summary">展现中国式浪漫与科技融合的视听盛宴，二十四节气倒计时与点火仪式引发全球热议。</div>
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">1</span>
+                <span class="hotword" style="font-size: 18px;">千问</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>1,256,422</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「千问」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsbqrGlnrXQkkmY6QK_emOVSiG5ky-uTYcItdvJlQJbJ9VTYPol6JBCTFtB6CrtPnSsQa_wQlrpk2UvceJ78Fo9-Z-CbnG8PZDx2NgaX0xjjtf04Bz-NjCsrLr8vZNkeBvjaidj&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsbqrGlnrXQkkmY6QK_emOVSiG5ky-uTYcItdvJlQJbJ9VTYPol6JBCTFtB6CrtPnSsQa_wQlrpk2UvceJ78Fo9-Z-CbnG8PZDx2NgaX0xjjtf04Bz-NjCsrLr8vZNkeBvjaidj&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsbqrGlnrXQkkmY6QK_emOVSiG5ky-uTYcItdvJlQJbJ9VTYPol6JBCTFtB6CrtPnSsQa_wQlrpk2UvceJ78Fo9-Z-CbnG8PZDx2NgaX0xjjtf04Bz-NjCsrLr8vZNkeBvjaidj&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsbqrGlnrXQkkmY6QK_emOVSiG5ky-uTYcItdvJlQJbJ9VTYPol6JBCTFtB6CrtPnSsQa_wQlrpk2UvceJ78Fo9-Z-CbnG8PZDx2NgaX0xjjtf04Bz-NjCsrLr8vZNkeBvjaidj&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">2</span>
+                <span class="hotword" style="font-size: 18px;">米兰开幕式 好正常好好看</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>865,461</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">审美纠偏相机</span>
+                        <div class="score-info">
+                            <span class="score">89分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>一键去油去抽象</li>
+                    <li>米兰光影滤镜</li>
+                    <li>正常人类审美评分</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁社交媒体重度用户，热衷玩梗且对前卫艺术感到疲劳的群体</p>
+                        <p><strong>📝 产品描述：</strong>一款AI修图工具，能将过度夸张、抽象或怪异的照片一键还原为符合大众审美的“正常好看”风格，满足用户对经典美学的回归需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">洗眼大大</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>全网美图聚合</li>
+                    <li>辣眼内容自动屏蔽</li>
+                    <li>每日审美疗愈计划</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁追求视觉舒适度的职场人，设计审美疲劳者</p>
+                        <p><strong>📝 产品描述：</strong>基于热搜情绪开发的视觉聚合App，只推送符合黄金分割与传统美学的高清内容，为被网络审丑疲劳轰炸的用户提供一片“视觉净土”。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">不做显眼包</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>穿搭/活动安全指数检测</li>
+                    <li>经典风格推荐引擎</li>
+                    <li>大众接受度模拟投票</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-30岁筹备婚礼或重要活动的年轻人，害怕翻车的社恐人士</p>
+                        <p><strong>📝 产品描述：</strong>反向潮流助手，帮助用户在穿搭或活动策划中规避过度前卫的设计，提供“好正常好好看”的安全方案，确保在主流审美中不出错。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 78分 × 80% + 有用度 68分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">3</span>
+                <span class="hotword" style="font-size: 18px;">大集里的中国年味</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>679,705</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「大集里的中国年味」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuTvNFVKLsBqUC2Zj_hUXJgHqtwR7-P01-tV8TAmxqSKJrFyp2BNWmPcSEXx8_LTO_SpzSVpaQwwe__AGyjHNcqelJmMJePSwnG1ie3LBiLp2rNnNdpNzClJuOYL8td-47PTJ9G&flowName=GlifWebSignIn&authuser"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuTvNFVKLsBqUC2Zj_hUXJgHqtwR7-P01-tV8TAmxqSKJrFyp2BNWmPcSEXx8_LTO_SpzSVpaQwwe__AGyjHNcqelJmMJePSwnG1ie3LBiLp2rNnNdpNzClJuOYL8td-47PTJ9G&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuTvNFVKLsBqUC2Zj_hUXJgHqtwR7-P01-tV8TAmxqSKJrFyp2BNWmPcSEXx8_LTO_SpzSVpaQwwe__AGyjHNcqelJmMJePSwnG1ie3LBiLp2rNnNdpNzClJuOYL8td-47PTJ9G&flowName=GlifWebSignIn&authuser"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuTvNFVKLsBqUC2Zj_hUXJgHqtwR7-P01-tV8TAmxqSKJrFyp2BNWmPcSEXx8_LTO_SpzSVpaQwwe__AGyjHNcqelJmMJePSwnG1ie3LBiLp2rNnNdpNzClJuOYL8td-47PTJ9G&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">4</span>
+                <span class="hotword" style="font-size: 18px;">潜水员戴夫手游上线</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">戴夫的摸鱼钟</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>深海专注模式：设定工作时长如同下潜氧气量</li>
+                    <li>寿司店结算：将专注成果转化为虚拟经营收益</li>
+                    <li>像素风组件：桌面动态像素鱼缸挂件</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁，喜爱游戏化体验、需要管理时间的学生及职场人</p>
+                        <p><strong>📝 产品描述：</strong>一款结合游戏核心机制的番茄钟App。将枯燥的专注时间比作“深海捕鱼”，专注结束后的休息时间则是“寿司店经营”，用游戏原本的白天捕鱼晚上开店的循环激励用户保持高效与放松的平衡。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">蓝洞海鲜图鉴AR</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>扫码识鱼：AR扫描现实海鲜识别品种与口感</li>
+                    <li>虚拟养殖：在现实空间通过AR投射虚拟水族馆</li>
+                    <li>戴夫食谱：根据识别食材推荐游戏同款创意料理</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁，对海洋生物好奇、喜爱日料及烹饪的游戏玩家</p>
+                        <p><strong>📝 产品描述：</strong>打破次元壁的AR应用。用户在超市或日料店扫描海鲜，即可显示游戏风格的趣味科普卡片及烹饪建议，还能收集虚拟图鉴，让现实生活充满探险乐趣。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">深夜寿司外卖</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>盲盒套餐：根据游戏内当日菜单生成现实外卖</li>
+                    <li>班卓烹饪课：还原游戏内奇葩料理的视频教程</li>
+                    <li>同城饭搭：寻找附近的“潜水员”拼单日料</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-35岁，追求新奇用餐体验的城市独居青年及游戏粉丝</p>
+                        <p><strong>📝 产品描述：</strong>与线下日料店合作的O2O小程序。主打“游戏同款”与“深夜食堂”概念，解决玩家“玩游戏看饿了”的痛点，提供具备盲盒属性的游戏联名外卖套餐。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">5</span>
+                <span class="hotword" style="font-size: 18px;">吴京回应唇部紧急护理</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>375,643</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「吴京回应唇部紧急护理」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsX92spj_qg4y83bdS4IiwBwz1IDHVumzv-KwXQ1qOS_P4PMgg_EGEb9FFN0dEAlip8reTWtIRLI2x3ehXsa7DZHdMfbATtZTFwHoAjtb4MPDfp7R2TbHQeETwMGqz6SGHknv_p&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsX92spj_qg4y83bdS4IiwBwz1IDHVumzv-KwXQ1qOS_P4PMgg_EGEb9FFN0dEAlip8reTWtIRLI2x3ehXsa7DZHdMfbATtZTFwHoAjtb4MPDfp7R2TbHQeETwMGqz6SGHknv_p&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsX92spj_qg4y83bdS4IiwBwz1IDHVumzv-KwXQ1qOS_P4PMgg_EGEb9FFN0dEAlip8reTWtIRLI2x3ehXsa7DZHdMfbATtZTFwHoAjtb4MPDfp7R2TbHQeETwMGqz6SGHknv_p&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsX92spj_qg4y83bdS4IiwBwz1IDHVumzv-KwXQ1qOS_P4PMgg_EGEb9FFN0dEAlip8reTWtIRLI2x3ehXsa7DZHdMfbATtZTFwHoAjtb4MPDfp7R2TbHQeETwMGqz6SGHknv_p&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">6</span>
+                <span class="hotword" style="font-size: 18px;">昭阳公主 <span class="tag">荐</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>222,467</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「昭阳公主」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbtJXr0hyfs4uQ4-heWkhDLFi40N9NyKALqXJhMMpDUxNro7hilvd8TG_jEl8p-uhu9m-5359hhIA3UeXuBEMDv8nkPoWIVnfLivN_4EWlO_Tut75J9cauW5Y_KUwBM1WZya71p4&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbtJXr0hyfs4uQ4-heWkhDLFi40N9NyKALqXJhMMpDUxNro7hilvd8TG_jEl8p-uhu9m-5359hhIA3UeXuBEMDv8nkPoWIVnfLivN_4EWlO_Tut75J9cauW5Y_KUwBM1WZya71p4&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbtJXr0hyfs4uQ4-heWkhDLFi40N9NyKALqXJhMMpDUxNro7hilvd8TG_jEl8p-uhu9m-5359hhIA3UeXuBEMDv8nkPoWIVnfLivN_4EWlO_Tut75J9cauW5Y_KUwBM1WZya71p4&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbtJXr0hyfs4uQ4-heWkhDLFi40N9NyKALqXJhMMpDUxNro7hilvd8TG_jEl8p-uhu9m-5359hhIA3UeXuBEMDv8nkPoWIVnfLivN_4EWlO_Tut75J9cauW5Y_KUwBM1WZya71p4&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">7</span>
+                <span class="hotword" style="font-size: 18px;">苏翊鸣回应奥运夺冠后飘了</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>219,460</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「苏翊鸣回应奥运夺冠后飘了」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbszdPDO1zz9g3tiMULzpR-dz-7i-pj1rOIdgQKBzwYELnUBkCSqbhDYUScPQqIjcD1JOJALjuSGF4Yr4RxGuzKWPNAjrUPz38vwa8sgV6xDyJ7L8_w77S38RANAuhUZ9kbD1q7Z&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbszdPDO1zz9g3tiMULzpR-dz-7i-pj1rOIdgQKBzwYELnUBkCSqbhDYUScPQqIjcD1JOJALjuSGF4Yr4RxGuzKWPNAjrUPz38vwa8sgV6xDyJ7L8_w77S38RANAuhUZ9kbD1q7Z&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbszdPDO1zz9g3tiMULzpR-dz-7i-pj1rOIdgQKBzwYELnUBkCSqbhDYUScPQqIjcD1JOJALjuSGF4Yr4RxGuzKWPNAjrUPz38vwa8sgV6xDyJ7L8_w77S38RANAuhUZ9kbD1q7Z&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbszdPDO1zz9g3tiMULzpR-dz-7i-pj1rOIdgQKBzwYELnUBkCSqbhDYUScPQqIjcD1JOJALjuSGF4Yr4RxGuzKWPNAjrUPz38vwa8sgV6xDyJ7L8_w77S38RANAuhUZ9kbD1q7Z&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">8</span>
+                <span class="hotword" style="font-size: 18px;">睡眠时间越长越好是谣言 <span class="tag">热</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">赖床判官</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI生成睡眠判决书</li>
+                    <li>睡醉风险指数可视化</li>
+                    <li>朋友圈'保释'打卡</li>
+                    <li>过度睡眠副作用模拟</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁，喜欢玩梗、周末习惯报复性补觉，但又担心健康的年轻人。</p>
+                        <p><strong>📝 产品描述：</strong>一款将“睡眠过量危害”娱乐化的应用。用户输入睡眠时长，AI根据热搜科普生成夸张的“健康判决书”（如：判处大脑迟钝3小时），用幽默嘲讽的方式警示过度补觉风险。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 62分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">黄金睡眠局</span>
+                        <div class="score-info">
+                            <span class="score">83分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>精准时长对赌</li>
+                    <li>睡多扣分机制</li>
+                    <li>清醒度排行榜</li>
+                    <li>早起脑力挑战</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-35岁，追求效率、有胜负欲，希望改善作息的职场白领。</p>
+                        <p><strong>📝 产品描述：</strong>基于“过犹不及”理论的睡眠对赌游戏。设定7-8小时为得分区间，睡太少或睡太久（超过9小时）都会扣除虚拟资产，通过游戏化机制强迫用户养成精准、适度的睡眠习惯。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">防变傻闹钟</span>
+                        <div class="score-info">
+                            <span class="score">77分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>超长睡眠强力阻断</li>
+                    <li>脑雾清除任务</li>
+                    <li>智商在线监测</li>
+                    <li>补觉时长计算器</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-30岁考研党、脑力工作者，担心睡多导致记忆力下降的人群。</p>
+                        <p><strong>📝 产品描述：</strong>针对“睡久伤脑”痛点的硬核工具。一旦睡眠监测超过9小时红线，闹钟将触发高难度认知任务（如逻辑题）强制唤醒大脑，防止用户陷入“睡醉”状态，保持全天清醒。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 85分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">9</span>
+                <span class="hotword" style="font-size: 18px;">王安宇王玉雯二搭</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>200,141</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「王安宇王玉雯二搭」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbv9BTDcVNV592-y-ANsOPOaL-jC8qrqlOSo1-iMVdOwEUxDgcsF43L3NLFpPvEE9kLLN0a9T-DXbwU60hnHfP-z9GhdpvJPUw1MapQYJgMQVJxkrpZfcwl2Mgg89EI8_yYQxDkd&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbv9BTDcVNV592-y-ANsOPOaL-jC8qrqlOSo1-iMVdOwEUxDgcsF43L3NLFpPvEE9kLLN0a9T-DXbwU60hnHfP-z9GhdpvJPUw1MapQYJgMQVJxkrpZfcwl2Mgg89EI8_yYQxDkd&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"Verify your account to continue.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"Verify your account to continue.","validation_url_link_text":"Verify your account","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbv9BTDcVNV592-y-ANsOPOaL-jC8qrqlOSo1-iMVdOwEUxDgcsF43L3NLFpPvEE9kLLN0a9T-DXbwU60hnHfP-z9GhdpvJPUw1MapQYJgMQVJxkrpZfcwl2Mgg89EI8_yYQxDkd&flowName=GlifWebSignIn&authuser","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Verify your account","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbv9BTDcVNV592-y-ANsOPOaL-jC8qrqlOSo1-iMVdOwEUxDgcsF43L3NLFpPvEE9kLLN0a9T-DXbwU60hnHfP-z9GhdpvJPUw1MapQYJgMQVJxkrpZfcwl2Mgg89EI8_yYQxDkd&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">10</span>
+                <span class="hotword" style="font-size: 18px;">冬奥会开幕式</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>158,408</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">云端雪花汇</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>声纹生成专属雪花</li>
+                    <li>AR实景手持雪花拍照</li>
+                    <li>好友雪花拼图特效</li>
+                    <li>开幕式同款滤镜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁社交媒体重度用户，追求个性化表达与仪式感。</p>
+                        <p><strong>📝 产品描述：</strong>基于开幕式“一朵雪花”理念，通过用户声纹生成独一无二的3D数字雪花，支持AR合影与社交裂变传播，复刻中国式浪漫。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">各国羽绒大赏</span>
+                        <div class="score-info">
+                            <span class="score">83分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>代表团入场服饰识别</li>
+                    <li>同款/平替一键搜索</li>
+                    <li>国家队队服颜值投票</li>
+                    <li>虚拟试穿</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁时尚关注者，有冬季服饰购买需求及八卦心理的用户。</p>
+                        <p><strong>📝 产品描述：</strong>针对入场仪式变“羽绒服走秀”的热点，提供各国队服的AI识别与种草功能，建立实时颜值排行榜，连接电商转化流量。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">节气美学日历</span>
+                        <div class="score-info">
+                            <span class="score">74分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>开幕式高清动态壁纸</li>
+                    <li>节气诗词科普</li>
+                    <li>倒计时纪念日工具</li>
+                    <li>桌面小组件</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>全年龄段国潮爱好者，尤其是学生、设计师及文化类APP用户。</p>
+                        <p><strong>📝 产品描述：</strong>将开幕式惊艳的“二十四节气倒计时”视觉转化为日常工具，提供高审美的时间管理与文化科普服务，延续热点长尾价值。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 70分 × 80% + 有用度 90分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h2>🏆 产品创意排行榜 (TOP20)</h2>
+        <div class="ranking-list">
+
+            <div class="ranking-item">
+                <span class="ranking-rank gold">#1</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">审美纠偏相机</div>
+                    <div class="ranking-hotword">来源：米兰开幕式 好正常好好看</div>
+                </div>
+                <span class="ranking-score">89分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank silver">#2</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">戴夫的摸鱼钟</div>
+                    <div class="ranking-hotword">来源：潜水员戴夫手游上线</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank bronze">#3</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">云端雪花汇</div>
+                    <div class="ranking-hotword">来源：冬奥会开幕式</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">4</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">赖床判官</div>
+                    <div class="ranking-hotword">来源：睡眠时间越长越好是谣言</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">5</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">黄金睡眠局</div>
+                    <div class="ranking-hotword">来源：睡眠时间越长越好是谣言</div>
+                </div>
+                <span class="ranking-score">83分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">6</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">各国羽绒大赏</div>
+                    <div class="ranking-hotword">来源：冬奥会开幕式</div>
+                </div>
+                <span class="ranking-score">83分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">7</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">洗眼大大</div>
+                    <div class="ranking-hotword">来源：米兰开幕式 好正常好好看</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">8</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">蓝洞海鲜图鉴AR</div>
+                    <div class="ranking-hotword">来源：潜水员戴夫手游上线</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">9</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">深夜寿司外卖</div>
+                    <div class="ranking-hotword">来源：潜水员戴夫手游上线</div>
+                </div>
+                <span class="ranking-score">79分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">10</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">防变傻闹钟</div>
+                    <div class="ranking-hotword">来源：睡眠时间越长越好是谣言</div>
+                </div>
+                <span class="ranking-score">77分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">11</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">不做显眼包</div>
+                    <div class="ranking-hotword">来源：米兰开幕式 好正常好好看</div>
+                </div>
+                <span class="ranking-score">76分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">12</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">节气美学日历</div>
+                    <div class="ranking-hotword">来源：冬奥会开幕式</div>
+                </div>
+                <span class="ranking-score">74分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">13</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「千问」分析失败</div>
+                    <div class="ranking-hotword">来源：千问</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">14</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「大集里的中国年味」分析失败</div>
+                    <div class="ranking-hotword">来源：大集里的中国年味</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">15</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「吴京回应唇部紧急护理」分析失败</div>
+                    <div class="ranking-hotword">来源：吴京回应唇部紧急护理</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">16</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「昭阳公主」分析失败</div>
+                    <div class="ranking-hotword">来源：昭阳公主</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">17</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「苏翊鸣回应奥运夺冠后飘了」分析失败</div>
+                    <div class="ranking-hotword">来源：苏翊鸣回应奥运夺冠后飘了</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">18</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「王安宇王玉雯二搭」分析失败</div>
+                    <div class="ranking-hotword">来源：王安宇王玉雯二搭</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">18</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">8</span>
+                    <span class="stat-label">优秀创意 (&gt;80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">4</span>
+                    <span class="stat-label">良好创意 (60-80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">82.2</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🤖 本报告由 AI 自动生成 | 仅供参考</p>
+            <p>数据来源：天聚数行 API | AI 分析：Claude 4.5 Sonnet</p>
+            <p>生成时间：2026-02-07 12:14:01</p>
+        </footer>
+    </div>
+</body>
+</html>

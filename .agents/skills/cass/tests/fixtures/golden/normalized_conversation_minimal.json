@@ -1,0 +1,21 @@
+{
+  "agent_slug": "chatgpt",
+  "external_id": null,
+  "title": null,
+  "workspace": null,
+  "source_path": "/tmp/conv.json",
+  "started_at": null,
+  "ended_at": null,
+  "metadata": {},
+  "messages": [
+    {
+      "idx": 0,
+      "role": "user",
+      "author": null,
+      "created_at": null,
+      "content": "Hello",
+      "extra": {},
+      "snippets": []
+    }
+  ]
+}

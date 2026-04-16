@@ -1,0 +1,28 @@
+{
+  "title": "__TITLE__",
+  "description": "__DESCRIPTION__",
+  "majorVersion": __MAJOR__,
+  "minorVersion": __MINOR__,
+  "patchVersion": __PATCH__,
+  "runnable": 1,
+  "author": "__AUTHOR__",
+  "license": "__LICENSE__",
+  "coreApi": {
+    "majorVersion": 1,
+    "minorVersion": 27
+  },
+  "machineName": "__MACHINE__",
+  "embedTypes": [
+    "iframe"
+  ],
+  "preloadedJs": [
+    {
+      "path": "dist/h5p-__SLUG__.js"
+    }
+  ],
+  "preloadedCss": [
+    {
+      "path": "dist/h5p-__SLUG__.css"
+    }
+  ]
+}

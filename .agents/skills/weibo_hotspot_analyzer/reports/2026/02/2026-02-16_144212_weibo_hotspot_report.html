@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年02月16日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --accent-normal: #6C757D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .report-header h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+            margin-top: 32px;
+        }
+
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hotspot-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hotspot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .hotspot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .hotword {
+            font-weight: 600;
+            font-size: 16px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotness {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .hotspot-summary {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hotspot-detail {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .hotspot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+            transition: all 0.2s;
+        }
+
+        .idea-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .idea-card.excellent {
+            border-left-color: var(--accent-excellent);
+            background: linear-gradient(to right, rgba(255, 210, 63, 0.1), transparent);
+        }
+
+        .idea-card.good {
+            border-left-color: var(--accent-good);
+            background: linear-gradient(to right, rgba(6, 167, 125, 0.05), transparent);
+        }
+
+        .idea-card.normal {
+            border-left-color: var(--accent-normal);
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .idea-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .score-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.excellent {
+            background: var(--accent-excellent);
+            color: #333;
+        }
+
+        .badge.good {
+            background: var(--accent-good);
+            color: white;
+        }
+
+        .badge.normal {
+            background: var(--accent-normal);
+            color: white;
+        }
+
+        .idea-body p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .idea-body strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .idea-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .idea-body li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .score-breakdown {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .statistics h2 {
+            color: white;
+            border-left-color: white;
+            margin-top: 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ranking-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ranking-rank {
+            font-size: 24px;
+            font-weight: 700;
+            width: 40px;
+            text-align: center;
+        }
+
+        .ranking-rank.gold { color: #FFD700; }
+        .ranking-rank.silver { color: #C0C0C0; }
+        .ranking-rank.bronze { color: #CD7F32; }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .ranking-hotword {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .ranking-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .report-header { padding: 24px; }
+            .report-header h1 { font-size: 24px; }
+            .hotspot-list { grid-template-columns: 1fr; }
+            .idea-header { flex-direction: column; align-items: flex-start; }
+            .stat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>🤖 微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>📅 生成日期：2026-02-16</span>
+                <span>🔥 热搜总数：10</span>
+                <span>💡 创意总数：30</span>
+                <span>⏰ 生成时间：2026-02-16 22:42:12</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">谁给迪丽热巴化的妆</span>
+                </div>
+                <div class="hotness">热度：晚会 15427933 </div>
+                <div class="hotspot-summary">迪丽热巴新造型妆容引发热议，网友好奇化妆师身份并评价其审美。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">机器人全面入侵春晚</span>
+                </div>
+                <div class="hotness">热度：7162070 <span class="tag">爆</span></div>
+                <div class="hotspot-summary">央视春晚舞台引入大量机器人表演，科技元素与传统节目深度融合引发热议。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">春晚分会场上大分</span>
+                </div>
+                <div class="hotness">热度：4326292 </div>
+                <div class="hotspot-summary">央视春晚各分会场凭借惊艳舞美和地域特色，表现出彩赢得观众一致好评。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">鸿蒙智行连续三年亮相春晚</span>
+                </div>
+                <div class="hotness">热度： <span class="tag">新</span></div>
+                <div class="hotspot-summary">华为鸿蒙智行旗下车型连续三年登陆央视春晚，展现智能科技实力。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">春晚</span>
+                </div>
+                <div class="hotness">热度：5109019 </div>
+                <div class="hotspot-summary">央视除夕年度盛典，不仅是全球华人的团圆背景音，更是全民造梗、吐槽与情感共鸣的社交顶流。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">王菲 真妈妈来了</span>
+                </div>
+                <div class="hotness">热度：3261788 <span class="tag">官宣</span></div>
+                <div class="hotspot-summary">王菲现身巴黎时装周气场全开，被网友盛赞“真巨星”驾到。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">王一博郭富城炸场</span>
+                </div>
+                <div class="hotness">热度：晚会 2474747 </div>
+                <div class="hotspot-summary">王一博与郭富城跨时代同台斗舞，两代顶流视听盛宴燃爆全场。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">过年上淘宝闪购抓金马赢好运</span>
+                </div>
+                <div class="hotness">热度： <span class="tag">爆</span></div>
+                <div class="hotspot-summary">淘宝春节营销活动，用户在闪购频道通过“抓金马”互动游戏赢取新年好运与红包优惠。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">秦岚李沁王楚然美成啥了</span>
+                </div>
+                <div class="hotness">热度：晚会 2139198 </div>
+                <div class="hotspot-summary">秦岚、李沁、王楚然春晚同框，因绝美造型引发全网惊叹与热议。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">李健开净化了</span>
+                </div>
+                <div class="hotness">热度：晚会 2077701 <span class="tag">新</span></div>
+                <div class="hotspot-summary">李健在演出中展现神级唱功，音色空灵清澈，网友感叹听他唱歌如同给耳朵和心灵做了一次深度净化。</div>
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">1</span>
+                <span class="hotword" style="font-size: 18px;">谁给迪丽热巴化的妆</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>15,427,933</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">AI 妆造侦探</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>明星妆容一键拆解</li>
+                    <li>同款彩妆反向搜索</li>
+                    <li>AR实时仿妆滤镜</li>
+                    <li>化妆师风格匹配</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁，关注美妆潮流、喜欢模仿明星穿搭的年轻女性。</p>
+                        <p><strong>📝 产品描述：</strong>针对“谁化的妆”这一好奇心，利用AI分析热搜图片的妆容细节（眼影晕染、口红色号），反向推导所用产品及手法，并生成AR滤镜让用户一键体验同款“女明星妆”。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">全民改妆大挑战</span>
+                        <div class="score-info">
+                            <span class="score">85分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>明星脸模DIY上妆</li>
+                    <li>妆造红黑榜PK</li>
+                    <li>热门话题妆容二创</li>
+                    <li>粉丝审美战队</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>16-25岁，热衷饭圈文化、喜欢二创和表达观点的Z世代用户。</p>
+                        <p><strong>📝 产品描述：</strong>基于热搜的争议点，提供明星面部线稿或无妆底图。如果原妆容被吐槽，用户可“拯救”重画；如果原妆容绝美，用户可“复刻”挑战。通过投票PK，满足粉丝的参与感和审视欲。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 45分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">幕后黑手/金手</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>明星化妆师关系图谱</li>
+                    <li>造型师历史战绩评分</li>
+                    <li>风格避雷指南</li>
+                    <li>业内大神预约通道</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-40岁，关注时尚产业链、有高端化妆造型需求的从业者或消费者。</p>
+                        <p><strong>📝 产品描述：</strong>建立明星与化妆师的关联数据库。当“谁化的妆”上热搜时，即时揭秘背后的化妆师，展示其过往作品集（红榜/黑榜），将娱乐八卦转化为行业评价体系和预约平台。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">2</span>
+                <span class="hotword" style="font-size: 18px;">机器人全面入侵春晚 <span class="tag">爆</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>7,162,070</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">赛博拜年嘴替</span>
+                        <div class="score-info">
+                            <span class="score">91分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>机器人形象生成</li>
+                    <li>亲戚问答自动回复</li>
+                    <li>方言拜年视频合成</li>
+                    <li>红包自动感谢语</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁在这个春节面临社交压力、不想应付亲戚拷问的年轻人</p>
+                        <p><strong>📝 产品描述：</strong>一款结合春晚机器人形象的AI代理工具。用户可生成一个“机器人替身”，用幽默机械的语调替你应付七大姑八大姨的催婚催生提问，既不仅甚至还能录制赛博风拜年视频。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 85分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">客厅伴舞团</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR实景增强</li>
+                    <li>春晚同款舞步教学</li>
+                    <li>多机位合拍</li>
+                    <li>一键生成抖音特效</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-35岁短视频重度用户，喜欢跟拍挑战和分享生活</p>
+                        <p><strong>📝 产品描述：</strong>利用AR技术，将春晚舞台上的明星机器人投射到用户自家客厅。用户可与这些“顶级伴舞”同框拍摄魔性舞蹈视频，低成本复刻春晚大场面，极具传播爆点。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 30分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">春晚图灵测试</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>实时画面找茬</li>
+                    <li>人机辨别挑战</li>
+                    <li>机器人科普图鉴</li>
+                    <li>弹幕投票互动</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁科技爱好者及喜欢边看春晚边吐槽的网民</p>
+                        <p><strong>📝 产品描述：</strong>一款第二屏互动游戏。针对“机器人入侵”话题，让用户在看直播时实时竞猜画面中的背景演员是真人还是机器人/AI特效，普及硬核科技知识的同时增加观影趣味。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 40分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">3</span>
+                <span class="hotword" style="font-size: 18px;">春晚分会场上大分</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>4,326,292</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">春晚巡游记</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR实景还原春晚机位</li>
+                    <li>分会场同款旅游路线定制</li>
+                    <li>集邮式电子护照打卡</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁喜爱旅游、“特种兵式”打卡的年轻群体及亲子家庭。</p>
+                        <p><strong>📝 产品描述：</strong>一款虚实结合的文旅打卡APP。利用AR技术，指导用户在实地找到春晚分会场的绝美镜头机位进行拍摄；整合分会场周边的吃喝玩乐资源，推出“春晚同款”旅游专线，将流量转化为实地文旅消费。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 90分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">家乡上大分</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>城市阵营实时热度PK</li>
+                    <li>方言版节目二创配音</li>
+                    <li>点亮城市专属辉煌皮肤</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-45岁具有强烈家乡荣誉感、热衷网络玩梗和社交互动的泛娱乐用户。</p>
+                        <p><strong>📝 产品描述：</strong>基于地域荣誉感的社交互动小程序。用户选择家乡或喜爱的分会场阵营，通过上传方言解说、模仿秀或简单的点击助力游戏进行PK，获胜城市将在应用首页获得“至尊龙年”特效展示，极大满足地域自豪感。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 30分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">瞬息国潮妆</span>
+                        <div class="score-info">
+                            <span class="score">83分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AIGC生成分会场同款妆造</li>
+                    <li>沉浸式舞台背景合成</li>
+                    <li>一键生成拜年视频</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁喜爱国风文化、热衷在小红书/抖音分享照片的女性用户。</p>
+                        <p><strong>📝 产品描述：</strong>紧跟热搜审美的AI写真工具。深度解析分会场（如西安诗词、沈阳工业风等）的视觉元素，用户只需上传一张自拍，即可一键生成身着同款华服、置身绚丽舞台的写真大片，极具社交传播价值。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">4</span>
+                <span class="hotword" style="font-size: 18px;">鸿蒙智行连续三年亮相春晚 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">智行春晚氛围组</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>车灯随春晚歌曲律动</li>
+                    <li>座舱大屏同步放烟花</li>
+                    <li>一键生成人车拜年视频</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁车主，乐于在社交媒体分享生活、追求仪式感的年轻人</p>
+                        <p><strong>📝 产品描述：</strong>让汽车化身除夕最强“显眼包”，利用车外大灯投影和车内氛围灯与春晚节目实时联动，打造沉浸式移动影音室。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 42分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">鸿蒙锦鲤集卡</span>
+                        <div class="score-info">
+                            <span class="score">77分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>识别春晚画面中的车型</li>
+                    <li>AR实景搜寻虚拟车钥匙</li>
+                    <li>集齐三年款型抽大奖</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-40岁大众用户，热衷于扫福、集卡等春节互动游戏的人群</p>
+                        <p><strong>📝 产品描述：</strong>结合春晚直播的互动游戏，用户通过手机扫描电视画面中的鸿蒙智行汽车，收集虚拟卡片赢取真车使用权。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 45分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">除夕归途副驾</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>春晚小品音频实时转播</li>
+                    <li>AI生成春晚金句路况播报</li>
+                    <li>错过节目智能文字摘要</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁驾驶者，除夕夜仍奔波在回家路上无法看电视的人群</p>
+                        <p><strong>📝 产品描述：</strong>专为除夕夜开车用户设计，利用车载大模型将春晚视觉内容转化为趣味音频解说，让回家路不孤单。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">5</span>
+                <span class="hotword" style="font-size: 18px;">春晚</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>5,109,019</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">我要上春晚AI</span>
+                        <div class="score-info">
+                            <span class="score">90分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI换脸参演小品</li>
+                    <li>生成明星同款拜年视频</li>
+                    <li>定制专属主持词</li>
+                    <li>一键分享朋友圈</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-45岁，热衷社交分享、追求新鲜感的用户及需要创意拜年方式的人群</p>
+                        <p><strong>📝 产品描述：</strong>利用AIGC技术，用户只需上传照片，即可将自己替换为春晚小品主角或主持人，生成毫无违和感的搞笑或祝福视频，满足用户'参与国民大项目'的虚荣心与社交需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">春晚神吐槽</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>节目槽点实时弹幕</li>
+                    <li>AI自动生成表情包</li>
+                    <li>全网热梗排行榜</li>
+                    <li>尴尬指数仪表盘</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁网生代，喜欢边看电视边刷手机、热衷玩梗的互联网原住民</p>
+                        <p><strong>📝 产品描述：</strong>不仅是弹幕聚合，更是基于节目的实时Meme生成器。当小品出现尴尬台词时，AI瞬间截取画面并配上犀利文字，让用户在社交媒体上的'吐槽'快人一步，通过共鸣获得社交货币。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 42分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">春晚预言家</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>春晚套路宾果卡(Bingo)</li>
+                    <li>亲友群押注对战</li>
+                    <li>语音识别自动兑奖</li>
+                    <li>输家发红包惩罚</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>全年龄段，特别是在除夕夜寻找家庭聚会共同话题、缓解代沟尴尬的年轻人</p>
+                        <p><strong>📝 产品描述：</strong>将春晚变成多人互动桌游。卡片上写满'包饺子'、'催婚'等经典套路，听到对应台词即可打卡。通过游戏化机制，将枯燥的被动观看转化为刺激的家庭互动竞技，拯救无聊的客厅时光。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 40分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">6</span>
+                <span class="hotword" style="font-size: 18px;">王菲 真妈妈来了 <span class="tag">官宣</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>3,261,788</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">妈咪走秀滤镜</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI气场增强特效</li>
+                    <li>虚拟T台背景替换</li>
+                    <li>王菲经典BGM卡点</li>
+                    <li>自动生成慢动作大片</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁抖音/小红书重度用户，热衷模仿明星、展示自我的时尚男女。</p>
+                        <p><strong>📝 产品描述：</strong>一款短视频AR特效工具，能瞬间将用户普通的走路视频转化为王菲同款“六亲不认”步伐，自动添加聚光灯与高冷滤镜，让普通人也能体验“真女王”的压迫感与松弛感。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 40分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">菲式糊弄键盘</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>“关你啥事”语录生成</li>
+                    <li>高冷采访金句库</li>
+                    <li>拒绝内耗情绪分析</li>
+                    <li>优雅回怼话术推荐</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-35岁职场打工人，面临社交压力、渴望像王菲一样活得真实的年轻人。</p>
+                        <p><strong>📝 产品描述：</strong>基于王菲“太红了没烦恼”等经典采访名场面开发的输入法插件。当面对过年亲戚盘问或职场无效社交时，智能推荐高冷又不失礼貌的“菲式”回复，主打拒绝精神内耗。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">极简女王衣橱</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>穿搭做减法评分</li>
+                    <li>王菲同款平替检索</li>
+                    <li>Vintage单品鉴别</li>
+                    <li>松弛感穿搭诊断</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁追求质感与极简风格，喜爱Old Céline风格的中产女性。</p>
+                        <p><strong>📝 产品描述：</strong>反向种草App，不同于堆砌潮流单品，该应用利用AI分析用户的穿搭照片，建议“去掉哪一件”能提升高级感，通过模仿王菲的极简美学，帮助用户打造毫不费力的时髦感。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">7</span>
+                <span class="hotword" style="font-size: 18px;">王一博郭富城炸场</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>2,474,747</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">节奏双王AI</span>
+                        <div class="score-info">
+                            <span class="score">89分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI动作捕捉打分</li>
+                    <li>经典港风vs现代街舞双模式</li>
+                    <li>全息舞台AR投影</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁，喜爱舞蹈、追星及需要在居家场景健身的年轻群体</p>
+                        <p><strong>📝 产品描述：</strong>一款结合健身与体感游戏的APP。利用AI分析用户舞姿，提供郭富城经典樱花舞与王一博现代街舞的“跨时空斗舞”教学，让用户在家也能体验“炸场”快感。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">时光合拍</span>
+                        <div class="score-info">
+                            <span class="score">80分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>90年代/Z世代画风一键切换</li>
+                    <li>分屏合演特效模板</li>
+                    <li>智能踩点剪辑</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-25岁短视频重度用户，热衷于跟风拍摄热门挑战</p>
+                        <p><strong>📝 产品描述：</strong>短视频特效工具。提供独特的“双代同框”模板，用户可与年轻时的郭富城或现在的王一博进行虚拟合拍，通过滤镜营造两代审美碰撞的视觉冲击。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 50分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">聚会气氛组</span>
+                        <div class="score-info">
+                            <span class="score">72分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>声控爆闪灯光节奏同步</li>
+                    <li>模拟万人欢呼音效</li>
+                    <li>K歌炸场评分系统</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-30岁，经常组织线下KTV局、派对的社交活跃分子</p>
+                        <p><strong>📝 产品描述：</strong>一款派对辅助小程序。捕捉环境音乐高潮点，利用手机闪光灯和屏幕模拟演唱会级别的“炸场”灯光秀与音效，瞬间提升线下聚会的狂欢氛围。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">8</span>
+                <span class="hotword" style="font-size: 18px;">过年上淘宝闪购抓金马赢好运 <span class="tag">爆</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">抓马大吉 (Drama Luck)</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR实景抓马</li>
+                    <li>好友福气抢夺</li>
+                    <li>金马图鉴收集</li>
+                    <li>优惠券即时兑换</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁Z世代，热衷盲盒、集卡游戏及社交分享的年轻群体</p>
+                        <p><strong>📝 产品描述：</strong>一款基于LBS+AR的捉妖系互动游戏。将淘宝“金马”投射到现实街道，用户需举手机“抓马”赢取闪购资格。稀有金马可交易或赠送，将线上促销转化为线下社交狂欢。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">金马代嘴 (AI Mascot)</span>
+                        <div class="score-info">
+                            <span class="score">84分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI生成拜年吉祥话</li>
+                    <li>讨红包专属表情包</li>
+                    <li>亲戚问候自动回怼</li>
+                    <li>好运签文分享</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁职场青年，春节面临社交压力，希望通过幽默化解尴尬的用户</p>
+                        <p><strong>📝 产品描述：</strong>借“金马赢好运”概念，打造一只贱萌的AI电子宠物。它能替社恐用户生成高情商拜年视频或“讨红包”文案，既蹭了热搜的好运寓意，又解决了春节社交痛点。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 68分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">欧气闪购钟 (Lucky Clock)</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>个人欧气值测算</li>
+                    <li>闪购成功率预测</li>
+                    <li>自动抢拍辅助</li>
+                    <li>好运时刻提醒</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁“羊毛党”及家庭主妇，对价格敏感且相信运势的购物人群</p>
+                        <p><strong>📝 产品描述：</strong>结合玄学与大数据的工具。每天分析用户“今日运势”并推荐最容易抢到的闪购商品。当“金马”出现时自动提醒，将抢购成功归因为“好运”，降低抢不到的挫败感。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">9</span>
+                <span class="hotword" style="font-size: 18px;">秦岚李沁王楚然美成啥了</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>2,139,198</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">一键美成啥样</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>明星同款AR妆容复刻</li>
+                    <li>AI颜值风格诊断</li>
+                    <li>自动生成同系穿搭链接</li>
+                    <li>美貌指数PK排行榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁关注时尚美妆的女性，热衷于在社交媒体分享自拍。</p>
+                        <p><strong>📝 产品描述：</strong>一款AR滤镜应用，利用AI分析热搜三位女星的妆造特点，让用户能一键“上脸”同款妆容，并提供低成本的平替穿搭建议，满足用户“想和明星一样美”的虚荣心与模仿欲。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">彩虹屁文案姬</span>
+                        <div class="score-info">
+                            <span class="score">85分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>饭圈控评文案生成</li>
+                    <li>绝美形容词词库</li>
+                    <li>情绪化语音朗读</li>
+                    <li>一键生成夸人表情包</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-25岁追星族、饭圈女孩，需要大量文案为偶像打榜控评。</p>
+                        <p><strong>📝 产品描述：</strong>针对“美成啥了”这种无法言喻的惊叹，利用LLM生成各种花式夸赞美貌的“彩虹屁”文案和表情包，解决粉丝“只会说啊啊啊好美”的词穷痛点，极具传播性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 57分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">云端合影生成器</span>
+                        <div class="score-info">
+                            <span class="score">81分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>用户形象AI植入</li>
+                    <li>春晚舞台背景合成</li>
+                    <li>C位站位模拟</li>
+                    <li>虚拟社交朋友圈分享</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁社交活跃人群，喜欢蹭热点、发朋友圈。</p>
+                        <p><strong>📝 产品描述：</strong>利用AIGC技术，允许用户上传照片，将自己无缝合成到三位美女明星的合影中（或替换其中一位），生成“我也在春晚现场”的虚拟照片，满足用户的社交炫耀心理。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">10</span>
+                <span class="hotword" style="font-size: 18px;">李健开净化了 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>2,077,701</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">一键洗耳 (Ear Wash)</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>假唱/车祸现场识别</li>
+                    <li>自动切换空灵人声</li>
+                    <li>听觉净化进度条</li>
+                    <li>防油腻音效滤镜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁重度网民，对短视频神曲、车祸现场表演感到审美疲劳的用户</p>
+                        <p><strong>📝 产品描述：</strong>一款浏览器插件或后台应用，当检测到视频中出现嘈杂、跑调或过度修音的音频时，自动降低原音量并叠加类李健风格的空灵哼唱或白噪音，实现物理层面的“洗耳”体验。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 72分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">空灵吐槽机</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>暴躁语音转空灵歌声</li>
+                    <li>AI儒雅歌词重写</li>
+                    <li>诗人情绪海报生成</li>
+                    <li>净化朋友圈模式</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-30岁职场社畜及大学生，有宣泄情绪需求但不想显得粗鲁的人群</p>
+                        <p><strong>📝 产品描述：</strong>利用AI语音合成技术，将用户的愤怒语音或文字吐槽，转化为李健般娓娓道来的优雅歌声。即使是在骂人或抱怨工作，听起来也像是在吟唱一首关于岁月的散文诗。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 30分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">焦虑净化室</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>高保真无损人声库</li>
+                    <li>432Hz疗愈频率</li>
+                    <li>极简慢生活日历</li>
+                    <li>入睡前深度净化</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁城市中产、失眠人群、高保真音质追求者</p>
+                        <p><strong>📝 产品描述：</strong>拒绝电子舞曲和快节奏，只提供纯净人声与自然采样的助眠/专注APP。主打“听觉排毒”概念，用类李健的高质量清澈人声频率，帮助用户在快节奏生活中找回内心的平静。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 70分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h2>🏆 产品创意排行榜 (TOP20)</h2>
+        <div class="ranking-list">
+
+            <div class="ranking-item">
+                <span class="ranking-rank gold">#1</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">赛博拜年嘴替</div>
+                    <div class="ranking-hotword">来源：机器人全面入侵春晚</div>
+                </div>
+                <span class="ranking-score">91分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank silver">#2</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">我要上春晚AI</div>
+                    <div class="ranking-hotword">来源：春晚</div>
+                </div>
+                <span class="ranking-score">90分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank bronze">#3</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">节奏双王AI</div>
+                    <div class="ranking-hotword">来源：王一博郭富城炸场</div>
+                </div>
+                <span class="ranking-score">89分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">4</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">AI 妆造侦探</div>
+                    <div class="ranking-hotword">来源：谁给迪丽热巴化的妆</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">5</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">抓马大吉 (Drama Luck)</div>
+                    <div class="ranking-hotword">来源：过年上淘宝闪购抓金马赢好运</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">6</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">一键美成啥样</div>
+                    <div class="ranking-hotword">来源：秦岚李沁王楚然美成啥了</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">7</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">一键洗耳 (Ear Wash)</div>
+                    <div class="ranking-hotword">来源：李健开净化了</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">8</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">春晚巡游记</div>
+                    <div class="ranking-hotword">来源：春晚分会场上大分</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">9</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">全民改妆大挑战</div>
+                    <div class="ranking-hotword">来源：谁给迪丽热巴化的妆</div>
+                </div>
+                <span class="ranking-score">85分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">10</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">彩虹屁文案姬</div>
+                    <div class="ranking-hotword">来源：秦岚李沁王楚然美成啥了</div>
+                </div>
+                <span class="ranking-score">85分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">11</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">妈咪走秀滤镜</div>
+                    <div class="ranking-hotword">来源：王菲 真妈妈来了</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">12</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">菲式糊弄键盘</div>
+                    <div class="ranking-hotword">来源：王菲 真妈妈来了</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">13</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">金马代嘴 (AI Mascot)</div>
+                    <div class="ranking-hotword">来源：过年上淘宝闪购抓金马赢好运</div>
+                </div>
+                <span class="ranking-score">84分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">14</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">瞬息国潮妆</div>
+                    <div class="ranking-hotword">来源：春晚分会场上大分</div>
+                </div>
+                <span class="ranking-score">83分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">15</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">客厅伴舞团</div>
+                    <div class="ranking-hotword">来源：机器人全面入侵春晚</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">16</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">家乡上大分</div>
+                    <div class="ranking-hotword">来源：春晚分会场上大分</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">17</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">智行春晚氛围组</div>
+                    <div class="ranking-hotword">来源：鸿蒙智行连续三年亮相春晚</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">18</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">春晚神吐槽</div>
+                    <div class="ranking-hotword">来源：春晚</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">19</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">空灵吐槽机</div>
+                    <div class="ranking-hotword">来源：李健开净化了</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">20</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">云端合影生成器</div>
+                    <div class="ranking-hotword">来源：秦岚李沁王楚然美成啥了</div>
+                </div>
+                <span class="ranking-score">81分</span>
+            </div>
+
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">30</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">20</span>
+                    <span class="stat-label">优秀创意 (&gt;80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">10</span>
+                    <span class="stat-label">良好创意 (60-80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">82.5</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🤖 本报告由 AI 自动生成 | 仅供参考</p>
+            <p>数据来源：天聚数行 API | AI 分析：Claude 4.5 Sonnet</p>
+            <p>生成时间：2026-02-16 22:42:12</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年2月27日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+        }
+        .report-header h1 { font-size: 32px; margin-bottom: 16px; }
+        .meta-info { display: flex; gap: 16px; flex-wrap: wrap; }
+        .meta-info span {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+        }
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .hotspot-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .hotspot-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .hotword { font-weight: 600; font-size: 16px; flex: 1; }
+        .hotness { font-size: 13px; color: #666; }
+        .tag { background: var(--primary-color); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+        .hotspot-detail {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+        }
+        .idea-card.excellent { border-left-color: var(--accent-excellent); }
+        .idea-card.good { border-left-color: var(--accent-good); }
+        .idea-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .idea-name { font-size: 18px; font-weight: 600; }
+        .score { font-size: 20px; font-weight: 700; color: var(--primary-color); }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .badge.excellent { background: var(--accent-excellent); }
+        .badge.good { background: var(--accent-good); color: white; }
+        .idea-body p { margin-bottom: 8px; }
+        .idea-body ul { margin-left: 20px; margin-bottom: 12px; }
+        .idea-body strong { color: var(--primary-color); }
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+        }
+        .statistics h2 { color: white; border-left-color: white; }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+        .stat-item { text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 12px; }
+        .stat-value { font-size: 36px; font-weight: 700; display: block; }
+        .stat-label { font-size: 14px; opacity: 0.9; }
+        .footer { text-align: center; padding: 32px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>生成日期：2026-02-27</span>
+                <span>热搜总数：10</span>
+                <span>创意总数：20</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">提醒在伊朗的中国公民尽快撤离</span>
+                </div>
+                <div class="hotness">热度：1163324 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">美国双航母已就位</span>
+                </div>
+                <div class="hotness">热度：828231 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">关注2026全国两会</span>
+                </div>
+                <div class="hotness">热度：679023 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">Gucci直播</span>
+                </div>
+                <div class="hotness">热度：519624 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">草莓价格跌至1元一斤</span>
+                </div>
+                <div class="hotness">热度：369265 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">中国驻以色列使馆紧急通知</span>
+                </div>
+                <div class="hotness">热度：299870 <span class="tag">热</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">伊军方将对美侵略予以毁灭性回应</span>
+                </div>
+                <div class="hotness">热度：252230 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">虎跳峡男游客疑因洗杯落水失联</span>
+                </div>
+                <div class="hotness">热度：227669 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">退房的时候前台拿了个徐福记的糖纸</span>
+                </div>
+                <div class="hotness">热度：217748 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">00后员工年薪80万是老板的6倍</span>
+                </div>
+                <div class="hotness">热度：209629 <span class="tag">新</span></div>
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">1</span>
+                <span class="hotword">提醒在伊朗的中国公民尽快撤离</span>
+            </div>
+            <p><strong>热度指数：</strong>1163324</p>
+            <div class="product-ideas">
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"提醒在伊朗的中国公民尽快撤离"内容创作助手</span>
+                        <span>
+                            <span class="score">70分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>热点素材库</li><li>创作灵感生成</li><li>多格式导出</li><li>一键发布</li></ul>
+                        <p><strong>目标用户：</strong>内容创作者、自媒体</p>
+                        <p><strong>产品描述：</strong>基于"提醒在伊朗的中国公民尽快撤离"热点，为创作者提供相关素材和创作灵感，快速生成符合平台调性的内容。</p>
+                        <p><strong>评分：</strong>有趣度 72分 × 80% + 有用度 68分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"提醒在伊朗的中国公民尽快撤离"知识卡片</span>
+                        <span>
+                            <span class="score">65分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>关键信息提炼</li><li>视觉化呈现</li><li>知识关联</li><li>收藏复习</li></ul>
+                        <p><strong>目标用户：</strong>学习型用户</p>
+                        <p><strong>产品描述：</strong>将"提醒在伊朗的中国公民尽快撤离"相关的核心知识提炼成易读的卡片式内容，方便用户快速了解和分享。</p>
+                        <p><strong>评分：</strong>有趣度 68分 × 80% + 有用度 62分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">2</span>
+                <span class="hotword">美国双航母已就位 [新]</span>
+            </div>
+            <p><strong>热度指数：</strong>828231</p>
+            <div class="product-ideas">
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"美国双航母已就位"内容创作助手</span>
+                        <span>
+                            <span class="score">70分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>热点素材库</li><li>创作灵感生成</li><li>多格式导出</li><li>一键发布</li></ul>
+                        <p><strong>目标用户：</strong>内容创作者、自媒体</p>
+                        <p><strong>产品描述：</strong>基于"美国双航母已就位"热点，为创作者提供相关素材和创作灵感，快速生成符合平台调性的内容。</p>
+                        <p><strong>评分：</strong>有趣度 72分 × 80% + 有用度 68分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"美国双航母已就位"知识卡片</span>
+                        <span>
+                            <span class="score">65分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>关键信息提炼</li><li>视觉化呈现</li><li>知识关联</li><li>收藏复习</li></ul>
+                        <p><strong>目标用户：</strong>学习型用户</p>
+                        <p><strong>产品描述：</strong>将"美国双航母已就位"相关的核心知识提炼成易读的卡片式内容，方便用户快速了解和分享。</p>
+                        <p><strong>评分：</strong>有趣度 68分 × 80% + 有用度 62分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">3</span>
+                <span class="hotword">关注2026全国两会</span>
+            </div>
+            <p><strong>热度指数：</strong>679023</p>
+            <div class="product-ideas">
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"关注2026全国两会"内容创作助手</span>
+                        <span>
+                            <span class="score">70分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>热点素材库</li><li>创作灵感生成</li><li>多格式导出</li><li>一键发布</li></ul>
+                        <p><strong>目标用户：</strong>内容创作者、自媒体</p>
+                        <p><strong>产品描述：</strong>基于"关注2026全国两会"热点，为创作者提供相关素材和创作灵感，快速生成符合平台调性的内容。</p>
+                        <p><strong>评分：</strong>有趣度 72分 × 80% + 有用度 68分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"关注2026全国两会"知识卡片</span>
+                        <span>
+                            <span class="score">65分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>关键信息提炼</li><li>视觉化呈现</li><li>知识关联</li><li>收藏复习</li></ul>
+                        <p><strong>目标用户：</strong>学习型用户</p>
+                        <p><strong>产品描述：</strong>将"关注2026全国两会"相关的核心知识提炼成易读的卡片式内容，方便用户快速了解和分享。</p>
+                        <p><strong>评分：</strong>有趣度 68分 × 80% + 有用度 62分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">4</span>
+                <span class="hotword">Gucci直播 [新]</span>
+            </div>
+            <p><strong>热度指数：</strong>519624</p>
+            <div class="product-ideas">
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"Gucci直播"内容创作助手</span>
+                        <span>
+                            <span class="score">70分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>热点素材库</li><li>创作灵感生成</li><li>多格式导出</li><li>一键发布</li></ul>
+                        <p><strong>目标用户：</strong>内容创作者、自媒体</p>
+                        <p><strong>产品描述：</strong>基于"Gucci直播"热点，为创作者提供相关素材和创作灵感，快速生成符合平台调性的内容。</p>
+                        <p><strong>评分：</strong>有趣度 72分 × 80% + 有用度 68分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"Gucci直播"知识卡片</span>
+                        <span>
+                            <span class="score">65分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>关键信息提炼</li><li>视觉化呈现</li><li>知识关联</li><li>收藏复习</li></ul>
+                        <p><strong>目标用户：</strong>学习型用户</p>
+                        <p><strong>产品描述：</strong>将"Gucci直播"相关的核心知识提炼成易读的卡片式内容，方便用户快速了解和分享。</p>
+                        <p><strong>评分：</strong>有趣度 68分 × 80% + 有用度 62分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">5</span>
+                <span class="hotword">草莓价格跌至1元一斤</span>
+            </div>
+            <p><strong>热度指数：</strong>369265</p>
+            <div class="product-ideas">
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"草莓价格跌至1元一斤"内容创作助手</span>
+                        <span>
+                            <span class="score">70分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>热点素材库</li><li>创作灵感生成</li><li>多格式导出</li><li>一键发布</li></ul>
+                        <p><strong>目标用户：</strong>内容创作者、自媒体</p>
+                        <p><strong>产品描述：</strong>基于"草莓价格跌至1元一斤"热点，为创作者提供相关素材和创作灵感，快速生成符合平台调性的内容。</p>
+                        <p><strong>评分：</strong>有趣度 72分 × 80% + 有用度 68分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"草莓价格跌至1元一斤"知识卡片</span>
+                        <span>
+                            <span class="score">65分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>关键信息提炼</li><li>视觉化呈现</li><li>知识关联</li><li>收藏复习</li></ul>
+                        <p><strong>目标用户：</strong>学习型用户</p>
+                        <p><strong>产品描述：</strong>将"草莓价格跌至1元一斤"相关的核心知识提炼成易读的卡片式内容，方便用户快速了解和分享。</p>
+                        <p><strong>评分：</strong>有趣度 68分 × 80% + 有用度 62分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">6</span>
+                <span class="hotword">中国驻以色列使馆紧急通知 [热]</span>
+            </div>
+            <p><strong>热度指数：</strong>299870</p>
+            <div class="product-ideas">
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"中国驻以色列使馆紧急通知"内容创作助手</span>
+                        <span>
+                            <span class="score">70分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>热点素材库</li><li>创作灵感生成</li><li>多格式导出</li><li>一键发布</li></ul>
+                        <p><strong>目标用户：</strong>内容创作者、自媒体</p>
+                        <p><strong>产品描述：</strong>基于"中国驻以色列使馆紧急通知"热点，为创作者提供相关素材和创作灵感，快速生成符合平台调性的内容。</p>
+                        <p><strong>评分：</strong>有趣度 72分 × 80% + 有用度 68分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"中国驻以色列使馆紧急通知"知识卡片</span>
+                        <span>
+                            <span class="score">65分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>关键信息提炼</li><li>视觉化呈现</li><li>知识关联</li><li>收藏复习</li></ul>
+                        <p><strong>目标用户：</strong>学习型用户</p>
+                        <p><strong>产品描述：</strong>将"中国驻以色列使馆紧急通知"相关的核心知识提炼成易读的卡片式内容，方便用户快速了解和分享。</p>
+                        <p><strong>评分：</strong>有趣度 68分 × 80% + 有用度 62分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">7</span>
+                <span class="hotword">伊军方将对美侵略予以毁灭性回应</span>
+            </div>
+            <p><strong>热度指数：</strong>252230</p>
+            <div class="product-ideas">
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"伊军方将对美侵略予以毁灭性回应"内容创作助手</span>
+                        <span>
+                            <span class="score">70分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>热点素材库</li><li>创作灵感生成</li><li>多格式导出</li><li>一键发布</li></ul>
+                        <p><strong>目标用户：</strong>内容创作者、自媒体</p>
+                        <p><strong>产品描述：</strong>基于"伊军方将对美侵略予以毁灭性回应"热点，为创作者提供相关素材和创作灵感，快速生成符合平台调性的内容。</p>
+                        <p><strong>评分：</strong>有趣度 72分 × 80% + 有用度 68分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"伊军方将对美侵略予以毁灭性回应"知识卡片</span>
+                        <span>
+                            <span class="score">65分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>关键信息提炼</li><li>视觉化呈现</li><li>知识关联</li><li>收藏复习</li></ul>
+                        <p><strong>目标用户：</strong>学习型用户</p>
+                        <p><strong>产品描述：</strong>将"伊军方将对美侵略予以毁灭性回应"相关的核心知识提炼成易读的卡片式内容，方便用户快速了解和分享。</p>
+                        <p><strong>评分：</strong>有趣度 68分 × 80% + 有用度 62分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">8</span>
+                <span class="hotword">虎跳峡男游客疑因洗杯落水失联</span>
+            </div>
+            <p><strong>热度指数：</strong>227669</p>
+            <div class="product-ideas">
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"虎跳峡男游客疑因洗杯落水失联"内容创作助手</span>
+                        <span>
+                            <span class="score">70分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>热点素材库</li><li>创作灵感生成</li><li>多格式导出</li><li>一键发布</li></ul>
+                        <p><strong>目标用户：</strong>内容创作者、自媒体</p>
+                        <p><strong>产品描述：</strong>基于"虎跳峡男游客疑因洗杯落水失联"热点，为创作者提供相关素材和创作灵感，快速生成符合平台调性的内容。</p>
+                        <p><strong>评分：</strong>有趣度 72分 × 80% + 有用度 68分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"虎跳峡男游客疑因洗杯落水失联"知识卡片</span>
+                        <span>
+                            <span class="score">65分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>关键信息提炼</li><li>视觉化呈现</li><li>知识关联</li><li>收藏复习</li></ul>
+                        <p><strong>目标用户：</strong>学习型用户</p>
+                        <p><strong>产品描述：</strong>将"虎跳峡男游客疑因洗杯落水失联"相关的核心知识提炼成易读的卡片式内容，方便用户快速了解和分享。</p>
+                        <p><strong>评分：</strong>有趣度 68分 × 80% + 有用度 62分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">9</span>
+                <span class="hotword">退房的时候前台拿了个徐福记的糖纸</span>
+            </div>
+            <p><strong>热度指数：</strong>217748</p>
+            <div class="product-ideas">
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"退房的时候前台拿了个徐福记的糖纸"内容创作助手</span>
+                        <span>
+                            <span class="score">70分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>热点素材库</li><li>创作灵感生成</li><li>多格式导出</li><li>一键发布</li></ul>
+                        <p><strong>目标用户：</strong>内容创作者、自媒体</p>
+                        <p><strong>产品描述：</strong>基于"退房的时候前台拿了个徐福记的糖纸"热点，为创作者提供相关素材和创作灵感，快速生成符合平台调性的内容。</p>
+                        <p><strong>评分：</strong>有趣度 72分 × 80% + 有用度 68分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"退房的时候前台拿了个徐福记的糖纸"知识卡片</span>
+                        <span>
+                            <span class="score">65分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>关键信息提炼</li><li>视觉化呈现</li><li>知识关联</li><li>收藏复习</li></ul>
+                        <p><strong>目标用户：</strong>学习型用户</p>
+                        <p><strong>产品描述：</strong>将"退房的时候前台拿了个徐福记的糖纸"相关的核心知识提炼成易读的卡片式内容，方便用户快速了解和分享。</p>
+                        <p><strong>评分：</strong>有趣度 68分 × 80% + 有用度 62分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">10</span>
+                <span class="hotword">00后员工年薪80万是老板的6倍 [新]</span>
+            </div>
+            <p><strong>热度指数：</strong>209629</p>
+            <div class="product-ideas">
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"00后员工年薪80万是老板的6倍"内容创作助手</span>
+                        <span>
+                            <span class="score">70分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>热点素材库</li><li>创作灵感生成</li><li>多格式导出</li><li>一键发布</li></ul>
+                        <p><strong>目标用户：</strong>内容创作者、自媒体</p>
+                        <p><strong>产品描述：</strong>基于"00后员工年薪80万是老板的6倍"热点，为创作者提供相关素材和创作灵感，快速生成符合平台调性的内容。</p>
+                        <p><strong>评分：</strong>有趣度 72分 × 80% + 有用度 68分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">"00后员工年薪80万是老板的6倍"知识卡片</span>
+                        <span>
+                            <span class="score">65分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>关键信息提炼</li><li>视觉化呈现</li><li>知识关联</li><li>收藏复习</li></ul>
+                        <p><strong>目标用户：</strong>学习型用户</p>
+                        <p><strong>产品描述：</strong>将"00后员工年薪80万是老板的6倍"相关的核心知识提炼成易读的卡片式内容，方便用户快速了解和分享。</p>
+                        <p><strong>评分：</strong>有趣度 68分 × 80% + 有用度 62分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">20</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">0</span>
+                    <span class="stat-label">优秀创意（>80分）</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">20</span>
+                    <span class="stat-label">良好创意（60-80分）</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">67.5</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>本报告由AI自动生成 | 仅供参考 | 微博热搜数据来源：天聚数行API</p>
+            <p>生成时间：2026-02-27 14:38:04</p>
+        </footer>
+    </div>
+</body>
+</html>

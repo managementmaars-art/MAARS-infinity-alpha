@@ -1,0 +1,71 @@
+{
+  "skill_name": "textual-tui-v2",
+  "evals": [
+    {
+      "id": "build-data-explorer",
+      "prompt": "Create a Textual data explorer app for a terminal-first admin tool. I want a filter box, a DataTable of fake customer records, a detail pane, responsive behaviour on narrow terminals, TCSS in a separate file, and pytest Pilot tests. Package it like a small project.",
+      "expected_output": "A runnable Textual project with a Python app, separate TCSS, tests, and packaging files. The design should use DataTable rather than a manual Rich table and include a responsive layout strategy.",
+      "assertions": [
+        "The output includes a Textual app file",
+        "The output includes a separate .tcss file",
+        "The app uses DataTable",
+        "The app includes a detail pane or equivalent secondary view",
+        "The project includes at least one pytest Pilot test",
+        "The layout includes a breakpoint strategy or explicit narrow-terminal handling",
+        "The project includes pyproject.toml or equivalent packaging metadata"
+      ]
+    },
+    {
+      "id": "refactor-broken-search",
+      "prompt": "Audit and refactor the Textual app in evals/files/broken-search so it behaves like a responsive live-search tool. Preserve the core intent but fix architecture and performance issues, move styling out of Python if warranted, and add tests.",
+      "expected_output": "An improved version of the sample project that removes blocking search work from handlers, prefers built-in Textual widgets where appropriate, introduces more maintainable styling, and leaves behind meaningful tests.",
+      "files": [
+        "evals/files/broken-search/search_app.py"
+      ],
+      "assertions": [
+        "The response identifies that the original handler performs blocking work",
+        "The refactor moves search work into a worker or equivalent non-blocking pattern",
+        "The refactor uses DataTable or another stronger built-in list or table widget than the original manual Rich table",
+        "Styling is moved to a separate .tcss file or clearly reduced in complexity",
+        "The output includes at least one pytest Pilot test"
+      ]
+    },
+    {
+      "id": "browser-friendly-export",
+      "prompt": "Improve the export flow in evals/files/report-export so the app works well when served to a browser. Keep it as a Textual app, but make the export and feedback flow browser-aware and add a test scaffold.",
+      "expected_output": "A revised Textual app that uses browser-friendly delivery APIs for export instead of only writing to local paths, includes user feedback for success or failure, and leaves behind at least a smoke test.",
+      "files": [
+        "evals/files/report-export/report_export.py"
+      ],
+      "assertions": [
+        "The response recognises that the original app is export-like and browser-hostile",
+        "The revised implementation uses deliver_text, deliver_binary, or deliver_screenshot",
+        "The revised implementation includes feedback for success or failure",
+        "The output includes a pytest test file"
+      ]
+    },
+    {
+      "id": "design-admin-shell",
+      "prompt": "Build a keyboard-first Textual admin shell with durable top-level sections for dashboard, jobs, settings, and logs. Use modes or screens appropriately, make actions discoverable, and include a testing strategy.",
+      "expected_output": "A structured Textual app that chooses an appropriate navigation model for durable top-level sections, exposes discoverable actions, and includes tests or clearly scaffolded tests.",
+      "assertions": [
+        "The app uses modes or screen-based architecture rather than a single giant App class",
+        "The design includes discoverable actions such as a command palette or equivalent command provider setup",
+        "The output includes at least one test or a generated test scaffold",
+        "The response explains the navigation choice"
+      ]
+    },
+    {
+      "id": "editor-with-preview",
+      "prompt": "Make me a Textual editor app for markdown notes with a text editor, a rendered preview, save support, and sensible key bindings. Keep the app maintainable and testable.",
+      "expected_output": "A Textual editor-style project using suitable built-in widgets such as TextArea and Markdown/MarkdownViewer, plus styling and tests.",
+      "assertions": [
+        "The output includes TextArea or another appropriate editing widget",
+        "The output includes a rendered preview or document pane",
+        "The app includes save support",
+        "The project includes tests",
+        "The structure is split into Python and styling rather than one giant inline blob"
+      ]
+    }
+  ]
+}

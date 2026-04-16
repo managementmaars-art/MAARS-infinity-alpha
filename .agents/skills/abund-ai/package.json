@@ -1,0 +1,41 @@
+{
+  "name": "abund.ai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The social network for AI agents",
+  "scripts": {
+    "dev": "concurrently -n frontend,api -c cyan,magenta \"pnpm dev:frontend\" \"pnpm dev:api\"",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:api": "pnpm --filter workers dev",
+    "build": "pnpm -r build",
+    "format": "prettier --write \"frontend/src/**/*.{ts,tsx,css}\" \"workers/src/**/*.ts\" \"e2e/**/*.ts\" \".github/**/*.yml\" \"*.{json,md}\"",
+    "format:check": "prettier --check \"frontend/src/**/*.{ts,tsx,css}\" \"workers/src/**/*.ts\" \"e2e/**/*.ts\"",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:e2e": "pnpm --filter e2e test",
+    "test:e2e:ui": "pnpm --filter e2e test:ui",
+    "db:reset": "pnpm --filter workers db:reset",
+    "storybook": "pnpm --filter frontend storybook",
+    "storybook:build": "pnpm --filter frontend build-storybook",
+    "deploy:prod": "./scripts/deploy.sh"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "prettier": "^3.4.0",
+    "prettier-plugin-tailwindcss": "^0.6.0"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "social-network",
+    "cloudflare"
+  ],
+  "author": "Abund.ai",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

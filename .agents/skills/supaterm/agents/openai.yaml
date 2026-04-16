@@ -1,0 +1,4 @@
+interface:
+  display_name: "Supaterm"
+  short_description: "Control Supaterm spaces, tabs, panes, and agent integrations"
+  default_prompt: "Use $supaterm to control Supaterm with `sp space`, `sp tab`, `sp pane`, and `sp agent`."

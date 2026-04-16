@@ -1,0 +1,224 @@
+# 🔮 巴菲特神谕分析师（Buffett Oracle Analyzer）
+
+### AI驱动的上市公司深度分析Skill — 融合巴菲特投资智慧与现代12模块分析框架
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![覆盖市场](https://img.shields.io/badge/覆盖-美股%20%7C%20港股%20%7C%20A股-green.svg)](#多市场适配)
+
+> *"价格是你付出的，价值是你得到的。"* — 沃伦·巴菲特
+
+---
+
+## 一句话介绍
+
+**给AI一个股票代码，它输出像巴菲特一样思考的深度投资分析报告。**
+
+---
+
+## 这是什么？
+
+**巴菲特神谕分析师**是一个 [Claude AI Skill](https://docs.anthropic.com)，能够对任何上市公司（美股、港股、A股）进行全面的、机构级别的深度分析。
+
+给它一个公司名称或股票代码，它将输出：
+
+| 能力 | 细节 |
+|------|------|
+| 📊 **12大分析模块** | 从商业模式到K线技术形态，全方位覆盖 |
+| 🏰 **护城河5维度评分** | 网络效应、转换成本、成本优势、无形资产、有效规模 |
+| 💰 **所有者盈余计算** | 巴菲特最推崇的盈利指标 |
+| 🧮 **8种估值模型** | DCF、相对估值、PEG、DDM、NAV、SOTP、所有者盈余收益率、反向DCF |
+| 📞 **电话会深度解读** | 最新一期 + 前两期对比 |
+| 📈 **技术面完整分析** | 均线系统、RSI/MACD/布林带、斐波那契、筹码分析 |
+| 🎯 **巴菲特计分卡** | 12项标准、36分满分评分体系 |
+| 🔴🟡🟢 **可执行决策** | 目标价(三情景)、买入区间、止盈/止损、仓位建议 |
+
+---
+
+## 快速开始
+
+### Claude.ai / Claude桌面端
+
+1. 创建一个新的 **项目（Project）**
+2. 将 [`SKILL.md`](SKILL.md) 的内容复制到项目的 **自定义指令（Custom Instructions）** 中
+3. 开始对话：
+
+```
+分析英伟达(NVDA)
+```
+
+### Claude Code / MiniMax
+
+```
+/oracle-investment-research
+```
+
+---
+
+## 6步分析工作流
+
+| 步骤 | 环节 | 动作 |
+|------|------|------|
+| 1 | 🔍 信息采集 | 搜索最新财报、电话会、新闻、研报 |
+| 2 | 📋 基本面分析 | 业务+财务+管理层+竞争全面拆解 |
+| 3 | 🧮 估值建模 | 8种估值模型交叉验证 |
+| 4 | 📉 技术面研判 | K线形态+指标+支撑阻力位 |
+| 5 | ⚠️ 风险评估 | 多维风险矩阵+黑天鹅测试 |
+| 6 | 📄 输出报告 | 巴菲特计分卡+投资决策 |
+
+---
+
+## 12大分析模块
+
+| # | 模块 | 覆盖内容 |
+|---|------|---------|
+| 1 | **公司概览** | 背景、里程碑、股权结构 |
+| 2 | **管理层评估** | 领导力、资本配置、利益绑定 |
+| 3 | **商业模式** | 收入模型、单位经济、产业链定位 |
+| 4 | **经济护城河** | 5维度评分 + 趋势 |
+| 5 | **财务深度** | 4季度趋势、三张表、所有者盈余 |
+| 6 | **电话会分析** | 最新+前2期对比、指引追踪 |
+| 7 | **多模型估值** | DCF/PEG/DDM/NAV等8种 |
+| 8 | **竞争与行业** | 份额、波特五力、颠覆风险 |
+| 9 | **技术面分析** | 均线、RSI/MACD、布林带、斐波那契 |
+| 10 | **增长与催化剂** | 驱动力、TAM、短期/长期催化剂 |
+| 11 | **风险矩阵** | 6维度评分 + 黑天鹅情景 |
+| 12 | **投资决策** | 评级、目标价、买卖策略、仓位管理 |
+
+---
+
+## 输出示例
+
+```
+🔮 巴菲特的裁决
+
+Costco 是当今最好的零售企业——把"低价执念"变成"会员费收费站"，
+创造可预测的、高质量的现金流。护城河宽广且加宽中。但52倍市盈率下，
+市场先生要你为卓越支付溢价。杰出的企业，但不是杰出的价格。
+
+巴菲特计分卡：31/36（A级 — 杰出公司）
+当前价格：$920 | 合理估值：$720-$780 | 买入区间：<$700
+分批建仓：首仓40%@$700 → 二仓30%@$650 → 三仓30%@$600
+结论：持有 — 等待市场先生给出更好的价格。
+```
+
+---
+
+## 多市场适配
+
+| 市场 | 数据来源 | 会计准则 | 特色数据 |
+|------|---------|---------|---------|
+| 🇺🇸 美股 | SEC(10-K/Q/8-K) | GAAP+Non-GAAP | 期权波动率、13F持仓 |
+| 🇭🇰 港股 | 披露易 | HKFRS/IFRS | 南北向资金、AH溢价 |
+| 🇨🇳 A股 | 巨潮资讯 | CAS | 北向资金、龙虎榜 |
+
+---
+
+## 项目结构
+
+```
+buffett-oracle-analyzer/
+├── SKILL.md                          # 核心Skill
+├── README.md                          # 本文件
+├── LICENSE                            # MIT协议
+├── buffett-principles.md              # 巴菲特投资原则
+├── valuation-methods.md               # 8种估值方法
+├── example-prompts.md                 # 推荐提示词
+├── evals.json                        # 评估测试用例
+│
+├── docs/                             # 数据源与工具
+│   └── data-sources.md               # API数据源集成方案
+│
+├── scripts/                          # 可执行脚本
+│   └── data_fetcher.py               # Yahoo Finance数据获取工具
+│
+└── cases/                            # 分析案例库
+    └── analysis-reports/
+        ├── 宁德时代-300750-深度分析.md  # A股案例
+        ├── 腾讯-00700.HK-深度分析.md    # 港股案例
+        ├── example-analysis-crcl.md    # Circle(CRCL)美股案例
+        └── example-analysis-costco.md  # Costco美股案例
+```
+
+---
+
+## 使用建议
+
+| 提示词 | 产出 |
+|--------|------|
+| `分析 AAPL` | 完整12模块报告 |
+| `从巴菲特视角分析腾讯` | 港股深度分析 |
+| `CRCL值得投资吗？` | 毫不留情的批判性评估 |
+| `给5只股票打巴菲特计分卡` | 快速批量对比 |
+
+---
+
+## 🚧 Roadmap
+
+未来计划添加的内容（按优先级）：
+
+| 优先级 | 内容 | 说明 |
+|--------|------|------|
+| **P1** | 彼得·蒂尔VC框架 | 早期投资/从0到1分析 |
+| **P1** | 林奇成长股框架 | 十倍股筛选逻辑 |
+| **P2** | 达利欧宏观框架 | 全天候/风险平价 |
+| **P2** | Crypto赛道模块 | Token经济模型、协议分析 |
+| **P2** | VC Term Sheet分析 | 条款评估、Cap Table |
+| **P3** | 更多市场支持 | 日本、欧洲、印度 |
+
+---
+
+## 📋 版本更新日志
+
+### v1.0（当前版本）
+
+**发布日期**：2026年4月
+
+**核心功能**：
+- ✅ 12大分析模块完整覆盖
+- ✅ 巴菲特计分卡（12项标准，36分满分）
+- ✅ 8种估值模型（DCF/PEG/DDM/NAV/SOTP/相对估值/所有者盈余收益率/反向DCF）
+- ✅ 美股（SEC）、港股（披露易）、A股（巨潮资讯）多市场适配
+- ✅ 技术面分析（均线/RSI/MACD/布林带/斐波那契/筹码分析）
+- ✅ 电话会深度解读（最新+前2期追踪）
+- ✅ 风险矩阵 + 黑天鹅压力测试
+- ✅ 可执行投资决策（目标价/买入区间/止盈止损/仓位管理）
+
+**数据能力**：
+- ✅ Yahoo Finance API 实时行情、财务数据、技术指标、期权数据
+- ✅ `scripts/data_fetcher.py` 可执行脚本，支持美股/港股/A股
+- ✅ SEC EDGAR API（13F机构持仓）
+- ✅ Alpha Vantage 备用数据源
+- ✅ 文档化数据源集成方案（`docs/data-sources.md`）
+
+**分析案例**：
+- 宁德时代（300750.SZ）— A股案例
+- 腾讯控股（00700.HK）— 港股案例
+- Circle（CRCL）— 美股案例
+- Costco（COST）— 美股案例
+
+---
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=brucelanlan%2Fbuffett-oracle-analyzer&type=timeline&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=brucelanlan/buffett-oracle-analyzer&type=timeline&theme=dark&logscale&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=brucelanlan/buffett-oracle-analyzer&type=timeline&logscale&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=brucelanlan/buffett-oracle-analyzer&type=timeline&logscale&legend=top-left" />
+ </picture>
+</a>
+
+
+## ⚠️ 免责声明
+
+本项目仅供**教育和研究用途**，不构成投资建议。"巴菲特"视角是一个受沃伦·巴菲特公开表述的投资原则启发的分析框架——并不代表巴菲特本人对任何具体公司的观点。所有投资都有风险，请在做出投资决策前咨询合格的财务顾问。
+
+---
+
+## 许可协议
+
+MIT — 详见 [LICENSE](LICENSE)。
+
+---
+
+*为相信"做足功课"的投资者而构建。*

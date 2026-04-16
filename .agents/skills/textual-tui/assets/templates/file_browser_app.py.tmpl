@@ -1,0 +1,58 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal
+from textual.reactive import var
+from textual.widgets import DirectoryTree, Footer, Header, Static
+
+
+class {{CLASS_NAME}}(App):
+    CSS_PATH = "{{MODULE}}.tcss"
+    TITLE = "{{APP_TITLE}}"
+    SUB_TITLE = "Filesystem browser"
+    BINDINGS = [
+        ("f", "focus_tree", "Tree"),
+    ]
+
+    preview_text = var("")
+
+    def __init__(self, root_path: str = ".") -> None:
+        super().__init__()
+        self.root_path = root_path
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        with Horizontal(id="body"):
+            yield DirectoryTree(self.root_path, id="tree")
+            yield Static("Select a file to preview it.", id="preview")
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.query_one("#tree", DirectoryTree).focus()
+
+    def show_file(self, path: Path) -> None:
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except Exception as error:
+            self.preview_text = "Could not open {0}: {1}".format(path, error)
+        else:
+            self.preview_text = text[:4000] or "(empty file)"
+        self.query_one("#preview", Static).update(self.preview_text)
+        self.sub_title = str(path)
+
+    def on_directory_tree_file_selected(self, event: DirectoryTree.FileSelected) -> None:
+        event.stop()
+        self.show_file(event.path)
+
+    def action_focus_tree(self) -> None:
+        self.query_one("#tree", DirectoryTree).focus()
+
+
+def main() -> None:
+    {{CLASS_NAME}}().run()
+
+
+if __name__ == "__main__":
+    main()

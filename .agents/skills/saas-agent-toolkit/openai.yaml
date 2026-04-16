@@ -1,0 +1,4 @@
+interface:
+  display_name: "SaaS Agent Toolkit"
+  short_description: "Turn SaaS features into reliable agent tools"
+  default_prompt: "Design my SaaS for agent execution using reusable tool shapes, connector architecture, and policy guardrails including approvals and auditability."

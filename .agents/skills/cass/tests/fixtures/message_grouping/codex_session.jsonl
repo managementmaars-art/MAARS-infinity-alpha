@@ -1,0 +1,9 @@
+{"timestamp":"2026-01-15T11:00:00.000Z","type":"session_meta","payload":{"id":"codex-test-001","cwd":"/test/project","cli_version":"1.0.0","git":{"branch":"main"}}}
+{"timestamp":"2026-01-15T11:00:05.000Z","type":"response_item","payload":{"type":"message","role":"user","content":[{"type":"input_text","text":"List all Python files in the project"}]}}
+{"timestamp":"2026-01-15T11:00:10.000Z","type":"response_item","payload":{"type":"message","role":"assistant","content":null,"function_call":{"name":"shell","arguments":"{\"command\":\"find . -name '*.py' -type f\"}"}}}
+{"timestamp":"2026-01-15T11:00:12.000Z","type":"response_item","payload":{"type":"message","role":"function","name":"shell","content":"./src/main.py\n./src/utils.py\n./tests/test_main.py"}}
+{"timestamp":"2026-01-15T11:00:15.000Z","type":"response_item","payload":{"type":"message","role":"assistant","content":[{"type":"text","text":"I found 3 Python files:\n- `./src/main.py` - Main application\n- `./src/utils.py` - Utility functions\n- `./tests/test_main.py` - Tests"}]}}
+{"timestamp":"2026-01-15T11:00:20.000Z","type":"response_item","payload":{"type":"message","role":"user","content":[{"type":"input_text","text":"Run the tests"}]}}
+{"timestamp":"2026-01-15T11:00:25.000Z","type":"response_item","payload":{"type":"message","role":"assistant","content":null,"function_call":{"name":"shell","arguments":"{\"command\":\"python -m pytest tests/\"}"}}}
+{"timestamp":"2026-01-15T11:00:30.000Z","type":"response_item","payload":{"type":"message","role":"function","name":"shell","content":"===== test session starts =====\ncollected 5 items\n\ntests/test_main.py .....  [100%]\n\n===== 5 passed in 0.42s ====="}}
+{"timestamp":"2026-01-15T11:00:35.000Z","type":"response_item","payload":{"type":"message","role":"assistant","content":[{"type":"text","text":"All 5 tests passed successfully! The test suite completed in 0.42 seconds."}]}}

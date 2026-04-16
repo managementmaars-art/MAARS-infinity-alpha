@@ -1,0 +1,76 @@
+{
+  "skill_name": "opening-in-ide",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Open src/MyFile.cs in an IDE.",
+      "expected_output": "The skill detects installed supported IDEs first, auto-selects only when exactly one is installed, and asks the user to choose when multiple are installed.",
+      "files": [
+        "SKILL.md"
+      ],
+      "assertions": [
+        "The response uses the opening-in-ide skill for a generic IDE-opening request.",
+        "The response does not guess an IDE when multiple supported IDEs could be installed.",
+        "The response describes or performs installed-IDE detection before selecting a launcher.",
+        "The response limits generic choices to the supported IDE identifiers rider, webstorm, code, cursor, and windsurf."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Open src/app.ts in WebStorm.",
+      "expected_output": "The skill uses only the WebStorm launcher, preserves nearest .idea or JavaScript/TypeScript project context, and treats the WebStorm-specific line fallback intentionally.",
+      "files": [
+        "SKILL.md",
+        "tests/scenarios.md"
+      ],
+      "assertions": [
+        "The response uses the WebStorm-specific launcher rather than a generic IDE flow.",
+        "The response does not fall back to Rider, VS Code, Cursor, or Windsurf if WebStorm is unavailable.",
+        "The response preserves nearest .idea or JavaScript/TypeScript project-root context when available.",
+        "The response reflects that WebStorm file opens without an explicit line may intentionally use --line 1 as a workaround."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Open src/MyFile.cs at line 120 in VS Code.",
+      "expected_output": "The skill uses the VS Code launcher with workspace-aware context and opens the file using --goto path:line syntax.",
+      "files": [
+        "SKILL.md",
+        "tests/scenarios.md"
+      ],
+      "assertions": [
+        "The response uses the VS Code launcher specifically.",
+        "The response uses --goto behavior for file-and-line opens.",
+        "The response prefers nearest .code-workspace context before falling back to .sln or .csproj directories.",
+        "The response does not route the request through Rider or WebStorm behavior."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Open src/MyFile.cs in Rider, but Rider is not installed on this machine.",
+      "expected_output": "The skill returns a Rider-specific error and does not silently fall back to another editor.",
+      "files": [
+        "SKILL.md",
+        "tests/scenarios.md"
+      ],
+      "assertions": [
+        "The response reports that Rider is unavailable or its CLI is not on PATH.",
+        "The response names Rider rather than giving a generic IDE error.",
+        "The response does not fall back to VS Code, Cursor, Windsurf, or WebStorm.",
+        "The response mentions expected Rider command names when describing the missing CLI."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "How do I print Hello World in Python?",
+      "expected_output": "The opening-in-ide skill should not trigger for unrelated programming help.",
+      "files": [
+        "SKILL.md"
+      ],
+      "assertions": [
+        "The response does not invoke or recommend the opening-in-ide skill.",
+        "The response recognizes that the request is unrelated to opening files or folders in an IDE."
+      ]
+    }
+  ]
+}

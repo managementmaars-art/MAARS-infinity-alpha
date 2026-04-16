@@ -1,0 +1,11 @@
+{
+  "repoRouter": "app-router",
+  "packageStrategy": "use-motion",
+  "recommendedImportPath": "motion/react",
+  "recommendedBoundary": "persistent-route-shell-under-layout",
+  "recommendedPattern": "route-transition-shell",
+  "likelyFilesToChange": [
+    "app/layout.tsx",
+    "components/motion/route-transition-shell.tsx"
+  ]
+}

@@ -1,0 +1,36 @@
+Screen {
+    layout: vertical;
+}
+
+#filter {
+    margin: 0 1 1 1;
+}
+
+#body {
+    height: 1fr;
+}
+
+#table {
+    width: 1fr;
+}
+
+#detail-pane {
+    width: 40;
+    min-width: 28;
+    padding: 0 1;
+}
+
+#details,
+#hint {
+    border: round $primary;
+    padding: 1;
+    margin-bottom: 1;
+}
+
+Screen.-narrow #body {
+    layout: vertical;
+}
+
+Screen.-wide #body {
+    layout: horizontal;
+}

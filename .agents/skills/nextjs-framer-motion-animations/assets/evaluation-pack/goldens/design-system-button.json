@@ -1,0 +1,10 @@
+{
+  "repoRouter": "app-router",
+  "packageStrategy": "use-motion",
+  "recommendedImportPath": "motion/react",
+  "recommendedBoundary": "already-client",
+  "recommendedPattern": "design-system-motion-create",
+  "likelyFilesToChange": [
+    "components/ui/button.tsx"
+  ]
+}

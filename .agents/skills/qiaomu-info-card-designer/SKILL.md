@@ -1,0 +1,342 @@
+---
+name: qiaomu-info-card-designer
+description: |
+  将任意文本/URL/信息转化为杂志质感 HTML 信息卡片，并自动截图保存为图片。
+  支持直接输入 URL（X/Twitter、网页文章等），自动抓取内容、提炼要点、生成卡片。
+  适合分享到 X (Twitter)、微信、小红书等平台。
+  触发词："生成信息卡"、"做张信息卡"、"把这段内容做成卡片"、"信息卡片"、"make info card"、"generate card"、"把这个链接做成卡片"。
+  卡片特点：大字号、强排版张力、瑞士国际主义 + 杂志质感风格，生成后自动截图，超长智能分割输出图片。
+---
+
+# Info Card Designer
+
+将任意内容转化为杂志质感信息卡，自动截图 + 超长分割，适配 X/Twitter、微信、小红书分享。
+
+## 工作流
+
+### Step 0：获取内容（如果输入是 URL）
+
+如果用户给的是 URL 而非纯文本，先抓取内容再进入 Step 1。
+
+**路由规则**：
+
+| URL 类型 | 抓取方式 |
+|----------|---------|
+| `arxiv.org/abs/` | 提取论文 ID，优先抓 HTML 版 `https://arxiv.org/html/{id}v1`，失败则抓 PDF `https://arxiv.org/pdf/{id}.pdf` |
+| `x.com` / `twitter.com` | `curl -sL "https://r.jina.ai/{url}"` |
+| `mp.weixin.qq.com` | `python3 ~/.claude/skills/markdown-proxy/scripts/fetch_weixin.py "{url}"` （如存在） |
+| 其他网页 | `curl -sL "https://r.jina.ai/{url}"`，失败则 `curl -sL "https://defuddle.md/{url}"` |
+
+**arXiv 专用逻辑**（抓全文，不是摘要）：
+```bash
+# 从 https://arxiv.org/abs/2603.25694 提取 ID
+paper_id=$(echo "$url" | grep -oP 'arxiv.org/abs/\K[\d.]+')
+
+# 优先抓 HTML 版（内容最完整）
+html_url="https://arxiv.org/html/${paper_id}v1"
+curl -sL "$html_url" 2>/dev/null || curl -sL "https://r.jina.ai/https://arxiv.org/pdf/${paper_id}.pdf"
+```
+
+**通用代码**（覆盖 90% 场景）：
+```bash
+curl -sL "https://r.jina.ai/{url}" 2>/dev/null
+```
+
+> **原则**：skill 自己能抓就自己抓，不依赖外部 skill。r.jina.ai 免费、无需 API key、支持 X/Twitter/普通网页。arXiv 论文优先抓 HTML 版（比 PDF 更易提取），只有公众号等特殊页面才回退到专用脚本。
+
+### Step 1：提炼核心信息（最重要）
+
+> **目标**：让读者只看图片就能理解文章最核心、最重要的概念和信息，不需要点进原文。
+
+**提炼原则**：
+1. **找核心论点**：文章最反直觉、最颠覆认知的 1 个观点，作为主标题或核心金句
+2. **找关键数据**：文中的具体数字（百分比、倍数、年份、金额），数字比文字更有冲击力
+3. **找因果链**：A 导致 B，B 导致 C → 每个环节就是一个要点
+4. **砍到 4-6 个要点**：不是所有内容都值得放，只放"删了会损失信息"的
+5. **每个要点 ≤ 2 句话**：第一句给事实/数据，第二句给洞察/结论
+
+**主标题写法（卡片成败关键）**：
+- ✅ **必须是结论性的**：直接亮出文章最反直觉的发现/结论，读者看到就被勾住
+- ✅ 用数字驱动："把品牌面积放大100倍"、"500年越做越小，现在越做越大"
+- ✅ 用动词驱动："买表先排队，卖表被追踪"、"雅痞拯救了机械表"
+- ❌ **不能是描述性的**："在中国AI生态待了两周后"、"关于品牌的思考"（像日记标题，没冲击力）
+- ❌ 避免名词性标题："表壳即品牌的进化"、"人为制造稀缺"（太抽象）
+
+> **检验标准**：如果读者只看到主标题，就想知道"为什么？"——说明标题是对的。如果反应是"哦"——说明标题是错的。
+
+**条目标题写法**：
+- ✅ 有具体数字的反直觉发现："200家机器人公司，几乎全部没有收入"
+- ✅ 直接给结论："VC只投好简历，历史证明这是错的"
+- ❌ 平铺直叙："软件差距在扩大"、"估值泡沫"
+
+**要点之间的逻辑**：
+- 要点不是随机罗列，要有叙事弧线
+- 推荐顺序：**发现问题 → 分析原因 → 关键证据 → 意外/反转**
+- 让读者看完有"哦原来如此"的感觉
+
+**金句选取**：
+- 从原文中找最有冲击力的 1 句话放引用块
+- 如果原文没有现成金句，可以用原文事实重新组织一句（不改事实，改表达）
+
+**数据准确性（强制）**：
+- 引用数字时必须忠实于原文的表述方式
+- ARR（年化收入）和单月收入是不同概念，不能混用
+- 不能为了冲击力而改变数据含义
+- 原文说"reportedly"/"approximately"等不确定表述，卡片中要保留"据报道"/"约"等修饰
+
+**内容原则（强制）**：
+- 卡片内容必须 100% 来自用户提供的原文/URL/文本，严禁自行编造或使用占位符
+- 标题、描述、来源、金句均须与原文一致，Hook 改写只改表达方式，不改事实
+- 用户说"保持原文"或"不改描述"时关闭 Hook 模式
+
+**可图化评估（Step 1 末尾自动执行，不询问用户）**：
+
+分析完内容后，判断是否值得加图：
+
+| 内容特征 | 图表类型 |
+|---------|---------|
+| 明确的因果链（A 导致 B，B 导致 C） | Mermaid flowchart |
+| 有明确顺序的步骤流程（3 步以上） | Mermaid flowchart |
+| 概念间有包含/对立/互补关系 | Mermaid graph |
+| 有形象概念但 Mermaid 表达不了 | 内联 SVG |
+| 纯观点/金句/哲学/数字列表 | **不加图** |
+
+> **原则**：图是配角，只在图比文字能多传递 30% 以上信息时才加。宁可不加，不要为了加图而加图。
+
+### Step 2：分析布局
+
+- **低密度**（1 个核心观点）→ 大字符主义布局（模板 A）
+- **中密度**（2-4 要点）→ 标准单栏布局（模板 B）
+- **高密度**（5+ 要点）→ 单栏列表布局（模板 D，推荐）；多栏网格（模板 C）仅在用户明确要求或桌面端展示时使用
+
+### Step 2.5：询问设计风格（必须执行，生成前先问）
+
+> **每次生成前必须询问用户选择风格，不得跳过。**
+
+用 AskUserQuestion 展示三个选项：
+
+```
+问题：选择卡片设计风格？
+
+选项 A — 经典风格（默认）
+功能清晰，稳定可用。仓耳今楷统一字体，安全配色，标准间距。
+适合：日常分享、系列卡片、不确定时的默认选择。
+
+选项 B — 杂志风格
+在经典基础上精致化。奇偶交替底色、更细腻的间距节奏、克制的装饰引号。
+适合：正式发布、社交媒体传播。
+
+选项 C — 艺术风格（实验）
+极端字号对比（标题 3x 正文）、楷书×无衬线混排、一个"英雄视觉元素"
+（超大数字/单字/全宽色带）、更有气质的非常规配色。
+适合：追求视觉冲击、不介意风格激进。
+```
+
+**根据用户选择执行**：
+- 选 A → 按 design-spec.md 经典风格生成
+- 选 B → 按 design-spec.md 杂志风格生成
+- 选 C → 按下方艺术风格规范生成
+
+**艺术风格（C）专用规范**：
+- 主标题字号 ≥ 72px，正文描述 ≤ 18px，二者比例 ≥ 3:1
+- **字体三层混排**：仓耳今楷（标题/条目标题）× NotoSerifSC（正文描述）× 系统无衬线（编号/标签）
+- **英雄元素 = 大标题本身**：72px+ 的楷书标题即是视觉冲击，不需要叠加幽灵字、背景大字等装饰——那是设计院校习作，实用分享卡会显得做作
+- 配色选非常规色（避开靛蓝/琥珀/墨绿等常见选择），背景加微渐变或色温偏移
+- 间距要有节奏：同组内 8-12px，跨组大留白 48-64px
+- 装饰线预算清零：不用 border-left 竖线，靠色块和间距区分层次
+- **深色系对比度规范**（⚠️ 冷色系尤其注意）：
+  - section-label 最小 **13px**，不用 10px（10px 在手机上几乎不可见）
+  - 编号 `--num` 颜色必须与深色背景对比度 **≥ 3:1**（44px 大字标准），冷色系 accent（蓝/绿/紫）天然亮度低，直接用往往不达标，需要提亮版本
+  - **禁止 opacity 叠加代替颜色**：`color: var(--accent); opacity: 0.22` 实际合并后颜色极暗，肉眼和截图都难辨。一律用固定色值（如 `color: #8C6830`）
+  - **hex 颜色必须恰好 6 位**：`#6040888` 是 7 位，无效，浏览器静默回退为黑色
+
+### Step 3：生成 HTML
+
+读取 `references/design-spec.md` 获取完整设计规范（字号、配色、布局模板、CSS 变量等），**所有视觉参数以 design-spec.md 为准**。
+
+**图表区生成规范（如 Step 1 判断需要加图）**：
+
+图表位置：主标题/副标题下方，要点列表上方，作为内容结构的视觉总览。
+
+#### Mermaid 流程图
+
+```html
+<!-- 在 <head> 引入 -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    primaryColor: 'var(--accent-hex)',      /* 用卡片 accent 色，写死 hex 值 */
+    primaryTextColor: 'var(--text-hex)',
+    primaryBorderColor: 'var(--num-hex)',
+    lineColor: 'var(--num-hex)',
+    background: 'transparent',
+    edgeLabelBackground: 'transparent',
+    fontSize: '15px'
+  },
+  flowchart: { curve: 'basis', padding: 16 }
+});
+</script>
+
+<!-- 在 HTML 中使用 -->
+<div class="diagram-block">
+  <pre class="mermaid">
+flowchart LR
+  A[摄入糖] --> B[血糖升高] --> C[胰岛素分泌] --> D[压制生长激素]
+  </pre>
+</div>
+```
+
+**Mermaid CSS（图表容器）**：
+```css
+.diagram-block {
+  background: rgba(255,255,255,0.04);  /* 深色卡片用微亮底 */
+  border-radius: 10px;
+  padding: 20px 16px;
+  margin-bottom: 36px;
+  overflow: hidden;
+}
+.diagram-block .mermaid { display: flex; justify-content: center; }
+.diagram-block svg { max-width: 100%; height: auto; }
+```
+
+**Mermaid 注意事项**：
+- `themeVariables` 中必须写**固定 hex 值**，不能写 `var(--xxx)`（Mermaid 不解析 CSS 变量）
+- 浅色卡片用 `theme: 'neutral'`，深色卡片用 `theme: 'base'` + 自定义 themeVariables
+- 节点文字保持简短（≤ 6 字），否则截图时节点拉太宽
+
+#### 内联 SVG
+
+当内容更适合形象图示而非流程图时，用内联 SVG：
+
+```html
+<div class="diagram-block">
+  <svg viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;height:auto;display:block;">
+    <!-- 用卡片 accent 色填充，与整体配色统一 -->
+    <rect x="10" y="40" width="120" height="44" rx="8"
+          fill="rgba(196,151,58,0.15)" stroke="#8C6830" stroke-width="1.5"/>
+    <text x="70" y="67" text-anchor="middle"
+          font-family="-apple-system,sans-serif" font-size="15" fill="#EAD9B5">概念A</text>
+    <!-- 箭头 -->
+    <line x1="132" y1="62" x2="178" y2="62" stroke="#8C6830" stroke-width="2"/>
+    <polygon points="178,56 190,62 178,68" fill="#8C6830"/>
+    <!-- 更多节点... -->
+  </svg>
+</div>
+```
+
+**SVG 原则**：
+- viewBox 固定宽 500，高度按内容决定（通常 80-160）
+- 颜色用卡片的 accent/text/muted 固定值，不用 CSS 变量（SVG 属性不继承）
+- 字体用系统无衬线（`-apple-system,sans-serif`），确保截图渲染稳定
+- 保持极简：只用矩形、箭头、文字，不追求复杂图形
+
+**硬性约束**：
+- 卡片宽度：默认 **600px**，仅在用户明确要求时使用 480 / 900
+- `<meta name="viewport" content="width=[指定宽度]">` 防缩放
+- 背景色 `#f5f3ed`
+- 字号用 `clamp()` 写法（见 design-spec.md 字号规范），确保多宽度等比缩放
+- **手机可读性底线**：正文 ≥ 15px，辅助文字 ≥ 12px，任何可读内容不低于 10px
+
+保存路径：`/tmp/info-card-[关键词].html`
+
+### Step 4：截图（必须执行）
+
+**使用 Playwright Python 截图**（不用 Chrome DevTools MCP，避免端口冲突）：
+
+**无图表时**（标准等待）：
+```python
+from playwright.sync_api import sync_playwright
+import os
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)
+    page = browser.new_page(viewport={"width": 600, "height": 900}, device_scale_factor=2)
+    page.goto("file:///tmp/info-card-xxx.html")
+    page.wait_for_timeout(2000)  # 等待字体加载
+    page.screenshot(path="/tmp/info-card-xxx.png", full_page=True)
+    browser.close()
+```
+
+**含 Mermaid 图表时**（需等待 SVG 渲染完成）：
+```python
+from playwright.sync_api import sync_playwright
+import os
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)
+    page = browser.new_page(viewport={"width": 600, "height": 900}, device_scale_factor=2)
+    page.goto("file:///tmp/info-card-xxx.html")
+    page.wait_for_timeout(1500)  # 等待字体 + Mermaid JS 加载
+    # 等待 Mermaid 渲染完毕（SVG 出现）
+    try:
+        page.wait_for_function(
+            "() => document.querySelectorAll('.mermaid svg').length > 0",
+            timeout=8000
+        )
+    except:
+        pass  # 超时降级：继续截图，图表可能未渲染
+    page.wait_for_timeout(500)  # 额外稳定等待
+    page.screenshot(path="/tmp/info-card-xxx.png", full_page=True)
+    browser.close()
+```
+
+from PIL import Image
+img = Image.open("/tmp/info-card-xxx.png")
+print(f"Dimensions: {img.size[0]}x{img.size[1]}")
+print(f"File size: {os.path.getsize('/tmp/info-card-xxx.png') / 1024:.0f}KB")
+```
+
+**宽度与倍率对应**：
+
+| 卡片宽度 | devicePixelRatio | 输出 PNG 宽度 |
+|---------|-----------------|-------------|
+| 480px | **3x** | 1440px |
+| 600px | **2x** | 1200px |
+| 900px | **2x** | 1800px |
+
+> **为什么不用 Chrome DevTools MCP**：经常因为浏览器端口占用、extension 冲突导致连接失败。Playwright Python 是独立 headless 浏览器，零依赖冲突，支持 `full_page=True` 全页截图。
+
+### Step 5：超长分割（默认不执行）
+
+> **默认不分割**。截图后直接输出完整长图，不管高度多少。
+> 只有当用户明确要求"切分"、"分割"、"拆成多张"时，才执行分割。
+
+**用户要求分割时**：
+
+```bash
+python3 ~/.claude/skills/qiaomu-info-card-designer/scripts/split_card.py [图片路径] 1200
+```
+
+分割后输出 `card-1.png`, `card-2.png` ... 等文件。
+
+### Step 6：整理并输出
+
+> **截图完成后立即自动 deploy，不询问用户，不等待确认。**
+
+**保存路径规则**：
+```
+~/Downloads/info-cards/[YYYYMMDD]-[来源]-[主题关键词]/
+  ├── card*.html        # 源文件
+  └── card*.png         # 截图，直接可用于发布
+```
+
+示例：`~/Downloads/info-cards/20260405-life-wisdom/card1.png`
+
+> 文件夹名格式：`日期-来源-主题`，全小写英文+连字符
+
+**deploy 命令**：
+```bash
+mkdir -p ~/Downloads/info-cards/{slug}
+cp /tmp/{card}*.html /tmp/{card}*.png ~/Downloads/info-cards/{slug}/
+open ~/Downloads/info-cards/{slug}/   # 自动打开 Finder 文件夹
+```
+
+告知用户：输出目录路径 + 共几张图片
+
+---
+
+> **所有视觉参数（字号、配色、布局模板）的唯一真相源是 `references/design-spec.md`。**

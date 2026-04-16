@@ -1,0 +1,40 @@
+╭cass | Dark | Lexical/Standard────────────────────────────────────────────────────────────────────────────────────────╮
+│<type to search>                                                                                                      │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭Results (0)───────────────────────────────────────────────────╮╭Detail [Messages]─────────────────────────────────────╮
+│No results yet. Type a query and press Enter.                 ││Select a result to preview context and metadata.      │
+│                                                              ││                                                      │
+│                 ╭Quick Start & Shortcuts (F1 or ? to close)────────────────────────────────────────╮                 │
+│                 │Welcome to CASS — Coding Agent Session Search│                                    │                 │
+│                 │                                                                                  │                 │
+│                 │Navigation                                  ││                                    │                 │
+│                 │  Tab  Focus results/detail                 ││                                    │                 │
+│                 │  Alt+h/j/k/l  Directional navigation       ││                                    │                 │
+│                 │  ↑/↓  Move selection                       ││                                    │                 │
+│                 │  Home/End  Jump to top/bottom              ││                                    │                 │
+│                 │  Enter  Open detail                        ││                                    │                 │
+│                 │  Esc  Close/back                           ││                                    │                 │
+│                 │                                                                                  │                 │
+│                 │Search                                      ││                                    │                 │
+│                 │  Type to search (lexical/semantic/hybrid)  ││                                    │                 │
+│                 │  Alt+S  Cycle search mode                  ││                                    │                 │
+│                 │  F9  Toggle match mode                     ││                                    │                 │
+│                 │  F12  Cycle ranking                        ││                                    │                 │
+│                 │  Ctrl+Shift+R  Refresh results             ││                                    │                 │
+│                 │  Ctrl+R  History cycle                     ││                                    │                 │
+│                 │                                                                                  │                 │
+│                 │Filters                                     ││                                    │                 │
+│                 │  F3  Agent filter                          ││                                    │                 │
+│                 │  F4  Workspace filter                      ││                                    │                 │
+│                 │  F5/F6  Date range                         ││                                    │                 │
+│                 │  Ctrl+Del  Clear all filters               ││                                    │                 │
+│                 │  F7  Context window                        ││                                    │                 │
+│                 │                                                                                  │                 │
+│                 │Actions                                     ││                                    │                 │
+│                 ╰──────────────────────────────────────────────────────── [1/39] ↑/↓ PgUp/PgDn ────╯                 │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+╰──────────────────────────────────────────────────────────────╯╰──────────────────────────────────────────────────────╯
+ 0 hits | mode:fts | [LEX] | med | cozy | F2=theme D=density Ctrl+B=borders                                             

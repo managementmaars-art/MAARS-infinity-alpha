@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年4月10日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+        }
+        .report-header h1 { font-size: 32px; margin-bottom: 16px; }
+        .meta-info { display: flex; gap: 16px; flex-wrap: wrap; }
+        .meta-info span {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+        }
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .hotspot-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .hotspot-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .hotword { font-weight: 600; font-size: 16px; flex: 1; }
+        .hotness { font-size: 13px; color: #666; }
+        .tag { background: var(--primary-color); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+        .hotspot-detail {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+        }
+        .idea-card.excellent { border-left-color: var(--accent-excellent); }
+        .idea-card.good { border-left-color: var(--accent-good); }
+        .idea-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .idea-name { font-size: 18px; font-weight: 600; }
+        .score { font-size: 20px; font-weight: 700; color: var(--primary-color); }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .badge.excellent { background: var(--accent-excellent); }
+        .badge.good { background: var(--accent-good); color: white; }
+        .idea-body p { margin-bottom: 8px; }
+        .idea-body ul { margin-left: 20px; margin-bottom: 12px; }
+        .idea-body strong { color: var(--primary-color); }
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+        }
+        .statistics h2 { color: white; border-left-color: white; }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+        .stat-item { text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 12px; }
+        .stat-value { font-size: 36px; font-weight: 700; display: block; }
+        .stat-label { font-size: 14px; opacity: 0.9; }
+        .footer { text-align: center; padding: 32px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>生成日期：2026-04-10</span>
+                <span>热搜总数：10</span>
+                <span>创意总数：16</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">阚清子团比孙怡团票数高</span>
+                </div>
+                <div class="hotness">热度：综艺 1191227 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">男子微信群多次侮辱全红婵被拘</span>
+                </div>
+                <div class="hotness">热度：886910 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">我国海水直接制氢取得研究新突破</span>
+                </div>
+                <div class="hotness">热度：688330 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">孙怡组真唱</span>
+                </div>
+                <div class="hotness">热度：综艺 674121 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">疑似涉伊朗战事内幕交易被曝</span>
+                </div>
+                <div class="hotness">热度：535606 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">霍元甲编舞</span>
+                </div>
+                <div class="hotness">热度：综艺 532410 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">音你而来开播人均带梗入组</span>
+                </div>
+                <div class="hotness">热度： </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">婴儿出生9斤一个月瘦到7斤</span>
+                </div>
+                <div class="hotness">热度：499558 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">这些品牌竟然都是假洋牌</span>
+                </div>
+                <div class="hotness">热度：361316 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">赵丽颖工作室疑似表达对捆绑的不满</span>
+                </div>
+                <div class="hotness">热度：剧集 344093 <span class="tag">新</span></div>
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">1</span>
+                <span class="hotword">阚清子团比孙怡团票数高</span>
+            </div>
+            <p><strong>热度指数：</strong>1191227</p>
+            <div class="product-ideas">
+
+                <div class="idea-card ">
+                    <div class="idea-header">
+                        <span class="idea-name">「阚清子团比孙怡团票数高」分析失败</span>
+                        <span>
+                            <span class="score">0分</span>
+                            
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>错误: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3.1-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3.1-pro-high"}}]}}</li></ul>
+                        <p><strong>目标用户：</strong>无法生成</p>
+                        <p><strong>产品描述：</strong>API 调用失败: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3.1-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3.1-pro-high"}}]}}</p>
+                        <p><strong>评分：</strong>有趣度 0分 × 80% + 有用度 0分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">2</span>
+                <span class="hotword">男子微信群多次侮辱全红婵被拘</span>
+            </div>
+            <p><strong>热度指数：</strong>886910</p>
+            <div class="product-ideas">
+
+                <div class="idea-card ">
+                    <div class="idea-header">
+                        <span class="idea-name">「男子微信群多次侮辱全红婵被拘」分析失败</span>
+                        <span>
+                            <span class="score">0分</span>
+                            
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>错误: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3.1-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3.1-pro-high"}}]}}</li></ul>
+                        <p><strong>目标用户：</strong>无法生成</p>
+                        <p><strong>产品描述：</strong>API 调用失败: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3.1-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3.1-pro-high"}}]}}</p>
+                        <p><strong>评分：</strong>有趣度 0分 × 80% + 有用度 0分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">3</span>
+                <span class="hotword">我国海水直接制氢取得研究新突破</span>
+            </div>
+            <p><strong>热度指数：</strong>688330</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">氢岛大亨</span>
+                        <span>
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>近海平台搭建：在3D海浪上放置风力发电机和巨型制氢船</li><li>极端海况挑战：在台风黑潮中抢险维修管线并收集高能海水</li><li>全球绿电交易：看准动态波动的国际能源市场抛售氢气赚取资金</li></ul>
+                        <p><strong>目标用户：</strong>15-35岁策略游戏玩家、模拟经营爱好者、科技迷</p>
+                        <p><strong>产品描述：</strong>在狂风巨浪的海洋上建立你的漂浮制氢帝国！铺设海上风电，抽取翻滚的蔚蓝海水，看着透明的氢气源源不断装罐并转化为惊人财富。</p>
+                        <p><strong>评分：</strong>有趣度 90分 × 80% + 有用度 50分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">桌面海洋引擎</span>
+                        <span>
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>微缩电解舱：滴入特制盐水即可在透明舱内看到微小气泡疯狂沸腾</li><li>微型气动机械：利用装置产生的安全微量气体推动黄铜小齿轮运转</li><li>天气联动光效：内置芯片同步当地天气，雨天亮起幽蓝光效模拟深海制氢</li></ul>
+                        <p><strong>目标用户：</strong>科技数码爱好者、中小学生及家长、极客桌搭玩家</p>
+                        <p><strong>产品描述：</strong>一款极具赛博朋克感的桌面微缩科普潮玩。往透明水箱倒入盐水，看着蓝色幽光下气泡翻腾，驱动微型齿轮缓缓转动，感受前沿科技的浪漫。</p>
+                        <p><strong>评分：</strong>有趣度 85分 × 80% + 有用度 70分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">海能星图</span>
+                        <span>
+                            <span class="score">74分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>全球洋流3D热力图：发光粒子展示各大洋盐度与洋流，寻找最佳制氢点</li><li>沙盘式产能推演：在全息地图上拖拽风车、太阳能板测试海域产出比</li><li>碳足迹可视追踪：一键生成从一滴海水到一罐液氢的3D减排演变动画</li></ul>
+                        <p><strong>目标用户：</strong>新能源投资人、能源及海洋专业学生、环保政策研究者</p>
+                        <p><strong>产品描述：</strong>上帝视角的海洋能源勘探沙盘。手指转动3D地球，查看发光的海水洋流与风力，一键框选海域推演建厂收益，将枯燥的能源数据化为震撼星图。</p>
+                        <p><strong>评分：</strong>有趣度 70分 × 80% + 有用度 90分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">4</span>
+                <span class="hotword">孙怡组真唱 [新]</span>
+            </div>
+            <p><strong>热度指数：</strong>674121</p>
+            <div class="product-ideas">
+
+                <div class="idea-card ">
+                    <div class="idea-header">
+                        <span class="idea-name">「孙怡组真唱」分析失败</span>
+                        <span>
+                            <span class="score">0分</span>
+                            
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>错误: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3.1-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3.1-pro-high"}}]}}</li></ul>
+                        <p><strong>目标用户：</strong>无法生成</p>
+                        <p><strong>产品描述：</strong>API 调用失败: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3.1-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3.1-pro-high"}}]}}</p>
+                        <p><strong>评分：</strong>有趣度 0分 × 80% + 有用度 0分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">5</span>
+                <span class="hotword">疑似涉伊朗战事内幕交易被曝</span>
+            </div>
+            <p><strong>热度指数：</strong>535606</p>
+            <div class="product-ideas">
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">地缘操盘手</span>
+                        <span>
+                            <span class="score">80分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>暗网情报买卖：用筹码交换真假难辨的战事密电</li><li>极限杠杆推演：在导弹落下的倒数计时中完成多空双开</li><li>监管猫鼠游戏：模拟洗钱路径躲避SEC审查机制</li></ul>
+                        <p><strong>目标用户：</strong>策略游戏玩家、金融爱好者、对冲基金吃瓜群众</p>
+                        <p><strong>产品描述：</strong>一款硬核金融谍战桌游，玩家扮演华尔街大鳄，在各国军事摩擦的假动作中鉴别真情报，体验刀尖舔血的做空快感。</p>
+                        <p><strong>评分：</strong>有趣度 90分 × 80% + 有用度 40分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">黑天鹅雷达</span>
+                        <span>
+                            <span class="score">75分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>地缘情绪热力图：实时抓取推特中东军政要员发言进行NLP情绪打分</li><li>精准异动回溯：3D可视化复盘突发大跌前一小时的期权诡异大单</li><li>暗箱关联图谱：一键挖掘涉事账户与军工企业的隐藏股权交叉</li></ul>
+                        <p><strong>目标用户：</strong>资深股民、期货期权交易员、金融调查记者</p>
+                        <p><strong>产品描述：</strong>实时捕捉全球地缘政治摩擦与二级市场大单的共振瞬间，用可视化数据扒开春江水暖鸭先知的金融异动底裤。</p>
+                        <p><strong>评分：</strong>有趣度 70分 × 80% + 有用度 95分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">交易室疑云</span>
+                        <span>
+                            <span class="score">75分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>粉碎机文档拼接：还原投行高管销毁的加密做空指令</li><li>离岸账户追踪：抽丝剥茧追踪开曼群岛的皮包公司资金流</li><li>实时审讯对弈：利用话术漏洞击溃涉嫌内幕交易的交易员心理防线</li></ul>
+                        <p><strong>目标用户：</strong>悬疑推理爱好者、剧本杀玩家、泛娱乐网民</p>
+                        <p><strong>产品描述：</strong>沉浸式互动推理剧，你将扮演金融犯罪调查局特工，潜入华尔街顶级投行，从海量交易代码中揪出战事内幕交易的幕后黑手。</p>
+                        <p><strong>评分：</strong>有趣度 85分 × 80% + 有用度 35分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">6</span>
+                <span class="hotword">霍元甲编舞 [新]</span>
+            </div>
+            <p><strong>热度指数：</strong>532410</p>
+            <div class="product-ideas">
+
+                <div class="idea-card ">
+                    <div class="idea-header">
+                        <span class="idea-name">「霍元甲编舞」分析失败</span>
+                        <span>
+                            <span class="score">0分</span>
+                            
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>错误: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3.1-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3.1-pro-high"}}]}}</li></ul>
+                        <p><strong>目标用户：</strong>无法生成</p>
+                        <p><strong>产品描述：</strong>API 调用失败: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3.1-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3.1-pro-high"}}]}}</p>
+                        <p><strong>评分：</strong>有趣度 0分 × 80% + 有用度 0分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">7</span>
+                <span class="hotword">音你而来开播人均带梗入组</span>
+            </div>
+            <p><strong>热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">梗王争霸战</span>
+                        <span>
+                            <span class="score">80分</span>
+                            <span class="badge good">良好</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>随机梗人设抽取与演绎</li><li>AI微表情测爆笑指数</li><li>语音房匿名砸梗投喂</li></ul>
+                        <p><strong>目标用户：</strong>16-25岁喜爱社交破冰的年轻人、剧本杀玩家、综艺粉丝</p>
+                        <p><strong>产品描述：</strong>一款线上派对社交App，每个进入语音房的玩家都必须带着随机抽取的“梗人设”进行聊天，一旦崩坏人设或接不住梗将接受趣味惩罚。</p>
+                        <p><strong>评分：</strong>有趣度 90分 × 80% + 有用度 40分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">随身造梗机</span>
+                        <span>
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>滚动播放今日热梗弹幕</li><li>一键播放出场专属BGM</li><li>NFC碰一碰交换梗名片</li></ul>
+                        <p><strong>目标用户：</strong>00后Z世代潮人、漫展游场玩家、热衷彰显个性的社牛</p>
+                        <p><strong>产品描述：</strong>一款赛博朋克风的智能电子胸牌，通过手机蓝牙实时更换显示的爆笑梗句，还能随时随地外放你的专属名场面BGM，成为整条街的焦点。</p>
+                        <p><strong>评分：</strong>有趣度 95分 × 80% + 有用度 30分 × 20%</p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">声临其梗</span>
+                        <span>
+                            <span class="score">83分</span>
+                            <span class="badge excellent">优秀</span>
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>平淡Vlog一键加综艺花字</li><li>原声音频替换爆款梗音效</li><li>AI克隆原声翻唱搞笑神曲</li></ul>
+                        <p><strong>目标用户：</strong>热衷分享生活的Vlogger、短视频轻度用户、朋友圈活跃分子</p>
+                        <p><strong>产品描述：</strong>一款为平淡视频注入灵魂的娱乐剪辑App，AI自动抓取你的旅行视频痛点，加上综艺感十足的花字吐槽和罐头笑声，秒变爆款微综艺。</p>
+                        <p><strong>评分：</strong>有趣度 85分 × 80% + 有用度 75分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">8</span>
+                <span class="hotword">婴儿出生9斤一个月瘦到7斤 [新]</span>
+            </div>
+            <p><strong>热度指数：</strong>499558</p>
+            <div class="product-ideas">
+
+                <div class="idea-card ">
+                    <div class="idea-header">
+                        <span class="idea-name">「婴儿出生9斤一个月瘦到7斤」分析失败</span>
+                        <span>
+                            <span class="score">0分</span>
+                            
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>错误: API 调用失败 (HTTP 429): {"error":{"code":429,"message":"You have exhausted your capacity on this model. Your quota will reset after 1s.","status":"RESOURCE_EXHAUSTED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"RATE_LIMIT_EXCEEDED","domain":"cloudcode-pa.googleapis.com","metadata":{"quotaResetDelay":"1.438583854s","quotaResetTimeStamp":"2026-04-10T14:45:03Z","uiMessage":"true","model":"gemini-3.1-pro-high"}},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"1.438583854s"}]}}</li></ul>
+                        <p><strong>目标用户：</strong>无法生成</p>
+                        <p><strong>产品描述：</strong>API 调用失败: API 调用失败 (HTTP 429): {"error":{"code":429,"message":"You have exhausted your capacity on this model. Your quota will reset after 1s.","status":"RESOURCE_EXHAUSTED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"RATE_LIMIT_EXCEEDED","domain":"cloudcode-pa.googleapis.com","metadata":{"quotaResetDelay":"1.438583854s","quotaResetTimeStamp":"2026-04-10T14:45:03Z","uiMessage":"true","model":"gemini-3.1-pro-high"}},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"1.438583854s"}]}}</p>
+                        <p><strong>评分：</strong>有趣度 0分 × 80% + 有用度 0分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">9</span>
+                <span class="hotword">这些品牌竟然都是假洋牌</span>
+            </div>
+            <p><strong>热度指数：</strong>361316</p>
+            <div class="product-ideas">
+
+                <div class="idea-card ">
+                    <div class="idea-header">
+                        <span class="idea-name">「这些品牌竟然都是假洋牌」分析失败</span>
+                        <span>
+                            <span class="score">0分</span>
+                            
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>错误: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3.1-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3.1-pro-high"}},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"39s"}]}}</li></ul>
+                        <p><strong>目标用户：</strong>无法生成</p>
+                        <p><strong>产品描述：</strong>API 调用失败: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3.1-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3.1-pro-high"}},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"39s"}]}}</p>
+                        <p><strong>评分：</strong>有趣度 0分 × 80% + 有用度 0分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-header">
+                <span class="rank">10</span>
+                <span class="hotword">赵丽颖工作室疑似表达对捆绑的不满 [新]</span>
+            </div>
+            <p><strong>热度指数：</strong>344093</p>
+            <div class="product-ideas">
+
+                <div class="idea-card ">
+                    <div class="idea-header">
+                        <span class="idea-name">「赵丽颖工作室疑似表达对捆绑的不满」分析失败</span>
+                        <span>
+                            <span class="score">0分</span>
+                            
+                        </span>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>核心功能：</strong></p>
+                        <ul><li>错误: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3.1-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3.1-pro-high"}}]}}</li></ul>
+                        <p><strong>目标用户：</strong>无法生成</p>
+                        <p><strong>产品描述：</strong>API 调用失败: API 调用失败 (HTTP 503): {"error":{"code":503,"message":"No capacity available for model gemini-3.1-pro-high on the server","status":"UNAVAILABLE","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"MODEL_CAPACITY_EXHAUSTED","domain":"cloudcode-pa.googleapis.com","metadata":{"model":"gemini-3.1-pro-high"}}]}}</p>
+                        <p><strong>评分：</strong>有趣度 0分 × 80% + 有用度 0分 × 20%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">16</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">4</span>
+                    <span class="stat-label">优秀创意（>80分）</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">5</span>
+                    <span class="stat-label">良好创意（60-80分）</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">44.6</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>本报告由AI自动生成 | 仅供参考 | 微博热搜数据来源：天聚数行API</p>
+            <p>生成时间：2026-04-10 14:45:38</p>
+        </footer>
+    </div>
+</body>
+</html>

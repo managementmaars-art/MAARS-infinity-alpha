@@ -1,0 +1,153 @@
+# nsfc-qc 变更日志
+
+本文档记录 `nsfc-qc/` 的重要变更。格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
+
+## [Unreleased]
+
+### Added（新增）
+- 新增计划文档 `plans/英文缩写检查-v202603080812.md`：梳理 `nsfc-qc` 英文缩写检查的渲染顺序、全文唯一性与产物/文档同步优化方案，供后续实施参考。
+
+### Changed（变更）
+- **nsfc-qc v1.1.0 → v1.2.0**：英文缩写预检升级为“按 main.tex 实际渲染顺序 + 全文级缩写注册表”模型
+  - `scripts/nsfc_qc_precheck.py`：新增 render stream / abbreviation registry 机制；首次出现按真实渲染顺序判断，不再按单文件整文件扫描；同一行缩写按实际列号顺序识别；新增 `late_definition`、`conflicting_english_full_name`、`conflicting_chinese_full`、`repeated_same_definition` 等 issue model
+  - 新增工件：`abbreviation_registry.json`、`abbreviation_render_stream.jsonl`
+  - `scripts/materialize_final_outputs.py`：final findings 改为分别聚合“首次引入问题 / 冲突定义 / 缺中文全称 / 重复同一定义”，不再只按旧的 P1/P2 粗分类汇总
+  - `scripts/run_parallel_qc.py`：thread prompt 改为消费 registry/render stream，并显式要求检查“冲突定义 / 定义滞后 / 重复同一定义”
+  - `SKILL.md` / `README.md` / `references/qc_checklist.md` / `templates/REPORT_TEMPLATE.md`：文档口径同步到新问题模型
+  - `config.yaml`：版本号更新至 `1.2.0`
+
+## [1.1.0] - 2026-03-07
+
+### Changed（变更）
+- **元数据获取强制启用**：文献真实性检查现为 QC 核心功能，必须通过联网验证；移除 `--no-resolve-refs` 选项，`--resolve-refs` 默认启用且不可关闭。
+- `scripts/nsfc_qc_precheck.py`：增强 `_resolve_reference_evidence()` 函数：
+  - 新增 URL 可访问性检查（HTTP HEAD 请求检查 `.bib` 中 `url` 字段）
+  - 新增 metadata 自动比对（bib title vs API title，支持 exact/fuzzy/mismatch 三级判断）
+  - 新增并发控制参数 `max_concurrent`（默认 5，避免 API 速率限制）
+  - 输出增强：`reference_evidence.jsonl` 新增 `url_check` 和 `title_comparison` 字段；`reference_evidence_summary.json` 新增 `url_checked`/`url_accessible`/`title_match_exact`/`title_match_fuzzy`/`title_mismatch` 统计
+- `scripts/nsfc_qc_run.py`、`scripts/run_parallel_qc.py`：移除 `--no-resolve-refs` 参数，新增 `--max-concurrent` 参数（默认 5）。
+- `config.yaml`：版本号 `1.0.0 → 1.1.0`；新增 `max_concurrent`/`unpaywall_email`/`fetch_pdf`/`timeout_s` 参数配置；更新 description 明确"元数据获取为必选项"。
+- `SKILL.md`：
+  - 硬约束新增"元数据获取为必选项"说明
+  - 预检清单更新：明确引用真伪检查为必选项，详细说明 URL 检查、title 比对、并发控制
+  - Thread 统一任务更新：引用真伪检查新增 URL 不可访问、title 不匹配等 P0/P1 问题类型，要求使用 `url_check` 和 `title_comparison` 字段作为判断依据
+
+### Added（新增）
+- `scripts/nsfc_qc_precheck.py`：新增辅助函数 `_check_url_accessible()`（URL 可访问性检查）、`_normalize_title_for_comparison()`（标题归一化）、`_compare_titles()`（标题相似度比对）。
+
+## [1.0.0] - 2026-02-24
+
+### Changed（变更）
+- `config.yaml`：版本号 `0.2.1 → 1.0.0`，标记为正式稳定版本
+
+## [0.2.1] - 2026-02-22
+
+### Added（新增）
+- `scripts/nsfc_qc_precheck.py`：新增 `_detect_terminology_consistency()` 函数，启发式检测英文术语大小写/连字符不一致（如 "deep learning" vs "Deep Learning"）；输出 `terminology_issues.csv` 与 `terminology_issues_summary.json`。
+- `SKILL.md`：将"术语一致性"提升为 thread 统一任务的独立必检项（第 6 项），并补齐预检产物清单；原"其它 QC"降为第 7 项，要求从"至少 3 项"调整为"至少 2 项"。
+
+### Changed（变更）
+- `scripts/run_parallel_qc.py`：将 `terminology_issues.csv`/`terminology_issues_summary.json` 纳入 snapshot 证据包；在 thread prompt 中新增"术语一致性（必检，独立小节输出）"指令，要求在 RESULT.md 的「4) 可选优化（P2）」中输出 `### 术语一致性` 小节。
+- `config.yaml`：版本号 `0.2.0 → 0.2.1`。
+
+## [0.2.0] - 2026-02-21
+
+### Added（新增）
+- `scripts/nsfc_qc_precheck.py`：缩写预检新增 `abbreviation_issues_summary.json`（便于 AI 快速消费的摘要 JSON）。
+- `SKILL.md`：将“缩略语规范”提升为 thread 统一任务的独立必检项，并补齐预检产物清单。
+- `references/qc_checklist.md`：新增“缩略语规范（独立章节）”，细化检查点与分级口径。
+
+### Changed（变更）
+- `scripts/nsfc_qc_precheck.py`：扩展缩写 stoplist（Fig/Tab/Sec 等），并增强误报过滤（清除 `\\label/\\ref/\\cite` 参数与 `\\begin/\\end` 环境名；过滤 `V2` 这类版本号 token）。
+- `scripts/run_parallel_qc.py`：将 `abbreviation_issues_summary.json` 纳入 snapshot 证据包，并在 thread prompt 中要求独立输出“缩略语规范”小节（按文件/行号给出建议）。
+- `config.yaml`：版本号 `0.1.9 → 0.2.0`。
+
+## [0.1.9] - 2026-02-17
+
+### Changed（变更）
+- `nsfc-qc`：移除“编译是否成功/PDF 页数”相关流程与输出；skill 定位为“内容质量 QC”（标书写得怎么样），不再将编译成功与否作为 QC 结论的一部分。
+- `scripts/nsfc_qc_run.py`、`scripts/run_parallel_qc.py`：移除 `--compile-last` 参数与相关逻辑。
+- `scripts/nsfc_qc_precheck.py`：移除 `--compile` 与隔离编译逻辑，预检专注于引用/篇幅分布/排版与证据包。
+- `scripts/materialize_final_outputs.py`、`templates/REPORT_TEMPLATE.md`：final 输出不再聚合 compile 信息；报告中“页数”改为提示用户自行编译核对。
+- `scripts/nsfc_qc_compile.py`：保留为可选的手工调试脚本，但不再回填 `precheck.json`/`nsfc-qc_metrics.json`。
+
+## [0.1.8] - 2026-02-17
+
+### Changed（变更）
+- `scripts/run_parallel_qc.py`：snapshot 由“全量拷贝项目目录”改为“仅拷贝 `*.tex/*.bib`”（并跳过 `QC/` 等大目录），显著降低 `.nsfc-qc/` 中间产物体积与线程倍增开销。
+- `scripts/nsfc_qc_precheck.py`、`scripts/nsfc_qc_compile.py`：隔离编译的 copytree ignore 列表加入 `QC/`，避免把历史 QC 交付目录拷入 `compile/src` 导致体积膨胀。
+
+## [0.1.6] - 2026-02-17
+
+### Added（新增）
+- `scripts/nsfc_qc_precheck.py`：新增“全称与缩写规范”预检（启发式）。输出 `abbreviation_issues.csv`，并在 `precheck.json` 中给出结构化统计与建议（首次出现建议“中文全称（English Full Name, ABBR）”；后文尽量仅用 ABBR）。
+- `scripts/run_parallel_qc.py`：将 `abbreviation_issues.csv` 复制进 snapshot 的 `./.nsfc-qc/input/`，供多线程 QC 只读引用；同时在 thread prompt 的“证据包”中显式提示该文件。
+
+### Changed（变更）
+- `scripts/materialize_final_outputs.py`：把缩写预检信号映射为确定性 findings（P1/P2），并纳入 metrics 的 precheck 聚合与 artifacts 索引。
+
+## [0.1.7] - 2026-02-17
+
+### Changed（变更）
+- `scripts/run_parallel_qc.py`：将 thread 的“证据包”目录统一到 `snapshot/.nsfc-qc/input/`（位于 `.nsfc-qc/` 下），确保 snapshot 内的中间操作对用户更干净、更一致。
+
+## [0.1.5] - 2026-02-17
+
+### Changed（变更）
+- `scripts/nsfc_qc_run.py`：默认工作区从 `QC/{run_id}.nsfc-qc/` 调整为交付目录内的隐藏目录 `QC/{run_id}/.nsfc-qc/`（更优雅，且更符合“交付目录内隐藏中间产物”的直觉）
+- `scripts/nsfc_qc_run.py`：交付目录不再复制预检/编译等中间 artifacts（这些文件保留在工作区 run 目录下），交付目录只保留最终报告与结构化输出
+- `SKILL.md`、`README.md`、`config.yaml`：同步更新默认产物布局说明与版本号
+
+## [0.1.4] - 2026-02-17
+
+### Added（新增）
+- `scripts/nsfc_qc_run.py`：新增“一键实例隔离”运行器，默认输出到 `QC/{run_id}/` + sidecar 工作区 `QC/{run_id}.nsfc-qc/`，避免污染标书根目录
+- `scripts/validate_final_outputs.py`：新增 final 输出一致性校验脚本（报告固定章节 + findings JSON 与表格行一致）
+- `final/validation.json`：final 目录新增结构一致性校验结果（由 `materialize_final_outputs.py` 生成）
+
+### Changed（变更）
+- `scripts/run_parallel_qc.py`：支持 `--workspace-dir` 重定向所有中间产物；run_id 冲突自动后缀 `r1/r2...`；parallel-vibe 不可用/plan-only 也会落盘 final 输出
+- `scripts/materialize_final_outputs.py`：支持 `--run-dir` 模式；metrics/artifacts 路径改为相对 run_dir（更可搬运）；把 precheck/compile 的确定性信号映射为“底线 findings”，并注入报告 P0/P1/P2 表格
+- `scripts/nsfc_qc_precheck.py`、`scripts/nsfc_qc_compile.py`：compile.json 相关路径字段优先输出相对 out_dir（同时保留 *_abs），提升搬运一致性
+- `SKILL.md`、`README.md`、`config.yaml`：更新默认产物布局与脚本用法说明
+
+## [0.1.2] - 2026-02-16
+
+### Added（新增）
+- `scripts/nsfc_qc_precheck.py`：新增直引号排版预检，检测 `"免疫景观"` 这类写法并输出 `quote_issues.csv` 与结构化统计（建议替换为 TeX 引号 ``免疫景观''）
+
+### Changed（变更）
+- `scripts/materialize_final_outputs.py`：metrics 聚合时纳入 `typography` 预检信息，并补齐 `quote_issues.csv` 产物索引
+- `SKILL.md`/`README.md`/`references/qc_checklist.md`：补齐“中文双引号/直引号”排版检查项说明
+
+## [0.1.3] - 2026-02-16
+
+### Added（新增）
+- `scripts/nsfc_qc_precheck.py`：新增“引用证据包”硬编码抓取（题目/摘要/可选 OA PDF 片段）+ 标书内引用上下文提取，输出 `reference_evidence.jsonl`/`reference_evidence_summary.json`，供 AI 做语义核查
+- `scripts/nsfc_qc_compile.py`：新增“4 步法隔离编译”脚本（xelatex→bibtex→xelatex→xelatex），作为 QC 的最后一步执行，并回填 metrics
+
+### Changed（变更）
+- `scripts/run_parallel_qc.py`：默认先跑预检并把证据包复制到 snapshot 的 `./.nsfc-qc/input/`，thread 可只读使用；可选 `--compile-last` 作为最后一步更新编译信息
+- `SKILL.md`/`README.md`/`references/qc_checklist.md`：明确“引用真伪=硬编码证据 + AI 语义判断”“4 步法编译=QC 最后一步”
+
+## [0.1.1] - 2026-02-16
+
+### Changed（变更）
+- `scripts/nsfc_qc_precheck.py`：`--compile` 在缺少 TeX 工具链时自动降级并记录 `missing_tools`，不再崩溃
+- `scripts/run_parallel_qc.py`：thread prompt 以 cwd 为根（`project_root=.`），避免引导绝对路径越界；移除用户目录硬编码，支持 `PARALLEL_VIBE_SCRIPT` 覆盖
+- `scripts/run_parallel_qc.py`：snapshot 文件去写权限（目录保留可写），强化“只读 QC”约束落地
+- `SKILL.md`：修正文档与产物命名不一致（`tex_lengths.csv`）
+
+### Added（新增）
+- `scripts/materialize_final_outputs.py`：确定性落盘标准化 final 输出骨架（report/metrics/findings），即使 threads 尚未运行也可生成
+
+## [0.1.0] - 2026-02-16
+
+### Added（新增）
+- 新增 `nsfc-qc`：NSFC 标书只读质量控制 skill（多线程并行 QC + 标准化报告输出）
+- `SKILL.md`：定义只读边界（不修改 `.tex/.bib/.cls/.sty`）、中间文件归档到 `.nsfc-qc/`、固定报告结构与 P0/P1/P2 分级
+- `config.yaml`：提供默认参数（threads=5、execution=serial、page_limit_soft=30 等）与输出契约
+- `scripts/nsfc_qc_precheck.py`：确定性预检（引用 key 完整性、粗略篇幅统计；可选隔离编译以估算页数）
+- `scripts/run_parallel_qc.py`：在 `.nsfc-qc/` 内运行 parallel-vibe，并生成确定性 plan（各 thread 执行同一份 QC 清单）
+- `templates/`：提供标准化报告模板与 findings JSON schema
+- `references/qc_checklist.md`：给多线程 QC 的统一检查清单参考

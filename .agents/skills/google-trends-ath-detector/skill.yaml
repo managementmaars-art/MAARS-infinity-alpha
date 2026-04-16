@@ -1,0 +1,224 @@
+displayName: 解讀 Google Trends 歷史新高
+emoji: "\U0001F4C8"
+authorUrl: https://github.com/fatfingererr/macro-skills
+
+tools:
+  - claude-code
+
+featured: false
+installCount: 0
+
+testQuestions:
+  - question: '分析 "Health Insurance" 在美國的搜尋趨勢是否創下歷史新高'
+    expectedResult: |
+      此偵測器會：
+      1. 使用 Selenium 模擬真人瀏覽器抓取 Google Trends 數據
+      2. 抓取 2004-至今的時間序列
+      3. 計算 z-score 異常分數
+      4. 判定是否為 ATH
+      5. 識別訊號類型 (seasonal_spike/event_driven_shock/regime_shift)
+      6. 提取 related queries 作為驅動因素參考
+  - question: '比較 "Unemployment" 和 "Health Insurance" 的趨勢共振'
+    expectedResult: |
+      分析兩個主題的相關性，判斷是「單點焦慮」還是「系統性焦慮」，
+      並透過相關性分析輸出解讀。
+
+qualityScore:
+  overall: 49
+  badge: 中級
+  evaluatedAt: "2026-01-23"
+
+  metrics:
+    problemFit: 60
+    correctness: 50
+    dataGovernance: 40
+    robustness: 42
+    maintainability: 50
+    usability: 52
+
+  metricDetails:
+    problemFit:
+      score: 60
+      strengths:
+        - 訊號分型概念清晰
+        - Selenium 爬蟲設計完整
+      improvements:
+        - Google Trends API 不穩定
+        - 爬蟲被封鎖風險高
+
+    correctness:
+      score: 50
+      strengths:
+        - testQuestions 有 expectedResult
+        - 訊號分類邏輯說明
+      improvements:
+        - 爬蟲穩定性難以保證
+        - z-score 計算需驗證
+
+    dataGovernance:
+      score: 40
+      strengths:
+        - 說明數據來源與延遲
+        - 有 debug 模式說明
+      improvements:
+        - 缺少 data-sources.md 完整文檔
+        - 爬蟲可能違反 ToS
+        - 數據可靠性不穩定
+
+    robustness:
+      score: 42
+      strengths:
+        - pitfalls 詳列封鎖風險
+        - bestPractices 有頻率控制建議
+      improvements:
+        - 缺少 failure-modes.md
+        - 爬蟲失敗率較高
+        - 429 錯誤處理需加強
+
+    maintainability:
+      score: 50
+      strengths:
+        - 模組化爬蟲設計
+        - 防偵測策略完整
+      improvements:
+        - 可增加 manifest.json 版本控制
+        - Selenium 依賴複雜
+
+    usability:
+      score: 52
+      strengths:
+        - FAQ 解答 Google Trends 概念
+        - 有 debug 與調試說明
+      improvements:
+        - 執行環境需求高
+        - 需要 Chrome 與 Selenium
+
+  details: |
+    **任務適配度（60/100）**
+    - 訊號分型概念清晰
+    - 待改進：爬蟲穩定性
+
+    **正確性（50/100）**
+    - 有 expectedResult
+    - 待改進：爬蟲可靠性
+
+    **資料治理（40/100）**
+    - 說明數據來源
+    - 待改進：ToS 合規性
+
+    **穩健性（42/100）**
+    - pitfalls 詳列風險
+    - 待改進：錯誤處理
+
+    **可維護性（50/100）**
+    - 模組化設計
+    - 待改進：依賴複雜
+
+    **輸出可用性（52/100）**
+    - FAQ 解答概念
+    - 待改進：環境需求高
+
+  upgradeNotes:
+    targetBadge: 中高級
+    requirements:
+      - metric: dataGovernance
+        currentScore: 40
+        targetScore: 60
+        suggestion: 改用官方 API 或確認 ToS 合規
+      - metric: robustness
+        currentScore: 42
+        targetScore: 60
+        suggestion: 增加錯誤重試與降級機制
+      - metric: correctness
+        currentScore: 50
+        targetScore: 65
+        suggestion: 增加爬蟲穩定性測試
+
+bestPractices:
+  - title: 使用 Topic Entity 而非純關鍵字
+    description: Topic Entity 可避免同名歧義（如 "Apple" 公司 vs 水果）
+  - title: 關注去季節化後的殘差
+    description: 單看絕對值可能被季節性誤導，殘差才是真正的「異常」
+  - title: 結合 related queries 識別驅動
+    description: Rising queries 能揭示「為什麼」搜尋量上升
+  - title: 不要只看是否 ATH
+    description: 重要的是「是否異常」而非「是否最高」
+  - title: 區分訊號類型再做解讀
+    description: 季節性尖峰、事件衝擊、結構轉變需要不同的解讀方式
+  - title: 適當控制請求頻率
+    description: 使用隨機延遲避免被 Google 偵測為機器人
+
+pitfalls:
+  - title: 忽略季節性
+    description: 很多搜尋有固定的年度週期（報稅季、投保季）
+    consequence: 把正常季節性尖峰誤判為異常
+  - title: 過度解讀 Google Trends 指數
+    description: 0-100 是相對指數，不是絕對搜尋量
+    consequence: 錯誤比較不同主題或不同時間範圍
+  - title: 忽略數據延遲
+    description: Google Trends 有 2-3 天的數據延遲
+    consequence: 誤以為「今天」的數據已更新
+  - title: 單一關鍵字偏差
+    description: 只看一個關鍵字可能錯過更廣泛的趨勢
+    consequence: 錯誤歸因（單點焦慮 vs 系統性焦慮）
+  - title: 請求過於頻繁
+    description: 短時間內大量請求會被 Google 封鎖
+    consequence: 返回 429 錯誤或被要求驗證碼
+
+faq:
+  - question: Google Trends 的 0-100 指數代表什麼？
+    answer: |
+      這是相對指數，100 表示該時間範圍內的最高點。
+      不同時間範圍或不同主題的 100 不能直接比較。
+
+  - question: 如何區分季節性尖峰和真正的異常？
+    answer: |
+      本技能透過訊號分型來區分：
+      - seasonal_spike：每年重複的週期性高點
+      - event_driven_shock：短期異常飆升
+      - regime_shift：長期結構性上升
+
+  - question: 為什麼使用 Selenium 而非 requests/pytrends？
+    answer: |
+      本技能的 trend_fetcher.py 使用 Selenium 模擬真人瀏覽器行為：
+      - **防偵測**：移除自動化標記、輪換 User-Agent、隨機延遲
+      - **執行 JavaScript**：確保動態內容正確載入
+      - **穩定性**：避免被 Google 封鎖
+      - **維護 Session**：自動處理 cookies 和 tokens
+
+  - question: 被 Google 封鎖怎麼辦？
+    answer: |
+      如果遇到 429 錯誤或驗證碼：
+      1. 等待 24 小時後重試
+      2. 增加請求間隔（使用 --no-related 減少請求）
+      3. 使用 VPN 更換 IP
+      4. 降低爬取頻率
+
+  - question: 如何調試抓取問題？
+    answer: |
+      使用 debug 模式：
+      ```bash
+      python scripts/trend_fetcher.py --topic "test" --debug --no-headless
+      ```
+      這會：
+      - 顯示瀏覽器視窗（非 headless）
+      - 保存 debug_page.html 供檢查
+      - 輸出詳細日誌到 trend_fetcher.log
+
+about:
+  repository: https://github.com/fatfingererr/macro-skills
+  branch: main
+  additionalInfo: |
+    ## 數據來源
+
+    **專注於 Google Trends**
+    - 官網：https://trends.google.com
+    - 數據範圍：2004 年至今
+    - 更新頻率：接近即時（2-3 天延遲）
+
+    ## 技術架構
+
+    基於 [design-human-like-crawler.md](thoughts/shared/guide/design-human-like-crawler.md) 設計：
+    - Selenium + Chrome headless 模擬真人瀏覽器
+    - BeautifulSoup 解析 HTML
+    - 多層防偵測策略

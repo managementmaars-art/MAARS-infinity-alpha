@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Claw Control Documentation</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Claw Control - AI Agent Control Platform Documentation">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="icon" href="https://raw.githubusercontent.com/gokuclaw-adarsh/claw-control/main/assets/favicon.ico" type="image/x-icon">
+  
+  <!-- Dark Theme Base -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css">
+  
+  <!-- Prism Syntax Highlighting (Dark) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism-tomorrow.min.css">
+  
+  <!-- Custom Cyber-Green Styling -->
+  <style>
+    :root {
+      /* Cyber-green accent color */
+      --theme-color: #00ff41;
+      --base-background-color: #0a0a0a;
+      --cover-background-color: #0a0a0a;
+      --sidebar-background: #0d0d0d;
+      --sidebar-nav-link-color: #b0b0b0;
+      --sidebar-nav-link-color--active: #00ff41;
+      --sidebar-nav-link-color--hover: #00ff41;
+      --sidebar-nav-link-border-color--active: #00ff41;
+      --sidebar-name-color: #00ff41;
+      --link-color: #00ff41;
+      --link-color--hover: #33ff66;
+      --heading-color: #ffffff;
+      --blockquote-border-color: #00ff41;
+      --code-theme-background: #111111;
+      --code-inline-background: #1a1a1a;
+      --code-inline-color: #00ff41;
+      --search-result-keyword-background: rgba(0, 255, 65, 0.3);
+      --search-result-keyword-color: #00ff41;
+    }
+
+    /* Body styling */
+    body {
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* Sidebar styling */
+    .sidebar {
+      background: linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 100%);
+      border-right: 1px solid #1a1a1a;
+    }
+
+    .sidebar-nav a {
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .sidebar-nav a:hover {
+      text-decoration: none;
+    }
+
+    .sidebar-nav a.active {
+      border-left: 3px solid #00ff41;
+      padding-left: 10px;
+      font-weight: 600;
+    }
+
+    /* App name / Logo */
+    .app-name-link {
+      color: #00ff41 !important;
+      font-weight: 700;
+      font-size: 1.4em;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Main content */
+    .markdown-section {
+      max-width: 900px;
+    }
+
+    .markdown-section h1,
+    .markdown-section h2,
+    .markdown-section h3 {
+      color: #ffffff;
+      border-bottom: 1px solid #1a1a1a;
+      padding-bottom: 10px;
+    }
+
+    .markdown-section h1 {
+      font-size: 2.2em;
+      border-bottom: 2px solid #00ff41;
+    }
+
+    .markdown-section h2::before {
+      content: '# ';
+      color: #00ff41;
+      opacity: 0.6;
+    }
+
+    /* Code blocks */
+    .markdown-section pre {
+      background: #111111 !important;
+      border: 1px solid #1a1a1a;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .markdown-section code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', monospace;
+      font-size: 0.9em;
+    }
+
+    /* Inline code */
+    .markdown-section p code,
+    .markdown-section li code {
+      background: #1a1a1a;
+      color: #00ff41;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+
+    /* Blockquotes */
+    .markdown-section blockquote {
+      border-left: 4px solid #00ff41;
+      background: rgba(0, 255, 65, 0.05);
+      padding: 12px 20px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    /* Tables */
+    .markdown-section table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .markdown-section table th {
+      background: #1a1a1a;
+      color: #00ff41;
+      font-weight: 600;
+    }
+
+    .markdown-section table td,
+    .markdown-section table th {
+      border: 1px solid #2a2a2a;
+      padding: 10px 14px;
+    }
+
+    .markdown-section table tr:nth-child(even) {
+      background: #0d0d0d;
+    }
+
+    /* Links */
+    .markdown-section a {
+      color: #00ff41;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(0, 255, 65, 0.4);
+      transition: border-color 0.2s ease;
+    }
+
+    .markdown-section a:hover {
+      color: #33ff66;
+      border-bottom-color: #00ff41;
+    }
+
+    /* Search box styling */
+    .search {
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    .search input {
+      background: #111111 !important;
+      border: 1px solid #2a2a2a !important;
+      color: #e0e0e0 !important;
+      border-radius: 6px !important;
+    }
+
+    .search input:focus {
+      border-color: #00ff41 !important;
+      box-shadow: 0 0 0 2px rgba(0, 255, 65, 0.2) !important;
+    }
+
+    .search input::placeholder {
+      color: #666 !important;
+    }
+
+    .search .matching-post {
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    .search .matching-post .search-keyword {
+      background: rgba(0, 255, 65, 0.3);
+      color: #00ff41;
+    }
+
+    /* Cover page */
+    .cover {
+      background: linear-gradient(135deg, #0a0a0a 0%, #111111 100%) !important;
+    }
+
+    .cover h1 {
+      color: #00ff41;
+      text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+    }
+
+    .cover a.button {
+      background: #00ff41 !important;
+      color: #0a0a0a !important;
+      border-radius: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.2s ease;
+    }
+
+    .cover a.button:hover {
+      background: #33ff66 !important;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 255, 65, 0.4);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0a0a0a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #2a2a2a;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00ff41;
+    }
+
+    /* Docsify tip/warning/danger callouts */
+    .markdown-section .tip,
+    .markdown-section .warn,
+    .markdown-section .danger {
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .markdown-section .tip {
+      background: rgba(0, 255, 65, 0.1);
+      border-left: 4px solid #00ff41;
+    }
+
+    /* Copy code button */
+    .docsify-copy-code-button {
+      background: #1a1a1a !important;
+      color: #00ff41 !important;
+      border-radius: 4px !important;
+    }
+
+    .docsify-copy-code-button:hover {
+      background: #00ff41 !important;
+      color: #0a0a0a !important;
+    }
+
+    /* Responsive adjustments */
+    @media screen and (max-width: 768px) {
+      .sidebar {
+        background: #0a0a0a;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">Loading Claw Control Docs...</div>
+  
+  <script>
+    window.$docsify = {
+      name: '🦅 Claw Control',
+      repo: 'https://github.com/gokuclaw-adarsh/claw-control',
+      loadSidebar: true,
+      subMaxLevel: 3,
+      auto2top: true,
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: 'Search docs...',
+        noData: 'No results found',
+        depth: 3,
+        hideOtherSidebarContent: false
+      },
+      copyCode: {
+        buttonText: 'Copy',
+        errorText: 'Error',
+        successText: 'Copied!'
+      },
+      pagination: {
+        previousText: '← Previous',
+        nextText: 'Next →',
+        crossChapter: true,
+        crossChapterText: true
+      },
+      themeColor: '#00ff41',
+      notFoundPage: true,
+      relativePath: true
+    }
+  </script>
+  
+  <!-- Docsify Core -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  
+  <!-- Plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
+  
+  <!-- Prism Syntax Highlighting -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-typescript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-docker.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+</body>
+</html>

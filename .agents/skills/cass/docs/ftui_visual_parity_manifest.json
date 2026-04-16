@@ -1,0 +1,490 @@
+{
+  "schema_version": "1.0.0",
+  "bundle_id": "ftui-parity-baseline-2026-02-08",
+  "generated_at_utc": "2026-02-08T21:41:04Z",
+  "project": "coding_agent_session_search",
+  "epic_bead": "coding_agent_session_search-2dccg",
+  "task_bead": "coding_agent_session_search-2dccg.1.2",
+  "source_commit": "226ef1d",
+  "baseline_reference": {
+    "name": "ratatui-v0.1.64",
+    "note": "Legacy screenshots currently pinned in README/install flow"
+  },
+  "candidate_reference": {
+    "name": "ftui-current",
+    "note": "Snapshot + PTY artifact captures"
+  },
+  "capture_environment": {
+    "terminal_profiles": [
+      "xterm-256color",
+      "wide 145x45 PTY",
+      "narrow snapshot harness"
+    ],
+    "theme_presets_required": [
+      "Dark",
+      "Light",
+      "HighContrast"
+    ],
+    "commands": [
+      "cargo test --test e2e_tui_smoke_flows tui_pty_search_detail_and_quit_flow -- --nocapture",
+      "cargo test --test e2e_tui_smoke_flows tui_pty_help_overlay_open_close_flow -- --nocapture",
+      "cargo test --test e2e_tui_smoke_flows tui_pty_launch_quit_and_terminal_cleanup -- --nocapture"
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "screenshots/screenshot_01.webp",
+      "role": "baseline",
+      "sha256": "8d63e4d2626e4ca988a36793c721a73e1e53ff744b3ee0ec6f0ef171243e9edf",
+      "size_bytes": 853812,
+      "mtime": "2026-01-09T20:28:51Z"
+    },
+    {
+      "path": "screenshots/screenshot_02.webp",
+      "role": "baseline",
+      "sha256": "343ea5de8ef121a4118356cd8af95cbd6d5558ba6debd754e3a40f85b9d31d6f",
+      "size_bytes": 563474,
+      "mtime": "2026-01-09T20:28:51Z"
+    },
+    {
+      "path": "screenshots/screenshot_03.webp",
+      "role": "baseline",
+      "sha256": "34bd79ce8b6790b6d84a01114ebb59dbd90690f9656233b9879acf616226e088",
+      "size_bytes": 181210,
+      "mtime": "2026-01-09T20:28:51Z"
+    },
+    {
+      "path": "tests/snapshots/cassapp_results_wide.snap",
+      "role": "candidate",
+      "sha256": "19bb4bef84f06b316d8521f37b14b79ca9f004a3e171fbe7a326f8c6904c4f93",
+      "size_bytes": 10729,
+      "mtime": "2026-02-06T21:33:23Z"
+    },
+    {
+      "path": "tests/snapshots/cassapp_results_narrow.snap",
+      "role": "candidate",
+      "sha256": "f8e9f938e609d9c6e8f40f4c8fc0e3d215e7eb73eab13418d27ed96596a12553",
+      "size_bytes": 2577,
+      "mtime": "2026-02-06T21:33:23Z"
+    },
+    {
+      "path": "tests/snapshots/cassapp_command_palette.snap",
+      "role": "candidate",
+      "sha256": "1c2c3c959cd2f71bb08cd29626ac9a4b9edd3de97dfc953b66ff3074caa6ff5f",
+      "size_bytes": 6243,
+      "mtime": "2026-02-06T21:33:23Z"
+    },
+    {
+      "path": "tests/snapshots/cassapp_baseline_detail_tabs_snippets_active.snap",
+      "role": "candidate",
+      "sha256": "93be14bdd2be71f9ea466f63f02d93534d6d797fd53eb3807fb94e8300bee1e5",
+      "size_bytes": 1989,
+      "mtime": "2026-02-11T06:03:01Z"
+    },
+    {
+      "path": "tests/snapshots/cassapp_baseline_detail_tabs_json_active.snap",
+      "role": "candidate",
+      "sha256": "081539759c408e04368105b3256a3de5055ea534df05700085e15d94bd4a0f30",
+      "size_bytes": 1997,
+      "mtime": "2026-02-11T06:03:01Z"
+    },
+    {
+      "path": "tests/snapshots/cassapp_baseline_detail_find_current_match.snap",
+      "role": "candidate",
+      "sha256": "9f2133077cd709a50c6dc116f82c9f6a2f364077a0504bf165e945c34053be57",
+      "size_bytes": 2734,
+      "mtime": "2026-02-11T04:50:45Z"
+    },
+    {
+      "path": "test-results/e2e/tui/tui-19c3f31b889_pty_search_detail_output.raw",
+      "role": "candidate",
+      "sha256": "5329ac28e33719d5e5cc29a9e1d55bf07c54cde54c80b4d1f8de858e3c9f1975",
+      "size_bytes": 15375,
+      "mtime": "2026-02-08T21:39:10Z"
+    },
+    {
+      "path": "test-results/e2e/tui/tui-19c3f31b889_pty_search_detail_summary.json",
+      "role": "candidate",
+      "sha256": "641165da8bc07243c26c3c012f3199c5aadc5d1d74b58cb123d39348ea62e2ac",
+      "size_bytes": 168,
+      "mtime": "2026-02-08T21:39:10Z"
+    },
+    {
+      "path": "test-results/e2e/tui/tui-19c3f31d8d0_pty_help_overlay_output.raw",
+      "role": "candidate",
+      "sha256": "5dc824fac130e5a1915342f93f6eaaec5b6bd9500561fc14d457a6f0be231b08",
+      "size_bytes": 27538,
+      "mtime": "2026-02-08T21:39:18Z"
+    },
+    {
+      "path": "test-results/e2e/tui/tui-19c3f31d8d0_pty_help_overlay_summary.json",
+      "role": "candidate",
+      "sha256": "3be871fdabb49c24eb22a379ad5bd0daebaf6e3415e8d25796c73bff328ff5bf",
+      "size_bytes": 177,
+      "mtime": "2026-02-08T21:39:18Z"
+    },
+    {
+      "path": "test-results/e2e/tui/tui-19c3f320444_pty_launch_quit_output.raw",
+      "role": "candidate",
+      "sha256": "0ed4e9bd7b630d6d6fb29a107f3241ec2da0f10e2a7e05813c87bf2a91e096a0",
+      "size_bytes": 12701,
+      "mtime": "2026-02-08T21:39:28Z"
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "S1-search-results-wide",
+      "state": {
+        "query": "login",
+        "layout": "wide",
+        "detail_tab": "Messages"
+      },
+      "baseline_artifact": "screenshots/screenshot_01.webp",
+      "candidate_artifact": "tests/snapshots/cassapp_results_wide.snap",
+      "status": "captured"
+    },
+    {
+      "scenario_id": "S2-detail-messages-tab",
+      "state": {
+        "interaction_flow": "query->submit->focus results->open detail",
+        "detail_tab": "Messages"
+      },
+      "baseline_artifact": "screenshots/screenshot_02.webp",
+      "candidate_artifact": "test-results/e2e/tui/tui-19c3f31b889_pty_search_detail_output.raw",
+      "status": "captured"
+    },
+    {
+      "scenario_id": "S3-detail-snippets-tab",
+      "state": {
+        "detail_tab": "Snippets"
+      },
+      "baseline_artifact": "screenshots/screenshot_02.webp",
+      "candidate_artifact": "tests/snapshots/cassapp_baseline_detail_tabs_snippets_active.snap",
+      "status": "captured"
+    },
+    {
+      "scenario_id": "S4-detail-json-tab",
+      "state": {
+        "detail_tab": "Json"
+      },
+      "baseline_artifact": "screenshots/screenshot_02.webp",
+      "candidate_artifact": "tests/snapshots/cassapp_baseline_detail_tabs_json_active.snap",
+      "status": "captured"
+    },
+    {
+      "scenario_id": "S5-detail-find-bar-open",
+      "state": {
+        "detail_tab": "Messages",
+        "find_bar": "open"
+      },
+      "baseline_artifact": "screenshots/screenshot_02.webp",
+      "candidate_artifact": "tests/snapshots/cassapp_baseline_detail_find_current_match.snap",
+      "status": "captured"
+    },
+    {
+      "scenario_id": "S6-search-results-narrow",
+      "state": {
+        "query": "login",
+        "layout": "narrow"
+      },
+      "baseline_artifact": "screenshots/screenshot_01.webp",
+      "candidate_artifact": "tests/snapshots/cassapp_results_narrow.snap",
+      "status": "captured"
+    },
+    {
+      "scenario_id": "S7-command-palette-open",
+      "state": {
+        "palette": "open"
+      },
+      "baseline_artifact": "screenshots/screenshot_03.webp",
+      "candidate_artifact": "tests/snapshots/cassapp_command_palette.snap",
+      "status": "captured"
+    }
+  ],
+  "crosswalk": [
+    {
+      "capability": "search_input_cues_and_editing",
+      "ratatui_expectation": "query entry remains obvious and Enter submits deterministic search",
+      "ftui_status": "improved",
+      "evidence": [
+        "src/ui/app.rs:14616",
+        "src/ui/app.rs:14877",
+        "tests/snapshots/cassapp_results_wide.snap"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.8.1",
+        "coding_agent_session_search-2dccg.11.2"
+      ]
+    },
+    {
+      "capability": "filter_pills_state_affordance_click_targets",
+      "ratatui_expectation": "active filters are visible and directly actionable",
+      "ftui_status": "improved",
+      "evidence": [
+        "src/ui/app.rs:4030",
+        "src/ui/app.rs:4077",
+        "src/ui/app.rs:17071",
+        "src/ui/app.rs:17093",
+        "tests/snapshots/cassapp_search_surface_active_filters.snap",
+        "tests/snapshots/cassapp_baseline_pills_active_inactive.snap"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.8.2",
+        "coding_agent_session_search-2dccg.8.3",
+        "coding_agent_session_search-2dccg.6.2"
+      ]
+    },
+    {
+      "capability": "results_hierarchy_score_source_snippet",
+      "ratatui_expectation": "results stay scanable with clear provenance and snippet hierarchy",
+      "ftui_status": "improved",
+      "evidence": [
+        "tests/snapshots/cassapp_results_wide.snap",
+        "tests/snapshots/cassapp_results_narrow.snap",
+        "tests/snapshots/cassapp_search_surface_structure_default.snap",
+        "tests/snapshots/cassapp_search_surface_breakpoint_medium.snap",
+        "tests/snapshots/cassapp_search_surface_breakpoint_narrow.snap",
+        "src/ui/app.rs:14519"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.9.1",
+        "coding_agent_session_search-2dccg.9.2",
+        "coding_agent_session_search-2dccg.9.3"
+      ]
+    },
+    {
+      "capability": "detail_tabs_active_state_clarity",
+      "ratatui_expectation": "messages/snippets/raw/json tabs remain explicit and keyboard navigable",
+      "ftui_status": "improved",
+      "evidence": [
+        "src/ui/app.rs:4820",
+        "src/ui/app.rs:15549",
+        "src/ui/app.rs:15787"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.2",
+        "coding_agent_session_search-2dccg.8.6",
+        "coding_agent_session_search-2dccg.11.2"
+      ]
+    },
+    {
+      "capability": "detail_find_bar_match_counters_key_flows",
+      "ratatui_expectation": "find mode is visible and key flows remain predictable",
+      "ftui_status": "improved",
+      "evidence": [
+        "src/ui/app.rs:15420",
+        "src/ui/app.rs:15438",
+        "src/ui/app.rs:15523",
+        "src/ui/app.rs:4947",
+        "tests/snapshots/cassapp_baseline_detail_find_current_match.snap",
+        "tests/snapshots/cassapp_baseline_detail_find_empty_query.snap",
+        "tests/snapshots/cassapp_baseline_detail_find_no_matches.snap"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.4.1",
+        "coding_agent_session_search-2dccg.4.2",
+        "coding_agent_session_search-2dccg.4.3"
+      ]
+    },
+    {
+      "capability": "role_differentiation_metadata_readability",
+      "ratatui_expectation": "user/assistant/tool/system remain visually distinct",
+      "ftui_status": "improved",
+      "evidence": [
+        "src/ui/app.rs:4256",
+        "src/ui/app.rs:4267",
+        "src/ui/app.rs:15860"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.2",
+        "coding_agent_session_search-2dccg.9.3",
+        "coding_agent_session_search-2dccg.11.1"
+      ]
+    },
+    {
+      "capability": "footer_hud_status_degradation_diagnostics",
+      "ratatui_expectation": "status footer communicates key runtime context",
+      "ftui_status": "improved",
+      "evidence": [
+        "src/ui/app.rs:3661",
+        "src/ui/app.rs:16317",
+        "src/ui/app.rs:16753"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.8.5",
+        "coding_agent_session_search-2dccg.10.9",
+        "coding_agent_session_search-2dccg.11.6"
+      ]
+    },
+    {
+      "capability": "keyboard_mouse_navigation_affordances",
+      "ratatui_expectation": "full keyboard control with stable mouse parity",
+      "ftui_status": "improved",
+      "evidence": [
+        "src/ui/app.rs:19959",
+        "src/ui/app.rs:17144",
+        "src/ui/app.rs:17219",
+        "src/ui/app.rs:17841"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.11.2",
+        "coding_agent_session_search-2dccg.9.5"
+      ]
+    }
+  ],
+  "non_regression_checklist": [
+    {
+      "id": "NR-01",
+      "guardrail": "search_input_editing_and_submit",
+      "state": "pass",
+      "required_for_release_unpin": true,
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.8.1",
+        "coding_agent_session_search-2dccg.11.2"
+      ]
+    },
+    {
+      "id": "NR-02",
+      "guardrail": "filter_pill_interaction_fidelity",
+      "state": "pass",
+      "required_for_release_unpin": false,
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.8.2",
+        "coding_agent_session_search-2dccg.8.3",
+        "coding_agent_session_search-2dccg.6.2"
+      ]
+    },
+    {
+      "id": "NR-03",
+      "guardrail": "results_hierarchy_scanability",
+      "state": "pass",
+      "required_for_release_unpin": false,
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.9.1",
+        "coding_agent_session_search-2dccg.9.2",
+        "coding_agent_session_search-2dccg.9.3"
+      ]
+    },
+    {
+      "id": "NR-04",
+      "guardrail": "detail_tab_navigation_parity",
+      "state": "pass",
+      "required_for_release_unpin": true,
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.2",
+        "coding_agent_session_search-2dccg.8.6"
+      ]
+    },
+    {
+      "id": "NR-05",
+      "guardrail": "detail_find_behavior_and_visibility",
+      "state": "pass",
+      "required_for_release_unpin": false,
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.4.1",
+        "coding_agent_session_search-2dccg.4.2",
+        "coding_agent_session_search-2dccg.4.3"
+      ]
+    },
+    {
+      "id": "NR-06",
+      "guardrail": "role_differentiation",
+      "state": "pass",
+      "required_for_release_unpin": true,
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.2",
+        "coding_agent_session_search-2dccg.11.1"
+      ]
+    },
+    {
+      "id": "NR-07",
+      "guardrail": "footer_runtime_diagnostics",
+      "state": "pass",
+      "required_for_release_unpin": true,
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.8.5",
+        "coding_agent_session_search-2dccg.10.9",
+        "coding_agent_session_search-2dccg.11.6"
+      ]
+    },
+    {
+      "id": "NR-08",
+      "guardrail": "keyboard_mouse_navigation_parity",
+      "state": "pass",
+      "required_for_release_unpin": true,
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.11.2",
+        "coding_agent_session_search-2dccg.9.5"
+      ]
+    }
+  ],
+  "root_cause_map": [
+    {
+      "symptom": "Markdown theme incoherence",
+      "code_refs": [
+        "src/ui/app.rs:4337",
+        "src/ui/app.rs:4410"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.3.1",
+        "coding_agent_session_search-2dccg.3.2",
+        "coding_agent_session_search-2dccg.3.3"
+      ]
+    },
+    {
+      "symptom": "Detail find bar affordance weakness",
+      "code_refs": [
+        "src/ui/app.rs:4919",
+        "src/ui/app.rs:4947"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.4.1",
+        "coding_agent_session_search-2dccg.4.2",
+        "coding_agent_session_search-2dccg.4.3"
+      ]
+    },
+    {
+      "symptom": "Degradation policy cliffs under pressure",
+      "code_refs": [
+        "src/ui/app.rs:11594",
+        "src/ui/app.rs:11604",
+        "src/ui/app.rs:12646"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.5.1",
+        "coding_agent_session_search-2dccg.5.2",
+        "coding_agent_session_search-2dccg.10.4",
+        "coding_agent_session_search-2dccg.10.6"
+      ]
+    },
+    {
+      "symptom": "Fixture realism insufficient for parity confidence",
+      "code_refs": [
+        "tests/ftui_harness_snapshots.rs:21",
+        "tests/ftui_harness_snapshots.rs:32"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.6.1",
+        "coding_agent_session_search-2dccg.6.2",
+        "coding_agent_session_search-2dccg.11.3"
+      ]
+    },
+    {
+      "symptom": "Release docs/install still pinned to v0.1.64",
+      "code_refs": [
+        "README.md:16",
+        "README.md:22",
+        "README.md:25"
+      ],
+      "owner_beads": [
+        "coding_agent_session_search-2dccg.7.1",
+        "coding_agent_session_search-2dccg.7.3",
+        "coding_agent_session_search-2dccg.7.5"
+      ]
+    }
+  ],
+  "ownership_assertion": {
+    "major_unowned_failures": 0,
+    "note": "All major parity deficits are mapped to explicit workstreams; scenario captures are materialized in deterministic artifacts."
+  }
+}

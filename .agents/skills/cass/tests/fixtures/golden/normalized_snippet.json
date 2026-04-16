@@ -1,0 +1,7 @@
+{
+  "file_path": "src/handlers/auth.rs",
+  "start_line": 100,
+  "end_line": 120,
+  "language": "rust",
+  "snippet_text": "pub fn verify_token(token: &str) -> Result<Claims> {\n    let key = load_signing_key()?;\n    decode(token, &key, &Validation::default())\n        .map(|data| data.claims)\n        .map_err(|e| AuthError::InvalidToken(e.to_string()))\n}"
+}

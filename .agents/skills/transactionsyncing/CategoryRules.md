@@ -1,0 +1,404 @@
+# CategoryRules - Expense Categorization Patterns
+
+Pattern matching rules for auto-categorizing debit card purchases from Fidelity transaction history.
+
+## How to Add New Patterns
+
+To add a new categorization rule:
+
+1. Identify the merchant name pattern from Fidelity descriptions
+2. Add to the appropriate category section below
+3. Patterns are **case-insensitive**
+4. Use partial matches (e.g., "h-e-b" matches "H-E-B #063 Pearland TX")
+
+---
+
+## Category Patterns
+
+### Groceries
+Supermarkets, grocery stores, food supplies
+
+**Patterns**:
+- `h-e-b`, `heb`
+- `kroger`
+- `costco`
+- `wal-mart`, `walmart`
+- `wholefds`, `whole foods`
+- `makola`
+- `target` (when food context)
+- `sam's club`
+- `aldi`
+- `trader joe`
+
+**Examples**:
+- "H-E-B #063 Pearland TX" -> Groceries
+- "COSTCO WHSE #1 PEARLAND TX" -> Groceries
+- "MAKOLA IMPORTS HOUSTON TX" -> Groceries
+
+---
+
+### Dining Out
+Restaurants, fast food, entertainment dining
+
+**Patterns**:
+- `benihana`
+- `golden corral`
+- `papa john`
+- `chuck e cheese`
+- `wingstop`
+- `cinemark`
+- `mcdonald`
+- `chick-fil-a`
+- `chipotle`
+- `starbucks`
+- `coffee`
+- `restaurant`
+- `grill`
+- `cafe`
+- `makiin`
+- `sparkly photo` (event dining)
+
+**Examples**:
+- "BENIHANA SUGAR LAND" -> Dining Out
+- "TST*MAKIIN Houston TX" -> Dining Out
+- "PAPA JOHN'S #2 PEARLAND TX" -> Dining Out
+
+---
+
+### Auto & Transport
+Vehicle expenses, fuel, parking, transportation
+
+**Patterns**:
+- `tesla`
+- `supercha` (Tesla Supercharger)
+- `parking`
+- `fastpark`
+- `uber`
+- `lyft`
+- `shell`
+- `exxon`
+- `chevron`
+- `valero`
+- `buc-ee`
+- `gas station`
+- `toll`
+
+**Examples**:
+- "Tesla, Inc. SUPERCHA600118984238637" -> Auto & Transport
+- "FASTPARKHOU HOUSTON TX" -> Auto & Transport
+- "Tesla Property Casual Fremont CA" -> Auto & Transport
+
+---
+
+### Personal Care
+Grooming, beauty, self-care
+
+**Patterns**:
+- `salon`
+- `spa`
+- `barber`
+- `sephora`
+- `beauty supply`
+- `supreme beauty`
+- `ulta`
+- `nail`
+- `hair`
+- `shaving grace`
+- `gloss* skin`
+- `cash app*` (often personal transfers)
+
+**Examples**:
+- "K STAR SALON & SPA MANVEL TX" -> Personal Care
+- "A SHAVING GRACE BARBER PEARLAND TX" -> Personal Care
+- "SEPHORA PEACHT PEACHTREE CI GA" -> Personal Care
+
+---
+
+### Health & Wellness
+Medical, pharmacy, fitness
+
+**Patterns**:
+- `cvs`
+- `pharmacy`
+- `walgreens`
+- `life time` (gym)
+- `doctor`
+- `medical`
+- `dental`
+- `clinic`
+- `hospital`
+- `urgent care`
+
+**Examples**:
+- "CVS/PHARMACY # MANVEL TX" -> Health & Wellness
+- "LIFE TIME #320" -> Health & Wellness
+
+---
+
+### Shopping
+Retail, clothing, general merchandise
+
+**Patterns**:
+- `marshalls`
+- `target` (non-food)
+- `amazon`
+- `skims`
+- `tj maxx`
+- `ross`
+- `old navy`
+- `gap`
+- `nordstrom`
+- `macy`
+- `best buy`
+- `apple store`
+
+**Examples**:
+- "MARSHALLS #877 PEARLAND TX" -> Shopping
+- "SP SKIMS CHECKOUT.SKIM CA" -> Shopping
+
+---
+
+### Family Care
+Childcare, family activities, kids
+
+**Patterns**:
+- `aqua tots`
+- `brightwheel`, `brghtwhl`
+- `daycare`
+- `childcare`
+- `school`
+- `kid`
+- `children`
+- `pediatric`
+
+**Examples**:
+- "AQUA TOTS - PEARLAND" -> Family Care
+- "BRGHTWHL R* REDEEMER" -> Family Care
+
+---
+
+### Bills & Utilities
+Recurring bills, subscriptions, utilities
+
+**Patterns**:
+- `autopay`
+- `acctverify`
+- `electric`
+- `water`
+- `internet`
+- `comcast`
+- `att`
+- `verizon`
+- `t-mobile`
+- `netflix`
+- `spotify`
+- `subscription`
+
+**Examples**:
+- "BMO ACCTVERIFY" -> Bills & Utilities
+
+---
+
+### Cash Withdrawal
+ATM and cash transactions
+
+**Patterns**:
+- `atm`
+- `cash withdrawal`
+- `cash advance`
+
+**Examples**:
+- "ATM0043 11555 MAGNOLIA PEARLAND TX" -> Cash Withdrawal
+- "ATMXD10 *SEDONA LAKES MANVEL TX" -> Cash Withdrawal
+
+---
+
+### Tuition
+Education expenses
+
+**Patterns**:
+- `regent univer`
+- `university`
+- `college`
+- `tuition`
+- `school`
+- `education`
+- `coursera`
+- `udemy`
+
+**Examples**:
+- "REGENT UNIVERSPURCHASE" -> Tuition
+
+---
+
+### Business Expense
+Work-related purchases
+
+**Patterns**:
+- `gumroad`
+- `ups`
+- `fedex`
+- `office depot`
+- `staples`
+- `postal`
+- `usps`
+- `business`
+- `linkedin`
+- `zoom`
+
+**Examples**:
+- "GUMROAD* SHAWN GRADY" -> Business Expense
+- "POSTAL COPY CENTER-931 PEARLAND TX" -> Business Expense
+
+---
+
+### Loan Payment
+Debt payments
+
+**Patterns**:
+- `wells fargo` + `draft` or `audraft`
+- `loan payment`
+- `mortgage`
+- `car payment`
+- `student loan`
+- `credit card payment`
+
+**Examples**:
+- "WELLS FARGO AUDRAFT" -> Loan Payment
+
+---
+
+### Home & Garden
+Home improvement, garden, maintenance
+
+**Patterns**:
+- `home depot`
+- `lowes`
+- `sawyer`
+- `smart core`
+- `garden`
+- `hardware`
+- `furniture`
+
+**Examples**:
+- "SAWYER + S* SMART CORE" -> Home & Garden
+
+---
+
+### Crypto Deposit
+Cryptocurrency deposits and transfers
+
+**Patterns**:
+- `btc deposited`
+- `bitcoin`
+- `fidelity crypto`
+- `eth deposited`
+- `crypto`
+
+**Examples**:
+- "0.17713256 BTC deposited" -> Crypto Deposit
+- "Fidelity Crypto® 8449251033" -> Crypto Deposit
+
+---
+
+### Credit Card Payment
+Credit card bill payments
+
+**Patterns**:
+- `applecard`
+- `gsbapayment`
+- `chase payment`
+- `amex payment`
+- `discover payment`
+
+**Examples**:
+- "DIRECT DEBIT APPLECARD GSBAPAYMENT" -> Credit Card Payment
+
+---
+
+### Exempt
+Verification transactions, zero amounts
+
+**Patterns**:
+- `ifacctverify`
+- `verification`
+- Amount = $0.00 or < $1.00
+
+**Examples**:
+- "WELLS FARGO IFACCTVERIFY" -> Exempt
+
+---
+
+## Uncategorized
+
+Any transaction not matching the above patterns is marked as **"Uncategorized"** and flagged for manual review in the sync summary.
+
+**Common uncategorized reasons**:
+- New merchant not in patterns
+- Unusual description format
+- One-time or rare purchase
+
+**To resolve**: Add the pattern to the appropriate category above.
+
+---
+
+## Pattern Matching Algorithm
+
+```python
+def categorize_expense(description: str) -> str:
+    desc = description.lower()
+
+    # Check each category's patterns
+    for category, patterns in CATEGORY_PATTERNS.items():
+        for pattern in patterns:
+            if pattern in desc:
+                return category
+
+    return "Uncategorized"
+
+CATEGORY_PATTERNS = {
+    "Groceries": ["h-e-b", "heb", "kroger", "costco", "wal-mart", "walmart", ...],
+    "Dining Out": ["benihana", "golden corral", "papa john", ...],
+    "Auto & Transport": ["tesla", "supercha", "parking", "fastpark", ...],
+    # ... etc
+}
+```
+
+---
+
+## Extending Categories
+
+When the user wants to add new categories or patterns:
+
+1. **Add to existing category**: Update the patterns list above
+2. **Create new category**: Add a new section with patterns and examples
+3. **Expense Tracker sync**: Ensure the category name matches Budget Planner
+
+**Budget Planner categories** (must match exactly):
+- Groceries
+- Dining Out
+- Auto & Transport
+- Personal Care
+- Health & Wellness
+- Shopping
+- Family Care
+- Bills & Utilities
+- Cash Withdrawal
+- Tuition
+- Business Expense
+- Loan Payment
+- Home & Garden
+- Crypto Deposit
+- Credit Card Payment
+- Exempt
+- Software & Tech
+- Cell Phone
+- Gas
+- Water
+- Light Bill
+- Mortgage
+
+---
+
+**Last Updated**: 2026-01-02
+**Maintainer**: Finance Guru TransactionSyncing skill

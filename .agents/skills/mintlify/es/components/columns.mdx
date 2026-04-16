@@ -1,0 +1,88 @@
+---
+title: "Columnas"
+description: "Organiza tarjetas y otros componentes en un diseño de cuadrícula adaptable multicolumna con el componente columns, incluyendo recuentos de columnas personalizables."
+keywords: ['grupos de tarjetas', 'diseño de cuadrícula', 'diseño multicolumna']
+---
+
+El componente `Columns` te permite organizar contenido en un diseño de cuadrícula adaptable. Se usa con más frecuencia para colocar tarjetas en una cuadrícula, especificando el número de columnas de la cuadrícula. También puedes usar el subcomponente `Column` para envolver contenido arbitrario. Las columnas son adaptables y se ajustan automáticamente en pantallas más pequeñas.
+
+<Columns cols={2}>
+  <Card title="Primeros pasos" icon="rocket">
+    Configura tu proyecto con nuestra guía de inicio rápido.
+  </Card>
+
+  <Card title="Referencia de la API" icon="code">
+    Explora endpoints, parámetros y ejemplos de tu API.
+  </Card>
+</Columns>
+
+```mdx Columns example
+<Columns cols={2}>
+  <Card title="Primeros pasos">
+    Configura tu proyecto con nuestra guía de inicio rápido.
+  </Card>
+  <Card title="Referencia de la API">
+    Explora endpoints, parámetros y ejemplos de tu API.
+  </Card>
+</Columns>
+```
+
+<div id="column-sub-component">
+  ## Subcomponente Column
+</div>
+
+Usa el componente `Column` para envolver texto o código en columnas individuales. Esto es útil cuando deseas mostrar contenido arbitrario lado a lado, no solo tarjetas u otros componentes.
+
+<Columns cols={2}>
+  <Column>
+
+  **Installation**
+
+  ```bash
+  npm install my-package
+  ```
+
+  </Column>
+  <Column>
+
+  **Usage**
+
+  ```javascript
+  import { init } from 'my-package';
+  init();
+  ```
+
+  </Column>
+</Columns>
+
+````mdx Column sub-component example
+<Columns cols={2}>
+  <Column>
+
+  **Installation**
+
+  ```bash
+  npm install my-package
+  ```
+
+  </Column>
+  <Column>
+
+  **Usage**
+
+  ```javascript
+  import { init } from 'my-package';
+  init();
+  ```
+
+  </Column>
+</Columns>
+````
+
+<div id="properties">
+  ## Propiedades
+</div>
+
+<ResponseField name="cols" type="number" default={2}>
+  El número de columnas por fila. Acepta valores de 1 a 4.
+</ResponseField>

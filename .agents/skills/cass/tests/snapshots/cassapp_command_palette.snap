@@ -1,0 +1,40 @@
+╭cass | Dark | Lexical/Standard────────────────────────────────────────────────────────────────────────────────────────╮
+│<type to search>                                                                                                      │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭Results (0)───────────────────────────────────────────────────╮╭Detail [Messages]─────────────────────────────────────╮
+│No results yet. Type a query and press Enter.                 ││Select a result to preview context and metadata.      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                             ╭Command Palette (Ctrl+P)──────────────────────────────────╮                             │
+│                             │Type to filter...               ││                        │                             │
+│                             │──────────────────────────────────────────────────────────│                             │
+│                             │➜ Toggle theme                                        F2  │                             │
+│                             │  Toggle density                                    Ctrl+D│                             │
+│                             │  Toggle help strip                                     F1│                             │
+│                             │  Check updates                      Show update assistant│                             │
+│                             │  Filter: agent                                         F3│                             │
+│                             │  Filter: workspace                                     F4│                             │
+│                             │  Filter: today                          Restrict to today│                             │
+│                             │  Filter: last 7 days                     Restrict to week│                             │
+│                             │  Filter: date range                                    F5│                             │
+│                             │  Bulk actions                                           A│                             │
+│                             │  Reload index/view                           Ctrl+Shift+R│                             │
+│                             │  Saved views                             List saved slots│                             │
+│                             │  Save view to slot 1                               Ctrl+1│                             │
+│                             │  Load view from slot 1                            Shift+1│                             │
+│                             │  Save view to slot 2                               Ctrl+2│                             │
+│                             │  Load view from slot 2                            Shift+2│                             │
+│                             ╰ 30 actions───────────────────────────────────────────────╯                             │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+│                                                              ││                                                      │
+╰──────────────────────────────────────────────────────────────╯╰──────────────────────────────────────────────────────╯
+ 0 hits | mode:fts | [LEX] | med | cozy | F2=theme D=density Ctrl+B=borders                                             

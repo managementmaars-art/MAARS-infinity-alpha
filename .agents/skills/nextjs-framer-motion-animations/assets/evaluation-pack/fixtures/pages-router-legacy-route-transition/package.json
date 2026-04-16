@@ -1,0 +1,10 @@
+{
+  "name": "pages-router-legacy-route-transition",
+  "private": true,
+  "dependencies": {
+    "next": "^15.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "framer-motion": "^11.0.0"
+  }
+}

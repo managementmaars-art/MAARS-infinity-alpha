@@ -1,0 +1,28 @@
+{
+  "routes": [
+    { "src": "/SKILL.md", "dest": "/api/skill?name=monskill" },
+    { "src": "/(scaffold|why-monad|addresses|wallet|wallet-integration|vercel-deploy|gas|concepts|tooling-and-infra)/SKILL.md", "dest": "/api/skill?name=$1" },
+    { "src": "/(scaffold|why-monad|addresses|wallet|wallet-integration|vercel-deploy|gas|concepts|tooling-and-infra)", "dest": "/api/skill?name=$1" }
+  ],
+  "functions": {
+    "api/skill.js": {
+      "includeFiles": "{SKILL.md,*/SKILL.md,*/references/*.md}"
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)\\.md",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.sh",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
+      ]
+    }
+  ]
+}

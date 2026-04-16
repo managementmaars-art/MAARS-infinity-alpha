@@ -1,0 +1,15 @@
+from __future__ import annotations
+
+import pytest
+
+from {{MODULE}} import {{CLASS_NAME}}
+
+@pytest.mark.asyncio
+async def test_settings_save() -> None:
+    app = {{CLASS_NAME}}()
+    async with app.run_test(size=(100, 30)) as pilot:
+        await pilot.click("#project-name")
+        await pilot.press("D", "e", "m", "o")
+        await pilot.click("#save")
+        await pilot.pause()
+        assert app.saved is True

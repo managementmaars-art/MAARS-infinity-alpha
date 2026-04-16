@@ -1,0 +1,15 @@
+{
+  "$schema": "https://example.com/perf-budgets.schema.json",
+  "notes": "Copy to your repo as perf-budgets.json and tune values per app + device targets.",
+  "bundle": {
+    "maxJsBundleBytes": 4000000,
+    "maxTotalAssetsBytes": 15000000,
+    "maxOtaUpdateBytes": 5000000
+  },
+  "kpis": {
+    "coldStartToFirstRenderMs": 1500,
+    "timeToInteractiveMs": 2000,
+    "navigationP95Ms": 500,
+    "memorySteadyStateMb": 350
+  }
+}

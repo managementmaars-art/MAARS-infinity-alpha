@@ -1,0 +1,7 @@
+interface:
+  display_name: "Local Review"
+  short_description: "End-of-session review before commit, push, or handoff"
+  default_prompt: "Use $review-pr to review my current local diff at the end of a coding session. Check for high-confidence bugs, missing validation/tests, and repository instruction-file compliance, then return a local review report before commit, push, or handoff. Keep the default path local-first."
+
+policy:
+  allow_implicit_invocation: false

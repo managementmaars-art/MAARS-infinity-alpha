@@ -1,0 +1,27 @@
+{
+  "name": "@openclaw/reports",
+  "version": "1.0.0",
+  "description": "Generate financial reports (P&L, Balance Sheet, Cash Flow)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc --watch",
+    "cli": "node dist/cli.js",
+    "status": "node dist/cli.js status"
+  },
+  "keywords": ["reports", "financial", "accounting", "pdf", "openclaw", "skill"],
+  "author": "OpenClaw",
+  "license": "MIT",
+  "dependencies": {
+    "@openclaw/quickbooks": "file:../quickbooks",
+    "@openclaw/receipts-ocr": "file:../receipts-ocr",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/sqlite3": "^3.1.11",
+    "typescript": "^5.3.3"
+  }
+}

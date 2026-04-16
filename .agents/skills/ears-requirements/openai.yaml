@@ -1,0 +1,4 @@
+interface:
+  display_name: "EARS Requirements"
+  short_description: "Write structured requirements using EARS syntax"
+  default_prompt: "Convert my requirements into EARS format, label the pattern for each requirement, and flag ambiguity or missing trigger/state/response details."

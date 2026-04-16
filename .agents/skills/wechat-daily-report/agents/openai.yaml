@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Daily Report"
+  short_description: "Generate a WeChat group daily report PNG from local chat data"
+  default_prompt: "Generate a mobile-friendly WeChat group daily report PNG by refreshing local decrypted WeChat data, analyzing the selected group chat, producing ai_content.json from the prompt contract, and rendering the final long image."

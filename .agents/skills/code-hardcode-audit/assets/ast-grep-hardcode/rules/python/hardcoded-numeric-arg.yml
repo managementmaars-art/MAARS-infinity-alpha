@@ -1,0 +1,13 @@
+id: hardcoded-numeric-arg
+language: python
+severity: warning
+message: >-
+  Bare numeric literal in function call argument — extract to named constant.
+note: >-
+  Numeric literals in function calls (timeout=30, retries=3) are magic numbers
+  that should be named constants or config values for maintainability.
+rule:
+  kind: keyword_argument
+  has:
+    kind: integer
+    field: value

@@ -1,0 +1,273 @@
+# Complete GitLab CI/CD pipeline using uv
+# Customize based on your project structure
+
+default:
+  image: python:3.12
+  tags:
+    - docker  # Ensure runner has Docker capability
+
+variables:
+  # Performance optimizations
+  UV_CACHE_DIR: .uv-cache
+  PIP_CACHE_DIR: .pip-cache
+  PYTHONUNBUFFERED: 1
+  FORCE_COLOR: 1
+
+# Cache configuration
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .uv-cache
+    - .pip-cache
+    - .venv
+
+stages:
+  - install
+  - quality
+  - test
+  - security
+  - build
+  - deploy
+
+# ===== BEFORE SCRIPT =====
+# Install uv and set up environment
+before_script:
+  - apt-get update && apt-get install -y curl git
+  - curl -LsSf https://astral.sh/uv/install.sh | sh
+  - export PATH="$HOME/.cargo/bin:$PATH"
+  - uv python install
+  - uv sync --all-extras --dev
+
+# ===== INSTALLATION STAGE =====
+
+install:dependencies:
+  stage: install
+  script:
+    - uv sync --frozen --all-extras --dev
+    - uv tree
+  artifacts:
+    paths:
+      - .venv/
+    expire_in: 1 day
+  cache:
+    paths:
+      - .uv-cache
+      - .venv
+
+# ===== QUALITY STAGE =====
+
+lint:ruff:
+  stage: quality
+  needs: ["install:dependencies"]
+  script:
+    - uv run ruff check src/ tests/
+    - uv run ruff format --check src/ tests/
+  allow_failure: false
+
+type:check:
+  stage: quality
+  needs: ["install:dependencies"]
+  script:
+    - uv run mypy src/ --strict
+  allow_failure: true  # Type errors don't block merge
+
+docs:build:
+  stage: quality
+  image: python:3.12
+  needs: ["install:dependencies"]
+  script:
+    - uv sync --group docs
+    - uv run mkdocs build
+  artifacts:
+    paths:
+      - site/
+    expire_in: 7 days
+  only:
+    - main
+    - merge_requests
+
+# ===== TEST STAGE =====
+
+test:3.11:
+  stage: test
+  image: python:3.11
+  before_script:
+    - apt-get update && apt-get install -y curl
+    - curl -LsSf https://astral.sh/uv/install.sh | sh
+    - export PATH="$HOME/.cargo/bin:$PATH"
+    - uv python install 3.11
+    - uv sync --all-extras --dev
+  script:
+    - uv run pytest --cov=src --cov-report=xml --cov-report=term -v
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    paths:
+      - coverage.xml
+    expire_in: 7 days
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+
+test:3.12:
+  stage: test
+  image: python:3.12
+  needs: ["install:dependencies"]
+  script:
+    - uv run pytest --cov=src --cov-report=xml --cov-report=term -v
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    paths:
+      - coverage.xml
+    expire_in: 7 days
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+
+test:3.13:
+  stage: test
+  image: python:3.13
+  before_script:
+    - apt-get update && apt-get install -y curl
+    - curl -LsSf https://astral.sh/uv/install.sh | sh
+    - export PATH="$HOME/.cargo/bin:$PATH"
+    - uv python install 3.13
+    - uv sync --all-extras --dev
+  script:
+    - uv run pytest --cov=src --cov-report=xml --cov-report=term -v
+  allow_failure: true  # 3.13 is pre-release, don't block
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+
+test:integration:
+  stage: test
+  image: python:3.12
+  needs: ["install:dependencies"]
+  services:
+    - postgres:15
+    - redis:7
+  variables:
+    POSTGRES_DB: test_db
+    POSTGRES_USER: test_user
+    POSTGRES_PASSWORD: test_password
+    DATABASE_URL: postgresql://test_user:test_password@postgres:5432/test_db
+    REDIS_URL: redis://redis:6379/0
+  script:
+    - uv run pytest tests/integration/ -v --tb=short
+  only:
+    - main
+    - merge_requests
+
+# ===== SECURITY STAGE =====
+
+security:audit:
+  stage: security
+  needs: ["install:dependencies"]
+  script:
+    - uv pip audit
+  allow_failure: true
+  only:
+    - main
+    - merge_requests
+
+security:bandit:
+  stage: security
+  needs: ["install:dependencies"]
+  script:
+    - uv run bandit -r src/ -f json -o bandit-report.json
+    - uv run bandit -r src/ -ll -v
+  artifacts:
+    reports:
+      sast: bandit-report.json
+    expire_in: 7 days
+  allow_failure: true
+
+# ===== BUILD STAGE =====
+
+build:package:
+  stage: build
+  needs: ["lint:ruff", "type:check", "test:3.12"]
+  script:
+    - uv build
+    - uv tree --depth 1
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 30 days
+  only:
+    - main
+    - tags
+    - merge_requests
+
+# ===== DEPLOY STAGE =====
+
+publish:pypi:
+  stage: deploy
+  needs: ["build:package"]
+  script:
+    - uv publish
+  only:
+    - tags
+  environment:
+    name: pypi
+    url: https://pypi.org/project/$CI_PROJECT_NAME/
+  when: manual  # Require explicit approval
+
+publish:test-pypi:
+  stage: deploy
+  needs: ["build:package"]
+  script:
+    - uv publish --index-url https://test.pypi.org/legacy/
+  environment:
+    name: test-pypi
+    url: https://test.pypi.org/project/$CI_PROJECT_NAME/
+  only:
+    - merge_requests
+    - main
+  when: manual
+
+deploy:docker:
+  stage: deploy
+  image: docker:24
+  services:
+    - docker:24-dind
+  needs: ["build:package"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker build --build-arg VERSION=$CI_COMMIT_TAG -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - tags
+    - main
+  environment:
+    name: production
+    url: https://example.com
+
+# ===== SCHEDULED JOBS =====
+
+scheduled:dependency-update:
+  stage: quality
+  script:
+    - uv lock --upgrade
+  only:
+    - schedules
+  when: always
+
+scheduled:security-scan:
+  stage: security
+  script:
+    - uv pip audit
+    - uv run bandit -r src/
+  only:
+    - schedules
+  allow_failure: true

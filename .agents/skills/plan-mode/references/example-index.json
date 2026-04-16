@@ -1,0 +1,24 @@
+{
+  "plans": [
+    {
+      "plan_id": "PLAN-20260314-001",
+      "title": "登录鉴权改造计划",
+      "path": ".plan/current/2026-03-14-登录鉴权改造计划.md",
+      "status": "待审核",
+      "updated_at": "2026-03-14T21:45:00+08:00",
+      "parent_plan_id": null,
+      "children": [
+        "SUB-20260314-01"
+      ]
+    },
+    {
+      "plan_id": "SUB-20260314-01",
+      "title": "接口梳理子计划",
+      "path": ".plan/current/2026-03-14-登录鉴权改造计划/01-接口梳理子计划.md",
+      "status": "待审核",
+      "updated_at": "2026-03-14T21:46:00+08:00",
+      "parent_plan_id": "PLAN-20260314-001",
+      "children": []
+    }
+  ]
+}

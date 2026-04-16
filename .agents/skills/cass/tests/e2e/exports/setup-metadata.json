@@ -1,0 +1,87 @@
+{
+  "startedAt": "2026-01-27T23:00:47.405Z",
+  "finishedAt": "2026-01-27T23:00:56.958Z",
+  "durationMs": 9553,
+  "node": "v25.2.1",
+  "platform": "linux",
+  "arch": "x64",
+  "projectRoot": "/data/projects/coding_agent_session_search",
+  "exportDir": "/data/projects/coding_agent_session_search/tests/e2e/exports",
+  "fixturesDir": "/data/projects/coding_agent_session_search/tests/fixtures/html_export/real_sessions",
+  "cassPath": "/data/projects/coding_agent_session_search/target/release/cass",
+  "exports": [
+    {
+      "name": "test-basic",
+      "fixture": "claude_code_auth_fix.jsonl",
+      "outputPath": "/data/projects/coding_agent_session_search/tests/e2e/exports/test-basic.html",
+      "args": [],
+      "command": "/data/projects/coding_agent_session_search/target/release/cass export-html /data/projects/coding_agent_session_search/tests/fixtures/html_export/real_sessions/claude_code_auth_fix.jsonl --output-dir /data/projects/coding_agent_session_search/tests/e2e/exports --filename test-basic.html",
+      "success": true,
+      "durationMs": 28,
+      "stdout": "✓ Exported to /data/projects/coding_agent_session_search/tests/e2e/exports/test-basic.html\n  21 messages, 136572 bytes\n"
+    },
+    {
+      "name": "test-encrypted",
+      "fixture": "claude_code_auth_fix.jsonl",
+      "outputPath": "/data/projects/coding_agent_session_search/tests/e2e/exports/test-encrypted.html",
+      "args": [
+        "--encrypt",
+        "--password",
+        "test-password-123"
+      ],
+      "command": "/data/projects/coding_agent_session_search/target/release/cass export-html /data/projects/coding_agent_session_search/tests/fixtures/html_export/real_sessions/claude_code_auth_fix.jsonl --output-dir /data/projects/coding_agent_session_search/tests/e2e/exports --filename test-encrypted.html --encrypt --password test-password-123",
+      "success": true,
+      "durationMs": 439,
+      "stdout": "✓ Exported to /data/projects/coding_agent_session_search/tests/e2e/exports/test-encrypted.html\n  🔒 Encrypted with Web Crypto (AES-256-GCM)\n  21 messages, 154402 bytes\n"
+    },
+    {
+      "name": "test-tool-calls",
+      "fixture": "cursor_refactoring.jsonl",
+      "outputPath": "/data/projects/coding_agent_session_search/tests/e2e/exports/test-tool-calls.html",
+      "args": [],
+      "command": "/data/projects/coding_agent_session_search/target/release/cass export-html /data/projects/coding_agent_session_search/tests/fixtures/html_export/real_sessions/cursor_refactoring.jsonl --output-dir /data/projects/coding_agent_session_search/tests/e2e/exports --filename test-tool-calls.html",
+      "success": true,
+      "durationMs": 25,
+      "stdout": "✓ Exported to /data/projects/coding_agent_session_search/tests/e2e/exports/test-tool-calls.html\n  20 messages, 145020 bytes\n"
+    },
+    {
+      "name": "test-large",
+      "fixture": "../edge_cases/large_session.jsonl",
+      "outputPath": "/data/projects/coding_agent_session_search/tests/e2e/exports/test-large.html",
+      "args": [],
+      "command": "/data/projects/coding_agent_session_search/target/release/cass export-html /data/projects/coding_agent_session_search/tests/fixtures/html_export/edge_cases/large_session.jsonl --output-dir /data/projects/coding_agent_session_search/tests/e2e/exports --filename test-large.html",
+      "success": true,
+      "durationMs": 43,
+      "stdout": "✓ Exported to /data/projects/coding_agent_session_search/tests/e2e/exports/test-large.html\n  1001 messages, 762406 bytes\n"
+    },
+    {
+      "name": "test-unicode",
+      "fixture": "../edge_cases/unicode_heavy.jsonl",
+      "outputPath": "/data/projects/coding_agent_session_search/tests/e2e/exports/test-unicode.html",
+      "args": [],
+      "command": "/data/projects/coding_agent_session_search/target/release/cass export-html /data/projects/coding_agent_session_search/tests/fixtures/html_export/edge_cases/unicode_heavy.jsonl --output-dir /data/projects/coding_agent_session_search/tests/e2e/exports --filename test-unicode.html",
+      "success": true,
+      "durationMs": 24,
+      "stdout": "✓ Exported to /data/projects/coding_agent_session_search/tests/e2e/exports/test-unicode.html\n  9 messages, 113772 bytes\n"
+    },
+    {
+      "name": "test-no-cdn",
+      "fixture": "claude_code_auth_fix.jsonl",
+      "outputPath": "/data/projects/coding_agent_session_search/tests/e2e/exports/test-no-cdn.html",
+      "args": [
+        "--no-cdns"
+      ],
+      "command": "/data/projects/coding_agent_session_search/target/release/cass export-html /data/projects/coding_agent_session_search/tests/fixtures/html_export/real_sessions/claude_code_auth_fix.jsonl --output-dir /data/projects/coding_agent_session_search/tests/e2e/exports --filename test-no-cdn.html --no-cdns",
+      "success": true,
+      "durationMs": 24,
+      "stdout": "✓ Exported to /data/projects/coding_agent_session_search/tests/e2e/exports/test-no-cdn.html\n  21 messages, 134127 bytes\n"
+    }
+  ],
+  "pagesPreview": {
+    "port": 8090,
+    "siteDir": "/data/projects/coding_agent_session_search/tests/e2e/pages_preview/bundle",
+    "url": "",
+    "pid": "521852",
+    "log": "/data/projects/coding_agent_session_search/tests/e2e/pages_preview/preview-server.log"
+  }
+}

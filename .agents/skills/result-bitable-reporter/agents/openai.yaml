@@ -1,0 +1,4 @@
+interface:
+  display_name: "Result Bitable Reporter"
+  short_description: "Sync SQLite capture results to Feishu Bitable."
+  default_prompt: "Run collection into SQLite, filter capture results, report to Feishu Bitable, and write back reported status."

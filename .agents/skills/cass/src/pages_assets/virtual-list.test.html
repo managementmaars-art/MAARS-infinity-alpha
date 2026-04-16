@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual List Tests</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #0f172a;
+            color: #f1f5f9;
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #1e293b;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        h1 { color: #f1f5f9; }
+        h2 { color: #94a3b8; margin-bottom: 10px; }
+        .test-container {
+            height: 400px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 4px;
+            overflow: auto;
+            margin-top: 10px;
+        }
+        .test-item {
+            padding: 16px;
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            box-sizing: border-box;
+        }
+        .test-item:hover {
+            background: #475569;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #334155;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .pass { color: #22c55e; }
+        .fail { color: #ef4444; }
+        .info { color: #3b82f6; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        button:hover { background: #2563eb; }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .metric {
+            padding: 10px;
+            background: #0f172a;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Virtual List Component Tests</h1>
+
+    <!-- Test 1: Fixed Height Virtual List -->
+    <div class="test-section">
+        <h2>Test 1: Fixed Height Virtual List (10,000 items)</h2>
+        <p>This tests rendering 10,000 items with fixed height. Only visible items should be in the DOM.</p>
+        <div id="test1-container" class="test-container"></div>
+        <div class="metrics" id="test1-metrics"></div>
+        <button onclick="runTest1()">Run Test</button>
+        <button onclick="scrollTest1()">Scroll to Middle</button>
+        <div id="test1-results" class="results"></div>
+    </div>
+
+    <!-- Test 2: Variable Height Virtual List -->
+    <div class="test-section">
+        <h2>Test 2: Variable Height Virtual List (1,000 messages)</h2>
+        <p>This tests rendering variable height messages, similar to conversation view.</p>
+        <div id="test2-container" class="test-container"></div>
+        <div class="metrics" id="test2-metrics"></div>
+        <button onclick="runTest2()">Run Test</button>
+        <button onclick="scrollTest2()">Scroll to Message 500</button>
+        <div id="test2-results" class="results"></div>
+    </div>
+
+    <!-- Test 3: Performance Benchmark -->
+    <div class="test-section">
+        <h2>Test 3: Performance Benchmark</h2>
+        <p>Measures render time, scroll performance, and memory usage.</p>
+        <button onclick="runPerformanceTest()">Run Performance Test</button>
+        <div id="test3-results" class="results"></div>
+    </div>
+
+    <!-- Test 4: Stress Test -->
+    <div class="test-section">
+        <h2>Test 4: Stress Test (100,000 items)</h2>
+        <p>Tests the component with extreme data volumes.</p>
+        <div id="test4-container" class="test-container"></div>
+        <button onclick="runStressTest()">Run Stress Test</button>
+        <div id="test4-results" class="results"></div>
+    </div>
+
+    <script type="module">
+        import { VirtualList, VariableHeightVirtualList } from './virtual-list.js';
+
+        // Make functions available globally for button onclick
+        window.VirtualList = VirtualList;
+        window.VariableHeightVirtualList = VariableHeightVirtualList;
+
+        let test1List = null;
+        let test2List = null;
+        let test4List = null;
+
+        // Test 1: Fixed Height Virtual List
+        window.runTest1 = function() {
+            const container = document.getElementById('test1-container');
+            const results = document.getElementById('test1-results');
+            const metrics = document.getElementById('test1-metrics');
+            const ITEM_COUNT = 10000;
+            const ITEM_HEIGHT = 50;
+
+            results.innerHTML = '<span class="info">Starting test...</span>\n';
+
+            // Clean up previous test
+            if (test1List) {
+                test1List.destroy();
+            }
+
+            const startTime = performance.now();
+
+            test1List = new VirtualList({
+                container,
+                itemHeight: ITEM_HEIGHT,
+                totalCount: ITEM_COUNT,
+                renderItem: (index) => {
+                    const div = document.createElement('div');
+                    div.className = 'test-item';
+                    div.textContent = `Item ${index + 1} of ${ITEM_COUNT}`;
+                    return div;
+                },
+                overscan: 3
+            });
+
+            const initTime = performance.now() - startTime;
+            const domNodeCount = container.querySelectorAll('.test-item').length;
+            const listMetrics = test1List.getMetrics();
+
+            // Update metrics display
+            metrics.innerHTML = `
+                <div class="metric">
+                    <div class="metric-value">${initTime.toFixed(2)}ms</div>
+                    <div class="metric-label">Init Time</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">${domNodeCount}</div>
+                    <div class="metric-label">DOM Nodes</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">${ITEM_COUNT}</div>
+                    <div class="metric-label">Total Items</div>
+                </div>
+            `;
+
+            // Validate results
+            let output = '';
+            output += `<span class="pass">✓</span> Init time: ${initTime.toFixed(2)}ms\n`;
+            output += initTime < 100
+                ? `<span class="pass">✓</span> Init time under 100ms\n`
+                : `<span class="fail">✗</span> Init time exceeded 100ms\n`;
+            output += domNodeCount < 30
+                ? `<span class="pass">✓</span> Only ${domNodeCount} DOM nodes rendered (expected < 30)\n`
+                : `<span class="fail">✗</span> Too many DOM nodes: ${domNodeCount}\n`;
+            output += `<span class="info">ℹ</span> Metrics: ${JSON.stringify(listMetrics)}\n`;
+
+            results.innerHTML = output;
+        };
+
+        window.scrollTest1 = function() {
+            if (test1List) {
+                test1List.scrollToIndex(5000, 'center');
+            }
+        };
+
+        // Test 2: Variable Height Virtual List
+        window.runTest2 = function() {
+            const container = document.getElementById('test2-container');
+            const results = document.getElementById('test2-results');
+            const metrics = document.getElementById('test2-metrics');
+            const MESSAGE_COUNT = 1000;
+
+            results.innerHTML = '<span class="info">Starting test...</span>\n';
+
+            // Generate mock messages with varying lengths
+            const messages = Array.from({ length: MESSAGE_COUNT }, (_, i) => ({
+                id: i,
+                role: i % 2 === 0 ? 'user' : 'assistant',
+                content: generateContent(i)
+            }));
+
+            // Clean up previous test
+            if (test2List) {
+                test2List.destroy();
+            }
+
+            const startTime = performance.now();
+
+            test2List = new VariableHeightVirtualList({
+                container,
+                totalCount: MESSAGE_COUNT,
+                estimatedItemHeight: 120,
+                renderItem: (index) => {
+                    const msg = messages[index];
+                    const div = document.createElement('div');
+                    div.className = `test-item message-${msg.role}`;
+                    div.style.borderLeft = msg.role === 'user' ? '3px solid #3b82f6' : '3px solid #22c55e';
+                    div.innerHTML = `
+                        <strong>${msg.role === 'user' ? 'User' : 'Assistant'} (${index + 1})</strong>
+                        <p>${msg.content}</p>
+                    `;
+                    return div;
+                },
+                overscan: 3
+            });
+
+            const initTime = performance.now() - startTime;
+            const domNodeCount = container.querySelectorAll('.test-item').length;
+
+            // Update metrics display
+            metrics.innerHTML = `
+                <div class="metric">
+                    <div class="metric-value">${initTime.toFixed(2)}ms</div>
+                    <div class="metric-label">Init Time</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">${domNodeCount}</div>
+                    <div class="metric-label">DOM Nodes</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">${MESSAGE_COUNT}</div>
+                    <div class="metric-label">Total Messages</div>
+                </div>
+            `;
+
+            let output = '';
+            output += `<span class="pass">✓</span> Init time: ${initTime.toFixed(2)}ms\n`;
+            output += `<span class="pass">✓</span> ${domNodeCount} DOM nodes rendered\n`;
+            output += `<span class="info">ℹ</span> Variable height messages with estimated heights\n`;
+
+            results.innerHTML = output;
+        };
+
+        window.scrollTest2 = function() {
+            if (test2List) {
+                test2List.scrollToIndex(500, 'center');
+            }
+        };
+
+        // Test 3: Performance Benchmark
+        window.runPerformanceTest = function() {
+            const results = document.getElementById('test3-results');
+            results.innerHTML = '<span class="info">Running performance benchmarks...</span>\n';
+
+            const benchmarks = [];
+
+            // Benchmark 1: Initial render time for 10K items
+            {
+                const container = document.createElement('div');
+                container.style.height = '400px';
+                container.style.overflow = 'auto';
+                document.body.appendChild(container);
+
+                const start = performance.now();
+                const list = new VirtualList({
+                    container,
+                    itemHeight: 50,
+                    totalCount: 10000,
+                    renderItem: (i) => {
+                        const div = document.createElement('div');
+                        div.textContent = `Item ${i}`;
+                        return div;
+                    }
+                });
+                const elapsed = performance.now() - start;
+
+                benchmarks.push({
+                    name: '10K items init',
+                    time: elapsed,
+                    pass: elapsed < 16 // One frame budget
+                });
+
+                list.destroy();
+                container.remove();
+            }
+
+            // Benchmark 2: Scroll performance (100 scroll events)
+            {
+                const container = document.createElement('div');
+                container.style.height = '400px';
+                container.style.overflow = 'auto';
+                document.body.appendChild(container);
+
+                const list = new VirtualList({
+                    container,
+                    itemHeight: 50,
+                    totalCount: 100000,
+                    renderItem: (i) => {
+                        const div = document.createElement('div');
+                        div.textContent = `Item ${i}`;
+                        return div;
+                    }
+                });
+
+                const frameTimes = [];
+                const scrollPositions = Array.from({ length: 100 }, (_, i) => i * 500);
+
+                for (const pos of scrollPositions) {
+                    const start = performance.now();
+                    container.scrollTop = pos;
+                    // Synchronous reflow to measure
+                    container.offsetHeight;
+                    frameTimes.push(performance.now() - start);
+                }
+
+                const avgFrameTime = frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
+                const p95 = frameTimes.sort((a, b) => a - b)[95];
+
+                benchmarks.push({
+                    name: 'Scroll avg frame',
+                    time: avgFrameTime,
+                    pass: avgFrameTime < 16
+                });
+
+                benchmarks.push({
+                    name: 'Scroll P95',
+                    time: p95,
+                    pass: p95 < 16
+                });
+
+                list.destroy();
+                container.remove();
+            }
+
+            // Display results
+            let output = '<span class="info">Performance Benchmark Results:</span>\n\n';
+            for (const b of benchmarks) {
+                const status = b.pass ? '<span class="pass">✓ PASS</span>' : '<span class="fail">✗ FAIL</span>';
+                output += `${status} ${b.name}: ${b.time.toFixed(3)}ms\n`;
+            }
+
+            const allPassed = benchmarks.every(b => b.pass);
+            output += `\n${allPassed ? '<span class="pass">All benchmarks passed!</span>' : '<span class="fail">Some benchmarks failed</span>'}`;
+
+            results.innerHTML = output;
+        };
+
+        // Test 4: Stress Test
+        window.runStressTest = function() {
+            const container = document.getElementById('test4-container');
+            const results = document.getElementById('test4-results');
+            const ITEM_COUNT = 100000;
+
+            results.innerHTML = '<span class="info">Starting stress test with 100,000 items...</span>\n';
+
+            // Clean up previous test
+            if (test4List) {
+                test4List.destroy();
+            }
+
+            const startTime = performance.now();
+
+            test4List = new VirtualList({
+                container,
+                itemHeight: 40,
+                totalCount: ITEM_COUNT,
+                renderItem: (index) => {
+                    const div = document.createElement('div');
+                    div.className = 'test-item';
+                    div.style.height = '40px';
+                    div.style.padding = '8px';
+                    div.textContent = `Record ${(index + 1).toLocaleString()} of ${ITEM_COUNT.toLocaleString()}`;
+                    return div;
+                },
+                overscan: 5
+            });
+
+            const initTime = performance.now() - startTime;
+            const domNodeCount = container.querySelectorAll('.test-item').length;
+            const listMetrics = test4List.getMetrics();
+
+            let output = '';
+            output += `<span class="pass">✓</span> Init time: ${initTime.toFixed(2)}ms\n`;
+            output += `<span class="pass">✓</span> DOM nodes: ${domNodeCount} (target: < 30)\n`;
+            output += `<span class="info">ℹ</span> Total height: ${(ITEM_COUNT * 40).toLocaleString()}px\n`;
+            output += `<span class="info">ℹ</span> Metrics: creates=${listMetrics.created}, recycles=${listMetrics.recycled}\n`;
+
+            if (initTime < 50 && domNodeCount < 30) {
+                output += `\n<span class="pass">Stress test PASSED - handles 100K items efficiently!</span>`;
+            } else {
+                output += `\n<span class="fail">Stress test needs optimization</span>`;
+            }
+
+            results.innerHTML = output;
+        };
+
+        // Helper: Generate varied message content
+        function generateContent(index) {
+            const lengths = [50, 100, 200, 400, 800];
+            const targetLen = lengths[index % lengths.length];
+            const words = ['Lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit'];
+            let content = '';
+            while (content.length < targetLen) {
+                content += words[Math.floor(Math.random() * words.length)] + ' ';
+            }
+            return content.trim();
+        }
+    </script>
+</body>
+</html>

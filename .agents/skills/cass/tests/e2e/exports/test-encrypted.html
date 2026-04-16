@@ -1,0 +1,4173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <meta name="generator" content="CASS HTML Export">
+    <title>I&#39;m having issues with JWT token refresh. The tokens expire and users get logged</title>
+    <!-- Critical inline styles for offline operation -->
+    <style>
+/* ============================================
+   CSS Custom Properties - Tokyo Night Palette
+   World-class design system inspired by Stripe
+   ============================================ */
+:root {
+    /* Background layers - creates visual depth */
+    --bg-deep: #1a1b26;
+    --bg-surface: #24283b;
+    --bg-elevated: #292e42;
+    --bg-overlay: rgba(26, 27, 38, 0.97);
+    --bg-frosted: rgba(36, 40, 59, 0.85);
+
+    /* Borders - subtle definition */
+    --border: #3b4261;
+    --border-subtle: rgba(59, 66, 97, 0.5);
+    --border-hover: #7d91c8;
+    --border-focus: #7aa2f7;
+
+    /* Text hierarchy */
+    --text-primary: #c0caf5;
+    --text-secondary: #a9b1d6;
+    --text-muted: #696e9e;
+    --text-disabled: #444b6a;
+    --text-inverse: #1a1b26;
+
+    /* Accent colors for interactive elements */
+    --accent: #7aa2f7;
+    --accent-hover: #8cb4f8;
+    --accent-pressed: #6992e5;
+    --accent-muted: rgba(122, 162, 247, 0.15);
+    --accent-secondary: #bb9af7;
+    --accent-tertiary: #7dcfff;
+
+    /* Role-specific colors - conversation participants */
+    --role-user: #9ece6a;
+    --role-user-bg: #1a201e;
+    --role-user-glow: rgba(158, 206, 106, 0.12);
+    --role-user-border: rgba(158, 206, 106, 0.25);
+
+    --role-agent: #7aa2f7;
+    --role-agent-bg: #1a1c24;
+    --role-agent-glow: rgba(122, 162, 247, 0.12);
+    --role-agent-border: rgba(122, 162, 247, 0.25);
+
+    --role-tool: #ff9e64;
+    --role-tool-bg: #201c1a;
+    --role-tool-glow: rgba(255, 158, 100, 0.12);
+    --role-tool-border: rgba(255, 158, 100, 0.25);
+
+    --role-system: #e0af68;
+    --role-system-bg: #201e1a;
+    --role-system-glow: rgba(224, 175, 104, 0.12);
+    --role-system-border: rgba(224, 175, 104, 0.25);
+
+    /* Status colors with borders */
+    --success: #73daca;
+    --success-bg: rgba(115, 218, 202, 0.1);
+    --success-border: rgba(115, 218, 202, 0.25);
+    --warning: #e0af68;
+    --warning-bg: rgba(224, 175, 104, 0.1);
+    --warning-border: rgba(224, 175, 104, 0.25);
+    --error: #f7768e;
+    --error-bg: rgba(247, 118, 142, 0.1);
+    --error-border: rgba(247, 118, 142, 0.25);
+    --info: #7dcfff;
+    --info-bg: rgba(125, 207, 255, 0.1);
+    --info-border: rgba(125, 207, 255, 0.25);
+
+    /* Shadows - Stripe-inspired layered depth */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-glow: 0 0 20px rgba(122, 162, 247, 0.2);
+    --shadow-glow-lg: 0 0 40px rgba(122, 162, 247, 0.15);
+    --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+    --shadow-ring: 0 0 0 3px rgba(122, 162, 247, 0.15);
+    --shadow-ring-error: 0 0 0 3px rgba(247, 118, 142, 0.15);
+    --shadow-ring-success: 0 0 0 3px rgba(115, 218, 202, 0.15);
+
+    /* Timing functions - buttery smooth */
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --spring-bouncy: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Duration scale */
+    --duration-fast: 150ms;
+    --duration-normal: 250ms;
+    --duration-slow: 400ms;
+
+    /* Spacing scale - 4px base grid */
+    --space-0: 0;
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 4rem;
+
+    /* Border radius */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 18px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+
+    /* Z-index layers */
+    --z-base: 0;
+    --z-raised: 10;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-overlay: 250;
+    --z-modal: 300;
+    --z-toast: 400;
+    --z-tooltip: 500;
+
+    /* Typography scale - fluid sizing */
+    --text-xs: clamp(0.6875rem, 0.65rem + 0.1vw, 0.75rem);
+    --text-sm: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+    --text-base: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
+    --text-lg: clamp(1.0625rem, 1rem + 0.2vw, 1.125rem);
+    --text-xl: clamp(1.1875rem, 1.1rem + 0.3vw, 1.25rem);
+    --text-2xl: clamp(1.375rem, 1.2rem + 0.5vw, 1.5rem);
+    --text-3xl: clamp(1.625rem, 1.4rem + 0.8vw, 1.875rem);
+    --text-4xl: clamp(1.875rem, 1.6rem + 1vw, 2.25rem);
+
+    /* Line heights */
+    --leading-tight: 1.25;
+    --leading-snug: 1.375;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 1.75;
+
+    /* Content widths */
+    --content-width: min(900px, 100% - var(--space-8));
+    --content-width-lg: min(1100px, 100% - var(--space-10));
+}
+
+/* ============================================
+   Reset & Base Styles - Stripe-level Foundation
+   ============================================ */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--space-20);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
+                 'Segoe UI Variable', 'Segoe UI', system-ui, Roboto,
+                 'Helvetica Neue', Arial, sans-serif;
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    color: var(--text-primary);
+    background: var(--bg-deep);
+    background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(122, 162, 247, 0.03), transparent);
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+/* Elegant scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border: 2px solid var(--bg-deep);
+    border-radius: var(--radius-full);
+    transition: background var(--duration-fast) var(--ease-out-expo);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--border-hover);
+}
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+/* Selection styling */
+::selection {
+    background: var(--accent);
+    color: var(--text-inverse);
+}
+
+/* Image handling */
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Form elements inherit fonts */
+input, button, textarea, select {
+    font: inherit;
+    color: inherit;
+}
+
+/* Remove button styling */
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Links base */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* ============================================
+   Typography - Stripe-level Perfect Hierarchy
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 650;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+    text-wrap: balance;
+}
+
+h1 {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+h2 {
+    font-size: var(--text-3xl);
+    letter-spacing: -0.025em;
+}
+h3 {
+    font-size: var(--text-2xl);
+}
+h4 {
+    font-size: var(--text-xl);
+}
+h5 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+}
+h6 {
+    font-size: var(--text-base);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+p {
+    margin-bottom: var(--space-md);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+    text-wrap: pretty;
+}
+
+p:last-child {
+    margin-bottom: 0;
+}
+
+/* Links with smooth transitions */
+.message-content a,
+a.link {
+    color: var(--accent);
+    text-decoration: none;
+    background-image: linear-gradient(var(--accent-muted), var(--accent-muted));
+    background-size: 100% 2px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    padding-bottom: 1px;
+    transition: color var(--duration-fast) var(--ease-out-expo),
+                background-size var(--duration-fast) var(--ease-out-expo);
+}
+
+.message-content a:hover,
+a.link:hover {
+    color: var(--accent-hover);
+    background-size: 100% 100%;
+}
+
+strong, b {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+em, i {
+    font-style: italic;
+}
+
+small {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+}
+
+/* Monospace font stack with ligatures */
+code, pre, .mono, kbd {
+    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Cascadia Code',
+                 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+    font-feature-settings: 'liga' 1, 'calt' 1, 'zero' 1;
+    font-variant-ligatures: common-ligatures;
+}
+
+/* Lists */
+ul, ol {
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-md);
+}
+
+li {
+    margin-bottom: var(--space-2);
+    line-height: var(--leading-relaxed);
+}
+
+li::marker {
+    color: var(--text-muted);
+}
+
+/* Blockquotes */
+blockquote {
+    margin: var(--space-md) 0;
+    padding: var(--space-md) var(--space-lg);
+    border-left: 3px solid var(--accent);
+    background: var(--bg-elevated);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+/* Horizontal rule */
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: var(--space-xl) 0;
+}
+
+
+/* ============================================
+   Layout - Container & Structure
+   ============================================ */
+#app {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-md);
+    min-height: 100vh;
+}
+
+/* Glass morphism effect for elevated surfaces */
+.glass {
+    background: rgba(36, 40, 59, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(59, 66, 97, 0.5);
+}
+
+
+/* ============================================
+   Header - Session Metadata
+   ============================================ */
+.header {
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+}
+
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
+    opacity: 0.5;
+}
+
+.title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 var(--space-sm);
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.agent-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--role-agent-bg);
+    border: 1px solid var(--role-agent);
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: var(--role-agent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.2s var(--ease-out-expo);
+}
+
+.agent-badge:hover {
+    background: var(--role-agent);
+    color: var(--bg-deep);
+    box-shadow: var(--shadow-glow);
+}
+
+/* Agent-specific badge colors */
+.agent-claude { border-color: #7aa2f7; color: #7aa2f7; }
+.agent-codex { border-color: #9ece6a; color: #9ece6a; }
+.agent-cursor { border-color: #bb9af7; color: #bb9af7; }
+.agent-chatgpt { border-color: #73daca; color: #73daca; }
+.agent-gemini { border-color: #7dcfff; color: #7dcfff; }
+.agent-aider { border-color: #ff9e64; color: #ff9e64; }
+
+.workspace {
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-sm);
+    font-family: monospace;
+    font-size: 0.75rem;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* ============================================
+   Toolbar - Actions & Controls
+   ============================================ */
+.toolbar {
+    position: sticky;
+    top: var(--space-md);
+    z-index: var(--z-sticky);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.toolbar-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    margin: 0 var(--space-sm);
+}
+
+.toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s var(--ease-out-expo);
+    position: relative;
+}
+
+.toolbar-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--accent);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.2s var(--ease-out-expo);
+}
+
+.toolbar-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--border);
+    background: var(--bg-elevated);
+}
+
+.toolbar-btn:hover::before {
+    opacity: 0.1;
+    transform: scale(1);
+}
+
+.toolbar-btn:active {
+    transform: scale(0.95);
+}
+
+.toolbar-btn .icon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Tooltip on hover */
+.toolbar-btn[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s var(--ease-out-expo);
+    box-shadow: var(--shadow-md);
+    z-index: var(--z-tooltip);
+}
+
+.toolbar-btn[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+
+/* ============================================
+   Messages - Stripe-level Conversation Flow
+   ============================================ */
+.conversation {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+/* Staggered entrance animation */
+.conversation .message:nth-child(1) { animation-delay: 0ms; }
+.conversation .message:nth-child(2) { animation-delay: 50ms; }
+.conversation .message:nth-child(3) { animation-delay: 100ms; }
+.conversation .message:nth-child(4) { animation-delay: 150ms; }
+.conversation .message:nth-child(5) { animation-delay: 200ms; }
+.conversation .message:nth-child(n+6) { animation-delay: 250ms; }
+
+.message {
+    position: relative;
+    padding: var(--space-6);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-xs);
+    transition: transform var(--duration-normal) var(--ease-out-expo),
+                box-shadow var(--duration-normal) var(--ease-out-expo),
+                border-color var(--duration-fast) var(--ease-out-expo);
+    animation: messageSlideIn 0.5s var(--ease-out-expo) backwards;
+    will-change: transform;
+}
+
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Accent bar on the left */
+.message::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: var(--space-4);
+    bottom: var(--space-4);
+    width: 3px;
+    border-radius: var(--radius-full);
+    opacity: 0.8;
+    transition: opacity var(--duration-fast) var(--ease-out-expo),
+                transform var(--duration-fast) var(--ease-out-expo);
+}
+
+/* Subtle inner glow on hover */
+.message::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
+}
+
+.message:hover {
+    border-color: var(--border);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.message:hover::before {
+    opacity: 1;
+    transform: scaleY(1.1);
+}
+
+.message:hover::after {
+    opacity: 1;
+}
+
+/* Target/anchor highlighting */
+.message:target {
+    animation: messageHighlight 2s var(--ease-out-expo);
+}
+
+@keyframes messageHighlight {
+    0%, 30% {
+        box-shadow: var(--shadow-ring), var(--shadow-md);
+    }
+}
+
+/* ─────────────────────────────────────────
+   Role-specific styling - Visual Identity
+   ───────────────────────────────────────── */
+.message-user {
+    background: var(--role-user-bg);
+    border-color: var(--role-user-border);
+}
+.message-user::before {
+    background: var(--role-user);
+}
+.message-user::after {
+    background: radial-gradient(ellipse at top left, var(--role-user-glow), transparent 70%);
+}
+.message-user:hover {
+    border-color: rgba(158, 206, 106, 0.4);
+}
+
+.message-assistant, .message-agent {
+    background: var(--role-agent-bg);
+    border-color: var(--role-agent-border);
+}
+.message-assistant::before, .message-agent::before {
+    background: var(--role-agent);
+}
+.message-assistant::after, .message-agent::after {
+    background: radial-gradient(ellipse at top left, var(--role-agent-glow), transparent 70%);
+}
+.message-assistant:hover, .message-agent:hover {
+    border-color: rgba(122, 162, 247, 0.4);
+}
+
+.message-tool {
+    background: var(--role-tool-bg);
+    border-color: var(--role-tool-border);
+}
+.message-tool::before {
+    background: var(--role-tool);
+}
+.message-tool::after {
+    background: radial-gradient(ellipse at top left, var(--role-tool-glow), transparent 70%);
+}
+.message-tool:hover {
+    border-color: rgba(255, 158, 100, 0.4);
+}
+
+.message-system {
+    background: var(--role-system-bg);
+    border-color: var(--role-system-border);
+}
+.message-system::before {
+    background: var(--role-system);
+}
+.message-system::after {
+    background: radial-gradient(ellipse at top left, var(--role-system-glow), transparent 70%);
+}
+.message-system:hover {
+    border-color: rgba(224, 175, 104, 0.4);
+}
+
+/* ─────────────────────────────────────────
+   Message Header - Author & Timestamp
+   ───────────────────────────────────────── */
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+/* Role icon styling */
+.role-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+    background: var(--bg-elevated);
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+}
+
+.message-user .role-icon { background: var(--role-user-glow); }
+.message-assistant .role-icon, .message-agent .role-icon { background: var(--role-agent-glow); }
+.message-tool .role-icon { background: var(--role-tool-glow); }
+.message-system .role-icon { background: var(--role-system-glow); }
+
+.message-author {
+    font-weight: 600;
+    font-size: var(--text-sm);
+    letter-spacing: 0.01em;
+}
+
+.message-user .message-author { color: var(--role-user); }
+.message-assistant .message-author, .message-agent .message-author { color: var(--role-agent); }
+.message-tool .message-author { color: var(--role-tool); }
+.message-system .message-author { color: var(--role-system); }
+
+.message-time {
+    margin-left: auto;
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    opacity: 0.8;
+    transition: opacity var(--duration-fast);
+}
+
+.message:hover .message-time {
+    opacity: 1;
+}
+
+/* ─────────────────────────────────────────
+   Message Content - Beautiful Typography
+   ───────────────────────────────────────── */
+.message-content {
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+    font-size: var(--text-base);
+}
+
+.message-content > *:first-child {
+    margin-top: 0;
+}
+
+.message-content > *:last-child {
+    margin-bottom: 0;
+}
+
+.message-content p {
+    margin-bottom: var(--space-4);
+}
+
+.message-content ul, .message-content ol {
+    margin: var(--space-4) 0;
+    padding-left: var(--space-6);
+}
+
+.message-content li {
+    margin-bottom: var(--space-2);
+}
+
+/* Message collapse/expand for long content */
+.message-collapsed summary {
+    cursor: pointer;
+    list-style: none;
+}
+
+.message-collapsed summary::-webkit-details-marker {
+    display: none;
+}
+
+.message-preview {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.preview-text {
+    color: var(--text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.expand-hint {
+    font-size: var(--text-xs);
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.expand-hint:hover {
+    text-decoration: underline;
+}
+
+.message-full {
+    animation: expandContent 0.3s var(--ease-out-expo);
+}
+
+@keyframes expandContent {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+}
+
+
+/* ============================================
+   Code Blocks - Polished Developer Experience
+   ============================================ */
+pre {
+    position: relative;
+    margin: var(--space-5) 0;
+    padding: 0;
+    background: var(--bg-deep);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+    transition: border-color var(--duration-fast) var(--ease-out-expo),
+                box-shadow var(--duration-normal) var(--ease-out-expo);
+}
+
+pre:hover {
+    border-color: var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Horizontal scroll shadow indicators */
+pre::before,
+pre::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 24px;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity var(--duration-fast);
+}
+
+pre::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--bg-deep) 0%, transparent 100%);
+}
+
+pre::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--bg-deep) 0%, transparent 100%);
+}
+
+pre:hover::after {
+    opacity: 1;
+}
+
+pre code {
+    display: block;
+    padding: var(--space-5);
+    overflow-x: auto;
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    tab-size: 4;
+    background: none;
+    /* Custom scrollbar for code */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+pre code::-webkit-scrollbar {
+    height: 6px;
+}
+
+pre code::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+pre code::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: var(--radius-full);
+}
+
+pre code::-webkit-scrollbar-thumb:hover {
+    background: var(--border-hover);
+}
+
+/* Code header with language badge */
+.code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-2) var(--space-4);
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.code-language {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    padding: var(--space-1) var(--space-2);
+    background: var(--bg-deep);
+    border-radius: var(--radius-sm);
+}
+
+/* Copy button */
+.copy-code-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xs) var(--space-sm);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s var(--ease-out-expo);
+}
+
+pre:hover .copy-code-btn {
+    opacity: 1;
+}
+
+.copy-code-btn:hover {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+}
+
+.copy-code-btn.copied {
+    color: var(--success);
+    border-color: var(--success);
+}
+
+/* Inline code */
+code:not(pre code) {
+    padding: 2px 6px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.875em;
+    color: var(--accent-tertiary);
+}
+
+/* Line numbers */
+.line-numbers {
+    counter-reset: line;
+}
+.line-numbers .line::before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    width: 3ch;
+    margin-right: var(--space-md);
+    text-align: right;
+    color: var(--text-disabled);
+    user-select: none;
+}
+
+
+/* ============================================
+   Tool Calls - Collapsible Sections
+   ============================================ */
+.tool-call {
+    margin: var(--space-md) 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.3s var(--ease-out-expo);
+}
+
+.tool-call:hover {
+    border-color: var(--role-tool);
+}
+
+.tool-call-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: var(--bg-elevated);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s var(--ease-out-expo);
+    list-style: none;
+}
+
+.tool-call-header::-webkit-details-marker {
+    display: none;
+}
+
+.tool-call-header:hover {
+    background: var(--role-tool-bg);
+}
+
+.tool-call-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--role-tool-bg);
+    border-radius: var(--radius-sm);
+    color: var(--role-tool);
+    font-size: 0.875rem;
+}
+
+.tool-call-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--role-tool);
+}
+
+.tool-call-status {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.tool-call-status.success {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.tool-call-status.error {
+    background: var(--error-bg);
+    color: var(--error);
+}
+
+.tool-call-toggle {
+    color: var(--text-muted);
+    transition: transform 0.3s var(--ease-out-expo);
+}
+
+details[open] .tool-call-toggle {
+    transform: rotate(180deg);
+}
+
+.tool-call-body {
+    padding: var(--space-md);
+    border-top: 1px solid var(--border);
+    background: var(--bg-surface);
+    animation: toolBodySlideIn 0.3s var(--ease-out-expo);
+}
+
+@keyframes toolBodySlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+}
+
+.tool-input, .tool-output {
+    margin-bottom: var(--space-md);
+}
+
+.tool-input:last-child, .tool-output:last-child {
+    margin-bottom: 0;
+}
+
+.tool-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+
+/* ============================================
+   Animations - Stripe-level Micro-interactions
+   Purposeful, subtle, buttery smooth
+   ============================================ */
+
+/* --- Core Keyframes --- */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes scaleInBounce {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    60% {
+        transform: scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* --- Loading & Progress --- */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes pulseSubtle {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes ellipsis {
+    0% { content: '.'; }
+    33% { content: '..'; }
+    66% { content: '...'; }
+}
+
+/* --- Attention & Highlight --- */
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(122, 162, 247, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(122, 162, 247, 0.5);
+    }
+}
+
+@keyframes highlightFade {
+    0% {
+        background: var(--accent-muted);
+    }
+    100% {
+        background: transparent;
+    }
+}
+
+@keyframes borderPulse {
+    0%, 100% {
+        border-color: var(--accent);
+        box-shadow: var(--shadow-ring);
+    }
+    50% {
+        border-color: var(--accent-hover);
+        box-shadow: 0 0 0 4px rgba(122, 162, 247, 0.2);
+    }
+}
+
+/* --- Utility Classes --- */
+.animate-fade-in { animation: fadeIn 0.3s var(--ease-out-expo); }
+.animate-fade-out { animation: fadeOut 0.3s var(--ease-out-expo); }
+.animate-slide-up { animation: slideUp 0.4s var(--ease-out-expo); }
+.animate-slide-down { animation: slideDown 0.4s var(--ease-out-expo); }
+.animate-slide-in-right { animation: slideInRight 0.3s var(--ease-out-expo); }
+.animate-slide-in-left { animation: slideInLeft 0.3s var(--ease-out-expo); }
+.animate-scale-in { animation: scaleIn 0.3s var(--ease-out-expo); }
+.animate-scale-in-bounce { animation: scaleInBounce 0.4s var(--ease-out-expo); }
+.animate-pop-in { animation: popIn 0.35s var(--spring); }
+.animate-pulse { animation: pulse 2s infinite; }
+.animate-pulse-subtle { animation: pulseSubtle 3s infinite; }
+.animate-spin { animation: spin 1s linear infinite; }
+.animate-glow { animation: glow 2s infinite; }
+
+/* Loading skeleton - elegant shimmer */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--bg-elevated) 0%,
+        rgba(122, 162, 247, 0.05) 50%,
+        var(--bg-elevated) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: var(--radius-sm);
+}
+
+/* Success checkmark animation */
+@keyframes checkmarkDraw {
+    0% {
+        stroke-dashoffset: 24;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+.animate-checkmark {
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    animation: checkmarkDraw 0.4s var(--ease-out-expo) forwards;
+}
+
+/* Copy success feedback */
+@keyframes copySuccess {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+        color: var(--success);
+    }
+    100% {
+        transform: scale(1);
+        color: var(--success);
+    }
+}
+
+.copy-success {
+    animation: copySuccess 0.4s var(--ease-out-expo);
+}
+
+/* Toast entrance */
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes toastSlideOut {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.95);
+    }
+}
+
+.toast-enter {
+    animation: toastSlideIn 0.3s var(--ease-out-expo);
+}
+
+.toast-exit {
+    animation: toastSlideOut 0.2s var(--ease-out-expo);
+}
+
+/* Stagger delay utilities */
+.delay-75 { animation-delay: 75ms; }
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* Fill mode utilities */
+.fill-forwards { animation-fill-mode: forwards; }
+.fill-backwards { animation-fill-mode: backwards; }
+.fill-both { animation-fill-mode: both; }
+
+/* Transition utilities */
+.transition-none { transition: none; }
+.transition-fast { transition: all var(--duration-fast) var(--ease-out-expo); }
+.transition-normal { transition: all var(--duration-normal) var(--ease-out-expo); }
+.transition-slow { transition: all var(--duration-slow) var(--ease-out-expo); }
+
+
+/* ============================================
+   Search - Stripe-level Find Experience
+   ============================================ */
+.search-container {
+    position: relative;
+    flex: 1;
+    max-width: 320px;
+}
+
+#search-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 var(--space-md);
+    padding-left: 40px;
+    padding-right: 80px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    color: var(--text-primary);
+    font-size: var(--text-sm);
+    transition: all var(--duration-fast) var(--ease-out-expo);
+}
+
+#search-input:hover {
+    border-color: var(--border);
+    background: var(--bg-surface);
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--shadow-ring);
+    background: var(--bg-surface);
+}
+
+#search-input::placeholder {
+    color: var(--text-muted);
+    transition: color var(--duration-fast) var(--ease-out-expo);
+}
+
+#search-input:focus::placeholder {
+    color: var(--text-disabled);
+}
+
+/* Search icon with subtle animation */
+.search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    pointer-events: none;
+    transition: color var(--duration-fast) var(--ease-out-expo),
+                transform var(--duration-fast) var(--ease-out-expo);
+}
+
+#search-input:focus ~ .search-icon {
+    color: var(--accent);
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* Result count badge */
+#search-count {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    padding: var(--space-1) var(--space-2);
+    background: var(--bg-deep);
+    border-radius: var(--radius-sm);
+    animation: fadeIn var(--duration-fast) var(--ease-out-expo);
+}
+
+#search-count:empty {
+    display: none;
+}
+
+/* Search highlight with elegant glow */
+.search-highlight {
+    background: linear-gradient(
+        135deg,
+        rgba(224, 175, 104, 0.25) 0%,
+        rgba(224, 175, 104, 0.35) 100%
+    );
+    border-radius: 3px;
+    padding: 1px 3px;
+    margin: -1px -3px;
+    transition: all var(--duration-fast) var(--ease-out-expo);
+}
+
+/* Current match with prominent styling */
+.search-current {
+    background: linear-gradient(
+        135deg,
+        rgba(224, 175, 104, 0.5) 0%,
+        rgba(224, 175, 104, 0.7) 100%
+    );
+    box-shadow: 0 0 0 2px var(--warning),
+                0 0 12px rgba(224, 175, 104, 0.4);
+    animation: highlightPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes highlightPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 2px var(--warning),
+                    0 0 12px rgba(224, 175, 104, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 3px var(--warning),
+                    0 0 20px rgba(224, 175, 104, 0.6);
+    }
+}
+
+/* Navigation buttons */
+.search-nav {
+    display: flex;
+    gap: 4px;
+    margin-left: var(--space-sm);
+}
+
+.search-nav-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out-expo);
+}
+
+.search-nav-btn:hover {
+    background: var(--bg-surface);
+    border-color: var(--border);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.search-nav-btn:active {
+    transform: translateY(0) scale(0.95);
+}
+
+.search-nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.search-nav-btn .icon {
+    width: 14px;
+    height: 14px;
+}
+
+/* No results state */
+.search-no-results #search-count {
+    color: var(--error);
+    background: var(--error-bg);
+}
+
+/* Clear button */
+.search-clear {
+    position: absolute;
+    right: 48px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-deep);
+    border: none;
+    border-radius: var(--radius-full);
+    color: var(--text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: all var(--duration-fast) var(--ease-out-expo);
+}
+
+#search-input:not(:placeholder-shown) ~ .search-clear {
+    opacity: 1;
+}
+
+.search-clear:hover {
+    background: var(--error-bg);
+    color: var(--error);
+}
+
+/* Mobile search optimizations */
+@media (max-width: 767px) {
+    .search-container {
+        max-width: none;
+        flex: 1;
+    }
+
+    #search-input {
+        height: 44px;
+        font-size: 16px; /* Prevents iOS zoom on focus */
+        border-radius: var(--radius-lg);
+    }
+}
+
+
+/* ============================================
+   Theme Toggle - Light/Dark Mode
+   ============================================ */
+.theme-toggle {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s var(--ease-out-expo);
+}
+
+.theme-toggle .icon-sun svg,
+.theme-toggle .icon-moon svg {
+    width: 20px;
+    height: 20px;
+}
+
+[data-theme="dark"] .icon-sun {
+    transform: rotate(90deg) scale(0);
+    opacity: 0;
+}
+[data-theme="dark"] .icon-moon {
+    transform: rotate(0) scale(1);
+    opacity: 1;
+}
+
+[data-theme="light"] .icon-sun {
+    transform: rotate(0) scale(1);
+    opacity: 1;
+}
+[data-theme="light"] .icon-moon {
+    transform: rotate(-90deg) scale(0);
+    opacity: 0;
+}
+
+/* Light theme overrides */
+[data-theme="light"] {
+    --bg-deep: #f8f9fc;
+    --bg-surface: #ffffff;
+    --bg-elevated: #f0f1f5;
+    --bg-overlay: rgba(248, 249, 252, 0.95);
+    --bg-frosted: rgba(255, 255, 255, 0.85);
+    --border: #e1e4eb;
+    --border-subtle: rgba(225, 228, 235, 0.6);
+    --border-hover: #c8cdd8;
+    --border-focus: #7aa2f7;
+    --text-primary: #1a1b26;
+    --text-secondary: #3d4259;
+    --text-muted: #6b7394;
+    --text-disabled: #9da3be;
+    --text-inverse: #ffffff;
+    --accent-muted: rgba(122, 162, 247, 0.12);
+    --role-user-bg: #f0f5f3;
+    --role-user-glow: rgba(158, 206, 106, 0.08);
+    --role-user-border: rgba(158, 206, 106, 0.2);
+    --role-agent-bg: #f0f2f8;
+    --role-agent-glow: rgba(122, 162, 247, 0.08);
+    --role-agent-border: rgba(122, 162, 247, 0.2);
+    --role-tool-bg: #f8f5f0;
+    --role-tool-glow: rgba(255, 158, 100, 0.08);
+    --role-tool-border: rgba(255, 158, 100, 0.2);
+    --role-system-bg: #f8f6f0;
+    --role-system-glow: rgba(224, 175, 104, 0.08);
+    --role-system-border: rgba(224, 175, 104, 0.2);
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-glow: 0 0 20px rgba(122, 162, 247, 0.15);
+}
+
+/* Smooth theme transition */
+html {
+    transition: background-color 0.3s var(--ease-out-expo);
+}
+
+body, .message, .toolbar, .tool-call, pre {
+    transition: background-color 0.3s var(--ease-out-expo),
+                border-color 0.3s var(--ease-out-expo),
+                color 0.3s var(--ease-out-expo);
+}
+
+
+/* ============================================
+   Encryption - Password Modal
+   ============================================ */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-overlay);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: var(--z-modal);
+    animation: fadeIn 0.3s var(--ease-out-expo);
+}
+
+.modal[hidden] {
+    display: none;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 400px;
+    padding: var(--space-xl);
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    text-align: center;
+    animation: scaleIn 0.3s var(--ease-out-back);
+}
+
+.modal-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+    border-radius: var(--radius-full);
+    color: white;
+}
+
+.modal-icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+.modal-title {
+    margin: 0 0 var(--space-sm);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.modal-text {
+    margin: 0 0 var(--space-lg);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.modal-input {
+    width: 100%;
+    padding: var(--space-md);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 1rem;
+    text-align: center;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-md);
+    transition: all 0.2s var(--ease-out-expo);
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(122, 162, 247, 0.15);
+}
+
+.modal-btn {
+    width: 100%;
+    padding: var(--space-md);
+    background: var(--accent);
+    background: linear-gradient(135deg, var(--accent) 0%, #6992e5 100%);
+    border: none;
+    border-radius: var(--radius-md);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s var(--ease-out-expo);
+}
+
+.modal-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.modal-btn:active {
+    transform: translateY(0);
+}
+
+.modal-error {
+    margin-top: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--error-bg);
+    border-radius: var(--radius-md);
+    color: var(--error);
+    font-size: 0.875rem;
+}
+
+.encrypted-notice {
+    text-align: center;
+    padding: var(--space-xl);
+    color: var(--text-muted);
+}
+
+
+/* ============================================
+   Desktop Enhancements - Stripe-level Polish
+   Optimized for mouse, keyboard, wide screens
+   ============================================ */
+@media (min-width: 768px) {
+    /* Generous whitespace on larger screens */
+    #app {
+        padding: var(--space-2xl) var(--space-xl);
+    }
+
+    /* Elegant header grid layout */
+    .header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: var(--space-lg);
+        align-items: start;
+    }
+
+    .title {
+        font-size: var(--text-4xl);
+        letter-spacing: -0.03em;
+    }
+
+    /* Enhanced toolbar with more breathing room */
+    .toolbar {
+        padding: var(--space-md) var(--space-lg);
+        gap: var(--space-md);
+    }
+
+    /* Wide code blocks - break out of container elegantly */
+    pre {
+        margin-left: calc(-1 * var(--space-lg));
+        margin-right: calc(-1 * var(--space-lg));
+        padding-left: var(--space-lg);
+        padding-right: var(--space-lg);
+    }
+
+    /* Elegant keyboard shortcut hints */
+    .kbd-hint {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: var(--space-sm);
+        font-size: var(--text-xs);
+        color: var(--text-muted);
+    }
+
+    .kbd {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 22px;
+        height: 22px;
+        padding: 0 6px;
+        background: linear-gradient(to bottom, var(--bg-elevated), var(--bg-surface));
+        border: 1px solid var(--border);
+        border-bottom-width: 2px;
+        border-radius: var(--radius-sm);
+        font-family: inherit;
+        font-size: 0.6875rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Message hover states - subtle lift effect */
+    .message {
+        transition: transform var(--duration-normal) var(--ease-out-expo),
+                    box-shadow var(--duration-normal) var(--ease-out-expo),
+                    border-color var(--duration-fast) var(--ease-out-expo);
+    }
+
+    .message:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--border-hover);
+    }
+
+    /* Message action buttons - appear on hover */
+    .message-actions {
+        position: absolute;
+        top: var(--space-3);
+        right: var(--space-3);
+        display: flex;
+        gap: var(--space-2);
+        opacity: 0;
+        transform: translateY(-4px);
+        transition: opacity var(--duration-fast) var(--ease-out-expo),
+                    transform var(--duration-fast) var(--ease-out-expo);
+        pointer-events: none;
+    }
+
+    .message:hover .message-actions {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .message-action-btn {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-frosted);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--ease-out-expo);
+    }
+
+    .message-action-btn:hover {
+        background: var(--bg-elevated);
+        border-color: var(--border);
+        color: var(--text-primary);
+        transform: scale(1.05);
+    }
+
+    .message-action-btn:active {
+        transform: scale(0.95);
+    }
+
+    .message-action-btn .icon {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Enhanced tool call expansion on desktop */
+    .tool-call {
+        transition: all var(--duration-normal) var(--ease-out-expo);
+    }
+
+    .tool-call:hover {
+        border-color: var(--role-tool-border);
+    }
+
+    .tool-call.expanded {
+        background: var(--bg-elevated);
+    }
+
+    /* Code block copy button - elegant reveal */
+    .copy-code-btn {
+        opacity: 0;
+        transform: translateY(-2px) scale(0.95);
+        transition: opacity var(--duration-fast) var(--ease-out-expo),
+                    transform var(--duration-fast) var(--ease-out-expo),
+                    background var(--duration-fast) var(--ease-out-expo);
+    }
+
+    pre:hover .copy-code-btn {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    /* Refined focus states for keyboard navigation */
+    .toolbar-btn:focus-visible,
+    .message-action-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--shadow-ring);
+    }
+
+    /* Enhanced tooltip animations */
+    .toolbar-btn[data-tooltip]::after {
+        transition: opacity var(--duration-fast) var(--ease-out-expo),
+                    transform var(--duration-fast) var(--ease-out-expo);
+        transform: translateX(-50%) translateY(6px);
+    }
+
+    .toolbar-btn[data-tooltip]:hover::after {
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Large desktop - refined typography and spacing */
+@media (min-width: 1024px) {
+    #app {
+        max-width: 1000px;
+        padding: var(--space-3xl) var(--space-2xl);
+    }
+
+    /* Meta items flow to the right on wide screens */
+    .meta {
+        justify-content: flex-end;
+    }
+
+    /* More generous message padding */
+    .message {
+        padding: var(--space-8);
+    }
+
+    /* Larger code blocks with more context */
+    pre code {
+        max-height: 500px;
+    }
+}
+
+/* Extra large desktop - optimal reading width */
+@media (min-width: 1280px) {
+    #app {
+        max-width: 1100px;
+    }
+
+    /* Subtle side gutters for visual balance */
+    .conversation {
+        padding: 0 var(--space-4);
+    }
+}
+
+/* Ultra-wide screens - centered with max readability */
+@media (min-width: 1536px) {
+    #app {
+        max-width: 1200px;
+    }
+
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .message {
+        padding: var(--space-10);
+    }
+}
+
+
+/* ============================================
+   Mobile Optimizations - World-class Touch UX
+   Touch-first, thumb-friendly, performant
+   ============================================ */
+@media (max-width: 767px) {
+    /* Slightly smaller base font for mobile density */
+    html {
+        font-size: 15px;
+    }
+
+    /* Compact but breathable layout */
+    #app {
+        padding: var(--space-md);
+        padding-top: var(--space-lg);
+    }
+
+    /* Mobile-optimized title */
+    .title {
+        font-size: var(--text-2xl);
+        line-height: 1.2;
+        margin-bottom: var(--space-3);
+    }
+
+    /* Stack meta items vertically */
+    .meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+    }
+
+    .meta-item {
+        font-size: var(--text-sm);
+    }
+
+    /* Elegant floating toolbar with glassmorphism */
+    .toolbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto;
+        margin: 0;
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+        border-bottom: none;
+        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.3),
+                    0 -1px 8px rgba(0, 0, 0, 0.2);
+        justify-content: center;
+        z-index: var(--z-sticky);
+        background: var(--bg-frosted);
+        backdrop-filter: blur(20px) saturate(1.2);
+        -webkit-backdrop-filter: blur(20px) saturate(1.2);
+        padding: var(--space-3) var(--space-4);
+        padding-bottom: var(--space-3);
+    }
+
+    /* Handle notch/home indicator */
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+        .toolbar {
+            padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
+        }
+    }
+
+    /* Bottom padding for content above toolbar */
+    .conversation {
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* Apple HIG: 44px minimum touch targets */
+    .toolbar-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-lg);
+    }
+
+    .toolbar-btn .icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Haptic feedback simulation via scale */
+    .toolbar-btn:active {
+        transform: scale(0.92);
+        transition: transform 0.1s ease-out;
+    }
+
+    /* Stack toolbar items for smaller screens */
+    .toolbar-group {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--space-2);
+    }
+
+    .toolbar-divider {
+        display: none;
+    }
+
+    /* Messages - compact but readable */
+    .message {
+        padding: var(--space-4);
+        border-radius: var(--radius-lg);
+        margin-left: calc(-1 * var(--space-2));
+        margin-right: calc(-1 * var(--space-2));
+    }
+
+    /* Simpler animation on mobile for performance */
+    .message {
+        animation-duration: 0.3s;
+    }
+
+    /* Remove hover lift on touch devices */
+    .message:hover {
+        transform: none;
+        box-shadow: var(--shadow-xs);
+    }
+
+    /* Header wraps on mobile */
+    .message-header {
+        flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+
+    .message-time {
+        width: 100%;
+        margin-top: var(--space-1);
+        margin-left: 0;
+        font-size: var(--text-xs);
+    }
+
+    /* Role icon slightly smaller */
+    .role-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    /* Full-bleed code blocks for more code real estate */
+    pre {
+        margin-left: calc(-1 * var(--space-4));
+        margin-right: calc(-1 * var(--space-4));
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    pre code {
+        padding: var(--space-4);
+        font-size: 0.8125rem;
+        line-height: 1.5;
+        /* Limit height to prevent scroll fatigue */
+        max-height: 300px;
+    }
+
+    /* Code header adjustments */
+    .code-header {
+        padding: var(--space-2) var(--space-4);
+        margin: 0 calc(-1 * var(--space-4));
+        border-radius: 0;
+    }
+
+    /* Always show copy button on mobile */
+    .copy-code-btn {
+        opacity: 1;
+        width: 36px;
+        height: 36px;
+    }
+
+    /* Tool calls - compact */
+    .tool-call {
+        margin-left: calc(-1 * var(--space-2));
+        margin-right: calc(-1 * var(--space-2));
+        border-radius: var(--radius-md);
+    }
+
+    .tool-call-header {
+        padding: var(--space-3) var(--space-4);
+    }
+
+    .tool-call-body {
+        padding: var(--space-3) var(--space-4);
+    }
+
+    /* Message actions - always visible on mobile */
+    .message-actions {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+        position: relative;
+        top: auto;
+        right: auto;
+        margin-top: var(--space-3);
+        justify-content: flex-end;
+    }
+
+    .message-action-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    /* Hide keyboard hints - not applicable to touch */
+    .kbd-hint {
+        display: none !important;
+    }
+
+    /* Modal adjustments for mobile */
+    .modal-content {
+        width: 100%;
+        max-width: none;
+        margin: var(--space-4);
+        padding: var(--space-6);
+        border-radius: var(--radius-xl);
+        max-height: calc(100vh - var(--space-8));
+        overflow-y: auto;
+    }
+
+    .modal-title {
+        font-size: var(--text-xl);
+    }
+
+    .modal-input {
+        height: 52px;
+        font-size: 16px; /* Prevent iOS zoom */
+    }
+
+    .modal-btn {
+        height: 52px;
+    }
+}
+
+/* Very small phones - even more compact */
+@media (max-width: 374px) {
+    #app {
+        padding: var(--space-3);
+    }
+
+    .title {
+        font-size: var(--text-xl);
+    }
+
+    .message {
+        padding: var(--space-3);
+    }
+
+    .toolbar-btn {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* Landscape phone optimization */
+@media (max-width: 767px) and (orientation: landscape) {
+    /* More horizontal space, less vertical */
+    #app {
+        padding: var(--space-sm) var(--space-lg);
+    }
+
+    /* Toolbar becomes more compact */
+    .toolbar {
+        padding: var(--space-2) var(--space-4);
+    }
+
+    .toolbar-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    /* Reduce vertical spacing */
+    .conversation {
+        gap: var(--space-3);
+        padding-bottom: 60px;
+    }
+
+    .message {
+        padding: var(--space-3) var(--space-4);
+    }
+}
+
+/* Touch device optimization - no hover states */
+@media (hover: none) and (pointer: coarse) {
+    /* Remove hover effects that feel wrong on touch */
+    .toolbar-btn:hover::before {
+        opacity: 0;
+    }
+
+    .toolbar-btn:hover {
+        background: transparent;
+        border-color: transparent;
+    }
+
+    /* Active states for touch feedback */
+    .toolbar-btn:active {
+        background: var(--accent-muted);
+    }
+
+    .message:hover {
+        transform: none;
+        box-shadow: var(--shadow-xs);
+        border-color: var(--border-subtle);
+    }
+
+    /* Touch-tap highlight */
+    .tool-call-header {
+        -webkit-tap-highlight-color: var(--accent-muted);
+    }
+
+    /* Always visible interactive elements */
+    .copy-code-btn,
+    .message-actions {
+        opacity: 1;
+    }
+}
+
+/* Safe area handling for notched devices (iPhone X+, etc.) */
+@supports (padding: max(0px)) {
+    @media (max-width: 767px) {
+        #app {
+            padding-left: max(var(--space-md), env(safe-area-inset-left));
+            padding-right: max(var(--space-md), env(safe-area-inset-right));
+        }
+
+        .toolbar {
+            padding-left: max(var(--space-4), env(safe-area-inset-left));
+            padding-right: max(var(--space-4), env(safe-area-inset-right));
+        }
+    }
+}
+
+/* iOS-specific optimizations */
+@supports (-webkit-touch-callout: none) {
+    /* Smooth scrolling momentum */
+    .conversation,
+    .modal-content,
+    pre code {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Prevent text selection during scroll */
+    .message-content {
+        -webkit-user-select: text;
+    }
+}
+
+
+/* ============================================
+   World-Class UI/UX Enhancements
+   Stripe-level polish that makes users gasp
+   ============================================ */
+
+/* --- Scroll Progress Indicator --- */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg,
+        var(--accent) 0%,
+        var(--accent-secondary) 50%,
+        var(--accent-tertiary) 100%);
+    z-index: var(--z-toast);
+    transition: width 50ms linear;
+    box-shadow: 0 0 10px var(--accent), 0 0 5px var(--accent);
+    border-radius: 0 var(--radius-full) var(--radius-full) 0;
+}
+
+/* --- Gradient Mesh Background --- */
+.gradient-mesh {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.gradient-mesh::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+        radial-gradient(ellipse 600px 400px at 20% 30%, rgba(122, 162, 247, 0.08), transparent),
+        radial-gradient(ellipse 500px 300px at 80% 20%, rgba(187, 154, 247, 0.06), transparent),
+        radial-gradient(ellipse 400px 250px at 60% 80%, rgba(115, 218, 202, 0.05), transparent);
+    animation: meshFloat 30s ease-in-out infinite;
+}
+
+@keyframes meshFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(2%, 1%) rotate(1deg); }
+    50% { transform: translate(-1%, 2%) rotate(-1deg); }
+    75% { transform: translate(1%, -1%) rotate(0.5deg); }
+}
+
+[data-theme="light"] .gradient-mesh::before {
+    background:
+        radial-gradient(ellipse 600px 400px at 20% 30%, rgba(122, 162, 247, 0.06), transparent),
+        radial-gradient(ellipse 500px 300px at 80% 20%, rgba(187, 154, 247, 0.04), transparent),
+        radial-gradient(ellipse 400px 250px at 60% 80%, rgba(115, 218, 202, 0.03), transparent);
+}
+
+/* --- Floating Navigation Buttons --- */
+.floating-nav {
+    position: fixed;
+    right: var(--space-4);
+    bottom: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    z-index: var(--z-sticky);
+    opacity: 0;
+    transform: translateY(16px) scale(0.9);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
+    pointer-events: none;
+}
+
+.floating-nav.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.floating-btn {
+    position: relative;
+    overflow: hidden;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-frosted);
+    backdrop-filter: blur(12px) saturate(1.5);
+    -webkit-backdrop-filter: blur(12px) saturate(1.5);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: all var(--duration-fast) var(--ease-out-expo);
+}
+
+.floating-btn:hover {
+    background: var(--bg-surface);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: scale(1.08);
+    box-shadow: var(--shadow-xl), var(--shadow-glow);
+}
+
+.floating-btn:active {
+    transform: scale(0.95);
+}
+
+.floating-btn .icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* --- Message Link Copy --- */
+.message-link-btn {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-frosted);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: all var(--duration-fast) var(--ease-out-expo);
+}
+
+.message:hover .message-link-btn {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.message-link-btn:hover {
+    background: var(--bg-elevated);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.message-link-btn.copied {
+    background: var(--success-bg);
+    border-color: var(--success);
+    color: var(--success);
+    animation: copySuccess 0.5s var(--ease-out-expo);
+}
+
+/* --- Message Intersection Animations --- */
+.message.in-view {
+    animation: messageReveal 0.6s var(--ease-out-expo) forwards;
+}
+
+@keyframes messageReveal {
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.message.in-view::after {
+    animation: glowPulse 1.5s var(--ease-out-expo) forwards;
+}
+
+@keyframes glowPulse {
+    0% { opacity: 0.8; }
+    100% { opacity: 0; }
+}
+
+/* --- Keyboard Navigation Indicator --- */
+.message.keyboard-focus {
+    outline: none;
+    box-shadow: var(--shadow-ring), var(--shadow-md);
+    border-color: var(--accent);
+}
+
+.message.keyboard-focus::before {
+    opacity: 1;
+    width: 4px;
+    background: var(--accent);
+}
+
+/* --- Enhanced Code Block Interactions --- */
+pre:hover code {
+    background: linear-gradient(180deg,
+        rgba(122, 162, 247, 0.02) 0%,
+        transparent 100%);
+}
+
+/* Line highlighting on hover (when JS adds line spans) */
+pre code .line:hover {
+    background: rgba(122, 162, 247, 0.08);
+    border-radius: 2px;
+    margin: 0 calc(-1 * var(--space-2));
+    padding: 0 var(--space-2);
+}
+
+/* Language badge floating in corner */
+pre[data-language]::before {
+    content: attr(data-language);
+    position: absolute;
+    top: var(--space-2);
+    left: var(--space-3);
+    padding: 2px 8px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    z-index: 1;
+}
+
+/* --- Reading Time Badge --- */
+.reading-time {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 2px 10px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.reading-time .icon {
+    width: 12px;
+    height: 12px;
+    opacity: 0.7;
+}
+
+/* --- Share Button --- */
+.share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out-expo);
+}
+
+.share-btn:hover {
+    background: var(--accent-muted);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.share-btn .icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* --- Enhanced Toast Styling --- */
+.toast {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    font-size: var(--text-sm);
+    color: var(--text-primary);
+}
+
+.toast-success {
+    border-color: var(--success-border);
+    background: linear-gradient(135deg, var(--bg-surface), var(--success-bg));
+}
+
+.toast-success::before {
+    content: '✓';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: var(--success);
+    border-radius: var(--radius-full);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.toast-error {
+    border-color: var(--error-border);
+    background: linear-gradient(135deg, var(--bg-surface), var(--error-bg));
+}
+
+.toast-error::before {
+    content: '✕';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: var(--error);
+    border-radius: var(--radius-full);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* --- Current Message Indicator --- */
+.message-indicator {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60px;
+    background: var(--accent);
+    border-radius: 0 var(--radius-full) var(--radius-full) 0;
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--ease-out-expo),
+                top var(--duration-fast) var(--ease-out-expo);
+    z-index: var(--z-raised);
+}
+
+.message-indicator.visible {
+    opacity: 1;
+}
+
+/* --- Keyboard Shortcuts Hint Panel --- */
+.shortcuts-hint {
+    position: fixed;
+    bottom: var(--space-4);
+    left: var(--space-4);
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg-frosted);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all var(--duration-fast) var(--ease-out-expo);
+    z-index: var(--z-raised);
+}
+
+.shortcuts-hint.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.shortcuts-hint kbd {
+    display: inline-block;
+    min-width: 18px;
+    padding: 2px 5px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.6875rem;
+    text-align: center;
+}
+
+
+/* ============================================
+   Mobile World-Class Enhancements
+   Touch-first experiences that delight
+   ============================================ */
+@media (max-width: 767px) {
+    /* --- Scroll-Aware Toolbar --- */
+    .toolbar {
+        transition: transform var(--duration-normal) var(--ease-out-expo),
+                    opacity var(--duration-normal) var(--ease-out-expo);
+    }
+
+    .toolbar.toolbar-hidden {
+        transform: translateY(calc(100% + 20px));
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* --- Floating Navigation on Mobile --- */
+    .floating-nav {
+        right: var(--space-3);
+        bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .floating-btn {
+        width: 48px;
+        height: 48px;
+        box-shadow: var(--shadow-xl);
+    }
+
+    /* --- Pull to Refresh Visual --- */
+    .pull-indicator {
+        position: fixed;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-full);
+        box-shadow: var(--shadow-lg);
+        transition: top var(--duration-normal) var(--ease-out-expo);
+        z-index: var(--z-sticky);
+    }
+
+    .pull-indicator.pulling {
+        top: var(--space-4);
+    }
+
+    .pull-indicator .icon {
+        width: 20px;
+        height: 20px;
+        color: var(--text-muted);
+        transition: transform var(--duration-normal) var(--ease-out-expo);
+    }
+
+    .pull-indicator.ready .icon {
+        transform: rotate(180deg);
+        color: var(--accent);
+    }
+
+    /* --- Bottom Sheet Modal --- */
+    .modal {
+        align-items: flex-end;
+    }
+
+    .modal-content {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+        max-height: 90vh;
+        animation: bottomSheetSlideIn 0.4s var(--ease-out-expo);
+    }
+
+    @keyframes bottomSheetSlideIn {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Bottom sheet drag handle */
+    .modal-content::before {
+        content: '';
+        display: block;
+        width: 36px;
+        height: 4px;
+        background: var(--border);
+        border-radius: var(--radius-full);
+        margin: 0 auto var(--space-4);
+    }
+
+    /* --- Reading Progress Bar on Mobile --- */
+    .scroll-progress {
+        height: 2px;
+    }
+
+    /* --- Share Button in Toolbar --- */
+    .toolbar .share-btn {
+        padding: var(--space-2);
+        border: none;
+        background: transparent;
+    }
+
+    .toolbar .share-btn span {
+        display: none;
+    }
+
+    /* --- Message Link Button - Always Visible --- */
+    .message-link-btn {
+        opacity: 0.6;
+        transform: translateY(0);
+    }
+
+    .message-link-btn:active {
+        opacity: 1;
+        transform: scale(0.92);
+    }
+
+    /* --- Swipe Hint on First Message --- */
+    .swipe-hint {
+        position: absolute;
+        bottom: var(--space-3);
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-3);
+        background: var(--bg-frosted);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-full);
+        font-size: var(--text-xs);
+        color: var(--text-muted);
+        animation: swipeHintPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes swipeHintPulse {
+        0%, 100% { opacity: 0.8; transform: translateX(-50%); }
+        50% { opacity: 1; transform: translateX(-50%) translateY(-2px); }
+    }
+
+    /* --- Touch Ripple Effect --- */
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: var(--accent-muted);
+        transform: scale(0);
+        animation: rippleEffect 0.6s ease-out;
+        pointer-events: none;
+    }
+
+    @keyframes rippleEffect {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+
+    /* --- Hide Keyboard Shortcuts Panel on Mobile --- */
+    .shortcuts-hint {
+        display: none !important;
+    }
+
+    /* --- Gradient Mesh - Simpler on Mobile --- */
+    .gradient-mesh::before {
+        animation: none;
+        background:
+            radial-gradient(ellipse 400px 300px at 30% 20%, rgba(122, 162, 247, 0.06), transparent),
+            radial-gradient(ellipse 300px 200px at 70% 80%, rgba(115, 218, 202, 0.04), transparent);
+    }
+}
+
+/* --- Touch Device Specific --- */
+@media (hover: none) and (pointer: coarse) {
+    /* Larger tap targets for links in messages */
+    .message-content a {
+        padding: var(--space-1) var(--space-2);
+        margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-2));
+        border-radius: var(--radius-sm);
+    }
+
+    /* Active state ripple on buttons */
+    .toolbar-btn,
+    .floating-btn,
+    .share-btn,
+    .message-link-btn {
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Smoother scroll on iOS */
+    .conversation {
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+
+/* ============================================
+   Accessibility
+   ============================================ */
+/* Focus visible for keyboard navigation */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Remove focus outline for mouse users */
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Skip link */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--accent);
+    color: white;
+    border-radius: var(--radius-md);
+    z-index: 9999;
+    transition: top 0.2s var(--ease-out-expo);
+}
+
+.skip-link:focus {
+    top: var(--space-md);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    :root {
+        --border: #ffffff;
+        --text-primary: #ffffff;
+        --text-secondary: #ffffff;
+    }
+
+    .message {
+        border-width: 2px;
+    }
+
+    .message::before {
+        width: 4px;
+    }
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+.hidden { display: none !important; }
+.invisible { visibility: hidden !important; }
+.opacity-0 { opacity: 0; }
+.opacity-50 { opacity: 0.5; }
+.opacity-100 { opacity: 1; }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-xs { gap: var(--space-xs); }
+.gap-sm { gap: var(--space-sm); }
+.gap-md { gap: var(--space-md); }
+.gap-lg { gap: var(--space-lg); }
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.875rem; }
+.text-base { font-size: 1rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.25rem; }
+
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+.text-accent { color: var(--accent); }
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-error { color: var(--error); }
+
+.bg-deep { background: var(--bg-deep); }
+.bg-surface { background: var(--bg-surface); }
+.bg-elevated { background: var(--bg-elevated); }
+
+.rounded { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-full { border-radius: var(--radius-full); }
+
+.shadow { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+
+.print-only {
+    display: none !important;
+}
+
+
+/* CDN fallback hooks */
+.no-tailwind .toolbar,
+.no-tailwind .header,
+.no-tailwind .conversation {
+    backdrop-filter: none !important;
+}
+
+.no-prism pre code[class*="language-"] {
+    color: #c0caf5;
+}
+
+.no-prism pre code[class*="language-"] .token {
+    color: inherit;
+}
+
+    </style>
+    <!-- CDN enhancement (optional) - degrades gracefully if offline -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" integrity="sha384-wAkE1abywdsF0VP/+RDLxHADng231vt6gsqcjBzQFUoAQNkuN63+cJ4XDiE7LVjx" crossorigin="anonymous" media="print" onload="this.media='all'" onerror="document.documentElement.classList.add('no-tailwind')">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" integrity="sha384-wFjoQjtV1y5jVHbt0p35Ui8aV8GVpEZkyF99OXWqP/eNJDU93D3Ugxkoyh6Y2I4A" crossorigin="anonymous" media="print" onload="this.media='all'" onerror="document.documentElement.classList.add('no-prism')">
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js" integrity="sha384-ZM8fDxYm+GXOWeJcxDetoRImNnEAS7XwVFH5kv0pT6RXNy92Nemw/Sj7NfciXpqg" crossorigin="anonymous" defer onerror="document.documentElement.classList.add('no-prism')"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-rust.min.js" integrity="sha384-JyDgFjMbyrE/TGiEUSXW3CLjQOySrsoiUNAlXTFdIsr/XUfaB7E+eYlR+tGQ9bCO" crossorigin="anonymous" defer onerror="document.documentElement.classList.add('no-prism')"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js" integrity="sha384-WJdEkJKrbsqw0evQ4GB6mlsKe5cGTxBOw4KAEIa52ZLB7DDpliGkwdme/HMa5n1m" crossorigin="anonymous" defer onerror="document.documentElement.classList.add('no-prism')"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js" integrity="sha384-D44bgYYKvaiDh4cOGlj1dbSDpSctn2FSUj118HZGmZEShZcO2v//Q5vvhNy206pp" crossorigin="anonymous" defer onerror="document.documentElement.classList.add('no-prism')"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js" integrity="sha384-PeOqKNW/piETaCg8rqKFy+Pm6KEk7e36/5YZE5XO/OaFdO+/Aw3O8qZ9qDPKVUgx" crossorigin="anonymous" defer onerror="document.documentElement.classList.add('no-prism')"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js" integrity="sha384-9WmlN8ABpoFSSHvBGGjhvB3E/D8UkNB9HpLJjBQFC2VSQsM1odiQDv4NbEo+7l15" crossorigin="anonymous" defer onerror="document.documentElement.classList.add('no-prism')"></script>
+    <style media="print">
+/* ============================================
+   Print Styles - Clean PDF Output
+   ============================================ */
+@page {
+    margin: 0.75in;
+    size: auto;
+}
+
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    html {
+        font-size: 11pt;
+    }
+
+    body,
+    #app {
+        background: white !important;
+        color: #1a1b26 !important;
+        line-height: 1.4;
+    }
+
+    #app {
+        max-width: none;
+        padding: 0;
+    }
+
+    /* Hide interactive elements */
+    .toolbar,
+    .theme-toggle,
+    #theme-toggle,
+    [data-action="toggle-theme"],
+    .copy-code-btn,
+    .copy-btn,
+    [data-action="copy"],
+    .message-actions,
+    .skip-link,
+    .search-controls,
+    #search-input,
+    [data-testid="search"],
+    .search-nav,
+    .kbd-hint {
+        display: none !important;
+    }
+
+    /* Header styling */
+    .header {
+        border-bottom: 2px solid #1a1b26;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .title {
+        font-size: 14pt;
+        background: none;
+        -webkit-text-fill-color: #1a1b26;
+        color: #1a1b26 !important;
+    }
+
+    .agent-badge {
+        background: none;
+        border: 1px solid currentColor;
+    }
+
+    .meta {
+        color: #666 !important;
+    }
+
+    /* Message styling */
+    .message {
+        background: none !important;
+        border: 1px solid #ccc;
+        border-left-width: 4px;
+        page-break-inside: avoid;
+        margin-bottom: 0.75rem;
+        box-shadow: none !important;
+    }
+
+    .message::before {
+        display: none;
+    }
+
+    pre,
+    pre code,
+    code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+        white-space: pre-wrap;
+    }
+
+    .message-user {
+        border-left-color: #4a7c4a !important;
+    }
+
+    .message-assistant, .message-agent {
+        border-left-color: #4a6fa7 !important;
+    }
+
+    .message-tool {
+        border-left-color: #a77a4a !important;
+    }
+
+    .message-system {
+        border-left-color: #a79a4a !important;
+    }
+
+    .message-role {
+        color: #1a1b26 !important;
+    }
+
+    .message-content {
+        color: #333 !important;
+    }
+
+    /* Code blocks */
+    pre {
+        background: #f5f5f5 !important;
+        border: 1px solid #ddd;
+        font-size: 9pt;
+        page-break-inside: avoid;
+        box-shadow: none !important;
+    }
+
+    pre code {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    code:not(pre code) {
+        background: #eee !important;
+        border-color: #ddd !important;
+        color: #333 !important;
+    }
+
+    /* Tool calls - expanded */
+    .tool-call-body {
+        display: block !important;
+    }
+
+    .tool-call-toggle {
+        display: none;
+    }
+
+    /* Links */
+    a {
+        color: inherit;
+        text-decoration: underline;
+    }
+
+    a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    /* Page breaks */
+    h1, h2, h3 {
+        page-break-after: avoid;
+    }
+
+    .conversation {
+        padding-bottom: 0;
+    }
+}
+
+
+.print-only {
+    display: block !important;
+}
+
+.print-footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.2in 0.6in 0.1in;
+    border-top: 1px solid #ccc;
+    font-size: 9pt;
+    color: #666;
+    background: #fff;
+}
+
+.print-footer-title {
+    font-weight: 600;
+    color: #1a1b26;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.print-footer-page {
+    flex: 0 0 auto;
+}
+
+.print-footer-page::after {
+    content: "Page " counter(page) " of " counter(pages);
+}
+
+body {
+    padding-bottom: 0.7in;
+}
+
+/* Ensure printed layout is clean and unclipped */
+* {
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+.conversation,
+.message-content,
+.tool-call-body,
+pre,
+code {
+    overflow: visible !important;
+    max-height: none !important;
+}
+
+img,
+svg,
+video,
+canvas {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Avoid sticky/fixed UI elements in print, except footer */
+.toolbar,
+.theme-toggle {
+    position: static !important;
+}
+
+    </style>
+</head>
+<body>
+    <div class="print-footer print-only" aria-hidden="true">
+        <span class="print-footer-title">I&#39;m having issues with JWT token refresh. The tokens expire and users get logged</span>
+        <span class="print-footer-page"></span>
+    </div>
+    <div id="app">
+        <!-- Header with metadata -->
+        <header class="header" role="banner">
+            <h1 class="title">I&#39;m having issues with JWT token refresh. The tokens expire and users get logged</h1>
+            <div class="meta"><span class="meta-item">21 messages</span>
+                <span class="meta-item meta-project">/data/projects/coding_agent_session_search/tests/fixtures/html_export/real_sessions</span></div>
+        </header>
+        <!-- Toolbar -->
+        <nav class="toolbar" role="navigation" aria-label="Conversation tools">
+            <div class="toolbar-item">
+                <input type="search" id="search-input" placeholder="Search..." aria-label="Search conversation">
+                <span id="search-count" class="search-count" hidden></span>
+            </div>
+            <button id="theme-toggle" class="toolbar-btn" aria-label="Toggle theme" title="Toggle light/dark theme">
+                <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+                <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </button>
+            <button id="print-btn" class="toolbar-btn" aria-label="Print" title="Print conversation">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                    <rect x="6" y="14" width="12" height="8"/>
+                </svg>
+            </button>
+        </nav>
+        <!-- Conversation container -->
+        <main id="conversation" class="conversation" role="main">
+            <!-- Encrypted content - requires password to decrypt -->
+            <div id="encrypted-content" hidden>{"salt":"70foGwnaQEdm6OLM+c/gxQ==","iv":"G6L4ztVlLVI6mH/j","ciphertext":"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","iterations":600000}</div>
+            <div class="encrypted-notice">
+                <p>This conversation is encrypted. Enter the password above to view.</p>
+            </div>
+        </main>
+
+        <!-- Password modal for encrypted content -->
+        <div id="password-modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+            <div class="modal-content">
+                <div class="modal-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="10" rx="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <h2 id="modal-title" class="modal-title">Enter Password</h2>
+                <p class="modal-text">This conversation is encrypted. Enter the password to view.</p>
+                <form id="password-form">
+                    <input type="password" id="password-input" class="modal-input" placeholder="Password" autocomplete="current-password" required>
+                    <button type="submit" class="modal-btn">Decrypt</button>
+                </form>
+                <p id="decrypt-error" class="modal-error" hidden></p>
+            </div>
+        </div>
+    </div>
+    <!-- Scripts at end for performance -->
+    <script>
+// Core utilities
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => document.querySelectorAll(sel);
+
+// Toast notifications
+const Toast = {
+    container: null,
+
+    init() {
+        this.container = document.createElement('div');
+        this.container.id = 'toast-container';
+        this.container.style.cssText = 'position:fixed;bottom:1rem;right:1rem;z-index:9999;display:flex;flex-direction:column;gap:0.5rem;';
+        document.body.appendChild(this.container);
+    },
+
+    show(message, type = 'info') {
+        if (!this.container) this.init();
+        const toast = document.createElement('div');
+        toast.className = 'toast toast-' + type;
+        toast.style.cssText = 'padding:0.75rem 1rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);box-shadow:0 4px 12px rgba(0,0,0,0.3);transform:translateX(100%);transition:transform 0.3s ease;';
+        toast.textContent = message;
+        this.container.appendChild(toast);
+        requestAnimationFrame(() => toast.style.transform = 'translateX(0)');
+        setTimeout(() => {
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+};
+
+// Copy to clipboard
+async function copyToClipboard(text) {
+    try {
+        await navigator.clipboard.writeText(text);
+        Toast.show('Copied to clipboard', 'success');
+        return true;
+    } catch (e) {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            const ok = document.execCommand('copy');
+            if (ok) {
+                Toast.show('Copied to clipboard', 'success');
+                return true;
+            }
+            Toast.show('Copy failed', 'error');
+        } catch (e2) {
+            Toast.show('Copy failed', 'error');
+        }
+        textarea.remove();
+    }
+    return false;
+}
+
+// Copy code block
+async function copyCodeBlock(btn) {
+    const pre = btn.closest('pre');
+    const code = pre.querySelector('code');
+    const ok = await copyToClipboard(code ? code.textContent : pre.textContent);
+    if (ok) {
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 1500);
+    }
+}
+
+// Print handler
+function printConversation() {
+    // Expand all collapsed sections before print
+    $$('details, .tool-call').forEach(el => {
+        if (el.tagName === 'DETAILS') el.open = true;
+        else el.classList.add('expanded');
+    });
+    window.print();
+}
+
+// Search functionality
+const Search = {
+    input: null,
+    countEl: null,
+    matches: [],
+    currentIndex: -1,
+
+    init() {
+        this.input = $('#search-input');
+        this.countEl = $('#search-count');
+        if (!this.input) return;
+
+        this.input.addEventListener('input', () => this.search());
+        this.input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (e.shiftKey) {
+                    this.prev();
+                } else {
+                    this.next();
+                }
+            } else if (e.key === 'Escape') {
+                this.clear();
+                this.input.blur();
+            }
+        });
+
+        // Keyboard shortcut: Ctrl/Cmd + F for search
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                this.input.focus();
+                this.input.select();
+            }
+        });
+    },
+
+    search() {
+        this.clearHighlights();
+        const query = this.input.value.trim().toLowerCase();
+        if (!query) {
+            this.countEl.hidden = true;
+            return;
+        }
+
+        this.matches = [];
+        const messages = $$('.message-content');
+        messages.forEach((el) => {
+            const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+            let node;
+            while ((node = walker.nextNode())) {
+                const text = node.textContent.toLowerCase();
+                let index = text.indexOf(query);
+                while (index !== -1) {
+                    this.matches.push({ node, index, length: query.length });
+                    index = text.indexOf(query, index + 1);
+                }
+            }
+        });
+
+        this.highlightAll();
+        this.updateCount();
+
+        if (this.matches.length > 0) {
+            this.currentIndex = 0;
+            this.scrollToCurrent();
+        }
+    },
+
+    highlightAll() {
+        // Process in reverse to preserve indices
+        for (let i = this.matches.length - 1; i >= 0; i--) {
+            const match = this.matches[i];
+            const range = document.createRange();
+            try {
+                range.setStart(match.node, match.index);
+                range.setEnd(match.node, match.index + match.length);
+                const span = document.createElement('span');
+                span.className = 'search-highlight';
+                span.dataset.matchIndex = i;
+                range.surroundContents(span);
+            } catch (e) {
+                // Skip invalid ranges
+            }
+        }
+    },
+
+    clearHighlights() {
+        $$('.search-highlight').forEach((el) => {
+            const parent = el.parentNode;
+            while (el.firstChild) {
+                parent.insertBefore(el.firstChild, el);
+            }
+            parent.removeChild(el);
+        });
+        this.matches = [];
+        this.currentIndex = -1;
+    },
+
+    updateCount() {
+        if (this.matches.length > 0) {
+            this.countEl.textContent = `${this.currentIndex + 1}/${this.matches.length}`;
+            this.countEl.hidden = false;
+        } else {
+            this.countEl.textContent = 'No results';
+            this.countEl.hidden = false;
+        }
+    },
+
+    scrollToCurrent() {
+        $$('.search-current').forEach((el) => el.classList.remove('search-current'));
+        if (this.currentIndex >= 0 && this.currentIndex < this.matches.length) {
+            const highlight = $(`[data-match-index="${this.currentIndex}"]`);
+            if (highlight) {
+                highlight.classList.add('search-current');
+                highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+        this.updateCount();
+    },
+
+    next() {
+        if (this.matches.length === 0) return;
+        this.currentIndex = (this.currentIndex + 1) % this.matches.length;
+        this.scrollToCurrent();
+    },
+
+    prev() {
+        if (this.matches.length === 0) return;
+        this.currentIndex = (this.currentIndex - 1 + this.matches.length) % this.matches.length;
+        this.scrollToCurrent();
+    },
+
+    clear() {
+        this.input.value = '';
+        this.clearHighlights();
+        this.countEl.hidden = true;
+    }
+};
+
+// Theme toggle
+const Theme = {
+    toggle: null,
+
+    init() {
+        this.toggle = $('#theme-toggle');
+        if (!this.toggle) return;
+
+        // Load saved preference or system preference
+        const saved = localStorage.getItem('cass-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+
+        this.toggle.addEventListener('click', () => this.toggleTheme());
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('cass-theme')) {
+                document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            }
+        });
+    },
+
+    toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('cass-theme', next);
+    }
+};
+
+// Tool call expand/collapse
+const ToolCalls = {
+    init() {
+        $$('.tool-call-header').forEach((header) => {
+            header.addEventListener('click', () => {
+                const toolCall = header.closest('.tool-call');
+                toolCall.classList.toggle('expanded');
+            });
+        });
+    }
+};
+
+// Decryption using Web Crypto API
+const Crypto = {
+    modal: null,
+    form: null,
+    errorEl: null,
+
+    init() {
+        this.modal = $('#password-modal');
+        this.form = $('#password-form');
+        this.errorEl = $('#decrypt-error');
+
+        if (!this.modal || !this.form) return;
+
+        this.form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.decrypt();
+        });
+    },
+
+    async decrypt() {
+        const password = $('#password-input').value;
+        if (!password) return;
+
+        try {
+            this.errorEl.hidden = true;
+
+            // Get encrypted content
+            const encryptedEl = $('#encrypted-content');
+            if (!encryptedEl) throw new Error('No encrypted content found');
+
+            const encryptedData = JSON.parse(encryptedEl.textContent);
+            const { salt, iv, ciphertext, iterations } = encryptedData;
+            if (!salt || !iv || !ciphertext || !Number.isInteger(iterations) || iterations <= 0) {
+                throw new Error('Invalid encryption parameters');
+            }
+
+            // Derive key from password
+            const enc = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey(
+                'raw',
+                enc.encode(password),
+                'PBKDF2',
+                false,
+                ['deriveBits', 'deriveKey']
+            );
+
+            const key = await crypto.subtle.deriveKey(
+                {
+                    name: 'PBKDF2',
+                    salt: this.base64ToBytes(salt),
+                    iterations: iterations,
+                    hash: 'SHA-256'
+                },
+                keyMaterial,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['decrypt']
+            );
+
+            // Decrypt
+            const decrypted = await crypto.subtle.decrypt(
+                {
+                    name: 'AES-GCM',
+                    iv: this.base64ToBytes(iv)
+                },
+                key,
+                this.base64ToBytes(ciphertext)
+            );
+
+            // Replace content
+            const dec = new TextDecoder();
+            const plaintext = dec.decode(decrypted);
+            const conversation = $('#conversation');
+            conversation.innerHTML = plaintext;
+
+            // Hide modal
+            this.modal.hidden = true;
+            this.form.reset();
+
+            // Re-initialize tool calls
+            if (typeof ToolCalls !== 'undefined') {
+                ToolCalls.init();
+            }
+
+        } catch (e) {
+            this.errorEl.textContent = 'Decryption failed. Wrong password?';
+            this.errorEl.hidden = false;
+        }
+    },
+
+    base64ToBytes(base64) {
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+        }
+        return bytes;
+    }
+};
+
+// World-class UI/UX enhancements
+const WorldClass = {
+    scrollProgress: null,
+    floatingNav: null,
+    gradientMesh: null,
+    lastScrollY: 0,
+    ticking: false,
+    currentMessageIndex: -1,
+    messages: [],
+
+    init() {
+        this.messages = Array.from($$('.message'));
+        this.createScrollProgress();
+        this.createFloatingNav();
+        this.createGradientMesh();
+        this.initIntersectionObserver();
+        this.initKeyboardNav();
+        this.initMessageLinks();
+        this.initScrollHandler();
+        this.initShareButton();
+    },
+
+    createScrollProgress() {
+        this.scrollProgress = document.createElement('div');
+        this.scrollProgress.className = 'scroll-progress';
+        document.body.appendChild(this.scrollProgress);
+    },
+
+    createGradientMesh() {
+        this.gradientMesh = document.createElement('div');
+        this.gradientMesh.className = 'gradient-mesh';
+        document.body.insertBefore(this.gradientMesh, document.body.firstChild);
+    },
+
+    createFloatingNav() {
+        this.floatingNav = document.createElement('div');
+        this.floatingNav.className = 'floating-nav';
+        this.floatingNav.innerHTML = `
+            <button class="floating-btn" id="scroll-top-btn" aria-label="Scroll to top" title="Scroll to top">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 15l-6-6-6 6"/>
+                </svg>
+            </button>
+            <button class="floating-btn" id="scroll-bottom-btn" aria-label="Scroll to bottom" title="Scroll to bottom">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 9l6 6 6-6"/>
+                </svg>
+            </button>
+        `;
+        document.body.appendChild(this.floatingNav);
+
+        $('#scroll-top-btn').onclick = () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        $('#scroll-bottom-btn').onclick = () => {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        };
+    },
+
+    initScrollHandler() {
+        const toolbar = $('.toolbar');
+        let lastScrollY = window.scrollY;
+        let scrollDirection = 'up';
+
+        const updateScroll = () => {
+            const scrollY = window.scrollY;
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = scrollHeight > 0 ? (scrollY / scrollHeight) * 100 : 0;
+
+            // Update progress bar
+            if (this.scrollProgress) {
+                this.scrollProgress.style.width = `${progress}%`;
+            }
+
+            // Show/hide floating nav
+            if (this.floatingNav) {
+                if (scrollY > 300) {
+                    this.floatingNav.classList.add('visible');
+                } else {
+                    this.floatingNav.classList.remove('visible');
+                }
+            }
+
+            // Mobile: hide toolbar on scroll down (only if wide enough scroll)
+            if (toolbar && window.innerWidth < 768) {
+                scrollDirection = scrollY > lastScrollY ? 'down' : 'up';
+                if (scrollDirection === 'down' && scrollY > 200) {
+                    toolbar.classList.add('toolbar-hidden');
+                } else {
+                    toolbar.classList.remove('toolbar-hidden');
+                }
+            }
+
+            lastScrollY = scrollY;
+            this.ticking = false;
+        };
+
+        window.addEventListener('scroll', () => {
+            if (!this.ticking) {
+                requestAnimationFrame(updateScroll);
+                this.ticking = true;
+            }
+        }, { passive: true });
+    },
+
+    initIntersectionObserver() {
+        if (!('IntersectionObserver' in window)) return;
+
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) {
+            this.messages.forEach((msg) => {
+                msg.style.opacity = '1';
+                msg.style.transform = 'none';
+                msg.classList.add('in-view');
+            });
+            return;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        // Initially hide messages for animation
+        // Must match CSS @keyframes messageReveal 'from' state exactly
+        this.messages.forEach((msg, i) => {
+            msg.style.opacity = '0';
+            msg.style.transform = 'translateY(24px) scale(0.97)';
+            setTimeout(() => observer.observe(msg), i * 30);
+        });
+    },
+
+    initKeyboardNav() {
+        document.addEventListener('keydown', (e) => {
+            // Ignore if in input/textarea
+            if (e.target.matches('input, textarea')) return;
+
+            switch(e.key) {
+                case 'j':
+                    e.preventDefault();
+                    this.navigateMessage(1);
+                    break;
+                case 'k':
+                    e.preventDefault();
+                    this.navigateMessage(-1);
+                    break;
+                case 'g':
+                    e.preventDefault();
+                    this.navigateToMessage(0);
+                    break;
+                case 'G':
+                    e.preventDefault();
+                    this.navigateToMessage(this.messages.length - 1);
+                    break;
+                case '/':
+                    if (!e.ctrlKey && !e.metaKey) {
+                        e.preventDefault();
+                        const searchInput = $('#search-input');
+                        if (searchInput) {
+                            searchInput.focus();
+                            searchInput.select();
+                        }
+                    }
+                    break;
+                case '?':
+                    e.preventDefault();
+                    this.showShortcutsHint();
+                    break;
+            }
+        });
+    },
+
+    navigateMessage(direction) {
+        const newIndex = Math.max(0, Math.min(this.messages.length - 1, this.currentMessageIndex + direction));
+        this.navigateToMessage(newIndex);
+    },
+
+    navigateToMessage(index) {
+        // Remove focus from current
+        if (this.currentMessageIndex >= 0 && this.messages[this.currentMessageIndex]) {
+            this.messages[this.currentMessageIndex].classList.remove('keyboard-focus');
+        }
+
+        this.currentMessageIndex = index;
+        const msg = this.messages[index];
+        if (msg) {
+            msg.classList.add('keyboard-focus');
+            msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    },
+
+    showShortcutsHint() {
+        let hint = $('.shortcuts-hint');
+        if (!hint) {
+            hint = document.createElement('div');
+            hint.className = 'shortcuts-hint';
+            hint.innerHTML = '<kbd>j</kbd>/<kbd>k</kbd> navigate • <kbd>g</kbd> first • <kbd>G</kbd> last • <kbd>/</kbd> search • <kbd>?</kbd> help';
+            document.body.appendChild(hint);
+        }
+        hint.classList.add('visible');
+        setTimeout(() => hint.classList.remove('visible'), 3000);
+    },
+
+    initMessageLinks() {
+        this.messages.forEach((msg, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'message-link-btn';
+            btn.title = 'Copy link to message';
+            btn.setAttribute('aria-label', 'Copy link to message');
+            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>';
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                const id = msg.id || `msg-${i}`;
+                if (!msg.id) msg.id = id;
+                const url = `${window.location.href.split('#')[0]}#${id}`;
+                copyToClipboard(url);
+                btn.classList.add('copied');
+                setTimeout(() => btn.classList.remove('copied'), 1500);
+            };
+            msg.style.position = 'relative';
+            msg.appendChild(btn);
+        });
+    },
+
+    initShareButton() {
+        if (!navigator.share) return;
+
+        const toolbar = $('.toolbar');
+        if (!toolbar) return;
+
+        const shareBtn = document.createElement('button');
+        shareBtn.className = 'toolbar-btn share-btn';
+        shareBtn.title = 'Share';
+        shareBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16,6 12,2 8,6"/><line x1="12" y1="2" x2="12" y2="15"/></svg><span>Share</span>';
+        shareBtn.onclick = async () => {
+            try {
+                await navigator.share({
+                    title: document.title,
+                    url: window.location.href
+                });
+            } catch (e) {
+                if (e.name !== 'AbortError') {
+                    Toast.show('Share failed', 'error');
+                }
+            }
+        };
+        toolbar.appendChild(shareBtn);
+    }
+};
+
+// Touch ripple effect for mobile
+function createRipple(event) {
+    const button = event.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${event.clientX - rect.left - size/2}px`;
+    ripple.style.top = `${event.clientY - rect.top - size/2}px`;
+    ripple.className = 'ripple';
+    button.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+}
+
+// Add ripple to touch devices
+if ('ontouchstart' in window) {
+    document.addEventListener('DOMContentLoaded', () => {
+        $$('.toolbar-btn, .floating-btn').forEach(btn => {
+            btn.addEventListener('touchstart', createRipple);
+        });
+    });
+}
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+    Search.init();
+    Theme.init();
+    ToolCalls.init();
+    Crypto.init();
+    WorldClass.init();
+    // Add copy buttons to code blocks
+    $$('pre code').forEach((code) => {
+        const pre = code.parentNode;
+        const btn = document.createElement('button');
+        btn.className = 'copy-code-btn';
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+        btn.title = 'Copy code';
+        btn.setAttribute('aria-label', 'Copy code');
+        btn.onclick = () => copyCodeBlock(btn);
+        btn.style.cssText = 'position:absolute;top:0.5rem;right:0.5rem;padding:0.25rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:4px;color:var(--text-muted);cursor:pointer;transition:opacity 0.2s;';
+        pre.style.position = 'relative';
+        pre.appendChild(btn);
+    });
+
+    // Print button handler
+    const printBtn = $('#print-btn');
+    if (printBtn) printBtn.addEventListener('click', printConversation);
+
+    // Global keyboard shortcut: Ctrl/Cmd + P for print
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+            e.preventDefault();
+            printConversation();
+        }
+    });
+});
+    </script>
+</body>
+</html>

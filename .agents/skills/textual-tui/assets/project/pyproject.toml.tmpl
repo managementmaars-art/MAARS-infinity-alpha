@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling>=1.26.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "{{PROJECT_NAME}}"
+version = "0.1.0"
+description = "Textual application"
+readme = "README.md"
+requires-python = ">={{PYTHON_MIN}}"
+dependencies = [
+  "textual>=8.1.1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "pytest-asyncio>=0.23",
+  "textual-dev>=1.7.0",
+  "pytest-textual-snapshot>=1.0.0",
+]
+
+[project.scripts]
+{{COMMAND_NAME}} = "{{MODULE}}:{{ENTRY_FUNCTION}}"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

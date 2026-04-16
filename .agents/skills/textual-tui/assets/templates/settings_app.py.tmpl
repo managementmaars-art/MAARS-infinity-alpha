@@ -1,0 +1,83 @@
+from __future__ import annotations
+
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal
+from textual.reactive import var
+from textual.widgets import Button, Footer, Header, Input, Static, Switch, TabbedContent, TabPane
+
+
+class {{CLASS_NAME}}(App):
+    CSS_PATH = "{{MODULE}}.tcss"
+    TITLE = "{{APP_TITLE}}"
+    SUB_TITLE = "Settings editor"
+    BINDINGS = [
+        ("ctrl+s", "save", "Save"),
+    ]
+
+    saved = var(False)
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        with TabbedContent(initial="general"):
+            with TabPane("General", id="general"):
+                yield Input(placeholder="Project name", id="project-name")
+                with Horizontal(classes="switch-row"):
+                    yield Static("Enable autosave")
+                    yield Switch(id="autosave")
+            with TabPane("Appearance", id="appearance"):
+                yield Input(placeholder="Theme name", id="theme-name")
+                with Horizontal(classes="switch-row"):
+                    yield Static("Dense layout")
+                    yield Switch(id="dense-layout")
+            with TabPane("Advanced", id="advanced"):
+                with Horizontal(classes="switch-row"):
+                    yield Static("Enable telemetry")
+                    yield Switch(id="telemetry")
+        with Horizontal(id="actions"):
+            yield Button("Save", id="save", variant="primary")
+        yield Static(id="summary")
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.refresh_summary()
+        self.query_one("#project-name", Input).focus()
+
+    def summary_text(self) -> str:
+        return "\n".join(
+            [
+                "Project:   {0}".format(self.query_one("#project-name", Input).value or "—"),
+                "Theme:     {0}".format(self.query_one("#theme-name", Input).value or "textual-dark"),
+                "Autosave:  {0}".format(self.query_one("#autosave", Switch).value),
+                "Dense:     {0}".format(self.query_one("#dense-layout", Switch).value),
+                "Telemetry: {0}".format(self.query_one("#telemetry", Switch).value),
+                "Saved:     {0}".format(self.saved),
+            ]
+        )
+
+    def refresh_summary(self) -> None:
+        self.query_one("#summary", Static).update(self.summary_text())
+
+    def on_input_changed(self, _event: Input.Changed) -> None:
+        self.saved = False
+        self.refresh_summary()
+
+    def on_switch_changed(self, _event: Switch.Changed) -> None:
+        self.saved = False
+        self.refresh_summary()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "save":
+            self.action_save()
+
+    def action_save(self) -> None:
+        self.saved = True
+        self.refresh_summary()
+        self.notify("Saved settings.", title="Configuration")
+
+
+def main() -> None:
+    {{CLASS_NAME}}().run()
+
+
+if __name__ == "__main__":
+    main()

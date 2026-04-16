@@ -1,0 +1,6 @@
+{
+  "id": "part1",
+  "messageID": "msg_test1",
+  "type": "text",
+  "text": "Hello, can you help me with Rust?"
+}

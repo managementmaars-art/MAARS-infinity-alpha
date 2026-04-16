@@ -1,0 +1,22 @@
+会议邀请函
+
+尊敬的 {{name}} {{position}}：
+
+诚邀您参加 {{event_name}} 活动。
+
+活动时间：{{event_date}}
+活动地点：{{event_location}}
+
+活动议程：
+1. 签到入场
+2. 主题演讲
+3. 交流互动
+4. 晚宴
+
+请于 {{rsvp_date}} 前确认是否参加。
+
+此致
+敬礼
+
+{{company_name}}
+{{date}}

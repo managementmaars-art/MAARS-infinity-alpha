@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年02月06日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --accent-normal: #6C757D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .report-header h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+            margin-top: 32px;
+        }
+
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hotspot-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hotspot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .hotspot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .hotword {
+            font-weight: 600;
+            font-size: 16px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotness {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .hotspot-summary {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hotspot-detail {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .hotspot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+            transition: all 0.2s;
+        }
+
+        .idea-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .idea-card.excellent {
+            border-left-color: var(--accent-excellent);
+            background: linear-gradient(to right, rgba(255, 210, 63, 0.1), transparent);
+        }
+
+        .idea-card.good {
+            border-left-color: var(--accent-good);
+            background: linear-gradient(to right, rgba(6, 167, 125, 0.05), transparent);
+        }
+
+        .idea-card.normal {
+            border-left-color: var(--accent-normal);
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .idea-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .score-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.excellent {
+            background: var(--accent-excellent);
+            color: #333;
+        }
+
+        .badge.good {
+            background: var(--accent-good);
+            color: white;
+        }
+
+        .badge.normal {
+            background: var(--accent-normal);
+            color: white;
+        }
+
+        .idea-body p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .idea-body strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .idea-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .idea-body li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .score-breakdown {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .statistics h2 {
+            color: white;
+            border-left-color: white;
+            margin-top: 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ranking-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ranking-rank {
+            font-size: 24px;
+            font-weight: 700;
+            width: 40px;
+            text-align: center;
+        }
+
+        .ranking-rank.gold { color: #FFD700; }
+        .ranking-rank.silver { color: #C0C0C0; }
+        .ranking-rank.bronze { color: #CD7F32; }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .ranking-hotword {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .ranking-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .report-header { padding: 24px; }
+            .report-header h1 { font-size: 24px; }
+            .hotspot-list { grid-template-columns: 1fr; }
+            .idea-header { flex-direction: column; align-items: flex-start; }
+            .stat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>🤖 微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>📅 生成日期：2026-02-06</span>
+                <span>🔥 热搜总数：5</span>
+                <span>💡 创意总数：16</span>
+                <span>⏰ 生成时间：2026-02-06 22:37:31</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">快递停运</span>
+                </div>
+                <div class="hotness">热度：1150206 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">91岁老人900万积蓄遭儿子儿媳挪用</span>
+                </div>
+                <div class="hotness">热度：808789 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">全国首款航天造电动垂直起降飞行器首飞成功</span>
+                </div>
+                <div class="hotness">热度：640589 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">微博之夜最强追星神器</span>
+                </div>
+                <div class="hotness">热度： </div>
+                <div class="hotspot-summary">微博之夜粉丝热议能拍摄偶像高清生图的超长焦设备及辅助神器。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">Bin 我依然是世一上</span>
+                </div>
+                <div class="hotness">热度：591440 </div>
+                <div class="hotspot-summary">S14决赛失利后，BLG选手Bin发文拒绝认输，坚持宣称自己仍是世界第一上单，引发关于自信与嘴硬的热议。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">一上午烫了20多个老太太</span>
+                </div>
+                <div class="hotness">热度：514111 <span class="tag">好物</span></div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">隋文静落泪道歉</span>
+                </div>
+                <div class="hotness">热度：194209 </div>
+                <div class="hotspot-summary">隋文静在综艺节目中因表现未达预期落泪致歉，引发关于跨界压力与完美主义的讨论。</div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">成龙新片悬疑贺岁颠覆上演</span>
+                </div>
+                <div class="hotness">热度： <span class="tag">新</span></div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">隋文静摔倒</span>
+                </div>
+                <div class="hotness">热度：192955 </div>
+                
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">狼队对战KSG</span>
+                </div>
+                <div class="hotness">热度：192941 </div>
+                
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">1</span>
+                <span class="hotword" style="font-size: 18px;">快递停运</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>1,150,206</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「快递停运」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsOD59Wk0TlpE4oqqXiiALw2salgT2u-YmdUKd8stR0A4RkGuD_yhPNVWY6WUBZ4K1dLqO2K7n0Yj82STZtW-TMtbw9QXspwp91isHhddlsSm6tVfvyZmzhSkLdNB9fGh_CSsAO&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_message_description":"To continue, verify your account at","validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsOD59Wk0TlpE4oqqXiiALw2salgT2u-YmdUKd8stR0A4RkGuD_yhPNVWY6WUBZ4K1dLqO2K7n0Yj82STZtW-TMtbw9QXspwp91isHhddlsSm6tVfvyZmzhSkLdNB9fGh_CSsAO&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsOD59Wk0TlpE4oqqXiiALw2salgT2u-YmdUKd8stR0A4RkGuD_yhPNVWY6WUBZ4K1dLqO2K7n0Yj82STZtW-TMtbw9QXspwp91isHhddlsSm6tVfvyZmzhSkLdNB9fGh_CSsAO&flowName=GlifWebSignIn&authuser"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsOD59Wk0TlpE4oqqXiiALw2salgT2u-YmdUKd8stR0A4RkGuD_yhPNVWY6WUBZ4K1dLqO2K7n0Yj82STZtW-TMtbw9QXspwp91isHhddlsSm6tVfvyZmzhSkLdNB9fGh_CSsAO&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsOD59Wk0TlpE4oqqXiiALw2salgT2u-YmdUKd8stR0A4RkGuD_yhPNVWY6WUBZ4K1dLqO2K7n0Yj82STZtW-TMtbw9QXspwp91isHhddlsSm6tVfvyZmzhSkLdNB9fGh_CSsAO&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_message_description":"To continue, verify your account at","validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsOD59Wk0TlpE4oqqXiiALw2salgT2u-YmdUKd8stR0A4RkGuD_yhPNVWY6WUBZ4K1dLqO2K7n0Yj82STZtW-TMtbw9QXspwp91isHhddlsSm6tVfvyZmzhSkLdNB9fGh_CSsAO&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsOD59Wk0TlpE4oqqXiiALw2salgT2u-YmdUKd8stR0A4RkGuD_yhPNVWY6WUBZ4K1dLqO2K7n0Yj82STZtW-TMtbw9QXspwp91isHhddlsSm6tVfvyZmzhSkLdNB9fGh_CSsAO&flowName=GlifWebSignIn&authuser"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbsOD59Wk0TlpE4oqqXiiALw2salgT2u-YmdUKd8stR0A4RkGuD_yhPNVWY6WUBZ4K1dLqO2K7n0Yj82STZtW-TMtbw9QXspwp91isHhddlsSm6tVfvyZmzhSkLdNB9fGh_CSsAO&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">2</span>
+                <span class="hotword" style="font-size: 18px;">91岁老人900万积蓄遭儿子儿媳挪用</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>808,789</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「91岁老人900万积蓄遭儿子儿媳挪用」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuOgWI9xIqpWMcr5DP30E6z9V9TP-3GY6w57mgdhUcyTCA9CSir5L8Ck0mwFTh_-LUAiE8FfcpXOJ8LQL_cs5IjlTdAmN7TyxEH5CcQb8cKb7YxyppbYntCMXKwqrcV5QBN6s7e&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuOgWI9xIqpWMcr5DP30E6z9V9TP-3GY6w57mgdhUcyTCA9CSir5L8Ck0mwFTh_-LUAiE8FfcpXOJ8LQL_cs5IjlTdAmN7TyxEH5CcQb8cKb7YxyppbYntCMXKwqrcV5QBN6s7e&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuOgWI9xIqpWMcr5DP30E6z9V9TP-3GY6w57mgdhUcyTCA9CSir5L8Ck0mwFTh_-LUAiE8FfcpXOJ8LQL_cs5IjlTdAmN7TyxEH5CcQb8cKb7YxyppbYntCMXKwqrcV5QBN6s7e&flowName=GlifWebSignIn&authuser","validation_message_description":"To continue, verify your account at","validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuOgWI9xIqpWMcr5DP30E6z9V9TP-3GY6w57mgdhUcyTCA9CSir5L8Ck0mwFTh_-LUAiE8FfcpXOJ8LQL_cs5IjlTdAmN7TyxEH5CcQb8cKb7YxyppbYntCMXKwqrcV5QBN6s7e&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuOgWI9xIqpWMcr5DP30E6z9V9TP-3GY6w57mgdhUcyTCA9CSir5L8Ck0mwFTh_-LUAiE8FfcpXOJ8LQL_cs5IjlTdAmN7TyxEH5CcQb8cKb7YxyppbYntCMXKwqrcV5QBN6s7e&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuOgWI9xIqpWMcr5DP30E6z9V9TP-3GY6w57mgdhUcyTCA9CSir5L8Ck0mwFTh_-LUAiE8FfcpXOJ8LQL_cs5IjlTdAmN7TyxEH5CcQb8cKb7YxyppbYntCMXKwqrcV5QBN6s7e&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuOgWI9xIqpWMcr5DP30E6z9V9TP-3GY6w57mgdhUcyTCA9CSir5L8Ck0mwFTh_-LUAiE8FfcpXOJ8LQL_cs5IjlTdAmN7TyxEH5CcQb8cKb7YxyppbYntCMXKwqrcV5QBN6s7e&flowName=GlifWebSignIn&authuser","validation_message_description":"To continue, verify your account at","validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuOgWI9xIqpWMcr5DP30E6z9V9TP-3GY6w57mgdhUcyTCA9CSir5L8Ck0mwFTh_-LUAiE8FfcpXOJ8LQL_cs5IjlTdAmN7TyxEH5CcQb8cKb7YxyppbYntCMXKwqrcV5QBN6s7e&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">3</span>
+                <span class="hotword" style="font-size: 18px;">全国首款航天造电动垂直起降飞行器首飞成功</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>640,589</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「全国首款航天造电动垂直起降飞行器首飞成功」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuX5Geq_MqWfS2O9JvEJKBIiHQFchjOR0OTmslU591MU_z2xZyjPMvRoJeZdVqK56Pc--OQT_ItJkfFFq8rDl8HuOjvQxELUzYDNMFAZ5JZAZrBvut2buyh_IP-0s_5AXoK1rgq&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuX5Geq_MqWfS2O9JvEJKBIiHQFchjOR0OTmslU591MU_z2xZyjPMvRoJeZdVqK56Pc--OQT_ItJkfFFq8rDl8HuOjvQxELUzYDNMFAZ5JZAZrBvut2buyh_IP-0s_5AXoK1rgq&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuX5Geq_MqWfS2O9JvEJKBIiHQFchjOR0OTmslU591MU_z2xZyjPMvRoJeZdVqK56Pc--OQT_ItJkfFFq8rDl8HuOjvQxELUzYDNMFAZ5JZAZrBvut2buyh_IP-0s_5AXoK1rgq&flowName=GlifWebSignIn&authuser","validation_message_description":"To continue, verify your account at"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuX5Geq_MqWfS2O9JvEJKBIiHQFchjOR0OTmslU591MU_z2xZyjPMvRoJeZdVqK56Pc--OQT_ItJkfFFq8rDl8HuOjvQxELUzYDNMFAZ5JZAZrBvut2buyh_IP-0s_5AXoK1rgq&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuX5Geq_MqWfS2O9JvEJKBIiHQFchjOR0OTmslU591MU_z2xZyjPMvRoJeZdVqK56Pc--OQT_ItJkfFFq8rDl8HuOjvQxELUzYDNMFAZ5JZAZrBvut2buyh_IP-0s_5AXoK1rgq&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuX5Geq_MqWfS2O9JvEJKBIiHQFchjOR0OTmslU591MU_z2xZyjPMvRoJeZdVqK56Pc--OQT_ItJkfFFq8rDl8HuOjvQxELUzYDNMFAZ5JZAZrBvut2buyh_IP-0s_5AXoK1rgq&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuX5Geq_MqWfS2O9JvEJKBIiHQFchjOR0OTmslU591MU_z2xZyjPMvRoJeZdVqK56Pc--OQT_ItJkfFFq8rDl8HuOjvQxELUzYDNMFAZ5JZAZrBvut2buyh_IP-0s_5AXoK1rgq&flowName=GlifWebSignIn&authuser","validation_message_description":"To continue, verify your account at"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuX5Geq_MqWfS2O9JvEJKBIiHQFchjOR0OTmslU591MU_z2xZyjPMvRoJeZdVqK56Pc--OQT_ItJkfFFq8rDl8HuOjvQxELUzYDNMFAZ5JZAZrBvut2buyh_IP-0s_5AXoK1rgq&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">4</span>
+                <span class="hotword" style="font-size: 18px;">微博之夜最强追星神器</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">爱豆毛孔级相机</span>
+                        <div class="score-info">
+                            <span class="score">91分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI超分补全百倍变焦细节</li>
+                    <li>激动手抖智能防抖算法</li>
+                    <li>自动去除路人遮挡模式</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-28岁，热衷现场追星且对生图质量有极致要求的饭圈女孩</p>
+                        <p><strong>📝 产品描述：</strong>针对演唱会远距离拍摄痛点，利用生成式AI修复模糊像素，将糊图秒变“怼脸”高清生图，甚至能看清爱豆毛孔，满足粉丝炫耀心理。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">赛博灯牌矩阵</span>
+                        <div class="score-info">
+                            <span class="score">80分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>近场组网拼图功能</li>
+                    <li>声波控制同步闪烁</li>
+                    <li>AR弹幕上墙特效</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>应援团组织者及结伴参会的粉丝群体，喜欢营造集体声势</p>
+                        <p><strong>📝 产品描述：</strong>无需携带笨重灯牌，多台手机通过App自动组网，在看台拼出巨大的动态应援口号，并能随现场音乐节奏统一变色，打造震撼视觉效果。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">云端替身人偶</span>
+                        <div class="score-info">
+                            <span class="score">78分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>全景VR现场视角</li>
+                    <li>远程尖叫声波转化</li>
+                    <li>虚拟礼物投掷互动</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法去现场但消费能力强、渴望参与感的“云追星”用户</p>
+                        <p><strong>📝 产品描述：</strong>为未抢到票的粉丝提供VR“替身”体验，不仅能身临其境观看，还能将家中呐喊声转化为现场大屏的热力值，实现跨时空应援。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 38分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">5</span>
+                <span class="hotword" style="font-size: 18px;">Bin 我依然是世一上</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>591,440</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">全自动嘴硬助手</span>
+                        <div class="score-info">
+                            <span class="score">83分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI智能甩锅逻辑生成</li>
+                    <li>精神胜利法战报一键合成</li>
+                    <li>逆风局互怼语录库</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-28岁电竞玩家、喜欢玩梗的大学生、需要情绪宣泄的职场新人</p>
+                        <p><strong>📝 产品描述：</strong>基于Bin的'世一上'语录，利用AI帮助用户在游戏输掉或生活受挫时寻找'刁钻'角度反驳，生成看似有理的'不服输'文案，主打社交娱乐与情绪释放。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 35分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">万物皆可世一上</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>冷门领域'第一'头衔认证</li>
+                    <li>不服来战1v1投票PK</li>
+                    <li>自信语录海报生成器</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>Z世代社交活跃用户、渴望个性化表达的年轻人</p>
+                        <p><strong>📝 产品描述：</strong>一个趣味社交社区，用户可以自定义极其细分的领域（如'吃泡面速度世一上'）并申请头衔，他人可发起挑战，通过趣味互动满足用户的自我表达欲和胜负欲。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 55分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">Bin式强心剂</span>
+                        <div class="score-info">
+                            <span class="score">73分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>赛前/考前绝对自信语音唤醒</li>
+                    <li>抗压心理模拟训练</li>
+                    <li>每日霸气自我暗示推送</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>面临高压竞争的考生、电竞青训选手、缺乏自信的求职者</p>
+                        <p><strong>📝 产品描述：</strong>提取Bin的大赛心态模型，为用户提供一种'过度自信'的心理暗示工具。不同于传统的温和鼓励，它用极度霸气、舍我其谁的风格帮助用户在关键时刻克服怯场。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 70分 × 80% + 有用度 85分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">6</span>
+                <span class="hotword" style="font-size: 18px;">一上午烫了20多个老太太 <span class="tag">好物</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>514,111</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「一上午烫了20多个老太太」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbugWICPdQbkFCnvKB6u_H5olEqW7idkO5rFipZZ0uS4bl1i-JmXKdxUmrA4jwkTSo9JZwT2njHE_oHE2PE3PIU3UNgbALkKwo-rvz2AIS-g5PqjgxruXaQTRn3ffvZXY0Lj3nQ2&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbugWICPdQbkFCnvKB6u_H5olEqW7idkO5rFipZZ0uS4bl1i-JmXKdxUmrA4jwkTSo9JZwT2njHE_oHE2PE3PIU3UNgbALkKwo-rvz2AIS-g5PqjgxruXaQTRn3ffvZXY0Lj3nQ2&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbugWICPdQbkFCnvKB6u_H5olEqW7idkO5rFipZZ0uS4bl1i-JmXKdxUmrA4jwkTSo9JZwT2njHE_oHE2PE3PIU3UNgbALkKwo-rvz2AIS-g5PqjgxruXaQTRn3ffvZXY0Lj3nQ2&flowName=GlifWebSignIn&authuser","validation_message_description":"To continue, verify your account at","validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbugWICPdQbkFCnvKB6u_H5olEqW7idkO5rFipZZ0uS4bl1i-JmXKdxUmrA4jwkTSo9JZwT2njHE_oHE2PE3PIU3UNgbALkKwo-rvz2AIS-g5PqjgxruXaQTRn3ffvZXY0Lj3nQ2&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbugWICPdQbkFCnvKB6u_H5olEqW7idkO5rFipZZ0uS4bl1i-JmXKdxUmrA4jwkTSo9JZwT2njHE_oHE2PE3PIU3UNgbALkKwo-rvz2AIS-g5PqjgxruXaQTRn3ffvZXY0Lj3nQ2&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbugWICPdQbkFCnvKB6u_H5olEqW7idkO5rFipZZ0uS4bl1i-JmXKdxUmrA4jwkTSo9JZwT2njHE_oHE2PE3PIU3UNgbALkKwo-rvz2AIS-g5PqjgxruXaQTRn3ffvZXY0Lj3nQ2&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbugWICPdQbkFCnvKB6u_H5olEqW7idkO5rFipZZ0uS4bl1i-JmXKdxUmrA4jwkTSo9JZwT2njHE_oHE2PE3PIU3UNgbALkKwo-rvz2AIS-g5PqjgxruXaQTRn3ffvZXY0Lj3nQ2&flowName=GlifWebSignIn&authuser","validation_message_description":"To continue, verify your account at","validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbugWICPdQbkFCnvKB6u_H5olEqW7idkO5rFipZZ0uS4bl1i-JmXKdxUmrA4jwkTSo9JZwT2njHE_oHE2PE3PIU3UNgbALkKwo-rvz2AIS-g5PqjgxruXaQTRn3ffvZXY0Lj3nQ2&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">7</span>
+                <span class="hotword" style="font-size: 18px;">隋文静落泪道歉</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>194,209</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">跨界翻车大赏</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>各领域大神新手期视频</li>
+                    <li>我是菜鸟挑战赛</li>
+                    <li>治愈系弹幕生成</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁，深陷内卷与完美主义焦虑的年轻人</p>
+                        <p><strong>📝 产品描述：</strong>一个专门展示行业精英在陌生领域“笨拙时刻”的短视频社区。通过展示类似隋文静跨界的“翻车”瞬间，打破完美人设，缓解大众容貌与能力焦虑，传递“敢于丢脸才是自信”的价值观。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">高情商致歉君</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>致歉真诚度AI评分</li>
+                    <li>泪目文案生成器</li>
+                    <li>危机公关模拟游戏</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁，职场新人及关注娱乐圈公关的吃瓜群众</p>
+                        <p><strong>📝 产品描述：</strong>一款结合AI的社交辅助工具与模拟游戏。用户可输入犯错场景，生成类似热搜中“真诚且令人心疼”的致歉文案；或在游戏中扮演经纪人，处理明星因失误引发的舆论危机，体验公关艺术。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">抱抱能量站</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>虚拟安慰投喂</li>
+                    <li>压力宣泄树洞</li>
+                    <li>挫折恢复力图谱</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>女性用户为主，具有高共情能力及粉丝群体</p>
+                        <p><strong>📝 产品描述：</strong>基于热点人物情绪的互助小程序。当有人物（如隋文静）因压力落泪上热搜时，开启“守护模式”，用户可发送虚拟纸巾和鼓励。平时作为普通人的互助社区，用众包安慰治愈每一个“崩溃瞬间”。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">8</span>
+                <span class="hotword" style="font-size: 18px;">成龙新片悬疑贺岁颠覆上演 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>0</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「成龙新片悬疑贺岁颠覆上演」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt6ns_BGyrfBVLQkyMWHLQEXoH8nwthWae64brS6pQCG9qJkH-sbPvQi1m_4NPBeqQOB7duXKd5PNpCRrxWQZz97JaBu8kdufHOQ_zg78mFTxdPlo6lnOfLeUf3ATwVRZ4uugtb&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_message_description":"To continue, verify your account at","validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt6ns_BGyrfBVLQkyMWHLQEXoH8nwthWae64brS6pQCG9qJkH-sbPvQi1m_4NPBeqQOB7duXKd5PNpCRrxWQZz97JaBu8kdufHOQ_zg78mFTxdPlo6lnOfLeUf3ATwVRZ4uugtb&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt6ns_BGyrfBVLQkyMWHLQEXoH8nwthWae64brS6pQCG9qJkH-sbPvQi1m_4NPBeqQOB7duXKd5PNpCRrxWQZz97JaBu8kdufHOQ_zg78mFTxdPlo6lnOfLeUf3ATwVRZ4uugtb&flowName=GlifWebSignIn&authuser"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt6ns_BGyrfBVLQkyMWHLQEXoH8nwthWae64brS6pQCG9qJkH-sbPvQi1m_4NPBeqQOB7duXKd5PNpCRrxWQZz97JaBu8kdufHOQ_zg78mFTxdPlo6lnOfLeUf3ATwVRZ4uugtb&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt6ns_BGyrfBVLQkyMWHLQEXoH8nwthWae64brS6pQCG9qJkH-sbPvQi1m_4NPBeqQOB7duXKd5PNpCRrxWQZz97JaBu8kdufHOQ_zg78mFTxdPlo6lnOfLeUf3ATwVRZ4uugtb&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_message_description":"To continue, verify your account at","validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt6ns_BGyrfBVLQkyMWHLQEXoH8nwthWae64brS6pQCG9qJkH-sbPvQi1m_4NPBeqQOB7duXKd5PNpCRrxWQZz97JaBu8kdufHOQ_zg78mFTxdPlo6lnOfLeUf3ATwVRZ4uugtb&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt6ns_BGyrfBVLQkyMWHLQEXoH8nwthWae64brS6pQCG9qJkH-sbPvQi1m_4NPBeqQOB7duXKd5PNpCRrxWQZz97JaBu8kdufHOQ_zg78mFTxdPlo6lnOfLeUf3ATwVRZ4uugtb&flowName=GlifWebSignIn&authuser"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt6ns_BGyrfBVLQkyMWHLQEXoH8nwthWae64brS6pQCG9qJkH-sbPvQi1m_4NPBeqQOB7duXKd5PNpCRrxWQZz97JaBu8kdufHOQ_zg78mFTxdPlo6lnOfLeUf3ATwVRZ4uugtb&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">9</span>
+                <span class="hotword" style="font-size: 18px;">隋文静摔倒</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>192,955</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「隋文静摔倒」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt0l9reMZzE7cn8FoUOSfE8QaQpDjhNeehj-coimxrp1dMhH3zR4mTWHUHl3nsziD1WnSMKOKeLqw_JXjn27PVaY-nGRdDpdEHTBPWv2bQ2Z-SGT-rGwWSckMrZc2RdNNSlCVof&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_message_description":"To continue, verify your account at","validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt0l9reMZzE7cn8FoUOSfE8QaQpDjhNeehj-coimxrp1dMhH3zR4mTWHUHl3nsziD1WnSMKOKeLqw_JXjn27PVaY-nGRdDpdEHTBPWv2bQ2Z-SGT-rGwWSckMrZc2RdNNSlCVof&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt0l9reMZzE7cn8FoUOSfE8QaQpDjhNeehj-coimxrp1dMhH3zR4mTWHUHl3nsziD1WnSMKOKeLqw_JXjn27PVaY-nGRdDpdEHTBPWv2bQ2Z-SGT-rGwWSckMrZc2RdNNSlCVof&flowName=GlifWebSignIn&authuser"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt0l9reMZzE7cn8FoUOSfE8QaQpDjhNeehj-coimxrp1dMhH3zR4mTWHUHl3nsziD1WnSMKOKeLqw_JXjn27PVaY-nGRdDpdEHTBPWv2bQ2Z-SGT-rGwWSckMrZc2RdNNSlCVof&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt0l9reMZzE7cn8FoUOSfE8QaQpDjhNeehj-coimxrp1dMhH3zR4mTWHUHl3nsziD1WnSMKOKeLqw_JXjn27PVaY-nGRdDpdEHTBPWv2bQ2Z-SGT-rGwWSckMrZc2RdNNSlCVof&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_message_description":"To continue, verify your account at","validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt0l9reMZzE7cn8FoUOSfE8QaQpDjhNeehj-coimxrp1dMhH3zR4mTWHUHl3nsziD1WnSMKOKeLqw_JXjn27PVaY-nGRdDpdEHTBPWv2bQ2Z-SGT-rGwWSckMrZc2RdNNSlCVof&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt0l9reMZzE7cn8FoUOSfE8QaQpDjhNeehj-coimxrp1dMhH3zR4mTWHUHl3nsziD1WnSMKOKeLqw_JXjn27PVaY-nGRdDpdEHTBPWv2bQ2Z-SGT-rGwWSckMrZc2RdNNSlCVof&flowName=GlifWebSignIn&authuser"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbt0l9reMZzE7cn8FoUOSfE8QaQpDjhNeehj-coimxrp1dMhH3zR4mTWHUHl3nsziD1WnSMKOKeLqw_JXjn27PVaY-nGRdDpdEHTBPWv2bQ2Z-SGT-rGwWSckMrZc2RdNNSlCVof&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">10</span>
+                <span class="hotword" style="font-size: 18px;">狼队对战KSG</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>192,941</p>
+            <div class="product-ideas">
+
+                <div class="idea-card normal">
+                    <div class="idea-header">
+                        <span class="idea-name">「狼队对战KSG」分析失败</span>
+                        <div class="score-info">
+                            <span class="score">0分</span>
+                            <span class="badge normal">普通</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>错误: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuMpgfl4z727BipFMiBJPCh5Qh3CN_qKJnfk2DVeD0xufFv04324mPlRbeN3uDDLvZRnsR_S0Yaq8AJH5duYuhUM7IvEDUOLo4Tr5CQXLZQ9q1M5g9XUGNILrrysony7-DTvGH_&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuMpgfl4z727BipFMiBJPCh5Qh3CN_qKJnfk2DVeD0xufFv04324mPlRbeN3uDDLvZRnsR_S0Yaq8AJH5duYuhUM7IvEDUOLo4Tr5CQXLZQ9q1M5g9XUGNILrrysony7-DTvGH_&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuMpgfl4z727BipFMiBJPCh5Qh3CN_qKJnfk2DVeD0xufFv04324mPlRbeN3uDDLvZRnsR_S0Yaq8AJH5duYuhUM7IvEDUOLo4Tr5CQXLZQ9q1M5g9XUGNILrrysony7-DTvGH_&flowName=GlifWebSignIn&authuser","validation_message_description":"To continue, verify your account at"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuMpgfl4z727BipFMiBJPCh5Qh3CN_qKJnfk2DVeD0xufFv04324mPlRbeN3uDDLvZRnsR_S0Yaq8AJH5duYuhUM7IvEDUOLo4Tr5CQXLZQ9q1M5g9XUGNILrrysony7-DTvGH_&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>无法生成</p>
+                        <p><strong>📝 产品描述：</strong>API 调用失败: API 调用失败 (HTTP 403): {"error":{"code":403,"message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuMpgfl4z727BipFMiBJPCh5Qh3CN_qKJnfk2DVeD0xufFv04324mPlRbeN3uDDLvZRnsR_S0Yaq8AJH5duYuhUM7IvEDUOLo4Tr5CQXLZQ9q1M5g9XUGNILrrysony7-DTvGH_&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"VALIDATION_REQUIRED","domain":"cloudcode-pa.googleapis.com","metadata":{"validation_url_link_text":"Verify your account","validation_learn_more_link_text":"Learn more","validation_learn_more_url":"https://support.google.com/accounts?p=al_alert","validation_error_message":"To continue, verify your account at\n\nhttps://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuMpgfl4z727BipFMiBJPCh5Qh3CN_qKJnfk2DVeD0xufFv04324mPlRbeN3uDDLvZRnsR_S0Yaq8AJH5duYuhUM7IvEDUOLo4Tr5CQXLZQ9q1M5g9XUGNILrrysony7-DTvGH_&flowName=GlifWebSignIn&authuser\n\nLearn more\n\nhttps://support.google.com/accounts?p=al_alert\n","validation_url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuMpgfl4z727BipFMiBJPCh5Qh3CN_qKJnfk2DVeD0xufFv04324mPlRbeN3uDDLvZRnsR_S0Yaq8AJH5duYuhUM7IvEDUOLo4Tr5CQXLZQ9q1M5g9XUGNILrrysony7-DTvGH_&flowName=GlifWebSignIn&authuser","validation_message_description":"To continue, verify your account at"}},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"To continue, verify your account at","url":"https://accounts.google.com/signin/continue?sarp=1&scc=1&continue=https://developers.google.com/gemini-code-assist/auth/auth_success_gemini&plt=AKgnsbuMpgfl4z727BipFMiBJPCh5Qh3CN_qKJnfk2DVeD0xufFv04324mPlRbeN3uDDLvZRnsR_S0Yaq8AJH5duYuhUM7IvEDUOLo4Tr5CQXLZQ9q1M5g9XUGNILrrysony7-DTvGH_&flowName=GlifWebSignIn&authuser"},{"description":"Learn more","url":"https://support.google.com/accounts?p=al_alert"}]}]}}</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 0分 × 80% + 有用度 0分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h2>🏆 产品创意排行榜 (TOP20)</h2>
+        <div class="ranking-list">
+
+            <div class="ranking-item">
+                <span class="ranking-rank gold">#1</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">爱豆毛孔级相机</div>
+                    <div class="ranking-hotword">来源：微博之夜最强追星神器</div>
+                </div>
+                <span class="ranking-score">91分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank silver">#2</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">跨界翻车大赏</div>
+                    <div class="ranking-hotword">来源：隋文静落泪道歉</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank bronze">#3</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">全自动嘴硬助手</div>
+                    <div class="ranking-hotword">来源：Bin 我依然是世一上</div>
+                </div>
+                <span class="ranking-score">83分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">4</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">高情商致歉君</div>
+                    <div class="ranking-hotword">来源：隋文静落泪道歉</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">5</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">赛博灯牌矩阵</div>
+                    <div class="ranking-hotword">来源：微博之夜最强追星神器</div>
+                </div>
+                <span class="ranking-score">80分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">6</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">万物皆可世一上</div>
+                    <div class="ranking-hotword">来源：Bin 我依然是世一上</div>
+                </div>
+                <span class="ranking-score">79分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">7</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">云端替身人偶</div>
+                    <div class="ranking-hotword">来源：微博之夜最强追星神器</div>
+                </div>
+                <span class="ranking-score">78分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">8</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">抱抱能量站</div>
+                    <div class="ranking-hotword">来源：隋文静落泪道歉</div>
+                </div>
+                <span class="ranking-score">76分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">9</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">Bin式强心剂</div>
+                    <div class="ranking-hotword">来源：Bin 我依然是世一上</div>
+                </div>
+                <span class="ranking-score">73分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">10</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「快递停运」分析失败</div>
+                    <div class="ranking-hotword">来源：快递停运</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">11</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「91岁老人900万积蓄遭儿子儿媳挪用」分析失败</div>
+                    <div class="ranking-hotword">来源：91岁老人900万积蓄遭儿子儿媳挪用</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">12</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「全国首款航天造电动垂直起降飞行器首飞成功」分析失败</div>
+                    <div class="ranking-hotword">来源：全国首款航天造电动垂直起降飞行器首飞成功</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">13</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「一上午烫了20多个老太太」分析失败</div>
+                    <div class="ranking-hotword">来源：一上午烫了20多个老太太</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">14</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「成龙新片悬疑贺岁颠覆上演」分析失败</div>
+                    <div class="ranking-hotword">来源：成龙新片悬疑贺岁颠覆上演</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">15</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「隋文静摔倒」分析失败</div>
+                    <div class="ranking-hotword">来源：隋文静摔倒</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">16</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">「狼队对战KSG」分析失败</div>
+                    <div class="ranking-hotword">来源：狼队对战KSG</div>
+                </div>
+                <span class="ranking-score">0分</span>
+            </div>
+
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">16</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">4</span>
+                    <span class="stat-label">优秀创意 (&gt;80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">5</span>
+                    <span class="stat-label">良好创意 (60-80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">81.1</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🤖 本报告由 AI 自动生成 | 仅供参考</p>
+            <p>数据来源：天聚数行 API | AI 分析：Claude 4.5 Sonnet</p>
+            <p>生成时间：2026-02-06 22:37:31</p>
+        </footer>
+    </div>
+</body>
+</html>

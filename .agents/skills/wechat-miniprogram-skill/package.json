@@ -1,0 +1,21 @@
+{
+  "name": "wechat-miniprogram-skill",
+  "version": "1.0.1",
+  "description": "Google style guide for WeChat Mini Program AI coding",
+  "main": "index.js",
+  "files": [
+    "SKILL.md",
+    ".cursorrules",
+    ".antigravityrules",
+    ".opencode-rules",
+    "README.md"
+  ],
+  "keywords": [
+    "wechat",
+    "miniprogram",
+    "cursor-rules",
+    "add-skill"
+  ],
+  "author": "Minxiang.sun",
+  "license": "MIT"
+}

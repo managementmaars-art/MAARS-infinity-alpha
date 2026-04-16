@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博热搜产品创意分析报告 - 2026年01月25日</title>
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FF8C42;
+            --accent-excellent: #FFD23F;
+            --accent-good: #06A77D;
+            --accent-normal: #6C757D;
+            --bg-color: #FFF8F0;
+            --text-color: #2D3142;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .report-header h1 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 12px;
+            margin-top: 32px;
+        }
+
+        .hotspot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .hotspot-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hotspot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .hotspot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rank {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .hotword {
+            font-weight: 600;
+            font-size: 16px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hotness {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hotspot-detail {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .hotspot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .idea-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 5px solid #E0E0E0;
+            transition: all 0.2s;
+        }
+
+        .idea-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .idea-card.excellent {
+            border-left-color: var(--accent-excellent);
+            background: linear-gradient(to right, rgba(255, 210, 63, 0.1), transparent);
+        }
+
+        .idea-card.good {
+            border-left-color: var(--accent-good);
+            background: linear-gradient(to right, rgba(6, 167, 125, 0.05), transparent);
+        }
+
+        .idea-card.normal {
+            border-left-color: var(--accent-normal);
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .idea-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .score-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.excellent {
+            background: var(--accent-excellent);
+            color: #333;
+        }
+
+        .badge.good {
+            background: var(--accent-good);
+            color: white;
+        }
+
+        .badge.normal {
+            background: var(--accent-normal);
+            color: white;
+        }
+
+        .idea-body p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .idea-body strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .idea-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .idea-body li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .score-breakdown {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .statistics {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .statistics h2 {
+            color: white;
+            border-left-color: white;
+            margin-top: 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ranking-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .ranking-rank {
+            font-size: 24px;
+            font-weight: 700;
+            width: 40px;
+            text-align: center;
+        }
+
+        .ranking-rank.gold { color: #FFD700; }
+        .ranking-rank.silver { color: #C0C0C0; }
+        .ranking-rank.bronze { color: #CD7F32; }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .ranking-hotword {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .ranking-score {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .report-header { padding: 24px; }
+            .report-header h1 { font-size: 24px; }
+            .hotspot-list { grid-template-columns: 1fr; }
+            .idea-header { flex-direction: column; align-items: flex-start; }
+            .stat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="report-header">
+            <h1>🤖 微博热搜产品创意分析报告</h1>
+            <div class="meta-info">
+                <span>📅 生成日期：2026-01-25</span>
+                <span>🔥 热搜总数：10</span>
+                <span>💡 创意总数：30</span>
+                <span>⏰ 生成时间：2026-01-25 04:04:20</span>
+            </div>
+        </header>
+
+        <h2>📊 热搜TOP10概览</h2>
+        <div class="hotspot-list">
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">1</span>
+                    <span class="hotword">U23国足0比4日本队</span>
+                </div>
+                <div class="hotness">热度：1092528 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">2</span>
+                    <span class="hotword">印度男子倒奶入河避开接奶贫困儿童</span>
+                </div>
+                <div class="hotness">热度：793296 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">3</span>
+                    <span class="hotword">我的工位在大海上方178米</span>
+                </div>
+                <div class="hotness">热度：605154 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">4</span>
+                    <span class="hotword">猫的树 升咖</span>
+                </div>
+                <div class="hotness">热度：剧集 581867 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">5</span>
+                    <span class="hotword">女子买60克黄金轮胎手镯后悔买晚了</span>
+                </div>
+                <div class="hotness">热度：425243 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">6</span>
+                    <span class="hotword">2026央视春晚第二次联排</span>
+                </div>
+                <div class="hotness">热度：晚会 337307 <span class="tag">热</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">7</span>
+                    <span class="hotword">成都涉事小学取消育人故事分享</span>
+                </div>
+                <div class="hotness">热度：332278 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">8</span>
+                    <span class="hotword">美国男子大喊别拍照了快救我</span>
+                </div>
+                <div class="hotness">热度：320244 <span class="tag">新</span></div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">9</span>
+                    <span class="hotword">雷军称小米汽车熔岩橙配色敢买的人太少</span>
+                </div>
+                <div class="hotness">热度：300925 </div>
+            </div>
+
+            <div class="hotspot-card">
+                <div class="hotspot-header">
+                    <span class="rank">10</span>
+                    <span class="hotword">U23国足vs日本</span>
+                </div>
+                <div class="hotness">热度：281244 <span class="tag">新</span></div>
+            </div>
+
+        </div>
+
+        <h2>🔍 详细产品创意分析</h2>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">1</span>
+                <span class="hotword" style="font-size: 18px;">U23国足0比4日本队</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>1,092,528</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">智能甩锅王</span>
+                        <div class="score-info">
+                            <span class="score">91分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI生成千奇百怪输球理由（草皮、天气、甚至风水）</li>
+                    <li>一键生成'我尽力了'风格的新闻发布会海报</li>
+                    <li>甩锅理由热度排行榜，支持用户投票</li>
+                    <li>情绪转化：将愤怒转化为幽默段子一键分享朋友圈</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-40岁泛体育迷，喜欢玩梗、需要社交货币、寻求情绪宣泄的互联网用户</p>
+                        <p><strong>📝 产品描述：</strong>基于0-4惨败的舆论环境，利用AI技术自动生成各种荒诞或一本正经的输球借口。既是球迷无奈时的自嘲工具，也是社交网络上的病毒式传播内容生成器，帮助用户用幽默化解尴尬与愤怒。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">换你上你行</span>
+                        <div class="score-info">
+                            <span class="score">85分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AR/VR复刻本场比赛丢球瞬间</li>
+                    <li>用户接管防守球员或门将进行'逆天改命'操作</li>
+                    <li>挑战失败生成'原来我也行'嘲讽报告</li>
+                    <li>挑战成功生成'国足应该签我'高光集锦</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁男性球迷，游戏玩家，喜欢评论'踢得太臭'、'不如我上'的硬核群体</p>
+                        <p><strong>📝 产品描述：</strong>一款轻量级互动模拟游戏。针对'0比4'中的失误场景，让键盘侠们亲身体验防守日本队进攻的难度。通过高难度的物理模拟，既能让用户体验竞技快感，又能通过'根本守不住'的挫败感产生反差幽默效果。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 65分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">国足赛博功德箱</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>电子木鱼足球版：点击屏幕积攒'进球功德'</li>
+                    <li>净化弹幕：将辱骂词汇自动转化为'阿弥陀佛'或'加油'</li>
+                    <li>心率比惨榜：连接手环，展示看球时心率波动最大的'苦行僧'</li>
+                    <li>一键'原谅'按钮，播放大悲咒BGM平复心情</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁长期关注中国足球的资深球迷，心态已崩、寻求心理安慰的'佛系'群体</p>
+                        <p><strong>📝 产品描述：</strong>结合'电子木鱼'热点与国足惨败现状的解压小程序。主打'佛系看球，积德行善'，为失望透顶的球迷提供一个无需言语、只需点击的宣泄出口，用荒诞的仪式感消解比赛失利的痛苦。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 58分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">2</span>
+                <span class="hotword" style="font-size: 18px;">印度男子倒奶入河避开接奶贫困儿童</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>793,296</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">接奶大作战</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>物理引流玩法：划线引导牛奶流入贫困儿童杯中</li>
+                    <li>魔性音效：结合新闻原声的鬼畜混音</li>
+                    <li>公益转化：通关积分可兑换真实牛奶捐赠给贫困山区</li>
+                    <li>排行榜：'拯救浪费'全服排名</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-30岁喜欢休闲游戏、热衷网络梗、有公益心的年轻群体</p>
+                        <p><strong>📝 产品描述：</strong>一款基于物理引擎的休闲闯关游戏。针对新闻中'宁愿倒掉也不给'的荒诞行为，让用户通过手指划线，将原本要倒入河里的牛奶'抢救'回来分发给排队的孩子，利用讽刺与同情心驱动传播。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 60分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">云端宣泄河</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>倒苦水模式：将生活压力具象化为'黑奶'倒入虚拟河流</li>
+                    <li>漂流瓶打捞：随机捞取他人的烦恼并给予'拥抱'回应</li>
+                    <li>净化成就：互动越多，河流越清澈，解锁锦鲤特效</li>
+                    <li>热点弹幕：实时吐槽社会不公现象</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁职场社畜、生活压力大、需要情绪出口的互联网用户</p>
+                        <p><strong>📝 产品描述：</strong>借用'倒奶入河'的视觉意象，打造一个情绪树洞社交APP。用户不能倒真实的物资，但可以把负面情绪（苦水）倒入赛博河流中，通过陌生人之间的温暖互动（打捞与净化），实现心理治愈。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">临期互助侠</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>雷达扫描：发现周围3公里内即将被'倒掉'的临期食品</li>
+                    <li>一键截胡：低价或免费预约领取剩余物资</li>
+                    <li>节约账单：自动生成'我拯救了多少牛奶/面包'的环保海报</li>
+                    <li>商家红黑榜：曝光严重浪费商家，点赞爱心商家</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-40岁精打细算的大学生、家庭主妇及环保主义者</p>
+                        <p><strong>📝 产品描述：</strong>针对热搜背后的资源错配痛点，建立社区级临期食品/剩余物资对接平台。口号是'别倒河里，倒我嘴里'，将原本会被商家浪费的资源快速匹配给有需要的周边用户，既省钱又环保。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">3</span>
+                <span class="hotword" style="font-size: 18px;">我的工位在大海上方178米</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>605,154</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">任意门视界</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>全球极端工位4K实时直播（钻井平台、塔吊、灯塔）</li>
+                    <li>沉浸式白噪音生成（海浪、高空风声）</li>
+                    <li>以假乱真的‘工作伪装’屏保模式</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁被困在格子间的都市白领，渴望逃离与解压的人群</p>
+                        <p><strong>📝 产品描述：</strong>一款桌面沉浸式应用，将枯燥的办公屏幕一键切换为‘大海上方178米’的绝美视野。利用热搜激发的向往感，通过视觉与听觉的双重隔离，为用户提供片刻的精神逃离与心灵按摩。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 70分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">绝景打工人</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>特殊职业工作环境Vlog社区</li>
+                    <li>‘我的工位挑战’地理位置打卡</li>
+                    <li>高危/稀缺职业的匿名薪资与体验揭秘</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁对世界充满好奇的大学生及职场新人，猎奇心理重</p>
+                        <p><strong>📝 产品描述：</strong>基于热搜话题衍生的垂类职场社交平台。不仅满足用户对‘海上178米’等特殊工位的窥探欲，更通过UGC内容展示各种小众、极限职业的真实面貌，兼具娱乐猎奇与职业科普功能。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 58分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">深海工位模拟器</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>真实物理引擎模拟高空摇晃感</li>
+                    <li>突发极端天气应对挑战</li>
+                    <li>‘带薪发呆’收集海景图鉴玩法</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>Z世代游戏玩家，喜欢模拟经营类或解压类休闲游戏</p>
+                        <p><strong>📝 产品描述：</strong>一款超休闲手机游戏。玩家扮演海上钻井平台员工，在178米高空既要维持设施运转，又要想办法‘摸鱼’看海。用幽默夸张的手法还原热搜场景，满足用户‘想去体验但不敢真去’的心理。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 20分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">4</span>
+                <span class="hotword" style="font-size: 18px;">猫的树 升咖 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>581,867</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">一键升咖Cam</span>
+                        <div class="score-info">
+                            <span class="score">91分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>猫系氛围感AI滤镜</li>
+                    <li>素人变主角运镜模版</li>
+                    <li>智能补光与肤质高级化</li>
+                    <li>短剧女主独白生成器</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁爱美女性、短视频创作者，追求生活仪式感和主角光环。</p>
+                        <p><strong>📝 产品描述：</strong>一款主打“猫的树”同款审美的AI摄影APP。通过算法模拟导演特有的唯美打光和构图，让普通生活照瞬间拥有“待爆小花”的影视质感，满足用户想在社交媒体“升咖”的心理需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 94分 × 80% + 有用度 79分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">娱乐圈升咖模拟器</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>剧本挑选与试镜博弈</li>
+                    <li>导演好感度攻略系统</li>
+                    <li>舆论公关危机处理</li>
+                    <li>造型妆造进阶图鉴</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>15-28岁追星族、泛娱乐用户，对娱乐圈幕后和明星晋升机制好奇。</p>
+                        <p><strong>📝 产品描述：</strong>一款文字互动类养成游戏。玩家扮演十八线小透明，需策略性地争取像“猫的树”这类擅长拍人的导演合作，通过选对剧本和妆造实现流量跃迁，沉浸式体验从素人到顶流的“升咖”爽文剧情。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 62分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">职场氛围感树洞</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>职场人设包装指南</li>
+                    <li>汇报PPT的美学优化</li>
+                    <li>个人高光时刻剪辑</li>
+                    <li>升职加薪模拟对话</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-35岁职场白领，希望提升个人职场形象和影响力的人群。</p>
+                        <p><strong>📝 产品描述：</strong>借用“升咖”概念的职场个人品牌工具。不只教技能，更教如何通过“导演思维”包装工作成果，像拍偶像剧一样美化职场汇报和个人履历，帮助用户在公司内部实现形象和职级的双重提升。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">5</span>
+                <span class="hotword" style="font-size: 18px;">女子买60克黄金轮胎手镯后悔买晚了</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>425,243</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">黄金后悔药 (Gold Regret Medicine)</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>复盘亏损计算器</li>
+                    <li>AR虚拟试戴滤镜</li>
+                    <li>金价心情表情包生成</li>
+                    <li>早买早享日历提醒</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-35岁，对理财感兴趣但常因犹豫而错过的“搞钱”青年</p>
+                        <p><strong>📝 产品描述：</strong>一款基于金价走势的趣味可视化工具。用户输入“当年想买没买”的日期，App自动计算“亏损”并转化为“少喝了多少杯奶茶”，配合AR滤镜让用户过干瘾，主打情绪共鸣与社交裂变。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 62分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">暴富解压金轮胎 (Rich Stress-Relief Tire)</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>1:1配重(60克)手感</li>
+                    <li>机械轮胎棘轮声效</li>
+                    <li>不仅是手把件也是手机支架</li>
+                    <li>还可以当冰箱贴</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁职场社畜，渴望暴富但预算有限，需要解压玩具的群体</p>
+                        <p><strong>📝 产品描述：</strong>利用廉价黄铜或合金打造的“平替”手把件，完美复刻60克黄金轮胎手镯的沉甸甸压手感与工业风外观。既是解压神器，也是办公桌上的“赛博招财风水阵”，满足虚荣心与解压需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 50分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">云养金轮胎 (Cloud-Raised Gold Tire)</span>
+                        <div class="score-info">
+                            <span class="score">89分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>桌面养成小组件</li>
+                    <li>0.1克微众筹模式</li>
+                    <li>轮胎拼图进度条</li>
+                    <li>实体兑换功能</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>22-40岁，有强制储蓄需求，喜欢积少成多成就感的年轻女性</p>
+                        <p><strong>📝 产品描述：</strong>将高昂的60克金镯子拆解为“攒金游戏”。用户每天存入几十元（买0.1克金），桌面小组件上的“金轮胎”就会多亮一格。将枯燥的储蓄转化为可视化的养成游戏，集满60克即可兑换实物。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">6</span>
+                <span class="hotword" style="font-size: 18px;">2026央视春晚第二次联排 <span class="tag">热</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>337,307</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">联排星穿搭</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI识别明星路透私服品牌</li>
+                    <li>一键生成平替商品链接</li>
+                    <li>AR虚拟试穿明星同款羽绒服</li>
+                    <li>春晚穿搭红黑榜投票</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁追求时尚的年轻人，尤其是追星族和潮流跟随者。</p>
+                        <p><strong>📝 产品描述：</strong>基于“春晚联排路透”中明星私服这一高热度话题，利用AI视觉识别技术，快速扒出明星同款羽绒服及配饰。满足用户“看热闹”的八卦心理，同时通过电商导购解决“新年买新衣”的实际需求。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 85分 × 80% + 有用度 90分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">赛博春晚编导</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>拖拽路透明星组建自定义节目单</li>
+                    <li>AI根据嘉宾风格自动生成小品剧本</li>
+                    <li>一键生成“网传最真”节目单图片</li>
+                    <li>朋友圈不仅可见的吐槽弹幕</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>16-30岁喜欢玩梗、乐于在社交媒体分享创意的互联网原住民。</p>
+                        <p><strong>📝 产品描述：</strong>针对联排期间“阵容猜测”和“节目保密”的神秘感，提供一个低门槛的UGC创作工具。用户可以根据路透名单，利用AI“脑补”出各种离谱或精彩的节目组合，满足用户的吐槽欲和社交分享欲。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 30分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">春晚预言家</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>联排嘉宾去留实时竞猜</li>
+                    <li>春晚热梗/金句押题挑战</li>
+                    <li>预言成功生成“神算子”社交勋章</li>
+                    <li>基于路透图的舞台风格分析报告</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-45岁，关注时事热点，春节期间活跃于家庭群和社交平台的泛大众用户。</p>
+                        <p><strong>📝 产品描述：</strong>将枯燥的联排新闻转化为游戏化的“押题”体验。用户可以根据两次联排的线索，预测最终大名单和流行语。既是社交货币，也能在除夕夜验证结果时带来二次话题爆发。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 45分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">7</span>
+                <span class="hotword" style="font-size: 18px;">成都涉事小学取消育人故事分享</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>332,278</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">凡尔赛育儿生成器</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>一键生成高大上的育儿感悟</li>
+                    <li>朋友圈防穿帮自动润色</li>
+                    <li>凡尔赛指数PK排行榜</li>
+                    <li>不同学校风格（鸡血/佛系）切换</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-40岁、深受学校形式主义任务困扰的家长，以及喜欢玩梗的年轻网友</p>
+                        <p><strong>📝 产品描述：</strong>针对“育儿故事分享”变为家长负担的痛点，利用AI将原本平淡的带娃琐事，自动转化为词藻华丽、感人至深但毫无实际意义的“满分作文”，通过讽刺解构形式主义，引发社交裂变。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 72分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">家长渡劫模拟器</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>真实还原奇葩作业场景</li>
+                    <li>情商话术大挑战</li>
+                    <li>如果这是我的孩子（角色互换）</li>
+                    <li>全网“最惨家长”比惨大会</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁喜爱文字冒险游戏的玩家，及需要心理宣泄的学生家长</p>
+                        <p><strong>📝 产品描述：</strong>一款文字冒险RPG游戏。玩家扮演一位需要在职场内卷和学校奇葩任务（如做PPT、写故事、深夜打卡）中求生存的家长，用幽默荒诞的方式体验并吐槽当代教育现状。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 58分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">形式主义回收站</span>
+                        <div class="score-info">
+                            <span class="score">76分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>匿名上传奇葩学校任务</li>
+                    <li>任务无用指数大众评审</li>
+                    <li>地区/学校压力热力图</li>
+                    <li>自动生成“委婉拒绝”话术</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>30-45岁学龄儿童家长，关注教育公平的社会人士</p>
+                        <p><strong>📝 产品描述：</strong>一个匿名社区与工具集合。专门收集并展示各地学校不合理的“面子工程”任务，通过用户投票评选“年度最无用作业”，为家长提供情绪出口，同时汇总数据反映真实教育负担。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">8</span>
+                <span class="hotword" style="font-size: 18px;">美国男子大喊别拍照了快救我 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>320,244</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">版权金钟罩</span>
+                        <div class="score-info">
+                            <span class="score">92分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>一键播放迪士尼/任天堂等高版权风险音乐</li>
+                    <li>声波干扰导致录像设备收音过载</li>
+                    <li>AI自动识别并大喊多国语言'不许拍'</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-40岁注重隐私群体、公众人物、社恐人士</p>
+                        <p><strong>📝 产品描述：</strong>基于'别拍照'的痛点，利用各大平台的版权审核机制作为防御武器。当用户遇到被人围观拍摄的窘境或危险时，开启此App播放高敏版权音乐，使得旁观者拍摄的视频因侵权无法上传至社交平台，从源头切断传播动机。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 95分 × 80% + 有用度 80分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">绝境求生：流量围城</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>讽刺性游戏机制：手机镜头会扣除角色生命值</li>
+                    <li>抢夺路人手机作为求生道具</li>
+                    <li>生成'今日社死'假新闻海报便于分享</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-30岁喜欢黑色幽默、讽刺现实的Z世代游戏玩家</p>
+                        <p><strong>📝 产品描述：</strong>一款强讽刺意味的休闲动作手游。玩家扮演陷入困境的主角（如挂在悬崖），周围不仅没有救援，全是举着手机拍摄的NPC。玩家需要躲避镜头的'闪光灯攻击'，并利用路人的冷漠反向操作来逃出生天，极具传播话题性。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 62分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">良心滤镜</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>危险场景AI识别自动马赛克</li>
+                    <li>拍摄时强制弹出急救指南AR浮窗</li>
+                    <li>拍摄者'冷漠值'评分系统</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-45岁新闻媒体从业者、短视频创作者、社会观察类博主</p>
+                        <p><strong>📝 产品描述：</strong>一款反直觉的相机插件。当镜头捕捉到有人呼救或处于危险体态时，AI会自动模糊画面并锁定录像功能，强制在屏幕上显示'放下手机，去帮帮他'的急救指引。将'记录者'转化为'救援者'，主打科技向善的社会实验产品。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 80分 × 80% + 有用度 75分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">9</span>
+                <span class="hotword" style="font-size: 18px;">雷军称小米汽车熔岩橙配色敢买的人太少</span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>300,925</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">雷语测胆仪</span>
+                        <div class="score-info">
+                            <span class="score">93分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>AI雷军语音激将法互动</li>
+                    <li>AR人车合影颜值打分</li>
+                    <li>生成'顶级显眼包'认证海报</li>
+                    <li>全网胆量排行榜</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁网感强的年轻人、米粉、社交媒体重度用户</p>
+                        <p><strong>📝 产品描述：</strong>一款病毒式H5营销工具。利用雷军原声合成AI语音，通过AR将熔岩橙汽车与用户穿搭同框，由AI评判用户气场是否'镇得住'这款颜色，解决'不敢买'的心理门槛，引发朋友圈刷屏传播。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 96分 × 80% + 有用度 45分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">野生熔岩猎人</span>
+                        <div class="score-info">
+                            <span class="score">86分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>LBS街头寻宝模式</li>
+                    <li>稀有色车辆图鉴收集</li>
+                    <li>拍摄打卡兑换小米积分</li>
+                    <li>车主匿名互动打招呼</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>大学生、车迷、街拍爱好者、户外运动人群</p>
+                        <p><strong>📝 产品描述：</strong>基于'买的人少'这一稀缺属性开发的类Pokémon GO玩法小程序。用户在街头寻找并拍摄熔岩橙小米汽车即可解锁成就，将'销量少'转化为'稀有SSR'的社交货币，增加品牌话题度。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 90分 × 80% + 有用度 50分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">一日显眼包</span>
+                        <div class="score-info">
+                            <span class="score">81分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>特定色车型P2P短租</li>
+                    <li>社交恐惧症测试</li>
+                    <li>网红拍摄道具租赁</li>
+                    <li>购买转化优惠券</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>犹豫不决的潜在买家、短视频博主、寻求短期关注的乐活族</p>
+                        <p><strong>📝 产品描述：</strong>针对'敢买的人太少'的痛点，推出的官方/社区短租服务。用户只需低价即可租赁熔岩橙车型24小时，低成本体验'回头率爆表'的感觉，既满足虚荣心，又作为深度的购前试驾。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 78分 × 80% + 有用度 85分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="hotspot-detail">
+            <div class="hotspot-title">
+                <span class="rank">10</span>
+                <span class="hotword" style="font-size: 18px;">U23国足vs日本 <span class="tag">新</span></span>
+            </div>
+            <p><strong>🔥 热度指数：</strong>281,244</p>
+            <div class="product-ideas">
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">云执教：你行你上</span>
+                        <div class="score-info">
+                            <span class="score">88分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>实时战术投票：观众实时投票决定换人/阵型，AI模拟结果</li>
+                    <li>怒吼转弹幕：识别语音音量和情绪，自动生成特效弹幕</li>
+                    <li>平行宇宙推演：如果那个球进了，结局会怎样</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>20-45岁男性为主，热衷战术分析或情绪激动的资深球迷</p>
+                        <p><strong>📝 产品描述：</strong>一款结合直播的第二屏互动应用。针对球迷“教练不行我来带”的心理，允许用户实时接管比赛决策进行AI模拟，验证自己的战术水平，兼具吐槽与模拟经营乐趣。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 92分 × 80% + 有用度 72分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card excellent">
+                    <div class="idea-header">
+                        <span class="idea-name">速效救心伴侣</span>
+                        <div class="score-info">
+                            <span class="score">82分</span>
+                            <span class="badge excellent">优秀</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>心率预警同步：连接智能手表，心率过高自动打码画面并播放轻音乐</li>
+                    <li>失误粉碎机：点击屏幕粉碎球员失误画面，释放压力</li>
+                    <li>一键生成表情包：自动抓取比赛尴尬瞬间生成自嘲梗图</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>18-35岁泛球迷群体，喜欢玩梗、注重看球氛围但在意身体健康的用户</p>
+                        <p><strong>📝 产品描述：</strong>针对国足比赛常令观众“血压升高”的痛点，提供情绪健康监测与发泄出口。通过幽默化的交互和物理体征监测，让看球过程从“受难”变为一场集体的心理理疗与玩梗狂欢。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 88分 × 80% + 有用度 58分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+                <div class="idea-card good">
+                    <div class="idea-header">
+                        <span class="idea-name">中日青训透视镜</span>
+                        <div class="score-info">
+                            <span class="score">79分</span>
+                            <span class="badge good">良好</span>
+                        </div>
+                    </div>
+                    <div class="idea-body">
+                        <p><strong>💎 核心功能：</strong></p>
+                        <ul>
+                            <li>身价/数据AR对比：手机对准屏幕，实时显示双方对位球员成长轨迹对比</li>
+                    <li>差距可视化：用3D图表展示双方跑动距离、战术执行力的量化差距</li>
+                    <li>青训地图索引：基于比赛表现推荐附近的优质青训机构</li>
+                        </ul>
+                        <p><strong>👥 目标用户：</strong>25-40岁，关注足球产业、青训发展的家长或行业从业者</p>
+                        <p><strong>📝 产品描述：</strong>一款硬核数据增强现实工具。透过U23比赛的表象，直观展示中日足球在基础数据层面的真实差距，将比赛热度转化为对青训体系的理性认知与商业导流。</p>
+                        <p class="score-breakdown">
+                            评分：有趣度 75分 × 80% + 有用度 95分 × 20%
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h2>🏆 产品创意排行榜 (TOP20)</h2>
+        <div class="ranking-list">
+
+            <div class="ranking-item">
+                <span class="ranking-rank gold">#1</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">雷语测胆仪</div>
+                    <div class="ranking-hotword">来源：雷军称小米汽车熔岩橙配色敢买的人太少</div>
+                </div>
+                <span class="ranking-score">93分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank silver">#2</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">版权金钟罩</div>
+                    <div class="ranking-hotword">来源：美国男子大喊别拍照了快救我</div>
+                </div>
+                <span class="ranking-score">92分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank bronze">#3</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">智能甩锅王</div>
+                    <div class="ranking-hotword">来源：U23国足0比4日本队</div>
+                </div>
+                <span class="ranking-score">91分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">4</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">一键升咖Cam</div>
+                    <div class="ranking-hotword">来源：猫的树 升咖</div>
+                </div>
+                <span class="ranking-score">91分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">5</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">云养金轮胎 (Cloud-Raised Gold Tire)</div>
+                    <div class="ranking-hotword">来源：女子买60克黄金轮胎手镯后悔买晚了</div>
+                </div>
+                <span class="ranking-score">89分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">6</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">接奶大作战</div>
+                    <div class="ranking-hotword">来源：印度男子倒奶入河避开接奶贫困儿童</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">7</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">任意门视界</div>
+                    <div class="ranking-hotword">来源：我的工位在大海上方178米</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">8</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">凡尔赛育儿生成器</div>
+                    <div class="ranking-hotword">来源：成都涉事小学取消育人故事分享</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">9</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">云执教：你行你上</div>
+                    <div class="ranking-hotword">来源：U23国足vs日本</div>
+                </div>
+                <span class="ranking-score">88分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">10</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">娱乐圈升咖模拟器</div>
+                    <div class="ranking-hotword">来源：猫的树 升咖</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">11</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">黄金后悔药 (Gold Regret Medicine)</div>
+                    <div class="ranking-hotword">来源：女子买60克黄金轮胎手镯后悔买晚了</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">12</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">联排星穿搭</div>
+                    <div class="ranking-hotword">来源：2026央视春晚第二次联排</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">13</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">绝境求生：流量围城</div>
+                    <div class="ranking-hotword">来源：美国男子大喊别拍照了快救我</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">14</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">野生熔岩猎人</div>
+                    <div class="ranking-hotword">来源：雷军称小米汽车熔岩橙配色敢买的人太少</div>
+                </div>
+                <span class="ranking-score">86分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">15</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">换你上你行</div>
+                    <div class="ranking-hotword">来源：U23国足0比4日本队</div>
+                </div>
+                <span class="ranking-score">85分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">16</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">国足赛博功德箱</div>
+                    <div class="ranking-hotword">来源：U23国足0比4日本队</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">17</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">云端宣泄河</div>
+                    <div class="ranking-hotword">来源：印度男子倒奶入河避开接奶贫困儿童</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">18</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">绝景打工人</div>
+                    <div class="ranking-hotword">来源：我的工位在大海上方178米</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">19</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">暴富解压金轮胎 (Rich Stress-Relief Tire)</div>
+                    <div class="ranking-hotword">来源：女子买60克黄金轮胎手镯后悔买晚了</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+            <div class="ranking-item">
+                <span class="ranking-rank ">20</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">赛博春晚编导</div>
+                    <div class="ranking-hotword">来源：2026央视春晚第二次联排</div>
+                </div>
+                <span class="ranking-score">82分</span>
+            </div>
+
+        </div>
+
+        <div class="statistics">
+            <h2>📈 数据统计</h2>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-value">30</span>
+                    <span class="stat-label">创意总数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">23</span>
+                    <span class="stat-label">优秀创意 (&gt;80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">7</span>
+                    <span class="stat-label">良好创意 (60-80分)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">84.1</span>
+                    <span class="stat-label">平均评分</span>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🤖 本报告由 AI 自动生成 | 仅供参考</p>
+            <p>数据来源：天聚数行 API | AI 分析：Claude 3.5 Sonnet</p>
+            <p>生成时间：2026-01-25 04:04:20</p>
+        </footer>
+    </div>
+</body>
+</html>

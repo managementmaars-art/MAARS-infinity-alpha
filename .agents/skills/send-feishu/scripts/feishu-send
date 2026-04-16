@@ -1,0 +1,354 @@
+#!/usr/bin/env bash
+# feishu-send — Send messages, images, and files to Feishu
+#
+# Usage:
+#   feishu-send text "message"
+#   feishu-send card "title" "body" [--color green|orange|red|blue|purple]
+#   feishu-send image /path/to/image.png
+#   feishu-send file /path/to/file.md
+#   feishu-send --dry-run text "test"   # show resolved vars, no actual send
+#
+# Environment variables (CTI_* aliases also supported):
+#   FEISHU_WEBHOOK          Group webhook URL
+#   FEISHU_APP_ID           App ID (for token-based sends)
+#   FEISHU_APP_SECRET       App secret
+#   FEISHU_CHAT_ID          Group chat ID (oc_xxx)
+#   FEISHU_USER_OPEN_ID     Individual open_id (ou_xxx)
+#   FEISHU_WEBHOOK_SECRET   Webhook signing secret (if required)
+
+set -euo pipefail
+
+# ── helpers ──────────────────────────────────────────────────────────────────
+
+die()  { echo "[feishu-send] ERROR: $*" >&2; exit 1; }
+info() { echo "[feishu-send] $*" >&2; }
+
+# ── dry-run flag ──────────────────────────────────────────────────────────────
+
+DRY_RUN=0
+if [[ "${1:-}" == "--dry-run" ]]; then
+    DRY_RUN=1
+    shift
+fi
+
+# ── Step 0: variable resolution ───────────────────────────────────────────────
+
+FEISHU_APP_ID="${FEISHU_APP_ID:-${CTI_FEISHU_APP_ID:-}}"
+FEISHU_APP_SECRET="${FEISHU_APP_SECRET:-${CTI_FEISHU_APP_SECRET:-}}"
+FEISHU_CHAT_ID="${FEISHU_CHAT_ID:-${CTI_FEISHU_CHAT_ID:-}}"
+FEISHU_WEBHOOK="${FEISHU_WEBHOOK:-${CTI_FEISHU_WEBHOOK:-}}"
+FEISHU_USER_OPEN_ID="${FEISHU_USER_OPEN_ID:-${CTI_FEISHU_USER_OPEN_ID:-}}"
+FEISHU_WEBHOOK_SECRET="${FEISHU_WEBHOOK_SECRET:-${CTI_FEISHU_WEBHOOK_SECRET:-}}"
+
+if (( DRY_RUN )); then
+    info "=== Dry-run: resolved variables ==="
+    info "  APP_ID     = ${FEISHU_APP_ID:0:8}***"
+    info "  APP_SECRET = ${FEISHU_APP_SECRET:0:4}***"
+    info "  CHAT_ID    = ${FEISHU_CHAT_ID}"
+    info "  WEBHOOK    = ${FEISHU_WEBHOOK:0:30}***"
+    info "  OPEN_ID    = ${FEISHU_USER_OPEN_ID}"
+fi
+
+# ── argument parsing ──────────────────────────────────────────────────────────
+
+TYPE="${1:-}"
+[[ -z "$TYPE" ]] && die "Usage: feishu-send <text|card|image|file> [args...]"
+shift
+
+COLOR="blue"  # default card color
+
+case "$TYPE" in
+text)
+    MESSAGE="${1:-}"
+    [[ -z "$MESSAGE" ]] && die "feishu-send text <message>"
+    ;;
+card)
+    TITLE="${1:-}"
+    BODY="${2:-}"
+    [[ -z "$TITLE" || -z "$BODY" ]] && die "feishu-send card <title> <body> [--color COLOR]"
+    shift 2
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+        --color) COLOR="${2:-blue}"; shift 2 ;;
+        *) die "Unknown option: $1" ;;
+        esac
+    done
+    ;;
+image)
+    FILE_PATH="${1:-}"
+    [[ -z "$FILE_PATH" ]] && die "feishu-send image <path>"
+    [[ ! -f "$FILE_PATH" ]] && die "File not found: $FILE_PATH"
+    ;;
+file)
+    FILE_PATH="${1:-}"
+    [[ -z "$FILE_PATH" ]] && die "feishu-send file <path>"
+    [[ ! -f "$FILE_PATH" ]] && die "File not found: $FILE_PATH"
+    ;;
+*)
+    die "Unknown type '$TYPE'. Valid: text, card, image, file"
+    ;;
+esac
+
+if (( DRY_RUN )); then
+    info "=== Dry-run: would send type='$TYPE'"
+    [[ "$TYPE" == "text" ]]  && info "  message='$MESSAGE'"
+    [[ "$TYPE" == "card" ]]  && info "  title='$TITLE' color='$COLOR'"
+    [[ "$TYPE" =~ ^(image|file)$ ]] && info "  file='$FILE_PATH'"
+    info "=== Dry-run complete (no network requests made) ==="
+    exit 0
+fi
+
+# ── routing decision ──────────────────────────────────────────────────────────
+# image/file always need API (upload first)
+# text/card prefer webhook; fall back to API if only CHAT_ID is set
+
+need_token() {
+    [[ "$TYPE" =~ ^(image|file)$ ]] && return 0
+    # text/card via API path
+    [[ -n "$FEISHU_CHAT_ID" && -z "$FEISHU_WEBHOOK" ]] && return 0
+    [[ -n "$FEISHU_USER_OPEN_ID" ]] && return 0
+    return 1
+}
+
+# ── Step A: get tenant_access_token ──────────────────────────────────────────
+
+TOKEN=""
+get_token() {
+    [[ -z "$FEISHU_APP_ID" || -z "$FEISHU_APP_SECRET" ]] && \
+        die "FEISHU_APP_ID and FEISHU_APP_SECRET required for this operation"
+
+    local resp
+    resp=$(curl -sf -X POST 'https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal' \
+        -H 'Content-Type: application/json' \
+        -d "{\"app_id\":\"${FEISHU_APP_ID}\",\"app_secret\":\"${FEISHU_APP_SECRET}\"}")
+
+    local code
+    code=$(echo "$resp" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('code',''))" 2>/dev/null)
+    [[ "$code" != "0" ]] && die "Failed to get token: $resp"
+
+    TOKEN=$(echo "$resp" | python3 -c "import sys,json; print(json.load(sys.stdin)['tenant_access_token'])")
+    info "Token obtained (valid 2h)"
+}
+
+if need_token; then
+    get_token
+fi
+
+# ── check_resp: validate curl response ───────────────────────────────────────
+
+check_resp() {
+    local resp="$1"
+    local code
+    code=$(echo "$resp" | python3 -c "import sys,json; print(json.load(sys.stdin).get('code','?'))" 2>/dev/null || echo "parse_error")
+    if [[ "$code" == "0" ]]; then
+        info "Sent successfully"
+        return 0
+    fi
+    # human-readable error hints
+    case "$code" in
+    19001) die "Send failed (19001): webhook URL invalid" ;;
+    19021) die "Send failed (19021): signature check failed" ;;
+    19022) die "Send failed (19022): IP not whitelisted" ;;
+    19024) die "Send failed (19024): keyword check failed" ;;
+    99991663) die "Send failed (99991663): token invalid or expired" ;;
+    230001|230002) die "Send failed ($code): bot not in chat or no permission" ;;
+    *) die "Send failed (code=$code): $resp" ;;
+    esac
+}
+
+# ── Step B/C: upload image or file ───────────────────────────────────────────
+
+RESOURCE_KEY=""
+
+upload_image() {
+    local resp
+    resp=$(curl -sf -X POST 'https://open.feishu.cn/open-apis/im/v1/images' \
+        -H "Authorization: Bearer $TOKEN" \
+        -F 'image_type="message"' \
+        -F "image=@\"${FILE_PATH}\"")
+    local code
+    code=$(echo "$resp" | python3 -c "import sys,json; print(json.load(sys.stdin).get('code','?'))" 2>/dev/null)
+    [[ "$code" != "0" ]] && die "Image upload failed: $resp"
+    RESOURCE_KEY=$(echo "$resp" | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['image_key'])")
+    info "Image uploaded: $RESOURCE_KEY"
+}
+
+upload_file() {
+    local fname
+    fname=$(basename "$FILE_PATH")
+    local resp
+    resp=$(curl -sf -X POST 'https://open.feishu.cn/open-apis/im/v1/files' \
+        -H "Authorization: Bearer $TOKEN" \
+        -F 'file_type="stream"' \
+        -F "file_name=\"${fname}\"" \
+        -F "file=@\"${FILE_PATH}\"")
+    local code
+    code=$(echo "$resp" | python3 -c "import sys,json; print(json.load(sys.stdin).get('code','?'))" 2>/dev/null)
+    [[ "$code" != "0" ]] && die "File upload failed: $resp"
+    RESOURCE_KEY=$(echo "$resp" | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['file_key'])")
+    info "File uploaded: $RESOURCE_KEY"
+}
+
+# ── send via webhook ──────────────────────────────────────────────────────────
+
+webhook_send() {
+    local payload="$1"
+    [[ -z "$FEISHU_WEBHOOK" ]] && die "FEISHU_WEBHOOK not set"
+
+    # sign if secret configured
+    if [[ -n "$FEISHU_WEBHOOK_SECRET" ]]; then
+        payload=$(PAYLOAD_STR="$payload" WEBHOOK_SECRET="$FEISHU_WEBHOOK_SECRET" python3 - <<'PY'
+import base64, hashlib, hmac, json, os, time
+secret = os.environ["WEBHOOK_SECRET"]
+ts = str(int(time.time()))
+sig = base64.b64encode(
+    hmac.new(f"{ts}\n{secret}".encode(), b"", digestmod=hashlib.sha256).digest()
+).decode()
+d = json.loads(os.environ["PAYLOAD_STR"])
+d["timestamp"] = ts
+d["sign"] = sig
+print(json.dumps(d, ensure_ascii=False))
+PY
+)
+    fi
+
+    local resp
+    resp=$(echo "$payload" | curl -sf -X POST "$FEISHU_WEBHOOK" \
+        -H "Content-Type: application/json" -d @-)
+    check_resp "$resp"
+}
+
+# ── send via API ──────────────────────────────────────────────────────────────
+
+api_send() {
+    local msg_type="$1"
+    local content_json="$2"   # already a JSON object string, e.g. {"text":"hi"}
+
+    local receive_id receive_type
+    if [[ -n "$FEISHU_USER_OPEN_ID" ]]; then
+        receive_id="$FEISHU_USER_OPEN_ID"
+        receive_type="open_id"
+    elif [[ -n "$FEISHU_CHAT_ID" ]]; then
+        receive_id="$FEISHU_CHAT_ID"
+        receive_type="chat_id"
+    else
+        die "Neither FEISHU_USER_OPEN_ID nor FEISHU_CHAT_ID is set"
+    fi
+
+    local resp
+    resp=$(RECEIVE_ID="$receive_id" MSG_TYPE="$msg_type" CONTENT_JSON="$content_json" python3 - <<'PY' | curl -sf -X POST \
+        "https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=${receive_type}" \
+        -H "Authorization: Bearer $TOKEN" \
+        -H "Content-Type: application/json; charset=utf-8" -d @-
+import json, os
+msg = {
+    "receive_id": os.environ["RECEIVE_ID"],
+    "msg_type":   os.environ["MSG_TYPE"],
+    "content":    json.dumps(json.loads(os.environ["CONTENT_JSON"]))
+}
+print(json.dumps(msg, ensure_ascii=False))
+PY
+)
+    check_resp "$resp"
+}
+
+# ── main dispatch ─────────────────────────────────────────────────────────────
+
+case "$TYPE" in
+text)
+    CONTENT=$(python3 - <<'PY'
+import json, os
+print(json.dumps({"text": os.environ["MESSAGE"]}))
+PY
+)
+    if [[ -n "$FEISHU_USER_OPEN_ID" ]]; then
+        api_send "text" "$CONTENT"
+    elif [[ -n "$FEISHU_WEBHOOK" ]]; then
+        PAYLOAD=$(python3 - <<PY
+import json, os
+print(json.dumps({
+    "msg_type": "text",
+    "content": json.loads("${CONTENT}")
+}, ensure_ascii=False))
+PY
+)
+        webhook_send "$PAYLOAD"
+    elif [[ -n "$FEISHU_CHAT_ID" ]]; then
+        api_send "text" "$CONTENT"
+    else
+        die "No destination configured. Set FEISHU_WEBHOOK, FEISHU_CHAT_ID, or FEISHU_USER_OPEN_ID"
+    fi
+    ;;
+
+card)
+    CARD_CONTENT=$(python3 - <<'PY'
+import json, os
+card = {
+    "header": {
+        "title": {"content": os.environ["TITLE"], "tag": "plain_text"},
+        "template": os.environ["COLOR"]
+    },
+    "elements": [{"tag": "div", "text": {"content": os.environ["BODY"], "tag": "lark_md"}}]
+}
+print(json.dumps(card))
+PY
+)
+
+    if [[ -n "$FEISHU_USER_OPEN_ID" ]]; then
+        # Feishu doesn't support interactive cards to individuals; fallback to text
+        FALLBACK=$(python3 - <<'PY'
+import json, os
+print(json.dumps({"text": "[%s] %s" % (os.environ["TITLE"], os.environ["BODY"])}))
+PY
+)
+        api_send "text" "$FALLBACK"
+        info "Card sent to individual as text (Feishu API doesn't support interactive to open_id)"
+    elif [[ -n "$FEISHU_WEBHOOK" ]]; then
+        PAYLOAD=$(python3 - <<PY
+import json
+card = json.loads('${CARD_CONTENT}')
+print(json.dumps({"msg_type": "interactive", "card": card}, ensure_ascii=False))
+PY
+)
+        webhook_send "$PAYLOAD"
+    elif [[ -n "$FEISHU_CHAT_ID" ]]; then
+        api_send "interactive" "$CARD_CONTENT"
+    else
+        die "No destination configured."
+    fi
+    ;;
+
+image)
+    upload_image
+    if [[ -n "$FEISHU_WEBHOOK" && -z "$FEISHU_USER_OPEN_ID" ]]; then
+        CONTENT=$(python3 - <<'PY'
+import json, os
+print(json.dumps({"image_key": os.environ["RESOURCE_KEY"]}))
+PY
+)
+        PAYLOAD=$(python3 - <<PY
+import json
+print(json.dumps({"msg_type": "image", "content": json.loads('${CONTENT}')}, ensure_ascii=False))
+PY
+)
+        webhook_send "$PAYLOAD"
+    else
+        CONTENT=$(python3 - <<'PY'
+import json, os
+print(json.dumps({"image_key": os.environ["RESOURCE_KEY"]}))
+PY
+)
+        api_send "image" "$CONTENT"
+    fi
+    ;;
+
+file)
+    upload_file
+    CONTENT=$(python3 - <<'PY'
+import json, os
+print(json.dumps({"file_key": os.environ["RESOURCE_KEY"]}))
+PY
+)
+    api_send "file" "$CONTENT"
+    ;;
+esac

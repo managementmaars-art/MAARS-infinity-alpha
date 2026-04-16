@@ -1,0 +1,27 @@
+{
+  "name": "{{MARKETPLACE_NAME}}",
+  "owner": {
+    "name": "{{OWNER_NAME}}"
+    {{#if OWNER_EMAIL}}, "email": "{{OWNER_EMAIL}}"{{/if}}
+  },
+  {{#if MARKETPLACE_DESCRIPTION}}
+  "metadata": {
+    "description": "{{MARKETPLACE_DESCRIPTION}}"
+  },
+  {{/if}}
+  "plugins": [
+    {
+      "name": "{{PLUGIN_NAME}}",
+      "source": "./",
+      "description": "{{PLUGIN_DESCRIPTION}}",
+      "author": {
+        "name": "{{AUTHOR_NAME}}"
+      },
+      {{#if HOMEPAGE}}"homepage": "{{HOMEPAGE}}",{{/if}}
+      {{#if REPOSITORY}}"repository": "{{REPOSITORY}}",{{/if}}
+      {{#if LICENSE}}"license": "{{LICENSE}}",{{/if}}
+      {{#if KEYWORDS}}"keywords": [{{KEYWORDS}}],{{/if}}
+      {{#if CATEGORY}}"category": "{{CATEGORY}}"{{/if}}
+    }
+  ]
+}

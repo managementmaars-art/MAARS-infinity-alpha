@@ -1,0 +1,12 @@
+{
+  "host_name": "offline-server",
+  "reachable": false,
+  "connection_time_ms": 0,
+  "cass_status": {
+    "status": "unknown"
+  },
+  "detected_agents": [],
+  "system_info": null,
+  "resources": null,
+  "error": "Connection timed out after 10 seconds"
+}

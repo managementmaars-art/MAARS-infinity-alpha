@@ -1,0 +1,132 @@
+// ===========================================
+// Team SaaS - Prisma Schema
+// Multi-tenant team-based application
+// ===========================================
+
+// Use "prisma-client" (Prisma 7+), NOT "prisma-client-js"
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ===========================================
+// USER & AUTHENTICATION
+// ===========================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String
+  emailVerified DateTime?
+  image         String?
+  theme         String    @default("system") // "light", "dark", or "system"
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Password reset
+  passwordResetToken   String?   @unique
+  passwordResetExpires DateTime?
+
+  // Relations
+  teamMembers TeamMember[]
+  invitations Invitation[] @relation("InvitedBy")
+}
+
+// ===========================================
+// TEAM MANAGEMENT
+// ===========================================
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  logo      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  members     TeamMember[]
+  invitations Invitation[]
+  
+  // Add your team-scoped models here, e.g.:
+  // projects    Project[]
+  // documents   Document[]
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  role      Role     @default(MEMBER)
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId])
+  @@index([teamId])
+}
+
+enum Role {
+  ADMIN  // Full access including team settings
+  MEMBER // Can view and manage team resources
+}
+
+// ===========================================
+// TEAM INVITATIONS
+// ===========================================
+
+model Invitation {
+  id        String   @id @default(cuid())
+  email     String
+  role      Role     @default(MEMBER)
+  token     String   @unique @default(uuid())
+  expiresAt DateTime // 7 days from creation
+  createdAt DateTime @default(now())
+
+  teamId    String
+  team      Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  invitedBy String
+  inviter   User   @relation("InvitedBy", fields: [invitedBy], references: [id], onDelete: Cascade)
+
+  @@unique([email, teamId]) // One invite per email per team
+  @@index([token])
+}
+
+// ===========================================
+// CUSTOM PREFIXED IDs (Optional Pattern)
+// ===========================================
+// 
+// For models where you want prefixed IDs (e.g., "proj_abc123"):
+// 
+// model Project {
+//   id String @id @default(dbgenerated("'proj_' || gen_random_uuid()")) @db.Text
+//   ...
+// }
+//
+// This uses PostgreSQL's gen_random_uuid() with a prefix.
+// Most models can use simple cuid() which is the default.
+
+// ===========================================
+// ADD YOUR MODELS HERE
+// ===========================================
+// 
+// Example: Project model scoped to a team
+// 
+// model Project {
+//   id          String   @id @default(cuid())
+//   name        String
+//   description String?
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+//
+//   teamId String
+//   team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+//
+//   @@index([teamId])
+// }

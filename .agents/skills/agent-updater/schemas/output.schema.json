@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "agent-updater output",
+  "type": "object",
+  "required": ["ok"],
+  "properties": {
+    "ok": { "type": "boolean" },
+    "mode": { "type": "string", "enum": ["plan", "execute"] },
+    "risk": { "type": "string", "enum": ["low", "medium", "high"] },
+    "target": { "type": "object" },
+    "patchPlan": {
+      "type": "object",
+      "properties": {
+        "objective": { "type": "string" },
+        "promptFiles": { "type": "array", "items": { "type": "string" } },
+        "workflowFiles": { "type": "array", "items": { "type": "string" } },
+        "hookEnforcementPoints": { "type": "array", "items": { "type": "string" } },
+        "validationCommands": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

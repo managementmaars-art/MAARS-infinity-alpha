@@ -1,0 +1,16 @@
+id: hardcoded-sleep
+language: python
+severity: warning
+message: >-
+  Hardcoded sleep duration — extract to named constant for tuning.
+note: >-
+  Sleep durations are operational parameters that often need tuning per environment.
+  Create SLEEP_* or DELAY_* constants backed by env vars.
+rule:
+  any:
+    - pattern: time.sleep($N)
+    - pattern: asyncio.sleep($N)
+    - pattern: await asyncio.sleep($N)
+constraints:
+  N:
+    kind: integer

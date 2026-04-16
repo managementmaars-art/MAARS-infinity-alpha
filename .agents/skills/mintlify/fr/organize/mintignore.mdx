@@ -1,0 +1,82 @@
+---
+title: "Exclure des fichiers de la publication"
+sidebarTitle: "Exclure des fichiers"
+description: "Excluez des fichiers et répertoires spécifiques de votre documentation publiée en utilisant un fichier .mintignore avec des motifs glob, similaire à la syntaxe .gitignore."
+keywords: ["exclure", "ignorer", "gitignore", "brouillons", "privé"]
+---
+
+Le fichier `.mintignore` vous permet d'exclure des fichiers et des répertoires spécifiques de votre référentiel de documentation du traitement et de la publication sur votre site de documentation.
+
+Utilisez `.mintignore` pour conserver les brouillons, les notes internes et les fichiers source en dehors de votre documentation publique tout en les gardant dans votre référentiel.
+
+<div id="create-a-mintignore-file">
+  ## Créer un fichier .mintignore
+</div>
+
+Créez un fichier `.mintignore` à la racine de votre répertoire de documentation. Ce fichier utilise la même syntaxe de motifs que `.gitignore`.
+
+```plaintext .mintignore
+# Exclure les documents brouillons
+drafts/
+*.draft.mdx
+
+# Exclure la documentation interne
+internal/
+
+# Exclure des fichiers spécifiques
+private-notes.md
+```
+
+Lorsque Mintlify génère votre documentation, il lit le fichier `.mintignore` et exclut de la génération tous les fichiers ou répertoires correspondants.
+
+Fichiers exclus :
+
+* n’apparaissent pas dans votre documentation publiée ;
+* ne sont pas indexés pour la recherche ;
+* ne sont pas accessibles aux visiteurs ;
+* ne déclenchent pas les [contrôles de liens rompus](/fr/cli/commands#mint-broken-links). Les liens qui pointent vers des fichiers ignorés sont rompus.
+
+<div id="default-ignored-patterns">
+  ## Motifs ignorés par défaut
+</div>
+
+Mintlify ignore automatiquement les répertoires et fichiers suivants sans nécessiter de configuration :
+
+* `.git`
+* `.github`
+* `.claude`
+* `.agents`
+* `.idea`
+* `.vscode`
+* `node_modules`
+* `build`
+* `dist`
+* `coverage`
+* `.cache`
+* `tmp`
+* `temp`
+* `README.md`
+* `LICENSE.md`
+* `CHANGELOG.md`
+* `CONTRIBUTING.md`
+
+Vous n’avez pas besoin de les ajouter à votre fichier `.mintignore`.
+
+<Note>
+  Contrairement aux [pages masquées](/fr/organize/hidden-pages), `.mintignore` supprime entièrement
+  les fichiers correspondants de votre site. Les visiteurs ne peuvent pas y accéder via leur URL.
+</Note>
+
+<div id="pattern-syntax">
+  ## Syntaxe des motifs
+</div>
+
+Le fichier `.mintignore` utilise la même syntaxe que `.gitignore`. Voici quelques motifs courants :
+
+| Motif              | Description                                            |
+| ------------------ | ------------------------------------------------------ |
+| `drafts/`          | Exclut l’intégralité du répertoire `drafts`            |
+| `*.draft.mdx`      | Exclut tous les fichiers se terminant par `.draft.mdx` |
+| `private-notes.md` | Exclut un fichier spécifique                           |
+| `**/internal/**`   | Exclut tout répertoire `internal`, quel que soit son niveau |
+| `!important.mdx`   | Annule un motif précédent (inclut le fichier)          |

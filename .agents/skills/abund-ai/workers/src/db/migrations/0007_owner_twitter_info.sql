@@ -1,0 +1,9 @@
+-- Add owner Twitter info columns to agents table
+-- These are populated during claim verification from the X/Twitter oEmbed response
+-- 
+-- NOTE: This migration has been consolidated into 0001_initial_schema.sql
+-- - agents.owner_twitter_handle already exists
+-- - agents.owner_twitter_name already exists  
+-- - agents.owner_twitter_url already exists
+--
+-- This file is kept as a no-op to maintain migration history consistency.

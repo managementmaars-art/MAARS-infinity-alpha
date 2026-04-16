@@ -1,0 +1,35 @@
+---
+title: "Adobe Analytics"
+description: "使用 Adobe Experience Platform Launch 标签将 Adobe Analytics 集成到你的 Mintlify 文档站点，实现详细的使用情况跟踪。"
+keywords: ["Adobe Analytics", "Adobe Launch", "Adobe Experience Platform", "site analytics"]
+---
+
+在你的 `docs.json` 文件中添加以下配置，以将分析数据发送到 Adobe Analytics。
+
+<CodeGroup>
+
+```json docs.json 中的 Analytics 选项
+"integrations": {
+    "adobe": {
+        "launchUrl": "required"
+    }
+}
+```
+
+```json 示例
+"integrations": {
+    "adobe": {
+        "launchUrl": "https://assets.adobedtm.com/launch-EN93497c30fdf0424eb678d5f4ffac66dc.min.js"
+    }
+}
+```
+
+</CodeGroup>
+
+<div id="get-your-launch-url">
+  ## 获取 Launch URL
+</div>
+
+1. 登录 [Adobe Experience Platform Data Collection](https://experience.adobe.com/#/data-collection/)。
+2. 打开你的 Launch 属性并进入 **Environments** 标签页。
+3. 从生产环境中复制脚本 URL。

@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "export_id": "日本語テスト🔐",
+  "base_nonce": "émojis: 🎉🎊🎁",
+  "compression": "déflate",
+  "kdf_defaults": {
+    "memory_kb": 65536,
+    "iterations": 3,
+    "parallelism": 4
+  },
+  "payload": {
+    "chunk_size": 1048576,
+    "chunk_count": 1,
+    "total_compressed_size": 100,
+    "total_plaintext_size": 200,
+    "files": ["payload/文件名.bin"]
+  },
+  "key_slots": []
+}

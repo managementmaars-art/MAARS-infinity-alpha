@@ -1,0 +1,1110 @@
+#!/usr/bin/env python3
+"""
+Smart DCA (Dollar Cost Averaging) Backtest
+==========================================
+Intelligent periodic investment with valuation-based allocation.
+
+Features:
+- Multi-factor valuation scoring
+- Dynamic allocation based on market state
+- Comparison with fixed DCA
+- Beautiful HTML report
+- Multi-language support (en/zh)
+"""
+
+import argparse
+import json
+from datetime import datetime, timedelta
+from pathlib import Path
+
+import ccxt
+import numpy as np
+import pandas as pd
+import pandas_ta as ta
+
+
+# ============================================================================
+# LANGUAGE LABELS
+# ============================================================================
+
+LABELS = {
+    'en': {
+        'title': 'Smart DCA vs Fixed DCA',
+        'periods': 'periods',
+        'base': 'Base',
+        'per_period': '/period',
+        'smart_dca': 'Smart DCA',
+        'fixed_dca': 'Fixed DCA',
+        'total_invested': 'Total Invested',
+        'final_value': 'Final Value',
+        'avg_cost': 'Avg Cost',
+        'smart_alpha': 'Smart DCA Alpha',
+        'cost_reduction': 'Cost Reduction',
+        'smart_btc': 'Smart DCA BTC',
+        'fixed_btc': 'Fixed DCA BTC',
+        'portfolio_growth': 'Portfolio Growth',
+        'valuation_investment': 'Valuation Score & Investment',
+        'price_chart': 'Price',
+        'valuation_score': 'Valuation Score',
+        'investment': 'Investment',
+        'smart_cost_basis': 'Smart Cost Basis',
+        'tagline': 'Validate your trading ideas in minutes',
+        'share_cta': 'Share your results to help others discover this tool!',
+        'invested': 'Invested',
+        'total_btc': 'Total BTC',
+        'return': 'Return',
+        'smart_wins': 'Smart DCA wins! Alpha',
+        'fixed_wins': 'Fixed DCA wins by',
+        'cost_reduction_label': 'Cost reduction',
+        # Strategy summary labels
+        'strategy_summary': 'Strategy Summary',
+        'symbol': 'Symbol',
+        'frequency': 'Frequency',
+        'base_amount': 'Base Amount',
+        'backtest_period': 'Backtest Period',
+        'days': 'days',
+        'every_n_days': 'Every {n} days',
+        'valuation_model': 'Valuation Model',
+        'allocation_rules': 'Allocation Rules',
+        'bullish_signal': 'Bullish Signal',
+        'bearish_signal': 'Bearish Signal',
+        'weight': 'Weight',
+        'factor': 'Factor',
+        'indicator': 'Indicator',
+        'score_range': 'Score Range',
+        'allocation': 'Allocation',
+        'rsi_low': 'RSI < 35',
+        'rsi_high': 'RSI > 65',
+        'below_sma200': 'Price < SMA200',
+        'above_sma200_130': 'Price > SMA200 × 1.3',
+        'below_bb_lower': 'Price < BB Lower',
+        'above_bb_upper': 'Price > BB Upper',
+        'drawdown_25': 'Drawdown > 25%',
+        'near_ath': 'Near ATH (< 5% DD)',
+        'macd_turning_up': 'MACD turning up (negative zone)',
+        'macd_turning_down': 'MACD turning down (positive zone)',
+        'strong_buy': '🟢🟢 Strong buy zone',
+        'undervalued': '🟢 Undervalued',
+        'fair_value': '🟡 Fair value',
+        'overvalued': '🔴 Overvalued',
+        'extreme_caution': '🔴🔴 Extreme caution',
+        'date_range': 'Date Range',
+        'to': 'to',
+        'original_idea': 'Original Strategy Idea',
+    },
+    'zh': {
+        'title': '智能定投 vs 等额定投',
+        'periods': '期',
+        'base': '基准',
+        'per_period': '/期',
+        'smart_dca': '智能定投',
+        'fixed_dca': '等额定投',
+        'total_invested': '总投入',
+        'final_value': '最终价值',
+        'avg_cost': '平均成本',
+        'smart_alpha': '智能定投超额收益',
+        'cost_reduction': '平均成本降低',
+        'smart_btc': '智能定投累计 BTC',
+        'fixed_btc': '等额定投累计 BTC',
+        'portfolio_growth': '资产增长对比',
+        'valuation_investment': '估值分数 & 投入金额',
+        'price_chart': '价格走势',
+        'valuation_score': '估值分数',
+        'investment': '投入金额',
+        'smart_cost_basis': '智能投入成本',
+        'tagline': '几分钟验证你的交易策略想法',
+        'share_cta': '截图分享你的回测结果，帮助更多人发现这个工具！',
+        'invested': '总投入',
+        'total_btc': '累计 BTC',
+        'return': '收益率',
+        'smart_wins': '智能定投胜出！超额收益',
+        'fixed_wins': '等额定投胜出，差距',
+        'cost_reduction_label': '平均成本降低',
+        # Strategy summary labels
+        'strategy_summary': '策略摘要',
+        'symbol': '交易对',
+        'frequency': '定投频率',
+        'base_amount': '基准金额',
+        'backtest_period': '回测周期',
+        'days': '天',
+        'every_n_days': '每 {n} 天',
+        'valuation_model': '估值模型',
+        'allocation_rules': '投资分配规则',
+        'bullish_signal': '看涨信号',
+        'bearish_signal': '看跌信号',
+        'weight': '权重',
+        'factor': '因子',
+        'indicator': '指标',
+        'score_range': '分数区间',
+        'allocation': '投资倍数',
+        'rsi_low': 'RSI < 35',
+        'rsi_high': 'RSI > 65',
+        'below_sma200': '价格 < SMA200',
+        'above_sma200_130': '价格 > SMA200 × 1.3',
+        'below_bb_lower': '价格 < 布林带下轨',
+        'above_bb_upper': '价格 > 布林带上轨',
+        'drawdown_25': '回撤 > 25%',
+        'near_ath': '接近历史高点 (回撤 < 5%)',
+        'macd_turning_up': 'MACD 负值区域转正',
+        'macd_turning_down': 'MACD 正值区域转负',
+        'strong_buy': '🟢🟢 强烈买入区',
+        'undervalued': '🟢 低估',
+        'fair_value': '🟡 合理估值',
+        'overvalued': '🔴 高估',
+        'extreme_caution': '🔴🔴 极度谨慎',
+        'date_range': '回测区间',
+        'to': '至',
+        'original_idea': '原始策略想法',
+    }
+}
+
+
+# ============================================================================
+# DATA FETCHING
+# ============================================================================
+
+def fetch_ohlcv(symbol: str, timeframe: str, days: int, exchange_id: str = "kucoin") -> pd.DataFrame:
+    """Fetch historical OHLCV data."""
+    exchange_class = getattr(ccxt, exchange_id)
+    exchange = exchange_class({'enableRateLimit': True})
+    
+    since = exchange.parse8601((datetime.utcnow() - timedelta(days=days)).isoformat())
+    
+    all_ohlcv = []
+    while True:
+        ohlcv = exchange.fetch_ohlcv(symbol, timeframe, since=since, limit=1000)
+        if not ohlcv:
+            break
+        all_ohlcv.extend(ohlcv)
+        since = ohlcv[-1][0] + 1
+        if len(ohlcv) < 1000:
+            break
+    
+    df = pd.DataFrame(all_ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+    df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+    df.set_index('timestamp', inplace=True)
+    df = df[~df.index.duplicated(keep='first')]
+    
+    return df
+
+
+# ============================================================================
+# VALUATION MODEL
+# ============================================================================
+
+def calculate_valuation_score(df: pd.DataFrame) -> pd.DataFrame:
+    """Calculate multi-factor valuation score."""
+    df = df.copy()
+    
+    # 1. RSI - Momentum
+    df['rsi'] = ta.rsi(df['close'], length=14)
+    
+    # 2. SMA(200) - Long-term trend position
+    df['sma200'] = ta.sma(df['close'], length=200)
+    
+    # 3. Bollinger Bands - Statistical deviation
+    bb = ta.bbands(df['close'], length=20, std=2.0)
+    if bb is not None:
+        df['bb_upper'] = bb.iloc[:, 2]
+        df['bb_middle'] = bb.iloc[:, 1]
+        df['bb_lower'] = bb.iloc[:, 0]
+    
+    # 4. Drawdown from rolling high
+    df['rolling_high_90'] = df['close'].rolling(window=90).max()
+    df['drawdown_pct'] = (df['close'] - df['rolling_high_90']) / df['rolling_high_90'] * 100
+    
+    # 5. MACD - Momentum direction
+    macd = ta.macd(df['close'], fast=12, slow=26, signal=9)
+    if macd is not None:
+        df['macd'] = macd.iloc[:, 0]
+        df['macd_signal'] = macd.iloc[:, 2]
+        df['macd_hist'] = macd.iloc[:, 1]
+    
+    # 6. Volume relative to average
+    df['volume_sma'] = ta.sma(df['volume'], length=20)
+    df['volume_ratio'] = df['volume'] / df['volume_sma']
+    
+    # Calculate valuation score
+    df['score'] = 0.0
+    
+    # RSI score (weight: 1.0)
+    df.loc[df['rsi'] < 35, 'score'] += 1.0
+    df.loc[df['rsi'] > 70, 'score'] -= 1.0
+    
+    # Price vs SMA200 (weight: 1.0)
+    df.loc[df['close'] < df['sma200'], 'score'] += 1.0
+    df.loc[df['close'] > df['sma200'] * 1.3, 'score'] -= 1.0
+    
+    # Bollinger Band position (weight: 1.0)
+    df.loc[df['close'] < df['bb_lower'], 'score'] += 1.0
+    df.loc[df['close'] > df['bb_upper'], 'score'] -= 1.0
+    
+    # Drawdown score (weight: 1.0)
+    df.loc[df['drawdown_pct'] < -25, 'score'] += 1.0
+    df.loc[df['drawdown_pct'] > -5, 'score'] -= 0.5
+    
+    # MACD turning (weight: 0.5)
+    df['macd_turning_up'] = (df['macd_hist'] > df['macd_hist'].shift(1)) & (df['macd_hist'].shift(1) < 0)
+    df['macd_turning_down'] = (df['macd_hist'] < df['macd_hist'].shift(1)) & (df['macd_hist'].shift(1) > 0)
+    df.loc[df['macd_turning_up'], 'score'] += 0.5
+    df.loc[df['macd_turning_down'], 'score'] -= 0.5
+    
+    # Classify market state
+    df['market_state'] = 'normal'
+    df.loc[df['score'] >= 3.0, 'market_state'] = 'extreme_undervalued'
+    df.loc[(df['score'] >= 1.5) & (df['score'] < 3.0), 'market_state'] = 'undervalued'
+    df.loc[(df['score'] <= -1.5) & (df['score'] > -3.0), 'market_state'] = 'overvalued'
+    df.loc[df['score'] <= -3.0, 'market_state'] = 'extreme_overvalued'
+    
+    return df
+
+
+def get_allocation_multiplier(score: float) -> float:
+    """Get allocation multiplier based on valuation score."""
+    if score >= 3.0:
+        return 2.0  # Extreme undervaluation: 2x
+    elif score >= 1.5:
+        return 1.5  # Undervalued: 1.5x
+    elif score >= -1.5:
+        return 1.0  # Normal: 1x
+    elif score >= -3.0:
+        return 0.5  # Overvalued: 0.5x
+    else:
+        return 0.25  # Extreme overvaluation: 0.25x
+
+
+# ============================================================================
+# SMART DCA SIMULATION
+# ============================================================================
+
+def simulate_smart_dca(
+    df: pd.DataFrame,
+    base_amount: float = 200,
+    frequency_days: int = 7
+) -> dict:
+    """Simulate smart DCA with valuation-based allocation."""
+    
+    # Resample to weekly (or specified frequency)
+    # Get one data point per period
+    df_weekly = df.resample(f'{frequency_days}D').last().dropna()
+    
+    # Calculate valuation for each period
+    df_with_score = calculate_valuation_score(df)
+    
+    # Align scores with weekly data
+    df_weekly = df_weekly.copy()
+    df_weekly['score'] = df_with_score['score'].reindex(df_weekly.index, method='ffill')
+    df_weekly['rsi'] = df_with_score['rsi'].reindex(df_weekly.index, method='ffill')
+    df_weekly['market_state'] = df_with_score['market_state'].reindex(df_weekly.index, method='ffill')
+    
+    # Smart DCA simulation
+    smart_records = []
+    smart_total_invested = 0
+    smart_total_btc = 0
+    
+    # Fixed DCA simulation (for comparison)
+    fixed_records = []
+    fixed_total_invested = 0
+    fixed_total_btc = 0
+    
+    for timestamp, row in df_weekly.iterrows():
+        price = row['close']
+        score = row['score'] if pd.notna(row['score']) else 0
+        
+        # Smart DCA
+        multiplier = get_allocation_multiplier(score)
+        smart_amount = base_amount * multiplier
+        smart_btc_bought = smart_amount / price
+        smart_total_invested += smart_amount
+        smart_total_btc += smart_btc_bought
+        
+        smart_records.append({
+            'timestamp': timestamp,
+            'price': price,
+            'score': score,
+            'market_state': row['market_state'],
+            'multiplier': multiplier,
+            'amount_invested': smart_amount,
+            'btc_bought': smart_btc_bought,
+            'total_invested': smart_total_invested,
+            'total_btc': smart_total_btc,
+            'portfolio_value': smart_total_btc * price,
+            'avg_cost': smart_total_invested / smart_total_btc if smart_total_btc > 0 else 0
+        })
+        
+        # Fixed DCA
+        fixed_btc_bought = base_amount / price
+        fixed_total_invested += base_amount
+        fixed_total_btc += fixed_btc_bought
+        
+        fixed_records.append({
+            'timestamp': timestamp,
+            'price': price,
+            'amount_invested': base_amount,
+            'btc_bought': fixed_btc_bought,
+            'total_invested': fixed_total_invested,
+            'total_btc': fixed_total_btc,
+            'portfolio_value': fixed_total_btc * price,
+            'avg_cost': fixed_total_invested / fixed_total_btc if fixed_total_btc > 0 else 0
+        })
+    
+    # Final metrics
+    final_price = df_weekly.iloc[-1]['close']
+    
+    smart_final_value = smart_total_btc * final_price
+    smart_return_pct = (smart_final_value - smart_total_invested) / smart_total_invested * 100
+    smart_avg_cost = smart_total_invested / smart_total_btc
+    
+    fixed_final_value = fixed_total_btc * final_price
+    fixed_return_pct = (fixed_final_value - fixed_total_invested) / fixed_total_invested * 100
+    fixed_avg_cost = fixed_total_invested / fixed_total_btc
+    
+    return {
+        'smart': {
+            'records': smart_records,
+            'total_invested': smart_total_invested,
+            'total_btc': smart_total_btc,
+            'final_value': smart_final_value,
+            'return_pct': smart_return_pct,
+            'avg_cost': smart_avg_cost
+        },
+        'fixed': {
+            'records': fixed_records,
+            'total_invested': fixed_total_invested,
+            'total_btc': fixed_total_btc,
+            'final_value': fixed_final_value,
+            'return_pct': fixed_return_pct,
+            'avg_cost': fixed_avg_cost
+        },
+        'comparison': {
+            'extra_return_pct': smart_return_pct - fixed_return_pct,
+            'cost_savings_pct': (fixed_avg_cost - smart_avg_cost) / fixed_avg_cost * 100,
+            'extra_btc': smart_total_btc - fixed_total_btc,
+            'investment_diff': smart_total_invested - fixed_total_invested
+        }
+    }
+
+
+# ============================================================================
+# HTML REPORT
+# ============================================================================
+
+def generate_html_report(results: dict, config: dict, lang: str = 'en') -> str:
+    """Generate beautiful HTML report for Smart DCA.
+    
+    Args:
+        results: Backtest results dict
+        config: Configuration dict
+        lang: Language code ('en' or 'zh')
+    """
+    L = LABELS.get(lang, LABELS['en'])
+    
+    smart = results['smart']
+    fixed = results['fixed']
+    comp = results['comparison']
+    
+    # Prepare chart data
+    timestamps = [str(r['timestamp']) for r in smart['records']]
+    smart_values = [r['portfolio_value'] for r in smart['records']]
+    fixed_values = [r['portfolio_value'] for r in fixed['records']]
+    smart_invested = [r['total_invested'] for r in smart['records']]
+    fixed_invested = [r['total_invested'] for r in fixed['records']]
+    prices = [r['price'] for r in smart['records']]
+    scores = [r['score'] for r in smart['records']]
+    amounts = [r['amount_invested'] for r in smart['records']]
+    
+    # Market state distribution
+    state_counts = {}
+    for r in smart['records']:
+        state = r['market_state']
+        state_counts[state] = state_counts.get(state, 0) + 1
+    
+    html = f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart DCA Report | {config.get('symbol', 'BTC/USDT')}</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {{
+            /* Light theme - clean and professional */
+            --bg-void: #f8fafc;
+            --bg-deep: #ffffff;
+            --bg-surface: #ffffff;
+            --bg-elevated: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --accent-cyan: #0ea5e9;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-gold: #f59e0b;
+            --accent-purple: #8b5cf6;
+            --border-subtle: #e2e8f0;
+        }}
+        
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        
+        body {{
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }}
+        
+        .bg-pattern {{
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(14,165,233,0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139,92,246,0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }}
+        
+        .container {{ position: relative; max-width: 1400px; margin: 0 auto; padding: 40px 24px; }}
+        
+        .header {{
+            text-align: center;
+            padding: 60px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 48px;
+        }}
+        
+        .header-badge {{
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            margin-bottom: 24px;
+        }}
+        
+        .header h1 {{
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }}
+        
+        .header-meta {{
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            color: var(--text-secondary);
+        }}
+        
+        /* Strategy Summary */
+        .strategy-summary {{
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 48px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }}
+        
+        .strategy-summary h2 {{
+            font-size: 1.25rem;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }}
+        
+        .original-idea {{
+            background: var(--bg-elevated);
+            border-left: 4px solid var(--accent-cyan);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }}
+        
+        .original-idea strong {{
+            display: block;
+            font-style: normal;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }}
+        
+        .info-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+        }}
+        
+        .info-item {{
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }}
+        
+        .info-label {{
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }}
+        
+        .info-value {{
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }}
+        
+        .model-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }}
+        
+        .model-block {{
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 20px;
+        }}
+        
+        .model-block h3 {{
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            margin-bottom: 16px;
+        }}
+        
+        .model-table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }}
+        
+        .model-table th {{
+            text-align: left;
+            padding: 8px;
+            background: var(--bg-deep);
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+        }}
+        
+        .model-table td {{
+            padding: 8px;
+            border-bottom: 1px solid var(--border-subtle);
+            font-family: 'JetBrains Mono', monospace;
+        }}
+        
+        .model-table .bullish {{
+            color: var(--accent-green);
+        }}
+        
+        .model-table .bearish {{
+            color: var(--accent-red);
+        }}
+        
+        .comparison-hero {{
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 24px;
+            margin-bottom: 48px;
+            align-items: center;
+        }}
+        
+        .strategy-card {{
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+        }}
+        
+        .strategy-card.winner {{
+            border-color: var(--accent-green);
+            box-shadow: 0 0 40px rgba(0,255,157,0.15);
+        }}
+        
+        .strategy-card h3 {{
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }}
+        
+        .strategy-card .value {{
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }}
+        
+        .strategy-card .value.positive {{ color: var(--accent-green); }}
+        .strategy-card .value.negative {{ color: var(--accent-red); }}
+        
+        .strategy-card .sub {{ color: var(--text-secondary); font-size: 0.9rem; }}
+        
+        .vs-badge {{
+            background: var(--bg-elevated);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--accent-purple);
+        }}
+        
+        .metrics-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 48px;
+        }}
+        
+        .metric-card {{
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }}
+        
+        .metric-card .value {{
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }}
+        
+        .metric-card .label {{
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }}
+        
+        .section {{
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }}
+        
+        .section h2 {{
+            font-size: 1.25rem;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }}
+        
+        .chart-container {{
+            background: var(--bg-deep);
+            border-radius: 12px;
+            padding: 16px;
+        }}
+        
+        .footer {{
+            margin-top: 64px;
+            padding: 48px;
+            background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-elevated) 100%);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 24px;
+            text-align: center;
+        }}
+        
+        .footer-brand {{
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }}
+        
+        .footer-cta {{
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
+            color: var(--bg-void);
+            font-weight: 600;
+            border-radius: 12px;
+            text-decoration: none;
+            margin-top: 16px;
+        }}
+        
+        @media (max-width: 768px) {{
+            .comparison-hero {{ grid-template-columns: 1fr; }}
+            .vs-badge {{ margin: 16px auto; }}
+        }}
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    <div class="container">
+        <header class="header">
+            <div class="header-badge">Smart DCA Backtest</div>
+            <h1>{L['title']}</h1>
+            <div class="header-meta">
+                <span>📊 {config.get('symbol', 'BTC/USDT')}</span>
+                <span>📅 {len(smart['records'])} {L['periods']}</span>
+                <span>💰 {L['base']} {config.get('base_amount', 200)} USDT{L['per_period']}</span>
+            </div>
+        </header>
+        
+        <!-- Strategy Summary -->
+        <section class="strategy-summary">
+            <h2>📋 {L['strategy_summary']}</h2>
+            
+            {f'<div class="original-idea"><strong>{L["original_idea"]}</strong>"{config.get("description", "")}"</div>' if config.get('description') else ''}
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">{L['symbol']}</span>
+                    <span class="info-value">{config.get('symbol', 'BTC/USDT')}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">{L['frequency']}</span>
+                    <span class="info-value">{L['every_n_days'].format(n=config.get('frequency', 7))}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">{L['base_amount']}</span>
+                    <span class="info-value">${config.get('base_amount', 200)}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">{L['date_range']}</span>
+                    <span class="info-value">{config.get('start_date', 'N/A')} {L['to']} {config.get('end_date', 'N/A')}</span>
+                </div>
+            </div>
+            
+            <div class="model-grid">
+                <div class="model-block">
+                    <h3>📊 {L['valuation_model']}</h3>
+                    <table class="model-table">
+                        <thead>
+                            <tr>
+                                <th>{L['factor']}</th>
+                                <th>{L['bullish_signal']}</th>
+                                <th>{L['bearish_signal']}</th>
+                                <th>{L['weight']}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>RSI(14)</td><td class="bullish">{L['rsi_low']}</td><td class="bearish">{L['rsi_high']}</td><td>1.0</td></tr>
+                            <tr><td>SMA(200)</td><td class="bullish">{L['below_sma200']}</td><td class="bearish">{L['above_sma200_130']}</td><td>1.0</td></tr>
+                            <tr><td>Bollinger</td><td class="bullish">{L['below_bb_lower']}</td><td class="bearish">{L['above_bb_upper']}</td><td>1.0</td></tr>
+                            <tr><td>Drawdown</td><td class="bullish">{L['drawdown_25']}</td><td class="bearish">{L['near_ath']}</td><td>1.0</td></tr>
+                            <tr><td>MACD</td><td class="bullish">{L['macd_turning_up']}</td><td class="bearish">{L['macd_turning_down']}</td><td>0.5</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="model-block">
+                    <h3>💰 {L['allocation_rules']}</h3>
+                    <table class="model-table">
+                        <thead>
+                            <tr>
+                                <th>{L['score_range']}</th>
+                                <th>State</th>
+                                <th>{L['allocation']}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>≥ +3.0</td><td>{L['strong_buy']}</td><td class="bullish">× 2.0</td></tr>
+                            <tr><td>+1.5 ~ +3.0</td><td>{L['undervalued']}</td><td class="bullish">× 1.5</td></tr>
+                            <tr><td>-1.5 ~ +1.5</td><td>{L['fair_value']}</td><td>× 1.0</td></tr>
+                            <tr><td>-3.0 ~ -1.5</td><td>{L['overvalued']}</td><td class="bearish">× 0.5</td></tr>
+                            <tr><td>≤ -3.0</td><td>{L['extreme_caution']}</td><td class="bearish">× 0.25</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <div class="comparison-hero">
+            <div class="strategy-card {'winner' if comp['extra_return_pct'] > 0 else ''}">
+                <h3>🧠 {L['smart_dca']}</h3>
+                <div class="value {'positive' if smart['return_pct'] > 0 else 'negative'}">{smart['return_pct']:+.1f}%</div>
+                <div class="sub">{L['total_invested']} ${smart['total_invested']:,.0f}</div>
+                <div class="sub">{L['final_value']} ${smart['final_value']:,.0f}</div>
+                <div class="sub">{L['avg_cost']} ${smart['avg_cost']:,.0f}</div>
+            </div>
+            
+            <div class="vs-badge">VS</div>
+            
+            <div class="strategy-card {'winner' if comp['extra_return_pct'] < 0 else ''}">
+                <h3>📊 {L['fixed_dca']}</h3>
+                <div class="value {'positive' if fixed['return_pct'] > 0 else 'negative'}">{fixed['return_pct']:+.1f}%</div>
+                <div class="sub">{L['total_invested']} ${fixed['total_invested']:,.0f}</div>
+                <div class="sub">{L['final_value']} ${fixed['final_value']:,.0f}</div>
+                <div class="sub">{L['avg_cost']} ${fixed['avg_cost']:,.0f}</div>
+            </div>
+        </div>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="value" style="color: {'var(--accent-green)' if comp['extra_return_pct'] > 0 else 'var(--accent-red)'}">{comp['extra_return_pct']:+.2f}%</div>
+                <div class="label">{L['smart_alpha']}</div>
+            </div>
+            <div class="metric-card">
+                <div class="value">{comp['cost_savings_pct']:+.2f}%</div>
+                <div class="label">{L['cost_reduction']}</div>
+            </div>
+            <div class="metric-card">
+                <div class="value">{smart['total_btc']:.6f}</div>
+                <div class="label">{L['smart_btc']}</div>
+            </div>
+            <div class="metric-card">
+                <div class="value">{fixed['total_btc']:.6f}</div>
+                <div class="label">{L['fixed_btc']}</div>
+            </div>
+        </div>
+        
+        <section class="section">
+            <h2>📈 {L['portfolio_growth']}</h2>
+            <div class="chart-container" id="value-chart"></div>
+        </section>
+        
+        <section class="section">
+            <h2>📊 {L['valuation_investment']}</h2>
+            <div class="chart-container" id="allocation-chart"></div>
+        </section>
+        
+        <section class="section">
+            <h2>💰 {config.get('symbol', 'BTC').split('/')[0]} {L['price_chart']}</h2>
+            <div class="chart-container" id="price-chart"></div>
+        </section>
+        
+        <footer class="footer">
+            <div class="footer-brand">🚀 Crypto Backtest Skill</div>
+            <div style="color: var(--text-secondary);">{L['tagline']}</div>
+            <a href="https://github.com/0xrikt/crypto-skills" class="footer-cta" target="_blank">⭐ Star on GitHub</a>
+            <div style="margin-top: 16px; color: var(--text-secondary); font-size: 0.85rem;">
+                {L['share_cta']}<br>
+                Generated on {datetime.now().strftime('%Y-%m-%d %H:%M')} • Past performance ≠ future results
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        const theme = {{
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            font: {{ color: '#e6edf3', family: 'Space Grotesk' }},
+            xaxis: {{ gridcolor: 'rgba(255,255,255,0.06)' }},
+            yaxis: {{ gridcolor: 'rgba(255,255,255,0.06)' }}
+        }};
+        
+        // Portfolio Value Comparison
+        Plotly.newPlot('value-chart', [
+            {{
+                x: {json.dumps(timestamps)},
+                y: {json.dumps(smart_values)},
+                type: 'scatter',
+                mode: 'lines',
+                name: '{L['smart_dca']}',
+                line: {{ color: '#00ff9d', width: 2 }},
+                fill: 'tozeroy',
+                fillcolor: 'rgba(0,255,157,0.1)'
+            }},
+            {{
+                x: {json.dumps(timestamps)},
+                y: {json.dumps(fixed_values)},
+                type: 'scatter',
+                mode: 'lines',
+                name: '{L['fixed_dca']}',
+                line: {{ color: '#00d9ff', width: 2, dash: 'dash' }}
+            }},
+            {{
+                x: {json.dumps(timestamps)},
+                y: {json.dumps(smart_invested)},
+                type: 'scatter',
+                mode: 'lines',
+                name: '{L['smart_cost_basis']}',
+                line: {{ color: '#ffd93d', width: 1, dash: 'dot' }}
+            }}
+        ], {{
+            ...theme,
+            height: 400,
+            margin: {{ t: 20, r: 20, b: 40, l: 60 }},
+            yaxis: {{ ...theme.yaxis, title: 'Value ($)', tickformat: '$,.0f' }},
+            legend: {{ orientation: 'h', y: 1.1 }}
+        }}, {{ responsive: true }});
+        
+        // Allocation Chart
+        Plotly.newPlot('allocation-chart', [
+            {{
+                x: {json.dumps(timestamps)},
+                y: {json.dumps(scores)},
+                type: 'scatter',
+                mode: 'lines',
+                name: '{L['valuation_score']}',
+                line: {{ color: '#a855f7', width: 2 }},
+                yaxis: 'y'
+            }},
+            {{
+                x: {json.dumps(timestamps)},
+                y: {json.dumps(amounts)},
+                type: 'bar',
+                name: '{L['investment']}',
+                marker: {{ 
+                    color: {json.dumps(amounts)},
+                    colorscale: [[0, '#ff4757'], [0.5, '#ffd93d'], [1, '#00ff9d']]
+                }},
+                yaxis: 'y2'
+            }}
+        ], {{
+            ...theme,
+            height: 350,
+            margin: {{ t: 20, r: 60, b: 40, l: 60 }},
+            yaxis: {{ ...theme.yaxis, title: '{L['valuation_score']}', side: 'left' }},
+            yaxis2: {{ title: '{L['investment']} ($)', side: 'right', overlaying: 'y', tickformat: '$,.0f' }},
+            legend: {{ orientation: 'h', y: 1.1 }},
+            shapes: [
+                {{ type: 'line', y0: 0, y1: 0, x0: 0, x1: 1, xref: 'paper', yref: 'y', line: {{ dash: 'dash', color: 'rgba(255,255,255,0.3)' }} }}
+            ]
+        }}, {{ responsive: true }});
+        
+        // Price Chart
+        Plotly.newPlot('price-chart', [{{
+            x: {json.dumps(timestamps)},
+            y: {json.dumps(prices)},
+            type: 'scatter',
+            mode: 'lines',
+            name: '{config.get('symbol', 'BTC').split('/')[0]} Price',
+            line: {{ color: '#ffd93d', width: 2 }},
+            fill: 'tozeroy',
+            fillcolor: 'rgba(255,217,61,0.1)'
+        }}], {{
+            ...theme,
+            height: 300,
+            margin: {{ t: 20, r: 20, b: 40, l: 60 }},
+            yaxis: {{ ...theme.yaxis, title: '{L['price_chart']} ($)', tickformat: '$,.0f' }}
+        }}, {{ responsive: true }});
+    </script>
+</body>
+</html>'''
+    
+    return html
+
+
+# ============================================================================
+# MAIN
+# ============================================================================
+
+def main():
+    parser = argparse.ArgumentParser(description='Smart DCA Backtest')
+    parser.add_argument('--symbol', default='BTC/USDT', help='Trading pair')
+    parser.add_argument('--days', type=int, default=1095, help='Backtest period (default: 3 years)')
+    parser.add_argument('--base-amount', type=float, default=200, help='Base investment per period')
+    parser.add_argument('--frequency', type=int, default=7, help='Investment frequency in days')
+    parser.add_argument('--output', default='smart_dca_report.html', help='Output HTML file')
+    parser.add_argument('--description', default='', help='Original strategy idea in natural language')
+    parser.add_argument('--lang', default='en', choices=['en', 'zh'], help='Report language (en/zh)')
+    
+    args = parser.parse_args()
+    
+    L = LABELS.get(args.lang, LABELS['en'])
+    
+    print(f"🧠 Smart DCA Backtest")
+    print(f"{'='*50}")
+    print(f"Symbol: {args.symbol}")
+    print(f"Period: {args.days} days ({args.days // 365} years)")
+    print(f"Base Amount: ${args.base_amount}/period")
+    print(f"Frequency: Every {args.frequency} days")
+    print(f"Language: {args.lang}")
+    print()
+    
+    # Fetch data
+    print("📊 Fetching historical data...")
+    df = fetch_ohlcv(args.symbol, '1d', args.days)
+    print(f"   Got {len(df)} daily candles")
+    
+    # Validate data - warn if significantly less than requested
+    if len(df) > 1:
+        actual_days = (df.index[-1] - df.index[0]).days
+        if actual_days < args.days * 0.5:
+            print()
+            print("⚠️  WARNING: Received much less data than requested!")
+            print(f"   Requested: {args.days} days")
+            print(f"   Received:  {actual_days} days ({len(df)} candles)")
+            print()
+            print("   💡 TIP: OKX ~90 day limit. Use --exchange kucoin or binance for longer backtests.")
+            print()
+    
+    # Run simulation
+    print("🧮 Running Smart DCA simulation...")
+    results = simulate_smart_dca(df, args.base_amount, args.frequency)
+    
+    smart = results['smart']
+    fixed = results['fixed']
+    comp = results['comparison']
+    
+    # Generate report
+    print("📄 Generating report...")
+    
+    # Get actual date range from data
+    start_date = df.index[0].strftime('%Y-%m-%d') if len(df) > 0 else 'N/A'
+    end_date = df.index[-1].strftime('%Y-%m-%d') if len(df) > 0 else 'N/A'
+    
+    config = {
+        'symbol': args.symbol,
+        'base_amount': args.base_amount,
+        'frequency': args.frequency,
+        'days': args.days,
+        'start_date': start_date,
+        'end_date': end_date,
+        'description': args.description,
+    }
+    html = generate_html_report(results, config, lang=args.lang)
+    
+    output_path = Path(args.output)
+    output_path.write_text(html)
+    print(f"   Saved: {output_path.absolute()}")
+    
+    # Print results
+    print()
+    print(f"{'='*50}")
+    print(f"📈 {L['smart_dca']} vs {L['fixed_dca']}")
+    print(f"{'='*50}")
+    print()
+    print(f"🧠 {L['smart_dca']}:")
+    print(f"   {L['invested']}:    ${smart['total_invested']:,.0f}")
+    print(f"   {L['total_btc']}:   {smart['total_btc']:.6f}")
+    print(f"   {L['final_value']}: ${smart['final_value']:,.0f}")
+    print(f"   {L['return']}:      {smart['return_pct']:+.2f}%")
+    print(f"   {L['avg_cost']}:    ${smart['avg_cost']:,.0f}")
+    print()
+    print(f"📊 {L['fixed_dca']}:")
+    print(f"   {L['invested']}:    ${fixed['total_invested']:,.0f}")
+    print(f"   {L['total_btc']}:   {fixed['total_btc']:.6f}")
+    print(f"   {L['final_value']}: ${fixed['final_value']:,.0f}")
+    print(f"   {L['return']}:      {fixed['return_pct']:+.2f}%")
+    print(f"   {L['avg_cost']}:    ${fixed['avg_cost']:,.0f}")
+    print()
+    print(f"{'='*50}")
+    
+    if comp['extra_return_pct'] > 0:
+        print(f"✅ {L['smart_wins']}: {comp['extra_return_pct']:+.2f}%")
+    else:
+        print(f"📊 {L['fixed_wins']} {abs(comp['extra_return_pct']):.2f}%")
+    
+    print(f"   {L['cost_reduction_label']}: {comp['cost_savings_pct']:.2f}%")
+
+
+if __name__ == '__main__':
+    main()

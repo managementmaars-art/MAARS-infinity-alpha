@@ -1,0 +1,9 @@
+- name: "Custom Vector"
+  password: "password"
+  salt: "somesalt"
+  memory_kb: 64
+  iterations: 3
+  parallelism: 4
+  output_len: 32
+  expected_hash_hex: "4f87cd309b72ccf982e3a0be0c36a2e8517923ca3eeaf28c6efc676d092fb6d5"
+  source: "Generated locally"

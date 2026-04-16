@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Content Router"
+  short_description: "Route research-to-content work with evidence-first A/B/C workflow"
+  default_prompt: "Use A/B/C task grading and the Research→Synthesis→Content pipeline to turn my topic into publishable content with a clear evidence chain."

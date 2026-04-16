@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android State Management"
+  short_description: "Model screen state, events, reducers, and side effects for Android UIs with predictable lifecycle-aware ownership"
+  default_prompt: "Use $android-state-management when the request is about model screen state, events, reducers, and side effects for Android UIs with predictable lifecycle-aware ownership."

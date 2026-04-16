@@ -1,0 +1,55 @@
+{
+  "name": "@affilino/ecommerce-seo-audit-skill",
+  "version": "2.1.0",
+  "description": "Professional ecommerce SEO audit skill for Claude Code with 7 specialized audit types. Developed by Affilino NZ - Auckland Shopify SEO Agency.",
+  "main": "SKILL.md",
+  "keywords": [
+    "claude-code",
+    "claude-skill",
+    "agent-skill",
+    "seo",
+    "ecommerce",
+    "shopify",
+    "seo-audit",
+    "technical-seo",
+    "ecommerce-seo",
+    "product-pages",
+    "collection-pages",
+    "competitor-analysis",
+    "keyword-research",
+    "log-file-analysis",
+    "crawl-budget",
+    "ai-agent",
+    "claude",
+    "affilino"
+  ],
+  "author": {
+    "name": "Affilino NZ",
+    "email": "hello@affilino.co.nz",
+    "url": "https://affilino.co.nz"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/affilino/ecommerce-seo-audit-skill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/affilino/ecommerce-seo-audit-skill/issues"
+  },
+  "homepage": "https://github.com/affilino/ecommerce-seo-audit-skill#readme",
+  "files": [
+    "SKILL.md",
+    ".claude-plugin/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

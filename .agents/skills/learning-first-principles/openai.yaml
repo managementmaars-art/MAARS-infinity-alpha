@@ -1,0 +1,4 @@
+interface:
+  display_name: "Learning First Principles"
+  short_description: "Diagnose and optimize learning method efficiency"
+  default_prompt: "Evaluate my learning approach using first-principles criteria and give a prioritized plan to improve understanding, output, and practice transfer."

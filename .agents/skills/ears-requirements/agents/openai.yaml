@@ -1,0 +1,4 @@
+interface:
+  display_name: "EARS Requirements"
+  short_description: "Write requirements with EARS patterns"
+  default_prompt: "Convert and author system requirements using EARS syntax and quality checks."

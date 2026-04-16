@@ -1,0 +1,35 @@
+# 春日清新主题
+name: spring-fresh
+type: code
+description: "【春日清新】清新自然，绿色调，生机盎然"
+version: "4.0"
+
+# 风格说明
+style_info:
+  mood: "清新自然"
+  colors: "绿色调"
+  best_for: "旅行日记、自然主题"
+
+# 颜色方案
+colors:
+  background: "#f5f8f5"
+  text: "#3d4a3d"
+  primary: "#6b9b7a"
+  secondary: "#4a8058"
+  quote_background: "#e8f0e8"
+
+# 渲染器配置（代码渲染，无需 AI）
+renderer:
+  h2_icon: "❀"
+  h2_icon_shadow: "0 0 10px rgba(107, 155, 122, 0.4)"
+  card_background_image: "radial-gradient(circle at 1px 1px, rgba(107, 155, 122, 0.08) 1px, transparent 0)"
+  card_background_size: "20px 20px"
+  card_border: "1px solid rgba(107, 155, 122, 0.1)"
+  card_shadow: "0 8px 24px rgba(74, 128, 88, 0.08), 0 0 12px rgba(107, 155, 122, 0.2)"
+  card_border_radius: "16px"
+  font_size: "16px"
+  line_height: "1.8"
+  letter_spacing: "0.3px"
+  hr_style: "border: none; height: 1px; background: linear-gradient(90deg, transparent, rgba(107, 155, 122, 0.3), transparent);"
+
+

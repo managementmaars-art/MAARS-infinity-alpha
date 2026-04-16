@@ -1,0 +1,3 @@
+display_name: 'SVG Precision'
+short_description: 'Generate deterministic SVGs with validation and previews.'
+default_prompt: 'Help me create a precise SVG from a structured spec.'

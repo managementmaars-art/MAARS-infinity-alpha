@@ -1,0 +1,25 @@
+version: '3.8'
+
+# =================================================================
+# SQLite Override Configuration
+# 
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.sqlite.yml up
+# 
+# This overrides the default Postgres setup to use SQLite instead.
+# No external database required - perfect for local development!
+# =================================================================
+
+services:
+  # Backend with SQLite
+  backend:
+    environment:
+      DATABASE_URL: sqlite:/app/data/claw-control.db
+    volumes:
+      - ./config:/app/config:ro
+      - ./data:/app/data  # Persist SQLite database to local ./data folder
+    depends_on: []  # Remove postgres dependency
+
+# Note: When using this override, the 'db' service from docker-compose.yml
+# will still be defined but won't be started since backend doesn't depend on it.
+# You can also run with --scale db=0 to explicitly not start Postgres:
+#   docker-compose -f docker-compose.yml -f docker-compose.sqlite.yml up --scale db=0

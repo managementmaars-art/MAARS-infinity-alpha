@@ -1,0 +1,46 @@
+{
+  "skill_name": "sn-sdk-fluent",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm building a ServiceNow scoped app called MyApp. Create a Fluent table definition for an IT asset tracking table — it should have a name field (string, mandatory), an asset_tag field (string), a status field (integer), and a managed_by field referencing sys_user.",
+      "expected_output": "A valid .now.ts file using Table() from @servicenow/sdk/core with all 4 fields using correct column types (StringColumn for name and asset_tag, IntegerColumn for status, ReferenceColumn for managed_by), scope prefix read from now.config.json, and no invented column types.",
+      "assertions": [
+        "Output imports from @servicenow/sdk/core (not @servicenow/sdk)",
+        "Output uses Table() constructor",
+        "Output uses StringColumn for the name and asset_tag fields",
+        "Output uses IntegerColumn for the status field",
+        "Output uses ReferenceColumn with referenceTable: 'sys_user' for managed_by",
+        "Output does not invent column types not in the 6 documented types (StringColumn, IntegerColumn, BooleanColumn, DateColumn, DateTimeColumn, ReferenceColumn)",
+        "Output does not contain GlideRecord",
+        "Output uses x_SCOPE_ prefix or reads scope from now.config.json — does not invent a scope prefix"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Generate a ServiceNow Fluent SDK flow that triggers when an email arrives in the system (record insert on sys_email table) and creates an incident from the email subject and body.",
+      "expected_output": "A valid .now.ts Flow definition using trigger (record insert on sys_email) and an action that creates an incident record, using correct data pill syntax for field values referencing email fields.",
+      "assertions": [
+        "Output imports from @servicenow/sdk/core (not @servicenow/sdk)",
+        "Output uses Flow() constructor",
+        "Output trigger references the sys_email table",
+        "Output uses data pill syntax ({{trigger.current.field_name}}) to reference email fields",
+        "Output does not use GlideRecord inside the flow definition",
+        "Output does not import from @servicenow/sdk (bare import without /core)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Create a Fluent SDK business rule for the incident table that runs before insert. It should set the assigned_to field to the current user's sys_id if assigned_to is empty, using a Now.include server-side script.",
+      "expected_output": "A valid .now.ts BusinessRule definition with $id, runs before insert on incident table, includes a .server.js reference via Now.include for the script logic rather than placing raw JavaScript inline in the .now.ts file.",
+      "assertions": [
+        "Output imports from @servicenow/sdk/core (not @servicenow/sdk)",
+        "Output uses BusinessRule() constructor",
+        "Output includes $id field on the BusinessRule",
+        "Output uses Now.include to reference a .server.js script (not inline JavaScript in the .now.ts file)",
+        "Output specifies 'insert' trigger timing and 'before' order",
+        "Output does not place raw GlideRecord or JavaScript logic inline in the .now.ts — logic lives in the referenced .server.js file"
+      ]
+    }
+  ]
+}

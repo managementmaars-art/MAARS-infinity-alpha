@@ -1,0 +1,54 @@
+---
+title: "配置 GitHub 应用的自动合并"
+sidebarTitle: "配置自动合并"
+description: "通过将 Mintlify 机器人添加到仓库规则集的绕过列表，设置 GitHub 工作流程以自动合并 Mintlify pull request。"
+keywords: ["automerge", "ruleset", "分支保护", "bypass"]
+---
+
+将 Mintlify GitHub 应用添加到规则集的绕过列表中，使该应用能够创建和合并 pull request 而审查和状态检查要求不会阻止它。这允许你配置[工作流程](/zh/guides/automate-agent)以自动将更改合并到 `main`。
+
+<Note>
+  Mintlify GitHub 应用必须对**所有**针对你部署分支的规则集都拥有绕过权限，包括在组织级和仓库级定义的规则集。如果任何规则集缺少绕过条目，工作流程会创建 PR，但不会将其合并。
+</Note>
+
+<div id="prerequisites">
+  ## 前提条件
+</div>
+
+- 仓库管理员权限（如果有组织级规则集，还需要组织管理员权限）
+- 在仓库中安装了 [Mintlify GitHub 应用](/zh/deploy/github)
+- 一个或多个针对 `main` 分支的规则集（在组织级或仓库级）
+
+<div id="steps">
+  ## 步骤
+</div>
+
+对适用于你部署分支的每个规则集重复以下步骤。包括**组织级**和**仓库级**的规则集。
+
+<Steps>
+  <Step title="导航到规则集">
+    - **仓库规则集**：在 GitHub 上，进入仓库的 **Settings** -> **Rules** -> **Rulesets**。
+    - **组织规则集**：进入组织的 **Settings** -> **Rules** -> **Rulesets**。
+  </Step>
+  <Step title="选择规则集">
+    点击一个针对你部署分支的规则集，通常是 `main`。
+  </Step>
+  <Step title="将 Mintlify GitHub 应用添加到绕过列表">
+    1. 在 **Bypass list** 下，点击 **Add bypass**。
+    2. 搜索并选择 Mintlify GitHub 应用。
+    3. 将绕过模式设置为 **Always**。
+  </Step>
+  <Step title="保存">
+    点击 **Save changes**。
+  </Step>
+  <Step title="对剩余规则集重复操作">
+    如果你有其他针对部署分支的组织级或仓库级规则集，请对每个规则集重复步骤 2 至 4。
+  </Step>
+</Steps>
+
+<div id="verify-the-setup">
+  ## 验证设置
+</div>
+
+1. **对于贡献者**：打开一个针对 `main` 的 PR。确认它仍然需要批准和通过状态检查后你才能合并。
+2. **对于工作流程**：触发启用了自动合并的工作流程。确认工作流程运行并成功合并 PR。

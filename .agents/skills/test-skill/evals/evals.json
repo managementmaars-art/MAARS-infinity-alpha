@@ -1,0 +1,43 @@
+{
+  "skill_name": "test-skill",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Are LinkSoft Skills working?",
+      "expected_output": "I greet you from the world of skills, user! You shall use me skillfully.",
+      "files": [
+        "SKILL.md"
+      ],
+      "assertions": [
+        "The response uses the test-skill behavior for a direct LinkSoft Skills health-check question.",
+        "The response is exactly 'I greet you from the world of skills, user! You shall use me skillfully.'",
+        "The response does not add any extra explanation, greeting, or follow-up text."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Are Linksoft Skills woroking?",
+      "expected_output": "I greet you from the world of skills, user! You shall use me skillfully.",
+      "files": [
+        "SKILL.md"
+      ],
+      "assertions": [
+        "The response still triggers for a minor typo and casing variation in the user's question.",
+        "The response is exactly 'I greet you from the world of skills, user! You shall use me skillfully.'",
+        "The response does not correct the user's spelling or add commentary."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I create a new LinkSoft skill?",
+      "expected_output": "The test-skill should not trigger for unrelated skill-authoring questions.",
+      "files": [
+        "SKILL.md"
+      ],
+      "assertions": [
+        "The response does not invoke the test-skill fixed verification message for unrelated requests.",
+        "The response recognizes that this is not a question about whether LinkSoft Skills are working."
+      ]
+    }
+  ]
+}

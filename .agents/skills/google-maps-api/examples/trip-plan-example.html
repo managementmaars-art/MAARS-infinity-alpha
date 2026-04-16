@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trip Plan Example — Warm Stone Sunrise Theme</title>
+<!--
+  EXAMPLE: This file demonstrates the Warm Stone Sunrise theme
+  used by the google-maps-api skill for consolidated trip plan pages.
+
+  To use: Replace YOUR_API_KEY_HERE with your Google Maps API key.
+  Required API: Maps JavaScript API (must be enabled in GCP Console).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafaf9;
+    --surface: #ffffff;
+    --surface-alt: #f5f5f4;
+    --border: #e7e5e4;
+    --border-light: #f0eeec;
+    --text: #1c1917;
+    --text-secondary: #57534e;
+    --text-tertiary: #a8a29e;
+    --accent: #4f46e5;
+    --accent-light: #eef2ff;
+    --accent-mid: #c7d2fe;
+    --green: #059669;
+    --green-light: #ecfdf5;
+    --amber: #d97706;
+    --amber-light: #fffbeb;
+    --red: #dc2626;
+    --red-light: #fef2f2;
+    --blue: #2563eb;
+    --blue-light: #eff6ff;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-xs: 6px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -2px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+
+  /* NAV */
+  .topnav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.85); backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border-light);
+    display: flex; align-items: center; padding: 0 24px; height: 56px;
+    overflow-x: auto; white-space: nowrap;
+  }
+  .topnav::-webkit-scrollbar { display: none; }
+  .topnav a {
+    color: var(--text-tertiary); text-decoration: none; font-size: 13px; font-weight: 500;
+    padding: 18px 14px; transition: all 0.25s ease; flex-shrink: 0; position: relative;
+  }
+  .topnav a:hover { color: var(--text); }
+  .topnav a.active { color: var(--accent); }
+  .topnav a::after {
+    content: ''; position: absolute; bottom: 0; left: 14px; right: 14px;
+    height: 2px; background: var(--accent); border-radius: 1px;
+    transform: scaleX(0); transition: transform 0.25s ease;
+  }
+  .topnav a:hover::after, .topnav a.active::after { transform: scaleX(1); }
+  .topnav .brand {
+    font-family: 'Playfair Display', serif;
+    color: var(--text); font-weight: 800; font-size: 17px;
+    margin-right: 12px; flex-shrink: 0;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative; overflow: hidden;
+    padding: 72px 32px 64px; text-align: center;
+    background: linear-gradient(160deg, #eef2ff 0%, #faf5ff 40%, #fff7ed 100%);
+  }
+  .hero::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+  .hero-route {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 12px; font-weight: 600; color: var(--text-tertiary);
+    letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 20px;
+  }
+  .hero-route .arrow {
+    width: 36px; height: 1px;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    position: relative;
+  }
+  .hero-route .arrow::after {
+    content: ''; position: absolute; right: -1px; top: -3px;
+    border: solid var(--green); border-width: 0 1.5px 1.5px 0;
+    padding: 2.5px; transform: rotate(-45deg);
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 900;
+    letter-spacing: -1.5px; line-height: 1.08; margin-bottom: 14px;
+  }
+  .hero .sub { color: var(--text-secondary); font-size: 15px; }
+  .hero .tags {
+    margin-top: 24px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+  }
+  .hero .tag {
+    background: rgba(255,255,255,0.7); border: 1px solid var(--border-light);
+    padding: 7px 16px; border-radius: 100px; font-size: 12px;
+    color: var(--text-secondary); font-weight: 500;
+  }
+
+  /* SECTIONS */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+  section {
+    padding: 48px 0;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  section.visible { opacity: 1; transform: translateY(0); }
+  .section-divider { border: none; height: 1px; margin: 0; background: var(--border-light); }
+  .section-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 2px; color: var(--accent); margin-bottom: 6px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.5px;
+  }
+  .section-desc { font-size: 14px; color: var(--text-tertiary); margin-bottom: 28px; line-height: 1.6; }
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px;
+    transition: all 0.25s ease; box-shadow: var(--shadow-sm);
+  }
+  .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--accent-mid); }
+  .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .card .meta { font-size: 12px; color: var(--text-tertiary); margin-bottom: 10px; }
+  .card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* STAT CARD */
+  .stat-card { text-align: center; padding: 24px 16px; }
+  .stat-card .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px; font-weight: 900; letter-spacing: -1px; margin-bottom: 4px;
+  }
+  .stat-card .stat-label { font-size: 12px; color: var(--text-tertiary); font-weight: 500; }
+
+  /* MAP */
+  .map-container {
+    width: 100%; height: 420px; border-radius: var(--radius);
+    overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+  }
+
+  /* BUTTONS */
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 11px 22px; border-radius: var(--radius-sm);
+    text-decoration: none; font-size: 13px; font-weight: 600; transition: all 0.2s;
+  }
+  .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(79,70,229,0.2); }
+  .btn-primary:hover { background: #4338ca; transform: translateY(-1px); }
+  .btn-ghost { background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--accent-mid); color: var(--text); }
+
+  /* FOOTER */
+  .footer {
+    text-align: center; padding: 40px 24px; font-size: 12px; color: var(--text-tertiary);
+    border-top: 1px solid var(--border-light);
+  }
+  .footer .brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 6px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .hero { padding: 60px 28px 52px; }
+    .hero h1 { font-size: 40px; }
+    section { padding: 40px 0; }
+    .map-container { height: 380px; }
+  }
+  @media (max-width: 640px) {
+    .topnav { padding: 0 16px; height: 50px; }
+    .topnav .brand { font-size: 15px; }
+    .topnav a { font-size: 12px; padding: 16px 10px; }
+    .hero { padding: 48px 20px 40px; }
+    .hero h1 { font-size: 32px; }
+    .hero .sub { font-size: 13px; }
+    .container { padding: 0 16px; }
+    section { padding: 32px 0; }
+    .section-title { font-size: 22px; }
+    .card-grid, .card-grid-3 { grid-template-columns: 1fr; }
+    .map-container { height: 280px; border-radius: 12px; }
+    .btn-row { flex-direction: column; }
+    .btn { justify-content: center; }
+  }
+  @media (max-width: 380px) {
+    .hero h1 { font-size: 28px; }
+    .hero { padding: 40px 16px 32px; }
+    .stat-card .stat-value { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <span class="brand">Trip Plan</span>
+  <a href="#weather">Weather</a>
+  <a href="#directions">Directions</a>
+  <a href="#hotel">Hotel</a>
+  <a href="#dinner">Dinner</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-route">
+      <span>Origin City</span>
+      <span class="arrow"></span>
+      <span>Destination City</span>
+    </div>
+    <h1>Your Trip to<br>Destination City</h1>
+    <p class="sub">Date &middot; Hotel Name &middot; Dinner at Restaurant</p>
+    <div class="tags">
+      <span class="tag">Airport &rarr; Airport</span>
+      <span class="tag">Rental Car</span>
+      <span class="tag">Drive to Hotel</span>
+      <span class="tag">Dinner for 2</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<section id="weather">
+  <div class="section-label">Current Conditions</div>
+  <div class="section-title">Destination Weather</div>
+  <div class="section-desc">Weather data populated by the google-maps-api skill.</div>
+  <div class="card-grid">
+    <div class="card"><h3>Temperature</h3><p>Data from Weather API</p></div>
+    <div class="card"><h3>Conditions</h3><p>Data from Weather API</p></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="directions">
+  <div class="section-label">Route</div>
+  <div class="section-title">Driving Directions</div>
+  <div class="section-desc">Interactive map with route polyline.</div>
+  <div class="card-grid card-grid-3" style="margin-bottom:20px;">
+    <div class="card stat-card">
+      <div class="stat-value" style="color:var(--accent)">XX mi</div>
+      <div class="stat-label">Distance</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-value" style="color:var(--amber)">~XX min</div>
+      <div class="stat-label">Drive time</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-value" style="color:var(--red)">$X-X</div>
+      <div class="stat-label">Tolls</div>
+    </div>
+  </div>
+  <div id="routeMap" class="map-container"></div>
+</section>
+
+<hr class="section-divider">
+
+<section id="hotel">
+  <div class="section-label">Accommodation</div>
+  <div class="section-title">Hotel Name</div>
+  <div class="section-desc">Your home base.</div>
+  <div class="card-grid">
+    <div class="card"><h3>Address</h3><p>Hotel address and details from Places API</p></div>
+    <div class="card"><h3>Location</h3><p>Nearby landmarks and advantages</p></div>
+  </div>
+  <div id="hotelMap" class="map-container" style="margin-top:16px; height:300px;"></div>
+</section>
+
+<hr class="section-divider">
+
+<section id="dinner">
+  <div class="section-label">Dinner</div>
+  <div class="section-title">Restaurant Name</div>
+  <div class="section-desc">Restaurant details from Places API.</div>
+  <div class="card-grid">
+    <div class="card"><h3>Details</h3><p>Rating, price, hours, phone from place-details</p></div>
+    <div class="card"><h3>Street View</h3><p>360° panorama embedded here</p></div>
+  </div>
+  <div class="btn-row">
+    <a href="#" class="btn btn-primary">Reserve &rarr;</a>
+    <a href="#" class="btn btn-ghost">Call Restaurant</a>
+  </div>
+</section>
+
+</div>
+
+<div class="footer">
+  <span class="brand">Trip Plan</span>
+  Generated with Claude Code &middot; Google Maps Platform
+</div>
+
+<script>
+/*
+  Replace YOUR_API_KEY_HERE with your actual Google Maps API key.
+  Required: Maps JavaScript API must be enabled in GCP Console.
+*/
+function initMaps() {
+  const mapStyle = [
+    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#c9d7e4' }] },
+    { featureType: 'landscape', elementType: 'geometry', stylers: [{ color: '#f0eeec' }] },
+    { featureType: 'road.highway', elementType: 'geometry.fill', stylers: [{ color: '#e0dcd8' }] },
+    { featureType: 'road.arterial', elementType: 'geometry.fill', stylers: [{ color: '#ffffff' }] },
+    { featureType: 'road.local', elementType: 'geometry.fill', stylers: [{ color: '#ffffff' }] },
+    { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#e8e4df' }] },
+    { featureType: 'poi.park', elementType: 'geometry.fill', stylers: [{ color: '#d4e9d4' }] },
+    { elementType: 'labels.text.fill', stylers: [{ color: '#6b7280' }] },
+    { elementType: 'labels.text.stroke', stylers: [{ color: '#ffffff' }] }
+  ];
+
+  // Example: Route map
+  const routeMap = new google.maps.Map(document.getElementById('routeMap'), {
+    center: { lat: 40.71, lng: -73.89 }, zoom: 11,
+    styles: mapStyle, mapTypeControl: false, streetViewControl: false
+  });
+
+  // Example: Hotel map
+  const hotelMap = new google.maps.Map(document.getElementById('hotelMap'), {
+    center: { lat: 40.765, lng: -73.977 }, zoom: 15,
+    styles: mapStyle, mapTypeControl: false
+  });
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('section').forEach(s => observer.observe(s));
+
+// Active nav
+const navLinks = document.querySelectorAll('.topnav a[href^="#"]');
+const sectionEls = document.querySelectorAll('section[id]');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sectionEls.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 100) current = s.getAttribute('id');
+  });
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+}, { passive: true });
+</script>
+<!-- Replace YOUR_API_KEY_HERE with your Google Maps API key -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMaps" async defer></script>
+
+</body>
+</html>

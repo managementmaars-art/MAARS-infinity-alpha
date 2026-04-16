@@ -1,0 +1,23 @@
+{
+  "title": "__EDITOR_MACHINE__",
+  "majorVersion": __MAJOR__,
+  "minorVersion": __MINOR__,
+  "patchVersion": __PATCH__,
+  "runnable": 0,
+  "machineName": "__EDITOR_MACHINE__",
+  "coreApi": {
+    "majorVersion": 1,
+    "minorVersion": 27
+  },
+  "author": "__AUTHOR__",
+  "preloadedJs": [
+    {
+      "path": "dist/h5peditor-__SLUG__.js"
+    }
+  ],
+  "preloadedCss": [
+    {
+      "path": "dist/h5peditor-__SLUG__.css"
+    }
+  ]
+}

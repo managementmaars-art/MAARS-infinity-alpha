@@ -1,0 +1,7 @@
+Integrity Fingerprint: 75a340430fa1b4b8
+
+Generated: 2026-01-27T23:00:48.835114568+00:00
+
+Verify this fingerprint matches the one displayed in the web viewer
+before proceeding. If it doesn't match, the archive may have been
+tampered with.

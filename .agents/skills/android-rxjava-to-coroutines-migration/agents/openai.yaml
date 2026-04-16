@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android Rxjava To Coroutines Migration"
+  short_description: "Migrate Android RxJava code to Kotlin coroutines and Flow with safe lifecycle-aware replacements."
+  default_prompt: "Use $android-rxjava-to-coroutines-migration when the request is about Migrate Android RxJava code to Kotlin coroutines and Flow with safe lifecycle-aware replacements.."

@@ -1,0 +1,42 @@
+{
+  "files": {
+    ".nojekyll": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "auth.js": {
+      "sha256": "ec6aceab65d121e4523317692f1fff0405b3c9fe9f823aa090bc8cec51ee8118",
+      "size": 21
+    },
+    "config.json": {
+      "sha256": "58329a7f9e592f288d36f46eb5b457d54be98a3b864a5381b7421963126c5dfb",
+      "size": 784
+    },
+    "index.html": {
+      "sha256": "1d270464f916462379d574ef059a60299ec1cd01ead604706c7ac2241273e22a",
+      "size": 62
+    },
+    "payload/chunk-00000.bin": {
+      "sha256": "6c8addc760fb5a92541fdc5668675dc0a8dc9a22979482fab329daba544a9bd8",
+      "size": 14
+    },
+    "robots.txt": {
+      "sha256": "e5c4b84484ee4216e9373be99380320c25dd94805f99f0a805846f087636553f",
+      "size": 24
+    },
+    "styles.css": {
+      "sha256": "0bf4d668930b5ab1d543ab1d43785e7cbe4b5f29d95ed3593ea5e9953f7cca59",
+      "size": 34
+    },
+    "sw.js": {
+      "sha256": "7141c69784a2af738db01f7a3a78c90beabc62e5e7c676386741deb7430a6577",
+      "size": 44
+    },
+    "viewer.js": {
+      "sha256": "a81d116e1f319595aef991950e8c8c42fd86aa38d88420b695214f7c6dc99171",
+      "size": 23
+    }
+  },
+  "generated_at": "2025-01-01T00:00:00Z",
+  "version": 1
+}

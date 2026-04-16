@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI PDF Filler CLI"
+  short_description: "Fill PDF forms with the simplicity-cli command"
+  default_prompt: "Use $ai-pdf-filler-cli to autofill a PDF form with simplicity-cli and return the output path."

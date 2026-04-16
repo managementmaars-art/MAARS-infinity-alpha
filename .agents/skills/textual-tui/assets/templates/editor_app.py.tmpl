@@ -1,0 +1,69 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal
+from textual.reactive import var
+from textual.widgets import Button, Footer, Header, Input, TextArea
+
+SAMPLE_TEXT = """\
+def greet(name: str) -> str:
+    return f"Hello, {name}!"
+"""
+
+
+class {{CLASS_NAME}}(App):
+    CSS_PATH = "{{MODULE}}.tcss"
+    TITLE = "{{APP_TITLE}}"
+    SUB_TITLE = "Text editor"
+    BINDINGS = [
+        ("ctrl+s", "save", "Save"),
+        ("f6", "toggle_line_numbers", "Line Numbers"),
+    ]
+
+    saved_path = var("")
+
+    def __init__(self, default_path: str = "notes.py") -> None:
+        super().__init__()
+        self.default_path = default_path
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        with Horizontal(id="toolbar"):
+            yield Input(value=self.default_path, id="path")
+            yield Button("Save", id="save", variant="primary")
+            yield Button("Toggle line numbers", id="toggle-lines")
+        yield TextArea.code_editor(SAMPLE_TEXT, language="python", id="editor")
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.query_one("#editor", TextArea).focus()
+
+    def save_to_disk(self) -> Path:
+        path = Path(self.query_one("#path", Input).value or self.default_path)
+        path.write_text(self.query_one("#editor", TextArea).text, encoding="utf-8")
+        self.saved_path = str(path)
+        self.notify("Saved {0}".format(path), title="Editor")
+        return path
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "save":
+            self.action_save()
+        elif event.button.id == "toggle-lines":
+            self.action_toggle_line_numbers()
+
+    def action_save(self) -> None:
+        self.save_to_disk()
+
+    def action_toggle_line_numbers(self) -> None:
+        editor = self.query_one("#editor", TextArea)
+        editor.show_line_numbers = not editor.show_line_numbers
+
+
+def main() -> None:
+    {{CLASS_NAME}}().run()
+
+
+if __name__ == "__main__":
+    main()

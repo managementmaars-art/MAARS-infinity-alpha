@@ -1,0 +1,32 @@
+{
+  "name": "kodevu",
+  "version": "0.1.70",
+  "license": "MIT",
+  "type": "module",
+  "description": "Poll SVN revisions or Git commits, send each change diff to a reviewer CLI, and write configurable review reports.",
+  "bin": {
+    "kodevu": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "SKILL.md"
+  ],
+  "scripts": {
+    "start": "node src/index.js",
+    "check": "node --check src/index.js && node --check src/config.js && node --check src/review-runner.js && node --check src/svn-client.js && node --check src/git-client.js && node --check src/vcs-client.js && node --check src/shell.js && node --check src/progress-ui.js",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cross-spawn": "^7.0.6",
+    "fast-xml-parser": "^5.2.5",
+    "iconv-lite": "^0.7.2"
+  },
+  "devDependencies": {
+    "eslint": "^10.1.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "feishu-bitable-task-manager",
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.2"
+  }
+}

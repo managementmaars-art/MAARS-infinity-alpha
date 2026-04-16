@@ -1,0 +1,17 @@
+{
+  "name": "structural-physics",
+  "description": "Stability validation and damage systems for building mechanics. import { HeuristicValidator } from './scripts/heuristic-validator.js';",
+  "tags": [
+    "building-game",
+    "3d",
+    "code-generation"
+  ],
+  "sub_skills": [],
+  "source": "claude-user",
+  "type": "template",
+  "depends_on": [],
+  "enhances": [
+    "3d-building-advanced",
+    "decay-upkeep"
+  ]
+}

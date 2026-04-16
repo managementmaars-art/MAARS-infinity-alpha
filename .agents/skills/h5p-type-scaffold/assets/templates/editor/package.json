@@ -1,0 +1,36 @@
+{
+  "name": "h5peditor-__SLUG__",
+  "version": "__VERSION__",
+  "description": "Start your own H5P editor widget",
+  "private": true,
+  "scripts": {
+    "lint": "stylelint './src/**/*.scss' && eslint './src/**/*.js'",
+    "build": "webpack --mode=production",
+    "watch": "webpack --mode=development --watch"
+  },
+  "keywords": [
+    "h5p",
+    "editor"
+  ],
+  "author": "__AUTHOR__",
+  "license": "__LICENSE__",
+  "type": "module",
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/plugin-transform-destructuring": "^7.28.5",
+    "@babel/preset-env": "^7.29.0",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.3",
+    "eslint-config-snordian-h5p": "github:otacke/eslint-config-snordian-h5p",
+    "mini-css-extract-plugin": "^2.10.0",
+    "regenerator-runtime": "^0.14.1",
+    "sass": "^1.97.3",
+    "sass-loader": "^16.0.6",
+    "stylelint": "^17.1.0",
+    "stylelint-config-recommended": "^18.0.0",
+    "stylelint-config-recommended-scss": "^17.0.0",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1"
+  },
+  "browserslist": "> 0.5%, last 3 versions, Firefox ESR, not dead"
+}

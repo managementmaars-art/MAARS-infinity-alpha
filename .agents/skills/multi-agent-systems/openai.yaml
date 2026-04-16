@@ -1,0 +1,4 @@
+interface:
+  display_name: "Multi-Agent Systems"
+  short_description: "Design orchestrator-subagent LLM architectures"
+  default_prompt: "Assess whether my problem needs multi-agent architecture and design an orchestrator-subagent plan with clear boundaries, tools, and verification loops."

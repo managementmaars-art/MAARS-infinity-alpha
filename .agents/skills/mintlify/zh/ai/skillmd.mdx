@@ -1,0 +1,215 @@
+---
+title: "skill.md"
+description: "通过自动生成的 skill.md 能力文件，让你的文档随时可供 AI 智能体使用，并向其描述产品可用的能力。"
+keywords: ["AI 智能体", "技能", "智能体技能", "智能体"]
+---
+
+Mintlify 会在你项目的根目录托管一个 `skill.md` 文件，用于描述 AI agent 在你的产品中可以执行哪些操作。
+
+[skill.md 规范](https://agentskills.io/specification) 是一种结构化、机器可读的格式，它将产品的能力、必填输入以及约束条件显式列出，从而让 agent 能更可靠地使用这些能力。
+
+Mintlify 会通过一个 agentic loop 分析你的文档，自动为你的项目生成一个 `skill.md` 文件。随着你更新文档，这个文件会自动保持最新且无需维护。你也可以选择在项目根目录添加一个自定义的 `skill.md` 文件，以覆盖自动生成的版本。
+
+<Note>生成或更新 `skill.md` 文件最多可能需要 24 小时。</Note>
+
+在你的文档站点 URL 末尾追加 `/skill.md`，即可查看你的 `skill.md`。Mintlify 只会为公开的文档站点生成 `skill.md` 文件。
+
+<PreviewButton href="https://mintlify.com/docs/skill.md">
+  打开本站点的 skill.md。
+</PreviewButton>
+
+<Tip>
+  `llms.txt` 和 `skill.md` 都帮助 agent 使用你的文档，但它们的作用不同。
+
+  - `llms.txt` 是一个目录。它列出你所有的文档页面及其说明，让 agent 知道去哪里查找信息。
+  - `skill.md` 是一个能力概览。它告诉 agent 使用你的产品可以完成什么、需要哪些输入，以及有哪些约束条件。
+</Tip>
+
+<div id="use-skillmd-files-with-agents">
+  ## 将 `skill.md` 文件与代理一起使用
+</div>
+
+<Note>
+  如果你使用[反向代理](/zh/deploy/reverse-proxy)，请将其配置为将对
+  `/skill.md`、`/.well-known/skills/*` 和 `/.well-known/agent-skills/*`
+  路径的请求转发到你的 Mintlify 子域。
+</Note>
+
+代理可以使用 [skills 命令行界面 (CLI)](https://www.npmjs.com/package/skills) 来处理你的 `skill.md`。
+
+```bash
+npx skills add https://your-docs-domain.com
+```
+
+这会将你的产品功能添加到代理的 context 中，使其能够代表用户执行操作。
+
+<Tip>
+  向你的用户讲解如何将 `skill.md` 文件与代理配合使用，以便他们在结合你的产品使用
+  AI 工具时获得更好的效果。
+</Tip>
+
+<div id="skillmd-structure">
+  ## `skill.md` 结构
+</div>
+
+Mintlify 会根据 [agentskills.io 规范](https://agentskills.io/specification) 生成一个 `skill.md` 文件。生成的文件包括：
+
+- **Metadata**：项目名称、说明和版本。
+- **Capabilities**：智能体可以通过你的产品完成的能力范围。
+- **Skills**：按类别组织的具体操作。
+- **Workflows**：常见任务的分步流程。
+- **Integration**：支持的工具和服务。
+- **Context**：与你产品架构相关的背景信息。
+
+<div id="custom-skill-files">
+  ## 自定义 skill 文件
+</div>
+
+添加自定义 skill 文件以覆盖自动生成的 `skill.md`。Mintlify 支持托管单个 skill 文件和用于多个 skill 的目录。如果你删除所有自定义 skill 文件，Mintlify 会重新生成一个 `skill.md` 文件。
+
+<div id="single-skill-file">
+  ### 单个 skill 文件
+</div>
+
+在项目根目录添加一个 `skill.md` 文件，以覆盖自动生成的文件。
+
+<div id="multiple-skill-files">
+  ### 多个 skill 文件
+</div>
+
+将多个 skill 文件添加到项目中的 `.mintlify/skills/` 目录。每个 skill 必须位于自己的子目录中，并包含一个 `SKILL.md` 文件：
+
+```
+.mintlify/
+  skills/
+    payments/
+      SKILL.md
+    analytics/
+      SKILL.md
+```
+
+当你有多个 skill 时，`/skill.md` 端点会重定向到 `/.well-known/skills/index.json` 发现端点，该端点列出所有可用的 skill。发现端点使每个 skill 可以被单独访问。
+
+<Note>
+  你可以同时使用两种方式——在根目录放置一个 `skill.md` 文件，并使用 `.mintlify/skills/` 目录。发现索引会包含所有 skill。
+</Note>
+
+<div id="use-symlinks-to-avoid-duplication">
+  ### 使用符号链接避免重复
+</div>
+
+如果你的 skill 文件位于仓库中的其他位置（例如 `plugins/` 或 `skills/` 目录），你可以将 `.mintlify/skills` 通过符号链接指向该位置，而无需复制文件：
+
+```bash
+# Skills live in a top-level skills/ directory
+ln -s ../skills .mintlify/skills
+```
+
+```
+project/
+  skills/
+    payments/
+      SKILL.md
+    analytics/
+      SKILL.md
+  .mintlify/
+    skills -> ../skills
+  docs.json
+```
+
+Mintlify 会在部署时解析符号链接，因此 skill 文件会像直接位于 `.mintlify/skills/` 内一样被发现和提供。这对目录符号链接和单个 skill 符号链接都有效。
+
+<div id="frontmatter-fields">
+  ### Frontmatter 字段
+</div>
+
+自定义 `skill.md` 文件必须以 YAML frontmatter 开头。
+
+| Field           | Type   | Description                                               |
+| --------------- | ------ | --------------------------------------------------------- |
+| `name`          | string | 该技能的名称。                                                   |
+| `description`   | string | 该技能功能的简要说明。                                               |
+| `license`       | string | 该技能的许可证（例如，`MIT`、`Apache-2.0`）。                           |
+| `compatibility` | string | 运行要求或兼容性说明（例如，运行时依赖）。                                     |
+| `metadata`      | object | 以字符串形式的 key-value 对提供的附加 metadata（例如，`author`、`version`）。 |
+| `allowed-tools` | string | 以空格分隔的、预先批准可供该技能使用的工具列表（实验性）。                             |
+
+```md Example frontmatter
+---
+name: mintlify
+description: 使用 Mintlify 构建和维护文档站点。用于创建文档页面、配置导航、添加组件或设置 API 参考。
+license: MIT
+compatibility: Requires Node.js for CLI. Works with any Git-based workflow.
+metadata:
+  author: mintlify
+  version: "1.0"
+---
+```
+
+<div id="skills-discovery-endpoints">
+  ## Skills 发现端点
+</div>
+
+Mintlify 在 `/.well-known/skills/` 和 `/.well-known/agent-skills/` 托管了 skills 目录，代理可以通过这些目录以编程方式发现和获取你的 skill 文件。
+
+<div id="agent-skills-discovery">
+  ### Agent-skills 发现（推荐）
+</div>
+
+`/.well-known/agent-skills/` 端点遵循 [agent-skills 0.2.0 发现规范](https://schemas.agentskills.io/discovery/0.2.0/schema.json)，并包含内容完整性验证。
+
+`GET /.well-known/agent-skills/index.json` 返回一个 JSON 清单，列出所有可用的 skills：
+
+```json
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "my-product",
+      "type": "skill-md",
+      "description": "A brief description of what your skill does.",
+      "url": "/.well-known/agent-skills/my-product/SKILL.md",
+      "digest": "sha256:a1b2c3..."
+    }
+  ]
+}
+```
+
+| 字段          | 描述                                                                          |
+| ------------- | ----------------------------------------------------------------------------- |
+| `$schema`     | Agent-skills 0.2.0 发现规范的 schema URL。                                     |
+| `name`        | 一个 URL 安全的 slug，源自你 `skill.md` frontmatter 中的 `name` 字段。            |
+| `type`        | Skill 格式，始终为 `skill-md`。                                                 |
+| `description` | 来自你 `skill.md` frontmatter 的简要描述，截断为 1024 个字符。                     |
+| `url`         | 获取完整 skill 文件的路径。                                                      |
+| `digest`      | Skill 文件内容的 `sha256` 哈希值，用于完整性验证。                                 |
+
+`GET /.well-known/agent-skills/{name}/SKILL.md` 返回通过索引中 slugified 名称标识的特定 skill 的 `skill.md` 文件。
+
+<div id="skills-index">
+  ### Skills 索引
+</div>
+
+`/.well-known/skills/` 端点是原始的发现格式。
+
+`GET /.well-known/skills/index.json` 返回一个 JSON 清单，列出所有可用的 skills：
+
+```json
+{
+  "skills": [
+    {
+      "name": "my-product",
+      "description": "A brief description of what your skill does.",
+      "files": ["SKILL.md"]
+    }
+  ]
+}
+```
+
+`name` 字段是一个 URL 安全的 slug，源自你 `skill.md` frontmatter 中的 `name` 字段。
+
+<div id="individual-skill-files">
+  ### 单个 skill 文件
+</div>
+
+`GET /.well-known/skills/{name}/skill.md` 返回通过索引中 slugified 名称标识的特定 skill 的 `skill.md` 文件。

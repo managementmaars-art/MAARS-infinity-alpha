@@ -1,0 +1,290 @@
+# =============================================================================
+# Prometheus Alert Rules Template
+# =============================================================================
+# Alert rules for a FastAPI + PostgreSQL + Redis application stack.
+# Copy to your Prometheus configuration and adjust thresholds as needed.
+#
+# Severity labels:
+#   critical: Page immediately (SEV1/SEV2)
+#   warning:  Notify via Slack (SEV3)
+#   info:     Log, no notification (SEV4)
+#
+# Each alert includes:
+#   - description: What is happening
+#   - runbook_url: Link to remediation steps
+#   - dashboard_url: Link to relevant Grafana dashboard
+# =============================================================================
+
+groups:
+  # ─── Application Health ──────────────────────────────────────────────────
+  - name: application_health
+    rules:
+      # Service is completely down
+      - alert: ServiceDown
+        expr: up{job="backend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "Backend service is down"
+          description: >-
+            The backend service has been unreachable for more than 2 minutes.
+            Health check endpoint is not responding.
+          runbook_url: "https://wiki.example.com/runbooks/service-down"
+          dashboard_url: "https://grafana.example.com/d/service-overview"
+
+      # Health check endpoint returning errors
+      - alert: HealthCheckFailing
+        expr: probe_success{job="blackbox", target=~".*health.*"} == 0
+        for: 3m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "Health check endpoint failing"
+          description: >-
+            Health check at {{ $labels.target }} has been failing
+            for more than 3 minutes.
+          runbook_url: "https://wiki.example.com/runbooks/health-check-failure"
+
+  # ─── HTTP Request Metrics (RED) ──────────────────────────────────────────
+  - name: http_requests
+    rules:
+      # High error rate (5xx errors)
+      - alert: HighErrorRate
+        expr: >-
+          (
+            sum(rate(http_requests_total{status_code=~"5.."}[5m]))
+            /
+            sum(rate(http_requests_total[5m]))
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "High HTTP error rate (> 5%)"
+          description: >-
+            More than 5% of HTTP requests are returning 5xx errors
+            over the last 5 minutes. Current error rate: {{ $value | humanizePercentage }}.
+          runbook_url: "https://wiki.example.com/runbooks/high-error-rate"
+          dashboard_url: "https://grafana.example.com/d/http-metrics"
+
+      # Elevated error rate (warning threshold)
+      - alert: ElevatedErrorRate
+        expr: >-
+          (
+            sum(rate(http_requests_total{status_code=~"5.."}[5m]))
+            /
+            sum(rate(http_requests_total[5m]))
+          ) > 0.01
+        for: 10m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "Elevated HTTP error rate (> 1%)"
+          description: >-
+            More than 1% of HTTP requests are returning 5xx errors
+            over the last 10 minutes. Current error rate: {{ $value | humanizePercentage }}.
+          runbook_url: "https://wiki.example.com/runbooks/elevated-error-rate"
+
+      # High latency (p99)
+      - alert: HighLatencyP99
+        expr: >-
+          histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))
+          > 2.0
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "High p99 latency (> 2 seconds)"
+          description: >-
+            The 99th percentile request latency has exceeded 2 seconds
+            for the last 5 minutes. Current p99: {{ $value | humanizeDuration }}.
+          runbook_url: "https://wiki.example.com/runbooks/high-latency"
+          dashboard_url: "https://grafana.example.com/d/http-metrics"
+
+      # Very high latency (p99) - critical
+      - alert: CriticalLatencyP99
+        expr: >-
+          histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))
+          > 5.0
+        for: 3m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "Critical p99 latency (> 5 seconds)"
+          description: >-
+            The 99th percentile request latency has exceeded 5 seconds.
+            This likely indicates a systemic issue.
+          runbook_url: "https://wiki.example.com/runbooks/critical-latency"
+
+      # Low request rate (potential outage indicator)
+      - alert: LowRequestRate
+        expr: >-
+          sum(rate(http_requests_total[5m])) < 0.1
+        for: 10m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "Unusually low request rate"
+          description: >-
+            Request rate has dropped below 0.1 req/s for 10 minutes.
+            This may indicate a routing issue or upstream failure.
+          runbook_url: "https://wiki.example.com/runbooks/low-traffic"
+
+  # ─── Database Metrics ───────────────────────────────────────────────────
+  - name: database
+    rules:
+      # Connection pool nearly exhausted
+      - alert: DBConnectionPoolHigh
+        expr: >-
+          (db_connection_pool_checked_out / db_connection_pool_size) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "Database connection pool usage > 80%"
+          description: >-
+            The database connection pool is {{ $value | humanizePercentage }} utilized.
+            Pool exhaustion will cause request failures.
+          runbook_url: "https://wiki.example.com/runbooks/db-pool-high"
+
+      # Connection pool critical
+      - alert: DBConnectionPoolCritical
+        expr: >-
+          (db_connection_pool_checked_out / db_connection_pool_size) > 0.95
+        for: 2m
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "Database connection pool usage > 95%"
+          description: >-
+            Database connection pool is nearly exhausted.
+            New requests will start failing.
+          runbook_url: "https://wiki.example.com/runbooks/db-pool-critical"
+
+      # Database not reachable
+      - alert: DatabaseUnreachable
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "PostgreSQL database is unreachable"
+          description: >-
+            Cannot connect to the PostgreSQL database. All database-dependent
+            operations will fail.
+          runbook_url: "https://wiki.example.com/runbooks/db-unreachable"
+
+  # ─── Redis Metrics ──────────────────────────────────────────────────────
+  - name: redis
+    rules:
+      # Redis not reachable
+      - alert: RedisUnreachable
+        expr: redis_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: redis
+        annotations:
+          summary: "Redis is unreachable"
+          description: >-
+            Cannot connect to Redis. Caching and session management
+            will be affected.
+          runbook_url: "https://wiki.example.com/runbooks/redis-unreachable"
+
+      # Redis memory high
+      - alert: RedisMemoryHigh
+        expr: >-
+          redis_memory_used_bytes / redis_memory_max_bytes > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          service: redis
+        annotations:
+          summary: "Redis memory usage > 85%"
+          description: >-
+            Redis is using {{ $value | humanizePercentage }} of available memory.
+            Evictions may start occurring.
+          runbook_url: "https://wiki.example.com/runbooks/redis-memory-high"
+
+  # ─── Infrastructure Metrics ─────────────────────────────────────────────
+  - name: infrastructure
+    rules:
+      # High CPU usage
+      - alert: HighCPUUsage
+        expr: >-
+          (
+            rate(container_cpu_usage_seconds_total{name=~"app-.*"}[5m])
+            /
+            container_spec_cpu_quota{name=~"app-.*"}
+            * container_spec_cpu_period{name=~"app-.*"}
+          ) > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          service: infrastructure
+        annotations:
+          summary: "High CPU usage on {{ $labels.name }}"
+          description: >-
+            Container {{ $labels.name }} CPU usage is above 85%
+            for the last 10 minutes.
+          runbook_url: "https://wiki.example.com/runbooks/high-cpu"
+
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: >-
+          container_memory_usage_bytes{name=~"app-.*"}
+          /
+          container_spec_memory_limit_bytes{name=~"app-.*"}
+          > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          service: infrastructure
+        annotations:
+          summary: "High memory usage on {{ $labels.name }}"
+          description: >-
+            Container {{ $labels.name }} memory usage is above 85%.
+            Risk of OOM kill.
+          runbook_url: "https://wiki.example.com/runbooks/high-memory"
+
+      # Disk space low
+      - alert: DiskSpaceLow
+        expr: >-
+          (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})
+          < 0.15
+        for: 10m
+        labels:
+          severity: warning
+          service: infrastructure
+        annotations:
+          summary: "Disk space low (< 15% remaining)"
+          description: >-
+            Root filesystem has less than 15% free space.
+            Clean up logs or expand the volume.
+          runbook_url: "https://wiki.example.com/runbooks/disk-space-low"
+
+      # SSL certificate expiring soon
+      - alert: SSLCertificateExpiringSoon
+        expr: >-
+          probe_ssl_earliest_cert_expiry - time() < 14 * 24 * 3600
+        for: 1h
+        labels:
+          severity: warning
+          service: infrastructure
+        annotations:
+          summary: "SSL certificate expires in less than 14 days"
+          description: >-
+            SSL certificate for {{ $labels.target }} expires
+            in {{ $value | humanizeDuration }}. Renew immediately.
+          runbook_url: "https://wiki.example.com/runbooks/ssl-renewal"

@@ -1,0 +1,54 @@
+//! Approximate nearest-neighbor (ANN) reporting types.
+//!
+//! cass uses frankensearch's HNSW implementation for approximate semantic search.
+//! This module intentionally stays small: it defines the stats payload surfaced
+//! in robot output and TUI diagnostics.
+
+use std::path::{Path, PathBuf};
+
+use crate::search::vector_index::VECTOR_INDEX_DIR;
+
+/// Statistics from an ANN search operation.
+///
+/// These metrics help users understand the quality/speed tradeoff of approximate search.
+#[derive(Debug, Clone, Default, serde::Serialize)]
+pub struct AnnSearchStats {
+    /// Total vectors in the HNSW index.
+    pub index_size: usize,
+    /// Dimension of vectors.
+    pub dimension: usize,
+    /// ef parameter used for this search (higher = more accurate but slower).
+    pub ef_search: usize,
+    /// Number of results requested (k).
+    pub k_requested: usize,
+    /// Number of results returned.
+    pub k_returned: usize,
+    /// Search time in microseconds.
+    pub search_time_us: u64,
+    /// Estimated recall based on ef/k ratio.
+    ///
+    /// Formula: min(1.0, 0.9 + 0.1 * log2(ef / k))
+    /// This is an empirical estimate; actual recall depends on data distribution.
+    pub estimated_recall: f32,
+    /// Whether this was an approximate (HNSW) or exact search.
+    pub is_approximate: bool,
+}
+
+/// Default on-disk location for the HNSW index for a given embedder.
+#[must_use]
+pub fn hnsw_index_path(data_dir: &Path, embedder_id: &str) -> PathBuf {
+    data_dir
+        .join(VECTOR_INDEX_DIR)
+        .join(format!("hnsw-{embedder_id}.chsw"))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn hnsw_index_path_uses_expected_layout() {
+        let p = hnsw_index_path(Path::new("/tmp/cass"), "minilm-384");
+        assert!(p.ends_with("vector_index/hnsw-minilm-384.chsw"));
+    }
+}

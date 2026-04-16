@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "scenarios": [
+    {
+      "id": "app-router-passive-card",
+      "type": "scenario",
+      "fixtureRoot": "fixtures/app-router-passive-card",
+      "targetFile": "components/product-card.tsx",
+      "task": "Add a subtle fade and y reveal to this server-rendered product card in App Router without turning the page into a Client Component.",
+      "goldenJson": "goldens/app-router-passive-card.json",
+      "goldenMarkdown": "goldens/app-router-passive-card.md"
+    },
+    {
+      "id": "app-router-client-modal",
+      "type": "scenario",
+      "fixtureRoot": "fixtures/app-router-client-modal",
+      "targetFile": "components/settings-drawer.tsx",
+      "task": "Animate this settings drawer opening and closing with exit animations and reduced motion support.",
+      "goldenJson": "goldens/app-router-client-modal.json",
+      "goldenMarkdown": "goldens/app-router-client-modal.md"
+    },
+    {
+      "id": "app-router-route-shell",
+      "type": "scenario",
+      "fixtureRoot": "fixtures/app-router-route-shell",
+      "targetFile": "app/layout.tsx",
+      "task": "Add a lightweight route-content transition between dashboard pages in App Router.",
+      "goldenJson": "goldens/app-router-route-shell.json",
+      "goldenMarkdown": "goldens/app-router-route-shell.md"
+    },
+    {
+      "id": "pages-router-legacy-route-transition",
+      "type": "scenario",
+      "fixtureRoot": "fixtures/pages-router-legacy-route-transition",
+      "targetFile": "pages/_app.tsx",
+      "task": "Add gentle page transitions between blog pages, but keep the repo on its existing Framer Motion setup.",
+      "goldenJson": "goldens/pages-router-legacy-route-transition.json",
+      "goldenMarkdown": "goldens/pages-router-legacy-route-transition.md"
+    },
+    {
+      "id": "shared-layout-tabs",
+      "type": "scenario",
+      "fixtureRoot": "fixtures/shared-layout-tabs",
+      "targetFile": "components/settings-tabs.tsx",
+      "task": "Animate the active tab underline as a shared layout indicator, and make sure repeated tab groups do not collide.",
+      "goldenJson": "goldens/shared-layout-tabs.json",
+      "goldenMarkdown": "goldens/shared-layout-tabs.md"
+    },
+    {
+      "id": "design-system-button",
+      "type": "scenario",
+      "fixtureRoot": "fixtures/design-system-button",
+      "targetFile": "components/ui/button.tsx",
+      "task": "Make our design-system button support Motion hover, tap, and focus states without adding extra wrapper divs.",
+      "goldenJson": "goldens/design-system-button.json",
+      "goldenMarkdown": "goldens/design-system-button.md"
+    },
+    {
+      "id": "anti-pattern-broken",
+      "type": "anti-pattern",
+      "fixtureRoot": "fixtures/anti-pattern-broken",
+      "task": "Audit this repo and identify the Motion and Framer Motion anti-patterns that should be fixed first.",
+      "goldenJson": "goldens/anti-pattern-broken.json",
+      "goldenMarkdown": "goldens/anti-pattern-broken.md"
+    }
+  ]
+}
