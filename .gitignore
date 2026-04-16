@@ -127,3 +127,7 @@ frontend/node_modules/.cache/default-development/13.pack
 frontend/node_modules/.cache/default-development/15.pack_
 frontend/node_modules/.cache/default-development/16.pack
 frontend/node_modules/.cache/default-development/11.pack
+
+# credentials cached by setup.sh / make seed
+.maars-setup.env
+scripts/legacy/harvest_skills_cache.json

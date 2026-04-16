@@ -87,7 +87,6 @@ services:
   - type: web
     name: maars-frontend
     runtime: static
-    region: oregon
     plan: free
     rootDir: frontend
     buildCommand: yarn install --frozen-lockfile && yarn build
