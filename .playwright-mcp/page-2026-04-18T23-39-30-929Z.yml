@@ -1,0 +1,787 @@
+- generic [ref=e2]:
+  - generic [ref=e115]:
+    - complementary [ref=e119]:
+      - generic [ref=e120]:
+        - link "MAARS MAARS Command by MAARS Global Corporation" [ref=e122] [cursor=pointer]:
+          - /url: /dashboard
+          - img "MAARS" [ref=e123]
+          - generic [ref=e124]:
+            - heading "MAARS Command" [level=1] [ref=e125]
+            - paragraph [ref=e126]: by MAARS Global Corporation
+        - generic [ref=e127]:
+          - generic [ref=e129]: ONLINE
+          - generic [ref=e130]: 499 agents
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - generic [ref=e140]:
+              - img [ref=e141]
+              - generic [ref=e143]: "50.00"
+            - generic [ref=e144]: Free
+          - button "Buy Credits" [ref=e145] [cursor=pointer]:
+            - img [ref=e146]
+            - text: Buy Credits
+        - button "Personal Workspace 1 members" [ref=e148] [cursor=pointer]:
+          - img [ref=e150]
+          - generic [ref=e154]:
+            - paragraph [ref=e155]: Personal Workspace
+            - paragraph [ref=e156]: 1 members
+          - img [ref=e157]
+        - button "Search… /" [ref=e160] [cursor=pointer]:
+          - img [ref=e161]
+          - generic [ref=e164]: Search…
+          - generic [ref=e165]: /
+        - navigation [ref=e166]:
+          - button "Dashboard" [ref=e168] [cursor=pointer]:
+            - img [ref=e170]
+            - generic [ref=e175]: Dashboard
+          - generic [ref=e177]:
+            - generic [ref=e180]: Workspace
+            - button "Projects" [ref=e182] [cursor=pointer]:
+              - img [ref=e183]
+              - generic [ref=e188]: Projects
+            - button "Chat" [ref=e189] [cursor=pointer]:
+              - img [ref=e190]
+              - generic [ref=e192]: Chat
+            - button "Tasks" [ref=e193] [cursor=pointer]:
+              - img [ref=e194]
+              - generic [ref=e197]: Tasks
+            - button "Approvals" [ref=e198] [cursor=pointer]:
+              - img [ref=e199]
+              - generic [ref=e203]: Approvals
+          - generic [ref=e204]:
+            - generic [ref=e207]: AI Tools
+            - button "Agents" [ref=e209] [cursor=pointer]:
+              - img [ref=e210]
+              - generic [ref=e213]: Agents
+            - button "Team Builder" [ref=e214] [cursor=pointer]:
+              - img [ref=e215]
+              - generic [ref=e218]: Team Builder
+            - button "Workspace Brain" [ref=e219] [cursor=pointer]:
+              - img [ref=e220]
+              - generic [ref=e230]: Workspace Brain
+            - button "Brain Profiles" [ref=e231] [cursor=pointer]:
+              - img [ref=e232]
+              - generic [ref=e235]: Brain Profiles
+            - button "Vibe Coding" [ref=e236] [cursor=pointer]:
+              - img [ref=e237]
+              - generic [ref=e240]: Vibe Coding
+            - button "Reference Intel" [ref=e241] [cursor=pointer]:
+              - img [ref=e242]
+              - generic [ref=e244]: Reference Intel
+            - button "Content Generator" [ref=e245] [cursor=pointer]:
+              - img [ref=e246]
+              - generic [ref=e251]: Content Generator
+          - generic [ref=e252]:
+            - generic [ref=e255]: Intelligence
+            - button "Kernel" [ref=e257] [cursor=pointer]:
+              - img [ref=e258]
+              - generic [ref=e262]: Kernel
+            - button "Agent Networks" [ref=e263] [cursor=pointer]:
+              - img [ref=e264]
+              - generic [ref=e269]: Agent Networks
+            - button "Task Graphs" [ref=e270] [cursor=pointer]:
+              - img [ref=e271]
+              - generic [ref=e275]: Task Graphs
+            - button "Knowledge Graph" [ref=e276] [cursor=pointer]:
+              - img [ref=e277]
+              - generic [ref=e283]: Knowledge Graph
+            - button "Trust Scores" [ref=e284] [cursor=pointer]:
+              - img [ref=e285]
+              - generic [ref=e287]: Trust Scores
+            - button "Execution Gateway" [ref=e288] [cursor=pointer]:
+              - img [ref=e289]
+              - generic [ref=e291]: Execution Gateway
+            - button "Workflow Builder" [ref=e292] [cursor=pointer]:
+              - img [ref=e293]
+              - generic [ref=e297]: Workflow Builder
+            - button "Campaign Builder" [ref=e298] [cursor=pointer]:
+              - img [ref=e299]
+              - generic [ref=e302]: Campaign Builder
+            - button "Integrations" [ref=e303] [cursor=pointer]:
+              - img [ref=e304]
+              - generic [ref=e306]: Integrations
+            - button "Embedded Browser" [ref=e307] [cursor=pointer]:
+              - img [ref=e308]
+              - generic [ref=e311]: Embedded Browser
+            - button "Social Media" [ref=e312] [cursor=pointer]:
+              - img [ref=e313]
+              - generic [ref=e319]: Social Media
+            - button "Universal Key" [ref=e320] [cursor=pointer]:
+              - img [ref=e321]
+              - generic [ref=e325]: Universal Key
+            - button "Analytics" [ref=e326] [cursor=pointer]:
+              - img [ref=e327]
+              - generic [ref=e330]: Analytics
+            - button "Agent Suggestions" [ref=e331] [cursor=pointer]:
+              - img [ref=e332]
+              - generic [ref=e334]: Agent Suggestions
+            - button "Environments" [ref=e335] [cursor=pointer]:
+              - img [ref=e336]
+              - generic [ref=e339]: Environments
+            - button "Memory Hierarchy" [ref=e340] [cursor=pointer]:
+              - img [ref=e341]
+              - generic [ref=e343]: Memory Hierarchy
+            - button "Memory" [ref=e344] [cursor=pointer]:
+              - img [ref=e345]
+              - generic [ref=e349]: Memory
+            - button "Collaborations" [ref=e350] [cursor=pointer]:
+              - img [ref=e351]
+              - generic [ref=e353]: Collaborations
+            - button "KPI Dashboard" [ref=e354] [cursor=pointer]:
+              - img [ref=e355]
+              - generic [ref=e358]: KPI Dashboard
+            - button "Activity Monitor" [ref=e359] [cursor=pointer]:
+              - img [ref=e360]
+              - generic [ref=e366]: Activity Monitor
+            - button "My Insights" [ref=e367] [cursor=pointer]:
+              - img [ref=e368]
+              - generic [ref=e370]: My Insights
+          - generic [ref=e371]:
+            - generic [ref=e374]: MAARS Infinity
+            - button "Developer API" [ref=e376] [cursor=pointer]:
+              - img [ref=e377]
+              - generic [ref=e379]: Developer API
+            - button "Observability" [ref=e380] [cursor=pointer]:
+              - img [ref=e381]
+              - generic [ref=e388]: Observability
+            - button "Model Router" [ref=e389] [cursor=pointer]:
+              - img [ref=e390]
+              - generic [ref=e392]: Model Router
+            - button "Commander Orion" [ref=e393] [cursor=pointer]:
+              - img [ref=e394]
+              - generic [ref=e400]: Commander Orion
+            - button "Venture Portfolio" [ref=e401] [cursor=pointer]:
+              - img [ref=e402]
+              - generic [ref=e405]: Venture Portfolio
+            - button "Operator Panel" [ref=e406] [cursor=pointer]:
+              - img [ref=e407]
+              - generic [ref=e409]: Operator Panel
+            - button "Agent Catalog" [ref=e410] [cursor=pointer]:
+              - img [ref=e411]
+              - generic [ref=e416]: Agent Catalog
+          - generic [ref=e417]:
+            - generic [ref=e420]: Manage
+            - button "Products" [ref=e422] [cursor=pointer]:
+              - img [ref=e423]
+              - generic [ref=e427]: Products
+            - button "Team" [ref=e428] [cursor=pointer]:
+              - img [ref=e429]
+              - generic [ref=e434]: Team
+            - button "Organization" [ref=e435] [cursor=pointer]:
+              - img [ref=e436]
+              - generic [ref=e440]: Organization
+            - button "Settings" [ref=e441] [cursor=pointer]:
+              - img [ref=e442]
+              - generic [ref=e445]: Settings
+            - button "About" [ref=e446] [cursor=pointer]:
+              - img [ref=e447]
+              - generic [ref=e449]: About
+        - button "Collapse" [ref=e451] [cursor=pointer]:
+          - img [ref=e452]
+          - generic [ref=e455]: Collapse
+        - generic [ref=e456]:
+          - generic [ref=e458]:
+            - generic [ref=e461]: D
+            - generic [ref=e463]:
+              - paragraph [ref=e464]: Demo Client
+              - paragraph [ref=e465]: demo-client-20260418@maars.demo
+          - generic [ref=e466]:
+            - generic [ref=e467]: LIVE
+            - generic [ref=e468]: MAARS v2.0
+          - button "Log Out" [ref=e473] [cursor=pointer]:
+            - img [ref=e474]
+            - generic [ref=e477]: Log Out
+    - generic [ref=e480]:
+      - generic [ref=e536]:
+        - generic [ref=e537]:
+          - generic [ref=e540]: SYSTEM ONLINE
+          - generic [ref=e541]: 06:39:29 AM
+          - generic [ref=e543]: 499 agents standing by
+          - button "1" [ref=e546] [cursor=pointer]:
+            - img [ref=e547]
+            - generic [ref=e550]: "1"
+        - heading "Good morning, Demo." [level=1] [ref=e551]
+        - generic [ref=e552]:
+          - generic [ref=e553]: ⚡ MISSION
+          - paragraph [ref=e554]: Set up an integration to connect your existing tools to the platform
+        - generic [ref=e556]:
+          - generic [ref=e557]:
+            - img [ref=e558]
+            - generic [ref=e561]: INTEL
+          - generic [ref=e563]:
+            - generic [ref=e564]: ▸ Commander Orion coordinating 14 active agents across 3 networks
+            - generic [ref=e565]: ▸ System operating at 99.97% uptime
+            - generic [ref=e566]: ▸ 175,000+ AI models available via Universal Key
+            - generic [ref=e567]: ▸ Enterprise trust scoring active — all agent actions audited
+            - generic [ref=e568]: ▸ Real-time multi-agent collaboration engine online
+            - generic [ref=e569]: ▸ 28 specialized networks — strategy, creative, engineering, finance, legal…
+            - generic [ref=e570]: ▸ Zero-downtime model switching across 33 LLM providers
+            - generic [ref=e571]: ▸ Knowledge graph continuously updated with new intelligence
+            - generic [ref=e572]: ▸ Commander Orion coordinating 14 active agents across 3 networks
+            - generic [ref=e573]: ▸ System operating at 99.97% uptime
+            - generic [ref=e574]: ▸ 175,000+ AI models available via Universal Key
+            - generic [ref=e575]: ▸ Enterprise trust scoring active — all agent actions audited
+            - generic [ref=e576]: ▸ Real-time multi-agent collaboration engine online
+            - generic [ref=e577]: ▸ 28 specialized networks — strategy, creative, engineering, finance, legal…
+            - generic [ref=e578]: ▸ Zero-downtime model switching across 33 LLM providers
+            - generic [ref=e579]: ▸ Knowledge graph continuously updated with new intelligence
+      - generic [ref=e580]:
+        - generic [ref=e582]:
+          - generic [ref=e583]:
+            - generic [ref=e584]:
+              - paragraph [ref=e585]: Total Chats
+              - paragraph [ref=e586]: "0"
+            - img [ref=e589]
+          - generic [ref=e591]:
+            - img [ref=e592]
+            - generic [ref=e595]: Live
+        - generic [ref=e597]:
+          - generic [ref=e598]:
+            - generic [ref=e599]:
+              - paragraph [ref=e600]: Total Tasks
+              - paragraph [ref=e601]: "0"
+            - img [ref=e604]
+          - generic [ref=e607]:
+            - img [ref=e608]
+            - generic [ref=e611]: Live
+        - generic [ref=e613]:
+          - generic [ref=e614]:
+            - generic [ref=e615]:
+              - paragraph [ref=e616]: Completed
+              - paragraph [ref=e617]: "0"
+            - img [ref=e620]
+          - generic [ref=e622]:
+            - img [ref=e623]
+            - generic [ref=e626]: Live
+        - generic [ref=e628]:
+          - generic [ref=e629]:
+            - generic [ref=e630]:
+              - paragraph [ref=e631]: Active Agents
+              - paragraph [ref=e632]: "499"
+              - paragraph [ref=e633]: of 499 total
+            - img [ref=e636]
+          - generic [ref=e639]:
+            - img [ref=e640]
+            - generic [ref=e643]: Live
+      - generic [ref=e646]:
+        - generic [ref=e647]:
+          - img [ref=e648]
+          - generic [ref=e651]: AI System Insights
+          - generic [ref=e652]:
+            - button [ref=e653] [cursor=pointer]
+            - button [ref=e654] [cursor=pointer]
+            - button [ref=e655] [cursor=pointer]
+            - button [ref=e656] [cursor=pointer]
+            - button [ref=e657] [cursor=pointer]
+            - button [ref=e658] [cursor=pointer]
+        - generic [ref=e659]:
+          - img [ref=e1472]
+          - generic [ref=e666]:
+            - paragraph [ref=e667]: Recommendations
+            - paragraph [ref=e668]: Start your first chat to activate agent learning
+          - generic [ref=e669]:
+            - button "Fleet Performance" [ref=e670] [cursor=pointer]:
+              - img [ref=e671]
+            - button "Knowledge Coverage" [ref=e674] [cursor=pointer]:
+              - img [ref=e675]
+            - button "Governance Status" [ref=e685] [cursor=pointer]:
+              - img [ref=e686]
+      - generic [ref=e690] [cursor=pointer]:
+        - generic [ref=e691]:
+          - img [ref=e693]
+          - generic [ref=e695]:
+            - paragraph [ref=e696]: "1"
+            - paragraph [ref=e697]: day streak
+        - generic [ref=e699]:
+          - generic [ref=e700]:
+            - generic [ref=e701]:
+              - img [ref=e703]
+              - generic [ref=e705]: Lv.1 · Recruit
+            - generic [ref=e706]:
+              - img [ref=e707]
+              - generic [ref=e709]: 10 XP
+              - img [ref=e710]
+          - paragraph [ref=e714]: 90 XP to Apprentice
+      - generic [ref=e718]:
+        - generic [ref=e719]:
+          - generic [ref=e720]:
+            - img [ref=e721]
+            - generic [ref=e723]: Activity Matrix
+            - generic [ref=e724]: · 17 weeks
+          - generic [ref=e725]:
+            - generic [ref=e726]: Less
+            - generic [ref=e732]: More
+        - generic [ref=e733]:
+          - generic [ref=e734]:
+            - generic [ref=e736]: Dec
+            - generic [ref=e740]: Jan
+            - generic [ref=e744]: Feb
+            - generic [ref=e748]: Mar
+            - generic [ref=e752]: Apr
+          - generic [ref=e753]:
+            - generic [ref=e754]: S
+            - generic "No activity" [ref=e755]
+            - generic "No activity" [ref=e756]
+            - generic "No activity" [ref=e757]
+            - generic "No activity" [ref=e758]
+            - generic "No activity" [ref=e759]
+            - generic "No activity" [ref=e760]
+            - generic "No activity" [ref=e761]
+            - generic "No activity" [ref=e762]
+            - generic "No activity" [ref=e763]
+            - generic "No activity" [ref=e764]
+            - generic "No activity" [ref=e765]
+            - generic "No activity" [ref=e766]
+            - generic "No activity" [ref=e767]
+            - generic "No activity" [ref=e768]
+            - generic "No activity" [ref=e769]
+            - generic "No activity" [ref=e770]
+            - generic "No activity" [ref=e771]
+          - generic [ref=e772]:
+            - generic "No activity" [ref=e774]
+            - generic "No activity" [ref=e775]
+            - generic "No activity" [ref=e776]
+            - generic "No activity" [ref=e777]
+            - generic "No activity" [ref=e778]
+            - generic "No activity" [ref=e779]
+            - generic "No activity" [ref=e780]
+            - generic "No activity" [ref=e781]
+            - generic "No activity" [ref=e782]
+            - generic "No activity" [ref=e783]
+            - generic "No activity" [ref=e784]
+            - generic "No activity" [ref=e785]
+            - generic "No activity" [ref=e786]
+            - generic "No activity" [ref=e787]
+            - generic "No activity" [ref=e788]
+            - generic "No activity" [ref=e789]
+            - generic "No activity" [ref=e790]
+          - generic [ref=e791]:
+            - generic [ref=e792]: T
+            - generic "No activity" [ref=e793]
+            - generic "No activity" [ref=e794]
+            - generic "No activity" [ref=e795]
+            - generic "No activity" [ref=e796]
+            - generic "No activity" [ref=e797]
+            - generic "No activity" [ref=e798]
+            - generic "No activity" [ref=e799]
+            - generic "No activity" [ref=e800]
+            - generic "No activity" [ref=e801]
+            - generic "No activity" [ref=e802]
+            - generic "No activity" [ref=e803]
+            - generic "No activity" [ref=e804]
+            - generic "No activity" [ref=e805]
+            - generic "No activity" [ref=e806]
+            - generic "No activity" [ref=e807]
+            - generic "No activity" [ref=e808]
+            - generic "No activity" [ref=e809]
+          - generic [ref=e810]:
+            - generic "No activity" [ref=e812]
+            - generic "No activity" [ref=e813]
+            - generic "No activity" [ref=e814]
+            - generic "No activity" [ref=e815]
+            - generic "No activity" [ref=e816]
+            - generic "No activity" [ref=e817]
+            - generic "No activity" [ref=e818]
+            - generic "No activity" [ref=e819]
+            - generic "No activity" [ref=e820]
+            - generic "No activity" [ref=e821]
+            - generic "No activity" [ref=e822]
+            - generic "No activity" [ref=e823]
+            - generic "No activity" [ref=e824]
+            - generic "No activity" [ref=e825]
+            - generic "No activity" [ref=e826]
+            - generic "No activity" [ref=e827]
+            - generic "No activity" [ref=e828]
+          - generic [ref=e829]:
+            - generic [ref=e830]: T
+            - generic "No activity" [ref=e831]
+            - generic "No activity" [ref=e832]
+            - generic "No activity" [ref=e833]
+            - generic "No activity" [ref=e834]
+            - generic "No activity" [ref=e835]
+            - generic "No activity" [ref=e836]
+            - generic "No activity" [ref=e837]
+            - generic "No activity" [ref=e838]
+            - generic "No activity" [ref=e839]
+            - generic "No activity" [ref=e840]
+            - generic "No activity" [ref=e841]
+            - generic "No activity" [ref=e842]
+            - generic "No activity" [ref=e843]
+            - generic "No activity" [ref=e844]
+            - generic "No activity" [ref=e845]
+            - generic "No activity" [ref=e846]
+            - generic "No activity" [ref=e847]
+          - generic [ref=e848]:
+            - generic "No activity" [ref=e850]
+            - generic "No activity" [ref=e851]
+            - generic "No activity" [ref=e852]
+            - generic "No activity" [ref=e853]
+            - generic "No activity" [ref=e854]
+            - generic "No activity" [ref=e855]
+            - generic "No activity" [ref=e856]
+            - generic "No activity" [ref=e857]
+            - generic "No activity" [ref=e858]
+            - generic "No activity" [ref=e859]
+            - generic "No activity" [ref=e860]
+            - generic "No activity" [ref=e861]
+            - generic "No activity" [ref=e862]
+            - generic "No activity" [ref=e863]
+            - generic "No activity" [ref=e864]
+            - generic "No activity" [ref=e865]
+            - generic "No activity" [ref=e866]
+          - generic [ref=e867]:
+            - generic [ref=e868]: S
+            - generic "No activity" [ref=e869]
+            - generic "No activity" [ref=e870]
+            - generic "No activity" [ref=e871]
+            - generic "No activity" [ref=e872]
+            - generic "No activity" [ref=e873]
+            - generic "No activity" [ref=e874]
+            - generic "No activity" [ref=e875]
+            - generic "No activity" [ref=e876]
+            - generic "No activity" [ref=e877]
+            - generic "No activity" [ref=e878]
+            - generic "No activity" [ref=e879]
+            - generic "No activity" [ref=e880]
+            - generic "No activity" [ref=e881]
+            - generic "No activity" [ref=e882]
+            - generic "No activity" [ref=e883]
+            - generic "No activity" [ref=e884]
+            - generic "No activity" [ref=e885]
+      - generic [ref=e886]:
+        - generic [ref=e887]:
+          - generic [ref=e888]:
+            - generic [ref=e891]: Your Commander
+            - generic [ref=e892] [cursor=pointer]:
+              - generic [ref=e893]:
+                - img "Commander Orion ∞" [ref=e897]
+                - generic [ref=e899]:
+                  - generic [ref=e900]:
+                    - heading "Commander Orion ∞" [level=3] [ref=e901]
+                    - generic [ref=e902]: ⚡ CMD
+                  - paragraph [ref=e903]: Commander
+                  - generic [ref=e904]:
+                    - generic [ref=e905]: Task Delegation
+                    - generic [ref=e906]: Strategic Planning
+                    - generic [ref=e907]: Team Orchestration
+                    - generic [ref=e908]: Goal Breakdown
+                - button "Chat Now" [ref=e909]:
+                  - img [ref=e910]
+                  - text: Chat Now
+              - generic [ref=e912]:
+                - generic [ref=e923]: Coordinating agent network…
+                - generic [ref=e924]:
+                  - generic [ref=e925]: ●
+                  - generic [ref=e926]: Online
+          - generic [ref=e927]:
+            - generic [ref=e930]: Command Center
+            - generic [ref=e931]:
+              - generic [ref=e936]:
+                - img [ref=e937]
+                - textbox "Set a business goal... (e.g. 'Launch Q2 marketing campaign for our SaaS product')" [ref=e941]
+                - button [disabled]:
+                  - img
+              - generic [ref=e942]:
+                - generic [ref=e943]:
+                  - generic [ref=e944]:
+                    - img [ref=e945]
+                    - generic [ref=e950]: Active Projects
+                  - paragraph [ref=e951]: "0"
+                - generic [ref=e952]:
+                  - generic [ref=e953]:
+                    - img [ref=e954]
+                    - generic [ref=e957]: Completed
+                  - paragraph [ref=e958]: "0"
+                - generic [ref=e959]:
+                  - generic [ref=e960]:
+                    - img [ref=e961]
+                    - generic [ref=e963]: Agents Working
+                  - paragraph [ref=e964]: "0"
+                - generic [ref=e965]:
+                  - generic [ref=e966]:
+                    - img [ref=e967]
+                    - generic [ref=e971]: Total Projects
+                  - paragraph [ref=e972]: "0"
+              - generic [ref=e974]:
+                - generic [ref=e975]:
+                  - img [ref=e977]
+                  - generic [ref=e979]:
+                    - paragraph [ref=e980]: Autonomy Control
+                    - paragraph [ref=e981]: Set default execution mode for new projects
+                - generic [ref=e983]:
+                  - generic [ref=e984]:
+                    - button "Manual" [ref=e985] [cursor=pointer]
+                    - button "Approval" [ref=e986] [cursor=pointer]
+                    - button "Autonomous" [ref=e987] [cursor=pointer]
+                  - paragraph [ref=e990]: AI plans, you approve
+              - generic [ref=e991]:
+                - img [ref=e993]
+                - heading "Launch Your First Mission" [level=3] [ref=e998]
+                - paragraph [ref=e999]: Type a business goal above. Your AI workforce will analyze it, create a strategic plan, and execute autonomously.
+          - generic [ref=e1000]:
+            - generic [ref=e1003]: Quick Actions
+            - generic [ref=e1004]:
+              - button "New Chat Start a conversation N" [ref=e1005] [cursor=pointer]:
+                - img [ref=e1007]
+                - generic [ref=e1009]:
+                  - paragraph [ref=e1010]: New Chat
+                  - paragraph [ref=e1011]: Start a conversation
+                - generic [ref=e1012]: "N"
+              - button "Create Task Assign to agents T" [ref=e1013] [cursor=pointer]:
+                - img [ref=e1015]
+                - generic [ref=e1018]:
+                  - paragraph [ref=e1019]: Create Task
+                  - paragraph [ref=e1020]: Assign to agents
+                - generic [ref=e1021]: T
+              - button "Browse Agents 499 agents A" [ref=e1022] [cursor=pointer]:
+                - img [ref=e1024]
+                - generic [ref=e1029]:
+                  - paragraph [ref=e1030]: Browse Agents
+                  - paragraph [ref=e1031]: 499 agents
+                - generic [ref=e1032]: A
+              - button "Create Agent Build custom AI C" [ref=e1033] [cursor=pointer]:
+                - img [ref=e1035]
+                - generic [ref=e1036]:
+                  - paragraph [ref=e1037]: Create Agent
+                  - paragraph [ref=e1038]: Build custom AI
+                - generic [ref=e1039]: C
+              - button "Developer API 175k+ models D" [ref=e1040] [cursor=pointer]:
+                - img [ref=e1042]
+                - generic [ref=e1044]:
+                  - paragraph [ref=e1045]: Developer API
+                  - paragraph [ref=e1046]: 175k+ models
+                - generic [ref=e1047]: D
+              - button "Projects Command center P" [ref=e1048] [cursor=pointer]:
+                - img [ref=e1050]
+                - generic [ref=e1054]:
+                  - paragraph [ref=e1055]: Projects
+                  - paragraph [ref=e1056]: Command center
+                - generic [ref=e1057]: P
+        - generic [ref=e1058]:
+          - generic [ref=e1059]:
+            - generic [ref=e1060]:
+              - img [ref=e1061]
+              - generic [ref=e1063]: System Health
+              - generic [ref=e1066]: READY
+            - generic [ref=e1067]:
+              - generic [ref=e1069]:
+                - generic [ref=e1070]:
+                  - img [ref=e1071]
+                  - generic [ref=e1074]: Agents Online
+                - generic [ref=e1075]:
+                  - generic [ref=e1076]: "499"
+                  - generic [ref=e1077]: 499 total
+              - generic [ref=e1081]:
+                - generic [ref=e1082]:
+                  - img [ref=e1083]
+                  - generic [ref=e1085]: Tasks Completed
+                - generic [ref=e1086]:
+                  - generic [ref=e1087]: "0"
+                  - generic [ref=e1088]: 0 tracked
+              - generic [ref=e1092]:
+                - generic [ref=e1093]:
+                  - img [ref=e1094]
+                  - generic [ref=e1096]: Startup Checks
+                - generic [ref=e1097]:
+                  - generic [ref=e1098]: "3"
+                  - generic [ref=e1099]: startup healthy
+              - generic [ref=e1103]:
+                - generic [ref=e1104]:
+                  - img [ref=e1105]
+                  - generic [ref=e1110]: Integrations Ready
+                - generic [ref=e1111]:
+                  - generic [ref=e1112]: "5"
+                  - generic [ref=e1113]: 0 partial
+              - generic [ref=e1116]:
+                - generic [ref=e1117]:
+                  - paragraph [ref=e1118]: Runtime
+                  - paragraph [ref=e1119]: 14s uptime
+                  - paragraph [ref=e1120]: DEVELOPMENT
+                - generic [ref=e1121]:
+                  - paragraph [ref=e1122]: Database
+                  - paragraph [ref=e1123]: Connected
+                  - paragraph [ref=e1124]: 3.77 ms ping
+          - generic [ref=e1125]:
+            - generic [ref=e1127]:
+              - img [ref=e1129]
+              - generic [ref=e1136]: Neural Activity Feed
+              - generic [ref=e1139]: LIVE
+            - generic [ref=e1146]:
+              - generic [ref=e1479]:
+                - paragraph [ref=e1482]: Sandbox Tool Agent ran competitive analysis
+                - generic [ref=e1483]: 0s ago
+              - generic [ref=e1484]:
+                - paragraph [ref=e1487]: Victor Ashford generated campaign brief
+                - generic [ref=e1488]: 3s ago
+              - generic [ref=e1489]:
+                - paragraph [ref=e1492]: Dr. Eleanor Shaw scheduled 3 follow-ups
+                - generic [ref=e1493]: 7s ago
+              - generic [ref=e1147]:
+                - paragraph [ref=e1150]: Kernel Operations Agent built financial forecast
+                - generic [ref=e1151]: 11s ago
+              - generic [ref=e1152]:
+                - paragraph [ref=e1155]: Venture Thesis Agent processed knowledge update
+                - generic [ref=e1156]: 15s ago
+              - generic [ref=e1157]:
+                - paragraph [ref=e1160]: Opportunity Screening Agent delegated subtask to specialist
+                - generic [ref=e1161]: 18s ago
+              - generic [ref=e1162]:
+                - paragraph [ref=e1165]: Media Strategy Agent ran competitive analysis
+                - generic [ref=e1166]: 22s ago
+              - generic [ref=e1167]:
+                - paragraph [ref=e1170]: Arbitration Agent deployed automation workflow
+                - generic [ref=e1171]: 26s ago
+              - generic [ref=e1172]:
+                - paragraph [ref=e1175]: Strategic Partnership Agent ran competitive analysis
+                - generic [ref=e1176]: 30s ago
+              - generic [ref=e1177]:
+                - paragraph [ref=e1180]: Visual Identity Agent built financial forecast
+                - generic [ref=e1181]: 34s ago
+              - generic [ref=e1182]:
+                - paragraph [ref=e1185]: Product Demand Forecast Agent updated product roadmap
+                - generic [ref=e1186]: 38s ago
+              - generic [ref=e1187]:
+                - paragraph [ref=e1190]: Task Graph Integrity Agent processed knowledge update
+                - generic [ref=e1191]: 41s ago
+          - generic [ref=e1207]:
+            - generic [ref=e1208]:
+              - generic [ref=e1209]:
+                - img [ref=e1210]
+                - generic [ref=e1215]: Live Roster
+                - generic [ref=e1218]: 0 active
+              - generic [ref=e1219]:
+                - button "All (40)" [ref=e1220] [cursor=pointer]
+                - button "Active (0)" [ref=e1221] [cursor=pointer]
+            - generic [ref=e1223]:
+              - generic "Commander Orion ∞ — Available" [ref=e1224] [cursor=pointer]:
+                - img "Commander Orion ∞" [ref=e1227]
+                - generic [ref=e1229]: Commander
+              - generic "Adrian Stone — Available" [ref=e1230] [cursor=pointer]:
+                - img "Adrian Stone" [ref=e1233]
+                - generic [ref=e1235]: Adrian
+              - generic "Alexandra Reid — Available" [ref=e1236] [cursor=pointer]:
+                - img "Alexandra Reid" [ref=e1239]
+                - generic [ref=e1241]: Alexandra
+              - generic "Amara Johnson — Available" [ref=e1242] [cursor=pointer]:
+                - img "Amara Johnson" [ref=e1245]
+                - generic [ref=e1247]: Amara
+              - generic "Axel Brennan — Available" [ref=e1248] [cursor=pointer]:
+                - img "Axel Brennan" [ref=e1251]
+                - generic [ref=e1253]: Axel
+              - generic "Benjamin Cole — Available" [ref=e1254] [cursor=pointer]:
+                - img "Benjamin Cole" [ref=e1257]
+                - generic [ref=e1259]: Benjamin
+              - generic "Cassandra Steele — Available" [ref=e1260] [cursor=pointer]:
+                - img "Cassandra Steele" [ref=e1263]
+                - generic [ref=e1265]: Cassandra
+              - generic "Catherine Blake — Available" [ref=e1266] [cursor=pointer]:
+                - img "Catherine Blake" [ref=e1269]
+                - generic [ref=e1271]: Catherine
+              - generic "Damien Voss — Available" [ref=e1272] [cursor=pointer]:
+                - img "Damien Voss" [ref=e1275]
+                - generic [ref=e1277]: Damien
+              - generic "Derek Huang — Available" [ref=e1278] [cursor=pointer]:
+                - img "Derek Huang" [ref=e1281]
+                - generic [ref=e1283]: Derek
+              - generic "Diana Morales — Available" [ref=e1284] [cursor=pointer]:
+                - img "Diana Morales" [ref=e1287]
+                - generic [ref=e1289]: Diana
+              - generic "Dr. Clara Voss — Available" [ref=e1290] [cursor=pointer]:
+                - img "Dr. Clara Voss" [ref=e1293]
+                - generic [ref=e1295]: Dr.
+              - generic "Dr. Eleanor Shaw — Available" [ref=e1296] [cursor=pointer]:
+                - img "Dr. Eleanor Shaw" [ref=e1299]
+                - generic [ref=e1301]: Dr.
+              - generic "Dr. Luca Bernstein — Available" [ref=e1302] [cursor=pointer]:
+                - img "Dr. Luca Bernstein" [ref=e1305]
+                - generic [ref=e1307]: Dr.
+              - generic "Elena Kovacs — Available" [ref=e1308] [cursor=pointer]:
+                - img "Elena Kovacs" [ref=e1311]
+                - generic [ref=e1313]: Elena
+              - generic "Ethan Yates — Available" [ref=e1314] [cursor=pointer]:
+                - img "Ethan Yates" [ref=e1317]
+                - generic [ref=e1319]: Ethan
+              - generic "Felix Romano — Available" [ref=e1320] [cursor=pointer]:
+                - img "Felix Romano" [ref=e1323]
+                - generic [ref=e1325]: Felix
+              - generic "Isla Fernandez — Available" [ref=e1326] [cursor=pointer]:
+                - img "Isla Fernandez" [ref=e1329]
+                - generic [ref=e1331]: Isla
+              - generic "Jasper Wells — Available" [ref=e1332] [cursor=pointer]:
+                - img "Jasper Wells" [ref=e1335]
+                - generic [ref=e1337]: Jasper
+              - generic "Kai Nakamoto — Available" [ref=e1338] [cursor=pointer]:
+                - img "Kai Nakamoto" [ref=e1341]
+                - generic [ref=e1343]: Kai
+              - generic "Layla Mansouri — Available" [ref=e1344] [cursor=pointer]:
+                - img "Layla Mansouri" [ref=e1347]
+                - generic [ref=e1349]: Layla
+              - generic "Luna Bergström — Available" [ref=e1350] [cursor=pointer]:
+                - img "Luna Bergström" [ref=e1353]
+                - generic [ref=e1355]: Luna
+              - generic "Marco De Luca — Available" [ref=e1356] [cursor=pointer]:
+                - img "Marco De Luca" [ref=e1359]
+                - generic [ref=e1361]: Marco
+              - generic "Marcus Drake — Available" [ref=e1362] [cursor=pointer]:
+                - img "Marcus Drake" [ref=e1365]
+                - generic [ref=e1367]: Marcus
+              - generic "Maximilian Wolfe — Available" [ref=e1368] [cursor=pointer]:
+                - img "Maximilian Wolfe" [ref=e1371]
+                - generic [ref=e1373]: Maximilian
+              - generic "Maya Thompson — Available" [ref=e1374] [cursor=pointer]:
+                - img "Maya Thompson" [ref=e1377]
+                - generic [ref=e1379]: Maya
+              - generic "Nadia Kessler — Available" [ref=e1380] [cursor=pointer]:
+                - img "Nadia Kessler" [ref=e1383]
+                - generic [ref=e1385]: Nadia
+              - generic "Nathan Cross — Available" [ref=e1386] [cursor=pointer]:
+                - img "Nathan Cross" [ref=e1389]
+                - generic [ref=e1391]: Nathan
+              - generic "Nikolai Volkov — Available" [ref=e1392] [cursor=pointer]:
+                - img "Nikolai Volkov" [ref=e1395]
+                - generic [ref=e1397]: Nikolai
+              - generic "Olivia Sinclair — Available" [ref=e1398] [cursor=pointer]:
+                - img "Olivia Sinclair" [ref=e1401]
+                - generic [ref=e1403]: Olivia
+              - generic "Professor James Whitfield — Available" [ref=e1404] [cursor=pointer]:
+                - img "Professor James Whitfield" [ref=e1407]
+                - generic [ref=e1409]: Professor
+              - generic "Richard Ashworth — Available" [ref=e1410] [cursor=pointer]:
+                - img "Richard Ashworth" [ref=e1413]
+                - generic [ref=e1415]: Richard
+              - generic "Riley Chen — Available" [ref=e1416] [cursor=pointer]:
+                - img "Riley Chen" [ref=e1419]
+                - generic [ref=e1421]: Riley
+              - generic "Scarlett Monroe — Available" [ref=e1422] [cursor=pointer]:
+                - img "Scarlett Monroe" [ref=e1425]
+                - generic [ref=e1427]: Scarlett
+              - generic "Serena Okafor — Available" [ref=e1428] [cursor=pointer]:
+                - img "Serena Okafor" [ref=e1431]
+                - generic [ref=e1433]: Serena
+              - generic "Sofia Reyes — Available" [ref=e1434] [cursor=pointer]:
+                - img "Sofia Reyes" [ref=e1437]
+                - generic [ref=e1439]: Sofia
+              - generic "Valentina Cruz — Available" [ref=e1440] [cursor=pointer]:
+                - img "Valentina Cruz" [ref=e1443]
+                - generic [ref=e1445]: Valentina
+              - generic "Victor Ashford — Available" [ref=e1446] [cursor=pointer]:
+                - img "Victor Ashford" [ref=e1449]
+                - generic [ref=e1451]: Victor
+              - generic "Victoria Harrington — Available" [ref=e1452] [cursor=pointer]:
+                - img "Victoria Harrington" [ref=e1455]
+                - generic [ref=e1457]: Victoria
+              - generic "Yuki Tanaka — Available" [ref=e1458] [cursor=pointer]:
+                - img "Yuki Tanaka" [ref=e1461]
+                - generic [ref=e1463]: Yuki
+    - generic [ref=e1464]:
+      - generic "Chat with Commander Orion" [ref=e1465] [cursor=pointer]:
+        - img "Commander Orion" [ref=e1468]
+      - button "Start a new chat" [ref=e1470] [cursor=pointer]:
+        - img [ref=e1471]
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

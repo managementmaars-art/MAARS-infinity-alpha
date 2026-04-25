@@ -1,0 +1,607 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - link "MiniMax" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - img "MiniMax" [ref=e6]
+    - generic [ref=e7]:
+      - generic [ref=e9] [cursor=pointer]:
+        - generic [ref=e10]: Models
+        - generic [ref=e11]:
+          - generic [ref=e12]:
+            - generic [ref=e13]:
+              - img "TEXT" [ref=e14]
+              - text: TEXT
+            - generic [ref=e15]:
+              - link "MiniMax M2.7" [ref=e16]:
+                - /url: /models/text/m27
+                - generic [ref=e17]: MiniMax M2.7
+              - link "MiniMax M2.5" [ref=e18]:
+                - /url: /models/text
+                - generic [ref=e19]: MiniMax M2.5
+              - link "MiniMax M2-Her" [ref=e20]:
+                - /url: /news/a-deep-dive-into-the-minimax-m2-her-2
+                - generic [ref=e21]: MiniMax M2-Her
+              - link "MiniMax M2.1" [ref=e22]:
+                - /url: /news/minimax-m21
+                - generic [ref=e23]: MiniMax M2.1
+              - link "MiniMax M2" [ref=e24]:
+                - /url: /news/minimax-m2
+                - generic [ref=e25]: MiniMax M2
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - img "SPEECH" [ref=e28]
+              - text: SPEECH
+            - generic [ref=e29]:
+              - link "MiniMax Speech 2.8" [ref=e30]:
+                - /url: /news/minimax-speech-28
+                - generic [ref=e31]: MiniMax Speech 2.8
+              - link "MiniMax Speech 2.6" [ref=e32]:
+                - /url: /news/minimax-speech-26
+                - generic [ref=e33]: MiniMax Speech 2.6
+              - link "MiniMax Speech 2.5" [ref=e34]:
+                - /url: /news/minimax-speech-25
+                - generic [ref=e35]: MiniMax Speech 2.5
+          - generic [ref=e36]:
+            - generic [ref=e37]:
+              - img "VIDEO" [ref=e38]
+              - text: VIDEO
+            - generic [ref=e39]:
+              - link "MiniMax Hailuo 2.3 / 2.3 Fast" [ref=e40]:
+                - /url: /news/minimax-hailuo-23
+                - generic [ref=e41]: MiniMax Hailuo 2.3 / 2.3 Fast
+              - link "MiniMax Hailuo 02" [ref=e42]:
+                - /url: /news/minimax-hailuo-02
+                - generic [ref=e43]: MiniMax Hailuo 02
+          - generic [ref=e44]:
+            - generic [ref=e45]:
+              - img "MUSIC" [ref=e46]
+              - text: MUSIC
+            - generic [ref=e47]:
+              - link "MiniMax Music 2.6" [ref=e48]:
+                - /url: /news/music-26
+                - generic [ref=e49]: MiniMax Music 2.6
+              - link "MiniMax Music 2.5+" [ref=e50]:
+                - /url: /news/music-25-unlock-instrumental-music
+                - generic [ref=e51]: MiniMax Music 2.5+
+              - link "MiniMax Music 2.5" [ref=e52]:
+                - /url: /news/minimax-music-25
+                - generic [ref=e53]: MiniMax Music 2.5
+              - link "MiniMax Music 2.0" [ref=e54]:
+                - /url: /news/minimax-music-20
+                - generic [ref=e55]: MiniMax Music 2.0
+              - link "MiniMax Music 1.5" [ref=e56]:
+                - /url: /news/minimax-music-15
+                - generic [ref=e57]: MiniMax Music 1.5
+      - generic [ref=e59] [cursor=pointer]:
+        - generic [ref=e60]: Product
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - img "AI-native Applications" [ref=e64]
+            - text: AI-native Applications
+          - generic [ref=e65]:
+            - link "Agent" [ref=e66]:
+              - /url: https://agent.minimax.io
+              - generic [ref=e67]: Agent
+              - img [ref=e69]
+            - link "Video Hailuo" [ref=e71]:
+              - /url: https://hailuoai.video
+              - generic [ref=e72]: Video Hailuo
+              - img [ref=e74]
+            - link "Audio" [ref=e76]:
+              - /url: https://www.minimax.io/audio
+              - generic [ref=e77]: Audio
+              - img [ref=e79]
+            - link "Talkie" [ref=e81]:
+              - /url: https://www.talkie-ai.com/
+              - generic [ref=e82]: Talkie
+              - img [ref=e84]
+      - generic [ref=e87] [cursor=pointer]:
+        - generic [ref=e88]: API
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - img "Develop On MiniMax" [ref=e92]
+            - text: Develop On MiniMax
+          - generic [ref=e93]:
+            - link "Developer Docs" [ref=e94]:
+              - /url: https://platform.minimax.io/docs/guides/models-intro
+              - generic [ref=e95]: Developer Docs
+              - img [ref=e97]
+            - link "Token Plan" [ref=e99]:
+              - /url: https://platform.minimax.io/subscribe/token-plan
+              - generic [ref=e100]: Token Plan
+              - img [ref=e102]
+            - link "Pricing" [ref=e104]:
+              - /url: https://platform.minimax.io/docs/pricing/overview
+              - generic [ref=e105]: Pricing
+              - img [ref=e107]
+            - link "Console Login" [ref=e109]:
+              - /url: https://platform.minimax.io/user-center/basic-information
+              - generic [ref=e110]: Console Login
+              - img [ref=e112]
+      - generic [ref=e116] [cursor=pointer]: News
+      - generic [ref=e118] [cursor=pointer]:
+        - generic [ref=e119]: Company
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - img "Intelligence with everyone" [ref=e123]
+            - text: Intelligence with everyone
+          - generic [ref=e124]:
+            - link "About" [ref=e125]:
+              - /url: /about
+              - generic [ref=e126]: About
+            - link "Investor Relations" [ref=e127]:
+              - /url: https://ir.minimax.io/
+              - generic [ref=e128]: Investor Relations
+              - img [ref=e130]
+    - generic [ref=e132]:
+      - link "Contact Us" [ref=e133] [cursor=pointer]:
+        - /url: https://platform.minimax.io/contact-us
+      - generic [ref=e134] [cursor=pointer]:
+        - generic [ref=e135]: Login
+        - generic [ref=e136]:
+          - link "API Platform" [ref=e137]:
+            - /url: https://platform.minimax.io/login
+            - generic [ref=e138]: API Platform
+            - img [ref=e140]
+          - link "MiniMax Agent" [ref=e142]:
+            - /url: https://agent.minimax.io/
+            - generic [ref=e143]: MiniMax Agent
+            - img [ref=e145]
+          - link "Hailuo AI Video" [ref=e147]:
+            - /url: https://hailuoai.video/
+            - generic [ref=e148]: Hailuo AI Video
+            - img [ref=e150]
+          - link "MiniMax Audio" [ref=e152]:
+            - /url: https://www.minimax.io/audio
+            - generic [ref=e153]: MiniMax Audio
+            - img [ref=e155]
+  - main [ref=e157]:
+    - generic [ref=e160]:
+      - button "上一张":
+        - img
+      - button "下一张":
+        - img
+      - generic [ref=e162]:
+        - generic [ref=e164]:
+          - generic [ref=e165]:
+            - generic [ref=e166]:
+              - heading "MiniMax Title Icon Music 2.6" [level=1] [ref=e167]:
+                - generic [ref=e168]:
+                  - generic [ref=e169]: MiniMax
+                  - img "Title Icon" [ref=e171]
+                  - generic [ref=e172]: Music 2.6
+              - paragraph [ref=e174]: Bring any melody back to life with Cover, powered by deeper bass and richer instrumentation
+            - generic [ref=e176]:
+              - link "Access API" [ref=e177] [cursor=pointer]:
+                - /url: https://platform.minimax.io/docs/api-reference/music-generation
+                - generic [ref=e179]: Access API
+              - link "Learn More" [ref=e182] [cursor=pointer]:
+                - /url: https://www.minimax.io/news/music-26
+                - generic [ref=e184]: Learn More
+          - generic [ref=e189]:
+            - generic [ref=e192] [cursor=pointer]:
+              - img "Cover" [ref=e195]
+              - img [ref=e198]
+              - generic [ref=e202]: Cover
+              - generic [ref=e204]: New
+            - generic [ref=e207] [cursor=pointer]:
+              - img "Pop" [ref=e210]
+              - img [ref=e213]
+              - generic [ref=e217]: Pop
+              - generic [ref=e218]:
+                - generic [ref=e219]: Pop
+                - generic [ref=e220]: Melody
+            - generic [ref=e223] [cursor=pointer]:
+              - img "Hyperpop" [ref=e226]
+              - img [ref=e229]
+              - generic [ref=e233]: Hyperpop
+              - generic [ref=e234]:
+                - generic [ref=e235]: New
+                - generic [ref=e236]: Dance
+                - generic [ref=e237]: Club
+            - generic [ref=e240] [cursor=pointer]:
+              - img "Electronic" [ref=e243]
+              - img [ref=e246]
+              - generic [ref=e250]: Electronic
+              - generic [ref=e251]:
+                - generic [ref=e252]: New
+                - generic [ref=e253]: Drive
+                - generic [ref=e254]: Sports
+            - generic [ref=e257] [cursor=pointer]:
+              - img "Trap" [ref=e260]
+              - img [ref=e263]
+              - generic [ref=e267]: Trap
+              - generic [ref=e268]:
+                - generic [ref=e269]: New
+                - generic [ref=e270]: Video Scoring
+            - generic [ref=e273] [cursor=pointer]:
+              - img "EDM" [ref=e276]
+              - img [ref=e279]
+              - generic [ref=e283]: EDM
+              - generic [ref=e284]:
+                - generic [ref=e285]: New
+                - generic [ref=e286]: Epic
+                - generic [ref=e287]: Game
+            - generic [ref=e290] [cursor=pointer]:
+              - img "Cover" [ref=e293]
+              - img [ref=e296]
+              - generic [ref=e300]: Cover
+              - generic [ref=e302]: New
+            - generic [ref=e305] [cursor=pointer]:
+              - img "Pop" [ref=e308]
+              - img [ref=e311]
+              - generic [ref=e315]: Pop
+              - generic [ref=e316]:
+                - generic [ref=e317]: Pop
+                - generic [ref=e318]: Melody
+            - generic [ref=e321] [cursor=pointer]:
+              - img "Hyperpop" [ref=e324]
+              - img [ref=e327]
+              - generic [ref=e331]: Hyperpop
+              - generic [ref=e332]:
+                - generic [ref=e333]: New
+                - generic [ref=e334]: Dance
+                - generic [ref=e335]: Club
+            - generic [ref=e338] [cursor=pointer]:
+              - img "Electronic" [ref=e341]
+              - img [ref=e344]
+              - generic [ref=e348]: Electronic
+              - generic [ref=e349]:
+                - generic [ref=e350]: New
+                - generic [ref=e351]: Drive
+                - generic [ref=e352]: Sports
+            - generic [ref=e355] [cursor=pointer]:
+              - img "Trap" [ref=e358]
+              - img [ref=e361]
+              - generic [ref=e365]: Trap
+              - generic [ref=e366]:
+                - generic [ref=e367]: New
+                - generic [ref=e368]: Video Scoring
+            - generic [ref=e371] [cursor=pointer]:
+              - img "EDM" [ref=e374]
+              - img [ref=e377]
+              - generic [ref=e381]: EDM
+              - generic [ref=e382]:
+                - generic [ref=e383]: New
+                - generic [ref=e384]: Epic
+                - generic [ref=e385]: Game
+            - generic [ref=e388] [cursor=pointer]:
+              - img "Cover" [ref=e391]
+              - img [ref=e394]
+              - generic [ref=e398]: Cover
+              - generic [ref=e400]: New
+            - generic [ref=e403] [cursor=pointer]:
+              - img "Pop" [ref=e406]
+              - img [ref=e409]
+              - generic [ref=e413]: Pop
+              - generic [ref=e414]:
+                - generic [ref=e415]: Pop
+                - generic [ref=e416]: Melody
+            - generic [ref=e419] [cursor=pointer]:
+              - img "Hyperpop" [ref=e422]
+              - img [ref=e425]
+              - generic [ref=e429]: Hyperpop
+              - generic [ref=e430]:
+                - generic [ref=e431]: New
+                - generic [ref=e432]: Dance
+                - generic [ref=e433]: Club
+            - generic [ref=e436] [cursor=pointer]:
+              - img "Electronic" [ref=e439]
+              - img [ref=e442]
+              - generic [ref=e446]: Electronic
+              - generic [ref=e447]:
+                - generic [ref=e448]: New
+                - generic [ref=e449]: Drive
+                - generic [ref=e450]: Sports
+        - generic [ref=e452]:
+          - generic [ref=e453]:
+            - generic [ref=e454]:
+              - heading "MiniMax Title Icon M2.7" [level=1] [ref=e455]:
+                - generic [ref=e456]:
+                  - generic [ref=e457]: MiniMax
+                  - img "Title Icon" [ref=e459]
+                  - generic [ref=e460]: M2.7
+              - paragraph [ref=e462]: Enable Self-Improvement for Models, with Significant Improvement in Practical Capabilities Compared to M2.5
+            - generic [ref=e464]:
+              - link "Access API Now" [ref=e465] [cursor=pointer]:
+                - /url: https://platform.minimax.io/docs/api-reference/api-overview
+                - generic [ref=e467]: Access API Now
+              - link "Try Agent Now" [ref=e470] [cursor=pointer]:
+                - /url: https://agent.minimax.io
+                - generic [ref=e472]: Try Agent Now
+              - link "Learn More" [ref=e475] [cursor=pointer]:
+                - /url: /models/text/m27
+                - generic [ref=e477]: Learn More
+          - generic [ref=e484]:
+            - generic [ref=e488] [cursor=pointer]:
+              - paragraph [ref=e489]: Agent Harness Capabilities
+              - paragraph [ref=e490]: Build self-improvement Agent harness
+            - generic [ref=e494] [cursor=pointer]:
+              - paragraph [ref=e495]: Powerful Engineering & Coding Capabilities
+              - paragraph [ref=e496]: A model that truly understands production systems
+            - generic [ref=e500] [cursor=pointer]:
+              - paragraph [ref=e501]: Office Scenarios
+              - paragraph [ref=e502]: Supports complex Excel/Word/PPT office tasks and multi-round editing
+        - generic [ref=e504]:
+          - generic [ref=e505]:
+            - generic [ref=e506]:
+              - heading "2025 Financial Results" [level=1] [ref=e507]:
+                - generic [ref=e509]: 2025 Financial Results
+              - paragraph [ref=e511]: Towards an AI Era Platform Company
+            - link "Learn More" [ref=e514] [cursor=pointer]:
+              - /url: https://www.minimax.io/news/full-year-2025-financial-results
+              - generic [ref=e516]: Learn More
+          - img "Banner illustration" [ref=e522]
+        - generic [ref=e524]:
+          - generic [ref=e525]:
+            - generic [ref=e526]:
+              - heading "Token Title Icon plan" [level=1] [ref=e527]:
+                - generic [ref=e528]:
+                  - generic [ref=e529]: Token
+                  - img "Title Icon" [ref=e531]
+                  - generic [ref=e532]: plan
+              - paragraph [ref=e534]: A cost-effective token package tailored for developers
+            - generic [ref=e536]:
+              - link "Access API" [ref=e537] [cursor=pointer]:
+                - /url: https://platform.minimax.io/docs/Token-plan/quickstart
+                - generic [ref=e539]: Access API
+              - link "Subscribe" [ref=e542] [cursor=pointer]:
+                - /url: https://platform.minimax.io/subscribe/token-plan
+                - generic [ref=e544]: Subscribe
+          - generic [ref=e551]:
+            - generic [ref=e555] [cursor=pointer]:
+              - paragraph [ref=e556]: Top Model
+              - paragraph [ref=e557]: Production-Ready Delivery
+            - generic [ref=e561] [cursor=pointer]:
+              - paragraph [ref=e562]: Unlimited Monthly Plan
+              - paragraph [ref=e563]: No Worries, More Value the More You Use
+            - generic [ref=e567] [cursor=pointer]:
+              - paragraph [ref=e568]: Out-of-the-Box
+              - paragraph [ref=e569]: One-Click Integration with Leading Dev Tools
+        - generic [ref=e572]:
+          - generic [ref=e573]:
+            - heading "MiniMax Title Icon Hailuo 2.3" [level=1] [ref=e574]:
+              - generic [ref=e575]:
+                - generic [ref=e576]: MiniMax
+                - img "Title Icon" [ref=e578]
+                - generic [ref=e579]: Hailuo 2.3
+            - paragraph [ref=e581]: Breathtaking Motion, Lifelike Emotion.
+          - generic [ref=e583]:
+            - link "Access API" [ref=e584] [cursor=pointer]:
+              - /url: https://platform.minimax.io/docs/api-reference/video-generation-t2v
+              - generic [ref=e586]: Access API
+            - link "Try Hailuo Now" [ref=e589] [cursor=pointer]:
+              - /url: https://hailuoai.video
+              - generic [ref=e591]: Try Hailuo Now
+            - link "Learn More" [ref=e594] [cursor=pointer]:
+              - /url: /news/minimax-hailuo-23
+              - generic [ref=e596]: Learn More
+        - generic [ref=e604]:
+          - generic [ref=e605]:
+            - generic [ref=e606]:
+              - heading "MiniMax Title Icon Speech 2.8" [level=1] [ref=e607]:
+                - generic [ref=e608]:
+                  - generic [ref=e609]: MiniMax
+                  - img "Title Icon" [ref=e611]
+                  - generic [ref=e612]: Speech 2.8
+              - paragraph [ref=e614]: Breathing life into AI voice
+            - generic [ref=e616]:
+              - link "Access API" [ref=e617] [cursor=pointer]:
+                - /url: https://platform.minimax.io/docs/api-reference/speech-t2a-http
+                - generic [ref=e619]: Access API
+              - link "Try Audio Now" [ref=e622] [cursor=pointer]:
+                - /url: https://www.minimax.io/audio
+                - generic [ref=e624]: Try Audio Now
+              - link "Learn More" [ref=e627] [cursor=pointer]:
+                - /url: /news/minimax-speech-28
+                - generic [ref=e629]: Learn More
+          - generic [ref=e634]:
+            - generic:
+              - generic [ref=e637] [cursor=pointer]:
+                - img "Bedtime Whispers" [ref=e639]
+                - generic [ref=e640]:
+                  - paragraph [ref=e641]: Bedtime Whispers
+                  - paragraph [ref=e642]: Japanese · ASMR
+              - generic [ref=e645] [cursor=pointer]:
+                - img "Horror Story" [ref=e647]
+                - generic [ref=e648]:
+                  - paragraph [ref=e649]: Horror Story
+                  - paragraph [ref=e650]: English · Horror
+              - generic [ref=e653] [cursor=pointer]:
+                - img "Goblin's Trade" [ref=e655]
+                - generic [ref=e656]:
+                  - paragraph [ref=e657]: Goblin's Trade
+                  - paragraph [ref=e658]: English · Character
+        - generic [ref=e661]:
+          - generic [ref=e662]:
+            - generic [ref=e663]:
+              - heading "MiniMax Title Icon Agent" [level=1] [ref=e664]:
+                - generic [ref=e665]:
+                  - generic [ref=e666]: MiniMax
+                  - img "Title Icon" [ref=e668]
+                  - generic [ref=e669]: Agent
+              - paragraph [ref=e671]: Intelligent assistant providing comprehensive support for your work and life.
+            - generic [ref=e673]:
+              - link "Try Agent Now" [ref=e674] [cursor=pointer]:
+                - /url: https://agent.minimax.io
+                - generic [ref=e676]: Try Agent Now
+              - link "Learn More" [ref=e679] [cursor=pointer]:
+                - /url: /news/minimax-agent
+                - generic [ref=e681]: Learn More
+          - img "Banner illustration" [ref=e687]
+        - generic [ref=e689]:
+          - generic [ref=e690]:
+            - generic [ref=e691]:
+              - heading "MiniMax Title Icon M2-her" [level=1] [ref=e692]:
+                - generic [ref=e693]:
+                  - generic [ref=e694]: MiniMax
+                  - img "Title Icon" [ref=e696]
+                  - generic [ref=e697]: M2-her
+              - paragraph [ref=e699]: Multi-Character Roleplay, Immersive Long-horizon Interaction
+            - generic [ref=e701]:
+              - link "Access API" [ref=e702] [cursor=pointer]:
+                - /url: https://platform.minimax.io/docs/api-reference/text-chat
+                - generic [ref=e704]: Access API
+              - link "Learn More" [ref=e707] [cursor=pointer]:
+                - /url: https://www.minimax.io/news/a-deep-dive-into-the-minimax-m2-her-2
+                - generic [ref=e709]: Learn More
+          - img "Banner illustration" [ref=e715]
+    - generic [ref=e734]:
+      - generic [ref=e735]:
+        - generic [ref=e736]:
+          - heading "Full-Stack Model Matrix" [level=2] [ref=e737]
+          - paragraph [ref=e738]: "Covering five major areas: text, speech, video, image, and music. Helping developers efficiently build intelligent applications"
+        - generic [ref=e739]:
+          - button "上一张" [disabled] [ref=e741]
+          - button "下一张" [ref=e745] [cursor=pointer]
+      - generic [ref=e749]:
+        - link "MiniMax M2.7" [ref=e752] [cursor=pointer]:
+          - /url: /news/minimax-m27-en
+          - img "MiniMax M2.7" [ref=e753]
+          - generic [ref=e754]: NEW
+          - generic [ref=e756]:
+            - generic [ref=e757]:
+              - generic [ref=e758]:
+                - text: MiniMax M2.7
+                - generic [ref=e759]: Text Model
+              - button "下一张" [ref=e761]
+            - generic [ref=e764]: Model Self-Improvement, Driving Productivity Innovation Through Technological Breakthroughs
+        - link "MiniMax Music 2.6" [ref=e767] [cursor=pointer]:
+          - /url: https://www.minimax.io/news/music-26
+          - img "MiniMax Music 2.6" [ref=e768]
+          - generic [ref=e769]: NEW
+          - generic [ref=e771]:
+            - generic [ref=e772]:
+              - generic [ref=e773]:
+                - text: MiniMax Music 2.6
+                - generic [ref=e774]: Music Model
+              - button "下一张" [ref=e776]
+            - generic [ref=e779]: Cover Reborn, Bass Redefined
+        - link "Hailuo 2.3 / 2.3 Fast" [ref=e782] [cursor=pointer]:
+          - /url: /news/minimax-hailuo-23
+          - generic [ref=e784]: NEW
+          - generic [ref=e786]:
+            - generic [ref=e787]:
+              - generic [ref=e788]:
+                - text: Hailuo 2.3 / 2.3 Fast
+                - generic [ref=e789]: Video Model
+              - button "下一张" [ref=e791]
+            - generic [ref=e794]: Breathtaking Motion, Lifelike Emotion.
+        - link "MiniMax Speech 2.8" [ref=e797] [cursor=pointer]:
+          - /url: /news/minimax-speech-28
+          - img "MiniMax Speech 2.8" [ref=e798]
+          - generic [ref=e799]: NEW
+          - generic [ref=e801]:
+            - generic [ref=e802]:
+              - generic [ref=e803]:
+                - text: MiniMax Speech 2.8
+                - generic [ref=e804]: Audio Model
+              - button "下一张" [ref=e806]
+            - generic [ref=e809]: Breathing life into AI voice
+        - link "MiniMax M2-her" [ref=e812] [cursor=pointer]:
+          - /url: https://www.minimax.io/news/a-deep-dive-into-the-minimax-m2-her-2
+          - img "MiniMax M2-her" [ref=e813]
+          - generic [ref=e814]: NEW
+          - generic [ref=e816]:
+            - generic [ref=e817]:
+              - generic [ref=e818]:
+                - text: MiniMax M2-her
+                - generic [ref=e819]: Text Model
+              - button "下一张" [ref=e821]
+            - generic [ref=e824]: Multi-Character Roleplay, Immersive Long-horizon Interaction
+        - link "MiniMax MCP Server" [ref=e827] [cursor=pointer]:
+          - /url: /news/minimax-mcp
+          - img "MiniMax MCP Server" [ref=e828]
+          - generic [ref=e830]:
+            - generic [ref=e831]:
+              - generic [ref=e832]:
+                - text: MiniMax MCP Server
+                - generic [ref=e833]: MCP
+              - button "下一张" [ref=e835]
+            - generic [ref=e838]: Video, Image, Speech generation and Voice Cloning Tools Now Available for Developers
+    - generic [ref=e840]:
+      - generic [ref=e841]:
+        - generic [ref=e842]:
+          - heading "AI Product Matrix" [level=2] [ref=e843]
+          - paragraph [ref=e844]: From intelligent conversations to video creation, from voice synthesis to virtual characters, MiniMax creates an all-around AI experience for you
+        - generic [ref=e845]:
+          - button "上一张" [disabled] [ref=e847]
+          - button "下一张" [ref=e851] [cursor=pointer]
+      - generic [ref=e855]:
+        - link "MiniMax Agent" [ref=e858] [cursor=pointer]:
+          - /url: https://agent.minimax.io
+          - img "MiniMax Agent" [ref=e859]
+          - generic [ref=e861]:
+            - generic [ref=e862]:
+              - generic [ref=e863]: MiniMax Agent
+              - button "下一张" [ref=e865]
+            - generic [ref=e868]: Simple commands, unlimited creativity
+        - link "Hailuo Video" [ref=e871] [cursor=pointer]:
+          - /url: https://hailuoai.video
+          - img "Hailuo Video" [ref=e872]
+          - generic [ref=e874]:
+            - generic [ref=e875]:
+              - generic [ref=e876]: Hailuo Video
+              - button "下一张" [ref=e878]
+            - generic [ref=e881]: Every idea is a blockbuster
+        - link "MiniMax Audio" [ref=e884] [cursor=pointer]:
+          - /url: https://www.minimax.io/audio
+          - img "MiniMax Audio" [ref=e885]
+          - generic [ref=e887]:
+            - generic [ref=e888]:
+              - generic [ref=e889]: MiniMax Audio
+              - button "下一张" [ref=e891]
+            - generic [ref=e894]: Ultra-realistic AI voice creation
+        - link "Hailuo Video Agent" [ref=e897] [cursor=pointer]:
+          - /url: /news/video-agent
+          - img "Hailuo Video Agent" [ref=e898]
+          - generic [ref=e899]: NEW
+          - generic [ref=e901]:
+            - generic [ref=e902]:
+              - generic [ref=e903]: Hailuo Video Agent
+              - button "下一张" [ref=e905]
+            - generic [ref=e908]: Vibe Videoing — Zero barrier, instant output
+        - link "Talkie" [ref=e911] [cursor=pointer]:
+          - /url: https://www.talkie-ai.com
+          - img "Talkie" [ref=e912]
+          - generic [ref=e914]:
+            - generic [ref=e915]:
+              - generic [ref=e916]: Talkie
+              - button "下一张" [ref=e918]
+            - generic [ref=e921]: Immerse yourself in Talkie
+    - generic [ref=e924]:
+      - generic [ref=e925]:
+        - generic [ref=e926]:
+          - heading "MiniMax" [level=2] [ref=e927]
+          - paragraph [ref=e928]: A World-Leading General AI Technology Company
+        - paragraph [ref=e929]: Founded in early 2022, MiniMax is driven by the mission to 'co-create intelligence with everyone,' dedicated to advancing the frontiers of AI and achieving Artificial General Intelligence (AGI). MiniMax has independently developed a series of multimodal foundation models with powerful code and Agent capabilities, as well as ultra-long context processing, capable of understanding, generating, and integrating multiple modalities including text, audio, image, video, and music.
+        - paragraph [ref=e930]: Building on these proprietary models, MiniMax has launched a suite of AI-native products worldwide, including MiniMax Agent, Hailuo AI, MiniMax Audio, Talkie, and an open platform for enterprises and developers — delivering cutting-edge intelligent experiences to users around the globe.
+      - generic [ref=e931]:
+        - generic [ref=e932]:
+          - generic [ref=e933]: 0+
+          - generic [ref=e934]: Countries & Regions Served
+        - generic [ref=e935]:
+          - generic [ref=e936]: 0M+
+          - generic [ref=e937]: Global Individual Users
+        - generic [ref=e938]:
+          - generic [ref=e939]: 214,000+
+          - generic [ref=e940]: Enterprise Clients & Developers
+        - generic [ref=e941]:
+          - generic [ref=e942]: 0+
+          - generic [ref=e943]: Enterprise Coverage Countries
+  - contentinfo [ref=e944]
+  - alert [ref=e945]
+  - generic [ref=e948]:
+    - generic [ref=e949]:
+      - heading "Cookie Consent" [level=3] [ref=e950]
+      - paragraph [ref=e951]:
+        - text: We use cookies to analyze website usage to improve your experience.
+        - text: By clicking "Accept All Cookies", you agree to the storing of cookies on your device to enhance site navigation, analyze site usage, and assist in our marketing efforts. You may click
+        - strong [ref=e952]: Customize
+        - text: to reject non-essential cookies or personalize the types of cookies you would like to allow.
+        - link "Read our Cookies Policy" [ref=e953] [cursor=pointer]:
+          - /url: /protocol/cookie-policy
+    - generic [ref=e954]:
+      - button "Reject All" [ref=e955] [cursor=pointer]
+      - button "Customize" [ref=e956] [cursor=pointer]
+      - button "Accept All Cookies" [ref=e957] [cursor=pointer]

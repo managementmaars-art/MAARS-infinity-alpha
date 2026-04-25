@@ -1,0 +1,92 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: 🎁 Invite & Earn — Rewards for Both!
+        - generic [ref=e8] [cursor=pointer]: Start Invite →
+      - img [ref=e10] [cursor=pointer]
+    - banner [ref=e13]:
+      - generic [ref=e14]:
+        - link "Logo" [ref=e16] [cursor=pointer]:
+          - /url: https://www.minimax.io
+          - img "Logo" [ref=e17]
+        - generic [ref=e18]:
+          - generic [ref=e19] [cursor=pointer]: Documentation
+          - generic [ref=e20] [cursor=pointer]: Account
+          - generic [ref=e21] [cursor=pointer]:
+            - text: Subscribe
+            - generic [ref=e22]: Code
+      - generic [ref=e24]:
+        - img [ref=e26] [cursor=pointer]
+        - img "google_avatar" [ref=e28] [cursor=pointer]
+      - link [ref=e29] [cursor=pointer]:
+        - /url: mailto:api@minimaxi.com
+        - img [ref=e30]
+    - main [ref=e33]:
+      - main [ref=e34]:
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - generic [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]:
+                - img [ref=e40]
+                - paragraph [ref=e42]: Settings
+              - img [ref=e44]
+            - generic [ref=e46]:
+              - paragraph [ref=e49] [cursor=pointer]: Your Profile
+              - paragraph [ref=e52] [cursor=pointer]: API Keys
+          - generic [ref=e53]:
+            - generic [ref=e54] [cursor=pointer]:
+              - generic [ref=e55]:
+                - img [ref=e57]
+                - paragraph [ref=e61]: Billing
+              - img [ref=e63]
+            - generic [ref=e65]:
+              - paragraph [ref=e68] [cursor=pointer]: Balance
+              - paragraph [ref=e71] [cursor=pointer]: Voucher
+              - paragraph [ref=e74] [cursor=pointer]: Billing
+          - generic [ref=e75]:
+            - generic [ref=e76] [cursor=pointer]:
+              - generic [ref=e77]:
+                - img [ref=e79]
+                - paragraph [ref=e81]: Subscribe
+              - img [ref=e83]
+            - generic [ref=e85]:
+              - paragraph [ref=e88] [cursor=pointer]: Token Plan
+              - paragraph [ref=e91] [cursor=pointer]: Audio
+              - paragraph [ref=e94] [cursor=pointer]: Video
+        - generic [ref=e97]:
+          - paragraph [ref=e98]: API Keys
+          - generic [ref=e99]:
+            - paragraph [ref=e100]: Do not share your API key with others, or expose it in the browser or other client-side code.
+            - paragraph [ref=e101]: In order to protect the security of your account, MiniMax may also automatically disable any API key that has leaked publicly.
+            - paragraph [ref=e102]: Use this API Key for pay-as-you-go billing.
+          - button "Create new secret key" [ref=e104] [cursor=pointer]:
+            - generic [ref=e105]: Create new secret key
+          - table [ref=e112]:
+            - rowgroup [ref=e118]:
+              - row "Name Secret key Created time(UTC) Last used(UTC) Operations" [ref=e119]:
+                - columnheader "Name" [ref=e120]
+                - columnheader "Secret key" [ref=e121]
+                - columnheader "Created time(UTC)" [ref=e122]
+                - columnheader "Last used(UTC)" [ref=e123]
+                - columnheader "Operations" [ref=e124]
+            - rowgroup [ref=e125]:
+              - row "No data No data" [ref=e126]:
+                - cell "No data No data" [ref=e127]:
+                  - generic [ref=e128]:
+                    - img "No data" [ref=e130]
+                    - generic [ref=e136]: No data
+  - alert [ref=e137]
+  - generic [ref=e138]:
+    - dialog "Create new secret key":
+      - generic [ref=e139]:
+        - generic [ref=e142]:
+          - generic [ref=e143]: Create new secret key
+          - img [ref=e146] [cursor=pointer]
+        - generic [ref=e149]:
+          - textbox "Please enter a key name" [ref=e155]
+          - generic [ref=e160]:
+            - button "Cancel" [ref=e161] [cursor=pointer]:
+              - generic [ref=e162]: Cancel
+            - button "Create" [ref=e163] [cursor=pointer]:
+              - generic [ref=e164]: Create

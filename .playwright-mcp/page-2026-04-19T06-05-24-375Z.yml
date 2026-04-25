@@ -1,0 +1,118 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - paragraph [ref=e5]:
+        - text: We and our vendors use technology that collects or records personal information about your use of our site so we can improve and personalize our products and services, for analytics, and to fulfill your requests. We may also share this information with third parties, such as our analytics partners. By using our website, you acknowledge and agree to our
+        - link "Terms of Use" [ref=e6] [cursor=pointer]:
+          - /url: https://www.inceptionlabs.ai/docs/terms-of-use
+        - text: and
+        - link "Privacy Policy" [ref=e7] [cursor=pointer]:
+          - /url: https://www.inceptionlabs.ai/docs/privacy-policy
+        - text: .
+      - button "Close" [ref=e8]
+    - generic [ref=e9]:
+      - complementary [ref=e10]:
+        - link "Inception Logo Inception" [ref=e12] [cursor=pointer]:
+          - /url: /
+          - img "Inception Logo" [ref=e14]
+          - img "Inception" [ref=e15]
+        - navigation [ref=e16]:
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: /
+          - link "API Keys" [ref=e18] [cursor=pointer]:
+            - /url: /dashboard/api-keys
+          - link "Usage" [ref=e19] [cursor=pointer]:
+            - /url: /dashboard/logs
+          - link "Billing" [ref=e20] [cursor=pointer]:
+            - /url: /dashboard/billing
+          - link "Limits" [ref=e21] [cursor=pointer]:
+            - /url: /dashboard/limits
+          - link "Settings" [ref=e22] [cursor=pointer]:
+            - /url: /dashboard/settings
+          - link "Documentation" [ref=e23] [cursor=pointer]:
+            - /url: https://docs.inceptionlabs.ai
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - link "Terms of Service" [ref=e26] [cursor=pointer]:
+              - /url: https://www.inceptionlabs.ai/docs/terms-of-use
+            - link "Privacy Policy" [ref=e27] [cursor=pointer]:
+              - /url: https://www.inceptionlabs.ai/docs/privacy-policy
+          - generic [ref=e28]:
+            - paragraph [ref=e29]: NEED MORE HELP?
+            - generic [ref=e30]:
+              - link "Contact Us" [ref=e31] [cursor=pointer]:
+                - /url: /contact
+              - link "Join Our Discord" [ref=e32] [cursor=pointer]:
+                - /url: https://discord.com/invite/btzTARamwH
+      - generic [ref=e33]:
+        - banner [ref=e34]:
+          - generic [ref=e35]:
+            - link "Mercury Chat" [ref=e36] [cursor=pointer]:
+              - /url: https://chat.inceptionlabs.ai
+            - link "Documentation" [ref=e37] [cursor=pointer]:
+              - /url: https://docs.inceptionlabs.ai
+            - button "Toggle theme" [ref=e38]:
+              - img [ref=e39]
+              - generic [ref=e45]: Toggle theme
+            - generic [ref=e46]:
+              - generic [ref=e47]: Mirza Arafat Abbas
+              - button "Sign Out" [ref=e48]
+        - main [ref=e49]:
+          - generic [ref=e51]:
+            - generic [ref=e52]:
+              - generic [ref=e53]:
+                - generic [ref=e54]:
+                  - heading "API Keys" [level=1] [ref=e55]
+                  - paragraph [ref=e56]: Manage your API keys for authentication
+                - button "Create API Key" [active] [ref=e58]
+              - generic [ref=e59]:
+                - img [ref=e60]
+                - generic [ref=e62]:
+                  - generic [ref=e63]: You are on the Free Tier
+                  - generic [ref=e64]: You have used 0 of your 10,000,000 free tokens.
+              - table [ref=e122]:
+                - rowgroup [ref=e123]:
+                  - row "Name API Key Created Last Used Status Actions" [ref=e124]:
+                    - columnheader "Name" [ref=e125]
+                    - columnheader "API Key" [ref=e126]
+                    - columnheader "Created" [ref=e127]
+                    - columnheader "Last Used" [ref=e128]
+                    - columnheader "Status" [ref=e129]
+                    - columnheader "Actions" [ref=e130]
+                - rowgroup [ref=e131]:
+                  - row "maars-command sk_3107.... Apr 19, 2026 Never used active Revoke" [ref=e132]:
+                    - cell "maars-command" [ref=e133]
+                    - cell "sk_3107...." [ref=e134]:
+                      - code [ref=e137]: sk_3107....
+                    - cell "Apr 19, 2026" [ref=e138]:
+                      - generic [ref=e139]:
+                        - img [ref=e140]
+                        - generic [ref=e142]: Apr 19, 2026
+                    - cell "Never used" [ref=e143]:
+                      - generic [ref=e144]:
+                        - img [ref=e145]
+                        - generic [ref=e148]: Never used
+                    - cell "active" [ref=e149]:
+                      - generic [ref=e150]: active
+                    - cell "Revoke" [ref=e151]:
+                      - button "Revoke" [ref=e152]
+            - generic [ref=e65]:
+              - heading "Using your API keys" [level=2] [ref=e66]
+              - paragraph [ref=e67]: "Include your API key in the Authorization header of your requests:"
+              - generic [ref=e68]:
+                - button "Copy" [ref=e69]:
+                  - img [ref=e70]
+                  - generic [ref=e73]: Copy
+                - code [ref=e75]:
+                  - generic [ref=e76]: curl -X POST https://api.inceptionlabs.ai/v1/chat/completions \
+                  - generic [ref=e77]: "-H \"Authorization: Bearer INCEPTION_API_KEY\" \\"
+                  - generic [ref=e78]: "-H \"Content-Type: application/json\" \\"
+                  - generic [ref=e79]: "-d '{\"messages\": [{\"role\": \"user\", \"content\": \"What is the meaning of life?\"}], \"model\": \"mercury-2\"}'"
+              - generic [ref=e80]:
+                - heading "Best practices for API key security" [level=4] [ref=e81]
+                - list [ref=e82]:
+                  - listitem [ref=e83]: Never expose your API keys in client-side code or public repositories
+                  - listitem [ref=e84]: Use environment variables to store your API keys in your applications
+                  - listitem [ref=e85]: Implement proper access controls and rotate keys regularly
+                  - listitem [ref=e86]: Create separate API keys for different environments (development, staging, production)
+  - alert [ref=e87]

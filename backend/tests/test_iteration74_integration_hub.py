@@ -3,10 +3,11 @@ Iteration 74 Tests: Integration Hub + Custom Agent Creation LLM Providers
 
 Tests:
 1. Integration Hub Backend APIs:
-   - GET /api/kernel/integrations/available - returns 6 integrations grouped by category
+   - GET /api/kernel/integrations/available - returns the unified catalog with summary metadata
    - POST /api/kernel/integrations/connect - creates user integration connection
    - DELETE /api/kernel/integrations/{id} - disconnects an integration
    - PUT /api/kernel/integrations/{id}/toggle - toggles integration enabled/disabled
+   - POST /api/kernel/integrations/{id}/verify - returns readiness/verification state
 
 2. CreateAgent page new providers verification (Groq, Together AI, Fireworks AI, AI21)
    - Validated via code review (no backend endpoint needed)
@@ -55,8 +56,8 @@ class TestIntegrationHubAvailable:
         response = requests.get(f"{BASE_URL}/api/kernel/integrations/available")
         assert response.status_code == 401
 
-    def test_get_available_integrations_returns_6(self, auth_headers):
-        """Returns 6 available integrations."""
+    def test_get_available_integrations_returns_catalog(self, auth_headers):
+        """Returns the unified integration catalog."""
         response = requests.get(
             f"{BASE_URL}/api/kernel/integrations/available",
             headers=auth_headers,
@@ -67,12 +68,14 @@ class TestIntegrationHubAvailable:
         assert "available" in data
         assert "connected" in data
         assert "connected_ids" in data
+        assert "summary" in data
         
         available = data["available"]
-        assert len(available) == 6, f"Expected 6 integrations, got {len(available)}"
+        assert len(available) >= 15, f"Expected a broad catalog, got {len(available)}"
+        assert data["summary"]["total_available"] == len(available)
 
     def test_integrations_have_correct_ids(self, auth_headers):
-        """All 6 integration IDs are present."""
+        """Core integration IDs are present."""
         response = requests.get(
             f"{BASE_URL}/api/kernel/integrations/available",
             headers=auth_headers,
@@ -81,9 +84,12 @@ class TestIntegrationHubAvailable:
         data = response.json()
         
         integration_ids = {i["integration_id"] for i in data["available"]}
-        expected_ids = {"whatsapp", "shopify", "hubspot", "salesforce", "slack", "zapier"}
+        expected_ids = {
+            "whatsapp", "slack", "github", "sendgrid", "resend", "twilio", "google_suite",
+            "shopify", "hubspot", "salesforce", "webhooks", "notion", "jira", "confluence", "stripe",
+        }
         
-        assert integration_ids == expected_ids, f"Missing or extra integrations: {integration_ids ^ expected_ids}"
+        assert expected_ids.issubset(integration_ids), f"Missing integrations: {expected_ids - integration_ids}"
 
     def test_integrations_grouped_by_category(self, auth_headers):
         """Integrations have correct categories."""
@@ -97,12 +103,12 @@ class TestIntegrationHubAvailable:
         categories = {i["integration_id"]: i["category"] for i in data["available"]}
         
         expected_categories = {
-            "whatsapp": "Messaging",
-            "shopify": "E-Commerce",
-            "hubspot": "CRM",
-            "salesforce": "CRM",
-            "slack": "Communication",
-            "zapier": "Automation",
+            "whatsapp": "social_media",
+            "shopify": "commerce",
+            "hubspot": "crm",
+            "salesforce": "crm",
+            "slack": "productivity",
+            "webhooks": "automation",
         }
         
         for int_id, expected_cat in expected_categories.items():
@@ -140,9 +146,19 @@ class TestIntegrationHubAvailable:
         assert whatsapp is not None
         
         field_keys = {f["key"] for f in whatsapp["config_fields"]}
-        expected_keys = {"phone_number_id", "access_token", "verify_token"}
+        expected_keys = {"phone_number_id", "access_token", "waba_id"}
         
         assert expected_keys.issubset(field_keys), f"WhatsApp missing fields: {expected_keys - field_keys}"
+
+    def test_summary_tracks_connection_counts(self, auth_headers):
+        response = requests.get(
+            f"{BASE_URL}/api/kernel/integrations/available",
+            headers=auth_headers,
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["summary"]["connected"] == len(data["connected"])
+        assert set(data["connected_ids"]) == {item["integration_id"] for item in data["connected"]}
 
 
 class TestIntegrationConnect:
@@ -226,12 +242,12 @@ class TestIntegrationDisconnect:
         requests.post(
             f"{BASE_URL}/api/kernel/integrations/connect",
             headers=auth_headers,
-            json={"integration_id": "zapier", "config": {"webhook_url": "https://hooks.zapier.com/test"}},
+            json={"integration_id": "webhooks", "config": {"webhook_url": "https://example.com/hooks/maars-test"}},
         )
-        
+
         # Then disconnect
         response = requests.delete(
-            f"{BASE_URL}/api/kernel/integrations/zapier",
+            f"{BASE_URL}/api/kernel/integrations/webhooks",
             headers=auth_headers,
         )
         assert response.status_code == 200
@@ -322,6 +338,26 @@ class TestIntegrationToggle:
         )
         assert response.status_code == 404
 
+    def test_verify_connected_integration(self, auth_headers):
+        requests.post(
+            f"{BASE_URL}/api/kernel/integrations/connect",
+            headers=auth_headers,
+            json={
+                "integration_id": "slack",
+                "config": {
+                    "bot_token": "xoxb-test-token-12345",
+                },
+            },
+        )
+        response = requests.post(
+            f"{BASE_URL}/api/kernel/integrations/slack/verify",
+            headers=auth_headers,
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["integration_id"] == "slack"
+        assert data["verification_status"] in {"verified", "incomplete", "configured"}
+
 
 class TestCampaignBuilderRegression:
     """Regression tests for Campaign Builder from iteration 73."""
@@ -394,7 +430,7 @@ class TestCleanup:
 
     def test_cleanup_test_integrations(self, auth_headers):
         """Clean up any integrations created during testing."""
-        test_integrations = ["slack", "hubspot", "zapier", "shopify", "whatsapp", "salesforce"]
+        test_integrations = ["slack", "hubspot", "webhooks", "shopify", "whatsapp", "salesforce"]
         for int_id in test_integrations:
             requests.delete(f"{BASE_URL}/api/kernel/integrations/{int_id}", headers=auth_headers)
         

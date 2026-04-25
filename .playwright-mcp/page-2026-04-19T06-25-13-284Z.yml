@@ -1,0 +1,54 @@
+- generic [ref=e7]:
+  - banner [ref=e9]:
+    - button "Navigate to home" [ref=e10] [cursor=pointer]:
+      - img "Arcee Logo" [ref=e11]
+    - generic [ref=e12]:
+      - button "English" [ref=e15] [cursor=pointer]:
+        - text: English
+        - img [ref=e16]
+      - button [ref=e20] [cursor=pointer]:
+        - img [ref=e21]
+  - generic [ref=e24]:
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - heading "Sign In" [level=1] [ref=e28]
+        - paragraph [ref=e29]: Sign in to your account to continue
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e32]:
+            - generic [ref=e35]: Email *
+            - generic [ref=e36]: "* Required"
+          - textbox "example@gmail.com" [ref=e38]
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - generic [ref=e43]: Password *
+            - generic [ref=e44]: "* Required"
+          - generic [ref=e45]:
+            - textbox [ref=e46]
+            - button [ref=e47] [cursor=pointer]:
+              - img [ref=e48]
+      - button "Sign In" [ref=e50] [cursor=pointer]
+      - generic [ref=e53]: Or continue with
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - button "Google Sign in with Google" [active] [ref=e57] [cursor=pointer]:
+            - img "Google" [ref=e58]
+            - text: Sign in with Google
+          - button "Sign in with GitHub" [ref=e59] [cursor=pointer]:
+            - img [ref=e60]
+            - text: Sign in with GitHub
+        - generic [ref=e63] [cursor=pointer]:
+          - checkbox "Stay signed in" [ref=e64]
+          - generic [ref=e67]: Stay signed in
+    - paragraph [ref=e69]:
+      - text: Don't have an account?
+      - link "Sign Up" [ref=e70] [cursor=pointer]:
+        - /url: /signup
+    - paragraph [ref=e71]:
+      - text: By signing up or logging in, you consent to Arcee's
+      - link "Terms and Conditions" [ref=e72] [cursor=pointer]:
+        - /url: https://www.arcee.ai/terms-and-conditions
+      - text: and
+      - link "Privacy Policy" [ref=e73] [cursor=pointer]:
+        - /url: https://www.arcee.ai/privacy-policy
+      - text: .

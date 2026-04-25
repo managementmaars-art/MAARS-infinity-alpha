@@ -9,7 +9,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from db import db
 from auth import get_current_user, User
 from models.schemas import Task, TaskCreate, TaskUpdate
-from shared.constants import EMERGENT_LLM_KEY
+from services.llm_gateway import complete_text
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -104,19 +104,19 @@ async def execute_task(task_id: str, current_user: User = Depends(get_current_us
         if not agent:
             return f"**{agent_id}:** Agent not found"
         try:
-            from emergentintegrations.llm.chat import LlmChat, UserMessage
-            llm_chat = LlmChat(
-                api_key=EMERGENT_LLM_KEY,
-                session_id=f"{task_id}_{agent_id}",
-                system_message=agent["system_prompt"]
-            ).with_model(agent["model_provider"], agent["model_name"])
             prompt = (
                 f"{priority_directive}\n\n"
                 f"**Task:** {task['title']}\n\n"
                 f"**Description:**\n{task['description']}\n\n"
                 f"Please complete this task thoroughly and provide structured output with clear sections."
             )
-            response = await llm_chat.send_message(UserMessage(text=prompt))
+            response = await complete_text(
+                user_id=current_user.user_id,
+                system_prompt=agent["system_prompt"],
+                user_prompt=prompt,
+                model="maars/auto",
+                source=f"task.execute:{agent_id}",
+            )
             return f"**{agent['name']} ({agent.get('role', 'Agent')}):**\n{response}"
         except Exception as e:
             logger.error(f"Task execution error for agent {agent_id}: {e}")

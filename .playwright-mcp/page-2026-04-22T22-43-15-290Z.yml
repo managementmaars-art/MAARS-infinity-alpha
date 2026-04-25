@@ -1,0 +1,271 @@
+- generic [ref=e2]:
+  - generic:
+    - generic:
+      - generic:
+        - banner [ref=e3]:
+          - generic [ref=e4]:
+            - link "ZHIPU·AI" [ref=e6] [cursor=pointer]:
+              - /url: /
+              - img "ZHIPU·AI" [ref=e7]
+            - generic [ref=e8]:
+              - list [ref=e10]:
+                - listitem [ref=e11]:
+                  - generic [ref=e12]:
+                    - button "研究" [ref=e13] [cursor=pointer]
+                    - text:   
+                - listitem [ref=e14]:
+                  - generic [ref=e15]:
+                    - button "产品" [ref=e16] [cursor=pointer]
+                    - text:          
+                - listitem [ref=e17]:
+                  - generic [ref=e18]:
+                    - button "文档" [ref=e19] [cursor=pointer]
+                    - text:        
+                - listitem [ref=e20]:
+                  - generic [ref=e21]:
+                    - button "体验" [ref=e22] [cursor=pointer]
+                    - text:  
+                - listitem [ref=e23]:
+                  - generic [ref=e24]:
+                    - button "定价" [ref=e25] [cursor=pointer]
+                    - text:   
+                - listitem [ref=e26]:
+                  - generic [ref=e27]:
+                    - button "支持" [ref=e28] [cursor=pointer]
+                    - text:        
+              - generic [ref=e29]:
+                - link "控制台" [ref=e30] [cursor=pointer]:
+                  - /url: /console/overview
+                - button "登录 / 注册" [ref=e35] [cursor=pointer]:
+                  - generic [ref=e36]: 登录 / 注册
+        - text: 
+        - generic:  
+  - generic [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e40]:
+        - heading "不止模型，构建可信智能" [level=2] [ref=e41]
+        - generic [ref=e42]:
+          - textbox "开始探索" [active] [ref=e44]
+          - generic [ref=e45] [cursor=pointer]: 
+        - list [ref=e46]:
+          - listitem [ref=e47]:
+            - generic [ref=e48]:
+              - generic [ref=e49]:
+                - generic [ref=e51]: 
+                - heading "GLM-5.1" [level=3] [ref=e52]
+              - generic [ref=e53]:
+                - generic [ref=e54]: Zhipu’s new flagship foundation model boasts remarkable enhancements in long-horizon tasks, and matches the overall performance of Claude Opus 4.6.
+                - generic:
+                  - generic [ref=e55]: Experience Now
+                  - generic [ref=e56]: 
+          - listitem [ref=e58]:
+            - generic [ref=e59]:
+              - generic [ref=e60]:
+                - generic [ref=e62]: 
+                - heading "GLM-5V-Turbo" [level=3] [ref=e63]
+              - generic [ref=e64]:
+                - generic [ref=e65]: A multimodal agent foundation model with native integration of vision and language. It brings a refined, elegant quality to visual programming.
+                - generic:
+                  - generic [ref=e66]: Experience Now
+                  - generic [ref=e67]: 
+          - listitem [ref=e69]:
+            - generic [ref=e70]:
+              - generic [ref=e71]:
+                - generic [ref=e73]: 
+                - heading "GLM Coding Plan" [level=3] [ref=e74]
+              - generic [ref=e75]:
+                - generic [ref=e76]: A globally popular subscription-based AI coding package designed for high-frequency coding scenarios, deeply integrated with mainstream development tools.
+                - generic:
+                  - generic [ref=e77]: Buy Now
+                  - generic [ref=e78]: 
+      - generic [ref=e81]:
+        - generic [ref=e82]:
+          - heading "旗舰模型家族，覆盖全场景" [level=2] [ref=e83]
+          - generic [ref=e84]:
+            - generic [ref=e85]:
+              - generic [ref=e87] [cursor=pointer]:
+                - generic [ref=e88]:
+                  - generic [ref=e89]: Flagship Model
+                  - generic [ref=e90]: GLM-5
+                  - generic [ref=e91]: Boasting open-source SOTA coding prowess, it excels in hour-long long-horizon tasks.
+                - generic [ref=e92]:
+                  - generic [ref=e93]: View Now
+                  - generic [ref=e94]: 
+              - generic [ref=e97] [cursor=pointer]:
+                - generic [ref=e98]:
+                  - generic [ref=e99]: Multimodal Coding Model
+                  - generic [ref=e100]: GLM-4.6V
+                  - generic [ref=e101]: Designed for visual programming tasks, it natively processes multimodal inputs including images, video, and text.
+                - generic [ref=e102]:
+                  - generic [ref=e103]: View Now
+                  - generic [ref=e104]: 
+            - generic [ref=e106]:
+              - generic [ref=e107] [cursor=pointer]:
+                - generic [ref=e108]:
+                  - generic [ref=e109]: Image Generation
+                  - generic [ref=e110]: GLM-Image
+                  - generic [ref=e111]: Open-source SOTA text rendering for complex layouts
+                - generic [ref=e112]:
+                  - generic [ref=e113]: View Now
+                  - generic [ref=e114]: 
+              - generic [ref=e115] [cursor=pointer]:
+                - generic [ref=e116]:
+                  - generic [ref=e117]: Visual Model
+                  - generic [ref=e118]: GLM-OCR
+                  - generic [ref=e119]: Document parsing & structured extraction
+                - generic [ref=e120]:
+                  - generic [ref=e121]: View Now
+                  - generic [ref=e122]: 
+              - generic [ref=e123] [cursor=pointer]:
+                - generic [ref=e124]:
+                  - generic [ref=e125]: Speech Recognition
+                  - generic [ref=e126]: GLM-ASR
+                  - generic [ref=e127]: Real-time, precise transcription with accent/terminology adaptation
+                - generic [ref=e128]:
+                  - generic [ref=e129]: View Now
+                  - generic [ref=e130]: 
+              - generic [ref=e131] [cursor=pointer]:
+                - generic [ref=e132]:
+                  - generic [ref=e133]: Speech Synthesis
+                  - generic [ref=e134]: GLM-TTS
+                  - generic [ref=e135]: Context-driven intonation for natural, stable, and pleasant audio
+                - generic [ref=e136]:
+                  - generic [ref=e137]: View Now
+                  - generic [ref=e138]: 
+          - generic [ref=e140] [cursor=pointer]:
+            - text: 查看全部模型
+            - generic [ref=e141]: 
+        - generic [ref=e143]:
+          - heading "从模型到产品，一站式完成" [level=2] [ref=e144]
+          - generic [ref=e145]:
+            - list [ref=e147]:
+              - listitem [ref=e148] [cursor=pointer]:
+                - generic [ref=e150]: 智能体
+              - listitem [ref=e151] [cursor=pointer]:
+                - generic [ref=e153]: 联网搜索
+              - listitem [ref=e154] [cursor=pointer]:
+                - generic [ref=e156]: MCP
+              - listitem [ref=e157] [cursor=pointer]:
+                - generic [ref=e159]: 知识库
+              - listitem [ref=e160] [cursor=pointer]:
+                - generic [ref=e162]: 模型微调
+            - generic [ref=e163]:
+              - generic [ref=e164]:
+                - generic [ref=e165]:
+                  - generic [ref=e166]: 智能体（Agent）
+                  - list [ref=e167]:
+                    - listitem [ref=e168]: 智能体市场：精选智能体，直击千行百业真需求
+                    - listitem [ref=e169]: 一键接入：API 直连生产环境，无缝融入业务全流程
+                - link "立即查看" [ref=e171] [cursor=pointer]:
+                  - /url: /console/marketplace/index/agent
+              - img "智谱AI" [ref=e173]
+        - generic [ref=e174]:
+          - heading "与全球创新者同行领先一步" [level=2] [ref=e176]
+          - list [ref=e179]:
+            - listitem [ref=e180]:
+              - img "智谱AI" [ref=e181]
+            - listitem [ref=e182]:
+              - img "智谱AI" [ref=e183]
+            - listitem [ref=e184]:
+              - img "智谱AI" [ref=e185]
+            - listitem [ref=e186]:
+              - img "智谱AI" [ref=e187]
+            - listitem [ref=e188]:
+              - img "智谱AI" [ref=e189]
+            - listitem [ref=e190]:
+              - img "智谱AI" [ref=e191]
+            - listitem [ref=e192]:
+              - img "智谱AI" [ref=e193]
+            - listitem [ref=e194]:
+              - img "智谱AI" [ref=e195]
+            - listitem [ref=e196]:
+              - img "智谱AI" [ref=e197]
+            - listitem [ref=e198]:
+              - img "智谱AI" [ref=e199]
+            - listitem [ref=e200]:
+              - img "智谱AI" [ref=e201]
+            - listitem [ref=e202]:
+              - img "智谱AI" [ref=e203]
+            - listitem [ref=e204]:
+              - img "智谱AI" [ref=e205]
+            - listitem [ref=e206]:
+              - img "智谱AI" [ref=e207]
+            - listitem [ref=e208]:
+              - img "智谱AI" [ref=e209]
+            - listitem [ref=e210]:
+              - img "智谱AI" [ref=e211]
+            - listitem [ref=e212]:
+              - img "智谱AI" [ref=e213]
+            - listitem [ref=e214]:
+              - img "智谱AI" [ref=e215]
+    - contentinfo [ref=e216]:
+      - generic [ref=e218]:
+        - heading "让机器像人一样思考" [level=2] [ref=e219]
+        - button "预约咨询" [ref=e220] [cursor=pointer]
+      - generic [ref=e222]:
+        - generic [ref=e223]:
+          - generic [ref=e224]:
+            - link "ZHIPU·AI" [ref=e225] [cursor=pointer]:
+              - /url: /
+              - img "ZHIPU·AI"
+            - list [ref=e226]:
+              - listitem [ref=e227]:
+                - heading "功能" [level=2] [ref=e228]
+                - link "控制台" [ref=e230] [cursor=pointer]:
+                  - /url: /console/overview
+                - link "体验中心" [ref=e232] [cursor=pointer]:
+                  - /url: /trialcenter/modeltrial
+                - link "智能体开发平台" [ref=e234] [cursor=pointer]:
+                  - /url: /console/appcenter_v2/intelligent/center
+                - link "模型微调" [ref=e236] [cursor=pointer]:
+                  - /url: /console/modelft/finetuning
+                - link "模型评测" [ref=e238] [cursor=pointer]:
+                  - /url: /console/evaluation/list
+                - link "批量处理" [ref=e240] [cursor=pointer]:
+                  - /url: /console/batch/task
+              - listitem [ref=e241]:
+                - heading "文档" [level=2] [ref=e242]
+                - link "快速开始" [ref=e244] [cursor=pointer]:
+                  - /url: //docs.bigmodel.cn/cn/guide/start/quick-start
+                - link "开发指南" [ref=e246] [cursor=pointer]:
+                  - /url: //docs.bigmodel.cn/cn/guide/develop/http/introduction
+                - link "API文档" [ref=e248] [cursor=pointer]:
+                  - /url: //docs.bigmodel.cn/api-reference
+                - link "最佳实践" [ref=e250] [cursor=pointer]:
+                  - /url: //docs.bigmodel.cn/cn/best-practice
+                - link "更新日志" [ref=e252] [cursor=pointer]:
+                  - /url: //docs.bigmodel.cn/cn/update
+                - link "SDK中心" [ref=e254] [cursor=pointer]:
+                  - /url: //docs.bigmodel.cn/cn/guide/develop/python/introduction
+              - listitem [ref=e255]:
+                - heading "公司" [level=2] [ref=e256]
+                - link "智谱官网" [ref=e258] [cursor=pointer]:
+                  - /url: https://www.zhipuai.cn/
+                - link "新闻动态" [ref=e260] [cursor=pointer]:
+                  - /url: https://www.zhipuai.cn/en/news?tab=2
+                - link "加入我们" [ref=e262] [cursor=pointer]:
+                  - /url: https://www.zhipuai.cn/joinus
+            - text:   
+          - generic [ref=e263]:
+            - generic [ref=e264]:
+              - generic [ref=e265]: 联系方式
+              - generic [ref=e266]: 联系电话：400-6883-991
+              - generic [ref=e267]: 商务合作：service@zhipuai.cn
+              - generic [ref=e268]: 公司地址：北京市海淀区中关村东路1号院9号楼10层
+            - generic [ref=e269]:
+              - generic [ref=e270]:
+                - img "ZHIPU·AI" [ref=e271]
+                - generic [ref=e272]: 售前咨询
+              - generic [ref=e273]:
+                - img "ZHIPU·AI" [ref=e274]
+                - generic [ref=e275] [cursor=pointer]: Github
+              - generic [ref=e276]:
+                - img "ZHIPU·AI" [ref=e277]
+                - generic [ref=e278]: 企微助手
+        - generic [ref=e279]:
+          - generic [ref=e280] [cursor=pointer]:
+            - link "京ICP备20011824号-14" [ref=e281]:
+              - /url: https://beian.miit.gov.cn/
+            - generic [ref=e284]: 
+          - paragraph [ref=e285]: Copyright © 2025 北京智谱华章科技股份有限公司
+  - generic:   

@@ -4,6 +4,8 @@ import { Bot, Sparkles, Users, Zap, MessageSquare, BarChart3, ChevronRight, Chev
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CustomCursor from "../components/CustomCursor";
+import LandingPricingSection from "./LandingPricingSection";
+import TestimonialsSection from "../components/TestimonialsSection";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -692,6 +694,10 @@ function AgentCarousel({ agents, navigate }) {
 const LandingPage = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // Selected 3D agent node — shows a floating card overlay when a
+  // visitor clicks a node in the hero canvas. Auto-clears after 4 s so
+  // the hero returns to its pristine state without requiring dismissal.
+  const [selectedAgent, setSelectedAgent] = useState(null);
   const scrollY = useRef(0);
   const heroRef = useRef(null);
   const heroContentRef = useRef(null);
@@ -703,6 +709,13 @@ const LandingPage = () => {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Auto-clear the clicked-agent card after 4 s.
+  useEffect(() => {
+    if (!selectedAgent) return;
+    const t = setTimeout(() => setSelectedAgent(null), 4000);
+    return () => clearTimeout(t);
+  }, [selectedAgent]);
 
   // Scroll-driven GSAP animations — unified scrub for full synchronization
   useEffect(() => {
@@ -910,12 +923,51 @@ const LandingPage = () => {
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
       <section ref={heroRef} style={{ position: "relative", height: "100vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
-        {/* 3D Canvas — full screen background */}
+        {/* 3D Canvas — full-screen background. Interactive: hover an
+            agent node to see its role, click to reveal the card overlay
+            below. */}
         <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
           <Suspense fallback={null}>
-            <NeuralCommandCanvas scrollY={scrollY} />
+            <NeuralCommandCanvas
+              scrollY={scrollY}
+              onSelectAgent={(role) => setSelectedAgent(role)}
+            />
           </Suspense>
         </div>
+
+        {/* Selected-agent card — appears at center when a node is clicked,
+            clears after 4s so the hero stays clean. Shows visitors the
+            depth of the 499-specialist catalog without leaving the page. */}
+        {selectedAgent && (
+          <div
+            style={{
+              position: "absolute", top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 5, pointerEvents: "none",
+              background: "rgba(3, 7, 18, 0.94)",
+              border: "1px solid rgba(79, 209, 197, 0.6)",
+              borderRadius: 14,
+              padding: "18px 26px",
+              color: "#e5e7eb",
+              fontFamily: "system-ui, -apple-system, sans-serif",
+              boxShadow: "0 0 60px rgba(79, 209, 197, 0.25)",
+              backdropFilter: "blur(12px)",
+              maxWidth: 320,
+            }}
+          >
+            <div style={{ fontSize: 10, color: "#4fd1c5", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 6 }}>
+              Specialist Agent
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: "#ffffff" }}>
+              {selectedAgent}
+            </div>
+            <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 8, lineHeight: 1.5 }}>
+              One of 499+ senior specialists in your MAARS workspace.
+              Every agent performs at the caliber of a Fortune 500 executive
+              in their function. Sign up to assign work directly.
+            </div>
+          </div>
+        )}
 
         {/* Perspective grid floor */}
         <div className="perspective-grid-floor" style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 1, height: "55%", overflow: "hidden", pointerEvents: "none" }}>
@@ -1462,17 +1514,31 @@ response = client.chat.completions.create(
       </section>
 
       {/* ── FOOTER ───────────────────────────────────────────────────────────── */}
+      {/* Social proof — drops in before pricing */}
+      <TestimonialsSection />
+
+      {/* Live pricing section — drops in as its own <section id="pricing"> */}
+      <LandingPricingSection />
+
       <footer style={{ borderTop: `1px solid ${C.border}`, padding: "32px 0" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <img src="/branding/maars-logo.jpeg" alt="MAARS" className="w-6 h-6 rounded object-cover" />
             <span style={{ color: "#64748b", fontSize: 14 }}>MAARS Command by MAARS Global Corporation © 2026</span>
           </div>
-          <div className="flex items-center gap-6" style={{ fontSize: 13, color: "#64748b" }}>
-            <a href="#models" className="hover:text-white transition-colors">175,000+ Models</a>
-            <a href="#agents" className="hover:text-white transition-colors">458+ Agents</a>
+          <div className="flex items-center gap-4 flex-wrap justify-center" style={{ fontSize: 13, color: "#64748b" }}>
+            <a href="#models" className="hover:text-white transition-colors">Models</a>
+            <a href="#agents" className="hover:text-white transition-colors">Agents</a>
             <Link to="/developer" className="hover:text-white transition-colors">Developer API</Link>
             <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+            <Link to="/blog" className="hover:text-white transition-colors">Blog</Link>
+            <Link to="/changelog" className="hover:text-white transition-colors">Changelog</Link>
+            <Link to="/alternatives" className="hover:text-white transition-colors">Alternatives</Link>
+            <span style={{ color: "#27272a" }}>·</span>
+            <Link to="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link to="/terms" className="hover:text-white transition-colors">Terms</Link>
+            <Link to="/subprocessors" className="hover:text-white transition-colors">Subprocessors</Link>
+            <a href="/api/status" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Status</a>
           </div>
         </div>
       </footer>

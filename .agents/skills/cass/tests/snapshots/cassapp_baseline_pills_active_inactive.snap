@@ -1,4 +1,0 @@
-inactive slots:                                                                                               
-○ agent:✎any ○ ws:✎any ○ time:✎all ○ source:✎all                                                              
-active filters:                                                                                               
-● agent:codex ● ws:/workspace/cass ● time:Jan 20, 1970 -> now ● source:remote-ci ● pane:triage                

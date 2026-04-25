@@ -1,4 +1,0 @@
-interface:
-  display_name: "EliteForge 技术设计文档"
-  short_description: "扫描当前执行目录文档与图，沉淀结构化技术设计文档草案"
-  default_prompt: "使用 $eliteforge-tech-doc 扫描当前执行目录下的文档与图，生成一份可评审的技术设计文档，并标注信息缺口。"

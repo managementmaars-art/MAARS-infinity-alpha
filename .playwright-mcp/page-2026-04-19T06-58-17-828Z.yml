@@ -1,0 +1,83 @@
+- generic [active]:
+  - generic [ref=e1]:
+    - generic [ref=e3]:
+      - link "logo" [ref=e5] [cursor=pointer]:
+        - /url: /console
+        - img "logo" [ref=e6]
+      - generic [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: /console
+        - link "Model APIs" [ref=e9] [cursor=pointer]:
+          - /url: /models-console/library
+        - link "Agent Sandbox new" [ref=e10] [cursor=pointer]:
+          - /url: /sandbox-console
+          - generic [ref=e11]:
+            - generic [ref=e12]: Agent Sandbox
+            - img "new" [ref=e13]
+        - link "GPUs" [ref=e14] [cursor=pointer]:
+          - /url: /gpus-console/application
+        - generic [ref=e15]: QUICK ACCESS
+        - link "Pricing" [ref=e16] [cursor=pointer]:
+          - /url: /console/pricing-console
+        - link "Billing" [ref=e17] [cursor=pointer]:
+          - /url: /billing
+        - link "Quotas & Limits" [ref=e18] [cursor=pointer]:
+          - /url: /quota-limits
+        - link "Account Settings" [ref=e19] [cursor=pointer]:
+          - /url: /settings
+      - link "Docs" [ref=e21] [cursor=pointer]:
+        - /url: /docs/guides/introduction
+        - img "docs" [ref=e23]
+        - text: Docs
+        - img [ref=e25]
+    - generic [ref=e29]:
+      - banner [ref=e31]:
+        - navigation [ref=e32]:
+          - generic [ref=e33]:
+            - generic [ref=e35]: Account Settings
+            - generic [ref=e37]:
+              - button "Log In" [ref=e38] [cursor=pointer]
+              - button "Get Started" [ref=e39] [cursor=pointer]
+      - generic [ref=e42]:
+        - tablist [ref=e43]:
+          - tab "Account" [selected] [ref=e44] [cursor=pointer]
+          - tab "Team" [ref=e45] [cursor=pointer]
+        - tabpanel "Account" [ref=e46]:
+          - generic [ref=e48]:
+            - generic [ref=e49]:
+              - generic [ref=e50]:
+                - paragraph [ref=e51]: Email
+                - generic [ref=e53]:
+                  - heading [level=3] [ref=e54]
+                  - list
+              - generic [ref=e55]:
+                - paragraph [ref=e56]: User ID
+                - generic [ref=e58]:
+                  - heading [level=3] [ref=e59]
+                  - list
+            - generic [ref=e60]:
+              - generic [ref=e61]:
+                - generic [ref=e62]:
+                  - paragraph [ref=e63]: First Name
+                  - textbox "First Name" [disabled] [ref=e65]
+                - generic [ref=e66]:
+                  - paragraph [ref=e67]: Last Name
+                  - textbox "Last Name" [disabled] [ref=e69]
+              - generic [ref=e70]:
+                - generic [ref=e71]:
+                  - paragraph [ref=e72]: Company Name
+                  - textbox "Company Name" [disabled] [ref=e74]
+                - generic [ref=e75]:
+                  - paragraph [ref=e76]: Country
+                  - textbox "Country" [disabled] [ref=e78]
+            - generic [ref=e80]:
+              - paragraph [ref=e81]: Password
+              - generic [ref=e82]:
+                - textbox [disabled] [ref=e85]: "*** *** ***"
+                - link "Change" [ref=e86] [cursor=pointer]:
+                  - /url: /user/reset?from=console&email=
+            - generic [ref=e88]:
+              - button "Save" [disabled]
+  - region "Notifications (F8)":
+    - list
+  - alert [ref=e89]

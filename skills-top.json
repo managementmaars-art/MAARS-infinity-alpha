@@ -1,0 +1,247 @@
+[
+  {
+    "rank": 9740,
+    "skill": "type4me-macos-voice-input",
+    "repo": "aradotso/trending-skills"
+  },
+  {
+    "rank": 9741,
+    "skill": "ai-ml-data-science",
+    "repo": "vasilyu1983/ai-agents-public"
+  },
+  {
+    "rank": 9742,
+    "skill": "plugin-structure",
+    "repo": "aiskillstore/marketplace"
+  },
+  {
+    "rank": 9743,
+    "skill": "upstash-vector-db-skills",
+    "repo": "gocallum/nextjs16-agent-skills"
+  },
+  {
+    "rank": 9744,
+    "skill": "qa-expert",
+    "repo": "404kidwiz/claude-supercode-skills"
+  },
+  {
+    "rank": 9745,
+    "skill": "secrets-management",
+    "repo": "aj-geddes/useful-ai-prompts"
+  },
+  {
+    "rank": 9746,
+    "skill": "web-audio-api",
+    "repo": "martinholovsky/claude-skills-generator"
+  },
+  {
+    "rank": 9747,
+    "skill": "llm-context",
+    "repo": "brave/brave-search-skills"
+  },
+  {
+    "rank": 9748,
+    "skill": "shiny-bslib",
+    "repo": "posit-dev/skills"
+  },
+  {
+    "rank": 9749,
+    "skill": "rust-expert-best-practices-code-review",
+    "repo": "wispbit-ai/skills"
+  },
+  {
+    "rank": 9750,
+    "skill": "axiom-realm-migration-ref",
+    "repo": "charleswiltgen/axiom"
+  },
+  {
+    "rank": 9751,
+    "skill": "chinese-style-guide",
+    "repo": "rightcapitalhq/chinese-style-guide"
+  },
+  {
+    "rank": 9752,
+    "skill": "expo-liquid-glass",
+    "repo": "devanshudesai/agent-skills"
+  },
+  {
+    "rank": 9753,
+    "skill": "javascript-expert",
+    "repo": "martinholovsky/claude-skills-generator"
+  },
+  {
+    "rank": 9754,
+    "skill": "dingtalk-workspace-cli",
+    "repo": "aradotso/trending-skills"
+  },
+  {
+    "rank": 9755,
+    "skill": "feishu-task",
+    "repo": "m1heng/clawdbot-feishu"
+  },
+  {
+    "rank": 9756,
+    "skill": "ruby-rails",
+    "repo": "mindrally/skills"
+  },
+  {
+    "rank": 9757,
+    "skill": "swiftui-code-review",
+    "repo": "existential-birds/beagle"
+  },
+  {
+    "rank": 9758,
+    "skill": "tushare",
+    "repo": "quantman888/tushare-skills"
+  },
+  {
+    "rank": 9759,
+    "skill": "enforcing-typescript-standards",
+    "repo": "jgeurts/eslint-config-decent"
+  },
+  {
+    "rank": 9760,
+    "skill": "shadcn",
+    "repo": "vercel/vercel-plugin"
+  },
+  {
+    "rank": 9761,
+    "skill": "sounds-on-the-web",
+    "repo": "raphaelsalaja/userinterface-wiki"
+  },
+  {
+    "rank": 9762,
+    "skill": "sentry-react-sdk",
+    "repo": "getsentry/sentry-agent-skills"
+  },
+  {
+    "rank": 9763,
+    "skill": "memory-lifecycle",
+    "repo": "basicmachines-co/basic-memory-skills"
+  },
+  {
+    "rank": 9764,
+    "skill": "stored-procedures",
+    "repo": "aj-geddes/useful-ai-prompts"
+  },
+  {
+    "rank": 9765,
+    "skill": "alicloud-database-analyticdb-mysql-test",
+    "repo": "cinience/alicloud-skills"
+  },
+  {
+    "rank": 9766,
+    "skill": "skill-create",
+    "repo": "skillscatalog/registry"
+  },
+  {
+    "rank": 9767,
+    "skill": "ml pipeline automation",
+    "repo": "aj-geddes/useful-ai-prompts"
+  },
+  {
+    "rank": 9768,
+    "skill": "clean-code",
+    "repo": "vudovn/antigravity-kit"
+  },
+  {
+    "rank": 9769,
+    "skill": "pine-optimizer",
+    "repo": "traderspost/pinescript-agents"
+  },
+  {
+    "rank": 9770,
+    "skill": "axiom-networking-migration",
+    "repo": "charleswiltgen/axiom"
+  },
+  {
+    "rank": 9771,
+    "skill": "commit-hygiene",
+    "repo": "alinaqi/claude-bootstrap"
+  },
+  {
+    "rank": 9772,
+    "skill": "xss-prevention",
+    "repo": "aj-geddes/useful-ai-prompts"
+  },
+  {
+    "rank": 9773,
+    "skill": "landing-page-optimization",
+    "repo": "manojbajaj95/claude-gtm-plugin"
+  },
+  {
+    "rank": 9774,
+    "skill": "game-facilitator",
+    "repo": "jwynia/agent-skills"
+  },
+  {
+    "rank": 9775,
+    "skill": "convex-quickstart",
+    "repo": "get-convex/convex-agent-plugins"
+  },
+  {
+    "rank": 9776,
+    "skill": "import",
+    "repo": "subframeapp/subframe"
+  },
+  {
+    "rank": 9777,
+    "skill": "gsap",
+    "repo": "mindrally/skills"
+  },
+  {
+    "rank": 9778,
+    "skill": "xpai-doubao-web",
+    "repo": "hunduncn/xpai-doubao-web"
+  },
+  {
+    "rank": 9779,
+    "skill": "site-architecture",
+    "repo": "alinaqi/claude-bootstrap"
+  },
+  {
+    "rank": 9780,
+    "skill": "xauusd-trading",
+    "repo": "huynguyen03dev/xauusd-trading"
+  },
+  {
+    "rank": 9781,
+    "skill": "autonomous-skill",
+    "repo": "feiskyer/claude-code-settings"
+  },
+  {
+    "rank": 9782,
+    "skill": "server-side-rendering",
+    "repo": "aj-geddes/useful-ai-prompts"
+  },
+  {
+    "rank": 9783,
+    "skill": "godot-shaders-basics",
+    "repo": "thedivergentai/gd-agentic-skills"
+  },
+  {
+    "rank": 9784,
+    "skill": "create-voltagent",
+    "repo": "voltagent/skills"
+  },
+  {
+    "rank": 9785,
+    "skill": "mastering-animate-presence",
+    "repo": "raphaelsalaja/userinterface-wiki"
+  },
+  {
+    "rank": 9786,
+    "skill": "ghidra",
+    "repo": "mitsuhiko/agent-stuff"
+  },
+  {
+    "rank": 9787,
+    "skill": "brand-copywriter",
+    "repo": "ognjengt/founder-skills"
+  },
+  {
+    "rank": 9788,
+    "skill": "encore-go-getting-started",
+    "repo": "encoredev/skills"
+  }
+]

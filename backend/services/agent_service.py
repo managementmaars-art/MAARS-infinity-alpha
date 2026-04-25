@@ -10,10 +10,11 @@ from datetime import datetime, timezone
 from db import db
 from config import DEFAULT_AGENTS, AGENT_TOOLS, AGENT_TOOL_MAP, DEFAULT_BRAIN_PROFILES
 from shared.constants import (
-    EMERGENT_LLM_KEY, UPLOAD_DIR, INTEGRATION_SERVICES
+    UPLOAD_DIR, INTEGRATION_SERVICES
 )
-from shared.utils import get_integration_keys, get_integration_key
+from services.integration_service import get_effective_integration_config
 from services.llm_service import call_llm_with_fallback
+from services.artifact_service import create_artifact
 
 logger = logging.getLogger(__name__)
 
@@ -268,12 +269,71 @@ async def log_tool_call(user_id: str, tool_name: str, tool_input: dict, result: 
         pass
 
 
+async def _get_connector_config(user_id: str, integration_id: str) -> dict:
+    config_info = await get_effective_integration_config(user_id, integration_id)
+    return config_info.get("config", {}) or {}
+
+
+async def _store_tool_artifact(
+    user_id: str,
+    artifact_type: str,
+    title: str,
+    payload,
+    source_tool: str,
+    source_integration: str,
+    content_type: str = "application/json",
+    metadata: dict = None,
+):
+    try:
+        await create_artifact(
+            user_id=user_id,
+            artifact_type=artifact_type,
+            title=title,
+            payload=payload,
+            source_tool=source_tool,
+            source_integration=source_integration,
+            content_type=content_type,
+            metadata=metadata or {},
+        )
+    except Exception as artifact_err:
+        logger.warning(f"Artifact creation failed for {source_tool}: {artifact_err}")
+
+
+async def _salesforce_access_token(user_id: str):
+    config = await _get_connector_config(user_id, "salesforce")
+    instance_url = (config.get("instance_url") or "").rstrip("/")
+    client_id = config.get("client_id", "")
+    client_secret = config.get("client_secret", "")
+    refresh_token = config.get("refresh_token", "")
+    if not all([instance_url, client_id, client_secret, refresh_token]):
+        return None, None, "Salesforce is not configured. Add instance_url, client_id, client_secret, and refresh_token."
+
+    async with httpx.AsyncClient(timeout=15) as client:
+        resp = await client.post(
+            "https://login.salesforce.com/services/oauth2/token",
+            data={
+                "grant_type": "refresh_token",
+                "client_id": client_id,
+                "client_secret": client_secret,
+                "refresh_token": refresh_token,
+            },
+        )
+        if resp.status_code != 200:
+            return None, None, f"Salesforce auth error: {resp.text[:200]}"
+        data = resp.json()
+        return data.get("access_token", ""), data.get("instance_url", instance_url), ""
+
+
 async def execute_tool(tool_name: str, tool_input: dict, user_id: str) -> str:
     """Execute a tool and return the result as a string. Logs the call for observability."""
     import time
 
     # Check system mode - simulation mode blocks real-world actions
-    REAL_WORLD_TOOLS = {"send_email", "send_gmail", "send_sms", "send_slack", "schedule_meeting", "google_calendar", "github_action"}
+    REAL_WORLD_TOOLS = {
+        "send_email", "send_gmail", "send_sms", "send_slack", "schedule_meeting",
+        "google_calendar", "github_action", "hubspot_action", "shopify_action",
+        "salesforce_action", "webhook_action",
+    }
     if tool_name in REAL_WORLD_TOOLS:
         mode_config = await db.system_config.find_one({"user_id": user_id, "mode": {"$exists": True}}, {"_id": 0})
         if not mode_config or mode_config.get("mode") != "execution":
@@ -453,7 +513,8 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
             return "\n".join(analysis)
 
         elif tool_name == "send_slack":
-            token = await get_integration_key("slack", "bot_token")
+            slack_config = await _get_connector_config(user_id, "slack")
+            token = slack_config.get("bot_token", "")
             if not token:
                 return "Slack is not configured. Ask your admin to add a Slack Bot Token in the Integrations panel."
             channel = tool_input.get("channel", "#general").lstrip("#")
@@ -468,12 +529,22 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
                 )
                 data = resp.json()
                 if data.get("ok"):
+                    await _store_tool_artifact(
+                        user_id,
+                        "message",
+                        f"Slack message to #{channel}",
+                        {"channel": channel, "message": message, "response": data},
+                        "send_slack",
+                        "slack",
+                    )
                     return f"Message sent to #{channel} successfully."
                 return f"Slack error: {data.get('error', 'Unknown error')}"
 
         elif tool_name == "send_email":
-            sg_key = await get_integration_key("sendgrid", "api_key")
-            resend_key = await get_integration_key("resend", "api_key")
+            sendgrid_config = await _get_connector_config(user_id, "sendgrid")
+            resend_config = await _get_connector_config(user_id, "resend")
+            sg_key = sendgrid_config.get("api_key", "")
+            resend_key = resend_config.get("api_key", "")
             to_email = tool_input.get("to", "")
             subject = tool_input.get("subject", "No Subject")
             body = tool_input.get("body", "")
@@ -487,6 +558,14 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
                         json={"personalizations": [{"to": [{"email": to_email}]}], "from": {"email": "noreply@maarsglobal.com"}, "subject": subject, "content": [{"type": "text/html", "value": body}]}
                     )
                     if resp.status_code in (200, 201, 202):
+                        await _store_tool_artifact(
+                            user_id,
+                            "email",
+                            f"Email to {to_email}",
+                            {"to": to_email, "subject": subject, "provider": "sendgrid"},
+                            "send_email",
+                            "sendgrid",
+                        )
                         return f"Email sent to {to_email} via SendGrid successfully."
                     return f"SendGrid error: {resp.status_code} - {resp.text[:200]}"
             elif resend_key:
@@ -497,14 +576,23 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
                         json={"from": "noreply@maarsglobal.com", "to": [to_email], "subject": subject, "html": body}
                     )
                     if resp.status_code in (200, 201):
+                        await _store_tool_artifact(
+                            user_id,
+                            "email",
+                            f"Email to {to_email}",
+                            {"to": to_email, "subject": subject, "provider": "resend"},
+                            "send_email",
+                            "resend",
+                        )
                         return f"Email sent to {to_email} via Resend successfully."
                     return f"Resend error: {resp.status_code} - {resp.text[:200]}"
             return "Email service not configured. Ask your admin to add SendGrid or Resend API key in Integrations."
 
         elif tool_name == "send_sms":
-            sid = await get_integration_key("twilio", "account_sid")
-            auth = await get_integration_key("twilio", "auth_token")
-            from_phone = await get_integration_key("twilio", "phone_number")
+            twilio_config = await _get_connector_config(user_id, "twilio")
+            sid = twilio_config.get("account_sid", "")
+            auth = twilio_config.get("auth_token", "")
+            from_phone = twilio_config.get("phone_number", "")
             if not sid or not auth:
                 return "Twilio is not configured. Ask your admin to add Twilio credentials in the Integrations panel."
             to_phone = tool_input.get("to", "")
@@ -519,11 +607,20 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
                 )
                 data = resp.json()
                 if resp.status_code in (200, 201):
+                    await _store_tool_artifact(
+                        user_id,
+                        "sms",
+                        f"SMS to {to_phone}",
+                        {"to": to_phone, "message": sms_body[:160], "sid": data.get("sid", "")},
+                        "send_sms",
+                        "twilio",
+                    )
                     return f"SMS sent to {to_phone} successfully. SID: {data.get('sid', 'N/A')}"
                 return f"Twilio error: {data.get('message', resp.text[:200])}"
 
         elif tool_name == "github_action":
-            token = await get_integration_key("github", "personal_access_token")
+            github_config = await _get_connector_config(user_id, "github")
+            token = github_config.get("personal_access_token", "")
             if not token:
                 return "GitHub is not configured. Ask your admin to add a GitHub Personal Access Token in Integrations."
             action = tool_input.get("action", "list_repos")
@@ -536,6 +633,14 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
                     resp = await client.post(f"https://api.github.com/repos/{repo}/issues", headers=headers, json={"title": tool_input.get("title", "New Issue"), "body": tool_input.get("body", "")})
                     if resp.status_code == 201:
                         data = resp.json()
+                        await _store_tool_artifact(
+                            user_id,
+                            "github_issue",
+                            f"{repo} issue #{data['number']}",
+                            data,
+                            "github_action",
+                            "github",
+                        )
                         return f"Issue created: #{data['number']} - {data['title']} ({data['html_url']})"
                     return f"GitHub error: {resp.status_code} - {resp.text[:200]}"
                 elif action == "list_issues":
@@ -561,7 +666,8 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
             return "Unknown GitHub action."
 
         elif tool_name == "airtable_action":
-            token = await get_integration_key("airtable", "api_key")
+            airtable_config = await _get_connector_config(user_id, "airtable")
+            token = airtable_config.get("api_key", "")
             if not token:
                 return "Airtable is not configured. Ask your admin to add an Airtable API key in Integrations."
             action = tool_input.get("action", "list_records")
@@ -580,12 +686,21 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
                     fields = tool_input.get("fields", {})
                     resp = await client.post(f"https://api.airtable.com/v0/{base_id}/{table_name}", headers=headers, json={"records": [{"fields": fields}]})
                     if resp.status_code == 200:
+                        await _store_tool_artifact(
+                            user_id,
+                            "record",
+                            f"Airtable record in {table_name}",
+                            resp.json(),
+                            "airtable_action",
+                            "airtable",
+                        )
                         return "Record created successfully."
                     return f"Airtable error: {resp.text[:200]}"
             return "Unknown Airtable action."
 
         elif tool_name == "search_gif":
-            token = await get_integration_key("giphy", "api_key")
+            giphy_config = await _get_connector_config(user_id, "giphy")
+            token = giphy_config.get("api_key", "")
             if not token:
                 return "Giphy is not configured. Ask your admin to add a Giphy API key in Integrations."
             query = tool_input.get("query", "")
@@ -600,7 +715,8 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
                 return "No GIFs found."
 
         elif tool_name == "schedule_meeting":
-            token = await get_integration_key("calendly", "api_key")
+            calendly_config = await _get_connector_config(user_id, "calendly")
+            token = calendly_config.get("api_key", "")
             if not token:
                 return "Calendly is not configured. Ask your admin to add a Calendly API key in Integrations."
             async with httpx.AsyncClient(timeout=10) as client:
@@ -608,14 +724,23 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
                 if resp.status_code == 200:
                     user_data = resp.json()
                     scheduling_url = user_data.get("resource", {}).get("scheduling_url", "")
+                    await _store_tool_artifact(
+                        user_id,
+                        "scheduling_link",
+                        "Calendly scheduling link",
+                        {"scheduling_url": scheduling_url},
+                        "schedule_meeting",
+                        "calendly",
+                    )
                     return f"Calendly scheduling link: {scheduling_url}\nShare this with participants to schedule a meeting."
                 return f"Calendly error: {resp.text[:200]}"
 
         elif tool_name == "google_calendar":
-            svc_json = await get_integration_key("google_suite", "service_account_json")
+            google_config = await _get_connector_config(user_id, "google_suite")
+            svc_json = google_config.get("service_account_json", "")
             if not svc_json:
                 return "Google Suite is not configured. Ask your admin to add Google Suite credentials in Integrations."
-            delegate_email = await get_integration_key("google_suite", "delegate_email")
+            delegate_email = google_config.get("delegate_email", "")
             action = tool_input.get("action", "list_events")
             try:
                 import json as _json
@@ -644,6 +769,14 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
                         emails = [e.strip() for e in attendees.split(",") if e.strip()]
                         event_body["attendees"] = [{"email": e} for e in emails]
                     result = service.events().insert(calendarId="primary", body=event_body).execute()
+                    await _store_tool_artifact(
+                        user_id,
+                        "calendar_event",
+                        result.get("summary", "Calendar event"),
+                        result,
+                        "google_calendar",
+                        "google_suite",
+                    )
                     return f"Event created: {result.get('summary')} on {result.get('start', {}).get('dateTime', 'N/A')}\nLink: {result.get('htmlLink', '')}"
                 else:
                     from datetime import datetime as _dt, timezone as _tz
@@ -666,10 +799,11 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
                 return f"Google Calendar error: {str(cal_err)[:200]}"
 
         elif tool_name == "send_gmail":
-            svc_json = await get_integration_key("google_suite", "service_account_json")
+            google_config = await _get_connector_config(user_id, "google_suite")
+            svc_json = google_config.get("service_account_json", "")
             if not svc_json:
                 return "Google Suite is not configured. Ask your admin to add Google Suite credentials in Integrations."
-            delegate_email = await get_integration_key("google_suite", "delegate_email")
+            delegate_email = google_config.get("delegate_email", "")
             if not delegate_email:
                 return "Gmail requires a Delegate Email in Google Suite settings. Ask your admin to add the sender email in Admin > Integrations."
             to_email = tool_input.get("to", "")
@@ -694,10 +828,210 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
                 message["subject"] = subject
                 raw = _b64.urlsafe_b64encode(message.as_bytes()).decode()
                 result = service.users().messages().send(userId="me", body={"raw": raw}).execute()
+                await _store_tool_artifact(
+                    user_id,
+                    "email",
+                    f"Gmail to {to_email}",
+                    {"to": to_email, "subject": subject, "message_id": result.get("id", "")},
+                    "send_gmail",
+                    "google_suite",
+                )
                 return f"Email sent to {to_email} via Gmail. Message ID: {result.get('id', 'N/A')}"
             except Exception as gmail_err:
                 logger.error(f"Gmail error: {gmail_err}")
                 return f"Gmail error: {str(gmail_err)[:200]}"
+
+        elif tool_name == "webhook_action":
+            webhook_config = await _get_connector_config(user_id, "webhooks")
+            webhook_url = tool_input.get("webhook_url") or webhook_config.get("webhook_url")
+            signing_secret = webhook_config.get("signing_secret", "")
+            if not webhook_url:
+                return "Webhook automation is not configured. Add a webhook_url in Webhooks."
+            method = str(tool_input.get("method", "POST")).upper()
+            payload = tool_input.get("payload", tool_input.get("body", {}))
+            headers = dict(tool_input.get("headers", {}) or {})
+            if signing_secret:
+                headers.setdefault("X-MAARS-Signature", signing_secret)
+            async with httpx.AsyncClient(timeout=15) as client:
+                resp = await client.request(
+                    method,
+                    webhook_url,
+                    json=payload if isinstance(payload, (dict, list)) else None,
+                    content=payload if isinstance(payload, str) else None,
+                    headers=headers,
+                )
+                response_preview = resp.text[:300]
+                await _store_tool_artifact(
+                    user_id,
+                    "webhook_delivery",
+                    f"Webhook {method} delivery",
+                    {
+                        "url": webhook_url,
+                        "method": method,
+                        "status_code": resp.status_code,
+                        "response_preview": response_preview,
+                    },
+                    "webhook_action",
+                    "webhooks",
+                )
+                return f"Webhook {method} sent to {webhook_url}. Status: {resp.status_code}. Response: {response_preview}"
+
+        elif tool_name == "hubspot_action":
+            hubspot_config = await _get_connector_config(user_id, "hubspot")
+            token = hubspot_config.get("access_token", "")
+            if not token:
+                return "HubSpot is not configured. Add an access_token in the Integration Hub."
+            action = tool_input.get("action", "list_contacts")
+            headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+            async with httpx.AsyncClient(timeout=15) as client:
+                if action == "list_contacts":
+                    resp = await client.get(
+                        "https://api.hubapi.com/crm/v3/objects/contacts",
+                        headers=headers,
+                        params={"limit": int(tool_input.get("limit", 10)), "properties": "firstname,lastname,email,company"},
+                    )
+                    data = resp.json()
+                    results = data.get("results", [])
+                    if resp.status_code != 200:
+                        return f"HubSpot error: {resp.text[:200]}"
+                    await _store_tool_artifact(
+                        user_id,
+                        "crm_export",
+                        "HubSpot contacts",
+                        data,
+                        "hubspot_action",
+                        "hubspot",
+                    )
+                    lines = []
+                    for item in results[:10]:
+                        props = item.get("properties", {})
+                        lines.append(f"- {props.get('firstname', '')} {props.get('lastname', '')}".strip() + f" <{props.get('email', 'no-email')}>")
+                    return "\n".join(lines) or "No HubSpot contacts found."
+                elif action == "create_contact":
+                    properties = tool_input.get("properties", {})
+                    if not properties.get("email"):
+                        return "HubSpot create_contact requires properties.email."
+                    resp = await client.post(
+                        "https://api.hubapi.com/crm/v3/objects/contacts",
+                        headers=headers,
+                        json={"properties": properties},
+                    )
+                    if resp.status_code not in (200, 201):
+                        return f"HubSpot error: {resp.text[:200]}"
+                    data = resp.json()
+                    await _store_tool_artifact(
+                        user_id,
+                        "crm_record",
+                        f"HubSpot contact {properties.get('email')}",
+                        data,
+                        "hubspot_action",
+                        "hubspot",
+                    )
+                    return f"HubSpot contact created: {properties.get('email')} (id: {data.get('id', 'N/A')})"
+            return "Unknown HubSpot action."
+
+        elif tool_name == "shopify_action":
+            shopify_config = await _get_connector_config(user_id, "shopify")
+            store_url = (shopify_config.get("store_url") or "").rstrip("/")
+            access_token = shopify_config.get("access_token", "")
+            api_version = tool_input.get("api_version", "2025-01")
+            if not store_url or not access_token:
+                return "Shopify is not configured. Add store_url and access_token in the Integration Hub."
+            headers = {"X-Shopify-Access-Token": access_token, "Content-Type": "application/json"}
+            action = tool_input.get("action", "list_products")
+            async with httpx.AsyncClient(timeout=15) as client:
+                if action == "list_products":
+                    resp = await client.get(
+                        f"{store_url}/admin/api/{api_version}/products.json",
+                        headers=headers,
+                        params={"limit": int(tool_input.get("limit", 10))},
+                    )
+                    if resp.status_code != 200:
+                        return f"Shopify error: {resp.text[:200]}"
+                    data = resp.json()
+                    await _store_tool_artifact(
+                        user_id,
+                        "catalog_export",
+                        "Shopify products",
+                        data,
+                        "shopify_action",
+                        "shopify",
+                    )
+                    products = data.get("products", [])
+                    return "\n".join([f"- {p.get('title', 'Untitled')} (id: {p.get('id')})" for p in products]) or "No products found."
+                elif action == "create_product":
+                    product = tool_input.get("product", {})
+                    if not product.get("title"):
+                        return "Shopify create_product requires product.title."
+                    resp = await client.post(
+                        f"{store_url}/admin/api/{api_version}/products.json",
+                        headers=headers,
+                        json={"product": product},
+                    )
+                    if resp.status_code not in (200, 201):
+                        return f"Shopify error: {resp.text[:200]}"
+                    data = resp.json()
+                    await _store_tool_artifact(
+                        user_id,
+                        "catalog_item",
+                        product.get("title", "Shopify product"),
+                        data,
+                        "shopify_action",
+                        "shopify",
+                    )
+                    created = data.get("product", {})
+                    return f"Shopify product created: {created.get('title', product.get('title'))} (id: {created.get('id', 'N/A')})"
+            return "Unknown Shopify action."
+
+        elif tool_name == "salesforce_action":
+            access_token, instance_url, auth_error = await _salesforce_access_token(user_id)
+            if auth_error:
+                return auth_error
+            action = tool_input.get("action", "query_accounts")
+            headers = {"Authorization": f"Bearer {access_token}", "Content-Type": "application/json"}
+            async with httpx.AsyncClient(timeout=15) as client:
+                if action == "query_accounts":
+                    soql = tool_input.get("soql", "SELECT Id, Name, Industry FROM Account ORDER BY LastModifiedDate DESC LIMIT 10")
+                    resp = await client.get(
+                        f"{instance_url}/services/data/v60.0/query",
+                        headers=headers,
+                        params={"q": soql},
+                    )
+                    if resp.status_code != 200:
+                        return f"Salesforce error: {resp.text[:200]}"
+                    data = resp.json()
+                    await _store_tool_artifact(
+                        user_id,
+                        "crm_export",
+                        "Salesforce query result",
+                        data,
+                        "salesforce_action",
+                        "salesforce",
+                    )
+                    records = data.get("records", [])
+                    return "\n".join([f"- {r.get('Name', 'Untitled')} ({r.get('Id', '')})" for r in records]) or "No Salesforce records found."
+                elif action == "create_lead":
+                    lead = tool_input.get("lead", {})
+                    if not lead.get("LastName") or not lead.get("Company"):
+                        return "Salesforce create_lead requires lead.LastName and lead.Company."
+                    resp = await client.post(
+                        f"{instance_url}/services/data/v60.0/sobjects/Lead",
+                        headers=headers,
+                        json=lead,
+                    )
+                    if resp.status_code not in (200, 201):
+                        return f"Salesforce error: {resp.text[:200]}"
+                    data = resp.json()
+                    await _store_tool_artifact(
+                        user_id,
+                        "crm_record",
+                        f"Salesforce lead {lead.get('Company')}",
+                        data,
+                        "salesforce_action",
+                        "salesforce",
+                    )
+                    return f"Salesforce lead created. ID: {data.get('id', 'N/A')}"
+            return "Unknown Salesforce action."
 
         elif tool_name == "product_scan":
             product_query = tool_input.get("product_query", "")
@@ -706,6 +1040,14 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
             try:
                 from services.product_scanner import scan_product
                 result = await scan_product(product_query, UPLOAD_DIR)
+                await _store_tool_artifact(
+                    user_id,
+                    "research_brief",
+                    f"Product scan: {product_query}",
+                    result,
+                    "product_scan",
+                    "web_search",
+                )
                 context = result.get("context", "")
                 ref_path = result.get("reference_image_path")
                 images = result.get("images", [])
@@ -726,10 +1068,13 @@ async def _execute_tool_inner(tool_name: str, tool_input: dict, user_id: str) ->
         return f"Tool execution error ({tool_name}): {str(e)[:200]}"
 
 
-async def build_tool_prompt_async(tools: list) -> str:
+async def build_tool_prompt_async(tools: list, user_id: str) -> str:
     if not tools:
         return ""
-    integration_keys = await get_integration_keys()
+    alternative_requirements = {
+        "send_email": ["sendgrid", "resend"],
+        "webhook_action": ["webhooks"],
+    }
     tool_descriptions = []
     available_tools = []
     for tool_name in tools:
@@ -738,9 +1083,14 @@ async def build_tool_prompt_async(tools: list) -> str:
             continue
         requires = tool.get("requires")
         if requires:
-            service_config = integration_keys.get(requires, {})
-            service_def = INTEGRATION_SERVICES.get(requires, {})
-            has_key = any(service_config.get(f) for f in service_def.get("key_fields", []))
+            requirement_ids = alternative_requirements.get(tool_name, [requires])
+            has_key = False
+            for requirement_id in requirement_ids:
+                service_config = (await get_effective_integration_config(user_id, requirement_id)).get("config", {})
+                service_def = INTEGRATION_SERVICES.get(requirement_id, {})
+                if any(service_config.get(f) for f in service_def.get("key_fields", [])):
+                    has_key = True
+                    break
             if not has_key:
                 continue
         tool_descriptions.append(f"  - {tool['name']}: {tool['description']} | Parameters: {tool['parameters']}")
@@ -766,11 +1116,14 @@ RULES:
 6. When the user asks to send an email -> use send_email
 7. When the user asks to send a text/SMS -> use send_sms
 8. When the user asks about GitHub repos/issues -> use github_action
-9. When the user references tasks, to-dos, or shared work -> use query_tasks first
-10. When the user asks about what another team member/agent discussed -> use query_agent_history
-11. When the user asks to update, complete, or change a task -> use update_task
-12. For questions you can fully answer from memory, respond directly
-13. After receiving a tool result, weave it naturally into your final answer"""
+9. When the user asks for CRM work like contacts, leads, or accounts -> use hubspot_action or salesforce_action
+10. When the user asks for ecommerce catalog or store operations -> use shopify_action
+11. When the user asks to trigger an automation or webhook -> use webhook_action
+12. When the user references tasks, to-dos, or shared work -> use query_tasks first
+13. When the user asks about what another team member/agent discussed -> use query_agent_history
+14. When the user asks to update, complete, or change a task -> use update_task
+15. For questions you can fully answer from memory, respond directly
+16. After receiving a tool result, weave it naturally into your final answer"""
 
 
 async def build_brain_context(user_id: str, agent_id: str) -> str:
@@ -820,7 +1173,7 @@ async def agent_execute_with_tools(
     if not agent_tools:
         return None
 
-    tool_prompt = await build_tool_prompt_async(agent_tools)
+    tool_prompt = await build_tool_prompt_async(agent_tools, user_id)
     enhanced_system_prompt = agent["system_prompt"] + CLARIFICATION_INSTRUCTION + tool_prompt
 
     workspace_ctx = await build_workspace_context(user_id, agent.get("agent_id", ""))
@@ -853,12 +1206,24 @@ async def agent_execute_with_tools(
 
     for iteration in range(max_iterations):
         try:
-            llm_response, model_provider, model_name = await call_llm_with_fallback(
-                api_keys, model_provider, model_name,
-                enhanced_system_prompt, accumulated_context,
-                attachments if iteration == 0 else None,
-                f"{chat_id}_tool_{iteration}"
+            # Route every tool-loop iteration through the Universal Gateway.
+            from services.llm_gateway import complete
+            gw_model = "maars/auto" if model_provider in ("auto", None) else f"{model_provider}/{model_name}"
+            gw_resp = await complete(
+                user_id=user_id,
+                messages=[
+                    {"role": "system", "content": enhanced_system_prompt},
+                    {"role": "user",   "content": accumulated_context},
+                ],
+                model=gw_model,
+                source=f"agent.tool_loop:{agent.get('agent_id','?')}:iter_{iteration}",
             )
+            llm_response = gw_resp["choices"][0]["message"]["content"]
+            maars_meta = gw_resp.get("maars", {})
+            model_provider = maars_meta.get("provider", model_provider)
+            actual_m = maars_meta.get("model", gw_model)
+            if "/" in actual_m:
+                _, model_name = actual_m.split("/", 1)
         except Exception as e:
             logger.error(f"Agent tool loop LLM error (iter {iteration}): {e}")
             if not final_response:
@@ -953,13 +1318,14 @@ Analyze this goal and create a delegation plan. Return ONLY a JSON array of sub-
 Choose 2-4 most relevant specialists. Be specific about what each should do. Assign priority based on urgency and importance. Return ONLY the JSON array, no other text."""
 
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
-        planner = LlmChat(
-            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-            session_id=f"{chat_id}_commander_plan",
-            system_message="You are a task planning AI. Output only valid JSON arrays."
-        ).with_model("openai", "gpt-5.2")
-        plan_text = await planner.send_message(UserMessage(text=plan_prompt))
+        from services.llm_gateway import complete_text
+        plan_text = await complete_text(
+            user_id=user_id,
+            system_prompt="You are a task planning AI. Output only valid JSON arrays.",
+            user_prompt=plan_prompt,
+            model="maars/auto",
+            source="agent.commander_plan",
+        )
         plan_text_clean = plan_text.strip()
         if plan_text_clean.startswith("```"):
             plan_text_clean = plan_text_clean.split("\n", 1)[1] if "\n" in plan_text_clean else plan_text_clean[3:]
@@ -976,10 +1342,14 @@ Choose 2-4 most relevant specialists. Be specific about what each should do. Ass
     now = datetime.now(timezone.utc).isoformat()
     agents_progress = []
 
+    from services.agents import agent_router_map
     for i, task_item in enumerate(tasks):
         task_desc = task_item.get("task", "")
         agent_role = task_item.get("agent_role", "").lower()
-        agent_id = AGENT_ROLE_MAP.get(agent_role, "agent_strategist")
+        try:
+            agent_id = await agent_router_map.resolve(agent_role)
+        except Exception:
+            agent_id = AGENT_ROLE_MAP.get(agent_role, "agent_strategist")
         priority = task_item.get("priority", "medium").lower()
         if priority not in ("high", "medium", "low"):
             priority = "medium"
@@ -1037,14 +1407,18 @@ Choose 2-4 most relevant specialists. Be specific about what each should do. Ass
         }
 
         try:
-            from emergentintegrations.llm.chat import LlmChat, UserMessage
-            specialist = LlmChat(
-                api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-                session_id=f"{chat_id}_commander_{ct['agent_id']}",
-                system_message=agent["system_prompt"]
-            ).with_model(agent.get("model_provider", "openai"), agent.get("model_name", "gpt-5.2"))
+            from services.llm_gateway import complete_text
+            specialist_provider = agent.get("model_provider", "auto")
+            specialist_model = agent.get("model_name", "auto")
+            gw_model = "maars/auto" if specialist_provider in ("auto", None) else f"{specialist_provider}/{specialist_model}"
             specialist_prompt = f"The Commander has assigned you this task as part of a larger project. Do NOT ask clarifying questions — just execute the task directly with your best professional output.\n\nWrite in clean, conversational paragraphs. Avoid excessive markdown headers (## ###). Use bold sparingly. Be concise and professional.\n\nOverall Goal: {goal}\n\nYour specific task: {ct['desc']}\n\nProvide a concise but actionable response. Focus on deliverables and next steps."
-            response = await specialist.send_message(UserMessage(text=specialist_prompt))
+            response = await complete_text(
+                user_id=user_id,
+                system_prompt=agent["system_prompt"],
+                user_prompt=specialist_prompt,
+                model=gw_model,
+                source=f"agent.commander_specialist:{ct['agent_id']}",
+            )
             agent_entry["response"] = response
             await db.tasks.update_one(
                 {"task_id": ct["task_id"]},

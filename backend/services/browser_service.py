@@ -576,6 +576,7 @@ class BrowserPool:
     async def open(
         self, *, user_id: str, agent_id: str | None = None,
         start_url: str | None = None,
+        proxy: dict | None = None,
     ) -> BrowserSession:
         # Budget pre-check — fail fast before spinning up Chromium.
         try:
@@ -604,6 +605,12 @@ class BrowserPool:
         }
         if storage_path.exists():
             context_args["storage_state"] = str(storage_path)
+        # Residential-proxy support for anti-detection scraping. Caller
+        # passes a Playwright-compatible dict:
+        # {"server": "http://host:port", "username": "...", "password": "..."}.
+        # When omitted, the browser uses the host network as before.
+        if proxy and isinstance(proxy, dict) and proxy.get("server"):
+            context_args["proxy"] = proxy
 
         async def _make_context_and_page():
             ctx = await browser.new_context(**context_args)

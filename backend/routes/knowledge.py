@@ -8,7 +8,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 
-async def process_document_async(db, doc_id: str, agent_id: str, file_path: str, filename: str, api_key: str):
+async def process_document_async(db, doc_id: str, agent_id: str, file_path: str, filename: str):
     """Background task to process a document: extract text, chunk, store."""
     try:
         from services.rag_service import extract_text_from_pdf, chunk_text

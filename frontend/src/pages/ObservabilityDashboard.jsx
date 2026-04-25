@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import {
   Rocket, GitBranch, Users, Cpu, Shield, Activity, AlertTriangle, CheckCircle,
   Clock, Brain, Search, Eye, Bell, BellOff, TrendingUp, RefreshCw, Gauge,
   Plus, Trash2, Settings, Wifi, WifiOff, X, Save
 } from "lucide-react";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const T = {
   bg: "#030712",
@@ -126,7 +126,7 @@ export default function ObservabilityDashboard() {
   const [wsConnected, setWsConnected] = useState(false);
   const wsRef = useRef(null);
   const token = localStorage.getItem("token");
-  const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const headers = useMemo(() => ({ Authorization: `Bearer ${token}`, "Content-Type": "application/json" }), [token]);
 
   const emptyRule = { rule_id: "", name: "", metric: "circuit_breakers_tripped", operator: ">", threshold: 0, severity: "medium", enabled: true };
 
@@ -159,7 +159,7 @@ export default function ObservabilityDashboard() {
     if (Array.isArray(rn)) setRuns(rn);
     if (Array.isArray(rules)) setAlertRules(rules);
     setLastRefresh(new Date());
-  }, [token]);
+  }, [headers]);
 
   useEffect(() => {
     fetchAll();

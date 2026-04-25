@@ -1,0 +1,113 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - link "← Back to Privacy Policy" [ref=e5] [cursor=pointer]:
+      - /url: /privacy
+    - heading "Subprocessors" [level=1] [ref=e6]
+    - paragraph [ref=e7]: "The third parties MAARS engages to process personal data on your behalf. We notify customers at least 30 days before adding or replacing a subprocessor. Last updated: April 21, 2026."
+    - table [ref=e9]:
+      - rowgroup [ref=e10]:
+        - row "Subprocessor Purpose Location Data types" [ref=e11]:
+          - columnheader "Subprocessor" [ref=e12]
+          - columnheader "Purpose" [ref=e13]
+          - columnheader "Location" [ref=e14]
+          - columnheader "Data types" [ref=e15]
+      - rowgroup [ref=e16]:
+        - row "Stripe, Inc. Payment processing USA Payment info, billing address" [ref=e17]:
+          - cell "Stripe, Inc." [ref=e18]
+          - cell "Payment processing" [ref=e19]
+          - cell "USA" [ref=e20]
+          - cell "Payment info, billing address" [ref=e21]
+        - row "MongoDB Atlas Database hosting USA / EU All platform data" [ref=e22]:
+          - cell "MongoDB Atlas" [ref=e23]
+          - cell "Database hosting" [ref=e24]
+          - cell "USA / EU" [ref=e25]
+          - cell "All platform data" [ref=e26]
+        - row "Amazon Web Services Infrastructure hosting Global All platform data" [ref=e27]:
+          - cell "Amazon Web Services" [ref=e28]
+          - cell "Infrastructure hosting" [ref=e29]
+          - cell "Global" [ref=e30]
+          - cell "All platform data" [ref=e31]
+        - row "SendGrid (Twilio) Transactional + outbound email delivery USA Email addresses, message content" [ref=e32]:
+          - cell "SendGrid (Twilio)" [ref=e33]
+          - cell "Transactional + outbound email delivery" [ref=e34]
+          - cell "USA" [ref=e35]
+          - cell "Email addresses, message content" [ref=e36]
+        - row "Resend Transactional email delivery (alt) USA Email addresses, message content" [ref=e37]:
+          - cell "Resend" [ref=e38]
+          - cell "Transactional email delivery (alt)" [ref=e39]
+          - cell "USA" [ref=e40]
+          - cell "Email addresses, message content" [ref=e41]
+        - row "Twilio SMS + voice delivery (optional) USA Phone numbers, call transcripts" [ref=e42]:
+          - cell "Twilio" [ref=e43]
+          - cell "SMS + voice delivery (optional)" [ref=e44]
+          - cell "USA" [ref=e45]
+          - cell "Phone numbers, call transcripts" [ref=e46]
+        - row "OpenAI AI inference USA Prompt content, generated output" [ref=e47]:
+          - cell "OpenAI" [ref=e48]
+          - cell "AI inference" [ref=e49]
+          - cell "USA" [ref=e50]
+          - cell "Prompt content, generated output" [ref=e51]
+        - row "Anthropic AI inference USA Prompt content, generated output" [ref=e52]:
+          - cell "Anthropic" [ref=e53]
+          - cell "AI inference" [ref=e54]
+          - cell "USA" [ref=e55]
+          - cell "Prompt content, generated output" [ref=e56]
+        - row "Google (Gemini) AI inference Global Prompt content, generated output" [ref=e57]:
+          - cell "Google (Gemini)" [ref=e58]
+          - cell "AI inference" [ref=e59]
+          - cell "Global" [ref=e60]
+          - cell "Prompt content, generated output" [ref=e61]
+        - row "Microsoft Text-to-speech (Edge TTS) Global Text for speech synthesis" [ref=e62]:
+          - cell "Microsoft" [ref=e63]
+          - cell "Text-to-speech (Edge TTS)" [ref=e64]
+          - cell "Global" [ref=e65]
+          - cell "Text for speech synthesis" [ref=e66]
+        - row "Deepgram Speech-to-text USA Audio files" [ref=e67]:
+          - cell "Deepgram" [ref=e68]
+          - cell "Speech-to-text" [ref=e69]
+          - cell "USA" [ref=e70]
+          - cell "Audio files" [ref=e71]
+        - row "Apollo.io Lead research (optional) USA Search queries" [ref=e72]:
+          - cell "Apollo.io" [ref=e73]
+          - cell "Lead research (optional)" [ref=e74]
+          - cell "USA" [ref=e75]
+          - cell "Search queries" [ref=e76]
+        - row "Hunter.io Lead research fallback USA Domain queries" [ref=e77]:
+          - cell "Hunter.io" [ref=e78]
+          - cell "Lead research fallback" [ref=e79]
+          - cell "USA" [ref=e80]
+          - cell "Domain queries" [ref=e81]
+        - row "LinkedIn OAuth-connected posting USA Post content" [ref=e82]:
+          - cell "LinkedIn" [ref=e83]
+          - cell "OAuth-connected posting" [ref=e84]
+          - cell "USA" [ref=e85]
+          - cell "Post content" [ref=e86]
+        - row "Sentry Error monitoring (PII-scrubbed) USA / EU Stack traces, request metadata" [ref=e87]:
+          - cell "Sentry" [ref=e88]
+          - cell "Error monitoring (PII-scrubbed)" [ref=e89]
+          - cell "USA / EU" [ref=e90]
+          - cell "Stack traces, request metadata" [ref=e91]
+        - row "Frankfurter (ECB) FX rate lookup EU None — public rates only" [ref=e92]:
+          - cell "Frankfurter (ECB)" [ref=e93]
+          - cell "FX rate lookup" [ref=e94]
+          - cell "EU" [ref=e95]
+          - cell "None — public rates only" [ref=e96]
+    - heading "Data Processing Agreement (DPA)" [level=2] [ref=e97]
+    - paragraph [ref=e98]: MAARS offers a standard DPA for customers processing personal data under GDPR, UK GDPR, or comparable regulations. Our DPA incorporates the EU Standard Contractual Clauses (2021/914) and the UK International Data Transfer Addendum.
+    - paragraph [ref=e99]:
+      - text: To request a countersigned DPA, email
+      - strong [ref=e100]: privacy@marsgc.net
+      - text: from your registered account email with "DPA Request" in the subject.
+    - paragraph [ref=e101]:
+      - link "Privacy" [ref=e102] [cursor=pointer]:
+        - /url: /privacy
+      - text: ·
+      - link "Terms" [ref=e103] [cursor=pointer]:
+        - /url: /terms
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

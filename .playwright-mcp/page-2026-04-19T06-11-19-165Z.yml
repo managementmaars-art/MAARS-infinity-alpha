@@ -1,0 +1,62 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - link [ref=e5] [cursor=pointer]:
+      - /url: /
+      - img [ref=e8]
+    - generic [ref=e28]:
+      - list [ref=e29]:
+        - listitem [ref=e30]:
+          - link "文档中心" [ref=e31] [cursor=pointer]:
+            - /url: /docs
+            - generic [ref=e32]:
+              - text: 文档中心
+              - img [ref=e34]
+        - listitem [ref=e36]:
+          - link "使用指南" [ref=e37] [cursor=pointer]:
+            - /url: /docs
+            - generic [ref=e38]: 使用指南
+        - listitem [ref=e39]:
+          - link "接口文档" [ref=e40] [cursor=pointer]:
+            - /url: /docs/api-reference
+            - generic [ref=e41]: 接口文档
+        - listitem [ref=e42]:
+          - link "体验中心" [ref=e43] [cursor=pointer]:
+            - /url: /playground
+            - generic [ref=e44]: 体验中心
+        - listitem [ref=e45]:
+          - link "联系我们" [ref=e46] [cursor=pointer]:
+            - /url: https://01ai.feishu.cn/share/base/form/shrcnhreMBxEkUfxvByY3cUhmgZ
+            - generic [ref=e47]: 联系我们
+        - listitem [ref=e48]:
+          - generic [ref=e50]: 工作台
+        - listitem [ref=e51]:
+          - link "API Key管理" [ref=e52] [cursor=pointer]:
+            - /url: /apikeys
+            - generic [ref=e53]: API Key管理
+        - listitem [ref=e54]:
+          - link "账单概览" [ref=e55] [cursor=pointer]:
+            - /url: /billing
+            - generic [ref=e56]: 账单概览
+        - listitem [ref=e57]:
+          - link "调用明细" [ref=e58] [cursor=pointer]:
+            - /url: /details
+            - generic [ref=e59]: 调用明细
+        - listitem [ref=e60]:
+          - link "充值/提速" [ref=e61] [cursor=pointer]:
+            - /url: /recharge
+            - generic [ref=e62]: 充值/提速
+        - listitem [ref=e63]:
+          - link "用户信息" [ref=e64] [cursor=pointer]:
+            - /url: /profile
+            - generic [ref=e65]: 用户信息
+      - img "RightIcon" [ref=e66]
+      - list [ref=e67]:
+        - listitem [ref=e68]:
+          - generic [ref=e70]:
+            - link "用户协议" [ref=e71] [cursor=pointer]:
+              - /url: /useragreement
+            - text: ·
+            - link "隐私政策" [ref=e72] [cursor=pointer]:
+              - /url: /privacypolicy
+        - generic [ref=e73]: 01.AI © Copyright 2024
+  - main [ref=e74]

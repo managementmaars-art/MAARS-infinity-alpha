@@ -1,0 +1,351 @@
+MAARS Command
+Login
+Get Started
+Choose Your Plan
+Get access to your AI team with flexible pricing. Start free, upgrade anytime.
+USD ($)
+BDT (৳)
+Current Plan
+Free
+/month
+credits/month
+3 AI agents
+50 credits/month
+Basic chat & task management
+1 LLM provider
+Community support
+Current Plan
+Starter
+$50
+/month
+300
+credits/month
+8 AI agents
+300 credits/month
+Chat, tasks & projects
+3 LLM providers
+File uploads
+Solo workspace
+Email support
+Subscribe
+Essential
+$100
+/month
+600
+credits/month
+12 AI agents
+600 credits/month
+1 custom agent
+5 LLM providers
+Workflow builder (basic)
+File uploads
+Team (up to 3)
+Email support
+Subscribe
+Basic
+$200
+/month
+1200
+credits/month
+18 AI agents
+1,200 credits/month
+2 custom agents
+8 LLM providers
+Full workflow builder
+Content generator
+Basic analytics
+Team (up to 5)
+Priority email support
+Subscribe
+Standard
+$350
+/month
+2000
+credits/month
+25 AI agents + Commander Orion
+2,000 credits/month
+3 custom agents
+MAARS Universal AI Gateway — 33 providers, 175,000+ models
+Autonomous orchestration
+Campaign builder
+Knowledge graph
+Trust scores
+Team (up to 10)
+Priority support
+Subscribe
+Professional
+$500
+/month
+3000
+credits/month
+35 AI agents + Commander Orion
+3,000 credits/month
+5 custom agents
+MAARS Universal AI Gateway — 33 providers, 175,000+ models
+Vibe Coding & Reference Intelligence
+Memory hierarchy
+Analytics dashboard
+Team (up to 20)
+Live chat support
+Subscribe
+Advanced
+$750
+/month
+4000
+credits/month
+All 41 core AI agents + Commander Orion
+4,000 credits/month
+10 custom agents
+MAARS Universal AI Gateway — 33 providers, 175,000+ models
+Full observability dashboard
+Model router
+Circuit breakers
+Cost governance
+Team (up to 35)
+Dedicated Slack support
+Subscribe
+Business
+$1000
+/month
+5000
+credits/month
+41 core + 100 MAARS Infinity agents + Commander Orion
+5,000 credits/month
+20 custom agents
+MAARS Universal AI Gateway — 33 providers, 175,000+ models
+MAARS Infinity agent networks
+Operator panel
+API access & webhooks
+Team (up to 50)
+Dedicated Slack support
+Subscribe
+Agency
+$1500
+/month
+6500
+credits/month
+41 core + 200 MAARS Infinity agents + Commander Orion
+6,500 credits/month
+Unlimited custom agents
+MAARS Universal AI Gateway — 33 providers, 175,000+ models
+White-label ready
+RBAC & access control
+Client management tools
+SLA guarantee
+Unlimited team members
+Dedicated account manager
+Subscribe
+Studio
+$2500
+/month
+7500
+credits/month
+41 core + 350 MAARS Infinity agents + Commander Orion
+7,500 credits/month
+Unlimited custom agents
+MAARS Universal AI Gateway — 33 providers, 175,000+ models
+Venture portfolio
+Agent Catalog (350 networks)
+Custom integrations
+Multi-workspace
+Unlimited team members
+Priority dedicated support
+Subscribe
+Enterprise
+$3500
+/month
+8500
+credits/month
+All 458 agents + Commander Orion
+8,500 credits/month
+Unlimited everything
+MAARS Universal AI Gateway — 33 providers, 175,000+ models
+Dedicated infrastructure
+Advanced security & compliance
+Custom AI integrations
+Onboarding & training
+Custom SLAs
+24/7 premium support
+Subscribe
+Corporate
+$5000
+/month
+9500
+credits/month
+All 458 agents + Commander Orion
+9,500 credits/month
+Unlimited everything
+MAARS Universal AI Gateway — 33 providers, 175,000+ models
+Custom AI model fine-tuning
+Dedicated engineering support
+Multi-workspace management
+Custom contracts & billing
+Quarterly business reviews
+Executive priority support
+Subscribe
+Elite
+$8000
+/month
+10000
+credits/month
+All 458 agents + Commander Orion
+10,000 credits/month
+Unlimited everything
+MAARS Universal AI Gateway — 33 providers, 175,000+ models
+Custom agent development
+Dedicated servers & infrastructure
+Strategic AI consulting
+Full platform customization
+Executive support hotline
+Custom contract & billing
+Subscribe
+New
+Build Your Own Package
+Pick exactly the agents you need and the credits you want. Pay only for what you use.
+Select Your Agents
+selected ·
+/mo
+Adrian Stone
+Procurement & Vendor Manager
+Alexandra Reid
+Legal Assistant
+Amara Johnson
+HR Specialist
+Axel Brennan
+Growth Hacker
+Benjamin Cole
+Financial Analyst
+Budget Enforcement Agent
+Budget Enforcement Officer
+Cassandra Steele
+Chief Strategy Officer
+Catherine Blake
+Reputation & PR Manager
+Damien Voss
+Cybersecurity Officer
+Derek Huang
+SEO Specialist
+Diana Morales
+Operations Manager
+Dr. Clara Voss
+Research Specialist
+Dr. Eleanor Shaw
+Knowledge Architect
+Dr. Luca Bernstein
+AI Optimization Specialist
+Elena Kovacs
+Product Manager
+Ethan Yates
+Data Analyst
+Execution Policy Agent
+Execution Policy Enforcer
+Felix Romano
+Graphic Designer
+Isla Fernandez
+Social Media Manager
+Jasper Wells
+Email Marketing Specialist
+Kai Nakamoto
+App Developer
+Kernel Operations Agent
+Kernel Operations Manager
+Layla Mansouri
+Localization & Global Expansion Specialist
+Luna Bergström
+Web Designer
+Marco De Luca
+3D Visualization Specialist
+Marcus Drake
+Sales Representative
+Maximilian Wolfe
+Revenue Strategist
+Maya Thompson
+Customer Service Rep
+Memory Routing Agent
+Memory Access Controller
+Nadia Kessler
+Personal Secretary
+Nathan Cross
+Project Manager
+Nikolai Volkov
+Data Engineer
+Olivia Sinclair
+Content Writer
+Professor James Whitfield
+Ethics & Risk Governance Officer
+Recovery and Rollback Agent
+Recovery Operations Manager
+Resource Allocation Agent
+Resource Allocation Manager
+Richard Ashworth
+Investor Relations Manager
+Riley Chen
+Video Content Specialist
+Scarlett Monroe
+Copywriter
+Scheduler Oversight Agent
+Scheduler Oversight Manager
+Serena Okafor
+Automation Engineer
+Sofia Reyes
+Customer Experience Architect
+Task Graph Integrity Agent
+Task Graph Integrity Manager
+Tool Access Controller Agent
+Tool Permission Manager
+Valentina Cruz
+Brand Architect
+Victor Ashford
+Business Strategist
+Victoria Harrington
+Compliance Officer
+Yuki Tanaka
+UX Researcher
+Zara Mitchell
+Marketing Specialist
+Commander Orion (Add-on)
+Delegates tasks across your team. Breaks down complex goals automatically.
+/month
+Your Package
+Choose credits
+100
+credits
+16.6
+500
+credits
+1,000
+credits
+165.99
+2,000
+credits
+331.98
+5,000
+credits
+829.96
+agent
+Total
+/mo
+Build Package
+Sign up
+to build your package
+Need More Credits?
+Buy additional credits anytime. They never expire.
+100
+credits
+$16.6
+300
+credits
+$49.8
+700
+credits
+$116.19
+1500
+credits
+$248.99
+458+ specialized AI agents across 28 network categories and 36 core systems. Commander Orion ∞ included in Pro and Business plans.
+Questions? Contact support.maars@marsgc.net
+MARS Command
+MARS Global Corporation
+2026
+MAARS COMMAND
+by MAARS Global Corporation

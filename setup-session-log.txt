@@ -1,0 +1,412 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260415094143
+Username: MSI\Yaleena Yara
+RunAs User: MSI\Yaleena Yara
+Configuration Name: 
+Machine: MSI (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command try { . "c:\Users\Yaleena Yara\AppData\Local\Programs\Microsoft VS Code\41dd792b5e\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1" } catch {}
+Process ID: 10768
+PSVersion: 5.1.26100.7920
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.7920
+BuildVersion: 10.0.26100.7920
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\Yaleena Yara\MAARS-Command\setup-session-log.txt
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>.\START_MAARS.bat
+
+==========================================
+          MAARS Command Launcher
+==========================================
+
+[1/2] Launching backend...
+[2/2] Launching frontend...
+
+Preview URLs:
+  Frontend:  http://localhost:3000
+  Backend:   http://localhost:8000
+  API Docs:  http://localhost:8000/docs
+
+Separate windows were opened for backend and frontend.
+If one of them closes, read that window for the exact error.
+
+Press any key to continue . . .
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe http://localhost:8000/docs
+    </html>
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe http://localhost:8000/api/v1/models -H "Authorization: Bearer YOUR_MAARS_KEY"
+ via huggingface/{org}/{model-id}"}
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe http://localhost:8000/api/v1/credits -H "Authorization: Bearer YOUR_USER_JWT"
+{"detail":"Not authenticated"}
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe http://localhost:8000/api/v1/chat/completions ^
+  -H "Authorization: Bearer YOUR_MAARS_KEY" ^
+  -H "Content-Type: application/json" ^
+  -d "{\"model\":\"maars/auto\",\"messages\":[{\"role\":\"user\",\"content\":\"hello\"}]}"
+
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:2 char:3
++   -H "Authorization: Bearer YOUR_MAARS_KEY" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-H : The term '-H' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a
+path was included, verify that the path is correct and try again.
+At line:2 char:3
++   -H "Authorization: Bearer YOUR_MAARS_KEY" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFo
+   undException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:3 char:3
++   -H "Content-Type: application/json" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-H : The term '-H' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a
+path was included, verify that the path is correct and try again.
+At line:3 char:3
++   -H "Content-Type: application/json" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFo
+   undException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+-d : The term '-d' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:4 char:3
++   -d "{\"model\":\"maars/auto\",\"messages\":[{\"role\":\"user\",\"co ...
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-d:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-d : The term '-d' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a
+path was included, verify that the path is correct and try again.
+At line:4 char:3
++   -d "{\"model\":\"maars/auto\",\"messages\":[{\"role\":\"user\",\"co ...
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-d:String) [], CommandNotFo
+   undException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe http://localhost:8000/api/v1/credits -H "Authorization: Bearer YOUR_USER_JWT"
+{"detail":"Not authenticated"}
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe "http://localhost:8000/api/v1/usage/ledger?limit=5" -H "Authorization: Bearer YOUR_USER_JWT"
+{"detail":"Not authenticated"}
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe -X POST http://localhost:8000/api/admin/wallets/user_xxx/adjust ^
+  -H "Authorization: Bearer YOUR_ADMIN_JWT" ^
+  -H "Content-Type: application/json" ^
+  -d "{\"delta\":-9999,\"reason\":\"test drain\"}"
+
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:2 char:3
++   -H "Authorization: Bearer YOUR_ADMIN_JWT" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-H : The term '-H' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a
+path was included, verify that the path is correct and try again.
+At line:2 char:3
++   -H "Authorization: Bearer YOUR_ADMIN_JWT" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFo
+   undException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:3 char:3
++   -H "Content-Type: application/json" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-H : The term '-H' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a
+path was included, verify that the path is correct and try again.
+At line:3 char:3
++   -H "Content-Type: application/json" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFo
+   undException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+-d : The term '-d' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:4 char:3
++   -d "{\"delta\":-9999,\"reason\":\"test drain\"}"
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-d:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-d : The term '-d' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a
+path was included, verify that the path is correct and try again.
+At line:4 char:3
++   -d "{\"delta\":-9999,\"reason\":\"test drain\"}"
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-d:String) [], CommandNotFo
+   undException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe -X POST http://localhost:8000/api/admin/wallets/user_xxx/adjust ^
+  -H "Authorization: Bearer YOUR_ADMIN_JWT" ^
+  -H "Content-Type: application/json" ^
+  -d "{\"delta\":50,\"reason\":\"restore credits after test\"}"
+
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:2 char:3
++   -H "Authorization: Bearer YOUR_ADMIN_JWT" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-H : The term '-H' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a
+path was included, verify that the path is correct and try again.
+At line:2 char:3
++   -H "Authorization: Bearer YOUR_ADMIN_JWT" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFo
+   undException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:3 char:3
++   -H "Content-Type: application/json" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-H : The term '-H' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a
+path was included, verify that the path is correct and try again.
+At line:3 char:3
++   -H "Content-Type: application/json" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFo
+   undException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+-d : The term '-d' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:4 char:3
++   -d "{\"delta\":50,\"reason\":\"restore credits after test\"}"
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-d:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-d : The term '-d' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a
+path was included, verify that the path is correct and try again.
+At line:4 char:3
++   -d "{\"delta\":50,\"reason\":\"restore credits after test\"}"
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-d:String) [], CommandNotFo
+   undException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe http://localhost:8000/api/v1/chat/completions ^
+  -H "Authorization: Bearer YOUR_MAARS_KEY" ^
+  -H "Content-Type: application/json" ^
+  -d "{\"model\":\"gpt-4.1\",\"messages\":[{\"role\":\"user\",\"content\":\"Summarize this in one sentence.\"}]}"
+
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:2 char:3
++   -H "Authorization: Bearer YOUR_MAARS_KEY" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-H : The term '-H' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a
+path was included, verify that the path is correct and try again.
+At line:2 char:3
++   -H "Authorization: Bearer YOUR_MAARS_KEY" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFo
+   undException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:3 char:3
++   -H "Content-Type: application/json" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-H : The term '-H' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a
+path was included, verify that the path is correct and try again.
+At line:3 char:3
++   -H "Content-Type: application/json" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFo
+   undException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+-d : The term '-d' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:4 char:3
++   -d "{\"model\":\"gpt-4.1\",\"messages\":[{\"role\":\"user\",\"conte ...
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-d:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-d : The term '-d' is not recognized as the name of a cmdlet, function,
+script file, or operable program. Check the spelling of the name, or if a
+path was included, verify that the path is correct and try again.
+At line:4 char:3
++   -d "{\"model\":\"gpt-4.1\",\"messages\":[{\"role\":\"user\",\"conte ...
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-d:String) [], CommandNotFo
+   undException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>Stop-Transcript
+**********************
+Windows PowerShell transcript end
+End time: 20260415094532
+**********************
+**********************
+Windows PowerShell transcript start
+Start time: 20260415094706
+Username: MSI\Yaleena Yara
+RunAs User: MSI\Yaleena Yara
+Configuration Name: 
+Machine: MSI (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command try { . "c:\Users\Yaleena Yara\AppData\Local\Programs\Microsoft VS Code\41dd792b5e\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1" } catch {}
+Process ID: 10768
+PSVersion: 5.1.26100.7920
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.7920
+BuildVersion: 10.0.26100.7920
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\Yaleena Yara\MAARS-Command\setup-session-log.txt
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>$headers = @{ Authorization = "Bearer YOUR_MAARS_KEY" }
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>$body = @{ model = "maars/auto"; messages = @(@{ role = "user"; content = "hello" }) } | ConvertTo-Json -Depth 5
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>Invoke-RestMethod -Uri "http://localhost:8000/api/v1/chat/completions" -Method POST -Headers $headers -Body $body -ContentType "application/json"
+>> TerminatingError(Invoke-RestMethod): "{"detail":{"error":{"message":"Invalid key format. MAARS keys begin with 'maars-sk-'","type":"auth_error","code":401}}}"
+Invoke-RestMethod : {"detail":{"error":{"message":"Invalid key format. MAARS keys begin with 
+'maars-sk-'","type":"auth_error","code":401}}}
+At line:1 char:1
++ Invoke-RestMethod -Uri "http://localhost:8000/api/v1/chat/completions ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod], 
+WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+Invoke-RestMethod : {"detail":{"error":{"message":"Invalid key format.
+MAARS keys begin with 'maars-sk-'","type":"auth_error","code":401}}}
+At line:1 char:1
++ Invoke-RestMethod -Uri "http://localhost:8000/api/v1/chat/completions ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest
+   :HttpWebRequest) [Invoke-RestMethod], WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.Powe
+   rShell.Commands.InvokeRestMethodCommand
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>$headers = @{ Authorization = "Bearer maars-sk-94a1155f188e0e5ad7aa7fb3e562fd33e6c4abb9" }
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>$body = @{ model = "maars/auto"; messages = @(@{ role = "user"; content = "hello" }) } | ConvertTo-Json -Depth 5
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>Invoke-RestMethod -Uri "http://localhost:8000/api/v1/chat/completions" -Method POST -Headers $headers -Body $body -ContentType "application/json"
+>> TerminatingError(Invoke-RestMethod): "{"detail":{"error":{"message":"No configured provider available for routing","type":"routing_error"}}}"
+Invoke-RestMethod : {"detail":{"error":{"message":"No configured provider available for 
+routing","type":"routing_error"}}}
+At line:1 char:1
++ Invoke-RestMethod -Uri "http://localhost:8000/api/v1/chat/completions ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod], 
+WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+Invoke-RestMethod : {"detail":{"error":{"message":"No configured provider
+available for routing","type":"routing_error"}}}
+At line:1 char:1
++ Invoke-RestMethod -Uri "http://localhost:8000/api/v1/chat/completions ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest
+   :HttpWebRequest) [Invoke-RestMethod], WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.Powe
+   rShell.Commands.InvokeRestMethodCommand
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260415095711
+Username: MSI\Yaleena Yara
+RunAs User: MSI\Yaleena Yara
+Configuration Name: 
+Machine: MSI (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command try { . "c:\Users\Yaleena Yara\AppData\Local\Programs\Microsoft VS Code\41dd792b5e\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1" } catch {}
+Process ID: 10720
+PSVersion: 5.1.26100.7920
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.7920
+BuildVersion: 10.0.26100.7920
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\Yaleena Yara\MAARS-Command\setup-session-log.txt
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>Get-ChildItem .\.claude -Recurse -Force -File -Include .mcp.json,mcp.json,*.mcp.json | Select-Object FullName
+
+FullName
+--------
+C:\Users\Yaleena Yara\MAARS-Command\.claude\skills\gitnexus-cli\mcp.json
+C:\Users\Yaleena Yara\MAARS-Command\.claude\skills\gitnexus-debugging\mcp.json
+C:\Users\Yaleena Yara\MAARS-Command\.claude\skills\gitnexus-exploring\mcp.json
+C:\Users\Yaleena Yara\MAARS-Command\.claude\skills\gitnexus-guide\mcp.json
+C:\Users\Yaleena Yara\MAARS-Command\.claude\skills\gitnexus-impact-analysis\mcp.json
+C:\Users\Yaleena Yara\MAARS-Command\.claude\skills\gitnexus-refactoring\mcp.json
+C:\Users\Yaleena Yara\MAARS-Command\.claude\skills_off\gitnexus-cli\mcp.json
+C:\Users\Yaleena Yara\MAARS-Command\.claude\skills_off\gitnexus-debugging\mcp.json
+C:\Users\Yaleena Yara\MAARS-Command\.claude\skills_off\gitnexus-exploring\mcp.json
+C:\Users\Yaleena Yara\MAARS-Command\.claude\skills_off\gitnexus-guide\mcp.json
+C:\Users\Yaleena Yara\MAARS-Command\.claude\skills_off\gitnexus-impact-analysis\m...
+C:\Users\Yaleena Yara\MAARS-Command\.claude\skills_off\gitnexus-refactoring\mcp.json
+
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>npm install -g yarn
+
+added 1 package in 2s
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>yarn install
+yarn start
+warning No license field
+[1/4] Resolving packages...
+⠁ (node:17224) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API inste
+ad. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[2/4] Fetching packages...
+[3/4] Linking dependencies...
+[4/4] Building fresh packages...
+success Saved lockfile.
+Done in 2.62s.
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B

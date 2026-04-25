@@ -1,9 +1,0 @@
-interface:
-  display_name: "Remote"
-  short_description: "当用户需要远程访问 Linux 服务器、复用本地保存的服务器记录或并行采集远程命令输出时触发"
-  default_prompt: "先通过标准脚本检查 bootstrap 状态（windows-msys 用 remote.ps1 -CheckBootstrap，其他环境用 remote.sh --check-bootstrap）；退出码 0 表示环境已就绪，直接进入理解用户需求阶段。若退出码非 0，必须调用标准脚本完成环境复核与 setup。Windows 使用 SSH_ASKPASS 机制，不需要 sshpass；Linux/macOS/WSL 使用 sshpass。不要手工执行 which sshpass、sshpass -V 或裸跑 sshpass ... ssh ...。之后检查 servers.json 是否已有服务器记录；未命中时立即询问地址、用户名和密码，端口默认 22。Windows 下执行远程命令推荐调用 scripts/remote.ps1，由它内部识别当前 bash 是 WSL 还是 MSYS，再转发到 bash -lc；优先使用 PowerShell 命名参数 -Address、-Port、-Username、-Password、-Command、-Commands、-Save、-Show、-Parallel、-CheckBootstrap；不要在 PowerShell 中裸跑 sshpass。状态文件统一按无 BOM UTF-8 写入，读取时必须兼容历史 BOM 文件。`windows-msys` 下使用 SSH_ASKPASS 机制自动提供密码，保持纯非交互；凭据错误时应直接失败。连接失败后不要依次试错 sshpass -k、sshpass -e、sshpass -p；若远端返回 Permission denied，只能先报告"远端拒绝了密码认证"，不能直接归因为特殊字符或兼容性问题。诊断类任务遵循 references/remote-guidelines.md。"
-policy:
-  allow_implicit_invocation: false
-dependencies:
-  tools:
-    - ssh

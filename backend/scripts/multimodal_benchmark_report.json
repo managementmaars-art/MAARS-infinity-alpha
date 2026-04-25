@@ -1,0 +1,317 @@
+{
+  "results": [
+    {
+      "modality": "chat",
+      "model": "maars/auto",
+      "units": 1,
+      "unit_kind": "n/a",
+      "usd_per_unit": 0.0001,
+      "real_cost_usd": 0.0001,
+      "real_cost_credits": 0.1,
+      "wall_s": 20.23,
+      "ok": true,
+      "meta": {
+        "status": 200,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "body_preview": null
+      }
+    },
+    {
+      "modality": "chat",
+      "model": "maars/auto",
+      "units": 1,
+      "unit_kind": "n/a",
+      "usd_per_unit": 0.002,
+      "real_cost_usd": 0.002,
+      "real_cost_credits": 2.0,
+      "wall_s": 11.96,
+      "ok": true,
+      "meta": {
+        "status": 200,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "body_preview": null
+      }
+    },
+    {
+      "modality": "chat",
+      "model": "maars/auto",
+      "units": 1,
+      "unit_kind": "n/a",
+      "usd_per_unit": 0.002,
+      "real_cost_usd": 0.002,
+      "real_cost_credits": 2.0,
+      "wall_s": 4.72,
+      "ok": true,
+      "meta": {
+        "status": 200,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "body_preview": null
+      }
+    },
+    {
+      "modality": "chat",
+      "model": "maars/auto",
+      "units": 1,
+      "unit_kind": "n/a",
+      "usd_per_unit": 0.0001,
+      "real_cost_usd": 0.0001,
+      "real_cost_credits": 0.1,
+      "wall_s": 4.22,
+      "ok": true,
+      "meta": {
+        "status": 200,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "body_preview": null
+      }
+    },
+    {
+      "modality": "chat",
+      "model": "maars/auto",
+      "units": 1,
+      "unit_kind": "n/a",
+      "usd_per_unit": 0.002,
+      "real_cost_usd": 0.002,
+      "real_cost_credits": 2.0,
+      "wall_s": 8.24,
+      "ok": true,
+      "meta": {
+        "status": 200,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "body_preview": null
+      }
+    },
+    {
+      "modality": "image",
+      "model": "gemini-3-pro-image-preview",
+      "units": 1,
+      "unit_kind": "n/a",
+      "usd_per_unit": 0.02,
+      "real_cost_usd": 0.02,
+      "real_cost_credits": 20.0,
+      "wall_s": 23.95,
+      "ok": true,
+      "meta": {
+        "provider": "gemini",
+        "model": "gemini-3-pro-image-preview",
+        "cost_usd": 0.02,
+        "cost_credits": 20,
+        "wall_s": 21.78,
+        "attempt": 1,
+        "chain_len": 3,
+        "prior_errors": []
+      }
+    },
+    {
+      "modality": "image",
+      "model": "dall-e-3",
+      "units": 1,
+      "unit_kind": "image",
+      "usd_per_unit": 0.04,
+      "real_cost_usd": 0.04,
+      "real_cost_credits": 40.0,
+      "wall_s": 21.83,
+      "ok": true,
+      "meta": {
+        "provider": "openai",
+        "model": "dall-e-3",
+        "cost_usd": 0.04,
+        "cost_credits": 40,
+        "wall_s": 21.71,
+        "attempt": 1,
+        "chain_len": 3,
+        "prior_errors": []
+      }
+    },
+    {
+      "modality": "tts",
+      "model": "tts-1",
+      "units": 1,
+      "unit_kind": "1k_char",
+      "usd_per_unit": 0.00036,
+      "real_cost_usd": 0.00036,
+      "real_cost_credits": 0.36,
+      "wall_s": 2.37,
+      "ok": true,
+      "meta": {
+        "provider": "openai",
+        "model": "tts-1",
+        "cost_usd": 0.00036,
+        "cost_credits": 1,
+        "wall_s": 2.29,
+        "attempt": 1,
+        "chain_len": 2,
+        "prior_errors": [],
+        "chars": 24,
+        "label": "short"
+      }
+    },
+    {
+      "modality": "tts",
+      "model": "tts-1",
+      "units": 1,
+      "unit_kind": "1k_char",
+      "usd_per_unit": 0.003375,
+      "real_cost_usd": 0.003375,
+      "real_cost_credits": 3.375,
+      "wall_s": 5.96,
+      "ok": true,
+      "meta": {
+        "provider": "openai",
+        "model": "tts-1",
+        "cost_usd": 0.003375,
+        "cost_credits": 4,
+        "wall_s": 5.87,
+        "attempt": 1,
+        "chain_len": 2,
+        "prior_errors": [],
+        "chars": 225,
+        "label": "medium"
+      }
+    },
+    {
+      "modality": "tts",
+      "model": "tts-1",
+      "units": 1,
+      "unit_kind": "1k_char",
+      "usd_per_unit": 0.01485,
+      "real_cost_usd": 0.01485,
+      "real_cost_credits": 14.85,
+      "wall_s": 13.45,
+      "ok": true,
+      "meta": {
+        "provider": "openai",
+        "model": "tts-1",
+        "cost_usd": 0.01485,
+        "cost_credits": 15,
+        "wall_s": 13.29,
+        "attempt": 1,
+        "chain_len": 2,
+        "prior_errors": [],
+        "chars": 990,
+        "label": "long"
+      }
+    },
+    {
+      "modality": "voice_over",
+      "model": "tts-1-hd",
+      "units": 1,
+      "unit_kind": "n/a",
+      "usd_per_unit": 0.00477,
+      "real_cost_usd": 0.00477,
+      "real_cost_credits": 4.77,
+      "wall_s": 9.92,
+      "ok": true,
+      "meta": {
+        "provider": "openai",
+        "model": "tts-1-hd",
+        "cost_usd": 0.00477,
+        "cost_credits": 5,
+        "wall_s": 9.75,
+        "attempt": 3,
+        "chain_len": 3,
+        "prior_errors": [
+          "elevenlabs/eleven_turbo_v2_5: RuntimeError: elevenlabs 402: {\"detail\":{\"type\":\"payment_required\",\"code\":\"paid_plan_required\",\"message\":\"Free users cannot use library voices via the API. Please upgrade your subscription to use this voice.\",\"stat",
+          "elevenlabs/eleven_multilingual_v2: RuntimeError: elevenlabs 402: {\"detail\":{\"type\":\"payment_required\",\"code\":\"paid_plan_required\",\"message\":\"Free users cannot use library voices via the API. Please upgrade your subscription to use this voice.\",\"stat"
+        ],
+        "chars": 159
+      }
+    },
+    {
+      "modality": "content",
+      "model": "gpt-5.2",
+      "units": 884,
+      "unit_kind": "chars",
+      "real_cost_usd": 0.00221,
+      "real_cost_credits": 2.21,
+      "wall_s": 7.63,
+      "ok": true,
+      "meta": {
+        "chars": 884
+      }
+    },
+    {
+      "modality": "social_post",
+      "model": "queue (no LLM)",
+      "units": 1,
+      "unit_kind": "post",
+      "real_cost_usd": 0.0,
+      "real_cost_credits": 0.0,
+      "wall_s": 0.02,
+      "ok": true,
+      "meta": {
+        "note": "queued, no external cost; caller-supplied content"
+      }
+    },
+    {
+      "modality": "vibe_coding",
+      "model": "gpt-5.2 (default)",
+      "units": 0,
+      "unit_kind": "html_chars",
+      "real_cost_usd": 0.0,
+      "real_cost_credits": 0.0,
+      "wall_s": 13.04,
+      "ok": true,
+      "meta": {
+        "chars_generated": 0,
+        "file_count": 0
+      }
+    }
+  ],
+  "summary": {
+    "chat": {
+      "calls": 5,
+      "ok": 5,
+      "avg_cost_usd": 0.00124,
+      "avg_cost_credits": 1.24,
+      "avg_wall_s": 9.87
+    },
+    "image": {
+      "calls": 2,
+      "ok": 2,
+      "avg_cost_usd": 0.03,
+      "avg_cost_credits": 30.0,
+      "avg_wall_s": 22.89
+    },
+    "tts": {
+      "calls": 3,
+      "ok": 3,
+      "avg_cost_usd": 0.006195,
+      "avg_cost_credits": 6.195,
+      "avg_wall_s": 7.26
+    },
+    "voice_over": {
+      "calls": 1,
+      "ok": 1,
+      "avg_cost_usd": 0.00477,
+      "avg_cost_credits": 4.77,
+      "avg_wall_s": 9.92
+    },
+    "content": {
+      "calls": 1,
+      "ok": 1,
+      "avg_cost_usd": 0.00221,
+      "avg_cost_credits": 2.21,
+      "avg_wall_s": 7.63
+    },
+    "social_post": {
+      "calls": 1,
+      "ok": 1,
+      "avg_cost_usd": 0.0,
+      "avg_cost_credits": 0.0,
+      "avg_wall_s": 0.02
+    },
+    "vibe_coding": {
+      "calls": 1,
+      "ok": 1,
+      "avg_cost_usd": 0.0,
+      "avg_cost_credits": 0.0,
+      "avg_wall_s": 13.04
+    }
+  },
+  "generated_at": "2026-04-19 01:12:31 UTC"
+}

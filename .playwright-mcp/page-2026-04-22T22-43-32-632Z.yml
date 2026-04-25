@@ -1,0 +1,230 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "logo" [ref=e5] [cursor=pointer]:
+        - /url: /chat
+        - img "logo" [ref=e6]
+      - navigation [ref=e8]:
+        - link "Chat" [ref=e9] [cursor=pointer]:
+          - /url: /chat
+        - link "API" [ref=e10] [cursor=pointer]:
+          - /url: /model-api
+        - link "Contact" [ref=e11] [cursor=pointer]:
+          - /url: /contact
+    - button "G" [ref=e15] [cursor=pointer]:
+      - generic [ref=e17]: G
+  - main [ref=e18]:
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - heading "Powering the Future with Z.ai" [level=1] [ref=e22]:
+            - text: Powering the
+            - text: Future with Z.ai
+          - generic [ref=e23]:
+            - button "Contact Sales" [ref=e24] [cursor=pointer]:
+              - text: Contact Sales
+              - img
+            - button "Developer Docs" [ref=e25] [cursor=pointer]:
+              - text: Developer Docs
+              - img
+        - generic [ref=e27]:
+          - generic [ref=e28]: New
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - img "Z.AI" [ref=e32]
+              - generic [ref=e33]:
+                - heading "GLM Coding Plan" [level=1] [ref=e34]
+                - paragraph [ref=e35]: The best choice for AI-powered coding.
+            - button "View Plans" [ref=e36] [cursor=pointer]:
+              - text: View Plans
+              - img
+        - generic [ref=e37]:
+          - heading "Models" [level=2] [ref=e38]
+          - list [ref=e39]:
+            - listitem [ref=e40] [cursor=pointer]: Language Models
+            - listitem [ref=e41] [cursor=pointer]: Vision Models
+            - listitem [ref=e42] [cursor=pointer]: Image Models
+            - listitem [ref=e43] [cursor=pointer]: Video Generation Models
+          - generic [ref=e44]:
+            - generic [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: New
+              - generic [ref=e49]: Reasoning Model
+              - generic [ref=e50]:
+                - heading "GLM-5.1" [level=2] [ref=e51]
+                - paragraph [ref=e52]: Z.ai's new flagship foundation model, significant gains on long-horizon tasks, supports 8-hour autonomous work, provides closed-loop engineering-grade deliverables, and matches the performance of Claude Opus 4.6.
+              - link "Learn More" [ref=e53]:
+                - /url: https://docs.z.ai/guides/llm/glm-5.1
+                - text: Learn More
+                - img [ref=e54]
+            - generic [ref=e57] [cursor=pointer]:
+              - generic [ref=e60]: Reasoning Model
+              - generic [ref=e61]:
+                - heading "GLM-5" [level=2] [ref=e62]
+                - paragraph [ref=e63]: GLM-5 by Z.ai delivers stronger coding, more reliable multi-step reasoning and execution, improved performance on complex agent tasks, more natural conversation, and better front-end generation quality.
+              - link "Learn More" [ref=e64]:
+                - /url: https://docs.z.ai/guides/llm/glm-5
+                - text: Learn More
+                - img [ref=e65]
+            - generic [ref=e68] [cursor=pointer]:
+              - generic [ref=e71]: Reasoning Model
+              - generic [ref=e72]:
+                - heading "GLM-4.7" [level=2] [ref=e73]
+                - paragraph [ref=e74]: GLM-4.7 Series by Z.AI features enhanced programming, stable multi-step reasoning and execution, better complex agent task performance, more natural dialogue, and improved front-end aesthetics.
+              - link "Learn More" [ref=e75]:
+                - /url: https://docs.z.ai/guides/llm/glm-4.7
+                - text: Learn More
+                - img [ref=e76]
+            - generic [ref=e79] [cursor=pointer]:
+              - generic [ref=e82]: Language Model
+              - generic [ref=e83]:
+                - heading "GLM-5-Turbo" [level=2] [ref=e84]
+                - paragraph [ref=e85]: A base model deeply optimized for the OpenClaw scenario, delivering true executability in complex, dynamic, and long-chain tasks.
+              - link "Learn More" [ref=e86]:
+                - /url: https://docs.z.ai/guides/llm/glm-5-turbo
+                - text: Learn More
+                - img [ref=e87]
+            - generic [ref=e90] [cursor=pointer]:
+              - generic [ref=e93]: Reasoning Model
+              - generic [ref=e94]:
+                - heading "GLM-4.5-Air" [level=2] [ref=e95]
+                - paragraph [ref=e96]: Z.ai’s lightweight model delivers SOTA performance with exceptional cost-effectiveness!
+              - link "Learn More" [ref=e97]:
+                - /url: https://docs.z.ai/guides/llm/glm-4.5
+                - text: Learn More
+                - img [ref=e98]
+            - generic [ref=e101] [cursor=pointer]:
+              - generic [ref=e104]: Reasoning Model
+              - generic [ref=e105]:
+                - heading "GLM-4.7-Flash" [level=2] [ref=e106]
+                - paragraph [ref=e107]: "30B parameters: Lightweight, efficient, and high-performance. It outranks similar-scale open-source models on multiple leaderboards."
+              - link "Learn More" [ref=e108]:
+                - /url: https://docs.z.ai/guides/llm/glm-4.7
+                - text: Learn More
+                - img [ref=e109]
+            - generic [ref=e112] [cursor=pointer]:
+              - generic [ref=e115]: Language Model
+              - generic [ref=e116]:
+                - heading "GLM-4-32B-0414-128K" [level=2] [ref=e117]
+                - paragraph [ref=e118]: A general-purpose, cost-efficient LLM for advanced Q&A, coding, search, and structured task automation across business and technical domains.
+              - link "Learn More" [ref=e119]:
+                - /url: https://docs.z.ai/guides/llm/glm-4-32b-0414-128k
+                - text: Learn More
+                - img [ref=e120]
+            - generic [ref=e123] [cursor=pointer]:
+              - generic [ref=e126]: Precise Recognition
+              - generic [ref=e127]:
+                - heading "GLM-ASR-2512" [level=2] [ref=e128]
+                - paragraph [ref=e129]: The latest generation of speech recognition model supports real-time conversion of speech into high-quality text. It maintains industry-leading recognition performance across multiple scenarios, achieving a character error rate (CER) of just 0.0717, delivering a fast and reliable voice input experience.
+              - link "Learn More" [ref=e130]:
+                - /url: https://docs.z.ai/guides/audio/glm-asr-2512
+                - text: Learn More
+                - img [ref=e131]
+        - generic [ref=e134]:
+          - heading "Agents" [level=2] [ref=e135]
+          - generic [ref=e136]:
+            - generic [ref=e137] [cursor=pointer]:
+              - generic [ref=e140]: Improve Work Efficiency
+              - generic [ref=e141]:
+                - heading "Translation Agent" [level=2] [ref=e142]
+                - paragraph [ref=e143]: An intelligent translation engine based on a large language model.
+              - link "Learn More" [ref=e144]:
+                - /url: https://docs.z.ai/guides/agents/translation
+                - text: Learn More
+                - img [ref=e145]
+            - generic [ref=e148] [cursor=pointer]:
+              - generic [ref=e151]: Improve Work Efficiency
+              - generic [ref=e152]:
+                - heading "GLM Slide/Poster Agent" [level=2] [ref=e153]
+                - paragraph [ref=e154]: Slide & Poster Creation Assistant Powered by GLM's Native AI Capabilities.
+              - link "Learn More" [ref=e155]:
+                - /url: https://docs.z.ai/guides/agents/slide
+                - text: Learn More
+                - img [ref=e156]
+            - generic [ref=e159] [cursor=pointer]:
+              - generic [ref=e162]: Content Generation
+              - generic [ref=e163]:
+                - heading "Video Effect Template Agent" [level=2] [ref=e164]
+                - paragraph [ref=e165]: Video templates for short video creation, based on popular gameplay.
+              - link "Learn More" [ref=e166]:
+                - /url: https://docs.z.ai/guides/agents/video-template
+                - text: Learn More
+                - img [ref=e167]
+      - generic [ref=e170]:
+        - heading "BUSINESS COOPERATION" [level=2] [ref=e171]:
+          - generic [ref=e172]: BUSINESS
+          - generic [ref=e173]: COOPERATION
+        - generic [ref=e174]:
+          - button "Price" [ref=e175] [cursor=pointer]:
+            - text: Price
+            - img
+          - button "Contact us" [ref=e176] [cursor=pointer]:
+            - text: Contact us
+            - img
+  - contentinfo [ref=e177]:
+    - generic [ref=e179]:
+      - generic [ref=e182]: Z.ai
+      - generic [ref=e183]:
+        - heading "Product" [level=3] [ref=e184]
+        - list [ref=e185]:
+          - listitem [ref=e186]:
+            - link "Language Models" [ref=e187] [cursor=pointer]:
+              - /url: https://docs.z.ai/guides/llm/glm-4.6
+          - listitem [ref=e188]:
+            - link "Video Generation Models" [ref=e189] [cursor=pointer]:
+              - /url: https://docs.z.ai/guides/video/cogvideox-3
+          - listitem [ref=e190]:
+            - link "Agent" [ref=e191] [cursor=pointer]:
+              - /url: https://docs.z.ai/guides/agents/slide
+      - generic [ref=e192]:
+        - heading "Contact" [level=3] [ref=e193]
+        - list [ref=e194]:
+          - listitem [ref=e195]:
+            - link "Contact Sales" [ref=e196] [cursor=pointer]:
+              - /url: https://z.ai/consultation?type=zaiweb
+          - listitem [ref=e197]:
+            - link "Discord" [ref=e198] [cursor=pointer]:
+              - /url: https://discord.com/invite/QR7SARHRxK
+          - listitem [ref=e199]:
+            - link "More" [ref=e200] [cursor=pointer]:
+              - /url: /contact
+      - generic [ref=e201]:
+        - heading "API Management" [level=3] [ref=e202]
+        - list [ref=e203]:
+          - listitem [ref=e204]:
+            - link "API Keys" [ref=e205] [cursor=pointer]:
+              - /url: /manage-apikey/apikey-list
+          - listitem [ref=e206]:
+            - link "Payment Method" [ref=e207] [cursor=pointer]:
+              - /url: /manage-apikey/billing
+          - listitem [ref=e208]:
+            - link "Rate Limit" [ref=e209] [cursor=pointer]:
+              - /url: /manage-apikey/rate-limits
+      - generic [ref=e210]:
+        - heading "Resource" [level=3] [ref=e211]
+        - list [ref=e212]:
+          - listitem [ref=e213]:
+            - link "Term of service" [ref=e214] [cursor=pointer]:
+              - /url: https://docs.z.ai/legal-agreement/terms-of-use
+          - listitem [ref=e215]:
+            - link "Privacy Policy" [ref=e216] [cursor=pointer]:
+              - /url: https://docs.z.ai/legal-agreement/privacy-policy
+  - region "Notifications alt+T"
+  - alert [ref=e217]
+  - generic [ref=e218]:
+    - dialog:
+      - generic [ref=e219]:
+        - button "Close" [active] [ref=e220] [cursor=pointer]:
+          - generic "Close" [ref=e221]:
+            - img "close" [ref=e222]:
+              - img [ref=e223]
+        - generic [ref=e225]:
+          - heading "Value Subscription" [level=3] [ref=e226]
+          - paragraph [ref=e227]: •Powered by Z.ai's new flagship Models
+          - paragraph [ref=e228]: •Compatible with 20+ popular AI coding tools such as Claude Code
+          - paragraph [ref=e229]: •From only $18/mo, enjoy high quotas
+        - generic [ref=e230]:
+          - link "Learn More" [ref=e231] [cursor=pointer]:
+            - /url: https://docs.z.ai/devpack/overview
+            - generic [ref=e232]: Learn More
+          - button "Join Now" [ref=e233] [cursor=pointer]:
+            - generic [ref=e234]: Join Now

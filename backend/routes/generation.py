@@ -10,7 +10,7 @@ from fastapi import APIRouter, HTTPException, Depends, Request
 from fastapi.responses import StreamingResponse
 from db import db
 from auth import get_current_user, User
-from shared.constants import UPLOAD_DIR, EMERGENT_LLM_KEY
+from shared.constants import UPLOAD_DIR
 from shared.utils import get_api_keys
 
 logger = logging.getLogger(__name__)
@@ -150,46 +150,43 @@ async def generate_document(request: Request, current_user: User = Depends(get_c
 
 @router.post("/generate/image")
 async def generate_image(request: Request, current_user: User = Depends(get_current_user)):
-    """Generate an image using GPT Image 1 or DALL-E 3"""
+    """Generate an image through the MAARS media router (Gemini/OpenAI)."""
     body = await request.json()
     prompt = body.get("prompt", "")
-    model = body.get("model", "gpt-image-1")
-    
+    quality = body.get("quality", "standard")  # "standard" | "premium"
+    size = body.get("size", "1024x1024")
+
     if not prompt:
         raise HTTPException(status_code=400, detail="Prompt is required")
-    
+
     try:
-        api_keys = await get_api_keys()
-        api_key = api_keys.get("emergent") or EMERGENT_LLM_KEY
-        
-        from emergentintegrations.llm.openai.image_generation import OpenAIImageGeneration
-        
-        image_gen = OpenAIImageGeneration(api_key=api_key)
-        images = await image_gen.generate_images(
-            prompt=prompt,
-            model=model,
-            number_of_images=1,
-            quality="high"
+        from services.media_router import route_image
+        from services.billing.media_billing import bill_and_run
+        # Estimate: standard tier image = 20 credits (gpt-image-1/$0.02), premium = 40 (dall-e-3/$0.04)
+        est_model = "dall-e-3" if quality == "premium" else "gpt-image-1"
+        image_bytes, meta, billing = await bill_and_run(
+            current_user.user_id, "image", est_model, 1,
+            route_image, prompt=prompt, quality=quality, size=size,
         )
-        
-        if not images or len(images) == 0:
-            raise HTTPException(status_code=500, detail="No image generated")
-        
+
         file_id = uuid.uuid4().hex[:10]
         filename = f"{file_id}_generated.png"
         filepath = UPLOAD_DIR / filename
-        
         with open(filepath, "wb") as f:
-            f.write(images[0])
-        
-        image_b64 = base64.b64encode(images[0]).decode()
-        
+            f.write(image_bytes)
+
+        image_b64 = base64.b64encode(image_bytes).decode()
+        # Scrub infrastructure details — clients see only the MAARS brand
+        # and whether enhancement happened. Provider/model/cost_usd are
+        # stripped so clients never know which backend produced the image.
+        from shared.response_scrubber import scrub_meta, scrub
         return {
             "filename": filename,
             "url": f"/files/{filename}",
             "preview": f"data:image/png;base64,{image_b64}",
-            "model": model,
-            "prompt": prompt
+            "prompt": prompt,
+            "router": scrub_meta(meta),
+            "billing": scrub(billing),
         }
     except HTTPException:
         raise
@@ -197,60 +194,80 @@ async def generate_image(request: Request, current_user: User = Depends(get_curr
         logger.error(f"Image generation error: {e}")
         raise HTTPException(status_code=500, detail=f"Image generation failed: {str(e)}")
 
+
+# Video gating — Sora-2 at $0.40 per 4-sec clip = 400 credits. Free/Starter/Essential
+# don't have enough budget for a single video even in the best case, so gate it cleanly
+# with a 402 that tells the user which plan they need rather than a confusing "insufficient
+# credits" after a partial flow.
+_VIDEO_MIN_PLANS = {"basic", "standard", "professional", "advanced", "business",
+                    "agency", "studio", "enterprise", "corporate", "elite", "owner"}
+
+
+async def _get_user_plan_id(user_id: str) -> str:
+    """Return the caller's current plan_id (defaults to 'free'). Admin → 'owner'."""
+    from db import db as _db
+    from auth import ADMIN_EMAIL
+    user = await _db.users.find_one({"user_id": user_id}, {"_id": 0, "email": 1})
+    if user and user.get("email") == ADMIN_EMAIL:
+        return "owner"
+    sub = await _db.subscriptions.find_one({"user_id": user_id}, {"_id": 0, "plan_id": 1})
+    return (sub or {}).get("plan_id", "free")
+
+
 @router.post("/generate/video")
 async def generate_video(request: Request, current_user: User = Depends(get_current_user)):
-    """Generate a video using Sora 2"""
+    """Generate a video through the MAARS media router (Sora-2 today)."""
     body = await request.json()
     prompt = body.get("prompt", "")
     size = body.get("size", "1280x720")
     duration = body.get("duration", 4)
-    model = body.get("model", "sora-2")
-    
+
     if not prompt:
         raise HTTPException(status_code=400, detail="Prompt is required")
-    
     if size not in ("1280x720", "1792x1024", "1024x1792", "1024x1024"):
         size = "1280x720"
     if duration not in (4, 8, 12):
         duration = 4
-    
+
+    # Plan gate — Sora-2 is too expensive for the cheapest plans.
+    plan_id = await _get_user_plan_id(current_user.user_id)
+    if plan_id not in _VIDEO_MIN_PLANS:
+        raise HTTPException(status_code=402, detail={
+            "error": {
+                "message": (f"Video generation requires the Basic plan or higher. "
+                            f"Your current plan ({plan_id}) doesn't include video. "
+                            f"A single 4-second video costs 400 credits; Basic includes 1,200 credits/mo."),
+                "type": "plan_upgrade_required",
+                "code": "video_plan_gate",
+                "current_plan": plan_id,
+                "required_plan": "basic",
+                "video_cost_credits": 400 * (duration // 4),
+            }
+        })
+
     try:
-        api_keys = await get_api_keys()
-        api_key = api_keys.get("emergent") or EMERGENT_LLM_KEY
-        
-        from emergentintegrations.llm.openai.video_generation import OpenAIVideoGeneration
-        import aiohttp
-        
-        video_gen = OpenAIVideoGeneration(api_key=api_key)
-        
-        def _gen():
-            return video_gen.text_to_video(
-                prompt=prompt,
-                model=model,
-                size=size,
-                duration=duration,
-                max_wait_time=600
-            )
-        
-        loop = asyncio.get_event_loop()
-        video_bytes = await loop.run_in_executor(None, _gen)
-        
-        if not video_bytes:
-            raise HTTPException(status_code=500, detail="Video generation failed")
-        
+        from services.media_router import route_video
+        from services.billing.media_billing import bill_and_run
+        video_bytes, meta, billing = await bill_and_run(
+            current_user.user_id, "video", "sora-2", duration,
+            route_video, prompt=prompt, duration=duration, size=size,
+        )
+
         file_id = uuid.uuid4().hex[:10]
         filename = f"{file_id}_video.mp4"
         filepath = UPLOAD_DIR / filename
-        
-        video_gen.save_video(video_bytes, str(filepath))
-        
+        with open(filepath, "wb") as f:
+            f.write(video_bytes)
+
+        from shared.response_scrubber import scrub_meta, scrub
         return {
             "filename": filename,
             "url": f"/files/{filename}",
-            "model": model,
             "size": size,
             "duration": duration,
-            "prompt": prompt
+            "prompt": prompt,
+            "router": scrub_meta(meta),
+            "billing": scrub(billing),
         }
     except HTTPException:
         raise

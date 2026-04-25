@@ -1,0 +1,25 @@
+- main [ref=e2]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - img "Lambda" [ref=e7]
+      - heading "Welcome" [level=1] [ref=e8]
+      - paragraph [ref=e10]: Log in to Lambda to continue to Lambda Cloud.
+    - generic [ref=e11]:
+      - generic [ref=e14]:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Email address *
+          - textbox "Email address" [active] [ref=e20]
+        - button "Continue" [ref=e22] [cursor=pointer]
+      - paragraph [ref=e24]:
+        - text: Don't have an account?
+        - link "Sign up" [ref=e25] [cursor=pointer]:
+          - /url: /u/signup/identifier?state=hKFo2SAwVUNxbEgxaWdIYTVNNmVWWVRhcmxJTTZFWm1YUlk0TKFur3VuaXZlcnNhbC1sb2dpbqN0aWTZIFJwZnZFblB6ZnRKMENWZDg4QnRJdzJTSm9qNjNrMVJyo2NpZNkgdFZ3U1o5QVk0S21RcUJDbTAyYXRkaThXVEtKMHlWV00
+      - generic [ref=e27]: Or
+      - generic [ref=e28]:
+        - button "Continue with Google" [ref=e30] [cursor=pointer]:
+          - generic [ref=e32]: Continue with Google
+        - button "Connection icon Continue with Hugging Face" [ref=e34] [cursor=pointer]:
+          - img "Connection icon" [ref=e35]
+          - generic [ref=e36]: Continue with Hugging Face
+        - button "Continue with GitHub" [ref=e38] [cursor=pointer]:
+          - generic [ref=e40]: Continue with GitHub

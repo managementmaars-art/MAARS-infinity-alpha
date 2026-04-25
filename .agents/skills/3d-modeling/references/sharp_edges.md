@@ -1,1 +1,0 @@
-# 3D Modeling - Sharp Edges

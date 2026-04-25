@@ -1,0 +1,671 @@
+- generic [ref=e2]:
+  - generic [ref=e7]:
+    - complementary [ref=e11]:
+      - generic [ref=e12]:
+        - link "MAARS MAARS Command by MAARS Global Corporation" [ref=e14] [cursor=pointer]:
+          - /url: /dashboard
+          - img "MAARS" [ref=e15]
+          - generic [ref=e16]:
+            - heading "MAARS Command" [level=1] [ref=e17]
+            - paragraph [ref=e18]: by MAARS Global Corporation
+        - generic [ref=e19]:
+          - generic [ref=e21]: ONLINE
+          - generic [ref=e22]: 499 agents
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]:
+              - img [ref=e33]
+              - generic [ref=e35]: "50.00"
+            - generic [ref=e36]: Free
+          - button "Buy Credits" [ref=e37] [cursor=pointer]:
+            - img [ref=e38]
+            - text: Buy Credits
+        - button "Personal Workspace 1 members" [ref=e40] [cursor=pointer]:
+          - img [ref=e42]
+          - generic [ref=e46]:
+            - paragraph [ref=e47]: Personal Workspace
+            - paragraph [ref=e48]: 1 members
+          - img [ref=e49]
+        - button "Search… /" [ref=e52] [cursor=pointer]:
+          - img [ref=e53]
+          - generic [ref=e56]: Search…
+          - generic [ref=e57]: /
+        - navigation [ref=e58]:
+          - button "Dashboard" [ref=e60] [cursor=pointer]:
+            - img [ref=e61]
+            - generic [ref=e66]: Dashboard
+          - generic [ref=e67]:
+            - generic [ref=e70]: Workspace
+            - button "Projects" [ref=e72] [cursor=pointer]:
+              - img [ref=e73]
+              - generic [ref=e78]: Projects
+            - button "Chat" [ref=e79] [cursor=pointer]:
+              - img [ref=e80]
+              - generic [ref=e82]: Chat
+            - button "Tasks" [ref=e83] [cursor=pointer]:
+              - img [ref=e84]
+              - generic [ref=e87]: Tasks
+            - button "Approvals" [ref=e88] [cursor=pointer]:
+              - img [ref=e89]
+              - generic [ref=e93]: Approvals
+          - generic [ref=e94]:
+            - generic [ref=e97]: AI Tools
+            - button "Agents" [ref=e99] [cursor=pointer]:
+              - img [ref=e100]
+              - generic [ref=e103]: Agents
+            - button "Team Builder" [ref=e104] [cursor=pointer]:
+              - img [ref=e105]
+              - generic [ref=e108]: Team Builder
+            - button "Workspace Brain" [ref=e109] [cursor=pointer]:
+              - img [ref=e110]
+              - generic [ref=e120]: Workspace Brain
+            - button "Brain Profiles" [ref=e121] [cursor=pointer]:
+              - img [ref=e122]
+              - generic [ref=e125]: Brain Profiles
+            - button "Vibe Coding" [ref=e126] [cursor=pointer]:
+              - img [ref=e127]
+              - generic [ref=e130]: Vibe Coding
+            - button "Reference Intel" [ref=e131] [cursor=pointer]:
+              - img [ref=e132]
+              - generic [ref=e134]: Reference Intel
+            - button "Content Generator" [ref=e135] [cursor=pointer]:
+              - img [ref=e136]
+              - generic [ref=e141]: Content Generator
+          - generic [ref=e142]:
+            - generic [ref=e145]: Intelligence
+            - button "Kernel" [ref=e147] [cursor=pointer]:
+              - img [ref=e148]
+              - generic [ref=e152]: Kernel
+            - button "Agent Networks" [ref=e153] [cursor=pointer]:
+              - img [ref=e154]
+              - generic [ref=e159]: Agent Networks
+            - button "Task Graphs" [ref=e160] [cursor=pointer]:
+              - img [ref=e161]
+              - generic [ref=e165]: Task Graphs
+            - button "Knowledge Graph" [ref=e166] [cursor=pointer]:
+              - img [ref=e167]
+              - generic [ref=e173]: Knowledge Graph
+            - button "Trust Scores" [ref=e174] [cursor=pointer]:
+              - img [ref=e175]
+              - generic [ref=e177]: Trust Scores
+            - button "Execution Gateway" [ref=e178] [cursor=pointer]:
+              - img [ref=e179]
+              - generic [ref=e181]: Execution Gateway
+            - button "Workflow Builder" [ref=e182] [cursor=pointer]:
+              - img [ref=e183]
+              - generic [ref=e187]: Workflow Builder
+            - button "Campaign Builder" [ref=e188] [cursor=pointer]:
+              - img [ref=e189]
+              - generic [ref=e192]: Campaign Builder
+            - button "Integrations" [ref=e193] [cursor=pointer]:
+              - img [ref=e195]
+              - generic [ref=e197]: Integrations
+            - button "Embedded Browser" [ref=e199] [cursor=pointer]:
+              - img [ref=e200]
+              - generic [ref=e203]: Embedded Browser
+            - button "Social Media" [ref=e204] [cursor=pointer]:
+              - img [ref=e205]
+              - generic [ref=e211]: Social Media
+            - button "Universal Key" [ref=e212] [cursor=pointer]:
+              - img [ref=e213]
+              - generic [ref=e217]: Universal Key
+            - button "Analytics" [ref=e218] [cursor=pointer]:
+              - img [ref=e219]
+              - generic [ref=e222]: Analytics
+            - button "Agent Suggestions" [ref=e223] [cursor=pointer]:
+              - img [ref=e224]
+              - generic [ref=e226]: Agent Suggestions
+            - button "Environments" [ref=e227] [cursor=pointer]:
+              - img [ref=e228]
+              - generic [ref=e231]: Environments
+            - button "Memory Hierarchy" [ref=e232] [cursor=pointer]:
+              - img [ref=e233]
+              - generic [ref=e235]: Memory Hierarchy
+            - button "Memory" [ref=e236] [cursor=pointer]:
+              - img [ref=e237]
+              - generic [ref=e241]: Memory
+            - button "Collaborations" [ref=e242] [cursor=pointer]:
+              - img [ref=e243]
+              - generic [ref=e245]: Collaborations
+            - button "KPI Dashboard" [ref=e246] [cursor=pointer]:
+              - img [ref=e247]
+              - generic [ref=e250]: KPI Dashboard
+            - button "Activity Monitor" [ref=e251] [cursor=pointer]:
+              - img [ref=e252]
+              - generic [ref=e258]: Activity Monitor
+            - button "My Insights" [ref=e259] [cursor=pointer]:
+              - img [ref=e260]
+              - generic [ref=e262]: My Insights
+          - generic [ref=e263]:
+            - generic [ref=e266]: MAARS Infinity
+            - button "Developer API" [ref=e268] [cursor=pointer]:
+              - img [ref=e269]
+              - generic [ref=e271]: Developer API
+            - button "Observability" [ref=e272] [cursor=pointer]:
+              - img [ref=e273]
+              - generic [ref=e280]: Observability
+            - button "Model Router" [ref=e281] [cursor=pointer]:
+              - img [ref=e282]
+              - generic [ref=e284]: Model Router
+            - button "Commander Orion" [ref=e285] [cursor=pointer]:
+              - img [ref=e286]
+              - generic [ref=e292]: Commander Orion
+            - button "Venture Portfolio" [ref=e293] [cursor=pointer]:
+              - img [ref=e294]
+              - generic [ref=e297]: Venture Portfolio
+            - button "Operator Panel" [ref=e298] [cursor=pointer]:
+              - img [ref=e299]
+              - generic [ref=e301]: Operator Panel
+            - button "Agent Catalog" [ref=e302] [cursor=pointer]:
+              - img [ref=e303]
+              - generic [ref=e308]: Agent Catalog
+          - generic [ref=e309]:
+            - generic [ref=e312]: Manage
+            - button "Products" [ref=e314] [cursor=pointer]:
+              - img [ref=e315]
+              - generic [ref=e319]: Products
+            - button "Team" [ref=e320] [cursor=pointer]:
+              - img [ref=e321]
+              - generic [ref=e326]: Team
+            - button "Organization" [ref=e327] [cursor=pointer]:
+              - img [ref=e328]
+              - generic [ref=e332]: Organization
+            - button "Settings" [ref=e333] [cursor=pointer]:
+              - img [ref=e334]
+              - generic [ref=e337]: Settings
+            - button "About" [ref=e338] [cursor=pointer]:
+              - img [ref=e339]
+              - generic [ref=e341]: About
+        - button "Collapse" [ref=e343] [cursor=pointer]:
+          - img [ref=e344]
+          - generic [ref=e347]: Collapse
+        - generic [ref=e348]:
+          - generic [ref=e350]:
+            - generic [ref=e353]: D
+            - generic [ref=e355]:
+              - paragraph [ref=e356]: Demo Client
+              - paragraph [ref=e357]: demo-client-20260418@maars.demo
+          - generic [ref=e358]:
+            - generic [ref=e359]: LIVE
+            - generic [ref=e360]: MAARS v2.0
+          - button "Log Out" [ref=e365] [cursor=pointer]:
+            - img [ref=e366]
+            - generic [ref=e369]: Log Out
+    - generic [ref=e372]:
+      - generic [ref=e373]:
+        - generic [ref=e374]:
+          - heading "Integration Hub" [level=1] [ref=e375]
+          - paragraph [ref=e376]: "Connect the systems your agents actually operate through: social channels, CRM, commerce, knowledge tools, billing, and automation fabric."
+        - generic [ref=e377]:
+          - generic [ref=e378]:
+            - paragraph [ref=e379]: Connected
+            - paragraph [ref=e380]: 0 platforms
+          - generic [ref=e382]:
+            - paragraph [ref=e383]: Ready
+            - paragraph [ref=e384]: "0"
+          - generic [ref=e386]:
+            - paragraph [ref=e387]: Social Media
+            - paragraph [ref=e388]: "0"
+      - generic [ref=e389]:
+        - generic [ref=e390]:
+          - paragraph [ref=e391]: Catalog
+          - paragraph [ref=e392]: "29"
+        - generic [ref=e393]:
+          - paragraph [ref=e394]: Ready Now
+          - paragraph [ref=e395]: "0"
+        - generic [ref=e396]:
+          - paragraph [ref=e397]: Needs Config
+          - paragraph [ref=e398]: "0"
+        - generic [ref=e399]:
+          - paragraph [ref=e400]: Planned
+          - paragraph [ref=e401]: "3"
+      - generic [ref=e402]:
+        - button "post" [ref=e403] [cursor=pointer]
+        - button "message" [ref=e404] [cursor=pointer]
+        - button "boost" [ref=e405] [cursor=pointer]
+        - button "call" [ref=e406] [cursor=pointer]
+        - button "email" [ref=e407] [cursor=pointer]
+        - button "geo target" [ref=e408] [cursor=pointer]
+        - button "analytics" [ref=e409] [cursor=pointer]
+        - button "schedule" [ref=e410] [cursor=pointer]
+      - generic [ref=e411]:
+        - button "Social Media & Messaging Connect platforms for AI-powered posting, messaging, boosting & geo-targeting 0/10 connected" [ref=e412] [cursor=pointer]:
+          - img [ref=e414]
+          - generic [ref=e420]:
+            - paragraph [ref=e421]: Social Media & Messaging
+            - paragraph [ref=e422]: Connect platforms for AI-powered posting, messaging, boosting & geo-targeting
+          - generic [ref=e423]:
+            - generic [ref=e424]: 0/10 connected
+            - img [ref=e425]
+        - generic [ref=e427]:
+          - generic [ref=e428]:
+            - generic [ref=e429]:
+              - img "Facebook" [ref=e431]
+              - generic [ref=e432]:
+                - paragraph [ref=e434]: Facebook
+                - paragraph [ref=e435]: social media
+              - link [ref=e436] [cursor=pointer]:
+                - /url: https://developers.facebook.com/docs/graph-api/
+                - img [ref=e437]
+            - generic [ref=e441]:
+              - generic [ref=e442]:
+                - img [ref=e443]
+                - text: post
+              - generic [ref=e445]:
+                - img [ref=e446]
+                - text: story
+              - generic [ref=e448]:
+                - img [ref=e449]
+                - text: reel
+              - generic [ref=e451]:
+                - img [ref=e452]
+                - text: message
+              - generic [ref=e454]:
+                - img [ref=e455]
+                - text: boost
+              - generic [ref=e458]: "+5"
+            - button "Connect" [ref=e460] [cursor=pointer]:
+              - img [ref=e461]
+              - text: Connect
+          - generic [ref=e462]:
+            - generic [ref=e463]:
+              - img "Instagram" [ref=e465]
+              - generic [ref=e466]:
+                - paragraph [ref=e468]: Instagram
+                - paragraph [ref=e469]: social media
+              - link [ref=e470] [cursor=pointer]:
+                - /url: https://developers.facebook.com/docs/instagram-api/
+                - img [ref=e471]
+            - generic [ref=e475]:
+              - generic [ref=e476]:
+                - img [ref=e477]
+                - text: post
+              - generic [ref=e479]:
+                - img [ref=e480]
+                - text: reel
+              - generic [ref=e482]:
+                - img [ref=e483]
+                - text: story
+              - generic [ref=e485]:
+                - img [ref=e486]
+                - text: dm
+              - generic [ref=e488]:
+                - img [ref=e489]
+                - text: boost
+              - generic [ref=e492]: "+4"
+            - button "Connect" [ref=e494] [cursor=pointer]:
+              - img [ref=e495]
+              - text: Connect
+          - generic [ref=e496]:
+            - generic [ref=e497]:
+              - img "LINE" [ref=e499]
+              - generic [ref=e500]:
+                - paragraph [ref=e502]: LINE
+                - paragraph [ref=e503]: social media
+              - link [ref=e504] [cursor=pointer]:
+                - /url: https://developers.line.biz/en/docs/messaging-api/
+                - img [ref=e505]
+            - generic [ref=e509]:
+              - generic [ref=e510]:
+                - img [ref=e511]
+                - text: message
+              - generic [ref=e513]:
+                - img [ref=e514]
+                - text: broadcast
+              - generic [ref=e520]:
+                - img [ref=e521]
+                - text: rich menu
+              - generic [ref=e523]:
+                - img [ref=e524]
+                - text: flex message
+              - generic [ref=e526]:
+                - img [ref=e527]
+                - text: push
+              - generic [ref=e529]: "+2"
+            - button "Connect" [ref=e531] [cursor=pointer]:
+              - img [ref=e532]
+              - text: Connect
+          - generic [ref=e533]:
+            - generic [ref=e534]:
+              - generic [ref=e536]:
+                - paragraph [ref=e538]: LinkedIn
+                - paragraph [ref=e539]: social media
+              - link [ref=e540] [cursor=pointer]:
+                - /url: https://learn.microsoft.com/en-us/linkedin/
+                - img [ref=e541]
+            - generic [ref=e545]:
+              - generic [ref=e546]:
+                - img [ref=e547]
+                - text: post
+              - generic [ref=e549]:
+                - img [ref=e550]
+                - text: article
+              - generic [ref=e552]:
+                - img [ref=e553]
+                - text: inmail
+              - generic [ref=e556]:
+                - img [ref=e557]
+                - text: ads
+              - generic [ref=e560]:
+                - img [ref=e561]
+                - text: lead gen
+              - generic [ref=e565]: "+3"
+            - button "Connect" [ref=e567] [cursor=pointer]:
+              - img [ref=e568]
+              - text: Connect
+          - generic [ref=e569]:
+            - generic [ref=e570]:
+              - img "Telegram" [ref=e572]
+              - generic [ref=e573]:
+                - paragraph [ref=e575]: Telegram
+                - paragraph [ref=e576]: social media
+              - link [ref=e577] [cursor=pointer]:
+                - /url: https://core.telegram.org/bots/api
+                - img [ref=e578]
+            - generic [ref=e582]:
+              - generic [ref=e583]:
+                - img [ref=e584]
+                - text: message
+              - generic [ref=e586]:
+                - img [ref=e587]
+                - text: broadcast
+              - generic [ref=e593]:
+                - img [ref=e594]
+                - text: channel
+              - generic [ref=e597]:
+                - img [ref=e598]
+                - text: group
+              - generic [ref=e600]:
+                - img [ref=e601]
+                - text: inline keyboard
+              - generic [ref=e603]: "+3"
+            - button "Connect" [ref=e605] [cursor=pointer]:
+              - img [ref=e606]
+              - text: Connect
+          - generic [ref=e607]:
+            - generic [ref=e608]:
+              - img "TikTok" [ref=e610]
+              - generic [ref=e611]:
+                - paragraph [ref=e613]: TikTok
+                - paragraph [ref=e614]: social media
+              - link [ref=e615] [cursor=pointer]:
+                - /url: https://ads.tiktok.com/marketing_api/docs
+                - img [ref=e616]
+            - generic [ref=e620]:
+              - generic [ref=e621]:
+                - img [ref=e622]
+                - text: post
+              - generic [ref=e624]:
+                - img [ref=e625]
+                - text: boost
+              - generic [ref=e628]:
+                - img [ref=e629]
+                - text: ads
+              - generic [ref=e632]:
+                - img [ref=e633]
+                - text: geo target
+              - generic [ref=e636]:
+                - img [ref=e637]
+                - text: analytics
+              - generic [ref=e639]: "+2"
+            - button "Connect" [ref=e641] [cursor=pointer]:
+              - img [ref=e642]
+              - text: Connect
+          - generic [ref=e643]:
+            - generic [ref=e644]:
+              - img "Twitter / X" [ref=e646]
+              - generic [ref=e647]:
+                - paragraph [ref=e649]: Twitter / X
+                - paragraph [ref=e650]: social media
+              - link [ref=e651] [cursor=pointer]:
+                - /url: https://developer.twitter.com/en/docs/twitter-api
+                - img [ref=e652]
+            - generic [ref=e656]:
+              - generic [ref=e657]:
+                - img [ref=e658]
+                - text: tweet
+              - generic [ref=e661]:
+                - img [ref=e662]
+                - text: reply
+              - generic [ref=e664]:
+                - img [ref=e665]
+                - text: dm
+              - generic [ref=e667]:
+                - img [ref=e668]
+                - text: retweet
+              - generic [ref=e670]:
+                - img [ref=e671]
+                - text: like
+              - generic [ref=e673]: "+4"
+            - button "Connect" [ref=e675] [cursor=pointer]:
+              - img [ref=e676]
+              - text: Connect
+          - generic [ref=e677]:
+            - generic [ref=e678]:
+              - img "Viber" [ref=e680]
+              - generic [ref=e681]:
+                - paragraph [ref=e683]: Viber
+                - paragraph [ref=e684]: social media
+              - link [ref=e685] [cursor=pointer]:
+                - /url: https://developers.viber.com/docs/api/rest-bot-api/
+                - img [ref=e686]
+            - generic [ref=e690]:
+              - generic [ref=e691]:
+                - img [ref=e692]
+                - text: message
+              - generic [ref=e694]:
+                - img [ref=e695]
+                - text: broadcast
+              - generic [ref=e701]:
+                - img [ref=e702]
+                - text: media
+              - generic [ref=e704]:
+                - img [ref=e705]
+                - text: keyboard
+              - generic [ref=e707]:
+                - img [ref=e708]
+                - text: reply
+              - generic [ref=e710]: "+1"
+            - button "Connect" [ref=e712] [cursor=pointer]:
+              - img [ref=e713]
+              - text: Connect
+          - generic [ref=e714]:
+            - generic [ref=e715]:
+              - img "WhatsApp Business" [ref=e717]
+              - generic [ref=e718]:
+                - paragraph [ref=e720]: WhatsApp Business
+                - paragraph [ref=e721]: social media
+              - link [ref=e722] [cursor=pointer]:
+                - /url: https://developers.facebook.com/docs/whatsapp/cloud-api/
+                - img [ref=e723]
+            - generic [ref=e727]:
+              - generic [ref=e728]:
+                - img [ref=e729]
+                - text: message
+              - generic [ref=e731]:
+                - img [ref=e732]
+                - text: call
+              - generic [ref=e734]:
+                - img [ref=e735]
+                - text: broadcast
+              - generic [ref=e741]:
+                - img [ref=e742]
+                - text: template
+              - generic [ref=e745]:
+                - img [ref=e746]
+                - text: media
+              - generic [ref=e748]: "+3"
+            - button "Connect" [ref=e750] [cursor=pointer]:
+              - img [ref=e751]
+              - text: Connect
+          - generic [ref=e752]:
+            - generic [ref=e753]:
+              - img "YouTube" [ref=e755]
+              - generic [ref=e756]:
+                - paragraph [ref=e758]: YouTube
+                - paragraph [ref=e759]: social media
+              - link [ref=e760] [cursor=pointer]:
+                - /url: https://developers.google.com/youtube/v3
+                - img [ref=e761]
+            - generic [ref=e765]:
+              - generic [ref=e766]:
+                - img [ref=e767]
+                - text: upload
+              - generic [ref=e770]:
+                - img [ref=e771]
+                - text: comment
+              - generic [ref=e773]:
+                - img [ref=e774]
+                - text: reply
+              - generic [ref=e776]:
+                - img [ref=e777]
+                - text: live
+              - generic [ref=e779]:
+                - img [ref=e780]
+                - text: ads
+              - generic [ref=e783]: "+3"
+            - button "Connect" [ref=e785] [cursor=pointer]:
+              - img [ref=e786]
+              - text: Connect
+      - button "Communications & Outreach Cold calls, SMS, voice campaigns 0/1 connected" [ref=e788] [cursor=pointer]:
+        - img [ref=e790]
+        - generic [ref=e792]:
+          - paragraph [ref=e793]: Communications & Outreach
+          - paragraph [ref=e794]: Cold calls, SMS, voice campaigns
+        - generic [ref=e795]:
+          - generic [ref=e796]: 0/1 connected
+          - img [ref=e797]
+      - button "Email & Cold Outreach Transactional email, cold outreach, campaigns 0/2 connected" [ref=e800] [cursor=pointer]:
+        - img [ref=e802]
+        - generic [ref=e805]:
+          - paragraph [ref=e806]: Email & Cold Outreach
+          - paragraph [ref=e807]: Transactional email, cold outreach, campaigns
+        - generic [ref=e808]:
+          - generic [ref=e809]: 0/2 connected
+          - img [ref=e810]
+      - button "Scheduling & Calendar Book meetings, schedule calls, manage events 0/1 connected" [ref=e813] [cursor=pointer]:
+        - img [ref=e815]
+        - generic [ref=e817]:
+          - paragraph [ref=e818]: Scheduling & Calendar
+          - paragraph [ref=e819]: Book meetings, schedule calls, manage events
+        - generic [ref=e820]:
+          - generic [ref=e821]: 0/1 connected
+          - img [ref=e822]
+      - button "Productivity & Data Airtable, Google Suite, Slack 0/3 connected" [ref=e825] [cursor=pointer]:
+        - img [ref=e827]
+        - generic [ref=e831]:
+          - paragraph [ref=e832]: Productivity & Data
+          - paragraph [ref=e833]: Airtable, Google Suite, Slack
+        - generic [ref=e834]:
+          - generic [ref=e835]: 0/3 connected
+          - img [ref=e836]
+      - button "Development GitHub repos, PRs, issues 0/1 connected" [ref=e839] [cursor=pointer]:
+        - img [ref=e841]
+        - generic [ref=e844]:
+          - paragraph [ref=e845]: Development
+          - paragraph [ref=e846]: GitHub repos, PRs, issues
+        - generic [ref=e847]:
+          - generic [ref=e848]: 0/1 connected
+          - img [ref=e849]
+      - button "Commerce Storefronts, catalog operations, orders, inventory 0/1 connected" [ref=e852] [cursor=pointer]:
+        - img [ref=e854]
+        - generic [ref=e857]:
+          - paragraph [ref=e858]: Commerce
+          - paragraph [ref=e859]: Storefronts, catalog operations, orders, inventory
+        - generic [ref=e860]:
+          - generic [ref=e861]: 0/1 connected
+          - img [ref=e862]
+      - button "CRM & RevOps Customer records, pipelines, deals, service workflows 0/2 connected" [ref=e865] [cursor=pointer]:
+        - img [ref=e867]
+        - generic [ref=e872]:
+          - paragraph [ref=e873]: CRM & RevOps
+          - paragraph [ref=e874]: Customer records, pipelines, deals, service workflows
+        - generic [ref=e875]:
+          - generic [ref=e876]: 0/2 connected
+          - img [ref=e877]
+      - button "Knowledge Systems Runbooks, docs, issue systems, structured knowledge 0/3 connected" [ref=e880] [cursor=pointer]:
+        - img [ref=e882]
+        - generic [ref=e884]:
+          - paragraph [ref=e885]: Knowledge Systems
+          - paragraph [ref=e886]: Runbooks, docs, issue systems, structured knowledge
+        - generic [ref=e887]:
+          - generic [ref=e888]: 0/3 connected
+          - img [ref=e889]
+      - button "Finance & Billing Payments, subscriptions, billing events, revenue operations 0/1 connected" [ref=e892] [cursor=pointer]:
+        - img [ref=e894]
+        - generic [ref=e896]:
+          - paragraph [ref=e897]: Finance & Billing
+          - paragraph [ref=e898]: Payments, subscriptions, billing events, revenue operations
+        - generic [ref=e899]:
+          - generic [ref=e900]: 0/1 connected
+          - img [ref=e901]
+      - button "Automation Fabric Webhooks, orchestration triggers, downstream automations 0/3 connected" [ref=e904] [cursor=pointer]:
+        - img [ref=e906]
+        - generic [ref=e908]:
+          - paragraph [ref=e909]: Automation Fabric
+          - paragraph [ref=e910]: Webhooks, orchestration triggers, downstream automations
+        - generic [ref=e911]:
+          - generic [ref=e912]: 0/3 connected
+          - img [ref=e913]
+      - generic [ref=e915]:
+        - heading "What Your Agents Can Do When Connected" [level=3] [ref=e916]:
+          - img [ref=e917]
+          - text: What Your Agents Can Do When Connected
+        - generic [ref=e919]:
+          - generic [ref=e920]:
+            - img [ref=e922]
+            - generic [ref=e925]:
+              - paragraph [ref=e926]: Post & Publish
+              - paragraph [ref=e927]: Auto-generate and post content to Facebook, Instagram, Twitter, TikTok, LinkedIn, YouTube in one click
+          - generic [ref=e928]:
+            - img [ref=e930]
+            - generic [ref=e934]:
+              - paragraph [ref=e935]: Geo-Targeted Boost
+              - paragraph [ref=e936]: Boost posts to specific geographic regions with the right language, age group, and interests automatically
+          - generic [ref=e937]:
+            - img [ref=e939]
+            - generic [ref=e941]:
+              - paragraph [ref=e942]: Send & Reply to Messages
+              - paragraph [ref=e943]: Send DMs on WhatsApp, Instagram, Viber, LINE, Telegram. Reply to comments and mentions across all platforms
+          - generic [ref=e944]:
+            - img [ref=e946]
+            - generic [ref=e949]:
+              - paragraph [ref=e950]: Cold Email Campaigns
+              - paragraph [ref=e951]: Send personalized cold emails via SendGrid or Resend with geo-aware language selection and CRM tracking
+          - generic [ref=e952]:
+            - img [ref=e954]
+            - generic [ref=e956]:
+              - paragraph [ref=e957]: Cold Calls via AI
+              - paragraph [ref=e958]: Initiate Twilio voice calls with AI-generated scripts in the language of the target region
+          - generic [ref=e959]:
+            - img [ref=e961]
+            - generic [ref=e963]:
+              - paragraph [ref=e964]: Schedule Everything
+              - paragraph [ref=e965]: Book meetings, schedule posts, calls, and campaigns — Calendly integration for fully automated scheduling
+          - generic [ref=e966]:
+            - img [ref=e968]
+            - generic [ref=e972]:
+              - paragraph [ref=e973]: Multi-Language Content
+              - paragraph [ref=e974]: Agents auto-translate content for each target region — Japanese for Japan, Arabic for Middle East, Thai for Thailand
+          - generic [ref=e975]:
+            - img [ref=e977]
+            - generic [ref=e980]:
+              - paragraph [ref=e981]: Non-Traditional Boosting
+              - paragraph [ref=e982]: "Beyond simple boosts: A/B test creatives by region, optimize bid strategy, spark ads on TikTok, LinkedIn lead gen"
+          - generic [ref=e983]:
+            - img [ref=e985]
+            - generic [ref=e988]:
+              - paragraph [ref=e989]: Geographic Client Targeting
+              - paragraph [ref=e990]: Pull clients from specific regions by geo-targeting ads and content — Southeast Asia, Middle East, Europe, Africa
+    - generic [ref=e991]:
+      - generic "Chat with Commander Orion" [ref=e992] [cursor=pointer]:
+        - img "Commander Orion" [ref=e995]
+      - button "Start a new chat" [ref=e997] [cursor=pointer]:
+        - img [ref=e998]
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

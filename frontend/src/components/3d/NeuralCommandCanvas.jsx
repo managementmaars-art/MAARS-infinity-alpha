@@ -57,7 +57,7 @@ function CoreRing({ idx }) {
   );
 }
 
-function Scene({ scrollY }) {
+function Scene({ scrollY, onSelectAgent }) {
   return (
     <>
       <CameraRig scrollY={scrollY} />
@@ -74,8 +74,10 @@ function Scene({ scrollY }) {
       {/* The central AI brain */}
       <NeuralCore />
 
-      {/* 72 agent nodes orbiting */}
-      <AgentNodes />
+      {/* 72 agent nodes orbiting — interactive: hover shows role label,
+          click bubbles up to the LandingPage which displays a toast or
+          routes to the agent catalog. */}
+      <AgentNodes onSelect={onSelectAgent} />
 
       {/* Ambient void particles */}
       <VoidParticles />
@@ -100,7 +102,7 @@ function Scene({ scrollY }) {
   );
 }
 
-export default function NeuralCommandCanvas({ scrollY }) {
+export default function NeuralCommandCanvas({ scrollY, onSelectAgent }) {
   return (
     <Canvas
       camera={{ position: [0, 0, 13], fov: 58, near: 0.1, far: 100 }}
@@ -113,7 +115,7 @@ export default function NeuralCommandCanvas({ scrollY }) {
       style={{ background: "transparent" }}
     >
       <Suspense fallback={null}>
-        <Scene scrollY={scrollY} />
+        <Scene scrollY={scrollY} onSelectAgent={onSelectAgent} />
       </Suspense>
     </Canvas>
   );

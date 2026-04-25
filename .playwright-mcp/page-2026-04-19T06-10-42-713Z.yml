@@ -1,0 +1,68 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e5]:
+    - generic [ref=e6]:
+      - link "logo":
+        - /url: //www.alibabacloud.com
+        - img "logo" [ref=e7] [cursor=pointer]
+      - generic [ref=e8]:
+        - link "Sign In" [ref=e9] [cursor=pointer]:
+          - /url: https://account.alibabacloud.com/login/login.htm
+        - generic [ref=e11] [cursor=pointer]:
+          - img [ref=e12]
+          - text: English
+  - iframe [ref=e16]:
+    - generic [ref=f354e4]:
+      - generic [ref=f354e7]:
+        - img [ref=f354e8]
+        - generic [ref=f354e13]:
+          - generic [ref=f354e14]: Sign up for an Enterprise Account For More Perks
+          - generic [ref=f354e16]: Running your own business? Even if it's a small or solo venture, you qualify for an Enterprise account!
+          - generic [ref=f354e18]: An Enterprise Account gives you more benefits — with no minimum company size requirements.
+          - generic [ref=f354e19]:
+            - generic [ref=f354e21]: "Benefits include:"
+            - generic [ref=f354e22]:
+              - text: ꔷ Access to more products and services
+              - text: ꔷ Up to $5,000 in free cloud credits
+              - text: ꔷ Personalized consultations and exclusive offers
+      - generic [ref=f354e23]:
+        - generic [ref=f354e25]:
+          - heading "Sign up to Alibaba Cloud" [level=1] [ref=f354e26]
+          - generic [ref=f354e27]:
+            - generic [ref=f354e28]:
+              - generic [ref=f354e29]: Please select your account type*
+              - radiogroup [ref=f354e31]:
+                - generic [ref=f354e33] [cursor=pointer]:
+                  - heading "Business Account" [level=4] [ref=f354e35]
+                  - paragraph [ref=f354e36]: For companies, startups, entrepreneurs. Enjoy full product access and exclusive offers.
+                - generic [ref=f354e38] [cursor=pointer]:
+                  - heading "Individual Account" [level=4] [ref=f354e39]
+                  - paragraph [ref=f354e40]: For personal learning and non-commercial use.
+            - link "Next" [ref=f354e41] [cursor=pointer]:
+              - /url: "#/account"
+            - generic [ref=f354e43]: Or
+            - generic [ref=f354e44]:
+              - button "google logoSign up with Google" [ref=f354e45] [cursor=pointer]:
+                - img "google logo" [ref=f354e46]
+                - text: Sign up with Google
+              - button "github logoSign up with Github" [ref=f354e47] [cursor=pointer]:
+                - img "github logo" [ref=f354e48]
+                - text: Sign up with Github
+            - paragraph [ref=f354e49]:
+              - text: Already a member?
+              - link "Sign In" [ref=f354e50] [cursor=pointer]:
+                - /url: //account.alibabacloud.com/login/login.htm
+        - generic [ref=f354e51]:
+          - paragraph [ref=f354e52]: © 2009-2026 Copyright by Alibaba Cloud All rights reserved
+          - paragraph [ref=f354e53]:
+            - link "Privacy Policy" [ref=f354e54] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/help/doc-detail/42425.htm
+            - text: "|"
+            - link "Terms of Use" [ref=f354e55] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/help/doc-detail/42417.htm
+            - text: "|"
+            - link "Membership Agreement" [ref=f354e56] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/help/doc-detail/42427.htm
+            - text: "|"
+            - link "Product Terms" [ref=f354e57] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/help/doc-detail/42416.htm
+  - img [ref=e18]

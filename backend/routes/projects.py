@@ -7,8 +7,8 @@ from fastapi import APIRouter, HTTPException, Depends
 from db import db
 from auth import get_current_user, User
 from models.schemas import ProjectCreate, ProjectUpdate, AutonomySettings
-from shared.constants import EMERGENT_LLM_KEY
 from services.orchestration_service import create_project, execute_project
+from shared.utils import get_api_keys as _get_admin_keys
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -57,8 +57,11 @@ async def create_new_project(data: ProjectCreate, current_user: User = Depends(g
     # Get user's API keys
     user = await db.users.find_one({"user_id": current_user.user_id}, {"_id": 0})
     api_keys = user.get("api_keys", {}) if user else {}
-    if not api_keys.get("emergent"):
-        api_keys["emergent"] = EMERGENT_LLM_KEY
+    # Merge admin-level DB/env keys (openai, gemini, etc.) so downstream
+    # services (orchestration_service.call_direct_llm) always have a provider key.
+    admin_keys = await _get_admin_keys()
+    for k, v in admin_keys.items():
+        api_keys.setdefault(k, v)
 
     project = await create_project(
         goal=data.goal,
@@ -118,8 +121,11 @@ async def execute_project_endpoint(project_id: str, current_user: User = Depends
 
     user = await db.users.find_one({"user_id": current_user.user_id}, {"_id": 0})
     api_keys = user.get("api_keys", {}) if user else {}
-    if not api_keys.get("emergent"):
-        api_keys["emergent"] = EMERGENT_LLM_KEY
+    # Merge admin-level DB/env keys (openai, gemini, etc.) so downstream
+    # services (orchestration_service.call_direct_llm) always have a provider key.
+    admin_keys = await _get_admin_keys()
+    for k, v in admin_keys.items():
+        api_keys.setdefault(k, v)
 
     await db.projects.update_one(
         {"project_id": project_id},

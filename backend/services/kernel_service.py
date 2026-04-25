@@ -33,8 +33,9 @@ from services.analytics_service import (
 # Re-export from integration_service
 from services.integration_service import (
     AVAILABLE_INTEGRATIONS,
+    get_integration_overview,
     get_integrations, get_user_integrations, save_user_integration,
-    disconnect_integration, toggle_integration,
+    disconnect_integration, toggle_integration, verify_user_integration,
 )
 
 # Re-export from organization_service

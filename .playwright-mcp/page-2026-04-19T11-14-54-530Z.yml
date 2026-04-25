@@ -1,0 +1,2764 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e7]:
+      - generic [ref=e8]:
+        - link "MAARS MAARS Command by MAARS Global Corporation" [ref=e10] [cursor=pointer]:
+          - /url: /dashboard
+          - img "MAARS" [ref=e11]
+          - generic [ref=e12]:
+            - heading "MAARS Command" [level=1] [ref=e13]
+            - paragraph [ref=e14]: by MAARS Global Corporation
+        - generic [ref=e15]:
+          - generic [ref=e17]: ONLINE
+          - generic [ref=e18]: 499 agents
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - generic [ref=e28]:
+              - img [ref=e29]
+              - generic [ref=e31]: Unlimited
+            - generic [ref=e32]: Owner
+          - paragraph [ref=e33]: No credit limits apply
+        - button "Personal Workspace 1 members" [ref=e35] [cursor=pointer]:
+          - img [ref=e37]
+          - generic [ref=e41]:
+            - paragraph [ref=e42]: Personal Workspace
+            - paragraph [ref=e43]: 1 members
+          - img [ref=e44]
+        - button "Search… /" [ref=e47] [cursor=pointer]:
+          - img [ref=e48]
+          - generic [ref=e51]: Search…
+          - generic [ref=e52]: /
+        - navigation [ref=e53]:
+          - button "Dashboard" [ref=e55] [cursor=pointer]:
+            - img [ref=e56]
+            - generic [ref=e61]: Dashboard
+          - generic [ref=e62]:
+            - generic [ref=e65]: Workspace
+            - button "Projects" [ref=e67] [cursor=pointer]:
+              - img [ref=e68]
+              - generic [ref=e73]: Projects
+            - button "Chat" [ref=e74] [cursor=pointer]:
+              - img [ref=e75]
+              - generic [ref=e77]: Chat
+            - button "Tasks" [ref=e78] [cursor=pointer]:
+              - img [ref=e79]
+              - generic [ref=e82]: Tasks
+            - button "Approvals" [ref=e83] [cursor=pointer]:
+              - img [ref=e84]
+              - generic [ref=e88]: Approvals
+          - generic [ref=e89]:
+            - generic [ref=e92]: AI Tools
+            - button "Agents" [ref=e94] [cursor=pointer]:
+              - img [ref=e95]
+              - generic [ref=e98]: Agents
+            - button "Team Builder" [ref=e99] [cursor=pointer]:
+              - img [ref=e100]
+              - generic [ref=e103]: Team Builder
+            - button "Workspace Brain" [ref=e104] [cursor=pointer]:
+              - img [ref=e105]
+              - generic [ref=e115]: Workspace Brain
+            - button "Brain Profiles" [ref=e116] [cursor=pointer]:
+              - img [ref=e117]
+              - generic [ref=e120]: Brain Profiles
+            - button "Vibe Coding" [ref=e121] [cursor=pointer]:
+              - img [ref=e122]
+              - generic [ref=e125]: Vibe Coding
+            - button "Reference Intel" [ref=e126] [cursor=pointer]:
+              - img [ref=e127]
+              - generic [ref=e129]: Reference Intel
+            - button "Content Generator" [ref=e130] [cursor=pointer]:
+              - img [ref=e131]
+              - generic [ref=e136]: Content Generator
+          - generic [ref=e137]:
+            - generic [ref=e140]: Intelligence
+            - button "Kernel" [ref=e142] [cursor=pointer]:
+              - img [ref=e143]
+              - generic [ref=e147]: Kernel
+            - button "Agent Networks" [ref=e148] [cursor=pointer]:
+              - img [ref=e149]
+              - generic [ref=e154]: Agent Networks
+            - button "Task Graphs" [ref=e155] [cursor=pointer]:
+              - img [ref=e156]
+              - generic [ref=e160]: Task Graphs
+            - button "Knowledge Graph" [ref=e161] [cursor=pointer]:
+              - img [ref=e162]
+              - generic [ref=e168]: Knowledge Graph
+            - button "Trust Scores" [ref=e169] [cursor=pointer]:
+              - img [ref=e170]
+              - generic [ref=e172]: Trust Scores
+            - button "Execution Gateway" [ref=e173] [cursor=pointer]:
+              - img [ref=e174]
+              - generic [ref=e176]: Execution Gateway
+            - button "Workflow Builder" [ref=e177] [cursor=pointer]:
+              - img [ref=e178]
+              - generic [ref=e182]: Workflow Builder
+            - button "Campaign Builder" [ref=e183] [cursor=pointer]:
+              - img [ref=e184]
+              - generic [ref=e187]: Campaign Builder
+            - button "Integrations" [ref=e188] [cursor=pointer]:
+              - img [ref=e189]
+              - generic [ref=e191]: Integrations
+            - button "Embedded Browser" [ref=e192] [cursor=pointer]:
+              - img [ref=e193]
+              - generic [ref=e196]: Embedded Browser
+            - button "Social Media" [ref=e197] [cursor=pointer]:
+              - img [ref=e198]
+              - generic [ref=e204]: Social Media
+            - button "Universal Key" [ref=e205] [cursor=pointer]:
+              - img [ref=e206]
+              - generic [ref=e210]: Universal Key
+            - button "Analytics" [ref=e211] [cursor=pointer]:
+              - img [ref=e212]
+              - generic [ref=e215]: Analytics
+            - button "Agent Suggestions" [ref=e216] [cursor=pointer]:
+              - img [ref=e217]
+              - generic [ref=e219]: Agent Suggestions
+            - button "Environments" [ref=e220] [cursor=pointer]:
+              - img [ref=e221]
+              - generic [ref=e224]: Environments
+            - button "Memory Hierarchy" [ref=e225] [cursor=pointer]:
+              - img [ref=e226]
+              - generic [ref=e228]: Memory Hierarchy
+            - button "Memory" [ref=e229] [cursor=pointer]:
+              - img [ref=e230]
+              - generic [ref=e234]: Memory
+            - button "Collaborations" [ref=e235] [cursor=pointer]:
+              - img [ref=e236]
+              - generic [ref=e238]: Collaborations
+            - button "KPI Dashboard" [ref=e239] [cursor=pointer]:
+              - img [ref=e240]
+              - generic [ref=e243]: KPI Dashboard
+            - button "Activity Monitor" [ref=e244] [cursor=pointer]:
+              - img [ref=e245]
+              - generic [ref=e251]: Activity Monitor
+            - button "My Insights" [ref=e252] [cursor=pointer]:
+              - img [ref=e253]
+              - generic [ref=e255]: My Insights
+          - generic [ref=e256]:
+            - generic [ref=e259]: MAARS Infinity
+            - button "Developer API" [ref=e261] [cursor=pointer]:
+              - img [ref=e262]
+              - generic [ref=e264]: Developer API
+            - button "Observability" [ref=e265] [cursor=pointer]:
+              - img [ref=e266]
+              - generic [ref=e273]: Observability
+            - button "Model Router" [ref=e274] [cursor=pointer]:
+              - img [ref=e275]
+              - generic [ref=e277]: Model Router
+            - button "Commander Orion" [ref=e278] [cursor=pointer]:
+              - img [ref=e279]
+              - generic [ref=e285]: Commander Orion
+            - button "Venture Portfolio" [ref=e286] [cursor=pointer]:
+              - img [ref=e287]
+              - generic [ref=e290]: Venture Portfolio
+            - button "Operator Panel" [ref=e291] [cursor=pointer]:
+              - img [ref=e292]
+              - generic [ref=e294]: Operator Panel
+            - button "Agent Catalog" [ref=e295] [cursor=pointer]:
+              - img [ref=e296]
+              - generic [ref=e301]: Agent Catalog
+          - generic [ref=e302]:
+            - generic [ref=e305]: Manage
+            - button "Products" [ref=e307] [cursor=pointer]:
+              - img [ref=e308]
+              - generic [ref=e312]: Products
+            - button "Team" [ref=e313] [cursor=pointer]:
+              - img [ref=e314]
+              - generic [ref=e319]: Team
+            - button "Organization" [ref=e320] [cursor=pointer]:
+              - img [ref=e321]
+              - generic [ref=e325]: Organization
+            - button "Settings" [ref=e326] [cursor=pointer]:
+              - img [ref=e327]
+              - generic [ref=e330]: Settings
+            - button "About" [ref=e331] [cursor=pointer]:
+              - img [ref=e332]
+              - generic [ref=e334]: About
+          - generic [ref=e337]: Admin
+          - button "Overview" [ref=e339] [cursor=pointer]:
+            - img [ref=e340]
+            - generic [ref=e342]: Overview
+          - button "Analytics" [ref=e343] [cursor=pointer]:
+            - img [ref=e344]
+            - generic [ref=e346]: Analytics
+          - button "Universal Gateway" [ref=e347] [cursor=pointer]:
+            - img [ref=e348]
+            - generic [ref=e351]: Universal Gateway
+          - button "Users" [ref=e352] [cursor=pointer]:
+            - img [ref=e353]
+            - generic [ref=e358]: Users
+          - button "Agents" [ref=e359] [cursor=pointer]:
+            - img [ref=e360]
+            - generic [ref=e363]: Agents
+          - button "Transactions" [ref=e364] [cursor=pointer]:
+            - img [ref=e365]
+            - generic [ref=e367]: Transactions
+          - button "Pricing & Splits" [ref=e368] [cursor=pointer]:
+            - img [ref=e370]
+            - generic [ref=e373]: Pricing & Splits
+          - button "API Keys" [ref=e375] [cursor=pointer]:
+            - img [ref=e376]
+            - generic [ref=e380]: API Keys
+          - button "Payment Setup" [ref=e381] [cursor=pointer]:
+            - img [ref=e382]
+            - generic [ref=e384]: Payment Setup
+          - button "Email (SMTP)" [ref=e385] [cursor=pointer]:
+            - img [ref=e386]
+            - generic [ref=e389]: Email (SMTP)
+          - button "Branding" [ref=e390] [cursor=pointer]:
+            - img [ref=e391]
+            - generic [ref=e395]: Branding
+          - button "Knowledge Base" [ref=e396] [cursor=pointer]:
+            - img [ref=e397]
+            - generic [ref=e399]: Knowledge Base
+          - button "Audit Log" [ref=e400] [cursor=pointer]:
+            - img [ref=e401]
+            - generic [ref=e404]: Audit Log
+          - button "Code Explorer" [ref=e405] [cursor=pointer]:
+            - img [ref=e406]
+            - generic [ref=e411]: Code Explorer
+          - button "Access Control" [ref=e412] [cursor=pointer]:
+            - img [ref=e413]
+            - generic [ref=e416]: Access Control
+          - button "Circuit Breakers" [ref=e417] [cursor=pointer]:
+            - img [ref=e418]
+            - generic [ref=e424]: Circuit Breakers
+          - button "Cost Governance" [ref=e425] [cursor=pointer]:
+            - img [ref=e426]
+            - generic [ref=e429]: Cost Governance
+          - button "Preview Client View" [ref=e430] [cursor=pointer]:
+            - img [ref=e431]
+            - generic [ref=e434]: Preview Client View
+        - button "Collapse" [ref=e436] [cursor=pointer]:
+          - img [ref=e437]
+          - generic [ref=e440]: Collapse
+        - generic [ref=e441]:
+          - generic [ref=e447]:
+            - paragraph [ref=e448]: Mirza Arafat Abbas
+            - paragraph [ref=e449]: management.maars@marsgc.net
+          - generic [ref=e450]:
+            - generic [ref=e451]: LIVE
+            - generic [ref=e452]: MAARS v2.0
+          - button "Log Out" [ref=e457] [cursor=pointer]:
+            - img [ref=e458]
+            - generic [ref=e461]: Log Out
+    - generic [ref=e464]:
+      - generic [ref=e465]:
+        - generic [ref=e466]:
+          - heading "Pricing Command Center" [level=1] [ref=e467]
+          - paragraph [ref=e468]: Plans, provider intelligence, and profitability — all in one place.
+        - generic [ref=e469]:
+          - button "Plans" [ref=e470] [cursor=pointer]:
+            - img [ref=e471]
+            - text: Plans
+          - button "Providers" [ref=e474] [cursor=pointer]:
+            - img [ref=e475]
+            - text: Providers
+          - button "Advisor" [ref=e477] [cursor=pointer]:
+            - img [ref=e478]
+            - text: Advisor
+      - generic [ref=e480]:
+        - paragraph [ref=e482]: Manage subscription plans, pricing margins, and custom packages.
+        - button "New Plan" [ref=e483] [cursor=pointer]:
+          - img [ref=e484]
+          - text: New Plan
+      - generic [ref=e485]:
+        - generic [ref=e486]:
+          - generic [ref=e488]:
+            - img [ref=e490]
+            - text: Pricing Engine Config
+            - generic [ref=e492]: GLOBAL
+          - generic [ref=e493]:
+            - paragraph [ref=e494]:
+              - text: These values drive every plan's auto-derived media capacity + USD cap. Change the
+              - strong [ref=e495]: tokens per credit
+              - text: to tune how much LLM work a credit buys. Change per-unit credit costs to rebalance your pricing without touching each plan individually.
+            - generic [ref=e496]:
+              - generic [ref=e497]:
+                - text: Tokens / Credit
+                - spinbutton [ref=e498]: "1000"
+                - paragraph [ref=e499]: 1 credit = this many tokens
+              - generic [ref=e500]:
+                - text: Image Standard
+                - spinbutton [ref=e501]: "20"
+                - paragraph [ref=e502]: credits per 1024² image
+              - generic [ref=e503]:
+                - text: Image HD
+                - spinbutton [ref=e504]: "40"
+                - paragraph [ref=e505]: credits per HD image
+              - generic [ref=e506]:
+                - text: Video / sec
+                - spinbutton [ref=e507]: "100"
+                - paragraph [ref=e508]: credits per second
+              - generic [ref=e509]:
+                - text: TTS / min
+                - spinbutton [ref=e510]: "15"
+                - paragraph [ref=e511]: credits per TTS minute
+              - generic [ref=e512]:
+                - text: Voice-Over / min
+                - spinbutton [ref=e513]: "30"
+                - paragraph [ref=e514]: credits per VO minute
+              - generic [ref=e515]:
+                - text: STT / min
+                - spinbutton [ref=e516]: "5"
+                - paragraph [ref=e517]: credits per STT minute
+            - generic [ref=e518]:
+              - generic [ref=e519]:
+                - img [ref=e520]
+                - generic [ref=e522]: Media Budget Calculator
+                - generic [ref=e523]: — set credits and watch capacity update live
+              - generic [ref=e524]:
+                - spinbutton [ref=e525]: "1000"
+                - generic [ref=e526]: credits
+                - slider [ref=e527]: "1000"
+                - generic [ref=e528]:
+                  - button "50" [ref=e529] [cursor=pointer]
+                  - button "300" [ref=e530] [cursor=pointer]
+                  - button "600" [ref=e531] [cursor=pointer]
+                  - button "1.2k" [ref=e532] [cursor=pointer]
+                  - button "2k" [ref=e533] [cursor=pointer]
+                  - button "3k" [ref=e534] [cursor=pointer]
+                  - button "5k" [ref=e535] [cursor=pointer]
+                  - button "10k" [ref=e536] [cursor=pointer]
+              - generic [ref=e537]:
+                - generic [ref=e538]: "If client spent 100% on ONE modality:"
+                - generic [ref=e539]:
+                  - generic [ref=e540]:
+                    - generic [ref=e541]: Chat tokens
+                    - generic [ref=e542]: 1,000,000
+                  - generic [ref=e543]:
+                    - generic [ref=e544]: Images (std)
+                    - generic [ref=e545]: "50"
+                  - generic [ref=e546]:
+                    - generic [ref=e547]: Images (HD)
+                    - generic [ref=e548]: "25"
+                  - generic [ref=e549]:
+                    - generic [ref=e550]: Video (4s clips)
+                    - generic [ref=e551]: "2"
+                  - generic [ref=e552]:
+                    - generic [ref=e553]: Video (sec)
+                    - generic [ref=e554]: "10"
+                  - generic [ref=e555]:
+                    - generic [ref=e556]: TTS (min)
+                    - generic [ref=e557]: "66"
+                  - generic [ref=e558]:
+                    - generic [ref=e559]: VO (min)
+                    - generic [ref=e560]: "33"
+                  - generic [ref=e561]:
+                    - generic [ref=e562]: STT (min)
+                    - generic [ref=e563]: "200"
+              - generic [ref=e564]:
+                - generic [ref=e566]: "Realistic mix (100% allocated) — tune to match your typical customer:"
+                - generic [ref=e567]:
+                  - generic [ref=e568]:
+                    - generic [ref=e569]:
+                      - generic [ref=e570]: Chat
+                      - generic [ref=e571]: 60%
+                    - slider [ref=e572]: "60"
+                  - generic [ref=e573]:
+                    - generic [ref=e574]:
+                      - generic [ref=e575]: Images
+                      - generic [ref=e576]: 20%
+                    - slider [ref=e577]: "20"
+                  - generic [ref=e578]:
+                    - generic [ref=e579]:
+                      - generic [ref=e580]: Video
+                      - generic [ref=e581]: 10%
+                    - slider [ref=e582]: "10"
+                  - generic [ref=e583]:
+                    - generic [ref=e584]:
+                      - generic [ref=e585]: TTS
+                      - generic [ref=e586]: 5%
+                    - slider [ref=e587]: "5"
+                  - generic [ref=e588]:
+                    - generic [ref=e589]:
+                      - generic [ref=e590]: VO
+                      - generic [ref=e591]: 5%
+                    - slider [ref=e592]: "5"
+                - generic [ref=e593]:
+                  - generic [ref=e594]:
+                    - generic [ref=e595]: Chat
+                    - generic [ref=e596]: 600,000 tok
+                  - generic [ref=e597]:
+                    - generic [ref=e598]: Images
+                    - generic [ref=e599]: 10 std
+                  - generic [ref=e600]:
+                    - generic [ref=e601]: Video
+                    - generic [ref=e602]: 1 sec
+                  - generic [ref=e603]:
+                    - generic [ref=e604]: TTS
+                    - generic [ref=e605]: 3 min
+                  - generic [ref=e606]:
+                    - generic [ref=e607]: VO
+                    - generic [ref=e608]: 1 min
+            - generic [ref=e609]:
+              - strong [ref=e610]: "Tip:"
+              - text: "At current settings, a plan with 1,000 tokens/credit can generate, per 1,000 credits:"
+              - strong [ref=e611]: "50"
+              - text: images ·
+              - strong [ref=e612]: "10"
+              - text: seconds of video ·
+              - strong [ref=e613]: "66"
+              - text: minutes of TTS ·
+              - strong [ref=e614]: 1.0M
+              - text: LLM tokens. Save to publish these defaults.
+        - generic [ref=e615]:
+          - generic [ref=e617]:
+            - img [ref=e619]
+            - text: Profit Margin Calculator
+            - generic [ref=e622]: LIVE SYNC
+          - generic [ref=e623]:
+            - generic [ref=e624]:
+              - generic [ref=e625]:
+                - paragraph [ref=e626]: Blended Cost / Credit
+                - paragraph [ref=e628]: $0.000187
+                - paragraph [ref=e629]: Across all providers (free + paid)
+              - generic [ref=e630]:
+                - paragraph [ref=e631]: Free-Tier Routing
+                - paragraph [ref=e633]: 96%
+                - paragraph [ref=e634]: 1723 free / 73 paid calls
+              - generic [ref=e635]:
+                - paragraph [ref=e636]: Total Credits Used
+                - paragraph [ref=e637]: 1,796
+                - paragraph [ref=e638]: "Total cost: $0.3360"
+              - generic [ref=e639]:
+                - paragraph [ref=e640]: Providers Active
+                - paragraph [ref=e641]:
+                  - generic [ref=e642]:
+                    - img [ref=e643]
+                    - text: 2 providers
+                - paragraph [ref=e646]: Live from usage logs
+            - generic [ref=e647]:
+              - generic [ref=e648]:
+                - text: Blended Cost per Credit (USD)
+                - generic [ref=e649]: $0.000187
+                - paragraph [ref=e650]: Live from 1796 credits used
+              - generic [ref=e652]:
+                - text: Profit Margin (% above AI cost)
+                - spinbutton [ref=e653]: "200"
+                - paragraph [ref=e654]: 200% markup → Price = AI Cost × 3.0×
+              - generic [ref=e655]:
+                - generic [ref=e656]: BDT Exchange Rate (syncs all prices)
+                - generic [ref=e657]:
+                  - spinbutton [ref=e658]: "122.95"
+                  - button "Refresh Live" [ref=e659] [cursor=pointer]
+                - paragraph [ref=e660]: 1 USD = 122.95 BDT — all plan BDT prices auto-update
+            - button "Auto-Price All Plans at 200% Margin" [ref=e661] [cursor=pointer]
+            - table [ref=e663]:
+              - rowgroup [ref=e664]:
+                - row "Plan Credits AI Cost (client cap) Price Suggested Profit Margin" [ref=e665]:
+                  - columnheader "Plan" [ref=e666]
+                  - columnheader "Credits" [ref=e667]
+                  - columnheader "AI Cost (client cap)" [ref=e668]
+                  - columnheader "Price" [ref=e669]
+                  - columnheader "Suggested" [ref=e670]
+                  - columnheader "Profit" [ref=e671]
+                  - columnheader "Margin" [ref=e672]
+              - rowgroup [ref=e673]:
+                - row "Free 50 $0.01 $0.00 — — —" [ref=e674]:
+                  - cell "Free" [ref=e675]
+                  - cell "50" [ref=e676]
+                  - cell "$0.01" [ref=e677]
+                  - cell "$0.00" [ref=e678]
+                  - cell "—" [ref=e679]
+                  - cell "—" [ref=e680]
+                  - cell "—" [ref=e681]
+                - row "Starter 500 $0.09 $19.00 $0.28 $18.91 ∞" [ref=e682]:
+                  - cell "Starter" [ref=e683]
+                  - cell "500" [ref=e684]
+                  - cell "$0.09" [ref=e685]
+                  - cell "$19.00" [ref=e686]
+                  - cell "$0.28" [ref=e687]:
+                    - button "$0.28" [ref=e688] [cursor=pointer]
+                  - cell "$18.91" [ref=e689]:
+                    - generic [ref=e690]: $18.91
+                  - cell "∞" [ref=e691]:
+                    - generic [ref=e692]: ∞
+                - row "Essential 1,200 $0.22 $39.00 $0.67 $38.78 ∞" [ref=e693]:
+                  - cell "Essential" [ref=e694]
+                  - cell "1,200" [ref=e695]
+                  - cell "$0.22" [ref=e696]
+                  - cell "$39.00" [ref=e697]
+                  - cell "$0.67" [ref=e698]:
+                    - button "$0.67" [ref=e699] [cursor=pointer]
+                  - cell "$38.78" [ref=e700]:
+                    - generic [ref=e701]: $38.78
+                  - cell "∞" [ref=e702]:
+                    - generic [ref=e703]: ∞
+                - row "Basic 2,500 $0.47 $79.00 $1.40 $78.53 ∞" [ref=e704]:
+                  - cell "Basic" [ref=e705]
+                  - cell "2,500" [ref=e706]
+                  - cell "$0.47" [ref=e707]
+                  - cell "$79.00" [ref=e708]
+                  - cell "$1.40" [ref=e709]:
+                    - button "$1.40" [ref=e710] [cursor=pointer]
+                  - cell "$78.53" [ref=e711]:
+                    - generic [ref=e712]: $78.53
+                  - cell "∞" [ref=e713]:
+                    - generic [ref=e714]: ∞
+                - row "Standard 5,000 $0.94 $149.00 $2.81 $148.06 ∞" [ref=e715]:
+                  - cell "Standard" [ref=e716]
+                  - cell "5,000" [ref=e717]
+                  - cell "$0.94" [ref=e718]
+                  - cell "$149.00" [ref=e719]
+                  - cell "$2.81" [ref=e720]:
+                    - button "$2.81" [ref=e721] [cursor=pointer]
+                  - cell "$148.06" [ref=e722]:
+                    - generic [ref=e723]: $148.06
+                  - cell "∞" [ref=e724]:
+                    - generic [ref=e725]: ∞
+                - row "Professional 9,000 $1.68 $249.00 $5.05 $247.32 ∞" [ref=e726]:
+                  - cell "Professional" [ref=e727]
+                  - cell "9,000" [ref=e728]
+                  - cell "$1.68" [ref=e729]
+                  - cell "$249.00" [ref=e730]
+                  - cell "$5.05" [ref=e731]:
+                    - button "$5.05" [ref=e732] [cursor=pointer]
+                  - cell "$247.32" [ref=e733]:
+                    - generic [ref=e734]: $247.32
+                  - cell "∞" [ref=e735]:
+                    - generic [ref=e736]: ∞
+                - row "Advanced 16,000 $2.99 $399.00 $8.98 $396.01 ∞" [ref=e737]:
+                  - cell "Advanced" [ref=e738]
+                  - cell "16,000" [ref=e739]
+                  - cell "$2.99" [ref=e740]
+                  - cell "$399.00" [ref=e741]
+                  - cell "$8.98" [ref=e742]:
+                    - button "$8.98" [ref=e743] [cursor=pointer]
+                  - cell "$396.01" [ref=e744]:
+                    - generic [ref=e745]: $396.01
+                  - cell "∞" [ref=e746]:
+                    - generic [ref=e747]: ∞
+                - row "Business 25,000 $4.68 $599.00 $14.03 $594.32 ∞" [ref=e748]:
+                  - cell "Business" [ref=e749]
+                  - cell "25,000" [ref=e750]
+                  - cell "$4.68" [ref=e751]
+                  - cell "$599.00" [ref=e752]
+                  - cell "$14.03" [ref=e753]:
+                    - button "$14.03" [ref=e754] [cursor=pointer]
+                  - cell "$594.32" [ref=e755]:
+                    - generic [ref=e756]: $594.32
+                  - cell "∞" [ref=e757]:
+                    - generic [ref=e758]: ∞
+                - row "Agency 45,000 $8.42 $999.00 $25.25 $990.58 ∞" [ref=e759]:
+                  - cell "Agency" [ref=e760]
+                  - cell "45,000" [ref=e761]
+                  - cell "$8.42" [ref=e762]
+                  - cell "$999.00" [ref=e763]
+                  - cell "$25.25" [ref=e764]:
+                    - button "$25.25" [ref=e765] [cursor=pointer]
+                  - cell "$990.58" [ref=e766]:
+                    - generic [ref=e767]: $990.58
+                  - cell "∞" [ref=e768]:
+                    - generic [ref=e769]: ∞
+                - row "Studio 70,000 $13.09 $1499.00 $39.28 $1485.91 ∞" [ref=e770]:
+                  - cell "Studio" [ref=e771]
+                  - cell "70,000" [ref=e772]
+                  - cell "$13.09" [ref=e773]
+                  - cell "$1499.00" [ref=e774]
+                  - cell "$39.28" [ref=e775]:
+                    - button "$39.28" [ref=e776] [cursor=pointer]
+                  - cell "$1485.91" [ref=e777]:
+                    - generic [ref=e778]: $1485.91
+                  - cell "∞" [ref=e779]:
+                    - generic [ref=e780]: ∞
+                - row "Enterprise 150,000 $28.06 $2999.00 $84.18 $2970.94 ∞" [ref=e781]:
+                  - cell "Enterprise" [ref=e782]
+                  - cell "150,000" [ref=e783]
+                  - cell "$28.06" [ref=e784]
+                  - cell "$2999.00" [ref=e785]
+                  - cell "$84.18" [ref=e786]:
+                    - button "$84.18" [ref=e787] [cursor=pointer]
+                  - cell "$2970.94" [ref=e788]:
+                    - generic [ref=e789]: $2970.94
+                  - cell "∞" [ref=e790]:
+                    - generic [ref=e791]: ∞
+                - row "Corporate 275,000 $51.44 $4999.00 $154.33 $4947.56 9617%" [ref=e792]:
+                  - cell "Corporate" [ref=e793]
+                  - cell "275,000" [ref=e794]
+                  - cell "$51.44" [ref=e795]
+                  - cell "$4999.00" [ref=e796]
+                  - cell "$154.33" [ref=e797]:
+                    - button "$154.33" [ref=e798] [cursor=pointer]
+                  - cell "$4947.56" [ref=e799]:
+                    - generic [ref=e800]: $4947.56
+                  - cell "9617%" [ref=e801]:
+                    - generic [ref=e802]: 9617%
+                - row "Elite 500,000 $93.53 $7999.00 $280.61 $7905.47 8452%" [ref=e803]:
+                  - cell "Elite" [ref=e804]
+                  - cell "500,000" [ref=e805]
+                  - cell "$93.53" [ref=e806]
+                  - cell "$7999.00" [ref=e807]
+                  - cell "$280.61" [ref=e808]:
+                    - button "$280.61" [ref=e809] [cursor=pointer]
+                  - cell "$7905.47" [ref=e810]:
+                    - generic [ref=e811]: $7905.47
+                  - cell "8452%" [ref=e812]:
+                    - generic [ref=e813]: 8452%
+            - button "Model Cost Reference — click a model to apply its cost per credit" [ref=e815] [cursor=pointer]:
+              - generic [ref=e816]:
+                - img [ref=e817]
+                - generic [ref=e819]: Model Cost Reference
+                - generic [ref=e820]: — click a model to apply its cost per credit
+              - img [ref=e821]
+        - generic [ref=e823]:
+          - generic [ref=e825]:
+            - generic [ref=e826]: Plans & Packages
+            - generic [ref=e827]:
+              - button "Load Preset Tiers ($50 → $8K)" [ref=e828] [cursor=pointer]:
+                - img
+                - text: Load Preset Tiers ($50 → $8K)
+              - button "New Plan" [ref=e829] [cursor=pointer]:
+                - img
+                - text: New Plan
+          - generic [ref=e830]:
+            - generic [ref=e831]:
+              - generic [ref=e832]:
+                - heading "Free" [level=4] [ref=e834]
+                - generic [ref=e835]:
+                  - generic [ref=e836]:
+                    - text: "AI Cost:"
+                    - generic [ref=e837]: $0.0094
+                  - generic [ref=e838]:
+                    - text: "Profit:"
+                    - generic [ref=e839]: $-0.01
+                  - generic [ref=e840]: LOSS
+              - generic [ref=e841]:
+                - generic [ref=e842]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e843]: "0"
+                - generic [ref=e844]:
+                  - generic [ref=e845]: Price BDT (auto)
+                  - generic [ref=e846]: ৳0
+                - generic [ref=e847]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e848]: "50"
+                - generic [ref=e849]:
+                  - text: Max Agents
+                  - spinbutton [ref=e850]: "3"
+                - generic [ref=e851]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e852]: "0"
+                  - paragraph [ref=e853]: "-1 = unlimited"
+                - generic [ref=e854]:
+                  - text: Team Size
+                  - spinbutton [ref=e855]: "1"
+                  - paragraph [ref=e856]: "-1 = unlimited"
+                - generic [ref=e857]:
+                  - generic [ref=e858]:
+                    - img [ref=e859]
+                    - text: Cap
+                    - generic [ref=e861]: (budgeted)
+                  - generic [ref=e862]: $0.0094
+                  - generic [ref=e863]: "Real: $0.0094 · ▼ 0% under"
+                  - paragraph [ref=e864]: = credits × cost/credit
+                - generic [ref=e865]:
+                  - generic [ref=e866]:
+                    - generic [ref=e867]: "%"
+                    - text: Operator Share
+                  - generic [ref=e868]:
+                    - slider [ref=e869]: "30"
+                    - generic [ref=e870]: 30%
+                  - paragraph [ref=e871]: $0.00 → profit pool
+                - generic [ref=e873] [cursor=pointer]:
+                  - checkbox "Commander" [ref=e874]
+                  - generic [ref=e875]: Commander
+              - generic [ref=e876]:
+                - generic [ref=e877]:
+                  - generic [ref=e878]: Media Capacity
+                  - generic [ref=e879]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e880]:
+                  - generic [ref=e881]:
+                    - text: Images Std
+                    - spinbutton [ref=e882]
+                    - paragraph [ref=e883]: 2 img auto
+                  - generic [ref=e884]:
+                    - text: Images HD
+                    - spinbutton [ref=e885]
+                    - paragraph [ref=e886]: 1 img auto
+                  - generic [ref=e887]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e888]
+                    - paragraph [ref=e889]: 0 clips auto
+                  - generic [ref=e890]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e891]
+                    - paragraph [ref=e892]: 0 sec auto
+                  - generic [ref=e893]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e894]
+                    - paragraph [ref=e895]: 3 min auto
+                  - generic [ref=e896]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e897]
+                    - paragraph [ref=e898]: 1 min auto
+                  - generic [ref=e899]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e900]
+                    - paragraph [ref=e901]: 10 min auto
+              - generic [ref=e902]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e903]:
+                  - generic [ref=e904]:
+                    - text: 3 AI agents
+                    - button [ref=e905] [cursor=pointer]:
+                      - img [ref=e906]
+                  - generic [ref=e909]:
+                    - text: 50 credits/month
+                    - button [ref=e910] [cursor=pointer]:
+                      - img [ref=e911]
+                  - generic [ref=e914]:
+                    - text: Basic chat & task management
+                    - button [ref=e915] [cursor=pointer]:
+                      - img [ref=e916]
+                  - generic [ref=e919]:
+                    - text: 1 LLM provider
+                    - button [ref=e920] [cursor=pointer]:
+                      - img [ref=e921]
+                  - generic [ref=e924]:
+                    - text: Community support
+                    - button [ref=e925] [cursor=pointer]:
+                      - img [ref=e926]
+                - generic [ref=e929]:
+                  - textbox "Add feature…" [ref=e930]
+                  - button [ref=e931] [cursor=pointer]:
+                    - img
+            - generic [ref=e932]:
+              - generic [ref=e933]:
+                - heading "Starter" [level=4] [ref=e935]
+                - generic [ref=e936]:
+                  - generic [ref=e937]:
+                    - text: "AI Cost:"
+                    - generic [ref=e938]: $0.0935
+                  - generic [ref=e939]:
+                    - text: "Profit:"
+                    - generic [ref=e940]: $18.91
+                  - generic [ref=e941]: 20213% margin
+                  - button [ref=e942] [cursor=pointer]:
+                    - img
+              - generic [ref=e943]:
+                - generic [ref=e944]: "Set margin:"
+                - button "100%" [ref=e945] [cursor=pointer]
+                - button "200%" [ref=e946] [cursor=pointer]
+                - button "500%" [ref=e947] [cursor=pointer]
+                - button "1000%" [ref=e948] [cursor=pointer]
+                - button "2000%" [ref=e949] [cursor=pointer]
+                - generic [ref=e950]:
+                  - spinbutton [ref=e951]
+                  - generic [ref=e952]: "%"
+              - generic [ref=e953]:
+                - generic [ref=e954]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e955]: "19"
+                - generic [ref=e956]:
+                  - generic [ref=e957]: Price BDT (auto)
+                  - generic [ref=e958]: ৳2,336
+                - generic [ref=e959]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e960]: "500"
+                - generic [ref=e961]:
+                  - text: Max Agents
+                  - spinbutton [ref=e962]: "8"
+                - generic [ref=e963]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e964]: "0"
+                  - paragraph [ref=e965]: "-1 = unlimited"
+                - generic [ref=e966]:
+                  - text: Team Size
+                  - spinbutton [ref=e967]: "1"
+                  - paragraph [ref=e968]: "-1 = unlimited"
+                - generic [ref=e969]:
+                  - generic [ref=e970]:
+                    - img [ref=e971]
+                    - text: Cap
+                    - generic [ref=e973]: (budgeted)
+                  - generic [ref=e974]: $0.0935
+                  - generic [ref=e975]: "Real: $0.0935 · ▲ 0% over"
+                  - paragraph [ref=e976]: = credits × cost/credit
+                - generic [ref=e977]:
+                  - generic [ref=e978]:
+                    - generic [ref=e979]: "%"
+                    - text: Operator Share
+                  - generic [ref=e980]:
+                    - slider [ref=e981]: "30"
+                    - generic [ref=e982]: 30%
+                  - paragraph [ref=e983]: $5.70 → profit pool
+                - generic [ref=e985] [cursor=pointer]:
+                  - checkbox "Commander" [ref=e986]
+                  - generic [ref=e987]: Commander
+              - generic [ref=e988]:
+                - generic [ref=e989]:
+                  - generic [ref=e990]: Media Capacity
+                  - generic [ref=e991]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e992]:
+                  - generic [ref=e993]:
+                    - text: Images Std
+                    - spinbutton [ref=e994]
+                    - paragraph [ref=e995]: 25 img auto
+                  - generic [ref=e996]:
+                    - text: Images HD
+                    - spinbutton [ref=e997]
+                    - paragraph [ref=e998]: 12 img auto
+                  - generic [ref=e999]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e1000]
+                    - paragraph [ref=e1001]: 1 clips auto
+                  - generic [ref=e1002]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e1003]
+                    - paragraph [ref=e1004]: 5 sec auto
+                  - generic [ref=e1005]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e1006]
+                    - paragraph [ref=e1007]: 33 min auto
+                  - generic [ref=e1008]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e1009]
+                    - paragraph [ref=e1010]: 16 min auto
+                  - generic [ref=e1011]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e1012]
+                    - paragraph [ref=e1013]: 100 min auto
+              - generic [ref=e1014]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e1015]:
+                  - generic [ref=e1016]:
+                    - text: 8 AI agents
+                    - button [ref=e1017] [cursor=pointer]:
+                      - img [ref=e1018]
+                  - generic [ref=e1021]:
+                    - text: 300 credits/month
+                    - button [ref=e1022] [cursor=pointer]:
+                      - img [ref=e1023]
+                  - generic [ref=e1026]:
+                    - text: Chat, tasks & projects
+                    - button [ref=e1027] [cursor=pointer]:
+                      - img [ref=e1028]
+                  - generic [ref=e1031]:
+                    - text: 3 LLM providers
+                    - button [ref=e1032] [cursor=pointer]:
+                      - img [ref=e1033]
+                  - generic [ref=e1036]:
+                    - text: File uploads
+                    - button [ref=e1037] [cursor=pointer]:
+                      - img [ref=e1038]
+                  - generic [ref=e1041]:
+                    - text: Solo workspace
+                    - button [ref=e1042] [cursor=pointer]:
+                      - img [ref=e1043]
+                  - generic [ref=e1046]:
+                    - text: Email support
+                    - button [ref=e1047] [cursor=pointer]:
+                      - img [ref=e1048]
+                - generic [ref=e1051]:
+                  - textbox "Add feature…" [ref=e1052]
+                  - button [ref=e1053] [cursor=pointer]:
+                    - img
+              - generic [ref=e1056]:
+                - generic [ref=e1057]:
+                  - text: "AI Cost:"
+                  - generic [ref=e1058]: $0.0935
+                - generic [ref=e1059]:
+                  - text: "Revenue:"
+                  - generic [ref=e1060]: $19
+                - generic [ref=e1061]:
+                  - text: "Profit:"
+                  - generic [ref=e1062]: $18.91
+            - generic [ref=e1063]:
+              - generic [ref=e1064]:
+                - heading "Essential" [level=4] [ref=e1066]
+                - generic [ref=e1067]:
+                  - generic [ref=e1068]:
+                    - text: "AI Cost:"
+                    - generic [ref=e1069]: $0.2245
+                  - generic [ref=e1070]:
+                    - text: "Profit:"
+                    - generic [ref=e1071]: $38.78
+                  - generic [ref=e1072]: 17273% margin
+                  - button [ref=e1073] [cursor=pointer]:
+                    - img
+              - generic [ref=e1074]:
+                - generic [ref=e1075]: "Set margin:"
+                - button "100%" [ref=e1076] [cursor=pointer]
+                - button "200%" [ref=e1077] [cursor=pointer]
+                - button "500%" [ref=e1078] [cursor=pointer]
+                - button "1000%" [ref=e1079] [cursor=pointer]
+                - button "2000%" [ref=e1080] [cursor=pointer]
+                - generic [ref=e1081]:
+                  - spinbutton [ref=e1082]
+                  - generic [ref=e1083]: "%"
+              - generic [ref=e1084]:
+                - generic [ref=e1085]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e1086]: "39"
+                - generic [ref=e1087]:
+                  - generic [ref=e1088]: Price BDT (auto)
+                  - generic [ref=e1089]: ৳4,795
+                - generic [ref=e1090]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e1091]: "1200"
+                - generic [ref=e1092]:
+                  - text: Max Agents
+                  - spinbutton [ref=e1093]: "12"
+                - generic [ref=e1094]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e1095]: "1"
+                  - paragraph [ref=e1096]: "-1 = unlimited"
+                - generic [ref=e1097]:
+                  - text: Team Size
+                  - spinbutton [ref=e1098]: "3"
+                  - paragraph [ref=e1099]: "-1 = unlimited"
+                - generic [ref=e1100]:
+                  - generic [ref=e1101]:
+                    - img [ref=e1102]
+                    - text: Cap
+                    - generic [ref=e1104]: (budgeted)
+                  - generic [ref=e1105]: $0.2245
+                  - generic [ref=e1106]: "Real: $0.2245 · ▼ 0% under"
+                  - paragraph [ref=e1107]: = credits × cost/credit
+                - generic [ref=e1108]:
+                  - generic [ref=e1109]:
+                    - generic [ref=e1110]: "%"
+                    - text: Operator Share
+                  - generic [ref=e1111]:
+                    - slider [ref=e1112]: "30"
+                    - generic [ref=e1113]: 30%
+                  - paragraph [ref=e1114]: $11.70 → profit pool
+                - generic [ref=e1116] [cursor=pointer]:
+                  - checkbox "Commander" [ref=e1117]
+                  - generic [ref=e1118]: Commander
+              - generic [ref=e1119]:
+                - generic [ref=e1120]:
+                  - generic [ref=e1121]: Media Capacity
+                  - generic [ref=e1122]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e1123]:
+                  - generic [ref=e1124]:
+                    - text: Images Std
+                    - spinbutton [ref=e1125]
+                    - paragraph [ref=e1126]: 60 img auto
+                  - generic [ref=e1127]:
+                    - text: Images HD
+                    - spinbutton [ref=e1128]
+                    - paragraph [ref=e1129]: 30 img auto
+                  - generic [ref=e1130]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e1131]
+                    - paragraph [ref=e1132]: 3 clips auto
+                  - generic [ref=e1133]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e1134]
+                    - paragraph [ref=e1135]: 12 sec auto
+                  - generic [ref=e1136]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e1137]
+                    - paragraph [ref=e1138]: 80 min auto
+                  - generic [ref=e1139]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e1140]
+                    - paragraph [ref=e1141]: 40 min auto
+                  - generic [ref=e1142]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e1143]
+                    - paragraph [ref=e1144]: 240 min auto
+              - generic [ref=e1145]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e1146]:
+                  - generic [ref=e1147]:
+                    - text: 12 AI agents
+                    - button [ref=e1148] [cursor=pointer]:
+                      - img [ref=e1149]
+                  - generic [ref=e1152]:
+                    - text: 600 credits/month
+                    - button [ref=e1153] [cursor=pointer]:
+                      - img [ref=e1154]
+                  - generic [ref=e1157]:
+                    - text: 1 custom agent
+                    - button [ref=e1158] [cursor=pointer]:
+                      - img [ref=e1159]
+                  - generic [ref=e1162]:
+                    - text: 5 LLM providers
+                    - button [ref=e1163] [cursor=pointer]:
+                      - img [ref=e1164]
+                  - generic [ref=e1167]:
+                    - text: Workflow builder (basic)
+                    - button [ref=e1168] [cursor=pointer]:
+                      - img [ref=e1169]
+                  - generic [ref=e1172]:
+                    - text: File uploads
+                    - button [ref=e1173] [cursor=pointer]:
+                      - img [ref=e1174]
+                  - generic [ref=e1177]:
+                    - text: Team (up to 3)
+                    - button [ref=e1178] [cursor=pointer]:
+                      - img [ref=e1179]
+                  - generic [ref=e1182]:
+                    - text: Email support
+                    - button [ref=e1183] [cursor=pointer]:
+                      - img [ref=e1184]
+                - generic [ref=e1187]:
+                  - textbox "Add feature…" [ref=e1188]
+                  - button [ref=e1189] [cursor=pointer]:
+                    - img
+              - generic [ref=e1192]:
+                - generic [ref=e1193]:
+                  - text: "AI Cost:"
+                  - generic [ref=e1194]: $0.2245
+                - generic [ref=e1195]:
+                  - text: "Revenue:"
+                  - generic [ref=e1196]: $39
+                - generic [ref=e1197]:
+                  - text: "Profit:"
+                  - generic [ref=e1198]: $38.78
+            - generic [ref=e1199]:
+              - generic [ref=e1200]:
+                - heading "Basic" [level=4] [ref=e1202]
+                - generic [ref=e1203]:
+                  - generic [ref=e1204]:
+                    - text: "AI Cost:"
+                    - generic [ref=e1205]: $0.4677
+                  - generic [ref=e1206]:
+                    - text: "Profit:"
+                    - generic [ref=e1207]: $78.53
+                  - generic [ref=e1208]: 16792% margin
+                  - button [ref=e1209] [cursor=pointer]:
+                    - img
+              - generic [ref=e1210]:
+                - generic [ref=e1211]: "Set margin:"
+                - button "100%" [ref=e1212] [cursor=pointer]
+                - button "200%" [ref=e1213] [cursor=pointer]
+                - button "500%" [ref=e1214] [cursor=pointer]
+                - button "1000%" [ref=e1215] [cursor=pointer]
+                - button "2000%" [ref=e1216] [cursor=pointer]
+                - generic [ref=e1217]:
+                  - spinbutton [ref=e1218]
+                  - generic [ref=e1219]: "%"
+              - generic [ref=e1220]:
+                - generic [ref=e1221]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e1222]: "79"
+                - generic [ref=e1223]:
+                  - generic [ref=e1224]: Price BDT (auto)
+                  - generic [ref=e1225]: ৳9,713
+                - generic [ref=e1226]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e1227]: "2500"
+                - generic [ref=e1228]:
+                  - text: Max Agents
+                  - spinbutton [ref=e1229]: "18"
+                - generic [ref=e1230]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e1231]: "2"
+                  - paragraph [ref=e1232]: "-1 = unlimited"
+                - generic [ref=e1233]:
+                  - text: Team Size
+                  - spinbutton [ref=e1234]: "5"
+                  - paragraph [ref=e1235]: "-1 = unlimited"
+                - generic [ref=e1236]:
+                  - generic [ref=e1237]:
+                    - img [ref=e1238]
+                    - text: Cap
+                    - generic [ref=e1240]: (budgeted)
+                  - generic [ref=e1241]: $0.4677
+                  - generic [ref=e1242]: "Real: $0.4677 · ▼ 0% under"
+                  - paragraph [ref=e1243]: = credits × cost/credit
+                - generic [ref=e1244]:
+                  - generic [ref=e1245]:
+                    - generic [ref=e1246]: "%"
+                    - text: Operator Share
+                  - generic [ref=e1247]:
+                    - slider [ref=e1248]: "30"
+                    - generic [ref=e1249]: 30%
+                  - paragraph [ref=e1250]: $23.70 → profit pool
+                - generic [ref=e1252] [cursor=pointer]:
+                  - checkbox "Commander" [ref=e1253]
+                  - generic [ref=e1254]: Commander
+              - generic [ref=e1255]:
+                - generic [ref=e1256]:
+                  - generic [ref=e1257]: Media Capacity
+                  - generic [ref=e1258]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e1259]:
+                  - generic [ref=e1260]:
+                    - text: Images Std
+                    - spinbutton [ref=e1261]
+                    - paragraph [ref=e1262]: 125 img auto
+                  - generic [ref=e1263]:
+                    - text: Images HD
+                    - spinbutton [ref=e1264]
+                    - paragraph [ref=e1265]: 62 img auto
+                  - generic [ref=e1266]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e1267]
+                    - paragraph [ref=e1268]: 6 clips auto
+                  - generic [ref=e1269]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e1270]
+                    - paragraph [ref=e1271]: 25 sec auto
+                  - generic [ref=e1272]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e1273]
+                    - paragraph [ref=e1274]: 166 min auto
+                  - generic [ref=e1275]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e1276]
+                    - paragraph [ref=e1277]: 83 min auto
+                  - generic [ref=e1278]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e1279]
+                    - paragraph [ref=e1280]: 500 min auto
+              - generic [ref=e1281]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e1282]:
+                  - generic [ref=e1283]:
+                    - text: 18 AI agents
+                    - button [ref=e1284] [cursor=pointer]:
+                      - img [ref=e1285]
+                  - generic [ref=e1288]:
+                    - text: 1,200 credits/month
+                    - button [ref=e1289] [cursor=pointer]:
+                      - img [ref=e1290]
+                  - generic [ref=e1293]:
+                    - text: 2 custom agents
+                    - button [ref=e1294] [cursor=pointer]:
+                      - img [ref=e1295]
+                  - generic [ref=e1298]:
+                    - text: 8 LLM providers
+                    - button [ref=e1299] [cursor=pointer]:
+                      - img [ref=e1300]
+                  - generic [ref=e1303]:
+                    - text: Full workflow builder
+                    - button [ref=e1304] [cursor=pointer]:
+                      - img [ref=e1305]
+                  - generic [ref=e1308]:
+                    - text: Content generator
+                    - button [ref=e1309] [cursor=pointer]:
+                      - img [ref=e1310]
+                  - generic [ref=e1313]:
+                    - text: Basic analytics
+                    - button [ref=e1314] [cursor=pointer]:
+                      - img [ref=e1315]
+                  - generic [ref=e1318]:
+                    - text: Team (up to 5)
+                    - button [ref=e1319] [cursor=pointer]:
+                      - img [ref=e1320]
+                  - generic [ref=e1323]:
+                    - text: Priority email support
+                    - button [ref=e1324] [cursor=pointer]:
+                      - img [ref=e1325]
+                - generic [ref=e1328]:
+                  - textbox "Add feature…" [ref=e1329]
+                  - button [ref=e1330] [cursor=pointer]:
+                    - img
+              - generic [ref=e1333]:
+                - generic [ref=e1334]:
+                  - text: "AI Cost:"
+                  - generic [ref=e1335]: $0.4677
+                - generic [ref=e1336]:
+                  - text: "Revenue:"
+                  - generic [ref=e1337]: $79
+                - generic [ref=e1338]:
+                  - text: "Profit:"
+                  - generic [ref=e1339]: $78.53
+            - generic [ref=e1340]:
+              - generic [ref=e1341]:
+                - generic [ref=e1342]:
+                  - heading "Standard" [level=4] [ref=e1343]
+                  - generic [ref=e1344]: Commander
+                - generic [ref=e1345]:
+                  - generic [ref=e1346]:
+                    - text: "AI Cost:"
+                    - generic [ref=e1347]: $0.9354
+                  - generic [ref=e1348]:
+                    - text: "Profit:"
+                    - generic [ref=e1349]: $148.06
+                  - generic [ref=e1350]: 15830% margin
+                  - button [ref=e1351] [cursor=pointer]:
+                    - img
+              - generic [ref=e1352]:
+                - generic [ref=e1353]: "Set margin:"
+                - button "100%" [ref=e1354] [cursor=pointer]
+                - button "200%" [ref=e1355] [cursor=pointer]
+                - button "500%" [ref=e1356] [cursor=pointer]
+                - button "1000%" [ref=e1357] [cursor=pointer]
+                - button "2000%" [ref=e1358] [cursor=pointer]
+                - generic [ref=e1359]:
+                  - spinbutton [ref=e1360]
+                  - generic [ref=e1361]: "%"
+              - generic [ref=e1362]:
+                - generic [ref=e1363]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e1364]: "149"
+                - generic [ref=e1365]:
+                  - generic [ref=e1366]: Price BDT (auto)
+                  - generic [ref=e1367]: ৳18,320
+                - generic [ref=e1368]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e1369]: "5000"
+                - generic [ref=e1370]:
+                  - text: Max Agents
+                  - spinbutton [ref=e1371]: "25"
+                - generic [ref=e1372]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e1373]: "3"
+                  - paragraph [ref=e1374]: "-1 = unlimited"
+                - generic [ref=e1375]:
+                  - text: Team Size
+                  - spinbutton [ref=e1376]: "10"
+                  - paragraph [ref=e1377]: "-1 = unlimited"
+                - generic [ref=e1378]:
+                  - generic [ref=e1379]:
+                    - img [ref=e1380]
+                    - text: Cap
+                    - generic [ref=e1382]: (budgeted)
+                  - generic [ref=e1383]: $0.9354
+                  - generic [ref=e1384]: "Real: $0.9354 · ▼ 0% under"
+                  - paragraph [ref=e1385]: = credits × cost/credit
+                - generic [ref=e1386]:
+                  - generic [ref=e1387]:
+                    - generic [ref=e1388]: "%"
+                    - text: Operator Share
+                  - generic [ref=e1389]:
+                    - slider [ref=e1390]: "30"
+                    - generic [ref=e1391]: 30%
+                  - paragraph [ref=e1392]: $44.70 → profit pool
+                - generic [ref=e1394] [cursor=pointer]:
+                  - checkbox "Commander" [checked] [ref=e1395]
+                  - generic [ref=e1396]: Commander
+              - generic [ref=e1397]:
+                - generic [ref=e1398]:
+                  - generic [ref=e1399]: Media Capacity
+                  - generic [ref=e1400]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e1401]:
+                  - generic [ref=e1402]:
+                    - text: Images Std
+                    - spinbutton [ref=e1403]
+                    - paragraph [ref=e1404]: 250 img auto
+                  - generic [ref=e1405]:
+                    - text: Images HD
+                    - spinbutton [ref=e1406]
+                    - paragraph [ref=e1407]: 125 img auto
+                  - generic [ref=e1408]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e1409]
+                    - paragraph [ref=e1410]: 12 clips auto
+                  - generic [ref=e1411]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e1412]
+                    - paragraph [ref=e1413]: 50 sec auto
+                  - generic [ref=e1414]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e1415]
+                    - paragraph [ref=e1416]: 333 min auto
+                  - generic [ref=e1417]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e1418]
+                    - paragraph [ref=e1419]: 166 min auto
+                  - generic [ref=e1420]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e1421]
+                    - paragraph [ref=e1422]: 1,000 min auto
+              - generic [ref=e1423]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e1424]:
+                  - generic [ref=e1425]:
+                    - text: 25 AI agents + Commander Orion
+                    - button [ref=e1426] [cursor=pointer]:
+                      - img [ref=e1427]
+                  - generic [ref=e1430]:
+                    - text: 2,000 credits/month
+                    - button [ref=e1431] [cursor=pointer]:
+                      - img [ref=e1432]
+                  - generic [ref=e1435]:
+                    - text: 3 custom agents
+                    - button [ref=e1436] [cursor=pointer]:
+                      - img [ref=e1437]
+                  - generic [ref=e1440]:
+                    - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+                    - button [ref=e1441] [cursor=pointer]:
+                      - img [ref=e1442]
+                  - generic [ref=e1445]:
+                    - text: Autonomous orchestration
+                    - button [ref=e1446] [cursor=pointer]:
+                      - img [ref=e1447]
+                  - generic [ref=e1450]:
+                    - text: Campaign builder
+                    - button [ref=e1451] [cursor=pointer]:
+                      - img [ref=e1452]
+                  - generic [ref=e1455]:
+                    - text: Knowledge graph
+                    - button [ref=e1456] [cursor=pointer]:
+                      - img [ref=e1457]
+                  - generic [ref=e1460]:
+                    - text: Trust scores
+                    - button [ref=e1461] [cursor=pointer]:
+                      - img [ref=e1462]
+                  - generic [ref=e1465]:
+                    - text: Team (up to 10)
+                    - button [ref=e1466] [cursor=pointer]:
+                      - img [ref=e1467]
+                  - generic [ref=e1470]:
+                    - text: Priority support
+                    - button [ref=e1471] [cursor=pointer]:
+                      - img [ref=e1472]
+                - generic [ref=e1475]:
+                  - textbox "Add feature…" [ref=e1476]
+                  - button [ref=e1477] [cursor=pointer]:
+                    - img
+              - generic [ref=e1480]:
+                - generic [ref=e1481]:
+                  - text: "AI Cost:"
+                  - generic [ref=e1482]: $0.9354
+                - generic [ref=e1483]:
+                  - text: "Revenue:"
+                  - generic [ref=e1484]: $149
+                - generic [ref=e1485]:
+                  - text: "Profit:"
+                  - generic [ref=e1486]: $148.06
+            - generic [ref=e1487]:
+              - generic [ref=e1488]:
+                - generic [ref=e1489]:
+                  - heading "Professional" [level=4] [ref=e1490]
+                  - generic [ref=e1491]: Commander
+                - generic [ref=e1492]:
+                  - generic [ref=e1493]:
+                    - text: "AI Cost:"
+                    - generic [ref=e1494]: $1.6836
+                  - generic [ref=e1495]:
+                    - text: "Profit:"
+                    - generic [ref=e1496]: $247.32
+                  - generic [ref=e1497]: 14689% margin
+                  - button [ref=e1498] [cursor=pointer]:
+                    - img
+              - generic [ref=e1499]:
+                - generic [ref=e1500]: "Set margin:"
+                - button "100%" [ref=e1501] [cursor=pointer]
+                - button "200%" [ref=e1502] [cursor=pointer]
+                - button "500%" [ref=e1503] [cursor=pointer]
+                - button "1000%" [ref=e1504] [cursor=pointer]
+                - button "2000%" [ref=e1505] [cursor=pointer]
+                - generic [ref=e1506]:
+                  - spinbutton [ref=e1507]
+                  - generic [ref=e1508]: "%"
+              - generic [ref=e1509]:
+                - generic [ref=e1510]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e1511]: "249"
+                - generic [ref=e1512]:
+                  - generic [ref=e1513]: Price BDT (auto)
+                  - generic [ref=e1514]: ৳30,615
+                - generic [ref=e1515]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e1516]: "9000"
+                - generic [ref=e1517]:
+                  - text: Max Agents
+                  - spinbutton [ref=e1518]: "35"
+                - generic [ref=e1519]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e1520]: "5"
+                  - paragraph [ref=e1521]: "-1 = unlimited"
+                - generic [ref=e1522]:
+                  - text: Team Size
+                  - spinbutton [ref=e1523]: "20"
+                  - paragraph [ref=e1524]: "-1 = unlimited"
+                - generic [ref=e1525]:
+                  - generic [ref=e1526]:
+                    - img [ref=e1527]
+                    - text: Cap
+                    - generic [ref=e1529]: (budgeted)
+                  - generic [ref=e1530]: $1.6836
+                  - generic [ref=e1531]: "Real: $1.6836 · ▲ 0% over"
+                  - paragraph [ref=e1532]: = credits × cost/credit
+                - generic [ref=e1533]:
+                  - generic [ref=e1534]:
+                    - generic [ref=e1535]: "%"
+                    - text: Operator Share
+                  - generic [ref=e1536]:
+                    - slider [ref=e1537]: "30"
+                    - generic [ref=e1538]: 30%
+                  - paragraph [ref=e1539]: $74.70 → profit pool
+                - generic [ref=e1541] [cursor=pointer]:
+                  - checkbox "Commander" [checked] [ref=e1542]
+                  - generic [ref=e1543]: Commander
+              - generic [ref=e1544]:
+                - generic [ref=e1545]:
+                  - generic [ref=e1546]: Media Capacity
+                  - generic [ref=e1547]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e1548]:
+                  - generic [ref=e1549]:
+                    - text: Images Std
+                    - spinbutton [ref=e1550]
+                    - paragraph [ref=e1551]: 450 img auto
+                  - generic [ref=e1552]:
+                    - text: Images HD
+                    - spinbutton [ref=e1553]
+                    - paragraph [ref=e1554]: 225 img auto
+                  - generic [ref=e1555]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e1556]
+                    - paragraph [ref=e1557]: 22 clips auto
+                  - generic [ref=e1558]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e1559]
+                    - paragraph [ref=e1560]: 90 sec auto
+                  - generic [ref=e1561]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e1562]
+                    - paragraph [ref=e1563]: 600 min auto
+                  - generic [ref=e1564]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e1565]
+                    - paragraph [ref=e1566]: 300 min auto
+                  - generic [ref=e1567]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e1568]
+                    - paragraph [ref=e1569]: 1,800 min auto
+              - generic [ref=e1570]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e1571]:
+                  - generic [ref=e1572]:
+                    - text: 35 AI agents + Commander Orion
+                    - button [ref=e1573] [cursor=pointer]:
+                      - img [ref=e1574]
+                  - generic [ref=e1577]:
+                    - text: 3,000 credits/month
+                    - button [ref=e1578] [cursor=pointer]:
+                      - img [ref=e1579]
+                  - generic [ref=e1582]:
+                    - text: 5 custom agents
+                    - button [ref=e1583] [cursor=pointer]:
+                      - img [ref=e1584]
+                  - generic [ref=e1587]:
+                    - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+                    - button [ref=e1588] [cursor=pointer]:
+                      - img [ref=e1589]
+                  - generic [ref=e1592]:
+                    - text: Vibe Coding & Reference Intelligence
+                    - button [ref=e1593] [cursor=pointer]:
+                      - img [ref=e1594]
+                  - generic [ref=e1597]:
+                    - text: Memory hierarchy
+                    - button [ref=e1598] [cursor=pointer]:
+                      - img [ref=e1599]
+                  - generic [ref=e1602]:
+                    - text: Analytics dashboard
+                    - button [ref=e1603] [cursor=pointer]:
+                      - img [ref=e1604]
+                  - generic [ref=e1607]:
+                    - text: Team (up to 20)
+                    - button [ref=e1608] [cursor=pointer]:
+                      - img [ref=e1609]
+                  - generic [ref=e1612]:
+                    - text: Live chat support
+                    - button [ref=e1613] [cursor=pointer]:
+                      - img [ref=e1614]
+                - generic [ref=e1617]:
+                  - textbox "Add feature…" [ref=e1618]
+                  - button [ref=e1619] [cursor=pointer]:
+                    - img
+              - generic [ref=e1622]:
+                - generic [ref=e1623]:
+                  - text: "AI Cost:"
+                  - generic [ref=e1624]: $1.6836
+                - generic [ref=e1625]:
+                  - text: "Revenue:"
+                  - generic [ref=e1626]: $249
+                - generic [ref=e1627]:
+                  - text: "Profit:"
+                  - generic [ref=e1628]: $247.32
+            - generic [ref=e1629]:
+              - generic [ref=e1630]:
+                - generic [ref=e1631]:
+                  - heading "Advanced" [level=4] [ref=e1632]
+                  - generic [ref=e1633]: Commander
+                - generic [ref=e1634]:
+                  - generic [ref=e1635]:
+                    - text: "AI Cost:"
+                    - generic [ref=e1636]: $2.9931
+                  - generic [ref=e1637]:
+                    - text: "Profit:"
+                    - generic [ref=e1638]: $396.01
+                  - generic [ref=e1639]: 13231% margin
+                  - button [ref=e1640] [cursor=pointer]:
+                    - img
+              - generic [ref=e1641]:
+                - generic [ref=e1642]: "Set margin:"
+                - button "100%" [ref=e1643] [cursor=pointer]
+                - button "200%" [ref=e1644] [cursor=pointer]
+                - button "500%" [ref=e1645] [cursor=pointer]
+                - button "1000%" [ref=e1646] [cursor=pointer]
+                - button "2000%" [ref=e1647] [cursor=pointer]
+                - generic [ref=e1648]:
+                  - spinbutton [ref=e1649]
+                  - generic [ref=e1650]: "%"
+              - generic [ref=e1651]:
+                - generic [ref=e1652]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e1653]: "399"
+                - generic [ref=e1654]:
+                  - generic [ref=e1655]: Price BDT (auto)
+                  - generic [ref=e1656]: ৳49,057
+                - generic [ref=e1657]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e1658]: "16000"
+                - generic [ref=e1659]:
+                  - text: Max Agents
+                  - spinbutton [ref=e1660]: "41"
+                - generic [ref=e1661]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e1662]: "10"
+                  - paragraph [ref=e1663]: "-1 = unlimited"
+                - generic [ref=e1664]:
+                  - text: Team Size
+                  - spinbutton [ref=e1665]: "35"
+                  - paragraph [ref=e1666]: "-1 = unlimited"
+                - generic [ref=e1667]:
+                  - generic [ref=e1668]:
+                    - img [ref=e1669]
+                    - text: Cap
+                    - generic [ref=e1671]: (budgeted)
+                  - generic [ref=e1672]: $2.9931
+                  - generic [ref=e1673]: "Real: $2.9931 · ▲ 0% over"
+                  - paragraph [ref=e1674]: = credits × cost/credit
+                - generic [ref=e1675]:
+                  - generic [ref=e1676]:
+                    - generic [ref=e1677]: "%"
+                    - text: Operator Share
+                  - generic [ref=e1678]:
+                    - slider [ref=e1679]: "30"
+                    - generic [ref=e1680]: 30%
+                  - paragraph [ref=e1681]: $119.70 → profit pool
+                - generic [ref=e1683] [cursor=pointer]:
+                  - checkbox "Commander" [checked] [ref=e1684]
+                  - generic [ref=e1685]: Commander
+              - generic [ref=e1686]:
+                - generic [ref=e1687]:
+                  - generic [ref=e1688]: Media Capacity
+                  - generic [ref=e1689]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e1690]:
+                  - generic [ref=e1691]:
+                    - text: Images Std
+                    - spinbutton [ref=e1692]
+                    - paragraph [ref=e1693]: 800 img auto
+                  - generic [ref=e1694]:
+                    - text: Images HD
+                    - spinbutton [ref=e1695]
+                    - paragraph [ref=e1696]: 400 img auto
+                  - generic [ref=e1697]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e1698]
+                    - paragraph [ref=e1699]: 40 clips auto
+                  - generic [ref=e1700]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e1701]
+                    - paragraph [ref=e1702]: 160 sec auto
+                  - generic [ref=e1703]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e1704]
+                    - paragraph [ref=e1705]: 1,066 min auto
+                  - generic [ref=e1706]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e1707]
+                    - paragraph [ref=e1708]: 533 min auto
+                  - generic [ref=e1709]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e1710]
+                    - paragraph [ref=e1711]: 3,200 min auto
+              - generic [ref=e1712]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e1713]:
+                  - generic [ref=e1714]:
+                    - text: All 41 core AI agents + Commander Orion
+                    - button [ref=e1715] [cursor=pointer]:
+                      - img [ref=e1716]
+                  - generic [ref=e1719]:
+                    - text: 4,000 credits/month
+                    - button [ref=e1720] [cursor=pointer]:
+                      - img [ref=e1721]
+                  - generic [ref=e1724]:
+                    - text: 10 custom agents
+                    - button [ref=e1725] [cursor=pointer]:
+                      - img [ref=e1726]
+                  - generic [ref=e1729]:
+                    - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+                    - button [ref=e1730] [cursor=pointer]:
+                      - img [ref=e1731]
+                  - generic [ref=e1734]:
+                    - text: Full observability dashboard
+                    - button [ref=e1735] [cursor=pointer]:
+                      - img [ref=e1736]
+                  - generic [ref=e1739]:
+                    - text: Model router
+                    - button [ref=e1740] [cursor=pointer]:
+                      - img [ref=e1741]
+                  - generic [ref=e1744]:
+                    - text: Circuit breakers
+                    - button [ref=e1745] [cursor=pointer]:
+                      - img [ref=e1746]
+                  - generic [ref=e1749]:
+                    - text: Cost governance
+                    - button [ref=e1750] [cursor=pointer]:
+                      - img [ref=e1751]
+                  - generic [ref=e1754]:
+                    - text: Team (up to 35)
+                    - button [ref=e1755] [cursor=pointer]:
+                      - img [ref=e1756]
+                  - generic [ref=e1759]:
+                    - text: Dedicated Slack support
+                    - button [ref=e1760] [cursor=pointer]:
+                      - img [ref=e1761]
+                - generic [ref=e1764]:
+                  - textbox "Add feature…" [ref=e1765]
+                  - button [ref=e1766] [cursor=pointer]:
+                    - img
+              - generic [ref=e1769]:
+                - generic [ref=e1770]:
+                  - text: "AI Cost:"
+                  - generic [ref=e1771]: $2.9931
+                - generic [ref=e1772]:
+                  - text: "Revenue:"
+                  - generic [ref=e1773]: $399
+                - generic [ref=e1774]:
+                  - text: "Profit:"
+                  - generic [ref=e1775]: $396.01
+            - generic [ref=e1776]:
+              - generic [ref=e1777]:
+                - generic [ref=e1778]:
+                  - heading "Business" [level=4] [ref=e1779]
+                  - generic [ref=e1780]: Commander
+                - generic [ref=e1781]:
+                  - generic [ref=e1782]:
+                    - text: "AI Cost:"
+                    - generic [ref=e1783]: $4.6768
+                  - generic [ref=e1784]:
+                    - text: "Profit:"
+                    - generic [ref=e1785]: $594.32
+                  - generic [ref=e1786]: 12708% margin
+                  - button [ref=e1787] [cursor=pointer]:
+                    - img
+              - generic [ref=e1788]:
+                - generic [ref=e1789]: "Set margin:"
+                - button "100%" [ref=e1790] [cursor=pointer]
+                - button "200%" [ref=e1791] [cursor=pointer]
+                - button "500%" [ref=e1792] [cursor=pointer]
+                - button "1000%" [ref=e1793] [cursor=pointer]
+                - button "2000%" [ref=e1794] [cursor=pointer]
+                - generic [ref=e1795]:
+                  - spinbutton [ref=e1796]
+                  - generic [ref=e1797]: "%"
+              - generic [ref=e1798]:
+                - generic [ref=e1799]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e1800]: "599"
+                - generic [ref=e1801]:
+                  - generic [ref=e1802]: Price BDT (auto)
+                  - generic [ref=e1803]: ৳73,647
+                - generic [ref=e1804]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e1805]: "25000"
+                - generic [ref=e1806]:
+                  - text: Max Agents
+                  - spinbutton [ref=e1807]: "141"
+                - generic [ref=e1808]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e1809]: "20"
+                  - paragraph [ref=e1810]: "-1 = unlimited"
+                - generic [ref=e1811]:
+                  - text: Team Size
+                  - spinbutton [ref=e1812]: "50"
+                  - paragraph [ref=e1813]: "-1 = unlimited"
+                - generic [ref=e1814]:
+                  - generic [ref=e1815]:
+                    - img [ref=e1816]
+                    - text: Cap
+                    - generic [ref=e1818]: (budgeted)
+                  - generic [ref=e1819]: $4.6768
+                  - generic [ref=e1820]: "Real: $4.6768 · ▼ 0% under"
+                  - paragraph [ref=e1821]: = credits × cost/credit
+                - generic [ref=e1822]:
+                  - generic [ref=e1823]:
+                    - generic [ref=e1824]: "%"
+                    - text: Operator Share
+                  - generic [ref=e1825]:
+                    - slider [ref=e1826]: "30"
+                    - generic [ref=e1827]: 30%
+                  - paragraph [ref=e1828]: $179.70 → profit pool
+                - generic [ref=e1830] [cursor=pointer]:
+                  - checkbox "Commander" [checked] [ref=e1831]
+                  - generic [ref=e1832]: Commander
+              - generic [ref=e1833]:
+                - generic [ref=e1834]:
+                  - generic [ref=e1835]: Media Capacity
+                  - generic [ref=e1836]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e1837]:
+                  - generic [ref=e1838]:
+                    - text: Images Std
+                    - spinbutton [ref=e1839]
+                    - paragraph [ref=e1840]: 1,250 img auto
+                  - generic [ref=e1841]:
+                    - text: Images HD
+                    - spinbutton [ref=e1842]
+                    - paragraph [ref=e1843]: 625 img auto
+                  - generic [ref=e1844]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e1845]
+                    - paragraph [ref=e1846]: 62 clips auto
+                  - generic [ref=e1847]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e1848]
+                    - paragraph [ref=e1849]: 250 sec auto
+                  - generic [ref=e1850]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e1851]
+                    - paragraph [ref=e1852]: 1,666 min auto
+                  - generic [ref=e1853]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e1854]
+                    - paragraph [ref=e1855]: 833 min auto
+                  - generic [ref=e1856]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e1857]
+                    - paragraph [ref=e1858]: 5,000 min auto
+              - generic [ref=e1859]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e1860]:
+                  - generic [ref=e1861]:
+                    - text: 41 core + 100 MAARS Infinity agents + Commander Orion
+                    - button [ref=e1862] [cursor=pointer]:
+                      - img [ref=e1863]
+                  - generic [ref=e1866]:
+                    - text: 5,000 credits/month
+                    - button [ref=e1867] [cursor=pointer]:
+                      - img [ref=e1868]
+                  - generic [ref=e1871]:
+                    - text: 20 custom agents
+                    - button [ref=e1872] [cursor=pointer]:
+                      - img [ref=e1873]
+                  - generic [ref=e1876]:
+                    - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+                    - button [ref=e1877] [cursor=pointer]:
+                      - img [ref=e1878]
+                  - generic [ref=e1881]:
+                    - text: MAARS Infinity agent networks
+                    - button [ref=e1882] [cursor=pointer]:
+                      - img [ref=e1883]
+                  - generic [ref=e1886]:
+                    - text: Operator panel
+                    - button [ref=e1887] [cursor=pointer]:
+                      - img [ref=e1888]
+                  - generic [ref=e1891]:
+                    - text: API access & webhooks
+                    - button [ref=e1892] [cursor=pointer]:
+                      - img [ref=e1893]
+                  - generic [ref=e1896]:
+                    - text: Team (up to 50)
+                    - button [ref=e1897] [cursor=pointer]:
+                      - img [ref=e1898]
+                  - generic [ref=e1901]:
+                    - text: Dedicated Slack support
+                    - button [ref=e1902] [cursor=pointer]:
+                      - img [ref=e1903]
+                - generic [ref=e1906]:
+                  - textbox "Add feature…" [ref=e1907]
+                  - button [ref=e1908] [cursor=pointer]:
+                    - img
+              - generic [ref=e1911]:
+                - generic [ref=e1912]:
+                  - text: "AI Cost:"
+                  - generic [ref=e1913]: $4.6768
+                - generic [ref=e1914]:
+                  - text: "Revenue:"
+                  - generic [ref=e1915]: $599
+                - generic [ref=e1916]:
+                  - text: "Profit:"
+                  - generic [ref=e1917]: $594.32
+            - generic [ref=e1918]:
+              - generic [ref=e1919]:
+                - generic [ref=e1920]:
+                  - heading "Agency" [level=4] [ref=e1921]
+                  - generic [ref=e1922]: Commander
+                - generic [ref=e1923]:
+                  - generic [ref=e1924]:
+                    - text: "AI Cost:"
+                    - generic [ref=e1925]: $8.4182
+                  - generic [ref=e1926]:
+                    - text: "Profit:"
+                    - generic [ref=e1927]: $990.58
+                  - generic [ref=e1928]: 11767% margin
+                  - button [ref=e1929] [cursor=pointer]:
+                    - img
+              - generic [ref=e1930]:
+                - generic [ref=e1931]: "Set margin:"
+                - button "100%" [ref=e1932] [cursor=pointer]
+                - button "200%" [ref=e1933] [cursor=pointer]
+                - button "500%" [ref=e1934] [cursor=pointer]
+                - button "1000%" [ref=e1935] [cursor=pointer]
+                - button "2000%" [ref=e1936] [cursor=pointer]
+                - generic [ref=e1937]:
+                  - spinbutton [ref=e1938]
+                  - generic [ref=e1939]: "%"
+              - generic [ref=e1940]:
+                - generic [ref=e1941]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e1942]: "999"
+                - generic [ref=e1943]:
+                  - generic [ref=e1944]: Price BDT (auto)
+                  - generic [ref=e1945]: ৳122,827
+                - generic [ref=e1946]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e1947]: "45000"
+                - generic [ref=e1948]:
+                  - text: Max Agents
+                  - spinbutton [ref=e1949]: "241"
+                - generic [ref=e1950]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e1951]: "-1"
+                  - paragraph [ref=e1952]: "-1 = unlimited"
+                - generic [ref=e1953]:
+                  - text: Team Size
+                  - spinbutton [ref=e1954]: "-1"
+                  - paragraph [ref=e1955]: "-1 = unlimited"
+                - generic [ref=e1956]:
+                  - generic [ref=e1957]:
+                    - img [ref=e1958]
+                    - text: Cap
+                    - generic [ref=e1960]: (budgeted)
+                  - generic [ref=e1961]: $8.4182
+                  - generic [ref=e1962]: "Real: $8.4182 · ▼ 0% under"
+                  - paragraph [ref=e1963]: = credits × cost/credit
+                - generic [ref=e1964]:
+                  - generic [ref=e1965]:
+                    - generic [ref=e1966]: "%"
+                    - text: Operator Share
+                  - generic [ref=e1967]:
+                    - slider [ref=e1968]: "30"
+                    - generic [ref=e1969]: 30%
+                  - paragraph [ref=e1970]: $299.70 → profit pool
+                - generic [ref=e1972] [cursor=pointer]:
+                  - checkbox "Commander" [checked] [ref=e1973]
+                  - generic [ref=e1974]: Commander
+              - generic [ref=e1975]:
+                - generic [ref=e1976]:
+                  - generic [ref=e1977]: Media Capacity
+                  - generic [ref=e1978]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e1979]:
+                  - generic [ref=e1980]:
+                    - text: Images Std
+                    - spinbutton [ref=e1981]
+                    - paragraph [ref=e1982]: 2,250 img auto
+                  - generic [ref=e1983]:
+                    - text: Images HD
+                    - spinbutton [ref=e1984]
+                    - paragraph [ref=e1985]: 1,125 img auto
+                  - generic [ref=e1986]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e1987]
+                    - paragraph [ref=e1988]: 112 clips auto
+                  - generic [ref=e1989]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e1990]
+                    - paragraph [ref=e1991]: 450 sec auto
+                  - generic [ref=e1992]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e1993]
+                    - paragraph [ref=e1994]: 3,000 min auto
+                  - generic [ref=e1995]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e1996]
+                    - paragraph [ref=e1997]: 1,500 min auto
+                  - generic [ref=e1998]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e1999]
+                    - paragraph [ref=e2000]: 9,000 min auto
+              - generic [ref=e2001]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e2002]:
+                  - generic [ref=e2003]:
+                    - text: 41 core + 200 MAARS Infinity agents + Commander Orion
+                    - button [ref=e2004] [cursor=pointer]:
+                      - img [ref=e2005]
+                  - generic [ref=e2008]:
+                    - text: 6,500 credits/month
+                    - button [ref=e2009] [cursor=pointer]:
+                      - img [ref=e2010]
+                  - generic [ref=e2013]:
+                    - text: Unlimited custom agents
+                    - button [ref=e2014] [cursor=pointer]:
+                      - img [ref=e2015]
+                  - generic [ref=e2018]:
+                    - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+                    - button [ref=e2019] [cursor=pointer]:
+                      - img [ref=e2020]
+                  - generic [ref=e2023]:
+                    - text: White-label ready
+                    - button [ref=e2024] [cursor=pointer]:
+                      - img [ref=e2025]
+                  - generic [ref=e2028]:
+                    - text: RBAC & access control
+                    - button [ref=e2029] [cursor=pointer]:
+                      - img [ref=e2030]
+                  - generic [ref=e2033]:
+                    - text: Client management tools
+                    - button [ref=e2034] [cursor=pointer]:
+                      - img [ref=e2035]
+                  - generic [ref=e2038]:
+                    - text: SLA guarantee
+                    - button [ref=e2039] [cursor=pointer]:
+                      - img [ref=e2040]
+                  - generic [ref=e2043]:
+                    - text: Unlimited team members
+                    - button [ref=e2044] [cursor=pointer]:
+                      - img [ref=e2045]
+                  - generic [ref=e2048]:
+                    - text: Dedicated account manager
+                    - button [ref=e2049] [cursor=pointer]:
+                      - img [ref=e2050]
+                - generic [ref=e2053]:
+                  - textbox "Add feature…" [ref=e2054]
+                  - button [ref=e2055] [cursor=pointer]:
+                    - img
+              - generic [ref=e2058]:
+                - generic [ref=e2059]:
+                  - text: "AI Cost:"
+                  - generic [ref=e2060]: $8.4182
+                - generic [ref=e2061]:
+                  - text: "Revenue:"
+                  - generic [ref=e2062]: $999
+                - generic [ref=e2063]:
+                  - text: "Profit:"
+                  - generic [ref=e2064]: $990.58
+            - generic [ref=e2065]:
+              - generic [ref=e2066]:
+                - generic [ref=e2067]:
+                  - heading "Studio" [level=4] [ref=e2068]
+                  - generic [ref=e2069]: Commander
+                - generic [ref=e2070]:
+                  - generic [ref=e2071]:
+                    - text: "AI Cost:"
+                    - generic [ref=e2072]: $13.0949
+                  - generic [ref=e2073]:
+                    - text: "Profit:"
+                    - generic [ref=e2074]: $1485.91
+                  - generic [ref=e2075]: 11347% margin
+                  - button [ref=e2076] [cursor=pointer]:
+                    - img
+              - generic [ref=e2077]:
+                - generic [ref=e2078]: "Set margin:"
+                - button "100%" [ref=e2079] [cursor=pointer]
+                - button "200%" [ref=e2080] [cursor=pointer]
+                - button "500%" [ref=e2081] [cursor=pointer]
+                - button "1000%" [ref=e2082] [cursor=pointer]
+                - button "2000%" [ref=e2083] [cursor=pointer]
+                - generic [ref=e2084]:
+                  - spinbutton [ref=e2085]
+                  - generic [ref=e2086]: "%"
+              - generic [ref=e2087]:
+                - generic [ref=e2088]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e2089]: "1499"
+                - generic [ref=e2090]:
+                  - generic [ref=e2091]: Price BDT (auto)
+                  - generic [ref=e2092]: ৳184,302
+                - generic [ref=e2093]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e2094]: "70000"
+                - generic [ref=e2095]:
+                  - text: Max Agents
+                  - spinbutton [ref=e2096]: "391"
+                - generic [ref=e2097]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e2098]: "-1"
+                  - paragraph [ref=e2099]: "-1 = unlimited"
+                - generic [ref=e2100]:
+                  - text: Team Size
+                  - spinbutton [ref=e2101]: "-1"
+                  - paragraph [ref=e2102]: "-1 = unlimited"
+                - generic [ref=e2103]:
+                  - generic [ref=e2104]:
+                    - img [ref=e2105]
+                    - text: Cap
+                    - generic [ref=e2107]: (budgeted)
+                  - generic [ref=e2108]: $13.0949
+                  - generic [ref=e2109]: "Real: $13.0949 · ▼ 0% under"
+                  - paragraph [ref=e2110]: = credits × cost/credit
+                - generic [ref=e2111]:
+                  - generic [ref=e2112]:
+                    - generic [ref=e2113]: "%"
+                    - text: Operator Share
+                  - generic [ref=e2114]:
+                    - slider [ref=e2115]: "30"
+                    - generic [ref=e2116]: 30%
+                  - paragraph [ref=e2117]: $449.70 → profit pool
+                - generic [ref=e2119] [cursor=pointer]:
+                  - checkbox "Commander" [checked] [ref=e2120]
+                  - generic [ref=e2121]: Commander
+              - generic [ref=e2122]:
+                - generic [ref=e2123]:
+                  - generic [ref=e2124]: Media Capacity
+                  - generic [ref=e2125]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e2126]:
+                  - generic [ref=e2127]:
+                    - text: Images Std
+                    - spinbutton [ref=e2128]
+                    - paragraph [ref=e2129]: 3,500 img auto
+                  - generic [ref=e2130]:
+                    - text: Images HD
+                    - spinbutton [ref=e2131]
+                    - paragraph [ref=e2132]: 1,750 img auto
+                  - generic [ref=e2133]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e2134]
+                    - paragraph [ref=e2135]: 175 clips auto
+                  - generic [ref=e2136]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e2137]
+                    - paragraph [ref=e2138]: 700 sec auto
+                  - generic [ref=e2139]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e2140]
+                    - paragraph [ref=e2141]: 4,666 min auto
+                  - generic [ref=e2142]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e2143]
+                    - paragraph [ref=e2144]: 2,333 min auto
+                  - generic [ref=e2145]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e2146]
+                    - paragraph [ref=e2147]: 14,000 min auto
+              - generic [ref=e2148]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e2149]:
+                  - generic [ref=e2150]:
+                    - text: 41 core + 350 MAARS Infinity agents + Commander Orion
+                    - button [ref=e2151] [cursor=pointer]:
+                      - img [ref=e2152]
+                  - generic [ref=e2155]:
+                    - text: 7,500 credits/month
+                    - button [ref=e2156] [cursor=pointer]:
+                      - img [ref=e2157]
+                  - generic [ref=e2160]:
+                    - text: Unlimited custom agents
+                    - button [ref=e2161] [cursor=pointer]:
+                      - img [ref=e2162]
+                  - generic [ref=e2165]:
+                    - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+                    - button [ref=e2166] [cursor=pointer]:
+                      - img [ref=e2167]
+                  - generic [ref=e2170]:
+                    - text: Venture portfolio
+                    - button [ref=e2171] [cursor=pointer]:
+                      - img [ref=e2172]
+                  - generic [ref=e2175]:
+                    - text: Agent Catalog (350 networks)
+                    - button [ref=e2176] [cursor=pointer]:
+                      - img [ref=e2177]
+                  - generic [ref=e2180]:
+                    - text: Custom integrations
+                    - button [ref=e2181] [cursor=pointer]:
+                      - img [ref=e2182]
+                  - generic [ref=e2185]:
+                    - text: Multi-workspace
+                    - button [ref=e2186] [cursor=pointer]:
+                      - img [ref=e2187]
+                  - generic [ref=e2190]:
+                    - text: Unlimited team members
+                    - button [ref=e2191] [cursor=pointer]:
+                      - img [ref=e2192]
+                  - generic [ref=e2195]:
+                    - text: Priority dedicated support
+                    - button [ref=e2196] [cursor=pointer]:
+                      - img [ref=e2197]
+                - generic [ref=e2200]:
+                  - textbox "Add feature…" [ref=e2201]
+                  - button [ref=e2202] [cursor=pointer]:
+                    - img
+              - generic [ref=e2205]:
+                - generic [ref=e2206]:
+                  - text: "AI Cost:"
+                  - generic [ref=e2207]: $13.0949
+                - generic [ref=e2208]:
+                  - text: "Revenue:"
+                  - generic [ref=e2209]: $1499
+                - generic [ref=e2210]:
+                  - text: "Profit:"
+                  - generic [ref=e2211]: $1485.91
+            - generic [ref=e2212]:
+              - generic [ref=e2213]:
+                - generic [ref=e2214]:
+                  - heading "Enterprise" [level=4] [ref=e2215]
+                  - generic [ref=e2216]: Commander
+                - generic [ref=e2217]:
+                  - generic [ref=e2218]:
+                    - text: "AI Cost:"
+                    - generic [ref=e2219]: $28.0605
+                  - generic [ref=e2220]:
+                    - text: "Profit:"
+                    - generic [ref=e2221]: $2970.94
+                  - generic [ref=e2222]: 10588% margin
+                  - button [ref=e2223] [cursor=pointer]:
+                    - img
+              - generic [ref=e2224]:
+                - generic [ref=e2225]: "Set margin:"
+                - button "100%" [ref=e2226] [cursor=pointer]
+                - button "200%" [ref=e2227] [cursor=pointer]
+                - button "500%" [ref=e2228] [cursor=pointer]
+                - button "1000%" [ref=e2229] [cursor=pointer]
+                - button "2000%" [ref=e2230] [cursor=pointer]
+                - generic [ref=e2231]:
+                  - spinbutton [ref=e2232]
+                  - generic [ref=e2233]: "%"
+              - generic [ref=e2234]:
+                - generic [ref=e2235]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e2236]: "2999"
+                - generic [ref=e2237]:
+                  - generic [ref=e2238]: Price BDT (auto)
+                  - generic [ref=e2239]: ৳368,727
+                - generic [ref=e2240]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e2241]: "150000"
+                - generic [ref=e2242]:
+                  - text: Max Agents
+                  - spinbutton [ref=e2243]: "458"
+                - generic [ref=e2244]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e2245]: "-1"
+                  - paragraph [ref=e2246]: "-1 = unlimited"
+                - generic [ref=e2247]:
+                  - text: Team Size
+                  - spinbutton [ref=e2248]: "-1"
+                  - paragraph [ref=e2249]: "-1 = unlimited"
+                - generic [ref=e2250]:
+                  - generic [ref=e2251]:
+                    - img [ref=e2252]
+                    - text: Cap
+                    - generic [ref=e2254]: (budgeted)
+                  - generic [ref=e2255]: $28.0605
+                  - generic [ref=e2256]: "Real: $28.0605 · ▼ 0% under"
+                  - paragraph [ref=e2257]: = credits × cost/credit
+                - generic [ref=e2258]:
+                  - generic [ref=e2259]:
+                    - generic [ref=e2260]: "%"
+                    - text: Operator Share
+                  - generic [ref=e2261]:
+                    - slider [ref=e2262]: "30"
+                    - generic [ref=e2263]: 30%
+                  - paragraph [ref=e2264]: $899.70 → profit pool
+                - generic [ref=e2266] [cursor=pointer]:
+                  - checkbox "Commander" [checked] [ref=e2267]
+                  - generic [ref=e2268]: Commander
+              - generic [ref=e2269]:
+                - generic [ref=e2270]:
+                  - generic [ref=e2271]: Media Capacity
+                  - generic [ref=e2272]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e2273]:
+                  - generic [ref=e2274]:
+                    - text: Images Std
+                    - spinbutton [ref=e2275]
+                    - paragraph [ref=e2276]: 7,500 img auto
+                  - generic [ref=e2277]:
+                    - text: Images HD
+                    - spinbutton [ref=e2278]
+                    - paragraph [ref=e2279]: 3,750 img auto
+                  - generic [ref=e2280]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e2281]
+                    - paragraph [ref=e2282]: 375 clips auto
+                  - generic [ref=e2283]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e2284]
+                    - paragraph [ref=e2285]: 1,500 sec auto
+                  - generic [ref=e2286]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e2287]
+                    - paragraph [ref=e2288]: 10,000 min auto
+                  - generic [ref=e2289]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e2290]
+                    - paragraph [ref=e2291]: 5,000 min auto
+                  - generic [ref=e2292]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e2293]
+                    - paragraph [ref=e2294]: 30,000 min auto
+              - generic [ref=e2295]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e2296]:
+                  - generic [ref=e2297]:
+                    - text: All 458 agents + Commander Orion
+                    - button [ref=e2298] [cursor=pointer]:
+                      - img [ref=e2299]
+                  - generic [ref=e2302]:
+                    - text: 8,500 credits/month
+                    - button [ref=e2303] [cursor=pointer]:
+                      - img [ref=e2304]
+                  - generic [ref=e2307]:
+                    - text: Unlimited everything
+                    - button [ref=e2308] [cursor=pointer]:
+                      - img [ref=e2309]
+                  - generic [ref=e2312]:
+                    - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+                    - button [ref=e2313] [cursor=pointer]:
+                      - img [ref=e2314]
+                  - generic [ref=e2317]:
+                    - text: Dedicated infrastructure
+                    - button [ref=e2318] [cursor=pointer]:
+                      - img [ref=e2319]
+                  - generic [ref=e2322]:
+                    - text: Advanced security & compliance
+                    - button [ref=e2323] [cursor=pointer]:
+                      - img [ref=e2324]
+                  - generic [ref=e2327]:
+                    - text: Custom AI integrations
+                    - button [ref=e2328] [cursor=pointer]:
+                      - img [ref=e2329]
+                  - generic [ref=e2332]:
+                    - text: Onboarding & training
+                    - button [ref=e2333] [cursor=pointer]:
+                      - img [ref=e2334]
+                  - generic [ref=e2337]:
+                    - text: Custom SLAs
+                    - button [ref=e2338] [cursor=pointer]:
+                      - img [ref=e2339]
+                  - generic [ref=e2342]:
+                    - text: 24/7 premium support
+                    - button [ref=e2343] [cursor=pointer]:
+                      - img [ref=e2344]
+                - generic [ref=e2347]:
+                  - textbox "Add feature…" [ref=e2348]
+                  - button [ref=e2349] [cursor=pointer]:
+                    - img
+              - generic [ref=e2352]:
+                - generic [ref=e2353]:
+                  - text: "AI Cost:"
+                  - generic [ref=e2354]: $28.0605
+                - generic [ref=e2355]:
+                  - text: "Revenue:"
+                  - generic [ref=e2356]: $2999
+                - generic [ref=e2357]:
+                  - text: "Profit:"
+                  - generic [ref=e2358]: $2970.94
+            - generic [ref=e2359]:
+              - generic [ref=e2360]:
+                - generic [ref=e2361]:
+                  - heading "Corporate" [level=4] [ref=e2362]
+                  - generic [ref=e2363]: Commander
+                - generic [ref=e2364]:
+                  - generic [ref=e2365]:
+                    - text: "AI Cost:"
+                    - generic [ref=e2366]: $51.4443
+                  - generic [ref=e2367]:
+                    - text: "Profit:"
+                    - generic [ref=e2368]: $4947.56
+                  - generic [ref=e2369]: 9617% margin
+                  - button [ref=e2370] [cursor=pointer]:
+                    - img
+              - generic [ref=e2371]:
+                - generic [ref=e2372]: "Set margin:"
+                - button "100%" [ref=e2373] [cursor=pointer]
+                - button "200%" [ref=e2374] [cursor=pointer]
+                - button "500%" [ref=e2375] [cursor=pointer]
+                - button "1000%" [ref=e2376] [cursor=pointer]
+                - button "2000%" [ref=e2377] [cursor=pointer]
+                - generic [ref=e2378]:
+                  - spinbutton [ref=e2379]
+                  - generic [ref=e2380]: "%"
+              - generic [ref=e2381]:
+                - generic [ref=e2382]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e2383]: "4999"
+                - generic [ref=e2384]:
+                  - generic [ref=e2385]: Price BDT (auto)
+                  - generic [ref=e2386]: ৳614,627
+                - generic [ref=e2387]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e2388]: "275000"
+                - generic [ref=e2389]:
+                  - text: Max Agents
+                  - spinbutton [ref=e2390]: "458"
+                - generic [ref=e2391]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e2392]: "-1"
+                  - paragraph [ref=e2393]: "-1 = unlimited"
+                - generic [ref=e2394]:
+                  - text: Team Size
+                  - spinbutton [ref=e2395]: "-1"
+                  - paragraph [ref=e2396]: "-1 = unlimited"
+                - generic [ref=e2397]:
+                  - generic [ref=e2398]:
+                    - img [ref=e2399]
+                    - text: Cap
+                    - generic [ref=e2401]: (budgeted)
+                  - generic [ref=e2402]: $51.4443
+                  - generic [ref=e2403]: "Real: $51.4443 · ▼ 0% under"
+                  - paragraph [ref=e2404]: = credits × cost/credit
+                - generic [ref=e2405]:
+                  - generic [ref=e2406]:
+                    - generic [ref=e2407]: "%"
+                    - text: Operator Share
+                  - generic [ref=e2408]:
+                    - slider [ref=e2409]: "30"
+                    - generic [ref=e2410]: 30%
+                  - paragraph [ref=e2411]: $1499.70 → profit pool
+                - generic [ref=e2413] [cursor=pointer]:
+                  - checkbox "Commander" [checked] [ref=e2414]
+                  - generic [ref=e2415]: Commander
+              - generic [ref=e2416]:
+                - generic [ref=e2417]:
+                  - generic [ref=e2418]: Media Capacity
+                  - generic [ref=e2419]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e2420]:
+                  - generic [ref=e2421]:
+                    - text: Images Std
+                    - spinbutton [ref=e2422]
+                    - paragraph [ref=e2423]: 13,750 img auto
+                  - generic [ref=e2424]:
+                    - text: Images HD
+                    - spinbutton [ref=e2425]
+                    - paragraph [ref=e2426]: 6,875 img auto
+                  - generic [ref=e2427]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e2428]
+                    - paragraph [ref=e2429]: 687 clips auto
+                  - generic [ref=e2430]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e2431]
+                    - paragraph [ref=e2432]: 2,750 sec auto
+                  - generic [ref=e2433]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e2434]
+                    - paragraph [ref=e2435]: 18,333 min auto
+                  - generic [ref=e2436]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e2437]
+                    - paragraph [ref=e2438]: 9,166 min auto
+                  - generic [ref=e2439]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e2440]
+                    - paragraph [ref=e2441]: 55,000 min auto
+              - generic [ref=e2442]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e2443]:
+                  - generic [ref=e2444]:
+                    - text: All 458 agents + Commander Orion
+                    - button [ref=e2445] [cursor=pointer]:
+                      - img [ref=e2446]
+                  - generic [ref=e2449]:
+                    - text: 9,500 credits/month
+                    - button [ref=e2450] [cursor=pointer]:
+                      - img [ref=e2451]
+                  - generic [ref=e2454]:
+                    - text: Unlimited everything
+                    - button [ref=e2455] [cursor=pointer]:
+                      - img [ref=e2456]
+                  - generic [ref=e2459]:
+                    - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+                    - button [ref=e2460] [cursor=pointer]:
+                      - img [ref=e2461]
+                  - generic [ref=e2464]:
+                    - text: Custom AI model fine-tuning
+                    - button [ref=e2465] [cursor=pointer]:
+                      - img [ref=e2466]
+                  - generic [ref=e2469]:
+                    - text: Dedicated engineering support
+                    - button [ref=e2470] [cursor=pointer]:
+                      - img [ref=e2471]
+                  - generic [ref=e2474]:
+                    - text: Multi-workspace management
+                    - button [ref=e2475] [cursor=pointer]:
+                      - img [ref=e2476]
+                  - generic [ref=e2479]:
+                    - text: Custom contracts & billing
+                    - button [ref=e2480] [cursor=pointer]:
+                      - img [ref=e2481]
+                  - generic [ref=e2484]:
+                    - text: Quarterly business reviews
+                    - button [ref=e2485] [cursor=pointer]:
+                      - img [ref=e2486]
+                  - generic [ref=e2489]:
+                    - text: Executive priority support
+                    - button [ref=e2490] [cursor=pointer]:
+                      - img [ref=e2491]
+                - generic [ref=e2494]:
+                  - textbox "Add feature…" [ref=e2495]
+                  - button [ref=e2496] [cursor=pointer]:
+                    - img
+              - generic [ref=e2499]:
+                - generic [ref=e2500]:
+                  - text: "AI Cost:"
+                  - generic [ref=e2501]: $51.4443
+                - generic [ref=e2502]:
+                  - text: "Revenue:"
+                  - generic [ref=e2503]: $4999
+                - generic [ref=e2504]:
+                  - text: "Profit:"
+                  - generic [ref=e2505]: $4947.56
+            - generic [ref=e2506]:
+              - generic [ref=e2507]:
+                - generic [ref=e2508]:
+                  - heading "Elite" [level=4] [ref=e2509]
+                  - generic [ref=e2510]: Commander
+                - generic [ref=e2511]:
+                  - generic [ref=e2512]:
+                    - text: "AI Cost:"
+                    - generic [ref=e2513]: $93.5350
+                  - generic [ref=e2514]:
+                    - text: "Profit:"
+                    - generic [ref=e2515]: $7905.47
+                  - generic [ref=e2516]: 8452% margin
+                  - button [ref=e2517] [cursor=pointer]:
+                    - img
+              - generic [ref=e2518]:
+                - generic [ref=e2519]: "Set margin:"
+                - button "100%" [ref=e2520] [cursor=pointer]
+                - button "200%" [ref=e2521] [cursor=pointer]
+                - button "500%" [ref=e2522] [cursor=pointer]
+                - button "1000%" [ref=e2523] [cursor=pointer]
+                - button "2000%" [ref=e2524] [cursor=pointer]
+                - generic [ref=e2525]:
+                  - spinbutton [ref=e2526]
+                  - generic [ref=e2527]: "%"
+              - generic [ref=e2528]:
+                - generic [ref=e2529]:
+                  - text: Price USD ★
+                  - spinbutton [ref=e2530]: "7999"
+                - generic [ref=e2531]:
+                  - generic [ref=e2532]: Price BDT (auto)
+                  - generic [ref=e2533]: ৳983,477
+                - generic [ref=e2534]:
+                  - text: Credits/mo
+                  - spinbutton [ref=e2535]: "500000"
+                - generic [ref=e2536]:
+                  - text: Max Agents
+                  - spinbutton [ref=e2537]: "458"
+                - generic [ref=e2538]:
+                  - text: Custom Agents
+                  - spinbutton [ref=e2539]: "-1"
+                  - paragraph [ref=e2540]: "-1 = unlimited"
+                - generic [ref=e2541]:
+                  - text: Team Size
+                  - spinbutton [ref=e2542]: "-1"
+                  - paragraph [ref=e2543]: "-1 = unlimited"
+                - generic [ref=e2544]:
+                  - generic [ref=e2545]:
+                    - img [ref=e2546]
+                    - text: Cap
+                    - generic [ref=e2548]: (budgeted)
+                  - generic [ref=e2549]: $93.5350
+                  - generic [ref=e2550]: "Real: $93.5350 · ▲ 0% over"
+                  - paragraph [ref=e2551]: = credits × cost/credit
+                - generic [ref=e2552]:
+                  - generic [ref=e2553]:
+                    - generic [ref=e2554]: "%"
+                    - text: Operator Share
+                  - generic [ref=e2555]:
+                    - slider [ref=e2556]: "30"
+                    - generic [ref=e2557]: 30%
+                  - paragraph [ref=e2558]: $2399.70 → profit pool
+                - generic [ref=e2560] [cursor=pointer]:
+                  - checkbox "Commander" [checked] [ref=e2561]
+                  - generic [ref=e2562]: Commander
+              - generic [ref=e2563]:
+                - generic [ref=e2564]:
+                  - generic [ref=e2565]: Media Capacity
+                  - generic [ref=e2566]: blank = auto (derived from credits) · number = hard cap · -1 = disabled
+                - generic [ref=e2567]:
+                  - generic [ref=e2568]:
+                    - text: Images Std
+                    - spinbutton [ref=e2569]
+                    - paragraph [ref=e2570]: 25,000 img auto
+                  - generic [ref=e2571]:
+                    - text: Images HD
+                    - spinbutton [ref=e2572]
+                    - paragraph [ref=e2573]: 12,500 img auto
+                  - generic [ref=e2574]:
+                    - text: Video Clips (4s)
+                    - spinbutton [ref=e2575]
+                    - paragraph [ref=e2576]: 1,250 clips auto
+                  - generic [ref=e2577]:
+                    - text: Video Seconds
+                    - spinbutton [ref=e2578]
+                    - paragraph [ref=e2579]: 5,000 sec auto
+                  - generic [ref=e2580]:
+                    - text: TTS Minutes
+                    - spinbutton [ref=e2581]
+                    - paragraph [ref=e2582]: 33,333 min auto
+                  - generic [ref=e2583]:
+                    - text: Voice-Over Min
+                    - spinbutton [ref=e2584]
+                    - paragraph [ref=e2585]: 16,666 min auto
+                  - generic [ref=e2586]:
+                    - text: STT Minutes
+                    - spinbutton [ref=e2587]
+                    - paragraph [ref=e2588]: 100,000 min auto
+              - generic [ref=e2589]:
+                - text: Features (shown on pricing page)
+                - generic [ref=e2590]:
+                  - generic [ref=e2591]:
+                    - text: All 458 agents + Commander Orion
+                    - button [ref=e2592] [cursor=pointer]:
+                      - img [ref=e2593]
+                  - generic [ref=e2596]:
+                    - text: 10,000 credits/month
+                    - button [ref=e2597] [cursor=pointer]:
+                      - img [ref=e2598]
+                  - generic [ref=e2601]:
+                    - text: Unlimited everything
+                    - button [ref=e2602] [cursor=pointer]:
+                      - img [ref=e2603]
+                  - generic [ref=e2606]:
+                    - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+                    - button [ref=e2607] [cursor=pointer]:
+                      - img [ref=e2608]
+                  - generic [ref=e2611]:
+                    - text: Custom agent development
+                    - button [ref=e2612] [cursor=pointer]:
+                      - img [ref=e2613]
+                  - generic [ref=e2616]:
+                    - text: Dedicated servers & infrastructure
+                    - button [ref=e2617] [cursor=pointer]:
+                      - img [ref=e2618]
+                  - generic [ref=e2621]:
+                    - text: Strategic AI consulting
+                    - button [ref=e2622] [cursor=pointer]:
+                      - img [ref=e2623]
+                  - generic [ref=e2626]:
+                    - text: Full platform customization
+                    - button [ref=e2627] [cursor=pointer]:
+                      - img [ref=e2628]
+                  - generic [ref=e2631]:
+                    - text: Executive support hotline
+                    - button [ref=e2632] [cursor=pointer]:
+                      - img [ref=e2633]
+                  - generic [ref=e2636]:
+                    - text: Custom contract & billing
+                    - button [ref=e2637] [cursor=pointer]:
+                      - img [ref=e2638]
+                - generic [ref=e2641]:
+                  - textbox "Add feature…" [ref=e2642]
+                  - button [ref=e2643] [cursor=pointer]:
+                    - img
+              - generic [ref=e2646]:
+                - generic [ref=e2647]:
+                  - text: "AI Cost:"
+                  - generic [ref=e2648]: $93.5350
+                - generic [ref=e2649]:
+                  - text: "Revenue:"
+                  - generic [ref=e2650]: $7999
+                - generic [ref=e2651]:
+                  - text: "Profit:"
+                  - generic [ref=e2652]: $7905.47
+            - generic [ref=e2653]:
+              - heading "Custom Agent Creation Cost" [level=4] [ref=e2654]
+              - generic [ref=e2655]:
+                - spinbutton [ref=e2656]: "20"
+                - paragraph [ref=e2657]: Credits charged per custom agent created
+            - generic [ref=e2658]:
+              - button "Publish Pricing Changes" [ref=e2659] [cursor=pointer]
+              - button "Reset to Current" [ref=e2660] [cursor=pointer]
+        - generic [ref=e2661]:
+          - generic [ref=e2663]:
+            - generic [ref=e2664]:
+              - generic [ref=e2665]: 🔒
+              - text: Operator Breakdown
+              - generic [ref=e2666]: ADMIN ONLY
+            - generic [ref=e2667]: Not visible to clients
+          - generic [ref=e2668]:
+            - generic [ref=e2669]:
+              - generic [ref=e2670]:
+                - paragraph [ref=e2671]: Credit ↔ Token Ratio
+                - paragraph [ref=e2672]: 1 credit = 500 tokens
+                - paragraph [ref=e2673]: ~250 input + ~250 output per API call
+              - generic [ref=e2674]:
+                - paragraph [ref=e2675]: Cost per Token (blended)
+                - paragraph [ref=e2676]: $3.74e-7
+                - paragraph [ref=e2677]: Across all 22 providers, weighted by router
+              - generic [ref=e2678]:
+                - paragraph [ref=e2679]: Free-Tier Routing
+                - paragraph [ref=e2680]: 96%
+                - paragraph [ref=e2681]: 6 free / 16 paid providers
+            - generic [ref=e2682]:
+              - paragraph [ref=e2683]: Smart Router Workflow
+              - list [ref=e2684]:
+                - listitem [ref=e2685]: 1. Request arrives → classified by task type (chat, code, reasoning, research)
+                - listitem [ref=e2686]: "2. Router checks free-tier first: Groq → Cerebras → SambaNova → Gemini → NVIDIA → HuggingFace"
+                - listitem [ref=e2687]: "3. If free unavailable → cheapest paid: DeepSeek → Together → Fireworks → Mistral"
+                - listitem [ref=e2688]: 4. Premium fallback (Opus/GPT-4/Sonnet) only if specifically requested
+                - listitem [ref=e2689]: 5. 1 request = 1 credit deducted from client's strict cap
+            - generic [ref=e2690]:
+              - paragraph [ref=e2691]: Client Usage Capacity per Plan
+              - table [ref=e2693]:
+                - rowgroup [ref=e2694]:
+                  - row "Plan Credits Total Tokens Short Chats* Long Chats** Research*** Your Cost Strict Cap" [ref=e2695]:
+                    - columnheader "Plan" [ref=e2696]
+                    - columnheader "Credits" [ref=e2697]
+                    - columnheader "Total Tokens" [ref=e2698]
+                    - columnheader "Short Chats*" [ref=e2699]
+                    - columnheader "Long Chats**" [ref=e2700]
+                    - columnheader "Research***" [ref=e2701]
+                    - columnheader "Your Cost" [ref=e2702]
+                    - columnheader "Strict Cap" [ref=e2703]
+                - rowgroup [ref=e2704]:
+                  - row "Free 50 25,000 50 10 2 $0.0094 $0.0094" [ref=e2705]:
+                    - cell "Free" [ref=e2706]
+                    - cell "50" [ref=e2707]
+                    - cell "25,000" [ref=e2708]
+                    - cell "50" [ref=e2709]
+                    - cell "10" [ref=e2710]
+                    - cell "2" [ref=e2711]
+                    - cell "$0.0094" [ref=e2712]
+                    - cell "$0.0094" [ref=e2713]
+                  - row "Starter 500 250,000 500 100 25 $0.0935 $0.0935" [ref=e2714]:
+                    - cell "Starter" [ref=e2715]
+                    - cell "500" [ref=e2716]
+                    - cell "250,000" [ref=e2717]
+                    - cell "500" [ref=e2718]
+                    - cell "100" [ref=e2719]
+                    - cell "25" [ref=e2720]
+                    - cell "$0.0935" [ref=e2721]
+                    - cell "$0.0935" [ref=e2722]
+                  - row "Essential 1,200 600,000 1,200 240 60 $0.2245 $0.2245" [ref=e2723]:
+                    - cell "Essential" [ref=e2724]
+                    - cell "1,200" [ref=e2725]
+                    - cell "600,000" [ref=e2726]
+                    - cell "1,200" [ref=e2727]
+                    - cell "240" [ref=e2728]
+                    - cell "60" [ref=e2729]
+                    - cell "$0.2245" [ref=e2730]
+                    - cell "$0.2245" [ref=e2731]
+                  - row "Basic 2,500 1,250,000 2,500 500 125 $0.4677 $0.4677" [ref=e2732]:
+                    - cell "Basic" [ref=e2733]
+                    - cell "2,500" [ref=e2734]
+                    - cell "1,250,000" [ref=e2735]
+                    - cell "2,500" [ref=e2736]
+                    - cell "500" [ref=e2737]
+                    - cell "125" [ref=e2738]
+                    - cell "$0.4677" [ref=e2739]
+                    - cell "$0.4677" [ref=e2740]
+                  - row "Standard 5,000 2,500,000 5,000 1,000 250 $0.9354 $0.9354" [ref=e2741]:
+                    - cell "Standard" [ref=e2742]
+                    - cell "5,000" [ref=e2743]
+                    - cell "2,500,000" [ref=e2744]
+                    - cell "5,000" [ref=e2745]
+                    - cell "1,000" [ref=e2746]
+                    - cell "250" [ref=e2747]
+                    - cell "$0.9354" [ref=e2748]
+                    - cell "$0.9354" [ref=e2749]
+                  - row "Professional 9,000 4,500,000 9,000 1,800 450 $1.6836 $1.6836" [ref=e2750]:
+                    - cell "Professional" [ref=e2751]
+                    - cell "9,000" [ref=e2752]
+                    - cell "4,500,000" [ref=e2753]
+                    - cell "9,000" [ref=e2754]
+                    - cell "1,800" [ref=e2755]
+                    - cell "450" [ref=e2756]
+                    - cell "$1.6836" [ref=e2757]
+                    - cell "$1.6836" [ref=e2758]
+                  - row "Advanced 16,000 8,000,000 16,000 3,200 800 $2.9931 $2.9931" [ref=e2759]:
+                    - cell "Advanced" [ref=e2760]
+                    - cell "16,000" [ref=e2761]
+                    - cell "8,000,000" [ref=e2762]
+                    - cell "16,000" [ref=e2763]
+                    - cell "3,200" [ref=e2764]
+                    - cell "800" [ref=e2765]
+                    - cell "$2.9931" [ref=e2766]
+                    - cell "$2.9931" [ref=e2767]
+                  - row "Business 25,000 12,500,000 25,000 5,000 1,250 $4.6768 $4.6768" [ref=e2768]:
+                    - cell "Business" [ref=e2769]
+                    - cell "25,000" [ref=e2770]
+                    - cell "12,500,000" [ref=e2771]
+                    - cell "25,000" [ref=e2772]
+                    - cell "5,000" [ref=e2773]
+                    - cell "1,250" [ref=e2774]
+                    - cell "$4.6768" [ref=e2775]
+                    - cell "$4.6768" [ref=e2776]
+                  - row "Agency 45,000 22,500,000 45,000 9,000 2,250 $8.4182 $8.4182" [ref=e2777]:
+                    - cell "Agency" [ref=e2778]
+                    - cell "45,000" [ref=e2779]
+                    - cell "22,500,000" [ref=e2780]
+                    - cell "45,000" [ref=e2781]
+                    - cell "9,000" [ref=e2782]
+                    - cell "2,250" [ref=e2783]
+                    - cell "$8.4182" [ref=e2784]
+                    - cell "$8.4182" [ref=e2785]
+                  - row "Studio 70,000 35,000,000 70,000 14,000 3,500 $13.0949 $13.0949" [ref=e2786]:
+                    - cell "Studio" [ref=e2787]
+                    - cell "70,000" [ref=e2788]
+                    - cell "35,000,000" [ref=e2789]
+                    - cell "70,000" [ref=e2790]
+                    - cell "14,000" [ref=e2791]
+                    - cell "3,500" [ref=e2792]
+                    - cell "$13.0949" [ref=e2793]
+                    - cell "$13.0949" [ref=e2794]
+                  - row "Enterprise 150,000 75,000,000 150,000 30,000 7,500 $28.0605 $28.0605" [ref=e2795]:
+                    - cell "Enterprise" [ref=e2796]
+                    - cell "150,000" [ref=e2797]
+                    - cell "75,000,000" [ref=e2798]
+                    - cell "150,000" [ref=e2799]
+                    - cell "30,000" [ref=e2800]
+                    - cell "7,500" [ref=e2801]
+                    - cell "$28.0605" [ref=e2802]
+                    - cell "$28.0605" [ref=e2803]
+                  - row "Corporate 275,000 137,500,000 275,000 55,000 13,750 $51.4443 $51.4443" [ref=e2804]:
+                    - cell "Corporate" [ref=e2805]
+                    - cell "275,000" [ref=e2806]
+                    - cell "137,500,000" [ref=e2807]
+                    - cell "275,000" [ref=e2808]
+                    - cell "55,000" [ref=e2809]
+                    - cell "13,750" [ref=e2810]
+                    - cell "$51.4443" [ref=e2811]
+                    - cell "$51.4443" [ref=e2812]
+                  - row "Elite 500,000 250,000,000 500,000 100,000 25,000 $93.5350 $93.5350" [ref=e2813]:
+                    - cell "Elite" [ref=e2814]
+                    - cell "500,000" [ref=e2815]
+                    - cell "250,000,000" [ref=e2816]
+                    - cell "500,000" [ref=e2817]
+                    - cell "100,000" [ref=e2818]
+                    - cell "25,000" [ref=e2819]
+                    - cell "$93.5350" [ref=e2820]
+                    - cell "$93.5350" [ref=e2821]
+              - paragraph [ref=e2822]:
+                - text: "* Short chat ≈ 1 credit (500 tokens) ** Long chat ≈ 5 credits (2,500 tokens) *** Research task ≈ 20 credits (10,000 tokens)"
+                - text: Strict Cap = your real AI cost for serving that plan's credits. Client cannot exceed this — credits are hard-limited at consumption time.
+                - generic [ref=e2823]:
+                  - text: Media capacity (images / video / TTS / voice-over) lives on
+                  - link "/admin/provider-intelligence" [ref=e2824] [cursor=pointer]:
+                    - /url: /admin/provider-intelligence
+                  - text: — click any plan row to expand its full breakdown.
+      - generic [ref=e2825]: Loading...
+      - generic [ref=e2827]:
+        - generic [ref=e2828]:
+          - heading "Operator splits, customer overrides & audit" [level=2] [ref=e2829]
+          - button "Refresh" [ref=e2830] [cursor=pointer]:
+            - img [ref=e2831]
+            - text: Refresh
+        - generic [ref=e2836]:
+          - generic [ref=e2837]:
+            - img [ref=e2838]
+            - text: Per-customer pricing overrides
+          - generic [ref=e2843]:
+            - paragraph [ref=e2844]: "Attach negotiated pricing to a specific user_id. The Stripe webhook checks for an active override per (user, package) and applies it before falling back to the package default. Optional `expires_at` ISO timestamp lets the override auto-revert."
+            - generic [ref=e2845]:
+              - textbox "user_id" [ref=e2846]
+              - combobox [ref=e2847]
+              - spinbutton [ref=e2848]: "0.2"
+              - spinbutton [ref=e2849]
+              - spinbutton [ref=e2850]
+              - textbox "notes (optional)" [ref=e2851]
+              - button "Save override" [ref=e2852] [cursor=pointer]:
+                - img [ref=e2853]
+                - text: Save override
+            - generic [ref=e2857]: No customer overrides yet.
+        - generic [ref=e2858]:
+          - generic [ref=e2859]:
+            - img [ref=e2860]
+            - text: Recent audit entries (packages & pricing)
+          - generic [ref=e2865]: No audit entries yet.
+    - generic [ref=e2866]:
+      - generic "Chat with Commander Orion" [ref=e2867] [cursor=pointer]:
+        - img "Commander Orion" [ref=e2870]
+      - button "Start a new chat" [ref=e2872] [cursor=pointer]:
+        - img [ref=e2873]
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

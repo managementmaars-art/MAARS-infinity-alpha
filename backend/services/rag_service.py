@@ -60,7 +60,7 @@ def chunk_text(text: str, chunk_size: int = 400, chunk_overlap: int = 80) -> Lis
 
 
 async def search_knowledge_base(
-    db, agent_id: str, query: str, top_k: int = 5, threshold: float = 0.10, api_key: str = None
+    db, agent_id: str, query: str, top_k: int = 5, threshold: float = 0.10,
 ) -> List[Dict]:
     """Search an agent's knowledge base using TF-IDF similarity."""
     chunks = await db.knowledge_chunks.find(

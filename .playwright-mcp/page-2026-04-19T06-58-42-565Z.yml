@@ -1,0 +1,95 @@
+- generic [active]:
+  - generic [ref=e1]:
+    - generic [ref=e3]:
+      - link "logo" [ref=e5] [cursor=pointer]:
+        - /url: /console
+        - img "logo" [ref=e6]
+      - generic [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: /console
+        - link "Model APIs" [ref=e9] [cursor=pointer]:
+          - /url: /models-console/library
+        - link "Agent Sandbox new" [ref=e10] [cursor=pointer]:
+          - /url: /sandbox-console
+          - generic [ref=e11]:
+            - generic [ref=e12]: Agent Sandbox
+            - img "new" [ref=e13]
+        - link "GPUs" [ref=e14] [cursor=pointer]:
+          - /url: /gpus-console/application
+        - generic [ref=e15]: QUICK ACCESS
+        - link "Pricing" [ref=e16] [cursor=pointer]:
+          - /url: /console/pricing-console
+        - link "Billing" [ref=e17] [cursor=pointer]:
+          - /url: /billing
+        - link "Quotas & Limits" [ref=e18] [cursor=pointer]:
+          - /url: /quota-limits
+        - link "Account Settings" [ref=e19] [cursor=pointer]:
+          - /url: /settings
+      - link "Docs" [ref=e21] [cursor=pointer]:
+        - /url: /docs/guides/introduction
+        - img "docs" [ref=e23]
+        - text: Docs
+        - img [ref=e25]
+    - generic [ref=e29]:
+      - banner [ref=e31]:
+        - navigation [ref=e32]:
+          - generic [ref=e33]:
+            - generic [ref=e35]: Account Settings
+            - generic [ref=e37]:
+              - generic [ref=e39] [cursor=pointer]:
+                - img [ref=e40]
+                - generic [ref=e44]: "Credits Remaining:"
+                - img [ref=e46]
+              - generic [ref=e49] [cursor=pointer]:
+                - text: management.maars
+                - generic [ref=e50]: Personal
+                - img [ref=e51]
+              - img [ref=e54] [cursor=pointer]
+              - img [ref=e61] [cursor=pointer]
+      - generic [ref=e66]:
+        - tablist [ref=e67]:
+          - tab "Account" [selected] [ref=e68] [cursor=pointer]
+          - tab "Team" [ref=e69] [cursor=pointer]
+          - tab "Key Management" [ref=e70] [cursor=pointer]
+          - tab "Audit Logs" [ref=e71] [cursor=pointer]
+        - tabpanel "Account" [ref=e72]:
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - paragraph [ref=e75]: Complete a quick survey to claim $1 in free credits!
+              - link "Go to Settings" [ref=e76] [cursor=pointer]:
+                - /url: /console
+                - text: Go to Settings
+                - img [ref=e77]
+            - generic [ref=e79]:
+              - generic [ref=e80]:
+                - generic [ref=e81]:
+                  - paragraph [ref=e82]: Email
+                  - paragraph [ref=e83]: management.maars@marsgc.net
+                - generic [ref=e84]:
+                  - paragraph [ref=e85]: User ID
+                  - paragraph [ref=e86]: 3f70832f-1efc-4be4-a644-f72da69bc85f
+              - generic [ref=e87]:
+                - generic [ref=e88]:
+                  - generic [ref=e89]:
+                    - paragraph [ref=e90]: First Name
+                    - textbox "First Name" [ref=e92]
+                  - generic [ref=e93]:
+                    - paragraph [ref=e94]: Last Name
+                    - textbox "Last Name" [ref=e96]
+                - generic [ref=e97]:
+                  - generic [ref=e98]:
+                    - paragraph [ref=e99]: Company Name
+                    - textbox "Company Name" [ref=e101]
+                  - generic [ref=e102]:
+                    - paragraph [ref=e103]: Country
+                    - textbox "Country" [ref=e105]: United States
+              - generic [ref=e107]:
+                - paragraph [ref=e108]: Password
+                - generic [ref=e109]:
+                  - textbox [disabled] [ref=e112]: "*** *** ***"
+                  - link "Change" [ref=e113] [cursor=pointer]:
+                    - /url: /user/reset?from=console&email=management.maars@marsgc.net
+              - button "Save" [ref=e116] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+  - alert [ref=e117]

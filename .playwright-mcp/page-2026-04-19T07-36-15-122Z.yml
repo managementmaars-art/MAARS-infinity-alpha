@@ -1,0 +1,355 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e14]:
+        - 'img "Account color: Unset" [ref=e15]'
+        - navigation "Global" [ref=e16]:
+          - generic [ref=e17]:
+            - generic [ref=e18]:
+              - link "AWS Console Home" [ref=e19] [cursor=pointer]:
+                - /url: https://us-east-1.console.aws.amazon.com/console/home?region=us-east-1
+                - img
+              - link "Skip to Main Content" [ref=e20] [cursor=pointer]:
+                - /url: "#c"
+              - button "Amazon Q" [ref=e23] [cursor=pointer]:
+                - img [ref=e27]
+              - button "Services" [ref=e33] [cursor=pointer]:
+                - img [ref=e34]
+            - generic [ref=e47]:
+              - generic [ref=e48]:
+                - img "Search" [ref=e49]:
+                  - generic [ref=e50]:
+                    - img
+                - generic [ref=e51]:
+                  - searchbox
+                  - combobox "Search" [ref=e52]
+                - button "Ask Amazon Q" [ref=e53]:
+                  - img "Ask Amazon Q" [ref=e54]
+                - generic: "[Alt+S]"
+              - status [ref=e56]
+            - generic [ref=e57]:
+              - link "CloudShell" [ref=e59] [cursor=pointer]:
+                - /url: https://us-east-1.console.aws.amazon.com/cloudshell/home?region=us-east-1
+                - img
+              - generic "Notifications" [ref=e60] [cursor=pointer]:
+                - button "Notifications (none available)" [ref=e64]:
+                  - generic [ref=e65]:
+                    - img
+                - generic [ref=e67]:
+                  - img
+              - list [ref=e70]:
+                - listitem [ref=e71]:
+                  - button "Help & support" [ref=e73] [cursor=pointer]:
+                    - img "Support" [ref=e75]
+                - listitem [ref=e78]:
+                  - button "Settings" [ref=e80] [cursor=pointer]:
+                    - generic [ref=e83]:
+                      - img
+                - listitem [ref=e93]:
+                  - combobox "Regions (United States (N. Virginia))" [ref=e95] [cursor=pointer]:
+                    - generic [ref=e97]: United States (N. Virginia)
+                    - generic [ref=e98]:
+                      - img
+                - listitem [ref=e99]:
+                  - button "MAARS%20Global%20Corporation" [ref=e101] [cursor=pointer]:
+                    - generic [ref=e105]:
+                      - 'generic "Account color: Unset" [ref=e107]':
+                        - generic [ref=e108]: MAARS Global Corporation (6152-9630-8298)
+                        - generic [ref=e109]:
+                          - img
+                      - generic [ref=e111]: MAARS%20Global%20Corporation
+        - generic:
+          - generic:
+            - list
+    - generic [ref=e426]:
+      - generic [ref=e428]:
+        - button "Console navigation sidebar" [expanded] [ref=e430] [cursor=pointer]:
+          - generic [ref=e431]:
+            - img
+        - navigation "Breadcrumb" [ref=e434]:
+          - list [ref=e435]:
+            - listitem [ref=e436]:
+              - generic [ref=e437]:
+                - link "Amazon Bedrock" [ref=e438] [cursor=pointer]:
+                  - /url: /bedrock/home#/overview
+                  - generic [ref=e439]: Amazon Bedrock
+                - generic [ref=e441]:
+                  - img
+            - listitem [ref=e442]:
+              - link "Playground" [disabled] [ref=e444]:
+                - generic [ref=e445]: Playground
+          - list [ref=e446]:
+            - listitem [ref=e447]:
+              - generic [ref=e448]:
+                - link [ref=e449] [cursor=pointer]:
+                  - /url: /bedrock/home#/overview
+                  - generic [ref=e450]: Amazon Bedrock
+                - generic [ref=e452]:
+                  - img
+            - listitem [ref=e453]:
+              - generic [ref=e456]: Playground
+        - region "Drawers" [ref=e458]:
+          - toolbar "Drawers" [ref=e459]:
+            - button "Tools toggle" [ref=e461] [cursor=pointer]:
+              - generic [ref=e462]:
+                - img
+      - navigation "Console" [ref=e465]:
+        - button "Close console navigation sidebar" [ref=e467] [cursor=pointer]:
+          - generic [ref=e468]:
+            - img
+        - generic [ref=e469]:
+          - heading "Amazon Bedrock" [level=2] [ref=e470]:
+            - link "Amazon Bedrock" [ref=e471] [cursor=pointer]:
+              - /url: /bedrock/home#/overview
+              - generic [ref=e472]: Amazon Bedrock
+          - list [ref=e474]:
+            - listitem [ref=e475]:
+              - generic [ref=e476]:
+                - button "Discover" [expanded] [ref=e480] [cursor=pointer]:
+                  - generic [ref=e482]:
+                    - img
+                  - generic [ref=e483]: Discover
+                - group "Discover" [ref=e484]:
+                  - list [ref=e485]:
+                    - listitem [ref=e486]:
+                      - link "Overview" [ref=e487] [cursor=pointer]:
+                        - /url: "#overview"
+                    - listitem [ref=e488]:
+                      - link "Quickstart" [ref=e489] [cursor=pointer]:
+                        - /url: "#quickstart"
+                      - button "New" [ref=e494] [cursor=pointer]
+                    - listitem [ref=e495]:
+                      - link "Model catalog" [ref=e496] [cursor=pointer]:
+                        - /url: "#model-catalog"
+                    - listitem [ref=e497]:
+                      - link "API keys" [ref=e498] [cursor=pointer]:
+                        - /url: "#api-keys"
+            - listitem [ref=e499]:
+              - generic [ref=e500]:
+                - button "Labs" [expanded] [ref=e504] [cursor=pointer]:
+                  - generic [ref=e506]:
+                    - img
+                  - generic [ref=e507]: Labs
+                - group "Labs" [ref=e508]:
+                  - list [ref=e509]:
+                    - listitem [ref=e510]:
+                      - link "Quotas" [ref=e511] [cursor=pointer]:
+                        - /url: "#model-quotas"
+                      - button "New" [ref=e516] [cursor=pointer]
+                    - listitem [ref=e517]:
+                      - link "Compare models" [ref=e518] [cursor=pointer]:
+                        - /url: "#compare-models"
+                      - button "New" [ref=e523] [cursor=pointer]
+            - listitem [ref=e524]:
+              - generic [ref=e525]:
+                - button "Test" [expanded] [ref=e529] [cursor=pointer]:
+                  - generic [ref=e531]:
+                    - img
+                  - generic [ref=e532]: Test
+                - group "Test" [ref=e533]:
+                  - list [ref=e534]:
+                    - listitem [ref=e535]:
+                      - link "Playground" [ref=e536] [cursor=pointer]:
+                        - /url: "#playground"
+                      - button "New" [ref=e541] [cursor=pointer]
+                    - listitem [ref=e542]:
+                      - link "Watermark detection" [ref=e543] [cursor=pointer]:
+                        - /url: "#watermark-detection"
+                    - listitem [ref=e544]:
+                      - link "Tokenizer" [ref=e545] [cursor=pointer]:
+                        - /url: "#tokenizer"
+            - listitem [ref=e546]:
+              - generic [ref=e547]:
+                - button "Infer" [expanded] [ref=e551] [cursor=pointer]:
+                  - generic [ref=e553]:
+                    - img
+                  - generic [ref=e554]: Infer
+                - group "Infer" [ref=e555]:
+                  - list [ref=e556]:
+                    - listitem [ref=e671]:
+                      - link "Inference profiles" [ref=e672] [cursor=pointer]:
+                        - /url: "#inference-profiles"
+                    - listitem [ref=e557]:
+                      - link "Batch inference" [ref=e558] [cursor=pointer]:
+                        - /url: "#batch-inference"
+                    - listitem [ref=e559]:
+                      - link "Provisioned Throughput" [ref=e560] [cursor=pointer]:
+                        - /url: "#provisioned-throughput"
+                    - listitem [ref=e561]:
+                      - link "Custom model on-demand" [ref=e562] [cursor=pointer]:
+                        - /url: "#custom-model-deployment"
+            - listitem [ref=e563]:
+              - generic [ref=e564]:
+                - button "Tune" [expanded] [ref=e568] [cursor=pointer]:
+                  - generic [ref=e570]:
+                    - img
+                  - generic [ref=e571]: Tune
+                - group "Tune" [ref=e572]:
+                  - list [ref=e573]:
+                    - listitem [ref=e574]:
+                      - link "Custom models" [ref=e575] [cursor=pointer]:
+                        - /url: "#custom-models"
+                    - listitem [ref=e576]:
+                      - link "Prompt router models" [ref=e577] [cursor=pointer]:
+                        - /url: "#prompt-routers"
+                    - listitem [ref=e578]:
+                      - link "Imported models" [ref=e579] [cursor=pointer]:
+                        - /url: "#import-models"
+                    - listitem [ref=e580]:
+                      - link "Marketplace model deployments" [ref=e581] [cursor=pointer]:
+                        - /url: "#marketplace-deployments"
+            - listitem [ref=e582]:
+              - generic [ref=e583]:
+                - button "Build" [expanded] [ref=e587] [cursor=pointer]:
+                  - generic [ref=e589]:
+                    - img
+                  - generic [ref=e590]: Build
+                - group "Build" [ref=e591]:
+                  - list [ref=e592]:
+                    - listitem [ref=e593]:
+                      - link "Agents" [ref=e594] [cursor=pointer]:
+                        - /url: "#agents"
+                    - listitem [ref=e595]:
+                      - link "Flows" [ref=e596] [cursor=pointer]:
+                        - /url: "#flows"
+                    - listitem [ref=e597]:
+                      - link "Knowledge Bases" [ref=e598] [cursor=pointer]:
+                        - /url: "#knowledge-bases"
+                    - listitem [ref=e599]:
+                      - link "Automated Reasoning" [ref=e600] [cursor=pointer]:
+                        - /url: "#automated-reasoning/policies"
+                    - listitem [ref=e601]:
+                      - link "Guardrails" [ref=e602] [cursor=pointer]:
+                        - /url: "#guardrails"
+                    - listitem [ref=e603]:
+                      - link "Prompt Management" [ref=e604] [cursor=pointer]:
+                        - /url: "#prompt-management"
+                    - listitem [ref=e605]:
+                      - link "Data Automation" [ref=e606] [cursor=pointer]:
+                        - /url: "#bda/how-it-works"
+                    - listitem [ref=e607]:
+                      - link "AgentCore" [ref=e608] [cursor=pointer]:
+                        - /url: /bedrock-agentcore/home
+                        - text: AgentCore
+                        - generic [ref=e610]:
+                          - img
+            - listitem [ref=e611]:
+              - generic [ref=e612]:
+                - button "Assess" [expanded] [ref=e616] [cursor=pointer]:
+                  - generic [ref=e618]:
+                    - img
+                  - generic [ref=e619]: Assess
+                - group "Assess" [ref=e620]:
+                  - list [ref=e621]:
+                    - listitem [ref=e622]:
+                      - link "Evaluations" [ref=e623] [cursor=pointer]:
+                        - /url: "#evaluation"
+            - listitem [ref=e624]:
+              - generic [ref=e625]:
+                - button "Configure and learn" [expanded] [ref=e629] [cursor=pointer]:
+                  - generic [ref=e631]:
+                    - img
+                  - generic [ref=e632]: Configure and learn
+                - group "Configure and learn" [ref=e633]:
+                  - list [ref=e634]:
+                    - listitem [ref=e635]:
+                      - link "Settings" [ref=e636] [cursor=pointer]:
+                        - /url: "#settings"
+                      - button "New" [ref=e641] [cursor=pointer]
+                    - listitem [ref=e642]:
+                      - link "Model access" [ref=e643] [cursor=pointer]:
+                        - /url: "#modelaccess"
+                    - listitem [ref=e644]:
+                      - link "User guideOpens a new tab with user guide" [ref=e645] [cursor=pointer]:
+                        - /url: https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html
+                        - text: User guide
+                        - img "Opens a new tab with user guide" [ref=e646]:
+                          - generic [ref=e647]:
+                            - img
+                    - listitem [ref=e648]:
+                      - link "Bedrock Service TermsOpens a new tab with Terms of Service" [ref=e649] [cursor=pointer]:
+                        - /url: https://aws.amazon.com/service-terms
+                        - text: Bedrock Service Terms
+                        - img "Opens a new tab with Terms of Service" [ref=e650]:
+                          - generic [ref=e651]:
+                            - img
+      - main [ref=e652]:
+        - generic:
+          - region "Notifications"
+        - generic [ref=e1118]:
+          - generic [ref=e1120]:
+            - heading "Mode" [level=4] [ref=e1122]
+            - button "Single prompt" [ref=e1127]:
+              - generic [ref=e1128]: Single prompt
+              - generic [ref=e1130]:
+                - img
+            - generic [ref=e1133]:
+              - checkbox "toggle-compare-mode" [ref=e1136]
+              - generic [ref=e1138]: Compare mode
+            - button "More options" [ref=e1143] [cursor=pointer]:
+              - generic [ref=e1144]:
+                - img
+          - generic [ref=e1146]:
+            - button "Open configurations" [ref=e1148] [cursor=pointer]:
+              - img [ref=e1150]
+            - heading "Nova 2 Lite" [level=4] [ref=e1151]
+            - generic [ref=e1152]:
+              - generic [ref=e1154]:
+                - button "Input" [ref=e1155] [cursor=pointer]
+                - text: ":"
+              - generic [ref=e1158]:
+                - button "Output" [ref=e1159] [cursor=pointer]
+                - text: ":"
+              - generic [ref=e1162]:
+                - button "Latency" [ref=e1163] [cursor=pointer]
+                - text: ":"
+            - toolbar "Control bar buttons" [ref=e1165]:
+              - generic [ref=e1166]:
+                - button "Clear" [disabled] [ref=e1169]:
+                  - img [ref=e1171]
+                - button "Copy playground chat/text" [disabled] [ref=e1174]:
+                  - generic [ref=e1175]:
+                    - img
+          - generic [ref=e1180]:
+            - generic [ref=e1182]:
+              - img
+            - text: Write a prompt and choose Run to generate a response.
+          - generic [ref=e1186]:
+            - textbox "Write a prompt. Press Shift + Enter to add a new line. Press Enter to generate a response." [ref=e1189]:
+              - paragraph [ref=e1191]: Write a prompt...
+            - generic [ref=e1192]:
+              - button "Attach File" [ref=e1199] [cursor=pointer]:
+                - img [ref=e1202]
+              - toolbar "Enter text to optimize" [ref=e1203]:
+                - button "Enter text to optimize" [disabled] [ref=e1207]:
+                  - img "Enter text to optimize" [ref=e1209]
+              - img [ref=e1211]
+              - toolbar "Expand text box" [ref=e1212]:
+                - button "Expand" [ref=e1216] [cursor=pointer]:
+                  - img "Expand" [ref=e1218]
+              - button "Run" [ref=e1219] [cursor=pointer]:
+                - generic [ref=e1220]:
+                  - img
+                - text: Run
+    - contentinfo [ref=e395]:
+      - generic [ref=e399]:
+        - generic [ref=e400]:
+          - button "CloudShell" [ref=e402] [cursor=pointer]:
+            - generic [ref=e403]:
+              - img
+            - generic [ref=e404]: CloudShell
+          - button "Feedback" [ref=e405] [cursor=pointer]
+          - button "Console Mobile App" [ref=e407] [cursor=pointer]:
+            - img [ref=e409]
+            - generic [ref=e412]: Console Mobile App
+        - generic [ref=e414]: © 2026, Amazon Web Services, Inc. or its affiliates.
+        - list [ref=e416]:
+          - listitem [ref=e417]:
+            - link "Privacy" [ref=e418] [cursor=pointer]:
+              - /url: https://aws.amazon.com/privacy/
+          - listitem [ref=e419]:
+            - link "Terms" [ref=e420] [cursor=pointer]:
+              - /url: https://aws.amazon.com/terms/
+          - listitem [ref=e421]:
+            - button "Cookie preferences" [ref=e422] [cursor=pointer]
+  - generic: Write a prompt...

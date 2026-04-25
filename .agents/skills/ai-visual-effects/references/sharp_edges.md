@@ -1,1 +1,0 @@
-# Ai Visual Effects - Sharp Edges

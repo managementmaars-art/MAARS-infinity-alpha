@@ -1,0 +1,99 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e229]:
+    - banner [ref=e230]:
+      - generic [ref=e231]:
+        - link "Logo" [ref=e233] [cursor=pointer]:
+          - /url: https://www.minimax.io
+          - img "Logo" [ref=e234]
+        - generic [ref=e235]:
+          - generic [ref=e236] [cursor=pointer]: Documentation
+          - generic [ref=e237] [cursor=pointer]: Account
+          - generic [ref=e238] [cursor=pointer]:
+            - text: Subscribe
+            - generic [ref=e239]: Code
+      - generic [ref=e241]:
+        - img [ref=e243] [cursor=pointer]
+        - img "google_avatar" [ref=e245] [cursor=pointer]
+      - link [ref=e246] [cursor=pointer]:
+        - /url: mailto:api@minimaxi.com
+        - img [ref=e247]
+    - main [ref=e250]:
+      - main [ref=e251]:
+        - generic [ref=e252]:
+          - generic [ref=e253]:
+            - generic [ref=e254] [cursor=pointer]:
+              - generic [ref=e255]:
+                - img [ref=e257]
+                - paragraph [ref=e259]: Settings
+              - img [ref=e261]
+            - generic [ref=e263]:
+              - paragraph [ref=e266] [cursor=pointer]: Your Profile
+              - paragraph [ref=e269] [cursor=pointer]: API Keys
+          - generic [ref=e270]:
+            - generic [ref=e271] [cursor=pointer]:
+              - generic [ref=e272]:
+                - img [ref=e274]
+                - paragraph [ref=e278]: Billing
+              - img [ref=e280]
+            - generic [ref=e282]:
+              - paragraph [ref=e285] [cursor=pointer]: Balance
+              - paragraph [ref=e288] [cursor=pointer]: Voucher
+              - paragraph [ref=e291] [cursor=pointer]: Billing
+          - generic [ref=e292]:
+            - generic [ref=e293] [cursor=pointer]:
+              - generic [ref=e294]:
+                - img [ref=e296]
+                - paragraph [ref=e298]: Subscribe
+              - img [ref=e300]
+            - generic [ref=e302]:
+              - paragraph [ref=e305] [cursor=pointer]: Token Plan
+              - paragraph [ref=e308] [cursor=pointer]: Audio
+              - paragraph [ref=e311] [cursor=pointer]: Video
+        - generic [ref=e313]:
+          - generic [ref=e316]:
+            - generic [ref=e317]:
+              - generic [ref=e318]: Voucher
+              - img "question-circle" [ref=e319] [cursor=pointer]:
+                - img [ref=e320]
+            - heading "Available balance of vouchers" [level=2] [ref=e323]
+            - heading "$--" [level=3] [ref=e324]
+            - generic [ref=e326]:
+              - generic [ref=e328]:
+                - generic [ref=e329]:
+                  - text: Total amount
+                  - img "question-circle" [ref=e330] [cursor=pointer]:
+                    - img [ref=e331]
+                - img "loading" [ref=e334]
+              - generic [ref=e335]:
+                - img "minus" [ref=e336]:
+                  - img [ref=e337]
+                - generic [ref=e339]:
+                  - generic [ref=e340]: Amount used
+                  - img "loading" [ref=e341]
+              - generic [ref=e342]:
+                - img "minus" [ref=e343]:
+                  - img [ref=e344]
+                - generic [ref=e346]:
+                  - generic [ref=e347]: Expired amount
+                  - img "loading" [ref=e348]
+              - generic [ref=e349]:
+                - img "minus" [ref=e350]:
+                  - img [ref=e351]
+                - generic [ref=e353]:
+                  - generic [ref=e354]: Pending amount
+                  - img "loading" [ref=e355]
+          - separator [ref=e356]
+          - generic [ref=e358]:
+            - generic [ref=e361]:
+              - textbox "Start date" [ref=e363]
+              - generic "to" [ref=e365]:
+                - img "swap-right" [ref=e366]:
+                  - img [ref=e367]
+              - textbox "End date" [ref=e370]
+              - generic:
+                - img "calendar":
+                  - img
+            - generic [ref=e371]:
+              - img "No data" [ref=e373]
+              - generic [ref=e385]: No records available
+  - alert [ref=e137]: MiniMax-Intelligence with everyone

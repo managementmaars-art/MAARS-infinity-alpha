@@ -1,0 +1,45 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "Skip to content" [ref=e6] [cursor=pointer]:
+          - /url: "#skip"
+        - generic [ref=e7]:
+          - link "Logo OpenRouter" [ref=e8] [cursor=pointer]:
+            - /url: /
+            - button "Logo OpenRouter" [ref=e9]:
+              - generic [ref=e10]:
+                - img "Logo" [ref=e11]
+                - text: OpenRouter
+          - combobox [ref=e19]:
+            - generic [ref=e20]:
+              - img [ref=e21]
+              - combobox [expanded] [ref=e23]
+            - generic: /
+          - generic [ref=e24]:
+            - link "Fusion" [ref=e25] [cursor=pointer]:
+              - /url: /labs/fusion
+              - button "Fusion" [ref=e26]
+            - link "Models" [ref=e27] [cursor=pointer]:
+              - /url: /models
+              - button "Models" [ref=e28]
+            - link "Chat" [ref=e29] [cursor=pointer]:
+              - /url: /chat
+              - button "Chat" [ref=e30]
+            - link "Rankings" [ref=e31] [cursor=pointer]:
+              - /url: /rankings
+              - button "Rankings" [ref=e32]
+            - link "Apps" [ref=e33] [cursor=pointer]:
+              - /url: /apps
+              - button "Apps" [ref=e34]
+            - link "Enterprise" [ref=e35] [cursor=pointer]:
+              - /url: /enterprise
+              - button "Enterprise" [ref=e36]
+            - link "Pricing" [ref=e37] [cursor=pointer]:
+              - /url: /pricing
+              - button "Pricing" [ref=e38]
+            - link "Docs" [ref=e39] [cursor=pointer]:
+              - /url: /docs/quickstart
+              - button "Docs" [ref=e40]
+  - region "Notifications alt+T"
+  - alert [ref=e44]

@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "../App";
 import { Building2, Users, Crown, Shield, UserPlus, Trash2, Mail } from "lucide-react";
 import { toast } from "sonner";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const T = {
   glass: "rgba(255,255,255,0.03)",
@@ -43,16 +43,16 @@ export default function Organization() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState("member");
 
-  const h = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const h = useMemo(() => ({ Authorization: `Bearer ${token}`, "Content-Type": "application/json" }), [token]);
 
-  const fetchOrg = async () => {
+  const fetchOrg = useCallback(async () => {
     try {
       const res = await fetch(`${API}/api/kernel/organizations/me`, { headers: h });
       if (res.ok) setOrgData(await res.json());
     } catch {} finally { setLoading(false); }
-  };
+  }, [h]);
 
-  useEffect(() => { fetchOrg(); }, [token]);
+  useEffect(() => { fetchOrg(); }, [fetchOrg]);
 
   const createOrg = async () => {
     if (!orgName.trim()) return;

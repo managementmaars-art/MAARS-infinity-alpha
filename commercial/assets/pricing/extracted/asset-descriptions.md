@@ -1,0 +1,49 @@
+# Asset Descriptions
+
+One line per file. Read this instead of opening every image individually.
+
+- image-0.png — 1228KB, A man in a dark blue suit and light blue shirt looks directly at the camera against
+- image-1.png — 1175KB, A woman in a black blazer and light grey blouse is shown from the waist up against a dark grey background.
+- image-10.png — 1155KB, A professional woman with glasses, wearing a dark suit and white blouse, is shown against a dark blue-grey background.
+- image-11.png — 1200KB, A professional woman wearing glasses, a light turtleneck, and a dark blazer looks forward against a dark
+- image-12.png — 1443KB, A man with glasses and a beard, wearing a dark suit and white shirt, is shown against a dark grey background.
+- image-13.png — 1359KB, A professional woman with dark brown hair, wearing a blue blazer and white blouse, looks directly at the camera against a dark gray background.
+- image-14.png — 1395KB, A man in a blue suit, white shirt, and blue tie is shown from the chest up against a dark grey background.
+- image-15.png — 1388KB, A man with dark curly hair and a beard, wearing a black turtleneck and camel coat, looks directly at the camera against a dark grey background with subtle geometric patterns.
+- image-16.png — 1192KB, A smiling woman in a white blazer and coral top with dark hair is shown against a dark grey background.
+- image-17.png — 1298KB, A man in a dark blue sweater and white shirt smiles against a dark gradient background.
+- image-18.png — 1195KB, A man in a dark grey suit jacket and black t-shirt looks at the camera against a dark grey background with subtle geometric lines.
+- image-19.png — 1328KB, A woman with dark hair, wearing a teal blazer and patterned scarf, looks forward in a headshot
+- image-2.png — 1216KB, A professional woman in a black blazer and purple top smiles at the camera against a dark grey background.
+- image-20.png — 1272KB, A blonde woman in a grey blazer and black turtleneck is shown from the chest up against a dark blue-grey background.
+- image-21.png — 1354KB, A man in a grey suit jacket and black turtleneck looks directly at the camera against a dark grey
+- image-22.png — 1322KB, A handsome man with dark hair and a beard, wearing a grey suit and white shirt, is shown from the chest up against a dark blue-grey background.
+- image-23.png — 1244KB, A distinguished man with a grey beard and hair, wearing a dark blue suit with a gold tie and pocket square, poses against a dark blue-grey background.
+- image-24.png — 1341KB, A smiling Black woman in a grey blazer and teal blouse is shown against a dark gradient background.
+- image-25.png — 1197KB, A smiling woman in a dark suit and light blouse is shown from the chest up against a dark
+- image-26.png — 1435KB, A man in a dark grey suit and light blue shirt looks forward against a dark grey background.
+- image-27.png — 1243KB, A man in a dark jacket and grey sweater is shown from the chest up, looking at the
+- image-28.png — 1226KB, A professional woman in a dark blue blazer and light pink blouse smiles confidently against a dark blue-grey background with subtle geometric lines.
+- image-29.png — 1286KB, A grey-haired man in a dark suit, white shirt, and patterned tie stands
+- image-3.png — 1236KB, A man with brown hair, blue eyes, and a beard, wearing a black hoodie under a black blazer, is shown from the chest up against a dark gray background.
+- image-30.png — 1395KB, A man in a dark grey pinstripe suit, white shirt, and red tie is shown against a dark grey background.
+- image-31.png — 1215KB, A young Asian man wearing an olive green bomber jacket and black shirt is shown against a dark grey background.
+- image-32.png — 1211KB, A woman with red hair, wearing a green top and black blazer, stands with crossed arms against a dark blue background.
+- image-33.png — 1317KB, A smiling woman with dark skin and reddish-brown hair, wearing a white top and dark
+- image-34.png — 1362KB, A smiling woman with dark curly hair, wearing a sage green shirt and dark grey blazer, is shown from the chest up against a dark grey background.
+- image-35.png — 1182KB, A woman in a black blazer and gold necklace stands with crossed arms against a dark blue-gray
+- image-36.png — 1315KB, A man in a dark blue pinstripe suit, white shirt, and light grey tie looks right against a dark blue gradient background.
+- image-37.png — 1215KB, A smiling, grey-haired woman in a dark blue blazer with a gold brooch and pearl
+- image-38.png — 1274KB, A young East Asian woman in a light grey blazer and white top looks right with a soft smile against a dark grey background with subtle geometric lines.
+- image-39.png — 1206KB, A smiling woman in a dark red blazer and white top is centered against a dark gray
+- image-4.png — 1284KB, A portrait of a man in a blue suit, white shirt, and red tie against a dark grey background.
+- image-5.png — 1219KB, A woman with grey hair in a black blazer and white blouse, wearing pearls, looks
+- image-6.png — 1147KB, A smiling woman with dark hair, wearing a red blouse and black blazer, is pictured against a
+- image-7.png — 1252KB, A man in dark clothing looks directly at the viewer against a dark grey background with subtle linear patterns.
+- image-8.png — 1244KB, A professionally dressed Asian man in a dark blue suit and glasses is pictured from the chest
+- image-9.png — 1111KB, A professional woman with dark hair, wearing a white top and a burgundy blazer, stands with crossed arms against a dark blue-grey background.
+- svgs/lucide-check.svg — icon: lucide-check
+- svgs/lucide-globe.svg — icon: lucide-globe
+- svgs/lucide-sparkles.svg — icon: lucide-sparkles
+- svgs/lucide-zap.svg — icon: lucide-zap
+- fonts/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg.ttf — font file

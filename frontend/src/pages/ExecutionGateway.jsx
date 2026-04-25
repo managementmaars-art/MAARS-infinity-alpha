@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../App";
 import { Activity, Zap, Clock, CheckCircle, XCircle, AlertTriangle, Search, ArrowRight, DollarSign } from "lucide-react";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const T = {
   glass: "rgba(255,255,255,0.03)",

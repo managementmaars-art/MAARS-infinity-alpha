@@ -5,7 +5,7 @@ import {
   CheckCircle2, Loader2, Layers, Zap, Target, AlertTriangle
 } from "lucide-react";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 /* ─── Design tokens ─────────────────────────────────────────────────── */
 const T = {

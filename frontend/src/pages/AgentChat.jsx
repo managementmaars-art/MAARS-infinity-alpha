@@ -1484,6 +1484,29 @@ const AgentChat = () => {
                     ) : (
                       <p className="whitespace-pre-wrap text-sm">{msg.content}</p>
                     )}
+                    {/* Citation pills — rendered when the assistant used
+                        RAG retrieval. Data lives on `msg.citations` as
+                        an array of {ref, doc_id, page, title, url}. */}
+                    {msg.role === "assistant" && Array.isArray(msg.citations) && msg.citations.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {msg.citations.map((c, i) => (
+                          <a key={i}
+                             href={c.url || "#"}
+                             target={c.url ? "_blank" : undefined}
+                             rel="noreferrer"
+                             className="text-[10px] px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-300 border border-violet-500/20 hover:bg-violet-500/20 font-mono"
+                             title={`${c.title || c.doc_id || ""}${c.page ? " · p" + c.page : ""}`}>
+                            {c.ref || `[${i+1}]`}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                    {msg.role === "assistant" && msg.trust?.score !== undefined && msg.trust?.score !== null && (
+                      <div className="mt-1 text-[10px] text-zinc-500">
+                        trust <span className={msg.trust.score >= 0.7 ? "text-teal-300" : msg.trust.score >= 0.5 ? "text-amber-300" : "text-rose-300"}>{(msg.trust.score * 100).toFixed(0)}%</span>
+                        <span className="ml-1 text-zinc-600">({msg.trust.method})</span>
+                      </div>
+                    )}
                     <div className="flex items-center gap-2 mt-2">
                       {msg.model_used && msg.role === "assistant" && (() => {
                         const prov = msg.model_used.split("/")[0] || "";

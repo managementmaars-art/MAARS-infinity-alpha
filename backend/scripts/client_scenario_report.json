@@ -1,0 +1,306 @@
+{
+  "wallet_start": {
+    "balance_credits": 98873,
+    "reserved_credits": 0
+  },
+  "wallet_end": {
+    "balance_credits": 98359,
+    "reserved_credits": 0
+  },
+  "total_credits": 514,
+  "total_usd": 0.514,
+  "by_modality": {
+    "chat": 417,
+    "content_gen": 1,
+    "image_gen": 60,
+    "video_gen": 400,
+    "tts": 9,
+    "vibe_coding": 27
+  },
+  "steps": [
+    {
+      "step": "1. Copywriter \u2192 product launch",
+      "detail": {
+        "agent": "Scarlett Monroe",
+        "role": "Copywriter",
+        "model": "gemini/gemini-2.5-flash",
+        "response_preview": "**MAARS Global Presents: Nord Cold-Brew**\n\nThe wait is over. MAARS Global proudly introduces Nord Cold-Brew. Crafted for clarity and designed for the discerning"
+      },
+      "credits_used": 1,
+      "ok": true,
+      "wall_s": 10.54
+    },
+    {
+      "step": "2. Social Manager \u2192 4 platform variants",
+      "detail": {
+        "agent": "Isla Fernandez",
+        "role": "Social Media Manager",
+        "model": "gemini/gemini-2.5-flash",
+        "response_preview": "Here are the 4 platform variants for the Nord Cold-Brew launch, tailored to each platform's style and audience:\n\n---\n\n### **1. LinkedIn Post (Professional)**\n\n*"
+      },
+      "credits_used": 1,
+      "ok": true,
+      "wall_s": 9.07
+    },
+    {
+      "step": "3. Graphic Designer \u2192 logo brief",
+      "detail": {
+        "agent": "Luna Bergstr\u00f6m",
+        "role": "Web Designer",
+        "model": "ai21/jamba-large-1.7",
+        "response_preview": "**Logo Brief for 'Nord' Cold Brew:**\nEmbody Scandinavian minimalism with a monochromatic palette of deep charcoal, icy white, and muted silver. Use clean, geome"
+      },
+      "credits_used": 5,
+      "ok": true,
+      "wall_s": 4.28
+    },
+    {
+      "step": "4. Video Specialist \u2192 4-sec storyboard",
+      "detail": {
+        "agent": "Riley Chen",
+        "role": "Video Content Specialist",
+        "model": "mistral/mistral-large-latest",
+        "response_preview": "**Creative Vision for Nord Cold-Brew 4-Second Sora Video**\n\n**Scene 1: Opening Shot (0:00 - 0:1.5s) \u2013 \"The Awakening\"**\n*Camera Angle:* Extreme close-up, slight"
+      },
+      "credits_used": 9,
+      "ok": true,
+      "wall_s": 18.14
+    },
+    {
+      "step": "5. Web Designer \u2192 landing page spec",
+      "detail": {
+        "agent": "Luna Bergstr\u00f6m",
+        "role": "Web Designer",
+        "model": "gemini/gemini-2.5-flash",
+        "response_preview": "Here is the single-page landing page specification for Nord Cold-Brew:\n\n**Nord Cold-Brew Landing Page Spec**\n\n**Overall Aesthetic:** Clean, minimalist, modern S"
+      },
+      "credits_used": 1,
+      "ok": true,
+      "wall_s": 5.73
+    },
+    {
+      "step": "6. Content Gen \u2192 blog post",
+      "detail": {
+        "chars": 937,
+        "preview": "## Discover Your New Refreshment: Introducing Nord Cold Brew\n\nGet ready to awaken your senses! We're thrilled to announce the arrival of **Nord Cold Brew**, you"
+      },
+      "credits_used": 1,
+      "ok": true,
+      "wall_s": 5.56
+    },
+    {
+      "step": "7+0. Image gen \u2192 logo",
+      "detail": {
+        "router": {
+          "provider": "gemini",
+          "model": "gemini-3-pro-image-preview",
+          "cost_usd": 0.02,
+          "cost_credits": 20,
+          "wall_s": 19.44,
+          "attempt": 1,
+          "chain_len": 3,
+          "prior_errors": []
+        },
+        "billing": {
+          "reference_id": "image_71ad63716808",
+          "reserved_credits": 20,
+          "actual_credits": 20,
+          "refunded_credits": 0,
+          "wallet": {
+            "user_id": "user_36301191e2cb",
+            "wallet_id": "wal_user_36301191e2cb",
+            "unit": "credits",
+            "balance_credits": 98835,
+            "reserved_credits": 0,
+            "status": "active"
+          }
+        },
+        "filename": "44d872fed7_generated.png"
+      },
+      "credits_used": 20,
+      "ok": true,
+      "wall_s": 19.55
+    },
+    {
+      "step": "7+1. Image gen \u2192 hero",
+      "detail": {
+        "router": {
+          "provider": "gemini",
+          "model": "gemini-3-pro-image-preview",
+          "cost_usd": 0.02,
+          "cost_credits": 20,
+          "wall_s": 25.9,
+          "attempt": 1,
+          "chain_len": 3,
+          "prior_errors": []
+        },
+        "billing": {
+          "reference_id": "image_4f06bcc1ee7c",
+          "reserved_credits": 20,
+          "actual_credits": 20,
+          "refunded_credits": 0,
+          "wallet": {
+            "user_id": "user_36301191e2cb",
+            "wallet_id": "wal_user_36301191e2cb",
+            "unit": "credits",
+            "balance_credits": 98815,
+            "reserved_credits": 0,
+            "status": "active"
+          }
+        },
+        "filename": "0b9bfde4a0_generated.png"
+      },
+      "credits_used": 20,
+      "ok": true,
+      "wall_s": 25.99
+    },
+    {
+      "step": "7+2. Image gen \u2192 product",
+      "detail": {
+        "router": {
+          "provider": "gemini",
+          "model": "gemini-3-pro-image-preview",
+          "cost_usd": 0.02,
+          "cost_credits": 20,
+          "wall_s": 19.42,
+          "attempt": 1,
+          "chain_len": 3,
+          "prior_errors": []
+        },
+        "billing": {
+          "reference_id": "image_a410ea0fd610",
+          "reserved_credits": 20,
+          "actual_credits": 20,
+          "refunded_credits": 0,
+          "wallet": {
+            "user_id": "user_36301191e2cb",
+            "wallet_id": "wal_user_36301191e2cb",
+            "unit": "credits",
+            "balance_credits": 98795,
+            "reserved_credits": 0,
+            "status": "active"
+          }
+        },
+        "filename": "6d5c762bfb_generated.png"
+      },
+      "credits_used": 20,
+      "ok": true,
+      "wall_s": 19.47
+    },
+    {
+      "step": "10. Video gen \u2192 4-sec Sora clip",
+      "detail": {
+        "router": {
+          "provider": "openai",
+          "model": "sora-2",
+          "cost_usd": 0.4,
+          "cost_credits": 400,
+          "wall_s": 69.63,
+          "attempt": 1,
+          "chain_len": 1,
+          "prior_errors": []
+        },
+        "billing": {
+          "reference_id": "video_4b5fb87893c2",
+          "reserved_credits": 400,
+          "actual_credits": 400,
+          "refunded_credits": 0,
+          "wallet": {
+            "user_id": "user_36301191e2cb",
+            "wallet_id": "wal_user_36301191e2cb",
+            "unit": "credits",
+            "balance_credits": 98395,
+            "reserved_credits": 0,
+            "status": "active"
+          }
+        },
+        "filename": "85df0cbb83_video.mp4"
+      },
+      "credits_used": 400,
+      "ok": true,
+      "wall_s": 69.71
+    },
+    {
+      "step": "11. TTS standard \u2192 welcome",
+      "detail": {
+        "router": {
+          "provider": "openai",
+          "model": "tts-1",
+          "cost_usd": 0.000705,
+          "cost_credits": 1,
+          "wall_s": 4.33,
+          "attempt": 1,
+          "chain_len": 2,
+          "prior_errors": []
+        },
+        "billing": {
+          "reference_id": "tts_c4c30c8abee6",
+          "reserved_credits": 1,
+          "actual_credits": 1,
+          "refunded_credits": 0,
+          "wallet": {
+            "user_id": "user_36301191e2cb",
+            "wallet_id": "wal_user_36301191e2cb",
+            "unit": "credits",
+            "balance_credits": 98394,
+            "reserved_credits": 0,
+            "status": "active"
+          }
+        },
+        "chars": 47
+      },
+      "credits_used": 1,
+      "ok": true,
+      "wall_s": 4.38
+    },
+    {
+      "step": "12. TTS premium \u2192 30-sec ad VO",
+      "detail": {
+        "router": {
+          "provider": "openai",
+          "model": "tts-1-hd",
+          "cost_usd": 0.00759,
+          "cost_credits": 8,
+          "wall_s": 11.18,
+          "attempt": 3,
+          "chain_len": 3,
+          "prior_errors": [
+            "elevenlabs/eleven_turbo_v2_5: RuntimeError: elevenlabs 402: {\"detail\":{\"type\":\"payment_required\",\"code\":\"paid_plan_required\",\"message\":\"Free users cannot use library voices via the API. Please upgrade your subscription to use this voice.\",\"stat",
+            "elevenlabs/eleven_multilingual_v2: RuntimeError: elevenlabs 402: {\"detail\":{\"type\":\"payment_required\",\"code\":\"paid_plan_required\",\"message\":\"Free users cannot use library voices via the API. Please upgrade your subscription to use this voice.\",\"stat"
+          ]
+        },
+        "billing": {
+          "reference_id": "tts_047d169d1073",
+          "reserved_credits": 46,
+          "actual_credits": 8,
+          "refunded_credits": 38,
+          "wallet": {
+            "user_id": "user_36301191e2cb",
+            "wallet_id": "wal_user_36301191e2cb",
+            "unit": "credits",
+            "balance_credits": 98386,
+            "reserved_credits": 0,
+            "status": "active"
+          }
+        },
+        "chars": 253
+      },
+      "credits_used": 8,
+      "ok": true,
+      "wall_s": 11.26
+    },
+    {
+      "step": "13. Vibe coding \u2192 landing page",
+      "detail": {
+        "vibe_id": "vibe_0e251113bc",
+        "files": 1,
+        "total_chars": 8150,
+        "status": "ready"
+      },
+      "credits_used": 27,
+      "ok": true,
+      "wall_s": 25.61
+    }
+  ],
+  "generated_at": "2026-04-19 04:13:21 UTC"
+}

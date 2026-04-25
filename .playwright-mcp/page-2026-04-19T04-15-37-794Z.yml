@@ -1,0 +1,385 @@
+- generic [ref=e2]:
+  - generic [ref=e7]:
+    - complementary [ref=e11]:
+      - generic [ref=e12]:
+        - link "MAARS MAARS Command by MAARS Global Corporation" [ref=e14] [cursor=pointer]:
+          - /url: /dashboard
+          - img "MAARS" [ref=e15]
+          - generic [ref=e16]:
+            - heading "MAARS Command" [level=1] [ref=e17]
+            - paragraph [ref=e18]: by MAARS Global Corporation
+        - generic [ref=e19]:
+          - generic [ref=e21]: ONLINE
+          - generic [ref=e22]: 499 agents
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]:
+              - img [ref=e33]
+              - generic [ref=e35]: Unlimited
+            - generic [ref=e36]: Owner
+          - paragraph [ref=e37]: No credit limits apply
+        - button "Personal Workspace 1 members" [ref=e39] [cursor=pointer]:
+          - img [ref=e41]
+          - generic [ref=e45]:
+            - paragraph [ref=e46]: Personal Workspace
+            - paragraph [ref=e47]: 1 members
+          - img [ref=e48]
+        - button "Search… /" [ref=e51] [cursor=pointer]:
+          - img [ref=e52]
+          - generic [ref=e55]: Search…
+          - generic [ref=e56]: /
+        - navigation [ref=e57]:
+          - button "Dashboard" [ref=e59] [cursor=pointer]:
+            - img [ref=e60]
+            - generic [ref=e65]: Dashboard
+          - generic [ref=e66]:
+            - generic [ref=e69]: Workspace
+            - button "Projects" [ref=e71] [cursor=pointer]:
+              - img [ref=e72]
+              - generic [ref=e77]: Projects
+            - button "Chat" [ref=e78] [cursor=pointer]:
+              - img [ref=e79]
+              - generic [ref=e81]: Chat
+            - button "Tasks" [ref=e82] [cursor=pointer]:
+              - img [ref=e83]
+              - generic [ref=e86]: Tasks
+            - button "Approvals" [ref=e87] [cursor=pointer]:
+              - img [ref=e88]
+              - generic [ref=e92]: Approvals
+          - generic [ref=e93]:
+            - generic [ref=e96]: AI Tools
+            - button "Agents" [ref=e98] [cursor=pointer]:
+              - img [ref=e99]
+              - generic [ref=e102]: Agents
+            - button "Team Builder" [ref=e103] [cursor=pointer]:
+              - img [ref=e104]
+              - generic [ref=e107]: Team Builder
+            - button "Workspace Brain" [ref=e108] [cursor=pointer]:
+              - img [ref=e109]
+              - generic [ref=e119]: Workspace Brain
+            - button "Brain Profiles" [ref=e120] [cursor=pointer]:
+              - img [ref=e121]
+              - generic [ref=e124]: Brain Profiles
+            - button "Vibe Coding" [ref=e125] [cursor=pointer]:
+              - img [ref=e126]
+              - generic [ref=e129]: Vibe Coding
+            - button "Reference Intel" [ref=e130] [cursor=pointer]:
+              - img [ref=e131]
+              - generic [ref=e133]: Reference Intel
+            - button "Content Generator" [ref=e134] [cursor=pointer]:
+              - img [ref=e135]
+              - generic [ref=e140]: Content Generator
+          - generic [ref=e141]:
+            - generic [ref=e144]: Intelligence
+            - button "Kernel" [ref=e146] [cursor=pointer]:
+              - img [ref=e147]
+              - generic [ref=e151]: Kernel
+            - button "Agent Networks" [ref=e152] [cursor=pointer]:
+              - img [ref=e153]
+              - generic [ref=e158]: Agent Networks
+            - button "Task Graphs" [ref=e159] [cursor=pointer]:
+              - img [ref=e160]
+              - generic [ref=e164]: Task Graphs
+            - button "Knowledge Graph" [ref=e165] [cursor=pointer]:
+              - img [ref=e166]
+              - generic [ref=e172]: Knowledge Graph
+            - button "Trust Scores" [ref=e173] [cursor=pointer]:
+              - img [ref=e174]
+              - generic [ref=e176]: Trust Scores
+            - button "Execution Gateway" [ref=e177] [cursor=pointer]:
+              - img [ref=e178]
+              - generic [ref=e180]: Execution Gateway
+            - button "Workflow Builder" [ref=e181] [cursor=pointer]:
+              - img [ref=e182]
+              - generic [ref=e186]: Workflow Builder
+            - button "Campaign Builder" [ref=e187] [cursor=pointer]:
+              - img [ref=e188]
+              - generic [ref=e191]: Campaign Builder
+            - button "Integrations" [ref=e192] [cursor=pointer]:
+              - img [ref=e193]
+              - generic [ref=e195]: Integrations
+            - button "Embedded Browser" [ref=e196] [cursor=pointer]:
+              - img [ref=e197]
+              - generic [ref=e200]: Embedded Browser
+            - button "Social Media" [ref=e201] [cursor=pointer]:
+              - img [ref=e202]
+              - generic [ref=e208]: Social Media
+            - button "Universal Key" [ref=e209] [cursor=pointer]:
+              - img [ref=e210]
+              - generic [ref=e214]: Universal Key
+            - button "Analytics" [ref=e215] [cursor=pointer]:
+              - img [ref=e216]
+              - generic [ref=e219]: Analytics
+            - button "Agent Suggestions" [ref=e220] [cursor=pointer]:
+              - img [ref=e221]
+              - generic [ref=e223]: Agent Suggestions
+            - button "Environments" [ref=e224] [cursor=pointer]:
+              - img [ref=e225]
+              - generic [ref=e228]: Environments
+            - button "Memory Hierarchy" [ref=e229] [cursor=pointer]:
+              - img [ref=e230]
+              - generic [ref=e232]: Memory Hierarchy
+            - button "Memory" [ref=e233] [cursor=pointer]:
+              - img [ref=e234]
+              - generic [ref=e238]: Memory
+            - button "Collaborations" [ref=e239] [cursor=pointer]:
+              - img [ref=e240]
+              - generic [ref=e242]: Collaborations
+            - button "KPI Dashboard" [ref=e243] [cursor=pointer]:
+              - img [ref=e244]
+              - generic [ref=e247]: KPI Dashboard
+            - button "Activity Monitor" [ref=e248] [cursor=pointer]:
+              - img [ref=e249]
+              - generic [ref=e255]: Activity Monitor
+            - button "My Insights" [ref=e256] [cursor=pointer]:
+              - img [ref=e257]
+              - generic [ref=e259]: My Insights
+          - generic [ref=e260]:
+            - generic [ref=e263]: MAARS Infinity
+            - button "Developer API" [ref=e265] [cursor=pointer]:
+              - img [ref=e266]
+              - generic [ref=e268]: Developer API
+            - button "Observability" [ref=e269] [cursor=pointer]:
+              - img [ref=e270]
+              - generic [ref=e277]: Observability
+            - button "Model Router" [ref=e278] [cursor=pointer]:
+              - img [ref=e279]
+              - generic [ref=e281]: Model Router
+            - button "Commander Orion" [ref=e282] [cursor=pointer]:
+              - img [ref=e283]
+              - generic [ref=e289]: Commander Orion
+            - button "Venture Portfolio" [ref=e290] [cursor=pointer]:
+              - img [ref=e291]
+              - generic [ref=e294]: Venture Portfolio
+            - button "Operator Panel" [ref=e295] [cursor=pointer]:
+              - img [ref=e296]
+              - generic [ref=e298]: Operator Panel
+            - button "Agent Catalog" [ref=e299] [cursor=pointer]:
+              - img [ref=e300]
+              - generic [ref=e305]: Agent Catalog
+          - generic [ref=e306]:
+            - generic [ref=e309]: Manage
+            - button "Products" [ref=e311] [cursor=pointer]:
+              - img [ref=e312]
+              - generic [ref=e316]: Products
+            - button "Team" [ref=e317] [cursor=pointer]:
+              - img [ref=e318]
+              - generic [ref=e323]: Team
+            - button "Organization" [ref=e324] [cursor=pointer]:
+              - img [ref=e325]
+              - generic [ref=e329]: Organization
+            - button "Settings" [ref=e330] [cursor=pointer]:
+              - img [ref=e331]
+              - generic [ref=e334]: Settings
+            - button "About" [ref=e335] [cursor=pointer]:
+              - img [ref=e336]
+              - generic [ref=e338]: About
+          - generic [ref=e341]: Admin
+          - button "Overview" [ref=e343] [cursor=pointer]:
+            - img [ref=e344]
+            - generic [ref=e346]: Overview
+          - button "Analytics" [ref=e347] [cursor=pointer]:
+            - img [ref=e348]
+            - generic [ref=e350]: Analytics
+          - button "Universal Gateway" [ref=e351] [cursor=pointer]:
+            - img [ref=e353]
+            - generic [ref=e356]: Universal Gateway
+          - button "Provider Intel" [ref=e358] [cursor=pointer]:
+            - img [ref=e359]
+            - generic [ref=e361]: Provider Intel
+          - button "Users" [ref=e362] [cursor=pointer]:
+            - img [ref=e363]
+            - generic [ref=e368]: Users
+          - button "Agents" [ref=e369] [cursor=pointer]:
+            - img [ref=e370]
+            - generic [ref=e373]: Agents
+          - button "Transactions" [ref=e374] [cursor=pointer]:
+            - img [ref=e375]
+            - generic [ref=e377]: Transactions
+          - button "Pricing & Splits" [ref=e378] [cursor=pointer]:
+            - img [ref=e379]
+            - generic [ref=e382]: Pricing & Splits
+          - button "Operator Metrics" [ref=e383] [cursor=pointer]:
+            - img [ref=e384]
+            - generic [ref=e386]: Operator Metrics
+          - button "API Keys" [ref=e387] [cursor=pointer]:
+            - img [ref=e388]
+            - generic [ref=e392]: API Keys
+          - button "Payment Setup" [ref=e393] [cursor=pointer]:
+            - img [ref=e394]
+            - generic [ref=e396]: Payment Setup
+          - button "Email (SMTP)" [ref=e397] [cursor=pointer]:
+            - img [ref=e398]
+            - generic [ref=e401]: Email (SMTP)
+          - button "Branding" [ref=e402] [cursor=pointer]:
+            - img [ref=e403]
+            - generic [ref=e407]: Branding
+          - button "Knowledge Base" [ref=e408] [cursor=pointer]:
+            - img [ref=e409]
+            - generic [ref=e411]: Knowledge Base
+          - button "Audit Log" [ref=e412] [cursor=pointer]:
+            - img [ref=e413]
+            - generic [ref=e416]: Audit Log
+          - button "Code Explorer" [ref=e417] [cursor=pointer]:
+            - img [ref=e418]
+            - generic [ref=e423]: Code Explorer
+          - button "Access Control" [ref=e424] [cursor=pointer]:
+            - img [ref=e425]
+            - generic [ref=e428]: Access Control
+          - button "Circuit Breakers" [ref=e429] [cursor=pointer]:
+            - img [ref=e430]
+            - generic [ref=e436]: Circuit Breakers
+          - button "Cost Governance" [ref=e437] [cursor=pointer]:
+            - img [ref=e438]
+            - generic [ref=e441]: Cost Governance
+          - button "Preview Client View" [ref=e442] [cursor=pointer]:
+            - img [ref=e443]
+            - generic [ref=e446]: Preview Client View
+        - button "Collapse" [ref=e448] [cursor=pointer]:
+          - img [ref=e449]
+          - generic [ref=e452]: Collapse
+        - generic [ref=e453]:
+          - generic [ref=e459]:
+            - paragraph [ref=e460]: Mirza Arafat Abbas
+            - paragraph [ref=e461]: management.maars@marsgc.net
+          - generic [ref=e462]:
+            - generic [ref=e463]: LIVE
+            - generic [ref=e464]: MAARS v2.0
+          - button "Log Out" [ref=e469] [cursor=pointer]:
+            - img [ref=e470]
+            - generic [ref=e473]: Log Out
+    - generic [ref=e476]:
+      - generic [ref=e477]:
+        - generic [ref=e479]:
+          - img [ref=e481]
+          - generic [ref=e484]:
+            - heading "MAARS Universal AI Gateway" [level=2] [ref=e485]
+            - paragraph [ref=e486]: 33 providers · 175,000+ models · live validation · owner-only view
+        - button "Refresh" [ref=e487] [cursor=pointer]:
+          - img
+          - generic [ref=e488]: Refresh
+      - generic [ref=e489]:
+        - img [ref=e490]
+        - generic [ref=e493]:
+          - paragraph [ref=e494]: Gateway Operational
+          - paragraph [ref=e495]: 18 / 19 providers active · No universal key — direct keys only
+        - generic [ref=e496]:
+          - generic [ref=e497]: OpenAI
+          - generic [ref=e498]: Anthropic
+          - generic [ref=e499]: Google Gemini
+          - generic [ref=e500]: xAI (Grok)
+          - generic [ref=e501]: DeepSeek
+          - generic [ref=e502]: Mistral AI
+          - generic [ref=e503]: +12 more
+      - generic [ref=e504]:
+        - button "Overview" [ref=e505] [cursor=pointer]:
+          - img [ref=e506]
+          - text: Overview
+        - button "Playground" [ref=e508] [cursor=pointer]:
+          - img [ref=e509]
+          - text: Playground
+        - button "Compare Models" [ref=e511] [cursor=pointer]:
+          - img [ref=e512]
+          - text: Compare Models
+        - button "Client Keys" [ref=e517] [cursor=pointer]:
+          - img [ref=e518]
+          - text: Client Keys
+        - button "Webhooks" [ref=e522] [cursor=pointer]:
+          - img [ref=e523]
+          - text: Webhooks
+        - button "API Reference" [ref=e527] [cursor=pointer]:
+          - img [ref=e528]
+          - text: API Reference
+        - button "Provider Health" [ref=e530] [cursor=pointer]:
+          - img [ref=e531]
+          - text: Provider Health
+        - button "Usage Breakdown" [ref=e536] [cursor=pointer]:
+          - img [ref=e537]
+          - text: Usage Breakdown
+        - button "Routing Log" [ref=e539] [cursor=pointer]:
+          - img [ref=e540]
+          - text: Routing Log
+      - generic [ref=e542]:
+        - generic [ref=e543]:
+          - generic [ref=e546]:
+            - generic [ref=e547]:
+              - paragraph [ref=e548]: Total Calls
+              - paragraph [ref=e549]: "117"
+            - img [ref=e551]
+          - generic [ref=e555]:
+            - generic [ref=e556]:
+              - paragraph [ref=e557]: Total Cost (USD)
+              - paragraph [ref=e558]: $0.0841
+              - paragraph [ref=e559]: Admin view only
+            - img [ref=e561]
+          - generic [ref=e566]:
+            - generic [ref=e567]:
+              - paragraph [ref=e568]: Credits Burned
+              - paragraph [ref=e569]: "75"
+            - img [ref=e571]
+          - generic [ref=e578]:
+            - generic [ref=e579]:
+              - paragraph [ref=e580]: Avg Cost/Call
+              - paragraph [ref=e581]: $0.000719
+            - img [ref=e583]
+          - generic [ref=e587]:
+            - generic [ref=e588]:
+              - paragraph [ref=e589]: Fallback Rate
+              - paragraph [ref=e590]: 0%
+              - paragraph [ref=e591]: 0 fallbacks
+            - img [ref=e593]
+          - generic [ref=e600]:
+            - generic [ref=e601]:
+              - paragraph [ref=e602]: Avg Latency
+              - paragraph [ref=e603]: 4224.2ms
+            - img [ref=e605]
+        - generic [ref=e609]:
+          - heading "Top Providers by Call Volume" [level=3] [ref=e610]:
+            - img [ref=e611]
+            - text: Top Providers by Call Volume
+          - generic [ref=e613]:
+            - generic [ref=e614]:
+              - generic [ref=e615]: gemini
+              - generic [ref=e618]: 51 (44%)
+            - generic [ref=e619]:
+              - generic [ref=e620]: openai
+              - generic [ref=e623]: 26 (22%)
+            - generic [ref=e624]:
+              - generic [ref=e625]: groq
+              - generic [ref=e628]: 24 (21%)
+            - generic [ref=e629]:
+              - generic [ref=e630]: mistral
+              - generic [ref=e633]: 7 (6%)
+            - generic [ref=e634]:
+              - generic [ref=e635]: deepseek
+              - generic [ref=e638]: 6 (5%)
+            - generic [ref=e639]:
+              - generic [ref=e640]: ai21
+              - generic [ref=e643]: 1 (1%)
+            - generic [ref=e644]:
+              - generic [ref=e645]: sambanova
+              - generic [ref=e648]: 1 (1%)
+            - generic [ref=e649]:
+              - generic [ref=e650]: anthropic
+              - generic [ref=e653]: 1 (1%)
+        - generic [ref=e655]:
+          - heading "Top Users by Gateway Calls" [level=3] [ref=e656]
+          - generic [ref=e657]:
+            - generic [ref=e658]:
+              - generic [ref=e659]: "#1 user_36301191e2c…"
+              - generic [ref=e660]: 74 calls
+            - generic [ref=e661]:
+              - generic [ref=e662]: "#2 user_3088ac1eb8b…"
+              - generic [ref=e663]: 43 calls
+    - generic [ref=e664]:
+      - generic "Chat with Commander Orion" [ref=e665] [cursor=pointer]:
+        - img "Commander Orion" [ref=e668]
+      - button "Start a new chat" [ref=e670] [cursor=pointer]:
+        - img [ref=e671]
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

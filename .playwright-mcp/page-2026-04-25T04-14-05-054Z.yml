@@ -1,0 +1,90 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - img "MAARS" [ref=e11]
+          - generic [ref=e13]:
+            - heading "MAARS Command" [level=2] [ref=e14]
+            - paragraph [ref=e15]: AI WORKFORCE PLATFORM
+        - generic [ref=e16]:
+          - generic [ref=e19]: 458 AGENTS ONLINE
+          - heading "Your AI workforce is waiting." [level=1] [ref=e20]
+          - paragraph [ref=e21]: Command 458+ AI agents, route across 33 providers, and orchestrate enterprise-scale workflows — all from one dashboard.
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - img [ref=e25]
+            - generic [ref=e35]:
+              - paragraph [ref=e36]: 458+ specialized AI agents
+              - paragraph [ref=e37]: Across 27 expert networks
+          - generic [ref=e38]:
+            - img [ref=e40]
+            - generic [ref=e43]:
+              - paragraph [ref=e44]: 33 providers · 175,000+ models
+              - paragraph [ref=e45]: All via one universal key
+          - generic [ref=e46]:
+            - img [ref=e48]
+            - generic [ref=e50]:
+              - paragraph [ref=e51]: Enterprise governance & trust scoring
+              - paragraph [ref=e52]: Every action audited & metered
+          - generic [ref=e53]:
+            - img [ref=e55]
+            - generic [ref=e57]:
+              - paragraph [ref=e58]: Real-time multi-agent orchestration
+              - paragraph [ref=e59]: Parallel task execution at scale
+      - generic [ref=e60]:
+        - link "← Back to home" [ref=e61] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - heading "Welcome back" [level=1] [ref=e64]
+            - paragraph [ref=e65]: Your AI team is online and ready. ●
+          - button "Continue with Google" [ref=e66] [cursor=pointer]:
+            - img [ref=e67]
+            - text: Continue with Google
+          - generic [ref=e74]: or continue with email
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e78]: Email
+              - generic [ref=e79]:
+                - img [ref=e80]
+                - textbox "Email" [ref=e83]:
+                  - /placeholder: name@example.com
+            - generic [ref=e84]:
+              - generic [ref=e85]: Password
+              - generic [ref=e86]:
+                - img [ref=e87]
+                - textbox "Password" [ref=e90]:
+                  - /placeholder: ••••••••
+                - button [ref=e91] [cursor=pointer]:
+                  - img [ref=e92]
+            - button "Sign In" [ref=e95] [cursor=pointer]:
+              - text: Sign In
+              - img [ref=e96]
+          - paragraph [ref=e98]:
+            - text: No account yet?
+            - link "Create your account →" [ref=e99] [cursor=pointer]:
+              - /url: /register
+          - generic [ref=e100]:
+            - generic [ref=e101]:
+              - img [ref=e102]
+              - generic [ref=e104]: SOC2 Ready
+            - generic [ref=e105]:
+              - img [ref=e106]
+              - generic [ref=e108]: GDPR Compliant
+            - generic [ref=e109]:
+              - img [ref=e110]
+              - generic [ref=e112]: 256-bit AES
+            - generic [ref=e113]:
+              - img [ref=e114]
+              - generic [ref=e116]: JWT Secured
+    - contentinfo [ref=e117]:
+      - img "MARS Command" [ref=e118]
+      - generic [ref=e119]: MARS Command by MARS Global Corporation © 2026
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

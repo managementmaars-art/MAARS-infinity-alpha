@@ -1,0 +1,330 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260415092134
+Username: MSI\Yaleena Yara
+RunAs User: MSI\Yaleena Yara
+Configuration Name: 
+Machine: MSI (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command try { . "c:\Users\Yaleena Yara\AppData\Local\Programs\Microsoft VS Code\41dd792b5e\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1" } catch {}
+Process ID: 5012
+PSVersion: 5.1.26100.7920
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.7920
+BuildVersion: 10.0.26100.7920
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\Yaleena Yara\MAARS-Command\session-log.txt
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe http://localhost:8000/docs
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui.css">
+    <link rel="shortcut icon" href="https://fastapi.tiangolo.com/img/favicon.png">
+    <title>MAARS Command API - Swagger UI</title>
+    </head>
+    <body>
+    <div id="swagger-ui">
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui-bundle.js"></script>
+    <!-- `SwaggerUIBundle` is now available on the page -->
+    <script>
+    const ui = SwaggerUIBundle({
+        url: '/openapi.json',
+    "dom_id": "#swagger-ui",
+"layout": "BaseLayout",
+"deepLinking": true,
+"showExtensions": true,
+"showCommonExtensions": true,
+oauth2RedirectUrl: window.location.origin + '/docs/oauth2-redirect',
+    presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIBundle.SwaggerUIStandalonePreset
+        ],
+    })
+    </script>
+    </body>
+    </html>
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>Invoke-WebRequest http://localhost:8000/docs
+Security Warning: Script Execution Risk
+Invoke-WebRequest parses the content of the web page. Script code in the web page might be run when the page is parsed.
+      RECOMMENDED ACTION:
+      Use the -UseBasicParsing switch to avoid script code execution.
+
+      Do you want to continue?
+&Yes  Yes to &All  &No  No to A&ll  &Suspend
+A
+
+
+StatusCode        : 200
+StatusDescription : OK
+Content           :
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui.css">
+                        <link rel="shortcut icon" href="http...
+RawContent        : HTTP/1.1 200 OK
+                    x-request-id: req_89987b591b4d4e0f
+                    x-response-time-ms: 0
+                    Content-Length: 949
+                    Content-Type: text/html; charset=utf-8
+                    Date: Wed, 15 Apr 2026 02:21:48 GMT
+                    Server: uvicorn
+
+
+                        <!...
+Forms             : {}
+Headers           : {[x-request-id, req_89987b591b4d4e0f], [x-response-time-ms, 0], [Content-Length, 949], [Content-Type, text/html; charset=utf-8]...}
+Images            : {}
+InputFields       : {}
+Links             : {}
+ParsedHtml        : mshtml.HTMLDocumentClass
+RawContentLength  : 949
+
+
+
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+**********************
+Windows PowerShell transcript start
+Start time: 20260415092245
+Username: MSI\Yaleena Yara
+RunAs User: MSI\Yaleena Yara
+Configuration Name: 
+Machine: MSI (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command try { . "c:\Users\Yaleena Yara\AppData\Local\Programs\Microsoft VS Code\41dd792b5e\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1" } catch {}
+Process ID: 10004
+PSVersion: 5.1.26100.7920
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.7920
+BuildVersion: 10.0.26100.7920
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\Yaleena Yara\MAARS-Command\session-log.txt
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe http://localhost:8000/docs
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui.css">
+    <link rel="shortcut icon" href="https://fastapi.tiangolo.com/img/favicon.png">
+    <title>MAARS Command API - Swagger UI</title>
+    </head>
+    <body>
+    <div id="swagger-ui">
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui-bundle.js"></script>
+    <!-- `SwaggerUIBundle` is now available on the page -->
+    <script>
+    const ui = SwaggerUIBundle({
+        url: '/openapi.json',
+    "dom_id": "#swagger-ui",
+"layout": "BaseLayout",
+"deepLinking": true,
+"showExtensions": true,
+"showCommonExtensions": true,
+oauth2RedirectUrl: window.location.origin + '/docs/oauth2-redirect',
+    presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIBundle.SwaggerUIStandalonePreset
+        ],
+    })
+    </script>
+    </body>
+    </html>
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>http://localhost:8000/api/v1/
+http://localhost:8000/api/v1/ : The term 'http://localhost:8000/api/v1/' is not recognized as the name of a cmdlet, 
+function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the 
+path is correct and try again.
+At line:1 char:1
++ http://localhost:8000/api/v1/
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (http://localhost:8000/api/v1/:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+http://localhost:8000/api/v1/ : The term 'http://localhost:8000/api/v1/' is not recognized as the name of a cmdlet, function, script file, or operable program. Check
+the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:1
++ http://localhost:8000/api/v1/
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (http://localhost:8000/api/v1/:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl http://localhost:3000/health
+>> TerminatingError(Invoke-WebRequest): "Cannot GET /health"
+curl : Cannot GET /health
+At line:1 char:1
++ curl http://localhost:3000/health
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], 
+WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+curl : Cannot GET /health
+At line:1 char:1
++ curl http://localhost:3000/health
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl http://localhost:3000/auth/api-keys \
+  -H "Authorization: Bearer ADMIN_KEY"
+>> TerminatingError(Invoke-WebRequest): "A positional parameter cannot be found that accepts argument '\'."
+Invoke-WebRequest : A positional parameter cannot be found that accepts argument '\'.
+At line:1 char:1
++ curl http://localhost:3000/auth/api-keys \
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Invoke-WebRequest], ParameterBindingException
+    + FullyQualifiedErrorId : PositionalParameterNotFound,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+Invoke-WebRequest : A positional parameter cannot be found that accepts argument '\'.
+At line:1 char:1
++ curl http://localhost:3000/auth/api-keys \
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Invoke-WebRequest], ParameterBindingException
+    + FullyQualifiedErrorId : PositionalParameterNotFound,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:2 char:3
++   -H "Authorization: Bearer ADMIN_KEY"
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included,
+verify that the path is correct and try again.
+At line:2 char:3
++   -H "Authorization: Bearer ADMIN_KEY"
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+**********************
+Windows PowerShell transcript start
+Start time: 20260415092726
+Username: MSI\Yaleena Yara
+RunAs User: MSI\Yaleena Yara
+Configuration Name: 
+Machine: MSI (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command try { . "c:\Users\Yaleena Yara\AppData\Local\Programs\Microsoft VS Code\41dd792b5e\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1" } catch {}
+Process ID: 22776
+PSVersion: 5.1.26100.7920
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.7920
+BuildVersion: 10.0.26100.7920
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\Yaleena Yara\MAARS-Command\session-log.txt
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl http://localhost:3000/health
+>> TerminatingError(Invoke-WebRequest): "Cannot GET /health"
+curl : Cannot GET /health
+At line:1 char:1
++ curl http://localhost:3000/health
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], 
+WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+curl : Cannot GET /health
+At line:1 char:1
++ curl http://localhost:3000/health
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe http://localhost:8000/docs
+    <html>
+    <head>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui.css">
+    <link rel="shortcut icon" href="https://fastapi.tiangolo.com/img/favicon.png">
+    <title>MAARS Command API - Swagger UI</title>
+    </head>
+    <body>
+    <div id="swagger-ui">
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui-bundle.js"></script>
+    <!-- `SwaggerUIBundle` is now available on the page -->
+    <script>
+    const ui = SwaggerUIBundle({
+        url: '/openapi.json',
+    "dom_id": "#swagger-ui",
+"layout": "BaseLayout",
+"deepLinking": true,
+"showExtensions": true,
+"showCommonExtensions": true,
+oauth2RedirectUrl: window.location.origin + '/docs/oauth2-redirect',
+    presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIBundle.SwaggerUIStandalonePreset
+        ],
+    })
+    </script>
+    </body>
+    </html>
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe http://localhost:8000/api/v1/models -H "Authorization: Bearer YOUR_MAARS_KEY"
+:"175,000+"}],"total":620,"huggingface_passthrough":"175,000+ additional open-source models available via huggingface/{org}/{model-id}"}
+]633;D;0]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B
+PS>curl.exe http://localhost:8000/api/v1/chat/completions ^
+  -H "Authorization: Bearer YOUR_MAARS_KEY" ^
+  -H "Content-Type: application/json" ^
+  -d "{\"model\":\"maars/auto\",\"messages\":[{\"role\":\"user\",\"content\":\"hello\"}]}"
+
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:2 char:3
++   -H "Authorization: Bearer YOUR_MAARS_KEY" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included,
+verify that the path is correct and try again.
+At line:2 char:3
++   -H "Authorization: Bearer YOUR_MAARS_KEY" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:3 char:3
++   -H "Content-Type: application/json" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-H : The term '-H' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included,
+verify that the path is correct and try again.
+At line:3 char:3
++   -H "Content-Type: application/json" ^
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-H:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+-d : The term '-d' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:4 char:3
++   -d "{\"model\":\"maars/auto\",\"messages\":[{\"role\":\"user\",\"co ...
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-d:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+-d : The term '-d' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included,
+verify that the path is correct and try again.
+At line:4 char:3
++   -d "{\"model\":\"maars/auto\",\"messages\":[{\"role\":\"user\",\"co ...
++   ~~
+    + CategoryInfo          : ObjectNotFound: (-d:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+]633;D;1]633;A]633;P;Cwd=C:\x5cUsers\x5cYaleena Yara\x5cMAARS-CommandPS C:\Users\Yaleena Yara\MAARS-Command> ]633;B

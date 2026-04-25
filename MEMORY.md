@@ -1,5 +1,96 @@
 # MEMORY.md
 
+## Update - 2026-04-19 00:57 ICT (Claude session PDF export)
+
+### Context
+User requested the full Claude Code session be exported as a PDF document.
+
+### What Was Changed
+- Located all VS Code Claude logs containing session ID `cafa2aa0-2b52-43f7-addd-80755fbf6627`.
+- Merged those logs in chronological order and generated a single PDF export:
+  - `claude-session-cafa2aa0-full.pdf`
+
+### Verification Performed
+- Confirmed output file exists and timestamp updated.
+- Confirmed PDF structure markers are valid (`%PDF-1.4` header and `%%EOF` trailer).
+- Export summary:
+  - 6 source log files included
+  - 143 pages generated
+
+### Files Touched
+- `claude-session-cafa2aa0-full.pdf`
+- `MEMORY.md`
+
+### Remaining Work
+- Open the generated PDF in any viewer to review formatting/readability.
+- If needed, create a filtered version (only user/assistant `io_message` lines) for a shorter transcript.
+
+## Update - 2026-04-18 15:31 ICT (Claude VS Code timeout root-cause isolation + workaround)
+
+### Context
+Claude VS Code still timed out at 60s after startup cleanup. Needed deeper isolation to find whether auth/network, project config, or extension runtime behavior was responsible.
+
+### What Was Changed
+- Performed CLI parity tests with `claude.exe`:
+  - `auth status` confirmed account/session valid.
+  - Default invocation in project continued to hang.
+  - Invocation with `--setting-sources user,local` returned immediately.
+- Isolated behavior to project settings source path (not OAuth validity).
+- Applied local extension workaround in installed VS Code extension:
+  - Patched `C:\Users\Yaleena Yara\.vscode\extensions\anthropic.claude-code-2.1.114-win32-x64\extension.js`
+  - Changed launch option from:
+    - `settingSources:["user","project","local"]`
+    - to `settingSources:["user","local"]`
+  - Backed up extension file:
+    - `extension.js.bak-20260418-0828`
+- Added and tested defensive project settings tweaks in `.claude/settings.json` (auto-memory/auto-mode disabled) during isolation.
+
+### Verification Performed
+- Confirmed CLI auth is valid (`loggedIn: true`, `subscriptionType: max`).
+- Reproduced timeout in project scope with default/project source.
+- Confirmed healthy response path with `--setting-sources user,local` (`Hi! What would you like to work on?`).
+- Verified extension patch string replacement exists in `extension.js`.
+
+### Files Touched
+- `MEMORY.md`
+- `.claude/settings.json`
+- External (installed extension, not repository file):
+  - `C:\Users\Yaleena Yara\.vscode\extensions\anthropic.claude-code-2.1.114-win32-x64\extension.js`
+
+### Remaining Work
+- Restart VS Code fully and verify Claude panel now responds in-repo.
+- Reapply patch after Claude extension updates (or remove once upstream fix ships).
+
+## Update - 2026-04-18 14:22 ICT (Claude VS Code launch timeout triage)
+
+### Context
+Claude VS Code extension repeatedly failed with `Subprocess initialization did not complete within 60000ms`, plus startup logs showed repeated path/permission noise and missing plugin cache path errors.
+
+### What Was Changed
+- Sanitized project Claude config to remove unstable/stale/local-machine-specific permission entries and clear leaked local API-token command rules:
+  - `.claude/settings.json` rewritten to a minimal stable allowlist.
+  - `.claude/settings.local.json` reset to empty allowlist.
+- Preserved recoverability by creating timestamped backups:
+  - `.claude/settings.json.bak-20260418-142117`
+  - `.claude/settings.local.json.bak-20260418-142117`
+- Created missing user plugin cache directory:
+  - `C:\Users\Yaleena Yara\.claude\plugins\cache`
+
+### Verification Performed
+- Confirmed sanitized files exist and are valid JSON.
+- Confirmed backup files were created.
+- Confirmed plugin cache directory now exists.
+- Confirmed `rg` no longer reports OS error for missing `~/.claude/plugins/cache` path.
+
+### Files Touched
+- `.claude/settings.json`
+- `.claude/settings.local.json`
+- `MEMORY.md`
+
+### Remaining Work
+- Restart VS Code and relaunch Claude Code to verify subprocess handshake is stable.
+- If timeout persists, complete auth refresh (`Sign out`/`Sign in`) and retest network/proxy path to Anthropic endpoints.
+
 ## Update - 2026-04-16
 
 ### Context
@@ -306,6 +397,98 @@ User asked for a PowerShell command for "handless configuration." Real answer: m
 ### Remaining Work
 - Same as the prior deploy-prep entry: user must complete the 4 manual signup/dashboard steps, then run `powershell -ExecutionPolicy Bypass -File deploy.ps1` to do the rest.
 - Honest scope clarification documented in this entry: "headless" = "scripted where feasible," not "skip the OAuth flows," because those literally require human-in-browser interaction.
+
+
+## Update - 2026-04-16 (Smart Router — LLMRouter merge)
+
+### Context
+User found github.com/ulab-uiuc/LLMRouter (UIUC research, 16+ ML-based routing algorithms). Asked to merge it with MAARS so no models are left behind. LLMRouter's full stack requires torch + transformers (2GB+), so ported the CONCEPTS (score-every-model, KNN classification, cost-quality tradeoff, learned quality from data) using scikit-learn (already installed) + TF-IDF (lightweight, CPU-only, sub-ms routing decisions). All 169 models in MODEL_COSTS_MAP are now scored on every request.
+
+### What Was Changed
+- `backend/services/smart_router.py` (NEW, 430 lines) — merged router engine:
+  - `_build_candidate_catalog()`: merges MODEL_COSTS_MAP (169 models, pricing), MODEL_CREDIT_COSTS (per-call charge), TASK_PREFERRED_MODELS (task affinity), and model_registry (65 curated with tiers/capabilities) into one candidate list. Every model from any source becomes a candidate.
+  - `classify_prompt(text)`: keyword-based task classifier (fallback when no KNN trained). Same keywords as llm_router but condensed into one function.
+  - `score_all(candidates, task, ...)`: LLMRouter-inspired composite scoring. Each model scored on 5 dimensions: task_fit (0.30), cost (0.25), quality (0.20), health (0.15), latency (0.10). Hard penalty (0.2x) when task needs specific capabilities and model has none. Quality uses trained data if available, else tier-based estimate.
+  - `train_from_logs()`: async function that trains a TF-IDF + KNN (scikit-learn KNeighborsClassifier, cosine metric, distance-weighted) from gateway_usage_logs. Learns per-model quality scores from real traffic. Persists to `backend/services/_router_models/`. Hot-reloadable.
+  - `rank(prompt, ...)`: main entry point. Classifies task (KNN if trained, else keywords), scores all 169 candidates, returns top-K sorted by composite score. KNN-predicted model gets a +0.1 confidence bonus (LLMRouter's "direct prediction" behavior).
+  - `explain(prompt)`: diagnostic — returns task classification, classifier used (knn vs keyword), top 10 candidates with full score breakdowns.
+  - Provider inference: `_infer_provider(model_id)` maps model name patterns to 20+ provider slugs so every MODEL_COSTS_MAP entry gets a provider tag.
+  - Tier inference: `_infer_tier(cost_per_mtok)` for models not in model_registry.
+
+- `backend/routes/universal.py` — `_smart_candidates` refactored:
+  - Path A (new): calls `smart_router.rank()`, gets ML-scored candidates, appends legacy candidates as deep-fallback.
+  - Path B (legacy): original keyword + tier intersection, preserved as `_legacy_smart_candidates()`. Used if Path A throws any exception.
+  - Try/except wrapper ensures the legacy router is NEVER broken by smart_router bugs.
+
+- `backend/routes/admin_metrics.py` — 2 new endpoints:
+  - `POST /admin/metrics/router/train` — triggers `smart_router.train_from_logs()` from gateway_usage_logs
+  - `POST /admin/metrics/router/explain` — diagnostic: show full routing decision for a prompt
+
+### Verification Performed
+- 97/97 backend tests pass (no regressions).
+- In-process test: `smart_router.rank("fix this python bug")` returns 169 scored candidates. Top pick: `openai/gpt-5` (score 0.9483), `groq/llama-4-maverick` (0.9208), `openai/o4-mini` (0.9207).
+- Full matrix tested across 10 prompt × tier combinations:
+  - `code` prompt → code-capable models top-ranked (gpt-5, llama-4-maverick, o4-mini)
+  - `creative` prompt → claude-opus, mistral-large top-ranked
+  - `translation` prompt → multilingual models (glm-4-plus, qwen-max) top-ranked
+  - `search` prompt → perplexity sonar-pro correctly top-ranked
+  - `economy` tier override → cost weight boosted to 0.40, cheapest models rise
+  - `premium` tier override → quality weight boosted to 0.35, flagship models rise
+- 584 total routes (2 new admin endpoints).
+- No new pip dependencies (scikit-learn 1.8.0 + numpy 2.4.2 already installed).
+
+### Design decisions (LLMRouter → MAARS mapping)
+- LLMRouter uses Longformer embeddings (768-dim, requires torch). Ported to TF-IDF (sparse, scikit-learn). Same KNN algorithm, different feature extraction. Upgradeable to sentence-transformers later if needed.
+- LLMRouter trains on benchmark datasets (MMLU, HumanEval, GSM8K). MAARS trains on its OWN gateway_usage_logs — real traffic, real costs, real latencies. More relevant to operator's actual workload.
+- LLMRouter's HybridLLM "small vs large" decision becomes MAARS's quality_override tier weighting: economy boosts cost weight, premium boosts quality weight.
+- LLMRouter's MetaRouter.route_single() returns a model name. MAARS's rank() returns a scored list so _call_with_fallback can walk down it.
+
+### Files Touched
+- `backend/services/smart_router.py` (NEW)
+- `backend/routes/universal.py`
+- `backend/routes/admin_metrics.py`
+- `MEMORY.md` (this entry)
+
+### Remaining Work
+- **Train the KNN**: once enough gateway_usage_logs exist (50+ non-fallback entries), run `POST /admin/metrics/router/train` to teach the KNN from real traffic. Until then, keyword classification drives task detection (same as before — never worse).
+- **Provider account fixes**: OpenAI (429 rate limit — top up billing), DeepSeek (402 — no balance), Anthropic (400 — model name format). These are account issues, not router issues. The smart router scores these models correctly but `_call_with_fallback` falls back to Gemini when they 4xx.
+- **Future upgrade path**: swap TF-IDF → sentence-transformers (384-dim, ~100MB pip install, no GPU needed) for better semantic understanding. The `rank()` API shape doesn't change.
+
+
+## DEPLOY LOG — Render Production Deploy (PAUSED — resume when ready)
+
+### Status: PAUSED after Step 2 of 4
+
+### What's done
+- [x] MongoDB Atlas: M0 cluster created, connection string obtained, network access set to 0.0.0.0/0
+- [x] Render: signed up via GitHub, API key (rnd_...) created
+- [x] render.yaml pushed to GitHub (commit b36c310f1 on main) — fixed "static sites cannot have a region" error + removed 143MB cache file that was blocking git push
+- [x] deploy-guided.ps1 written and tested (pure ASCII, PowerShell syntax valid)
+- [x] deploy.ps1 (non-interactive version) also available
+- [x] Stripe CLI installed (v1.40.3 via winget)
+- [x] GitHub CLI installed (v2.89.0 via winget)
+
+### What's remaining (resume later with `deploy-guided.ps1`)
+- [ ] Render Blueprint: click Retry on https://dashboard.render.com/blueprint/new -> render.yaml is now on GitHub -> click Apply -> 2 services created
+- [ ] Stripe: switch to Live mode, get sk_live_..., register webhook endpoint at {render_backend_url}/api/billing/webhook, get whsec_...
+- [ ] Script section 4: paste 4 values (Mongo URL, Render API key, sk_live, whsec) -> script pushes env vars to Render via REST API + triggers redeploy
+- [ ] Verify: open frontend URL, register as owner (management.maars@marsgc.net), check /admin/pricing-manager + /admin/metrics
+
+### How to resume
+```powershell
+cd "c:\Users\Yaleena Yara\MAARS-Command"
+powershell -ExecutionPolicy Bypass -File deploy-guided.ps1
+```
+The script is idempotent — re-running it from the top is safe. It will re-open Atlas/Render/Stripe tabs and re-ask for the 4 values. If you already have them saved, just paste them in when prompted.
+
+### Git note
+The repo's git index is bloated (2M+ skill files staged from auto-commit hook). Used git plumbing (read-tree + write-tree + commit-tree) to bypass the slow index for the deploy push. Future pushes of backend/frontend code changes should stage files selectively (`git add backend/ frontend/`) and avoid `git add -A` which would re-stage the skill library.
+
+### Files involved
+- render.yaml (on GitHub, commit b36c310f1)
+- DEPLOY.md (on GitHub)
+- deploy-guided.ps1 (on GitHub)
+- deploy.ps1 (on GitHub)
 
 
 ## Update - 2026-04-16 (Guided deploy script — deploy-guided.ps1)

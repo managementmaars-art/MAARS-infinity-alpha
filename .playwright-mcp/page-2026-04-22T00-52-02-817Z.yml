@@ -1,0 +1,1457 @@
+- generic [ref=e2]:
+  - generic [ref=e7]:
+    - complementary [ref=e11]:
+      - generic [ref=e12]:
+        - link "MAARS MAARS Command by MAARS Global Corporation" [ref=e14] [cursor=pointer]:
+          - /url: /dashboard
+          - img "MAARS" [ref=e15]
+          - generic [ref=e16]:
+            - heading "MAARS Command" [level=1] [ref=e17]
+            - paragraph [ref=e18]: by MAARS Global Corporation
+        - generic [ref=e19]:
+          - generic [ref=e21]: ONLINE
+          - generic [ref=e22]: 499 agents
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]:
+              - img [ref=e33]
+              - generic [ref=e35]: Unlimited
+            - generic [ref=e36]: Owner
+          - paragraph [ref=e37]: No credit limits apply
+        - button "Personal Workspace 1 members" [ref=e39] [cursor=pointer]:
+          - img [ref=e41]
+          - generic [ref=e45]:
+            - paragraph [ref=e46]: Personal Workspace
+            - paragraph [ref=e47]: 1 members
+          - img [ref=e48]
+        - button "Search… /" [ref=e51] [cursor=pointer]:
+          - img [ref=e52]
+          - generic [ref=e55]: Search…
+          - generic [ref=e56]: /
+        - navigation [ref=e57]:
+          - generic [ref=e58]:
+            - button "Dashboard" [ref=e59] [cursor=pointer]:
+              - img [ref=e60]
+              - generic [ref=e65]: Dashboard
+            - button "Results" [ref=e66] [cursor=pointer]:
+              - img [ref=e67]
+              - generic [ref=e70]: Results
+          - generic [ref=e71]:
+            - generic [ref=e74]: Workspace
+            - button "Projects" [ref=e76] [cursor=pointer]:
+              - img [ref=e77]
+              - generic [ref=e82]: Projects
+            - button "Chat" [ref=e83] [cursor=pointer]:
+              - img [ref=e84]
+              - generic [ref=e86]: Chat
+            - button "Tasks" [ref=e87] [cursor=pointer]:
+              - img [ref=e88]
+              - generic [ref=e91]: Tasks
+            - button "Approvals" [ref=e92] [cursor=pointer]:
+              - img [ref=e93]
+              - generic [ref=e97]: Approvals
+          - generic [ref=e98]:
+            - generic [ref=e101]: AI Tools
+            - button "Agents" [ref=e103] [cursor=pointer]:
+              - img [ref=e104]
+              - generic [ref=e107]: Agents
+            - button "Team Builder" [ref=e108] [cursor=pointer]:
+              - img [ref=e109]
+              - generic [ref=e112]: Team Builder
+            - button "Workspace Brain" [ref=e113] [cursor=pointer]:
+              - img [ref=e114]
+              - generic [ref=e124]: Workspace Brain
+            - button "Brain Profiles" [ref=e125] [cursor=pointer]:
+              - img [ref=e126]
+              - generic [ref=e129]: Brain Profiles
+            - button "Vibe Coding" [ref=e130] [cursor=pointer]:
+              - img [ref=e131]
+              - generic [ref=e134]: Vibe Coding
+            - button "Reference Intel" [ref=e135] [cursor=pointer]:
+              - img [ref=e136]
+              - generic [ref=e138]: Reference Intel
+            - button "Content Generator" [ref=e139] [cursor=pointer]:
+              - img [ref=e140]
+              - generic [ref=e145]: Content Generator
+          - generic [ref=e146]:
+            - generic [ref=e149]: Intelligence
+            - button "Kernel" [ref=e151] [cursor=pointer]:
+              - img [ref=e152]
+              - generic [ref=e156]: Kernel
+            - button "Agent Networks" [ref=e157] [cursor=pointer]:
+              - img [ref=e158]
+              - generic [ref=e163]: Agent Networks
+            - button "Task Graphs" [ref=e164] [cursor=pointer]:
+              - img [ref=e165]
+              - generic [ref=e169]: Task Graphs
+            - button "Knowledge Graph" [ref=e170] [cursor=pointer]:
+              - img [ref=e171]
+              - generic [ref=e177]: Knowledge Graph
+            - button "Trust Scores" [ref=e178] [cursor=pointer]:
+              - img [ref=e179]
+              - generic [ref=e181]: Trust Scores
+            - button "Execution Gateway" [ref=e182] [cursor=pointer]:
+              - img [ref=e183]
+              - generic [ref=e185]: Execution Gateway
+            - button "Workflow Builder" [ref=e186] [cursor=pointer]:
+              - img [ref=e187]
+              - generic [ref=e191]: Workflow Builder
+            - button "Campaign Builder" [ref=e192] [cursor=pointer]:
+              - img [ref=e193]
+              - generic [ref=e196]: Campaign Builder
+            - button "Integrations" [ref=e197] [cursor=pointer]:
+              - img [ref=e198]
+              - generic [ref=e200]: Integrations
+            - button "Embedded Browser" [ref=e201] [cursor=pointer]:
+              - img [ref=e202]
+              - generic [ref=e205]: Embedded Browser
+            - button "Social Media" [ref=e206] [cursor=pointer]:
+              - img [ref=e207]
+              - generic [ref=e213]: Social Media
+            - button "Universal Key" [ref=e214] [cursor=pointer]:
+              - img [ref=e215]
+              - generic [ref=e219]: Universal Key
+            - button "Analytics" [ref=e220] [cursor=pointer]:
+              - img [ref=e221]
+              - generic [ref=e224]: Analytics
+            - button "Agent Suggestions" [ref=e225] [cursor=pointer]:
+              - img [ref=e226]
+              - generic [ref=e228]: Agent Suggestions
+            - button "Environments" [ref=e229] [cursor=pointer]:
+              - img [ref=e230]
+              - generic [ref=e233]: Environments
+            - button "Memory Hierarchy" [ref=e234] [cursor=pointer]:
+              - img [ref=e235]
+              - generic [ref=e237]: Memory Hierarchy
+            - button "Memory" [ref=e238] [cursor=pointer]:
+              - img [ref=e239]
+              - generic [ref=e243]: Memory
+            - button "Collaborations" [ref=e244] [cursor=pointer]:
+              - img [ref=e245]
+              - generic [ref=e247]: Collaborations
+            - button "KPI Dashboard" [ref=e248] [cursor=pointer]:
+              - img [ref=e249]
+              - generic [ref=e252]: KPI Dashboard
+            - button "Activity Monitor" [ref=e253] [cursor=pointer]:
+              - img [ref=e254]
+              - generic [ref=e260]: Activity Monitor
+            - button "My Insights" [ref=e261] [cursor=pointer]:
+              - img [ref=e262]
+              - generic [ref=e264]: My Insights
+          - generic [ref=e265]:
+            - generic [ref=e268]: MAARS Infinity
+            - button "Developer API" [ref=e270] [cursor=pointer]:
+              - img [ref=e271]
+              - generic [ref=e273]: Developer API
+            - button "Observability" [ref=e274] [cursor=pointer]:
+              - img [ref=e275]
+              - generic [ref=e282]: Observability
+            - button "Commander Orion" [ref=e283] [cursor=pointer]:
+              - img [ref=e284]
+              - generic [ref=e290]: Commander Orion
+            - button "Venture Portfolio" [ref=e291] [cursor=pointer]:
+              - img [ref=e292]
+              - generic [ref=e295]: Venture Portfolio
+            - button "Operator Panel" [ref=e296] [cursor=pointer]:
+              - img [ref=e297]
+              - generic [ref=e299]: Operator Panel
+            - button "Agent Catalog" [ref=e300] [cursor=pointer]:
+              - img [ref=e301]
+              - generic [ref=e306]: Agent Catalog
+          - generic [ref=e307]:
+            - generic [ref=e310]: Manage
+            - button "Products" [ref=e312] [cursor=pointer]:
+              - img [ref=e313]
+              - generic [ref=e317]: Products
+            - button "Team" [ref=e318] [cursor=pointer]:
+              - img [ref=e319]
+              - generic [ref=e324]: Team
+            - button "Organization" [ref=e325] [cursor=pointer]:
+              - img [ref=e326]
+              - generic [ref=e330]: Organization
+            - button "Settings" [ref=e331] [cursor=pointer]:
+              - img [ref=e332]
+              - generic [ref=e335]: Settings
+            - button "About" [ref=e336] [cursor=pointer]:
+              - img [ref=e337]
+              - generic [ref=e339]: About
+          - generic [ref=e342]: Admin
+          - button "Overview" [ref=e344] [cursor=pointer]:
+            - img [ref=e345]
+            - generic [ref=e347]: Overview
+          - button "Analytics" [ref=e348] [cursor=pointer]:
+            - img [ref=e349]
+            - generic [ref=e351]: Analytics
+          - button "Universal Gateway" [ref=e352] [cursor=pointer]:
+            - img [ref=e353]
+            - generic [ref=e356]: Universal Gateway
+          - button "Users" [ref=e357] [cursor=pointer]:
+            - img [ref=e358]
+            - generic [ref=e363]: Users
+          - button "Agents" [ref=e364] [cursor=pointer]:
+            - img [ref=e365]
+            - generic [ref=e368]: Agents
+          - button "Transactions" [ref=e369] [cursor=pointer]:
+            - img [ref=e370]
+            - generic [ref=e372]: Transactions
+          - button "Pricing & Splits" [ref=e373] [cursor=pointer]:
+            - img [ref=e375]
+            - generic [ref=e378]: Pricing & Splits
+          - button "API Keys" [ref=e380] [cursor=pointer]:
+            - img [ref=e381]
+            - generic [ref=e385]: API Keys
+          - button "Payment Setup" [ref=e386] [cursor=pointer]:
+            - img [ref=e387]
+            - generic [ref=e389]: Payment Setup
+          - button "Email (SMTP)" [ref=e390] [cursor=pointer]:
+            - img [ref=e391]
+            - generic [ref=e394]: Email (SMTP)
+          - button "Branding" [ref=e395] [cursor=pointer]:
+            - img [ref=e396]
+            - generic [ref=e400]: Branding
+          - button "Knowledge Base" [ref=e401] [cursor=pointer]:
+            - img [ref=e402]
+            - generic [ref=e404]: Knowledge Base
+          - button "Audit Log" [ref=e405] [cursor=pointer]:
+            - img [ref=e406]
+            - generic [ref=e409]: Audit Log
+          - button "Code Explorer" [ref=e410] [cursor=pointer]:
+            - img [ref=e411]
+            - generic [ref=e416]: Code Explorer
+          - button "Access Control" [ref=e417] [cursor=pointer]:
+            - img [ref=e418]
+            - generic [ref=e421]: Access Control
+          - button "Circuit Breakers" [ref=e422] [cursor=pointer]:
+            - img [ref=e423]
+            - generic [ref=e429]: Circuit Breakers
+          - button "Cost Governance" [ref=e430] [cursor=pointer]:
+            - img [ref=e431]
+            - generic [ref=e434]: Cost Governance
+          - button "Preview Client View" [ref=e435] [cursor=pointer]:
+            - img [ref=e436]
+            - generic [ref=e439]: Preview Client View
+        - button "Collapse" [ref=e441] [cursor=pointer]:
+          - img [ref=e442]
+          - generic [ref=e445]: Collapse
+        - generic [ref=e446]:
+          - generic [ref=e452]:
+            - paragraph [ref=e453]: Mirza Arafat Abbas
+            - paragraph [ref=e454]: management.maars@marsgc.net
+          - generic [ref=e455]:
+            - generic [ref=e456]: LIVE
+            - generic [ref=e457]: MAARS v2.0
+          - button "Log Out" [ref=e462] [cursor=pointer]:
+            - img [ref=e463]
+            - generic [ref=e466]: Log Out
+    - generic [ref=e469]:
+      - generic [ref=e470]:
+        - generic [ref=e471]:
+          - heading "Pricing Command Center" [level=1] [ref=e472]
+          - paragraph [ref=e473]: Plans, provider intelligence, and profitability — all in one place.
+        - generic [ref=e474]:
+          - button "Plans" [ref=e475] [cursor=pointer]:
+            - img [ref=e476]
+            - text: Plans
+          - button "Providers" [ref=e479] [cursor=pointer]:
+            - img [ref=e480]
+            - text: Providers
+          - button "Advisor" [ref=e482] [cursor=pointer]:
+            - img [ref=e483]
+            - text: Advisor
+      - generic [ref=e485]:
+        - paragraph [ref=e487]: Manage subscription plans, pricing margins, and custom packages.
+        - button "New Plan" [ref=e488] [cursor=pointer]:
+          - img [ref=e489]
+          - text: New Plan
+      - generic [ref=e490]:
+        - generic [ref=e491]:
+          - generic [ref=e493]:
+            - img [ref=e495]
+            - text: Active Pricing Configuration
+            - generic [ref=e497]: DRIVES ALL PLANS
+            - generic [ref=e498]:
+              - img [ref=e499]
+              - text: Locked 4/22/2026, 7:21:54 AM · management.maars@marsgc.net
+            - generic [ref=e502]: Unsaved changes
+            - button "Lock Configuration" [ref=e504] [cursor=pointer]:
+              - img
+              - text: Lock Configuration
+          - generic [ref=e505]:
+            - generic [ref=e506]:
+              - generic [ref=e507]:
+                - paragraph [ref=e508]: Live Blended Cost
+                - paragraph [ref=e510]: $0.000100
+                - paragraph [ref=e511]: measured now · 7,664 calls
+              - generic [ref=e512]:
+                - paragraph [ref=e513]:
+                  - text: Locked Snapshot
+                  - img [ref=e514]
+                - paragraph [ref=e517]: $0.000103
+                - paragraph [ref=e518]: locked 4/22/2026
+              - generic [ref=e519]:
+                - paragraph [ref=e520]: Effective → Plans
+                - paragraph [ref=e521]: $0.000103
+                - paragraph [ref=e522]: from locked snapshot
+              - generic [ref=e523]:
+                - paragraph [ref=e524]: Drift (live vs locked)
+                - paragraph [ref=e525]: "-3.2%"
+                - paragraph [ref=e526]: in sync
+            - paragraph [ref=e527]:
+              - text: These values drive every plan's auto-derived media capacity + USD cap.
+              - strong [ref=e528]: The "Effective" cost above is what every plan card uses.
+              - text: Change
+              - strong [ref=e529]: tokens per credit
+              - text: to tune LLM work a credit buys, or per-unit credit costs to rebalance capacity. Lock Configuration freezes the snapshot so drift in live cost doesn't silently change plan math.
+            - generic [ref=e530]:
+              - generic [ref=e531]:
+                - text: Tokens / Credit
+                - spinbutton [ref=e532]: "10000000"
+                - paragraph [ref=e533]: 1 credit = this many tokens
+              - generic [ref=e534]:
+                - text: Image Standard
+                - spinbutton [ref=e535]: "20"
+                - paragraph [ref=e536]: credits per 1024² image
+              - generic [ref=e537]:
+                - text: Image HD
+                - spinbutton [ref=e538]: "40"
+                - paragraph [ref=e539]: credits per HD image
+              - generic [ref=e540]:
+                - text: Video / sec
+                - spinbutton [ref=e541]: "20"
+                - paragraph [ref=e542]: credits per second
+              - generic [ref=e543]:
+                - text: TTS / min
+                - spinbutton [ref=e544]: "10"
+                - paragraph [ref=e545]: credits per TTS minute
+              - generic [ref=e546]:
+                - text: Voice-Over / min
+                - spinbutton [ref=e547]: "10"
+                - paragraph [ref=e548]: credits per VO minute
+              - generic [ref=e549]:
+                - text: STT / min
+                - spinbutton [ref=e550]: "5"
+                - paragraph [ref=e551]: credits per STT minute
+              - generic [ref=e552]:
+                - text: Margin %
+                - spinbutton [ref=e553]: "160093"
+                - paragraph [ref=e554]: markup above AI cost
+              - generic [ref=e555]:
+                - text: BDT Rate
+                - spinbutton [ref=e556]: "122.7"
+                - paragraph [ref=e557]: 1 USD = ৳122.7
+            - generic [ref=e558]:
+              - generic [ref=e559]:
+                - img [ref=e560]
+                - generic [ref=e562]: Media Budget Calculator
+                - generic [ref=e563]: — set credits and watch capacity update live
+              - generic [ref=e564]:
+                - spinbutton [ref=e565]: "1000"
+                - generic [ref=e566]: credits
+                - slider [ref=e567]: "1000"
+                - generic [ref=e568]:
+                  - button "50" [ref=e569] [cursor=pointer]
+                  - button "300" [ref=e570] [cursor=pointer]
+                  - button "600" [ref=e571] [cursor=pointer]
+                  - button "1.2k" [ref=e572] [cursor=pointer]
+                  - button "2k" [ref=e573] [cursor=pointer]
+                  - button "3k" [ref=e574] [cursor=pointer]
+                  - button "5k" [ref=e575] [cursor=pointer]
+                  - button "10k" [ref=e576] [cursor=pointer]
+              - generic [ref=e577]:
+                - generic [ref=e578]: "If client spent 100% on ONE modality:"
+                - generic [ref=e579]:
+                  - generic [ref=e580]:
+                    - generic [ref=e581]: Chat tokens
+                    - generic [ref=e582]: 10,000,000,000
+                  - generic [ref=e583]:
+                    - generic [ref=e584]: Images (std)
+                    - generic [ref=e585]: "50"
+                  - generic [ref=e586]:
+                    - generic [ref=e587]: Images (HD)
+                    - generic [ref=e588]: "25"
+                  - generic [ref=e589]:
+                    - generic [ref=e590]: Video (4s clips)
+                    - generic [ref=e591]: "12"
+                  - generic [ref=e592]:
+                    - generic [ref=e593]: Video (sec)
+                    - generic [ref=e594]: "50"
+                  - generic [ref=e595]:
+                    - generic [ref=e596]: TTS (min)
+                    - generic [ref=e597]: "100"
+                  - generic [ref=e598]:
+                    - generic [ref=e599]: VO (min)
+                    - generic [ref=e600]: "100"
+                  - generic [ref=e601]:
+                    - generic [ref=e602]: STT (min)
+                    - generic [ref=e603]: "200"
+              - generic [ref=e604]:
+                - generic [ref=e606]: "Realistic mix (100% allocated) — tune to match your typical customer:"
+                - generic [ref=e607]:
+                  - generic [ref=e608]:
+                    - generic [ref=e609]:
+                      - generic [ref=e610]: Chat
+                      - generic [ref=e611]: 60%
+                    - slider [ref=e612]: "60"
+                  - generic [ref=e613]:
+                    - generic [ref=e614]:
+                      - generic [ref=e615]: Images
+                      - generic [ref=e616]: 20%
+                    - slider [ref=e617]: "20"
+                  - generic [ref=e618]:
+                    - generic [ref=e619]:
+                      - generic [ref=e620]: Video
+                      - generic [ref=e621]: 10%
+                    - slider [ref=e622]: "10"
+                  - generic [ref=e623]:
+                    - generic [ref=e624]:
+                      - generic [ref=e625]: TTS
+                      - generic [ref=e626]: 5%
+                    - slider [ref=e627]: "5"
+                  - generic [ref=e628]:
+                    - generic [ref=e629]:
+                      - generic [ref=e630]: VO
+                      - generic [ref=e631]: 5%
+                    - slider [ref=e632]: "5"
+                - generic [ref=e633]:
+                  - generic [ref=e634]:
+                    - generic [ref=e635]: Chat
+                    - generic [ref=e636]: 6,000,000,000 tok
+                  - generic [ref=e637]:
+                    - generic [ref=e638]: Images
+                    - generic [ref=e639]: 10 std
+                  - generic [ref=e640]:
+                    - generic [ref=e641]: Video
+                    - generic [ref=e642]: 5 sec
+                  - generic [ref=e643]:
+                    - generic [ref=e644]: TTS
+                    - generic [ref=e645]: 5 min
+                  - generic [ref=e646]:
+                    - generic [ref=e647]: VO
+                    - generic [ref=e648]: 5 min
+            - generic [ref=e649]:
+              - strong [ref=e650]: "Tip:"
+              - text: "At current settings, a plan with 10,000,000 tokens/credit can generate, per 1,000 credits:"
+              - strong [ref=e651]: "50"
+              - text: images ·
+              - strong [ref=e652]: "50"
+              - text: seconds of video ·
+              - strong [ref=e653]: "100"
+              - text: minutes of TTS ·
+              - strong [ref=e654]: 10000.0M
+              - text: LLM tokens. Save to publish these defaults.
+        - generic [ref=e655]:
+          - generic [ref=e657]:
+            - generic [ref=e658]:
+              - img [ref=e660]
+              - text: Plans
+              - generic [ref=e663]: reads from Active Pricing ↑
+            - generic [ref=e664]:
+              - button "Expand all" [ref=e665] [cursor=pointer]
+              - button "Load Preset Tiers" [ref=e666] [cursor=pointer]:
+                - img
+                - text: Load Preset Tiers
+              - button "New Plan" [ref=e667] [cursor=pointer]:
+                - img
+                - text: New Plan
+          - generic [ref=e668]:
+            - generic [ref=e669]:
+              - text: "Every row below computes:"
+              - strong [ref=e670]: AI Cost
+              - text: = credits ×
+              - generic [ref=e671]: $0.000103
+              - text: (locked) ·
+              - strong [ref=e672]: Suggested Price
+              - text: = AI Cost × 1601.93 (160093% markup) ·
+              - strong [ref=e673]: BDT
+              - text: = USD × 122.7.
+            - generic [ref=e674]:
+              - generic [ref=e675]:
+                - text: Profit Margin (% above AI Cost)
+                - generic [ref=e676]:
+                  - button "100%" [ref=e677] [cursor=pointer]
+                  - button "200%" [ref=e678] [cursor=pointer]
+                  - button "500%" [ref=e679] [cursor=pointer]
+                  - button "1000%" [ref=e680] [cursor=pointer]
+                  - button "2000%" [ref=e681] [cursor=pointer]
+                  - spinbutton [ref=e682]: "160093"
+                  - generic [ref=e683]: "%"
+                - paragraph [ref=e684]: Price = AI Cost × 1601.93 — stamped into every Suggested column
+              - button "Apply 160093% to All Plans" [ref=e685] [cursor=pointer]
+            - button "Model Cost Reference — click a model to apply its cost per credit" [ref=e687] [cursor=pointer]:
+              - generic [ref=e688]:
+                - img [ref=e689]
+                - generic [ref=e691]: Model Cost Reference
+                - generic [ref=e692]: — click a model to apply its cost per credit
+              - img [ref=e693]
+            - button "Free 50 cr $0.0052 $0.00 — — —" [ref=e696] [cursor=pointer]:
+              - img [ref=e697]
+              - generic [ref=e699]:
+                - generic [ref=e701]: Free
+                - generic [ref=e702]: 50 cr
+                - generic [ref=e704]: $0.0052
+                - generic [ref=e706]: $0.00
+                - generic [ref=e707]: —
+                - generic [ref=e708]: —
+                - generic [ref=e709]: —
+            - button "Starter 300 cr $0.0309 $50.00 $49.50 $49.97 ∞ Delete Starter" [ref=e711] [cursor=pointer]:
+              - img [ref=e712]
+              - generic [ref=e714]:
+                - generic [ref=e716]: Starter
+                - generic [ref=e717]: 300 cr
+                - generic [ref=e719]: $0.0309
+                - generic [ref=e721]: $50.00
+                - button "$49.50" [ref=e723]
+                - generic [ref=e725]: $49.97
+                - generic [ref=e727]: ∞
+              - button "Delete Starter" [ref=e728]:
+                - img [ref=e729]
+            - button "Essential 600 cr $0.0618 $100.00 $99.00 $99.94 ∞ Delete Essential" [ref=e733] [cursor=pointer]:
+              - img [ref=e734]
+              - generic [ref=e736]:
+                - generic [ref=e738]: Essential
+                - generic [ref=e739]: 600 cr
+                - generic [ref=e741]: $0.0618
+                - generic [ref=e743]: $100.00
+                - button "$99.00" [ref=e745]
+                - generic [ref=e747]: $99.94
+                - generic [ref=e749]: ∞
+              - button "Delete Essential" [ref=e750]:
+                - img [ref=e751]
+            - button "Basic 1,200 cr $0.1236 $200.00 $198.00 $199.88 ∞ Delete Basic" [ref=e755] [cursor=pointer]:
+              - img [ref=e756]
+              - generic [ref=e758]:
+                - generic [ref=e760]: Basic
+                - generic [ref=e761]: 1,200 cr
+                - generic [ref=e763]: $0.1236
+                - generic [ref=e765]: $200.00
+                - button "$198.00" [ref=e767]
+                - generic [ref=e769]: $199.88
+                - generic [ref=e771]: ∞
+              - button "Delete Basic" [ref=e772]:
+                - img [ref=e773]
+            - button "Standard Commander 2,000 cr $0.2061 $350.00 $330.16 $349.79 ∞ Delete Standard" [ref=e777] [cursor=pointer]:
+              - img [ref=e778]
+              - generic [ref=e780]:
+                - generic [ref=e781]:
+                  - generic [ref=e782]: Standard
+                  - generic [ref=e783]: Commander
+                - generic [ref=e784]: 2,000 cr
+                - generic [ref=e786]: $0.2061
+                - generic [ref=e788]: $350.00
+                - button "$330.16" [ref=e790]
+                - generic [ref=e792]: $349.79
+                - generic [ref=e794]: ∞
+              - button "Delete Standard" [ref=e795]:
+                - img [ref=e796]
+            - button "Professional Commander 3,000 cr $0.3091 $500.00 $495.16 $499.69 ∞ Delete Professional" [ref=e800] [cursor=pointer]:
+              - img [ref=e801]
+              - generic [ref=e803]:
+                - generic [ref=e804]:
+                  - generic [ref=e805]: Professional
+                  - generic [ref=e806]: Commander
+                - generic [ref=e807]: 3,000 cr
+                - generic [ref=e809]: $0.3091
+                - generic [ref=e811]: $500.00
+                - button "$495.16" [ref=e813]
+                - generic [ref=e815]: $499.69
+                - generic [ref=e817]: ∞
+              - button "Delete Professional" [ref=e818]:
+                - img [ref=e819]
+            - button "Advanced Commander 4,000 cr $0.4122 $750.00 $660.32 $749.59 ∞ Delete Advanced" [ref=e823] [cursor=pointer]:
+              - img [ref=e824]
+              - generic [ref=e826]:
+                - generic [ref=e827]:
+                  - generic [ref=e828]: Advanced
+                  - generic [ref=e829]: Commander
+                - generic [ref=e830]: 4,000 cr
+                - generic [ref=e832]: $0.4122
+                - generic [ref=e834]: $750.00
+                - button "$660.32" [ref=e836]
+                - generic [ref=e838]: $749.59
+                - generic [ref=e840]: ∞
+              - button "Delete Advanced" [ref=e841]:
+                - img [ref=e842]
+            - button "Business Commander 5,000 cr $0.5152 $1000.00 $825.31 $999.48 ∞ Delete Business" [ref=e846] [cursor=pointer]:
+              - img [ref=e847]
+              - generic [ref=e849]:
+                - generic [ref=e850]:
+                  - generic [ref=e851]: Business
+                  - generic [ref=e852]: Commander
+                - generic [ref=e853]: 5,000 cr
+                - generic [ref=e855]: $0.5152
+                - generic [ref=e857]: $1000.00
+                - button "$825.31" [ref=e859]
+                - generic [ref=e861]: $999.48
+                - generic [ref=e863]: ∞
+              - button "Delete Business" [ref=e864]:
+                - img [ref=e865]
+            - button "Agency Commander 6,500 cr $0.6698 $1500.00 $1072.97 $1499.33 ∞ Delete Agency" [ref=e869] [cursor=pointer]:
+              - img [ref=e870]
+              - generic [ref=e872]:
+                - generic [ref=e873]:
+                  - generic [ref=e874]: Agency
+                  - generic [ref=e875]: Commander
+                - generic [ref=e876]: 6,500 cr
+                - generic [ref=e878]: $0.6698
+                - generic [ref=e880]: $1500.00
+                - button "$1072.97" [ref=e882]
+                - generic [ref=e884]: $1499.33
+                - generic [ref=e886]: ∞
+              - button "Delete Agency" [ref=e887]:
+                - img [ref=e888]
+            - button "Studio Commander 7,500 cr $0.7728 $2500.00 $1237.97 $2499.23 ∞ Delete Studio" [ref=e892] [cursor=pointer]:
+              - img [ref=e893]
+              - generic [ref=e895]:
+                - generic [ref=e896]:
+                  - generic [ref=e897]: Studio
+                  - generic [ref=e898]: Commander
+                - generic [ref=e899]: 7,500 cr
+                - generic [ref=e901]: $0.7728
+                - generic [ref=e903]: $2500.00
+                - button "$1237.97" [ref=e905]
+                - generic [ref=e907]: $2499.23
+                - generic [ref=e909]: ∞
+              - button "Delete Studio" [ref=e910]:
+                - img [ref=e911]
+            - button "Enterprise Commander 8,500 cr $0.8758 $3500.00 $1402.97 $3499.12 ∞ Delete Enterprise" [ref=e915] [cursor=pointer]:
+              - img [ref=e916]
+              - generic [ref=e918]:
+                - generic [ref=e919]:
+                  - generic [ref=e920]: Enterprise
+                  - generic [ref=e921]: Commander
+                - generic [ref=e922]: 8,500 cr
+                - generic [ref=e924]: $0.8758
+                - generic [ref=e926]: $3500.00
+                - button "$1402.97" [ref=e928]
+                - generic [ref=e930]: $3499.12
+                - generic [ref=e932]: ∞
+              - button "Delete Enterprise" [ref=e933]:
+                - img [ref=e934]
+            - button "Corporate Commander 9,500 cr $0.9789 $5000.00 $1568.13 $4999.02 ∞ Delete Corporate" [ref=e938] [cursor=pointer]:
+              - img [ref=e939]
+              - generic [ref=e941]:
+                - generic [ref=e942]:
+                  - generic [ref=e943]: Corporate
+                  - generic [ref=e944]: Commander
+                - generic [ref=e945]: 9,500 cr
+                - generic [ref=e947]: $0.9789
+                - generic [ref=e949]: $5000.00
+                - button "$1568.13" [ref=e951]
+                - generic [ref=e953]: $4999.02
+                - generic [ref=e955]: ∞
+              - button "Delete Corporate" [ref=e956]:
+                - img [ref=e957]
+            - button "Elite Commander 10,000 cr $1.0304 $8000.00 $1650.63 $7998.97 ∞ Delete Elite" [ref=e961] [cursor=pointer]:
+              - img [ref=e962]
+              - generic [ref=e964]:
+                - generic [ref=e965]:
+                  - generic [ref=e966]: Elite
+                  - generic [ref=e967]: Commander
+                - generic [ref=e968]: 10,000 cr
+                - generic [ref=e970]: $1.0304
+                - generic [ref=e972]: $8000.00
+                - button "$1650.63" [ref=e974]
+                - generic [ref=e976]: $7998.97
+                - generic [ref=e978]: ∞
+              - button "Delete Elite" [ref=e979]:
+                - img [ref=e980]
+            - generic [ref=e983]:
+              - heading "Custom Agent Creation Cost" [level=4] [ref=e984]
+              - generic [ref=e985]:
+                - spinbutton [ref=e986]: "20"
+                - paragraph [ref=e987]: Credits charged per custom agent created
+            - generic [ref=e988]:
+              - button "Publish Pricing Changes" [ref=e989] [cursor=pointer]
+              - button "Reset to Current" [ref=e990] [cursor=pointer]
+        - generic [ref=e991]:
+          - generic [ref=e993]:
+            - generic [ref=e994]:
+              - generic [ref=e995]: 🔒
+              - text: Operator Breakdown
+              - generic [ref=e996]: ADMIN ONLY
+              - generic [ref=e997]: reads from Active Pricing ↑
+            - generic [ref=e998]: Not visible to clients
+          - generic [ref=e999]:
+            - generic [ref=e1000]:
+              - generic [ref=e1001]:
+                - paragraph [ref=e1002]: Credit ↔ Token Ratio
+                - paragraph [ref=e1003]: 1 credit = 10,000,000 tokens
+                - paragraph [ref=e1004]: ~250 input + ~250 output per API call
+              - generic [ref=e1005]:
+                - paragraph [ref=e1006]: Cost per Token (blended)
+                - paragraph [ref=e1007]: $1.03e-11
+                - paragraph [ref=e1008]: $0.000103/credit (locked) ÷ 10,000,000 tok/credit
+              - generic [ref=e1009]:
+                - paragraph [ref=e1010]: Free-Tier Routing
+                - paragraph [ref=e1011]: 99%
+                - paragraph [ref=e1012]: 6 free / 16 paid providers
+            - generic [ref=e1013]:
+              - paragraph [ref=e1014]: Smart Router Workflow
+              - list [ref=e1015]:
+                - listitem [ref=e1016]: 1. Request arrives → classified by task type (chat, code, reasoning, research)
+                - listitem [ref=e1017]: "2. Router checks free-tier first: Groq → Cerebras → SambaNova → Gemini → NVIDIA → HuggingFace"
+                - listitem [ref=e1018]: "3. If free unavailable → cheapest paid: DeepSeek → Together → Fireworks → Mistral"
+                - listitem [ref=e1019]: 4. Premium fallback (Opus/GPT-4/Sonnet) only if specifically requested
+                - listitem [ref=e1020]: 5. 1 request = 1 credit deducted from client's strict cap
+            - generic [ref=e1021]:
+              - paragraph [ref=e1022]: Client Usage Capacity per Plan
+              - table [ref=e1024]:
+                - rowgroup [ref=e1025]:
+                  - row "Plan Credits AI Messages* Cold Emails Social Posts Images Video (sec) VO (min) LLM Cost All-In Cost† Price Margin %" [ref=e1026]:
+                    - columnheader "Plan" [ref=e1027]
+                    - columnheader "Credits" [ref=e1028]
+                    - columnheader "AI Messages*" [ref=e1029]
+                    - columnheader "Cold Emails" [ref=e1030]
+                    - columnheader "Social Posts" [ref=e1031]
+                    - columnheader "Images" [ref=e1032]
+                    - columnheader "Video (sec)" [ref=e1033]
+                    - columnheader "VO (min)" [ref=e1034]
+                    - columnheader "LLM Cost" [ref=e1035]
+                    - columnheader "All-In Cost†" [ref=e1036]
+                    - columnheader "Price" [ref=e1037]
+                    - columnheader "Margin %" [ref=e1038]
+                - rowgroup [ref=e1039]:
+                  - row "Free 50 625.0k 16 25 2 2 5 $0.0052 $1.61 $0.00 —" [ref=e1040]:
+                    - cell "Free" [ref=e1041]
+                    - cell "50" [ref=e1042]
+                    - cell "625.0k" [ref=e1043]
+                    - cell "16" [ref=e1044]
+                    - cell "25" [ref=e1045]
+                    - cell "2" [ref=e1046]
+                    - cell "2" [ref=e1047]
+                    - cell "5" [ref=e1048]
+                    - cell "$0.0052" [ref=e1049]
+                    - cell "$1.61" [ref=e1050]
+                    - cell "$0.00" [ref=e1051]
+                    - cell "—" [ref=e1052]
+                  - row "Starter 300 3.8M 100 150 15 15 30 $0.0309 $1.77 $50.00 96.5%" [ref=e1053]:
+                    - cell "Starter" [ref=e1054]
+                    - cell "300" [ref=e1055]
+                    - cell "3.8M" [ref=e1056]
+                    - cell "100" [ref=e1057]
+                    - cell "150" [ref=e1058]
+                    - cell "15" [ref=e1059]
+                    - cell "15" [ref=e1060]
+                    - cell "30" [ref=e1061]
+                    - cell "$0.0309" [ref=e1062]
+                    - cell "$1.77" [ref=e1063]
+                    - cell "$50.00" [ref=e1064]
+                    - cell "96.5%" [ref=e1065]
+                  - row "Essential 600 7.5M 200 300 30 30 60 $0.0618 $2.07 $100.00 97.9%" [ref=e1066]:
+                    - cell "Essential" [ref=e1067]
+                    - cell "600" [ref=e1068]
+                    - cell "7.5M" [ref=e1069]
+                    - cell "200" [ref=e1070]
+                    - cell "300" [ref=e1071]
+                    - cell "30" [ref=e1072]
+                    - cell "30" [ref=e1073]
+                    - cell "60" [ref=e1074]
+                    - cell "$0.0618" [ref=e1075]
+                    - cell "$2.07" [ref=e1076]
+                    - cell "$100.00" [ref=e1077]
+                    - cell "97.9%" [ref=e1078]
+                  - row "Basic 1,200 15.0M 400 600 60 60 120 $0.1236 $2.54 $200.00 98.7%" [ref=e1079]:
+                    - cell "Basic" [ref=e1080]
+                    - cell "1,200" [ref=e1081]
+                    - cell "15.0M" [ref=e1082]
+                    - cell "400" [ref=e1083]
+                    - cell "600" [ref=e1084]
+                    - cell "60" [ref=e1085]
+                    - cell "60" [ref=e1086]
+                    - cell "120" [ref=e1087]
+                    - cell "$0.1236" [ref=e1088]
+                    - cell "$2.54" [ref=e1089]
+                    - cell "$200.00" [ref=e1090]
+                    - cell "98.7%" [ref=e1091]
+                  - row "Standard 2,000 25.0M 666 1.0k 100 100 200 $0.2061 $3.44 $350.00 99.0%" [ref=e1092]:
+                    - cell "Standard" [ref=e1093]
+                    - cell "2,000" [ref=e1094]
+                    - cell "25.0M" [ref=e1095]
+                    - cell "666" [ref=e1096]
+                    - cell "1.0k" [ref=e1097]
+                    - cell "100" [ref=e1098]
+                    - cell "100" [ref=e1099]
+                    - cell "200" [ref=e1100]
+                    - cell "$0.2061" [ref=e1101]
+                    - cell "$3.44" [ref=e1102]
+                    - cell "$350.00" [ref=e1103]
+                    - cell "99.0%" [ref=e1104]
+                  - row "Professional 3,000 37.5M 1.0k 1.5k 150 150 300 $0.3091 $4.62 $500.00 99.1%" [ref=e1105]:
+                    - cell "Professional" [ref=e1106]
+                    - cell "3,000" [ref=e1107]
+                    - cell "37.5M" [ref=e1108]
+                    - cell "1.0k" [ref=e1109]
+                    - cell "1.5k" [ref=e1110]
+                    - cell "150" [ref=e1111]
+                    - cell "150" [ref=e1112]
+                    - cell "300" [ref=e1113]
+                    - cell "$0.3091" [ref=e1114]
+                    - cell "$4.62" [ref=e1115]
+                    - cell "$500.00" [ref=e1116]
+                    - cell "99.1%" [ref=e1117]
+                  - row "Advanced 4,000 50.0M 1.3k 2.0k 200 200 400 $0.4122 $6.06 $750.00 99.2%" [ref=e1118]:
+                    - cell "Advanced" [ref=e1119]
+                    - cell "4,000" [ref=e1120]
+                    - cell "50.0M" [ref=e1121]
+                    - cell "1.3k" [ref=e1122]
+                    - cell "2.0k" [ref=e1123]
+                    - cell "200" [ref=e1124]
+                    - cell "200" [ref=e1125]
+                    - cell "400" [ref=e1126]
+                    - cell "$0.4122" [ref=e1127]
+                    - cell "$6.06" [ref=e1128]
+                    - cell "$750.00" [ref=e1129]
+                    - cell "99.2%" [ref=e1130]
+                  - row "Business 5,000 62.5M 1.7k 2.5k 250 250 500 $0.5152 $7.51 $1000.00 99.2%" [ref=e1131]:
+                    - cell "Business" [ref=e1132]
+                    - cell "5,000" [ref=e1133]
+                    - cell "62.5M" [ref=e1134]
+                    - cell "1.7k" [ref=e1135]
+                    - cell "2.5k" [ref=e1136]
+                    - cell "250" [ref=e1137]
+                    - cell "250" [ref=e1138]
+                    - cell "500" [ref=e1139]
+                    - cell "$0.5152" [ref=e1140]
+                    - cell "$7.51" [ref=e1141]
+                    - cell "$1000.00" [ref=e1142]
+                    - cell "99.2%" [ref=e1143]
+                  - row "Agency 6,500 81.3M 2.2k 3.3k 325 325 650 $0.6698 $9.01 $1500.00 99.4%" [ref=e1144]:
+                    - cell "Agency" [ref=e1145]
+                    - cell "6,500" [ref=e1146]
+                    - cell "81.3M" [ref=e1147]
+                    - cell "2.2k" [ref=e1148]
+                    - cell "3.3k" [ref=e1149]
+                    - cell "325" [ref=e1150]
+                    - cell "325" [ref=e1151]
+                    - cell "650" [ref=e1152]
+                    - cell "$0.6698" [ref=e1153]
+                    - cell "$9.01" [ref=e1154]
+                    - cell "$1500.00" [ref=e1155]
+                    - cell "99.4%" [ref=e1156]
+                  - row "Studio 7,500 93.8M 2.5k 3.8k 375 375 750 $0.7728 $10.46 $2500.00 99.6%" [ref=e1157]:
+                    - cell "Studio" [ref=e1158]
+                    - cell "7,500" [ref=e1159]
+                    - cell "93.8M" [ref=e1160]
+                    - cell "2.5k" [ref=e1161]
+                    - cell "3.8k" [ref=e1162]
+                    - cell "375" [ref=e1163]
+                    - cell "375" [ref=e1164]
+                    - cell "750" [ref=e1165]
+                    - cell "$0.7728" [ref=e1166]
+                    - cell "$10.46" [ref=e1167]
+                    - cell "$2500.00" [ref=e1168]
+                    - cell "99.6%" [ref=e1169]
+                  - row "Enterprise 8,500 106.3M 2.8k 4.3k 425 425 850 $0.8758 $13.26 $3500.00 99.6%" [ref=e1170]:
+                    - cell "Enterprise" [ref=e1171]
+                    - cell "8,500" [ref=e1172]
+                    - cell "106.3M" [ref=e1173]
+                    - cell "2.8k" [ref=e1174]
+                    - cell "4.3k" [ref=e1175]
+                    - cell "425" [ref=e1176]
+                    - cell "425" [ref=e1177]
+                    - cell "850" [ref=e1178]
+                    - cell "$0.8758" [ref=e1179]
+                    - cell "$13.26" [ref=e1180]
+                    - cell "$3500.00" [ref=e1181]
+                    - cell "99.6%" [ref=e1182]
+                  - row "Corporate 9,500 118.8M 3.2k 4.8k 475 475 950 $0.9789 $16.06 $5000.00 99.7%" [ref=e1183]:
+                    - cell "Corporate" [ref=e1184]
+                    - cell "9,500" [ref=e1185]
+                    - cell "118.8M" [ref=e1186]
+                    - cell "3.2k" [ref=e1187]
+                    - cell "4.8k" [ref=e1188]
+                    - cell "475" [ref=e1189]
+                    - cell "475" [ref=e1190]
+                    - cell "950" [ref=e1191]
+                    - cell "$0.9789" [ref=e1192]
+                    - cell "$16.06" [ref=e1193]
+                    - cell "$5000.00" [ref=e1194]
+                    - cell "99.7%" [ref=e1195]
+                  - row "Elite 10,000 125.0M 3.3k 5.0k 500 500 1.0k $1.0304 $18.81 $8000.00 99.8%" [ref=e1196]:
+                    - cell "Elite" [ref=e1197]
+                    - cell "10,000" [ref=e1198]
+                    - cell "125.0M" [ref=e1199]
+                    - cell "3.3k" [ref=e1200]
+                    - cell "5.0k" [ref=e1201]
+                    - cell "500" [ref=e1202]
+                    - cell "500" [ref=e1203]
+                    - cell "1.0k" [ref=e1204]
+                    - cell "$1.0304" [ref=e1205]
+                    - cell "$18.81" [ref=e1206]
+                    - cell "$8000.00" [ref=e1207]
+                    - cell "99.8%" [ref=e1208]
+              - paragraph [ref=e1209]:
+                - text: "* AI Messages = credits × tokens_per_credit ÷ 800. Cold Emails ≈ 3 cr each, Social Posts ≈ 2 cr. Image / Video / VO use Active Pricing rates above."
+                - text: LLM Cost = provider inference only. All-In Cost† = LLM + media + email + voice + infra (from
+                - link "/api/admin/pricing/full-ledger" [ref=e1210] [cursor=pointer]:
+                  - /url: /api/admin/pricing/full-ledger
+                - text: ). Margin % reflects All-In.
+            - generic [ref=e1211]:
+              - generic [ref=e1212]:
+                - paragraph [ref=e1213]: Cost Optimization Levers
+                - generic [ref=e1214]:
+                  - text: "Untapped:"
+                  - strong [ref=e1215]: $234.00/mo
+                  - generic [ref=e1216]: at 10 heavy clients
+              - generic [ref=e1217]:
+                - generic [ref=e1218]:
+                  - generic [ref=e1219]:
+                    - generic [ref=e1220]:
+                      - generic [ref=e1221]: Local media GPU
+                      - generic [ref=e1222]: "OFF"
+                    - generic [ref=e1223]: SDXL / Whisper / XTTS / SVD self-host — set MAARS_LOCAL_IMAGE_URL
+                    - generic [ref=e1224]: Saves ~$18.00/mo per heavy client
+                  - button "OFF" [ref=e1225] [cursor=pointer]
+                - generic [ref=e1226]:
+                  - generic [ref=e1227]:
+                    - generic [ref=e1228]:
+                      - generic [ref=e1229]: Self-hosted SMTP
+                      - generic [ref=e1230]: "OFF"
+                    - generic [ref=e1231]: Postfix + warmed IPs — set MAARS_SMTP_HOST
+                    - generic [ref=e1232]: Saves ~$0.40/mo per heavy client
+                  - button "OFF" [ref=e1233] [cursor=pointer]
+                - generic [ref=e1234]:
+                  - generic [ref=e1235]:
+                    - generic [ref=e1236]:
+                      - generic [ref=e1237]: Telnyx (vs Twilio)
+                      - generic [ref=e1238]: "OFF"
+                    - generic [ref=e1239]: ~45% cheaper/min — set TELNYX_API_KEY
+                    - generic [ref=e1240]: Saves ~$5.00/mo per heavy client
+                  - button "OFF" [ref=e1241] [cursor=pointer]
+                - generic [ref=e1242]:
+                  - generic [ref=e1243]:
+                    - generic [ref=e1244]:
+                      - generic [ref=e1245]: Native lead research
+                      - generic [ref=e1246]: ACTIVE
+                    - generic [ref=e1247]: BrowserAgent scraping (built-in) replaces Apollo/Hunter
+                    - generic [ref=e1248]: Saves ~$15.00/mo per heavy client
+                  - button "ON" [ref=e1249] [cursor=pointer]
+                - generic [ref=e1250]:
+                  - generic [ref=e1251]:
+                    - generic [ref=e1252]:
+                      - generic [ref=e1253]: Residential proxy pool
+                      - generic [ref=e1254]: "OFF"
+                    - generic [ref=e1255]: Scales scraping safely — set MAARS_PROXY_POOL
+                    - generic [ref=e1256]: Saves ~$0.00/mo per heavy client
+                  - button "OFF" [ref=e1257] [cursor=pointer]
+              - paragraph [ref=e1258]: ACTIVE = operator toggle on + env detected. NEEDS ENV = toggle on, prerequisite missing — no effect until infra wired. All-In Cost column recalculates when a lever becomes ACTIVE.
+      - generic [ref=e1259]:
+        - generic [ref=e1261]:
+          - heading "Custom Package Pricing" [level=2] [ref=e1262]
+          - paragraph [ref=e1263]: Set prices for agents, credits, and extra credit packs with real-time cost and profit visibility.
+        - generic [ref=e1264]:
+          - generic [ref=e1266]:
+            - img [ref=e1268]
+            - text: Credit & Package Margin Calculator
+            - generic [ref=e1271]: LIVE SYNC
+          - generic [ref=e1272]:
+            - paragraph [ref=e1273]: Set your target margin and apply it to all credit pricing, or manually edit individual prices below.
+            - generic [ref=e1274]:
+              - generic [ref=e1275]:
+                - text: AI Cost per Credit (USD)
+                - generic [ref=e1276]: $0.000100
+                - paragraph [ref=e1277]: Live from real usage
+              - generic [ref=e1279]:
+                - text: Target Profit Margin (%)
+                - spinbutton [ref=e1280]: "200"
+                - paragraph [ref=e1281]: 200% means 3.0x the cost
+              - generic [ref=e1282]:
+                - text: BDT Exchange Rate
+                - generic [ref=e1283]:
+                  - spinbutton [ref=e1284]: "122.7"
+                  - button "Refresh Live" [ref=e1285] [cursor=pointer]
+                - paragraph [ref=e1286]: "Live rate: 1 USD = 122.7 BDT (auto-syncs all BDT prices)"
+            - button "Apply 200% Margin to All Credits & Packs" [ref=e1287] [cursor=pointer]
+        - generic [ref=e1288]:
+          - generic [ref=e1290]:
+            - text: Agent & Commander Pricing
+            - generic [ref=e1291]: (Build Your Own)
+          - generic [ref=e1292]:
+            - generic [ref=e1293]:
+              - text: Per Agent (USD)
+              - spinbutton [ref=e1294]: "5"
+            - generic [ref=e1295]:
+              - generic [ref=e1296]: Per Agent (BDT) auto
+              - spinbutton [ref=e1297]: "615"
+            - generic [ref=e1298]:
+              - text: Commander Add-on (USD)
+              - spinbutton [ref=e1299]: "15"
+            - generic [ref=e1300]:
+              - generic [ref=e1301]: Commander Add-on (BDT) auto
+              - spinbutton [ref=e1302]: "1844"
+        - generic [ref=e1303]:
+          - generic [ref=e1305]:
+            - text: Credit Presets
+            - generic [ref=e1306]: (Build Your Own package)
+          - generic [ref=e1308]:
+            - generic [ref=e1309]:
+              - generic [ref=e1310]: Credits
+              - generic [ref=e1311]: AI Cost
+              - generic [ref=e1312]: USD Price
+              - generic [ref=e1313]: BDT (auto)
+              - generic [ref=e1314]: Profit
+              - generic [ref=e1315]: Margin
+            - generic [ref=e1317]:
+              - spinbutton [ref=e1318]: "100"
+              - generic [ref=e1319]: $0.01
+              - spinbutton [ref=e1320]: "16.6"
+              - generic [ref=e1321]: "2041"
+              - generic [ref=e1322]: $16.59
+              - generic [ref=e1323]: +166249%
+              - button "Remove" [ref=e1324] [cursor=pointer]
+            - generic [ref=e1325]:
+              - spinbutton [ref=e1326]: "500"
+              - generic [ref=e1327]: $0.05
+              - spinbutton [ref=e1328]: "83"
+              - generic [ref=e1329]: "10205"
+              - generic [ref=e1330]: $82.95
+              - generic [ref=e1331]: +166249%
+              - button "Remove" [ref=e1332] [cursor=pointer]
+            - generic [ref=e1333]:
+              - spinbutton [ref=e1334]: "1000"
+              - generic [ref=e1335]: $0.10
+              - spinbutton [ref=e1336]: "165.99"
+              - generic [ref=e1337]: "20408"
+              - generic [ref=e1338]: $165.89
+              - generic [ref=e1339]: +166239%
+              - button "Remove" [ref=e1340] [cursor=pointer]
+            - generic [ref=e1341]:
+              - spinbutton [ref=e1342]: "2000"
+              - generic [ref=e1343]: $0.20
+              - spinbutton [ref=e1344]: "331.98"
+              - generic [ref=e1345]: "40817"
+              - generic [ref=e1346]: $331.78
+              - generic [ref=e1347]: +166239%
+              - button "Remove" [ref=e1348] [cursor=pointer]
+            - generic [ref=e1349]:
+              - spinbutton [ref=e1350]: "5000"
+              - generic [ref=e1351]: $0.50
+              - spinbutton [ref=e1352]: "829.96"
+              - generic [ref=e1353]: "102044"
+              - generic [ref=e1354]: $829.46
+              - generic [ref=e1355]: +166241%
+              - button "Remove" [ref=e1356] [cursor=pointer]
+            - button "+ Add Preset" [ref=e1357] [cursor=pointer]
+        - generic [ref=e1358]:
+          - generic [ref=e1360]:
+            - text: Extra Credit Packs
+            - generic [ref=e1361]: ("Need More Credits?" section)
+          - generic [ref=e1363]:
+            - generic [ref=e1364]:
+              - generic [ref=e1365]: Credits
+              - generic [ref=e1366]: AI Cost/Credit
+              - generic [ref=e1367]: AI Cost
+              - generic [ref=e1368]: USD Price
+              - generic [ref=e1369]: BDT (auto)
+              - generic [ref=e1370]: Profit
+              - generic [ref=e1371]: Margin
+            - generic [ref=e1373]:
+              - spinbutton [ref=e1374]: "100"
+              - generic [ref=e1375]: $0.000100
+              - generic [ref=e1376]: $0.01
+              - spinbutton [ref=e1377]: "16.6"
+              - generic [ref=e1378]: "2041"
+              - generic [ref=e1379]: $16.59
+              - generic [ref=e1380]: +166249%
+              - button "Remove" [ref=e1381] [cursor=pointer]
+            - generic [ref=e1382]:
+              - spinbutton [ref=e1383]: "300"
+              - generic [ref=e1384]: $0.000100
+              - generic [ref=e1385]: $0.03
+              - spinbutton [ref=e1386]: "49.8"
+              - generic [ref=e1387]: "6123"
+              - generic [ref=e1388]: $49.77
+              - generic [ref=e1389]: +166249%
+              - button "Remove" [ref=e1390] [cursor=pointer]
+            - generic [ref=e1391]:
+              - spinbutton [ref=e1392]: "700"
+              - generic [ref=e1393]: $0.000100
+              - generic [ref=e1394]: $0.07
+              - spinbutton [ref=e1395]: "116.19"
+              - generic [ref=e1396]: "14286"
+              - generic [ref=e1397]: $116.12
+              - generic [ref=e1398]: +166235%
+              - button "Remove" [ref=e1399] [cursor=pointer]
+            - generic [ref=e1400]:
+              - spinbutton [ref=e1401]: "1500"
+              - generic [ref=e1402]: $0.000100
+              - generic [ref=e1403]: $0.15
+              - spinbutton [ref=e1404]: "248.99"
+              - generic [ref=e1405]: "30613"
+              - generic [ref=e1406]: $248.84
+              - generic [ref=e1407]: +166243%
+              - button "Remove" [ref=e1408] [cursor=pointer]
+            - button "+ Add Pack" [ref=e1409] [cursor=pointer]
+        - button "Save All Pricing" [ref=e1410] [cursor=pointer]
+      - generic [ref=e1412]:
+        - generic [ref=e1413]:
+          - heading "Operator splits, customer overrides & audit" [level=2] [ref=e1414]
+          - button "Refresh" [ref=e1415] [cursor=pointer]:
+            - img [ref=e1416]
+            - text: Refresh
+        - generic [ref=e1421]:
+          - generic [ref=e1422]:
+            - img [ref=e1423]
+            - text: Per-customer pricing overrides
+          - generic [ref=e1428]:
+            - paragraph [ref=e1429]: "Attach negotiated pricing to a specific user_id. The Stripe webhook checks for an active override per (user, package) and applies it before falling back to the package default. Optional `expires_at` ISO timestamp lets the override auto-revert."
+            - generic [ref=e1430]:
+              - textbox "user_id" [ref=e1431]
+              - combobox [ref=e1432]:
+                - option "starter" [selected]
+                - option "essential"
+                - option "basic"
+                - option "standard"
+                - option "professional"
+                - option "advanced"
+                - option "business"
+                - option "agency"
+                - option "studio"
+                - option "enterprise"
+                - option "corporate"
+                - option "elite"
+                - option "white_label"
+              - spinbutton [ref=e1433]: "0.2"
+              - spinbutton [ref=e1434]
+              - spinbutton [ref=e1435]
+              - textbox "notes (optional)" [ref=e1436]
+              - button "Save override" [ref=e1437] [cursor=pointer]:
+                - img [ref=e1438]
+                - text: Save override
+            - table [ref=e1442]:
+              - rowgroup [ref=e1443]:
+                - row "User Package Operator % Price USD Credit bonus Notes Updated" [ref=e1444]:
+                  - columnheader "User" [ref=e1445]
+                  - columnheader "Package" [ref=e1446]
+                  - columnheader "Operator %" [ref=e1447]
+                  - columnheader "Price USD" [ref=e1448]
+                  - columnheader "Credit bonus" [ref=e1449]
+                  - columnheader "Notes" [ref=e1450]
+                  - columnheader "Updated" [ref=e1451]
+                  - columnheader [ref=e1452]
+              - rowgroup [ref=e1453]:
+                - row "t_overflow_5908_1776333668629 starter 10% — +1,000 — 4/16/2026" [ref=e1454]:
+                  - cell "t_overflow_5908_1776333668629" [ref=e1455]
+                  - cell "starter" [ref=e1456]
+                  - cell "10%" [ref=e1457]
+                  - cell "—" [ref=e1458]
+                  - cell "+1,000" [ref=e1459]
+                  - cell "—" [ref=e1460]
+                  - cell "4/16/2026" [ref=e1461]
+                  - cell [ref=e1462]:
+                    - button [ref=e1463] [cursor=pointer]:
+                      - img [ref=e1464]
+                - row "t_exp_5908 starter 10% — — — 4/16/2026" [ref=e1467]:
+                  - cell "t_exp_5908" [ref=e1468]
+                  - cell "starter" [ref=e1469]
+                  - cell "10%" [ref=e1470]
+                  - cell "—" [ref=e1471]
+                  - cell "—" [ref=e1472]
+                  - cell "—" [ref=e1473]
+                  - cell "4/16/2026" [ref=e1474]
+                  - cell [ref=e1475]:
+                    - button [ref=e1476] [cursor=pointer]:
+                      - img [ref=e1477]
+                - row "t_overflow_2892_1776331953932 starter 10% — +1,000 — 4/16/2026" [ref=e1480]:
+                  - cell "t_overflow_2892_1776331953932" [ref=e1481]
+                  - cell "starter" [ref=e1482]
+                  - cell "10%" [ref=e1483]
+                  - cell "—" [ref=e1484]
+                  - cell "+1,000" [ref=e1485]
+                  - cell "—" [ref=e1486]
+                  - cell "4/16/2026" [ref=e1487]
+                  - cell [ref=e1488]:
+                    - button [ref=e1489] [cursor=pointer]:
+                      - img [ref=e1490]
+                - row "t_exp_2892 starter 10% — — — 4/16/2026" [ref=e1493]:
+                  - cell "t_exp_2892" [ref=e1494]
+                  - cell "starter" [ref=e1495]
+                  - cell "10%" [ref=e1496]
+                  - cell "—" [ref=e1497]
+                  - cell "—" [ref=e1498]
+                  - cell "—" [ref=e1499]
+                  - cell "4/16/2026" [ref=e1500]
+                  - cell [ref=e1501]:
+                    - button [ref=e1502] [cursor=pointer]:
+                      - img [ref=e1503]
+                - row "t_overflow_1112_1776297864463 starter 10% — +1,000 — 4/16/2026" [ref=e1506]:
+                  - cell "t_overflow_1112_1776297864463" [ref=e1507]
+                  - cell "starter" [ref=e1508]
+                  - cell "10%" [ref=e1509]
+                  - cell "—" [ref=e1510]
+                  - cell "+1,000" [ref=e1511]
+                  - cell "—" [ref=e1512]
+                  - cell "4/16/2026" [ref=e1513]
+                  - cell [ref=e1514]:
+                    - button [ref=e1515] [cursor=pointer]:
+                      - img [ref=e1516]
+                - row "t_exp_1112 starter 10% — — — 4/16/2026" [ref=e1519]:
+                  - cell "t_exp_1112" [ref=e1520]
+                  - cell "starter" [ref=e1521]
+                  - cell "10%" [ref=e1522]
+                  - cell "—" [ref=e1523]
+                  - cell "—" [ref=e1524]
+                  - cell "—" [ref=e1525]
+                  - cell "4/16/2026" [ref=e1526]
+                  - cell [ref=e1527]:
+                    - button [ref=e1528] [cursor=pointer]:
+                      - img [ref=e1529]
+                - row "t_overflow_3436_1776297837408 starter 10% — +1,000 — 4/16/2026" [ref=e1532]:
+                  - cell "t_overflow_3436_1776297837408" [ref=e1533]
+                  - cell "starter" [ref=e1534]
+                  - cell "10%" [ref=e1535]
+                  - cell "—" [ref=e1536]
+                  - cell "+1,000" [ref=e1537]
+                  - cell "—" [ref=e1538]
+                  - cell "4/16/2026" [ref=e1539]
+                  - cell [ref=e1540]:
+                    - button [ref=e1541] [cursor=pointer]:
+                      - img [ref=e1542]
+                - row "t_exp_3436 starter 10% — — — 4/16/2026" [ref=e1545]:
+                  - cell "t_exp_3436" [ref=e1546]
+                  - cell "starter" [ref=e1547]
+                  - cell "10%" [ref=e1548]
+                  - cell "—" [ref=e1549]
+                  - cell "—" [ref=e1550]
+                  - cell "—" [ref=e1551]
+                  - cell "4/16/2026" [ref=e1552]
+                  - cell [ref=e1553]:
+                    - button [ref=e1554] [cursor=pointer]:
+                      - img [ref=e1555]
+                - row "t_overflow_3812_1776297802055 starter 10% — +1,000 — 4/16/2026" [ref=e1558]:
+                  - cell "t_overflow_3812_1776297802055" [ref=e1559]
+                  - cell "starter" [ref=e1560]
+                  - cell "10%" [ref=e1561]
+                  - cell "—" [ref=e1562]
+                  - cell "+1,000" [ref=e1563]
+                  - cell "—" [ref=e1564]
+                  - cell "4/16/2026" [ref=e1565]
+                  - cell [ref=e1566]:
+                    - button [ref=e1567] [cursor=pointer]:
+                      - img [ref=e1568]
+                - row "t_exp_3812 starter 10% — — — 4/16/2026" [ref=e1571]:
+                  - cell "t_exp_3812" [ref=e1572]
+                  - cell "starter" [ref=e1573]
+                  - cell "10%" [ref=e1574]
+                  - cell "—" [ref=e1575]
+                  - cell "—" [ref=e1576]
+                  - cell "—" [ref=e1577]
+                  - cell "4/16/2026" [ref=e1578]
+                  - cell [ref=e1579]:
+                    - button [ref=e1580] [cursor=pointer]:
+                      - img [ref=e1581]
+                - row "t_overflow_12920_1776297738081 starter 10% — +1,000 — 4/16/2026" [ref=e1584]:
+                  - cell "t_overflow_12920_1776297738081" [ref=e1585]
+                  - cell "starter" [ref=e1586]
+                  - cell "10%" [ref=e1587]
+                  - cell "—" [ref=e1588]
+                  - cell "+1,000" [ref=e1589]
+                  - cell "—" [ref=e1590]
+                  - cell "4/16/2026" [ref=e1591]
+                  - cell [ref=e1592]:
+                    - button [ref=e1593] [cursor=pointer]:
+                      - img [ref=e1594]
+                - row "t_exp_12920 starter 10% — — — 4/16/2026" [ref=e1597]:
+                  - cell "t_exp_12920" [ref=e1598]
+                  - cell "starter" [ref=e1599]
+                  - cell "10%" [ref=e1600]
+                  - cell "—" [ref=e1601]
+                  - cell "—" [ref=e1602]
+                  - cell "—" [ref=e1603]
+                  - cell "4/16/2026" [ref=e1604]
+                  - cell [ref=e1605]:
+                    - button [ref=e1606] [cursor=pointer]:
+                      - img [ref=e1607]
+                - row "t_overflow_1496_1776237542924 starter 10% — +1,000 — 4/15/2026" [ref=e1610]:
+                  - cell "t_overflow_1496_1776237542924" [ref=e1611]
+                  - cell "starter" [ref=e1612]
+                  - cell "10%" [ref=e1613]
+                  - cell "—" [ref=e1614]
+                  - cell "+1,000" [ref=e1615]
+                  - cell "—" [ref=e1616]
+                  - cell "4/15/2026" [ref=e1617]
+                  - cell [ref=e1618]:
+                    - button [ref=e1619] [cursor=pointer]:
+                      - img [ref=e1620]
+                - row "t_exp_1496 starter 10% — — — 4/15/2026" [ref=e1623]:
+                  - cell "t_exp_1496" [ref=e1624]
+                  - cell "starter" [ref=e1625]
+                  - cell "10%" [ref=e1626]
+                  - cell "—" [ref=e1627]
+                  - cell "—" [ref=e1628]
+                  - cell "—" [ref=e1629]
+                  - cell "4/15/2026" [ref=e1630]
+                  - cell [ref=e1631]:
+                    - button [ref=e1632] [cursor=pointer]:
+                      - img [ref=e1633]
+                - row "t_overflow_20960_1776236921539 starter 10% — +1,000 — 4/15/2026" [ref=e1636]:
+                  - cell "t_overflow_20960_1776236921539" [ref=e1637]
+                  - cell "starter" [ref=e1638]
+                  - cell "10%" [ref=e1639]
+                  - cell "—" [ref=e1640]
+                  - cell "+1,000" [ref=e1641]
+                  - cell "—" [ref=e1642]
+                  - cell "4/15/2026" [ref=e1643]
+                  - cell [ref=e1644]:
+                    - button [ref=e1645] [cursor=pointer]:
+                      - img [ref=e1646]
+                - row "t_exp_20960 starter 10% — — — 4/15/2026" [ref=e1649]:
+                  - cell "t_exp_20960" [ref=e1650]
+                  - cell "starter" [ref=e1651]
+                  - cell "10%" [ref=e1652]
+                  - cell "—" [ref=e1653]
+                  - cell "—" [ref=e1654]
+                  - cell "—" [ref=e1655]
+                  - cell "4/15/2026" [ref=e1656]
+                  - cell [ref=e1657]:
+                    - button [ref=e1658] [cursor=pointer]:
+                      - img [ref=e1659]
+                - row "t_overflow_20320_1776236757561 starter 10% — +1,000 — 4/15/2026" [ref=e1662]:
+                  - cell "t_overflow_20320_1776236757561" [ref=e1663]
+                  - cell "starter" [ref=e1664]
+                  - cell "10%" [ref=e1665]
+                  - cell "—" [ref=e1666]
+                  - cell "+1,000" [ref=e1667]
+                  - cell "—" [ref=e1668]
+                  - cell "4/15/2026" [ref=e1669]
+                  - cell [ref=e1670]:
+                    - button [ref=e1671] [cursor=pointer]:
+                      - img [ref=e1672]
+                - row "t_exp_20320 starter 10% — — — 4/15/2026" [ref=e1675]:
+                  - cell "t_exp_20320" [ref=e1676]
+                  - cell "starter" [ref=e1677]
+                  - cell "10%" [ref=e1678]
+                  - cell "—" [ref=e1679]
+                  - cell "—" [ref=e1680]
+                  - cell "—" [ref=e1681]
+                  - cell "4/15/2026" [ref=e1682]
+                  - cell [ref=e1683]:
+                    - button [ref=e1684] [cursor=pointer]:
+                      - img [ref=e1685]
+                - row "t_overflow_7388_1776236747202 starter 10% — +1,000 — 4/15/2026" [ref=e1688]:
+                  - cell "t_overflow_7388_1776236747202" [ref=e1689]
+                  - cell "starter" [ref=e1690]
+                  - cell "10%" [ref=e1691]
+                  - cell "—" [ref=e1692]
+                  - cell "+1,000" [ref=e1693]
+                  - cell "—" [ref=e1694]
+                  - cell "4/15/2026" [ref=e1695]
+                  - cell [ref=e1696]:
+                    - button [ref=e1697] [cursor=pointer]:
+                      - img [ref=e1698]
+                - row "t_exp_7388 starter 10% — — — 4/15/2026" [ref=e1701]:
+                  - cell "t_exp_7388" [ref=e1702]
+                  - cell "starter" [ref=e1703]
+                  - cell "10%" [ref=e1704]
+                  - cell "—" [ref=e1705]
+                  - cell "—" [ref=e1706]
+                  - cell "—" [ref=e1707]
+                  - cell "4/15/2026" [ref=e1708]
+                  - cell [ref=e1709]:
+                    - button [ref=e1710] [cursor=pointer]:
+                      - img [ref=e1711]
+                - row "t_overflow_6848_1776236614141 pro 10% — +1,000 — 4/15/2026" [ref=e1714]:
+                  - cell "t_overflow_6848_1776236614141" [ref=e1715]
+                  - cell "pro" [ref=e1716]
+                  - cell "10%" [ref=e1717]
+                  - cell "—" [ref=e1718]
+                  - cell "+1,000" [ref=e1719]
+                  - cell "—" [ref=e1720]
+                  - cell "4/15/2026" [ref=e1721]
+                  - cell [ref=e1722]:
+                    - button [ref=e1723] [cursor=pointer]:
+                      - img [ref=e1724]
+                - row "t_exp_6848 pro 10% — — — 4/15/2026" [ref=e1727]:
+                  - cell "t_exp_6848" [ref=e1728]
+                  - cell "pro" [ref=e1729]
+                  - cell "10%" [ref=e1730]
+                  - cell "—" [ref=e1731]
+                  - cell "—" [ref=e1732]
+                  - cell "—" [ref=e1733]
+                  - cell "4/15/2026" [ref=e1734]
+                  - cell [ref=e1735]:
+                    - button [ref=e1736] [cursor=pointer]:
+                      - img [ref=e1737]
+                - row "t_overflow_20344_1776235787418 pro 10% — +1,000 — 4/15/2026" [ref=e1740]:
+                  - cell "t_overflow_20344_1776235787418" [ref=e1741]
+                  - cell "pro" [ref=e1742]
+                  - cell "10%" [ref=e1743]
+                  - cell "—" [ref=e1744]
+                  - cell "+1,000" [ref=e1745]
+                  - cell "—" [ref=e1746]
+                  - cell "4/15/2026" [ref=e1747]
+                  - cell [ref=e1748]:
+                    - button [ref=e1749] [cursor=pointer]:
+                      - img [ref=e1750]
+                - row "t_exp_20344 pro 10% — — — 4/15/2026" [ref=e1753]:
+                  - cell "t_exp_20344" [ref=e1754]
+                  - cell "pro" [ref=e1755]
+                  - cell "10%" [ref=e1756]
+                  - cell "—" [ref=e1757]
+                  - cell "—" [ref=e1758]
+                  - cell "—" [ref=e1759]
+                  - cell "4/15/2026" [ref=e1760]
+                  - cell [ref=e1761]:
+                    - button [ref=e1762] [cursor=pointer]:
+                      - img [ref=e1763]
+                - row "t_overflow_20000_1776235138680 pro 10% — +1,000 — 4/15/2026" [ref=e1766]:
+                  - cell "t_overflow_20000_1776235138680" [ref=e1767]
+                  - cell "pro" [ref=e1768]
+                  - cell "10%" [ref=e1769]
+                  - cell "—" [ref=e1770]
+                  - cell "+1,000" [ref=e1771]
+                  - cell "—" [ref=e1772]
+                  - cell "4/15/2026" [ref=e1773]
+                  - cell [ref=e1774]:
+                    - button [ref=e1775] [cursor=pointer]:
+                      - img [ref=e1776]
+                - row "t_exp_20000 pro 10% — — — 4/15/2026" [ref=e1779]:
+                  - cell "t_exp_20000" [ref=e1780]
+                  - cell "pro" [ref=e1781]
+                  - cell "10%" [ref=e1782]
+                  - cell "—" [ref=e1783]
+                  - cell "—" [ref=e1784]
+                  - cell "—" [ref=e1785]
+                  - cell "4/15/2026" [ref=e1786]
+                  - cell [ref=e1787]:
+                    - button [ref=e1788] [cursor=pointer]:
+                      - img [ref=e1789]
+                - row "t_overflow_14516_1776234712748 pro 10% — +1,000 — 4/15/2026" [ref=e1792]:
+                  - cell "t_overflow_14516_1776234712748" [ref=e1793]
+                  - cell "pro" [ref=e1794]
+                  - cell "10%" [ref=e1795]
+                  - cell "—" [ref=e1796]
+                  - cell "+1,000" [ref=e1797]
+                  - cell "—" [ref=e1798]
+                  - cell "4/15/2026" [ref=e1799]
+                  - cell [ref=e1800]:
+                    - button [ref=e1801] [cursor=pointer]:
+                      - img [ref=e1802]
+                - row "t_exp_14516 pro 10% — — — 4/15/2026" [ref=e1805]:
+                  - cell "t_exp_14516" [ref=e1806]
+                  - cell "pro" [ref=e1807]
+                  - cell "10%" [ref=e1808]
+                  - cell "—" [ref=e1809]
+                  - cell "—" [ref=e1810]
+                  - cell "—" [ref=e1811]
+                  - cell "4/15/2026" [ref=e1812]
+                  - cell [ref=e1813]:
+                    - button [ref=e1814] [cursor=pointer]:
+                      - img [ref=e1815]
+        - generic [ref=e1818]:
+          - generic [ref=e1819]:
+            - img [ref=e1820]
+            - text: Recent audit entries (packages & pricing)
+          - generic [ref=e1825]: No audit entries yet.
+    - generic [ref=e1826]:
+      - generic "Chat with Commander Orion" [ref=e1827] [cursor=pointer]:
+        - img "Commander Orion" [ref=e1830]
+      - button "Start a new chat" [ref=e1832] [cursor=pointer]:
+        - img [ref=e1833]
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

@@ -1,0 +1,30 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - heading [level=1] [ref=e4]:
+      - link [ref=e5] [cursor=pointer]:
+        - /url: https://www.alibabacloud.com
+    - heading "Open an account" [level=2] [ref=e6]
+    - list [ref=e7]:
+      - listitem [ref=e8]: Hi,man****ent.maars@marsgc.net
+      - listitem [ref=e9]:
+        - link "Alibaba Cloud Home" [ref=e10] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com
+      - listitem [ref=e11]:
+        - link "Help" [ref=e12] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/help
+  - generic [ref=e16]:
+    - paragraph [ref=e18]:
+      - generic "Note" [ref=e19]: 
+      - text: We have noticed an unusual activity in your account. This might be because you tried to sign in from another location or device. To protect your account we have temporarily locked it. To regain access, please proceed with the below verification process. If you experience any problems, please contact customer service.
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]: "Login ID:"
+        - generic [ref=e23]: man****ent.maars@marsgc.net
+      - generic [ref=e24]:
+        - generic [ref=e25]: "Verification code:"
+        - textbox "Verification code:" [ref=e26]
+        - img "Click image to refresh verification code" [ref=e27]
+        - link "Change verification code" [ref=e28] [cursor=pointer]:
+          - /url: "#"
+      - button "Submit" [ref=e30] [cursor=pointer]
+  - generic [ref=e33]: Copyright © 1999-2026 Alibaba. All rights reserved.

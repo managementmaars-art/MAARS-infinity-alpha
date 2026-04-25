@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../App";
 import {
   Activity, AlertTriangle, CheckCircle, XCircle, Clock,
   RotateCcw, Settings, Zap, Shield, Save, X
 } from "lucide-react";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 /* ─── Design tokens ─────────────────────────────────────────────────── */
 const T = {
@@ -40,14 +40,14 @@ export default function CircuitBreakers() {
   const [editing, setEditing]   = useState(null);
   const [editVals, setEditVals] = useState({});
 
-  const fetchBreakers = () => {
+  const fetchBreakers = useCallback(() => {
     fetch(`${API}/api/kernel/circuit-breakers/full`, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(data => { setBreakers(Array.isArray(data) ? data : []); setLoading(false); })
       .catch(() => setLoading(false));
-  };
+  }, [token]);
 
-  useEffect(() => { fetchBreakers(); }, [token]);
+  useEffect(() => { fetchBreakers(); }, [fetchBreakers]);
 
   const resetBreaker = async (id) => {
     await fetch(`${API}/api/kernel/circuit-breakers/${id}/reset`, {

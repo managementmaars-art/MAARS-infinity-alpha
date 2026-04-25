@@ -1,0 +1,590 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e14]:
+        - 'img "Account color: Unset" [ref=e15]'
+        - navigation "Global" [ref=e16]:
+          - generic [ref=e17]:
+            - generic [ref=e18]:
+              - link "AWS Console Home" [ref=e19] [cursor=pointer]:
+                - /url: https://us-east-1.console.aws.amazon.com/console/home?region=us-east-1
+                - img
+              - link "Skip to Main Content" [ref=e20] [cursor=pointer]:
+                - /url: "#c"
+              - button "Amazon Q" [ref=e23] [cursor=pointer]:
+                - img [ref=e27]
+              - button "Services" [ref=e33] [cursor=pointer]:
+                - img [ref=e34]
+            - generic [ref=e47]:
+              - generic [ref=e48]:
+                - img "Search" [ref=e49]:
+                  - generic [ref=e50]:
+                    - img
+                - generic [ref=e51]:
+                  - searchbox
+                  - combobox "Search" [ref=e52]
+                - button "Ask Amazon Q" [ref=e53]:
+                  - img "Ask Amazon Q" [ref=e54]
+                - generic: "[Alt+S]"
+              - status [ref=e56]
+            - generic [ref=e57]:
+              - link "CloudShell" [ref=e59] [cursor=pointer]:
+                - /url: https://us-east-1.console.aws.amazon.com/cloudshell/home?region=us-east-1
+                - img
+              - generic "Notifications" [ref=e60] [cursor=pointer]:
+                - button "Notifications (none available)" [ref=e64]:
+                  - generic [ref=e65]:
+                    - img
+                - generic [ref=e67]:
+                  - img
+              - dialog:
+                - generic [ref=e673]:
+                  - generic [ref=e674]:
+                    - generic [ref=e676]: Account color
+                    - paragraph [ref=e677]:
+                      - text: You can now set colors for accounts to identify them at a glance. Choose 'Account' from the account menu in the AWS Management Console to get started.
+                      - link "Learn more" [ref=e678]:
+                        - /url: https://docs.aws.amazon.com/awsconsolehelpdocs/latest/gsg/getting-started-uxc.html
+                        - text: Learn more
+                        - generic [ref=e681]:
+                          - img
+                  - button "Try now" [ref=e684] [cursor=pointer]
+              - list [ref=e70]:
+                - listitem [ref=e71]:
+                  - button "Help & support" [ref=e73] [cursor=pointer]:
+                    - img "Support" [ref=e75]
+                - listitem [ref=e78]:
+                  - button "Settings" [ref=e80] [cursor=pointer]:
+                    - generic [ref=e83]:
+                      - img
+                - listitem [ref=e93]:
+                  - combobox "Regions (United States (N. Virginia))" [ref=e95] [cursor=pointer]:
+                    - generic [ref=e97]: United States (N. Virginia)
+                    - generic [ref=e98]:
+                      - img
+                - listitem [ref=e99]:
+                  - button "MAARS%20Global%20Corporation" [ref=e101] [cursor=pointer]:
+                    - generic [ref=e105]:
+                      - 'generic "Account color: Unset" [ref=e107]':
+                        - generic [ref=e108]: MAARS Global Corporation (6152-9630-8298)
+                        - generic [ref=e109]:
+                          - img
+                      - generic [ref=e111]: MAARS%20Global%20Corporation
+        - generic:
+          - generic:
+            - list
+    - generic [ref=e426]:
+      - generic [ref=e428]:
+        - button "Console navigation sidebar" [expanded] [ref=e430] [cursor=pointer]:
+          - generic [ref=e431]:
+            - img
+        - navigation "Breadcrumb" [ref=e434]:
+          - list [ref=e435]:
+            - listitem [ref=e436]:
+              - generic [ref=e437]:
+                - link "Amazon Bedrock" [ref=e438] [cursor=pointer]:
+                  - /url: /bedrock/home#/overview
+                  - generic [ref=e439]: Amazon Bedrock
+                - generic [ref=e441]:
+                  - img
+            - listitem [ref=e442]:
+              - link "Playground" [disabled] [ref=e444]:
+                - generic [ref=e445]: Playground
+          - list [ref=e446]:
+            - listitem [ref=e447]:
+              - generic [ref=e448]:
+                - link [ref=e449] [cursor=pointer]:
+                  - /url: /bedrock/home#/overview
+                  - generic [ref=e450]: Amazon Bedrock
+                - generic [ref=e452]:
+                  - img
+            - listitem [ref=e453]:
+              - generic [ref=e456]: Playground
+        - region "Drawers" [ref=e458]:
+          - toolbar "Drawers" [ref=e459]:
+            - button "Tools toggle" [ref=e461] [cursor=pointer]:
+              - generic [ref=e462]:
+                - img
+      - navigation "Console" [ref=e465]:
+        - button "Close console navigation sidebar" [ref=e467] [cursor=pointer]:
+          - generic [ref=e468]:
+            - img
+        - generic [ref=e469]:
+          - heading "Amazon Bedrock" [level=2] [ref=e470]:
+            - link "Amazon Bedrock" [ref=e471] [cursor=pointer]:
+              - /url: /bedrock/home#/overview
+              - generic [ref=e472]: Amazon Bedrock
+          - list [ref=e474]:
+            - listitem [ref=e475]:
+              - generic [ref=e476]:
+                - button "Discover" [expanded] [ref=e480] [cursor=pointer]:
+                  - generic [ref=e482]:
+                    - img
+                  - generic [ref=e483]: Discover
+                - group "Discover" [ref=e484]:
+                  - list [ref=e485]:
+                    - listitem [ref=e486]:
+                      - link "Overview" [ref=e487] [cursor=pointer]:
+                        - /url: "#overview"
+                    - listitem [ref=e488]:
+                      - link "Quickstart" [ref=e489] [cursor=pointer]:
+                        - /url: "#quickstart"
+                      - button "New" [ref=e494] [cursor=pointer]
+                    - listitem [ref=e495]:
+                      - link "Model catalog" [ref=e496] [cursor=pointer]:
+                        - /url: "#model-catalog"
+                    - listitem [ref=e497]:
+                      - link "API keys" [ref=e498] [cursor=pointer]:
+                        - /url: "#api-keys"
+            - listitem [ref=e499]:
+              - generic [ref=e500]:
+                - button "Labs" [expanded] [ref=e504] [cursor=pointer]:
+                  - generic [ref=e506]:
+                    - img
+                  - generic [ref=e507]: Labs
+                - group "Labs" [ref=e508]:
+                  - list [ref=e509]:
+                    - listitem [ref=e510]:
+                      - link "Quotas" [ref=e511] [cursor=pointer]:
+                        - /url: "#model-quotas"
+                      - button "New" [ref=e516] [cursor=pointer]
+                    - listitem [ref=e517]:
+                      - link "Compare models" [ref=e518] [cursor=pointer]:
+                        - /url: "#compare-models"
+                      - button "New" [ref=e523] [cursor=pointer]
+            - listitem [ref=e524]:
+              - generic [ref=e525]:
+                - button "Test" [expanded] [ref=e529] [cursor=pointer]:
+                  - generic [ref=e531]:
+                    - img
+                  - generic [ref=e532]: Test
+                - group "Test" [ref=e533]:
+                  - list [ref=e534]:
+                    - listitem [ref=e535]:
+                      - link "Playground" [ref=e536] [cursor=pointer]:
+                        - /url: "#playground"
+                      - button "New" [ref=e541] [cursor=pointer]
+                    - listitem [ref=e542]:
+                      - link "Watermark detection" [ref=e543] [cursor=pointer]:
+                        - /url: "#watermark-detection"
+                    - listitem [ref=e544]:
+                      - link "Tokenizer" [ref=e545] [cursor=pointer]:
+                        - /url: "#tokenizer"
+            - listitem [ref=e546]:
+              - generic [ref=e547]:
+                - button "Infer" [expanded] [ref=e551] [cursor=pointer]:
+                  - generic [ref=e553]:
+                    - img
+                  - generic [ref=e554]: Infer
+                - group "Infer" [ref=e555]:
+                  - list [ref=e556]:
+                    - listitem [ref=e671]:
+                      - link "Inference profiles" [ref=e672] [cursor=pointer]:
+                        - /url: "#inference-profiles"
+                    - listitem [ref=e557]:
+                      - link "Batch inference" [ref=e558] [cursor=pointer]:
+                        - /url: "#batch-inference"
+                    - listitem [ref=e559]:
+                      - link "Provisioned Throughput" [ref=e560] [cursor=pointer]:
+                        - /url: "#provisioned-throughput"
+                    - listitem [ref=e561]:
+                      - link "Custom model on-demand" [ref=e562] [cursor=pointer]:
+                        - /url: "#custom-model-deployment"
+            - listitem [ref=e563]:
+              - generic [ref=e564]:
+                - button "Tune" [expanded] [ref=e568] [cursor=pointer]:
+                  - generic [ref=e570]:
+                    - img
+                  - generic [ref=e571]: Tune
+                - group "Tune" [ref=e572]:
+                  - list [ref=e573]:
+                    - listitem [ref=e574]:
+                      - link "Custom models" [ref=e575] [cursor=pointer]:
+                        - /url: "#custom-models"
+                    - listitem [ref=e576]:
+                      - link "Prompt router models" [ref=e577] [cursor=pointer]:
+                        - /url: "#prompt-routers"
+                    - listitem [ref=e578]:
+                      - link "Imported models" [ref=e579] [cursor=pointer]:
+                        - /url: "#import-models"
+                    - listitem [ref=e580]:
+                      - link "Marketplace model deployments" [ref=e581] [cursor=pointer]:
+                        - /url: "#marketplace-deployments"
+            - listitem [ref=e582]:
+              - generic [ref=e583]:
+                - button "Build" [expanded] [ref=e587] [cursor=pointer]:
+                  - generic [ref=e589]:
+                    - img
+                  - generic [ref=e590]: Build
+                - group "Build" [ref=e591]:
+                  - list [ref=e592]:
+                    - listitem [ref=e593]:
+                      - link "Agents" [ref=e594] [cursor=pointer]:
+                        - /url: "#agents"
+                    - listitem [ref=e595]:
+                      - link "Flows" [ref=e596] [cursor=pointer]:
+                        - /url: "#flows"
+                    - listitem [ref=e597]:
+                      - link "Knowledge Bases" [ref=e598] [cursor=pointer]:
+                        - /url: "#knowledge-bases"
+                    - listitem [ref=e599]:
+                      - link "Automated Reasoning" [ref=e600] [cursor=pointer]:
+                        - /url: "#automated-reasoning/policies"
+                    - listitem [ref=e601]:
+                      - link "Guardrails" [ref=e602] [cursor=pointer]:
+                        - /url: "#guardrails"
+                    - listitem [ref=e603]:
+                      - link "Prompt Management" [ref=e604] [cursor=pointer]:
+                        - /url: "#prompt-management"
+                    - listitem [ref=e605]:
+                      - link "Data Automation" [ref=e606] [cursor=pointer]:
+                        - /url: "#bda/how-it-works"
+                    - listitem [ref=e607]:
+                      - link "AgentCore" [ref=e608] [cursor=pointer]:
+                        - /url: /bedrock-agentcore/home
+                        - text: AgentCore
+                        - generic [ref=e610]:
+                          - img
+            - listitem [ref=e611]:
+              - generic [ref=e612]:
+                - button "Assess" [expanded] [ref=e616] [cursor=pointer]:
+                  - generic [ref=e618]:
+                    - img
+                  - generic [ref=e619]: Assess
+                - group "Assess" [ref=e620]:
+                  - list [ref=e621]:
+                    - listitem [ref=e622]:
+                      - link "Evaluations" [ref=e623] [cursor=pointer]:
+                        - /url: "#evaluation"
+            - listitem [ref=e624]:
+              - generic [ref=e625]:
+                - button "Configure and learn" [expanded] [ref=e629] [cursor=pointer]:
+                  - generic [ref=e631]:
+                    - img
+                  - generic [ref=e632]: Configure and learn
+                - group "Configure and learn" [ref=e633]:
+                  - list [ref=e634]:
+                    - listitem [ref=e635]:
+                      - link "Settings" [ref=e636] [cursor=pointer]:
+                        - /url: "#settings"
+                      - button "New" [ref=e641] [cursor=pointer]
+                    - listitem [ref=e642]:
+                      - link "Model access" [ref=e643] [cursor=pointer]:
+                        - /url: "#modelaccess"
+                    - listitem [ref=e644]:
+                      - link "User guideOpens a new tab with user guide" [ref=e645] [cursor=pointer]:
+                        - /url: https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html
+                        - text: User guide
+                        - img "Opens a new tab with user guide" [ref=e646]:
+                          - generic [ref=e647]:
+                            - img
+                    - listitem [ref=e648]:
+                      - link "Bedrock Service TermsOpens a new tab with Terms of Service" [ref=e649] [cursor=pointer]:
+                        - /url: https://aws.amazon.com/service-terms
+                        - text: Bedrock Service Terms
+                        - img "Opens a new tab with Terms of Service" [ref=e650]:
+                          - generic [ref=e651]:
+                            - img
+      - main [ref=e652]:
+        - generic:
+          - region "Notifications"
+        - generic [ref=e656]:
+          - generic [ref=e657]:
+            - img "Text" [ref=e659]
+            - img "Audio" [ref=e661]
+            - img "Image" [ref=e663]
+            - img "Video" [ref=e665]
+          - heading "Select a model to get started" [level=1] [ref=e666]
+          - paragraph [ref=e667]: You can configure model parameters and generate content with AI.
+          - button "Select model" [ref=e686] [cursor=pointer]
+    - contentinfo [ref=e395]:
+      - generic [ref=e399]:
+        - generic [ref=e400]:
+          - button "CloudShell" [ref=e402] [cursor=pointer]:
+            - generic [ref=e403]:
+              - img
+            - generic [ref=e404]: CloudShell
+          - button "Feedback" [ref=e405] [cursor=pointer]
+          - button "Console Mobile App" [ref=e407] [cursor=pointer]:
+            - img [ref=e409]
+            - generic [ref=e412]: Console Mobile App
+        - generic [ref=e414]: © 2026, Amazon Web Services, Inc. or its affiliates.
+        - list [ref=e416]:
+          - listitem [ref=e417]:
+            - link "Privacy" [ref=e418] [cursor=pointer]:
+              - /url: https://aws.amazon.com/privacy/
+          - listitem [ref=e419]:
+            - link "Terms" [ref=e420] [cursor=pointer]:
+              - /url: https://aws.amazon.com/terms/
+          - listitem [ref=e421]:
+            - button "Cookie preferences" [ref=e422] [cursor=pointer]
+  - dialog "Select model" [ref=e687] [cursor=pointer]:
+    - generic [ref=e689]:
+      - generic [ref=e692]:
+        - heading "Select model" [level=2] [ref=e694]:
+          - heading "Select model" [level=2] [ref=e700]
+        - button "Close modal" [ref=e703]:
+          - generic [ref=e704]:
+            - img
+      - generic [ref=e706]:
+        - generic [ref=e709]:
+          - generic [ref=e711]:
+            - generic:
+              - generic:
+                - img
+            - searchbox "Find available models and inference" [ref=e712]
+          - generic [ref=e714]:
+            - generic [ref=e717]:
+              - generic [ref=e718]: Input
+              - button "Input Choose options" [ref=e720]:
+                - generic [ref=e721]: Choose options
+                - generic [ref=e723]:
+                  - img
+            - generic [ref=e724]: Input
+          - generic [ref=e726]:
+            - generic [ref=e729]:
+              - generic [ref=e730]: Output
+              - button "Output Choose options" [ref=e732]:
+                - generic [ref=e733]: Choose options
+                - generic [ref=e735]:
+                  - img
+            - generic [ref=e736]: Output
+        - generic [ref=e738]:
+          - generic [ref=e742]:
+            - heading "1. Categories" [level=3] [ref=e745]
+            - generic [ref=e748]:
+              - button "1. Categories Serverless model providers" [ref=e753]:
+                - generic [ref=e754]: Serverless model providers
+                - generic [ref=e756]:
+                  - img
+              - listbox "1. Categories" [ref=e757]:
+                - generic [ref=e759]:
+                  - option "AI21 Labs" [ref=e761]:
+                    - generic [ref=e762]: AI21 Labs
+                  - option "Amazon" [selected] [ref=e764]:
+                    - generic [ref=e765]: Amazon
+                  - option "Anthropic" [ref=e767]:
+                    - generic [ref=e768]: Anthropic
+                  - option "Cohere" [ref=e770]:
+                    - generic [ref=e771]: Cohere
+                  - option "DeepSeek" [ref=e773]:
+                    - generic [ref=e774]: DeepSeek
+                  - option "Google" [ref=e776]:
+                    - generic [ref=e777]: Google
+                  - option "Meta" [ref=e779]:
+                    - generic [ref=e780]: Meta
+                  - option "MiniMax" [ref=e782]:
+                    - generic [ref=e783]: MiniMax
+                  - option "Mistral AI" [ref=e785]:
+                    - generic [ref=e786]: Mistral AI
+                  - option "Moonshot AI" [ref=e788]:
+                    - generic [ref=e789]: Moonshot AI
+                  - option "NVIDIA" [ref=e791]:
+                    - generic [ref=e792]: NVIDIA
+                  - option "OpenAI" [ref=e794]:
+                    - generic [ref=e795]: OpenAI
+                  - option "Qwen" [ref=e797]:
+                    - generic [ref=e798]: Qwen
+                  - option "TwelveLabs" [ref=e800]:
+                    - generic [ref=e801]: TwelveLabs
+                  - option "Writer" [ref=e803]:
+                    - generic [ref=e804]: Writer
+                  - option "Z.AI" [ref=e806]:
+                    - generic [ref=e807]: Z.AI
+          - generic [ref=e811]:
+            - heading "2. Models" [level=3] [ref=e814]
+            - listbox "2. Models" [ref=e818]:
+              - group "Models with access" [ref=e819]:
+                - 'option "Nova Pro 1.0 Input: Text, Image, Video Output: Text Max input: 300K tokens" [ref=e887]':
+                  - generic [ref=e888]:
+                    - button "Nova Pro 1.0" [ref=e890]:
+                      - generic [ref=e892]: Nova Pro 1.0
+                    - generic [ref=e894]:
+                      - generic [ref=e896]:
+                        - strong [ref=e897]: "Input:"
+                        - text: Text, Image, Video
+                      - generic [ref=e899]:
+                        - strong [ref=e900]: "Output:"
+                        - text: Text
+                      - generic [ref=e902]:
+                        - strong [ref=e903]: "Max input:"
+                        - text: 300K tokens
+                - 'option "Nova 2 Lite v1 Input: Text, Image, Video Output: Text Max input: 1M tokens" [selected] [ref=e904]':
+                  - generic [ref=e905]:
+                    - generic [ref=e906]:
+                      - button "Nova 2 Lite v1" [ref=e907]:
+                        - generic [ref=e909]: Nova 2 Lite v1
+                      - dialog [ref=e1093]:
+                        - generic [ref=e1095]:
+                          - button "Close popover" [ref=e1097]:
+                            - generic [ref=e1098]:
+                              - img
+                          - generic [ref=e1099]: Nova 2 Lite is an advanced multimodal model geared towards adaptive reasoning, efficient thinking, customization and agentic workflows.
+                    - generic [ref=e911]:
+                      - generic [ref=e913]:
+                        - strong [ref=e914]: "Input:"
+                        - text: Text, Image, Video
+                      - generic [ref=e916]:
+                        - strong [ref=e917]: "Output:"
+                        - text: Text
+                      - generic [ref=e919]:
+                        - strong [ref=e920]: "Max input:"
+                        - text: 1M tokens
+                - 'option "Nova 2 Sonic v1 Input: Audio (Speech) Output: Audio (Speech), Text Max input: 1M tokens tokens" [ref=e921]':
+                  - generic [ref=e922]:
+                    - button "Nova 2 Sonic v1" [ref=e924]:
+                      - generic [ref=e926]: Nova 2 Sonic v1
+                    - generic [ref=e928]:
+                      - generic [ref=e930]:
+                        - strong [ref=e931]: "Input:"
+                        - text: Audio (Speech)
+                      - generic [ref=e933]:
+                        - strong [ref=e934]: "Output:"
+                        - text: Audio (Speech), Text
+                      - generic [ref=e936]:
+                        - strong [ref=e937]: "Max input:"
+                        - text: 1M tokens tokens
+                - 'option "Titan Image Generator G1 v2 Legacy Input: Text, Image Output: Image Max input: 512 characters" [ref=e938]':
+                  - generic [ref=e939]:
+                    - button "Titan Image Generator G1 v2 Legacy" [ref=e941]:
+                      - generic [ref=e942]:
+                        - generic [ref=e943]: Titan Image Generator G1 v2
+                        - generic [ref=e945]: Legacy
+                    - generic [ref=e947]:
+                      - generic [ref=e949]:
+                        - strong [ref=e950]: "Input:"
+                        - text: Text, Image
+                      - generic [ref=e952]:
+                        - strong [ref=e953]: "Output:"
+                        - text: Image
+                      - generic [ref=e955]:
+                        - strong [ref=e956]: "Max input:"
+                        - text: 512 characters
+                - 'option "Nova Premier 1.0 Legacy Input: Text, Image, Video Output: Text Max input: 1M tokens" [ref=e957]':
+                  - generic [ref=e958]:
+                    - button "Nova Premier 1.0 Legacy" [ref=e960]:
+                      - generic [ref=e961]:
+                        - generic [ref=e962]: Nova Premier 1.0
+                        - generic [ref=e964]: Legacy
+                    - generic [ref=e966]:
+                      - generic [ref=e968]:
+                        - strong [ref=e969]: "Input:"
+                        - text: Text, Image, Video
+                      - generic [ref=e971]:
+                        - strong [ref=e972]: "Output:"
+                        - text: Text
+                      - generic [ref=e974]:
+                        - strong [ref=e975]: "Max input:"
+                        - text: 1M tokens
+                - 'option "Nova Lite 1.0 Input: Text, Image, Video Output: Text Max input: 300K tokens" [ref=e976]':
+                  - generic [ref=e977]:
+                    - button "Nova Lite 1.0" [ref=e979]:
+                      - generic [ref=e981]: Nova Lite 1.0
+                    - generic [ref=e983]:
+                      - generic [ref=e985]:
+                        - strong [ref=e986]: "Input:"
+                        - text: Text, Image, Video
+                      - generic [ref=e988]:
+                        - strong [ref=e989]: "Output:"
+                        - text: Text
+                      - generic [ref=e991]:
+                        - strong [ref=e992]: "Max input:"
+                        - text: 300K tokens
+                - 'option "Nova Canvas 1.0 Legacy Input: Text, Image Output: Image Max input: 1024 characters" [ref=e993]':
+                  - generic [ref=e994]:
+                    - button "Nova Canvas 1.0 Legacy" [ref=e996]:
+                      - generic [ref=e997]:
+                        - generic [ref=e998]: Nova Canvas 1.0
+                        - generic [ref=e1000]: Legacy
+                    - generic [ref=e1002]:
+                      - generic [ref=e1004]:
+                        - strong [ref=e1005]: "Input:"
+                        - text: Text, Image
+                      - generic [ref=e1007]:
+                        - strong [ref=e1008]: "Output:"
+                        - text: Image
+                      - generic [ref=e1010]:
+                        - strong [ref=e1011]: "Max input:"
+                        - text: 1024 characters
+                - 'option "Nova Reel v1 Legacy Input: Text, Image Output: Video Max input: 512 characters" [ref=e1012]':
+                  - generic [ref=e1013]:
+                    - button "Nova Reel v1 Legacy" [ref=e1015]:
+                      - generic [ref=e1016]:
+                        - generic [ref=e1017]: Nova Reel v1
+                        - generic [ref=e1019]: Legacy
+                    - generic [ref=e1021]:
+                      - generic [ref=e1023]:
+                        - strong [ref=e1024]: "Input:"
+                        - text: Text, Image
+                      - generic [ref=e1026]:
+                        - strong [ref=e1027]: "Output:"
+                        - text: Video
+                      - generic [ref=e1029]:
+                        - strong [ref=e1030]: "Max input:"
+                        - text: 512 characters
+                - 'option "Nova Reel v1.1 Legacy Input: Text, Image Output: Video Max input: 512 characters" [ref=e1031]':
+                  - generic [ref=e1032]:
+                    - button "Nova Reel v1.1 Legacy" [ref=e1034]:
+                      - generic [ref=e1035]:
+                        - generic [ref=e1036]: Nova Reel v1.1
+                        - generic [ref=e1038]: Legacy
+                    - generic [ref=e1040]:
+                      - generic [ref=e1042]:
+                        - strong [ref=e1043]: "Input:"
+                        - text: Text, Image
+                      - generic [ref=e1045]:
+                        - strong [ref=e1046]: "Output:"
+                        - text: Video
+                      - generic [ref=e1048]:
+                        - strong [ref=e1049]: "Max input:"
+                        - text: 512 characters
+                - 'option "Nova Micro 1.0 Input: Text Output: Text Max input: 128K tokens" [ref=e1050]':
+                  - generic [ref=e1051]:
+                    - button "Nova Micro 1.0" [ref=e1053]:
+                      - generic [ref=e1055]: Nova Micro 1.0
+                    - generic [ref=e1057]:
+                      - generic [ref=e1059]:
+                        - strong [ref=e1060]: "Input:"
+                        - text: Text
+                      - generic [ref=e1062]:
+                        - strong [ref=e1063]: "Output:"
+                        - text: Text
+                      - generic [ref=e1065]:
+                        - strong [ref=e1066]: "Max input:"
+                        - text: 128K tokens
+                - 'option "Nova Sonic 1.0 Legacy Input: Audio (Speech) Output: Audio (Speech), Text Max input: 300K context tokens" [ref=e1067]':
+                  - generic [ref=e1068]:
+                    - button "Nova Sonic 1.0 Legacy" [ref=e1070]:
+                      - generic [ref=e1071]:
+                        - generic [ref=e1072]: Nova Sonic 1.0
+                        - generic [ref=e1074]: Legacy
+                    - generic [ref=e1076]:
+                      - generic [ref=e1078]:
+                        - strong [ref=e1079]: "Input:"
+                        - text: Audio (Speech)
+                      - generic [ref=e1081]:
+                        - strong [ref=e1082]: "Output:"
+                        - text: Audio (Speech), Text
+                      - generic [ref=e1084]:
+                        - strong [ref=e1085]: "Max input:"
+                        - text: 300K context tokens
+          - generic [ref=e857]:
+            - heading "3. Inference" [level=3] [ref=e860]
+            - listbox "3. Inference" [ref=e864]:
+              - generic [ref=e865]:
+                - button "3. Inference Inference profiles" [active] [ref=e1100]:
+                  - generic [ref=e1101]: Inference profiles
+                  - generic [ref=e872]:
+                    - img
+                - group "Inference profiles" [ref=e1102]:
+                  - generic [ref=e1103]:
+                    - generic [ref=e1104]:
+                      - text: Cross-region
+                      - separator [ref=e1105]
+                    - option "GLOBAL Amazon Nova 2 Lite" [selected] [ref=e1106]:
+                      - generic [ref=e1107]: GLOBAL Amazon Nova 2 Lite
+                    - option "US Amazon Nova 2 Lite" [ref=e1108]:
+                      - generic [ref=e1109]: US Amazon Nova 2 Lite
+      - generic [ref=e879]:
+        - button "Cancel" [ref=e881]
+        - button "Apply" [ref=e886]

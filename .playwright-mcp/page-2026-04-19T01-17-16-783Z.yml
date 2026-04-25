@@ -1,0 +1,231 @@
+- generic [active] [ref=e1]:
+  - banner
+  - banner [ref=e2]:
+    - navigation "primary navigation" [ref=e3]:
+      - link "Higgsfield AI – AI Video & Image Generation Platform" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img [ref=e5]
+      - generic [ref=e8]:
+        - link "Explore" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - button "Image" [ref=e11] [cursor=pointer]
+        - button "Video" [ref=e13] [cursor=pointer]
+        - button "Audio" [ref=e15] [cursor=pointer]
+        - link "Collab" [ref=e16] [cursor=pointer]:
+          - /url: /generate
+        - button "Edit" [ref=e18] [cursor=pointer]
+        - button "Character" [ref=e20] [cursor=pointer]
+        - link "Marketing Studio New" [ref=e21] [cursor=pointer]:
+          - /url: /marketing-studio
+          - text: Marketing Studio
+          - generic [ref=e22]: New
+        - link "Cinema Studio 3.5" [ref=e23] [cursor=pointer]:
+          - /url: /cinema-studio?autoSelectFolder=true
+          - text: Cinema Studio
+          - generic [ref=e24]: "3.5"
+        - link "Originals New" [ref=e25] [cursor=pointer]:
+          - /url: /original-series
+          - text: Originals
+          - generic [ref=e26]: New
+        - link "Apps" [ref=e27] [cursor=pointer]:
+          - /url: /apps
+        - link "Assist" [ref=e28] [cursor=pointer]:
+          - /url: /chat
+        - button "Community" [ref=e30] [cursor=pointer]
+      - generic [ref=e32]:
+        - link "Upgrade 55% OFF" [ref=e184] [cursor=pointer]:
+          - /url: /pricing
+          - generic [ref=e34]:
+            - img [ref=e185]
+            - text: Upgrade
+            - generic [ref=e37]: 55% OFF
+        - separator [ref=e38]
+        - generic [ref=e188]:
+          - button "Notifications" [ref=e190] [cursor=pointer]:
+            - img [ref=e191]
+          - link "Folder icon Assets" [ref=e193] [cursor=pointer]:
+            - /url: /asset/all
+            - img "Folder icon" [ref=e195]
+            - generic [ref=e196]: Assets
+          - button "user profile" [ref=e198] [cursor=pointer]:
+            - generic [ref=e201]:
+              - img "user profile" [ref=e203]
+              - img [ref=e204]
+  - main [ref=e49]:
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - navigation [ref=e52]:
+          - generic [ref=e53] [cursor=pointer]: Create Video
+          - generic [ref=e54] [cursor=pointer]: Edit Video
+          - generic [ref=e55] [cursor=pointer]: Motion Control
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - group [ref=e59]:
+              - button "General Kling 3.0" [ref=e60]:
+                - generic [ref=e61]: Your browser does not support the video.
+                - generic [ref=e63]:
+                  - paragraph [ref=e64]: General
+                  - paragraph [ref=e65]: Kling 3.0
+                - button "Change" [ref=e67] [cursor=pointer]:
+                  - img [ref=e68]
+                  - text: Change
+            - generic [ref=e70]:
+              - generic [ref=e73]:
+                - generic [ref=e75]:
+                  - generic:
+                    - paragraph: Optional
+                  - generic [ref=e77] [cursor=pointer]:
+                    - button "Start frame" [ref=e78]
+                    - img [ref=e80]
+                    - paragraph [ref=e84]: Start frame
+                - generic [ref=e86]:
+                  - generic:
+                    - paragraph: Optional
+                  - generic [ref=e88] [cursor=pointer]:
+                    - button "End frame" [ref=e89]
+                    - img [ref=e91]
+                    - paragraph [ref=e95]: End frame
+              - generic [ref=e97]:
+                - generic [ref=e98]:
+                  - generic [ref=e99]: Multi-shot
+                  - button [ref=e100] [cursor=pointer]:
+                    - img [ref=e101]
+                - switch [ref=e103] [cursor=pointer]
+              - generic [ref=e105]:
+                - textbox [ref=e107]:
+                  - paragraph [ref=e108]: "Aisha — a 32-year-old Black woman, natural curly hair shoulder-length, warm dark brown skin, athletic build, cropped fitted hoodie over high-rise leggings — sits on the floor of her small apartment workspace at 11 PM. A folded former-employer studio shirt is in a box beside her labeled \"GOODBYE LULU FITNESS.\" Around her: a yoga mat rolled up, fitness textbooks, a \"NASM Certified Personal Trainer\" certificate framed on the wall, a notebook open with scribbled crossed-out brand ideas: \"ATHLEISURE? · SUPPLEMENTS? · COURSES? · COACHING APP?\". Her laptop shows competitive brands like Lululemon, Alo, Gymshark — overwhelming. She rests her forehead on her knees, defeated, surrounded by ambition with no direction. The camera slowly pulls back to reveal the lonely apartment. Photorealistic cinematic, soft warm lamp light, wistful mood, shallow depth of field.Aisha — a 32-year-old Black woman, natural curly hair shoulder-length, warm dark brown skin, athletic build, cropped fitted hoodie over high-rise leggings — sits on the floor of her small apartment workspace at 11 PM. A folded former-employer studio shirt is in a box beside her labeled \"GOODBYE LULU FITNESS.\" Around her: a yoga mat rolled up, fitness textbooks, a \"NASM Certified Personal Trainer\" certificate framed on the wall, a notebook open with scribbled crossed-out brand ideas: \"ATHLEISURE? · SUPPLEMENTS? · COURSES? · COACHING APP?\". Her laptop shows competitive brands like Lululemon, Alo, Gymshark — overwhelming. She rests her forehead on her knees, defeated, surrounded by ambition with no direction. The camera slowly pulls back to reveal the lonely apartment. Photorealistic cinematic, soft warm lamp light, wistful mood, shallow depth of field.David — a 42-year-old South Asian man, salt-and-pepper short beard, warm tan skin, charcoal henley shirt sleeves rolled up, glasses with thin black frames — at his wood-paneled wholesale plumbing-supply office. He's juggling three things at once: ringing landline in one hand, tablet in the other, inbox of \"812 unread\" emails on the monitor behind him, a paper invoice stack toppling, a whiteboard covered in overdue tasks, a contractor invoice \"SARAH (VA): $4,800/mo · MARK (Marketer): $3,200/mo · LISA (Sales): $5,500/mo\" pinned to the wall. Family photos on his desk visible but neglected. The camera slowly dollies in on his tired, defeated face. Photorealistic cinematic, soft late-afternoon window light, warm tones, shallow depth of field.Jamal — a 25-year-old Black man, warm dark brown skin, short cropped curly hair with a clean fade, light stubble, heather-grey hoodie over plain white t-shirt — sits at a single small desk in a tiny studio apartment at midnight. Open laptop in front of him. Sticky notes around the monitor: \"BUSINESS IDEAS?\", \"DROPSHIPPING?\", \"AGENCY?\", \"SAAS???\" — all crossed out. He's scrolling through 14 browser tabs (\"how to start a business\", \"what business should I start quiz\", \"side hustle ideas 2026\") with a defeated, exhausted expression, lit only by the screen glow. A barista apron is hung on a hook on the wall behind him. Camera slowly pulls back to reveal the lonely studio. Cinematic 35mm film, golden lamplight, photorealistic, shallow depth of field, melancholic mood."
+                - generic [ref=e109]:
+                  - generic [ref=e110] [cursor=pointer]:
+                    - img [ref=e112]
+                    - generic [ref=e114]: Enhance on
+                    - checkbox "Enhance on" [checked] [ref=e115]
+                  - generic [ref=e116] [cursor=pointer]:
+                    - img [ref=e118]
+                    - generic [ref=e120]: "On"
+                    - checkbox "On" [checked] [ref=e121]
+                  - button "Elements" [ref=e122] [cursor=pointer]:
+                    - img [ref=e123]
+                    - text: Elements
+              - button "Model" [ref=e127] [cursor=pointer]:
+                - generic [ref=e128]:
+                  - generic [ref=e129]: Model
+                  - generic [ref=e131]:
+                    - paragraph [ref=e132]: Kling 3.0
+                    - img [ref=e208]
+                - img [ref=e133]
+              - generic [ref=e135]:
+                - button "Duration" [ref=e137] [cursor=pointer]:
+                  - img [ref=e138]
+                  - generic [ref=e140]: 5s
+                - generic [ref=e142]:
+                  - button "16:9 Ratio" [ref=e144] [cursor=pointer]:
+                    - img [ref=e146]
+                    - generic [ref=e148]: 16:9
+                  - combobox [ref=e151]
+                - generic [ref=e153]:
+                  - button "720p Resolution" [ref=e155] [cursor=pointer]:
+                    - img [ref=e157]
+                    - generic [ref=e159]: 720p
+                  - combobox [ref=e162]
+          - button "Generate 10" [ref=e165] [cursor=pointer]:
+            - text: Generate
+            - generic [ref=e166]:
+              - img [ref=e167]
+              - text: "10"
+      - generic [ref=e170]:
+        - tablist [ref=e172]:
+          - tab "History" [selected] [ref=e173] [cursor=pointer]:
+            - img [ref=e174]
+            - text: History
+          - tab "How it works" [ref=e177] [cursor=pointer]:
+            - img [ref=e178]
+            - text: How it works
+        - generic [ref=e180]:
+          - generic [ref=e212]:
+            - button [ref=e213] [cursor=pointer]:
+              - img [ref=e214]
+            - slider [ref=e218]
+            - tablist [ref=e220]:
+              - tab "List" [selected] [ref=e222] [cursor=pointer]:
+                - img [ref=e223]
+                - text: List
+              - tab "Grid" [ref=e228] [cursor=pointer]:
+                - img [ref=e229]
+                - text: Grid
+          - generic [ref=e233]:
+            - img [ref=e235]
+            - generic [ref=e238]:
+              - listitem [ref=e240]:
+                - generic [ref=e241]:
+                  - figure [ref=e244]:
+                    - img "media asset by id of b9c8566f-55f8-4c0d-8582-d6e56522ebcc" [ref=e245]
+                    - img [ref=e247]
+                    - button [ref=e249] [cursor=pointer]
+                  - generic [ref=e251]:
+                    - button "Kling 3.0" [ref=e253] [cursor=pointer]:
+                      - img [ref=e254]
+                      - text: Kling 3.0
+                    - textbox [ref=e258]:
+                      - paragraph [ref=e259]: "David — a 42-year-old South Asian man, salt-and-pepper short beard, warm tan skin, charcoal henley shirt sleeves rolled up, glasses with thin black frames — at his wood-paneled wholesale plumbing-supply office. He's juggling three things at once: ringing landline in one hand, tablet in the other, inbox of \"812 unread\" emails on the monitor behind him, a paper invoice stack toppling, a whiteboard covered in overdue tasks, a contractor invoice \"SARAH (VA): $4,800/mo · MARK (Marketer): $3,200/mo · LISA (Sales): $5,500/mo\" pinned to the wall. Family photos on his desk visible but neglected. The camera slowly dollies in on his tired, defeated face. Photorealistic cinematic, soft late-afternoon window light, warm tones, shallow depth of field.Jamal — a 25-year-old Black man, warm dark brown skin, short cropped curly hair with a clean fade, light stubble, heather-grey hoodie over plain white t-shirt — sits at a single small desk in a tiny studio apartment at midnight. Open laptop in front of him. Sticky notes around the monitor: \"BUSINESS IDEAS?\", \"DROPSHIPPING?\", \"AGENCY?\", \"SAAS???\" — all crossed out. He's scrolling through 14 browser tabs (\"how to start a business\", \"what business should I start quiz\", \"side hustle ideas 2026\") with a defeated, exhausted expression, lit only by the screen glow. A barista apron is hung on a hook on the wall behind him. Camera slowly pulls back to reveal the lonely studio. Cinematic 35mm film, golden lamplight, photorealistic, shallow depth of field, melancholic mood."
+                    - generic [ref=e260]:
+                      - button "720p" [ref=e261]:
+                        - img [ref=e263]
+                        - text: 720p
+                      - button "5.0s" [ref=e265]:
+                        - img [ref=e267]
+                        - text: 5.0s
+                      - button "16:9" [ref=e269]:
+                        - img [ref=e271]
+                        - text: 16:9
+                      - button "Audio" [ref=e273]:
+                        - img [ref=e275]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e277]:
+                      - button "Rerun" [ref=e278] [cursor=pointer]:
+                        - img [ref=e279]
+                        - generic [ref=e281]: Rerun
+                      - generic [ref=e282]:
+                        - button [ref=e283] [cursor=pointer]:
+                          - img [ref=e284]
+                        - button [ref=e287] [cursor=pointer]:
+                          - img [ref=e288]
+              - listitem [ref=e292]:
+                - generic [ref=e293]:
+                  - figure [ref=e296]:
+                    - img "media asset by id of 0784301c-eb53-45f4-aa44-97baffba6be4" [ref=e297]
+                    - img [ref=e299]
+                    - button [ref=e301] [cursor=pointer]
+                  - generic [ref=e303]:
+                    - button "Kling 3.0" [ref=e305] [cursor=pointer]:
+                      - img [ref=e306]
+                      - text: Kling 3.0
+                    - textbox [ref=e310]:
+                      - paragraph [ref=e311]: "Jamal — a 25-year-old Black man, warm dark brown skin, short cropped curly hair with a clean fade, light stubble, heather-grey hoodie over plain white t-shirt — sits at a single small desk in a tiny studio apartment at midnight. Open laptop in front of him. Sticky notes around the monitor: \"BUSINESS IDEAS?\", \"DROPSHIPPING?\", \"AGENCY?\", \"SAAS???\" — all crossed out. He's scrolling through 14 browser tabs (\"how to start a business\", \"what business should I start quiz\", \"side hustle ideas 2026\") with a defeated, exhausted expression, lit only by the screen glow. A barista apron is hung on a hook on the wall behind him. Camera slowly pulls back to reveal the lonely studio. Cinematic 35mm film, golden lamplight, photorealistic, shallow depth of field, melancholic mood."
+                    - generic [ref=e312]:
+                      - button "720p" [ref=e313]:
+                        - img [ref=e315]
+                        - text: 720p
+                      - button "5.0s" [ref=e317]:
+                        - img [ref=e319]
+                        - text: 5.0s
+                      - button "16:9" [ref=e321]:
+                        - img [ref=e323]
+                        - text: 16:9
+                      - button "Audio" [ref=e325]:
+                        - img [ref=e327]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e329]:
+                      - button "Rerun" [ref=e330] [cursor=pointer]:
+                        - img [ref=e331]
+                        - generic [ref=e333]: Rerun
+                      - generic [ref=e334]:
+                        - button [ref=e335] [cursor=pointer]:
+                          - img [ref=e336]
+                        - button [ref=e339] [cursor=pointer]:
+                          - img [ref=e340]
+  - region "Notifications Alt+T"
+  - alert [ref=e183]
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"

@@ -1,0 +1,131 @@
+- generic [ref=e2]:
+  - region "Notifications alt+T"
+  - generic [ref=e3]:
+    - region "Notifications alt+T"
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - img "WRITER Agent" [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]:
+            - heading "WRITER Agent" [level=2] [ref=e9]
+            - generic [ref=e10]: Your AI teammate for better, faster work
+          - button "Try it now" [ref=e11] [cursor=pointer]:
+            - text: Try it now
+            - img
+      - generic [ref=e189]:
+        - navigation [ref=e190]:
+          - generic [ref=e191]:
+            - button "Back to AI Studio app list" [ref=e193] [cursor=pointer]:
+              - img [ref=e194]
+            - generic [ref=e196]:
+              - generic:
+                - img
+              - generic [ref=e197]:
+                - generic [ref=e198]: Title
+                - textbox "Title" [ref=e199]:
+                  - /placeholder: Untitled
+                  - text: successful-tiger
+          - generic [ref=e201]:
+            - tablist [ref=e203]:
+              - tab "Manage keys" [selected] [ref=e204] [cursor=pointer]:
+                - generic [ref=e205]: Manage keys
+              - tab "Observability" [ref=e206] [cursor=pointer]:
+                - generic [ref=e207]: Observability
+            - link "Docs" [ref=e208] [cursor=pointer]:
+              - /url: https://dev.writer.com/api-guides/introduction
+              - text: Docs
+              - img [ref=e209]
+        - generic [ref=e214]:
+          - generic [ref=e215]:
+            - generic [ref=e218]: About this Agent
+            - generic [ref=e219]:
+              - generic [ref=e220]:
+                - paragraph [ref=e222]: Short description
+                - textbox "No description" [ref=e226]
+              - generic [ref=e227]:
+                - paragraph [ref=e229]: Agent ID
+                - textbox [disabled] [ref=e232]: cf41e56f-4cd8-473c-a822-fe87a8e27a56
+          - generic [ref=e233]:
+            - generic [ref=e234]:
+              - generic [ref=e236]: API keys
+              - button "Generate a new key" [ref=e237] [cursor=pointer]:
+                - generic [ref=e238]: Generate a new key
+            - banner "API keys can only be viewed once" [ref=e239]:
+              - generic [ref=e240]:
+                - img [ref=e241]
+                - heading "API keys can only be viewed once" [level=3] [ref=e243]
+              - paragraph [ref=e244]: Once you leave or refresh this page, you will not be able to view your API key again. Copy your API key and keep it secure.
+            - generic [ref=e246]:
+              - generic [ref=e248]:
+                - paragraph [ref=e250]: Key Name
+                - paragraph [ref=e252]: Key
+                - paragraph [ref=e254]: Created by
+                - paragraph [ref=e256]: Created
+              - generic [ref=e258]:
+                - generic [ref=e260]: Production
+                - generic [ref=e262]:
+                  - paragraph [ref=e263]: "********zaA"
+                  - button "Show API key" [ref=e264] [cursor=pointer]:
+                    - img
+                  - button "Copy" [ref=e265] [cursor=pointer]
+                - generic [ref=e267]: management.maars@marsgc.net
+                - generic [ref=e269]: Apr 19, 2026
+                - button "Actions" [ref=e271] [cursor=pointer]:
+                  - img
+          - generic [ref=e272]:
+            - generic [ref=e276]:
+              - text: Capabilities
+              - generic [ref=e277] [cursor=pointer]:
+                - generic:
+                  - img
+            - generic [ref=e279]:
+              - generic [ref=e281]:
+                - paragraph [ref=e283]: Capability
+                - paragraph [ref=e285]: Description
+                - paragraph [ref=e287]: API documentation
+              - generic [ref=e288]:
+                - generic [ref=e289]:
+                  - paragraph [ref=e295] [cursor=pointer]: Vision
+                  - paragraph [ref=e297]: Access to vision AI capabilities
+                  - link "Read more" [ref=e299] [cursor=pointer]:
+                    - /url: https://dev.writer.com/api-guides/api-reference/vision-api/analyze-images
+                - generic [ref=e300]:
+                  - paragraph [ref=e306] [cursor=pointer]: Translation
+                  - paragraph [ref=e308]: Translate text from one language to another
+                  - link "Read more" [ref=e310] [cursor=pointer]:
+                    - /url: https://dev.writer.com/api-guides/api-reference/translation-api/translate
+                - generic [ref=e311]:
+                  - paragraph [ref=e317] [cursor=pointer]: Text generation
+                  - paragraph [ref=e319]: Generate text responses to a given prompt and input parameters.
+                  - link "Read more" [ref=e321] [cursor=pointer]:
+                    - /url: https://dev.writer.com/api-guides/api-reference/completion-api/text-generation
+                - generic [ref=e322]:
+                  - paragraph [ref=e328] [cursor=pointer]: Tools
+                  - paragraph [ref=e330]: Access a set of AI development tools
+                  - link "Read more" [ref=e332] [cursor=pointer]:
+                    - /url: https://dev.writer.com/api-guides/api-reference/tool-api/context-aware-splitting
+                - generic [ref=e333]:
+                  - paragraph [ref=e339] [cursor=pointer]: Workflows
+                  - paragraph [ref=e341]: Agent orchestration via api.
+                  - link "Read more" [ref=e343] [cursor=pointer]:
+                    - /url: https://dev.writer.com/api-guides
+                - generic [ref=e344]:
+                  - paragraph [ref=e350] [cursor=pointer]: Chat Completion
+                  - paragraph [ref=e352]: Enable interactive and dynamic conversation.
+                  - link "Read more" [ref=e354] [cursor=pointer]:
+                    - /url: https://dev.writer.com/api-guides/api-reference/completion-api/chat-completion
+                - generic [ref=e355]:
+                  - paragraph [ref=e361] [cursor=pointer]: Knowledge graphs and files
+                  - paragraph [ref=e363]: View and create knowledge graphs and files, and attach files to a graph.
+                  - link "Read more" [ref=e365] [cursor=pointer]:
+                    - /url: https://dev.writer.com/api-guides/api-reference/kg-api/create-graph
+                - generic [ref=e366]:
+                  - paragraph [ref=e372] [cursor=pointer]: Agents
+                  - paragraph [ref=e374]: Access your no code agents via api.
+                  - link "Read more" [ref=e376] [cursor=pointer]:
+                    - /url: https://dev.writer.com/api-guides/api-reference/completion-api/applications
+                - generic [ref=e377]:
+                  - paragraph [ref=e383] [cursor=pointer]: List models
+                  - paragraph [ref=e385]: Retrieve a list of all available language models.
+                  - link "Read more" [ref=e387] [cursor=pointer]:
+                    - /url: https://dev.writer.com/api-guides/api-reference/completion-api/list-models

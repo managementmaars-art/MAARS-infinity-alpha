@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, timezone
 
 from db import db
-from shared.constants import EMERGENT_LLM_KEY
+from services.llm_gateway import complete_text
 
 logger = logging.getLogger(__name__)
 
@@ -33,14 +33,6 @@ async def extract_learnings_from_task(
         return []
 
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
-
-        extractor = LlmChat(
-            api_key=(api_keys or {}).get("emergent", EMERGENT_LLM_KEY),
-            session_id=f"memory_learn_{uuid.uuid4().hex[:8]}",
-            system_message="You extract key learnings from task results. Return ONLY valid JSON."
-        ).with_model("openai", "gpt-4o-mini")
-
         prompt = f"""Analyze this completed task and extract 1-3 key learnings worth remembering for future work.
 
 TASK: {task_title}
@@ -66,7 +58,13 @@ Rules:
 - Return an empty array [] if nothing worth remembering
 - Max 3 learnings per task"""
 
-        response = await extractor.send_message(UserMessage(text=prompt))
+        response = await complete_text(
+            user_id=user_id,
+            system_prompt="You extract key learnings from task results. Return ONLY valid JSON.",
+            user_prompt=prompt,
+            model="maars/economy",
+            source="memory_learning.extract",
+        )
         text = response.strip()
         if text.startswith("```"):
             text = text.split("\n", 1)[1] if "\n" in text else text[3:]

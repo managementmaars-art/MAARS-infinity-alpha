@@ -1,0 +1,53 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - link "xAI account home link" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img [ref=e8]
+        - button "You are signing into Cloud Console" [ref=e11] [cursor=pointer]:
+          - generic [ref=e12]:
+            - text: You are signing into
+            - generic [ref=e13]: Cloud Console
+            - img [ref=e15]
+      - generic [ref=e19]:
+        - heading "Log into your account" [level=1] [ref=e20]
+        - button "Login with 𝕏" [ref=e21] [cursor=pointer]:
+          - img [ref=e23]
+          - generic [ref=e25]: Login with 𝕏
+        - separator [ref=e27]
+        - generic [ref=e28]:
+          - button "Login with email" [ref=e29] [cursor=pointer]:
+            - img [ref=e30]
+            - text: Login with email
+          - button "Login with Google" [ref=e33] [cursor=pointer]:
+            - img [ref=e35]
+            - generic [ref=e40]: Login with Google
+          - button "Login with Apple" [ref=e41] [cursor=pointer]:
+            - img [ref=e43]
+            - generic [ref=e45]: Login with Apple
+        - paragraph [ref=e47]:
+          - text: Don't have an account?
+          - link "Sign up" [ref=e48] [cursor=pointer]:
+            - /url: /sign-up
+      - paragraph [ref=e51]:
+        - text: By continuing, you agree to xAI's
+        - link "Terms of Service" [ref=e52] [cursor=pointer]:
+          - /url: https://x.ai/legal/terms-of-service-enterprise
+        - text: and
+        - link "Privacy Policy" [ref=e53] [cursor=pointer]:
+          - /url: https://x.ai/privacy-policy
+        - text: .
+    - img [ref=e57]
+  - generic [ref=e66]:
+    - generic [ref=e67]:
+      - paragraph [ref=e68]: "As of April 4, 2026, our Privacy Policy and Cookie Policy have been updated. View them here:"
+      - generic [ref=e69]:
+        - link "Privacy Policy" [ref=e70] [cursor=pointer]:
+          - /url: https://x.ai/legal/privacy-policy
+        - link "Cookie Policy" [ref=e71] [cursor=pointer]:
+          - /url: https://x.ai/legal/cookie-policy
+    - button "Dismiss" [ref=e72] [cursor=pointer]:
+      - img [ref=e73]
+  - region "Notifications alt+T"
+  - alert [ref=e76]

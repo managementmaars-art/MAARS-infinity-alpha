@@ -11,8 +11,13 @@
 
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
+// Force IPv4: Node 18+ resolves `localhost` to ::1 (IPv6) first on Windows,
+// but uvicorn binds 127.0.0.1 only. Use the literal IP so the proxy always
+// hits the live backend instead of a stale/absent ::1 listener (which
+// surfaces as a spurious 404 for any route added after the last dev-server
+// startup that cached the old resolution).
 const target =
-  process.env.REACT_APP_BACKEND_URL?.trim() || "http://localhost:8000";
+  process.env.REACT_APP_BACKEND_URL?.trim() || "http://127.0.0.1:8001";
 
 module.exports = function (app) {
   // REST / HTTP endpoints

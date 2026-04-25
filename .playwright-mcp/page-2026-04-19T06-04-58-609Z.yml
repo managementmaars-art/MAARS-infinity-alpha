@@ -1,0 +1,126 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - paragraph:
+          - text: We and our vendors use technology that collects or records personal information about your use of our site so we can improve and personalize our products and services, for analytics, and to fulfill your requests. We may also share this information with third parties, such as our analytics partners. By using our website, you acknowledge and agree to our
+          - link:
+            - /url: https://www.inceptionlabs.ai/docs/terms-of-use
+            - text: Terms of Use
+          - text: and
+          - link:
+            - /url: https://www.inceptionlabs.ai/docs/privacy-policy
+            - text: Privacy Policy
+          - text: .
+        - button: Close
+    - generic:
+      - complementary:
+        - generic:
+          - link:
+            - /url: /
+            - generic:
+              - img
+            - img
+        - navigation:
+          - link:
+            - /url: /
+            - text: Dashboard
+          - link:
+            - /url: /dashboard/api-keys
+            - text: API Keys
+          - link:
+            - /url: /dashboard/logs
+            - text: Usage
+          - link:
+            - /url: /dashboard/billing
+            - text: Billing
+          - link:
+            - /url: /dashboard/limits
+            - text: Limits
+          - link:
+            - /url: /dashboard/settings
+            - text: Settings
+          - link:
+            - /url: https://docs.inceptionlabs.ai
+            - text: Documentation
+        - generic:
+          - generic:
+            - link:
+              - /url: https://www.inceptionlabs.ai/docs/terms-of-use
+              - text: Terms of Service
+            - link:
+              - /url: https://www.inceptionlabs.ai/docs/privacy-policy
+              - text: Privacy Policy
+          - generic:
+            - paragraph: NEED MORE HELP?
+            - generic:
+              - link:
+                - /url: /contact
+                - text: Contact Us
+              - link:
+                - /url: https://discord.com/invite/btzTARamwH
+                - text: Join Our Discord
+      - generic:
+        - banner:
+          - generic:
+            - link:
+              - /url: https://chat.inceptionlabs.ai
+              - text: Mercury Chat
+            - link:
+              - /url: https://docs.inceptionlabs.ai
+              - text: Documentation
+            - button:
+              - img
+              - generic: Toggle theme
+            - generic:
+              - generic: Mirza Arafat Abbas
+              - button: Sign Out
+        - main:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - heading [level=1]: API Keys
+                    - paragraph: Manage your API keys for authentication
+                  - generic:
+                    - button [expanded]: Create API Key
+                - generic:
+                  - img
+                  - generic:
+                    - generic: You are on the Free Tier
+                    - generic: You have used 0 of your 10,000,000 free tokens.
+              - generic:
+                - heading [level=2]: Using your API keys
+                - paragraph: "Include your API key in the Authorization header of your requests:"
+                - generic:
+                  - button:
+                    - img
+                    - generic: Copy
+                  - generic:
+                    - code:
+                      - generic: curl -X POST https://api.inceptionlabs.ai/v1/chat/completions \
+                      - generic: "-H \"Authorization: Bearer INCEPTION_API_KEY\" \\"
+                      - generic: "-H \"Content-Type: application/json\" \\"
+                      - generic: "-d '{\"messages\": [{\"role\": \"user\", \"content\": \"What is the meaning of life?\"}], \"model\": \"mercury-2\"}'"
+                - generic:
+                  - heading [level=4]: Best practices for API key security
+                  - list:
+                    - listitem: Never expose your API keys in client-side code or public repositories
+                    - listitem: Use environment variables to store your API keys in your applications
+                    - listitem: Implement proper access controls and rotate keys regularly
+                    - listitem: Create separate API keys for different environments (development, staging, production)
+  - alert
+  - dialog "Create API Key" [ref=e89]:
+    - generic [ref=e90]:
+      - heading "Create API Key" [level=2] [ref=e91]
+      - paragraph [ref=e92]: Create a new API key to authenticate your requests
+    - generic [ref=e93]:
+      - generic [ref=e94]:
+        - generic [ref=e95]: Key Name
+        - textbox "Key Name" [active] [ref=e96]:
+          - /placeholder: e.g., Production API Key
+        - paragraph [ref=e97]: Give your key a descriptive name to identify its purpose
+      - generic [ref=e98]:
+        - button "Cancel" [ref=e99]
+        - button "Create Key" [disabled]

@@ -1,0 +1,40 @@
+- generic [ref=e1]:
+  - link "GPT Image 2 is now on fal! 🚀" [ref=e3] [cursor=pointer]:
+    - /url: https://fal.ai/models/openai/gpt-image-2/edit
+  - generic [ref=e180]:
+    - img "Onboarding illustration" [ref=e183]
+    - generic [ref=e184]:
+      - generic [ref=e185]:
+        - img [ref=e186]
+        - generic [ref=e196]: Mirza
+      - generic [ref=e199]:
+        - generic [ref=e201]:
+          - heading "You're all set to explore fal." [level=1] [ref=e202]
+          - generic [ref=e203]:
+            - paragraph [ref=e204]: Where did you first hear about us? (optional, choose one)
+            - generic [ref=e205]:
+              - button "Search" [ref=e206] [cursor=pointer]:
+                - img [ref=e207]
+                - generic [ref=e209]: Search
+              - button "Word of mouth" [ref=e210] [cursor=pointer]:
+                - img [ref=e211]
+                - generic [ref=e213]: Word of mouth
+              - button "Social Media" [ref=e214] [cursor=pointer]:
+                - img [ref=e215]
+                - generic [ref=e217]: Social Media
+              - button "Content (YouTube, Blog)" [ref=e218] [cursor=pointer]:
+                - img [ref=e219]
+                - generic [ref=e221]: Content (YouTube, Blog)
+              - button "Ads" [ref=e222] [cursor=pointer]:
+                - img [ref=e223]
+                - generic [ref=e226]: Ads
+              - button "Other" [ref=e227] [cursor=pointer]:
+                - img [ref=e228]
+                - generic [ref=e230]: Other
+        - button "Back" [ref=e233] [cursor=pointer]:
+          - img [ref=e234]
+          - text: Back
+        - button "Continue" [ref=e239] [cursor=pointer]
+  - region "Notifications alt+T" [active]
+  - alert [ref=e50]
+  - iframe

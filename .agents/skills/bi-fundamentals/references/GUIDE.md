@@ -1,1 +1,0 @@
-# bi-analyst Guide

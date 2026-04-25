@@ -3,9 +3,11 @@
  * Each wrapper fetches its own data and renders the corresponding tab component.
  */
 import { useState, useEffect, useCallback, useRef } from "react";
+import { Link } from "react-router-dom";
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
-import { Plus, X, Check, Package } from "lucide-react";
+import { Plus, X, Check, Package, ArrowRight, Info, Zap, BarChart3, Settings } from "lucide-react";
+import ProviderIntelligencePage from "./ProviderIntelligencePage";
 import { OverviewTab } from "../components/admin/tabs/OverviewTab";
 import { UsersTab } from "../components/admin/tabs/UsersTab";
 import { AgentsTab } from "../components/admin/tabs/AgentsTab";
@@ -15,12 +17,14 @@ import { PricingManagerTab } from "../components/admin/tabs/PricingManagerTab";
 import { PaymentSetupTab } from "../components/admin/tabs/PaymentSetupTab";
 import { AuditLogTab } from "../components/admin/tabs/AuditLogTab";
 import { UniversalGatewayTab } from "../components/admin/tabs/UniversalGatewayTab";
-import AnalyticsTab from "./AnalyticsTab";
-import SmtpConfigTab from "./SmtpConfigTab";
-import BrandingTab from "./BrandingTab";
-import KnowledgeBaseTab from "./KnowledgeBaseTab";
+import AnalyticsTab from "../components/admin/tabs/AnalyticsTab";
+import SmtpConfigTab from "../components/admin/tabs/SmtpConfigTab";
+import BrandingTab from "../components/admin/tabs/BrandingTab";
+import KnowledgeBaseTab from "../components/admin/tabs/KnowledgeBaseTab";
 import CustomPackagesTab from "../components/admin/CustomPackagesTab";
 import IntegrationsTab from "../components/admin/IntegrationsTab";
+import AdminPackagesPage from "./AdminPackagesPage";
+import GovernanceTab from "../components/admin/tabs/GovernanceTab";
 
 const T = {
   glass: "rgba(255,255,255,0.03)",
@@ -40,6 +44,27 @@ const AdminLoader = () => (
   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 192 }}>
     <div style={{ width: 24, height: 24, border: `2px solid ${T.indigo}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
   </div>
+);
+
+// Reusable cross-reference banner pointing admins to a related page.
+// Used to surface the new owner / metrics / packages flows from existing pages.
+const SeeAlso = ({ to, title, body }) => (
+  <Link to={to} style={{
+    display: "flex", alignItems: "center", gap: 12,
+    padding: "10px 14px", marginBottom: 16,
+    background: "rgba(124,58,237,0.08)", border: `1px solid rgba(124,58,237,0.3)`,
+    borderRadius: 8, color: "#e5e7eb", textDecoration: "none",
+    transition: "background 0.15s",
+  }}
+    onMouseEnter={e => e.currentTarget.style.background = "rgba(124,58,237,0.14)"}
+    onMouseLeave={e => e.currentTarget.style.background = "rgba(124,58,237,0.08)"}>
+    <Info size={16} color={T.violet} />
+    <div style={{ flex: 1, fontSize: 12 }}>
+      <div style={{ fontWeight: 600, color: "#fff" }}>{title}</div>
+      <div style={{ color: T.zinc, marginTop: 2 }}>{body}</div>
+    </div>
+    <ArrowRight size={14} color={T.violet} />
+  </Link>
 );
 
 // --- Overview ---
@@ -139,11 +164,12 @@ export function AdminTransactionsPage() {
 // --- Pricing & Packages (Unified) ---
 export function AdminPricingManagerPage() {
   const { token } = useAuth();
+  const [activeTab, setActiveTab] = useState("plans"); // plans | providers | advisor
   const [pricingConfig, setPricingConfig] = useState(null);
   const [pricingEdit, setPricingEdit] = useState(null);
-  const [calcInputs, setCalcInputs] = useState({ ai_cost_per_credit: 0.003, target_profit_margin: 200, bdt_exchange_rate: 107 });
+  const [calcInputs, setCalcInputs] = useState({ ai_cost_per_credit: 0.00003838, target_profit_margin: 200, bdt_exchange_rate: 107 });
   const [calcResult, setCalcResult] = useState(null);
-  const [liveCost, setLiveCost] = useState({ avg_cost_per_credit: 0.003, total_cost_usd: 0, total_calls: 0, source: "default" });
+  const [liveCost, setLiveCost] = useState({ avg_cost_per_credit: 0.00003838, total_cost_usd: 0, total_calls: 0, source: "default" });
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -157,8 +183,8 @@ export function AdminPricingManagerPage() {
       fetch(`${API}/admin/avg-cost`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.ok ? r.json() : null),
       fetch(`${API}/exchange-rate`).then(r => r.ok ? r.json() : null),
     ]).then(([p, avg, rate]) => {
-      if (p) { setPricingConfig(p); setPricingEdit(JSON.parse(JSON.stringify(p))); setCalcInputs(ci => ({ ...ci, ai_cost_per_credit: p.ai_cost_per_credit || 0.003, target_profit_margin: p.target_profit_margin || 200, bdt_exchange_rate: p.bdt_exchange_rate || 107 })); }
-      if (avg?.source === "real_usage" && avg.avg_cost_per_credit > 0) { setCalcInputs(ci => ({ ...ci, ai_cost_per_credit: avg.avg_cost_per_credit })); setLiveCost(avg); }
+      if (p) { setPricingConfig(p); setPricingEdit(JSON.parse(JSON.stringify(p))); setCalcInputs(ci => ({ ...ci, target_profit_margin: p.target_profit_margin || 200, bdt_exchange_rate: p.bdt_exchange_rate || 107 })); }
+      if (avg && avg.avg_cost_per_credit > 0) { setCalcInputs(ci => ({ ...ci, ai_cost_per_credit: avg.avg_cost_per_credit })); setLiveCost(avg); }
       if (rate?.usd_bdt > 0) setCalcInputs(ci => ({ ...ci, bdt_exchange_rate: rate.usd_bdt }));
       setLoading(false);
     }).catch(() => setLoading(false));
@@ -197,16 +223,41 @@ export function AdminPricingManagerPage() {
     setSaving(false);
   };
 
-  if (loading) return <AdminLoader />;
+  const tabStyle = (t) => ({
+    display: "flex", alignItems: "center", gap: 6, padding: "9px 18px", borderRadius: 8,
+    border: activeTab === t ? "none" : "1px solid rgba(255,255,255,0.08)",
+    background: activeTab === t ? "linear-gradient(90deg, #4fd1c5, #7c3aed)" : "transparent",
+    color: "#fff", fontWeight: 600, fontSize: 13, cursor: "pointer", fontFamily: "inherit",
+  });
+
+  if (loading && activeTab === "plans") return <AdminLoader />;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24, animation: "fadeUp .4s ease" }} data-testid="pricing-packages-page">
       <style>{STYLES}</style>
 
-      {/* Page Header */}
+      {/* Page Header + Tab Navigation */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 700, color: "#fff", fontFamily: "Outfit, sans-serif", margin: 0 }} data-testid="pricing-page-title">Pricing & Packages</h1>
-          <p style={{ fontSize: 13, color: T.zinc, marginTop: 2 }}>Manage subscription plans, pricing margins, and custom packages from one place.</p>
+          <h1 style={{ fontSize: 22, fontWeight: 700, color: "#fff", fontFamily: "Outfit, sans-serif", margin: 0 }}>Pricing Command Center</h1>
+          <p style={{ fontSize: 13, color: T.zinc, marginTop: 2 }}>Plans, provider intelligence, and profitability — all in one place.</p>
+        </div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button onClick={() => setActiveTab("plans")} style={tabStyle("plans")}><Settings size={14} /> Plans</button>
+          <button onClick={() => setActiveTab("providers")} style={tabStyle("providers")}><Zap size={14} /> Providers</button>
+          <button onClick={() => setActiveTab("advisor")} style={tabStyle("advisor")}><BarChart3 size={14} /> Advisor</button>
+        </div>
+      </div>
+
+      {/* Providers & Advisor tabs */}
+      {activeTab !== "plans" && <ProviderIntelligencePage embedded={true} initialTab={activeTab === "advisor" ? "recommendations" : "providers"} />}
+
+      {/* Plans tab - original pricing content */}
+      {activeTab === "plans" && <>
+
+      {/* Page Sub-Header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div>
+          <p style={{ fontSize: 13, color: T.zinc, margin: 0 }}>Manage subscription plans, pricing margins, and custom packages.</p>
         </div>
         <button
           onClick={() => setShowCreate(true)}
@@ -301,6 +352,14 @@ export function AdminPricingManagerPage() {
 
       {/* Custom Packages */}
       <CustomPackagesTab />
+
+      {/* Owner — Operator Splits + Customer Overrides + Audit slice */}
+      {/* Same data store: platform_config.config_type="pricing".                */}
+      {/* Edits here mirror into the Plan editor above and vice versa.           */}
+      <div style={{ marginTop: 24, padding: 20, background: "rgba(255,255,255,0.02)", border: `1px solid ${T.border}`, borderRadius: 12 }}>
+        <AdminPackagesPage embedded />
+      </div>
+      </>}
     </div>
   );
 }
@@ -331,6 +390,11 @@ export function AdminApiKeysPage() {
   if (loading) return <AdminLoader />;
   return (
     <>
+      <SeeAlso
+        to="/setup"
+        title="Full provider catalog (33 providers, env auto-detect, live key validation) →"
+        body="The wizard exposes the complete MAARS provider catalog with categorized search, env-detection, and live validation per provider strategy."
+      />
       <ApiKeysTab apiKeysConfig={apiKeysConfig} apiKeyInputs={apiKeyInputs} setApiKeyInputs={setApiKeyInputs} apiUsage={apiUsage} testingKey={testingKey} setTestingKey={setTestingKey} token={token} onRefresh={fetchData} />
       <div style={{ marginTop: 24 }}><IntegrationsTab /></div>
     </>
@@ -340,7 +404,16 @@ export function AdminApiKeysPage() {
 // --- Payment Setup ---
 export function AdminPaymentSetupPage() {
   const { token } = useAuth();
-  return <PaymentSetupTab token={token} />;
+  return (
+    <>
+      <SeeAlso
+        to="/admin/packages-manager"
+        title="Operator revenue, customer overrides, and audit trail →"
+        body="Stripe checkout packages with subscription split (operator profit pool vs user credit backing) and per-customer pricing live in Owner / Splits."
+      />
+      <PaymentSetupTab token={token} />
+    </>
+  );
 }
 
 // --- SMTP ---
@@ -367,4 +440,9 @@ export function AdminAuditLogPage() {
 export function AdminUniversalGatewayPage() {
   const { token } = useAuth();
   return <UniversalGatewayTab token={token} />;
+}
+
+// --- Governance (RBAC, circuit breakers, cost, trust, operator, activity) ---
+export function AdminGovernancePage() {
+  return <GovernanceTab />;
 }

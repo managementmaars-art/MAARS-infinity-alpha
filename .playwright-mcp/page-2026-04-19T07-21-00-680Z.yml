@@ -1,0 +1,76 @@
+- generic [active] [ref=e1]:
+  - alertdialog "Cookie Consent Prompt" [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - text: We use essential cookies to make our site work. With your consent, we may also use non-essential cookies to improve user experience and analyze website traffic. By clicking “Accept,” you agree to our website's cookie use as described in our
+        - button "Cookie Policy" [ref=e6] [cursor=pointer]
+        - text: . You can change your cookie settings at any time by clicking “
+        - button "Preferences" [ref=e7] [cursor=pointer]
+        - text: .”
+      - generic [ref=e8]:
+        - button "Preferences" [ref=e9] [cursor=pointer]
+        - button "Accept" [ref=e10] [cursor=pointer]
+  - generic [ref=e11]:
+    - region "Notifications alt+T"
+    - generic [ref=e12]:
+      - banner [ref=e13]:
+        - generic [ref=e14]:
+          - link [ref=e15] [cursor=pointer]:
+            - /url: https://www.together.ai
+            - img [ref=e16]
+          - navigation [ref=e33]:
+            - list [ref=e34]:
+              - listitem [ref=e35]:
+                - link "Docs" [ref=e36] [cursor=pointer]:
+                  - /url: https://docs.together.xyz
+              - listitem [ref=e37]:
+                - link "Blog" [ref=e38] [cursor=pointer]:
+                  - /url: https://www.together.ai/blog
+              - listitem [ref=e39]:
+                - link "Pricing" [ref=e40] [cursor=pointer]:
+                  - /url: https://www.together.ai/pricing
+      - generic [ref=e41]:
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - heading "Build on the AI Native Cloud" [level=1] [ref=e46]:
+              - text: Build on the
+              - text: AI Native Cloud
+            - heading "Accelerate training, fine-tuning and inference on performance-optimized GPU clusters" [level=2] [ref=e48]
+            - list [ref=e50]:
+              - listitem [ref=e51]:
+                - img [ref=e52]
+                - text: Evaluate and build with open-source and specialized models across modalities
+              - listitem [ref=e54]:
+                - img [ref=e55]
+                - text: Fine-tune open-source models for task-specific and large scale use cases
+              - listitem [ref=e57]:
+                - img [ref=e58]
+                - text: Reliably serve models with unmatched price-performance at scale
+          - generic [ref=e61]:
+            - generic [ref=e62]: AI Natives build on Together AI
+            - generic [ref=e63]:
+              - generic [ref=e64]:
+                - img "Cursor" [ref=e67]
+                - img "Decagon" [ref=e70]
+                - img "Vercept" [ref=e73]
+              - generic [ref=e74]:
+                - img "Hedra" [ref=e77]
+                - img "Pika" [ref=e80]
+                - img "Cartesia" [ref=e83]
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - heading "Let's get started" [level=2] [ref=e87]
+            - generic [ref=e88]: Choose a sign-in option
+          - generic [ref=e90]:
+            - generic [ref=e91]:
+              - button "Continue with Google" [ref=e92] [cursor=pointer]
+              - button "Continue with GitHub" [ref=e93] [cursor=pointer]
+              - button "Continue with SSO" [ref=e94] [cursor=pointer]
+            - generic [ref=e96]:
+              - text: By signing up, I agree to the
+              - link "Together AI privacy policy" [ref=e97] [cursor=pointer]:
+                - /url: https://together.ai/privacy
+              - text: and
+              - link "terms of service" [ref=e98] [cursor=pointer]:
+                - /url: https://together.ai/terms-of-service
+  - alert [ref=e99]

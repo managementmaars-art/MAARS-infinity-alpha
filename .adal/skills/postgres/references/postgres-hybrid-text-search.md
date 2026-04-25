@@ -1,1 +1,0 @@
-../../postgres-hybrid-text-search/SKILL.md

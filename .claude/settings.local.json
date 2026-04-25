@@ -1,7 +1,40 @@
 {
   "permissions": {
     "allow": [
-      "Bash(wc -l /c/Users/mirza/MAARS-Command/frontend/src/pages/*.jsx)"
+      "Bash(python -c ' *)",
+      "Bash(powershell -Command \"Get-Process python -ErrorAction SilentlyContinue | Stop-Process -Force\")",
+      "Bash(python -m uvicorn server:app --host 0.0.0.0 --port 8000 --reload)",
+      "Bash(curl -s http://localhost:8000/health)",
+      "Bash(npx -y @playwright/mcp@latest --help)",
+      "Bash(claude mcp *)",
+      "mcp__playwright__browser_resize",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_fill_form",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_close",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_press_key",
+      "mcp__playwright__browser_file_upload",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_tabs",
+      "mcp__playwright__browser_type",
+      "PowerShell(Stop-Process -Id 1436 -Force)",
+      "PowerShell(if \\($?\\) { \"still running\" } else { \"stopped cleanly\" })",
+      "PowerShell(Test-NetConnection localhost -Port 8000 -WarningAction SilentlyContinue -InformationLevel Quiet)",
+      "PowerShell(\"---\")",
+      "PowerShell($tcp = Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | Where-Object { $_.State -eq 'Listen' } | Select-Object -First 1; if \\($tcp\\) { Get-Process -Id $tcp.OwningProcess | Select-Object Id, ProcessName, StartTime } else { \"Nothing listening on 8000\" })",
+      "PowerShell($log = \"$env:TEMP\\\\maars_backend.log\"; $proc = Start-Process -FilePath \"C:\\\\Users\\\\Yaleena Yara\\\\MAARS-COMMAND\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" -ArgumentList @\\('-m','uvicorn','server:app','--host','0.0.0.0','--port','8000'\\) -WorkingDirectory \"C:\\\\Users\\\\Yaleena Yara\\\\MAARS-COMMAND\\\\backend\" -RedirectStandardOutput $log -RedirectStandardError \"$env:TEMP\\\\maars_backend.err\" -PassThru -WindowStyle Hidden; \"PID: $\\($proc.Id\\)\"; \"Log: $log\")",
+      "PowerShell(Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }; Start-Sleep -Seconds 2; $log = \"$env:TEMP\\\\maars_backend.log\"; $proc = Start-Process -FilePath \"C:\\\\Users\\\\Yaleena Yara\\\\MAARS-COMMAND\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" -ArgumentList @\\('-m','uvicorn','server:app','--host','0.0.0.0','--port','8000'\\) -WorkingDirectory \"C:\\\\Users\\\\Yaleena Yara\\\\MAARS-COMMAND\\\\backend\" -RedirectStandardOutput $log -RedirectStandardError \"$env:TEMP\\\\maars_backend.err\" -PassThru -WindowStyle Hidden; \"PID: $\\($proc.Id\\)\")",
+      "PowerShell(Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue | Select-Object LocalPort, OwningProcess; \"---\"; Get-Process python -ErrorAction SilentlyContinue | Select-Object Id, StartTime, @{N='Cmd';E={\\(Get-CimInstance Win32_Process -Filter \"ProcessId=$\\($_.Id\\)\"\\).CommandLine.Substring\\(0,[Math]::Min\\(80, \\(Get-CimInstance Win32_Process -Filter \"ProcessId=$\\($_.Id\\)\"\\).CommandLine.Length\\)\\)}} | Format-Table -AutoSize)",
+      "PowerShell(Get-Content \"$env:TEMP\\\\maars_backend.err\" -Tail 30 -ErrorAction SilentlyContinue; \"---\"; Get-Content \"$env:TEMP\\\\maars_backend.log\" -Tail 20 -ErrorAction SilentlyContinue)",
+      "PowerShell($log = \"$env:TEMP\\\\maars_backend.log\"; $err = \"$env:TEMP\\\\maars_backend.err\"; Remove-Item $log,$err -ErrorAction SilentlyContinue; $proc = Start-Process -FilePath \"C:\\\\Users\\\\Yaleena Yara\\\\MAARS-COMMAND\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" -ArgumentList @\\('-m','uvicorn','server:app','--host','0.0.0.0','--port','8001'\\) -WorkingDirectory \"C:\\\\Users\\\\Yaleena Yara\\\\MAARS-COMMAND\\\\backend\" -RedirectStandardOutput $log -RedirectStandardError $err -PassThru -WindowStyle Hidden; \"PID: $\\($proc.Id\\)\")",
+      "PowerShell(Get-NetTCPConnection -LocalPort 8001 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { try { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue } catch {} }; Start-Sleep -Seconds 2; $log = \"$env:TEMP\\\\maars_backend.log\"; $err = \"$env:TEMP\\\\maars_backend.err\"; Remove-Item $log,$err -ErrorAction SilentlyContinue; $proc = Start-Process -FilePath \"C:\\\\Users\\\\Yaleena Yara\\\\MAARS-COMMAND\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" -ArgumentList @\\('-m','uvicorn','server:app','--host','0.0.0.0','--port','8001'\\) -WorkingDirectory \"C:\\\\Users\\\\Yaleena Yara\\\\MAARS-COMMAND\\\\backend\" -RedirectStandardOutput $log -RedirectStandardError $err -PassThru -WindowStyle Hidden; \"PID: $\\($proc.Id\\)\")",
+      "PowerShell(Get-NetTCPConnection -LocalPort 8001 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { try { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue } catch {} }; Start-Sleep -Seconds 2; $log = \"$env:TEMP\\\\maars_backend.log\"; Remove-Item $log -ErrorAction SilentlyContinue; $proc = Start-Process -FilePath \"C:\\\\Users\\\\Yaleena Yara\\\\MAARS-COMMAND\\\\backend\\\\venv\\\\Scripts\\\\python.exe\" -ArgumentList @\\('-m','uvicorn','server:app','--host','0.0.0.0','--port','8001'\\) -WorkingDirectory \"C:\\\\Users\\\\Yaleena Yara\\\\MAARS-COMMAND\\\\backend\" -RedirectStandardOutput $log -RedirectStandardError \"$env:TEMP\\\\maars_backend.err\" -PassThru -WindowStyle Hidden; \"PID: $\\($proc.Id\\)\")",
+      "PowerShell(Stop-Process -Id 23040, 24676 -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 2; Get-CimInstance Win32_Process -Filter \"Name='python.exe'\" | Where-Object { $_.CommandLine -match 'uvicorn' } | Select-Object ProcessId | Format-List)",
+      "WebFetch(domain:atxp.ai)"
     ]
   }
 }

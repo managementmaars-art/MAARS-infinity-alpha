@@ -11,22 +11,14 @@ from datetime import datetime, timezone
 
 from db import db
 from config import DEFAULT_AGENTS
-from shared.constants import EMERGENT_LLM_KEY
 from services.agent_service import AGENT_ROLE_MAP
 
 logger = logging.getLogger(__name__)
 
 
-async def score_goal(goal: str, api_keys: dict) -> dict:
+async def score_goal(goal: str, api_keys: dict, user_id: str = "system") -> dict:
     """Score a goal for clarity, complexity, and strategic alignment."""
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
-        scorer = LlmChat(
-            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-            session_id=f"goal_score_{uuid.uuid4().hex[:8]}",
-            system_message="You score business goals. Return ONLY valid JSON."
-        ).with_model("openai", "gpt-4o-mini")
-
         prompt = f"""Score this business goal on a 1-10 scale for each metric. Return ONLY a JSON object:
 
 Goal: "{goal}"
@@ -41,7 +33,14 @@ Goal: "{goal}"
   "refined_title": "<clean 5-8 word title for this project>",
   "strategic_summary": "<1-2 sentence strategic assessment>"
 }}"""
-        response = await scorer.send_message(UserMessage(text=prompt))
+        from services.llm_gateway import complete_text
+        response = await complete_text(
+            user_id=user_id,
+            system_prompt="You score business goals. Return ONLY valid JSON.",
+            user_prompt=prompt,
+            model="maars/auto",
+            source="orchestration.score_goal",
+        )
         text = response.strip()
         if text.startswith("```"):
             text = text.split("\n", 1)[1] if "\n" in text else text[3:]
@@ -57,16 +56,9 @@ Goal: "{goal}"
         }
 
 
-async def create_strategic_plan(goal: str, scores: dict, api_keys: dict) -> dict:
+async def create_strategic_plan(goal: str, scores: dict, api_keys: dict, user_id: str = "system") -> dict:
     """Create a strategic plan with milestones and task assignments."""
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
-        planner = LlmChat(
-            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-            session_id=f"strategic_plan_{uuid.uuid4().hex[:8]}",
-            system_message="You are a world-class strategic planner. Output ONLY valid JSON."
-        ).with_model("openai", "gpt-5.2")
-
         available_roles = list(AGENT_ROLE_MAP.keys())
         prompt = f"""Create an execution plan for this business goal. Return ONLY valid JSON.
 
@@ -101,7 +93,14 @@ Return this exact JSON structure:
 
 Create 2-4 milestones with 1-3 tasks each. Be specific and actionable."""
 
-        response = await planner.send_message(UserMessage(text=prompt))
+        from services.llm_gateway import complete_text
+        response = await complete_text(
+            user_id=user_id,
+            system_prompt="You are a world-class strategic planner. Output ONLY valid JSON.",
+            user_prompt=prompt,
+            model="maars/auto",
+            source="orchestration.strategic_plan",
+        )
         text = response.strip()
         if text.startswith("```"):
             text = text.split("\n", 1)[1] if "\n" in text else text[3:]
@@ -129,20 +128,24 @@ async def create_project(goal: str, user_id: str, execution_mode: str, priority:
     now = datetime.now(timezone.utc).isoformat()
 
     # Step 1: Score the goal
-    scores = await score_goal(goal, api_keys)
+    scores = await score_goal(goal, api_keys, user_id=user_id)
 
     # Step 2: Create strategic plan
-    plan = await create_strategic_plan(goal, scores, api_keys)
+    plan = await create_strategic_plan(goal, scores, api_keys, user_id=user_id)
 
     # Step 3: Build project document
     milestones = []
     all_tasks = []
     for ms in plan.get("milestones", []):
+        from services.agents import agent_router_map
         ms_id = f"ms_{uuid.uuid4().hex[:8]}"
         ms_tasks = []
         for t in ms.get("tasks", []):
             agent_role = t.get("agent_role", "strategy").lower()
-            agent_id = AGENT_ROLE_MAP.get(agent_role, "agent_strategist")
+            try:
+                agent_id = await agent_router_map.resolve(agent_role)
+            except Exception:
+                agent_id = AGENT_ROLE_MAP.get(agent_role, "agent_strategist")
             agent_doc = await db.agents.find_one({"agent_id": agent_id}, {"_id": 0, "name": 1, "avatar": 1, "role": 1})
 
             task_id = f"task_{uuid.uuid4().hex[:12]}"
@@ -277,6 +280,7 @@ async def execute_project(project_id: str, user_id: str, api_keys: dict):
                             task_result=result[:2000],
                             task_description=task["description"],
                             agent_name=agent.get("name", "Agent"),
+                            agent_id=agent.get("agent_id"),
                             user_id=user_id,
                             project_id=project_id,
                             task_id=task_id,
@@ -422,7 +426,6 @@ async def execute_project(project_id: str, user_id: str, api_keys: dict):
 async def execute_agent_task(agent: dict, task_description: str, goal: str, api_keys: dict, user_id: str, project_id: str) -> str:
     """Execute a single task using the assigned agent. Supports media generation for image/video tasks."""
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
         from services.agent_service import build_brain_context
 
         brain_ctx = await build_brain_context(user_id, agent["agent_id"])
@@ -434,7 +437,7 @@ async def execute_agent_task(agent: dict, task_description: str, goal: str, api_
         model_provider = agent.get("model_provider", "openai")
         model_name = agent.get("model_name", "gpt-5.2")
         try:
-            from services.llm_router import route_to_model
+            from services.routing.llm_router import route_to_model
             routing = await route_to_model(task_description, agent.get("role", ""), user_id)
             model_provider = routing["provider"]
             model_name = routing["model"]
@@ -453,12 +456,6 @@ async def execute_agent_task(agent: dict, task_description: str, goal: str, api_
         if is_video_agent:
             system_msg += "\n\nIMPORTANT: When creating video content, describe your creative vision in detail (scenes, camera angles, mood, pacing). The system will automatically generate the video."
 
-        chat = LlmChat(
-            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-            session_id=f"project_{project_id}_{agent['agent_id']}_{uuid.uuid4().hex[:6]}",
-            system_message=system_msg
-        ).with_model(model_provider, model_name)
-
         prompt = f"""You are executing a task as part of an autonomous project.
 
 PROJECT GOAL: {goal}
@@ -466,12 +463,20 @@ YOUR TASK: {task_description}
 
 Execute this task NOW. Provide a complete, actionable deliverable. Do NOT ask questions — use your professional judgment. Be concise, specific, and deliver real value. Write in clean paragraphs, avoid excessive formatting."""
 
-        response = await chat.send_message(UserMessage(text=prompt))
+        from services.llm_gateway import complete_text
+        gw_model = "maars/auto" if model_provider in ("auto", None) else f"{model_provider}/{model_name}"
+        response = await complete_text(
+            user_id=user_id,
+            system_prompt=system_msg,
+            user_prompt=prompt,
+            model=gw_model,
+            source=f"orchestration.execute_agent_task:{agent.get('agent_id','?')}",
+        )
 
         # For graphics agent, attempt to generate an image based on the response
         if is_graphics_agent and response:
             try:
-                image_result = await _generate_project_image(response, api_keys, project_id, agent_id)
+                image_result = await _generate_project_image(response, api_keys, project_id, agent_id, user_id=user_id)
                 if image_result:
                     response += f"\n\n[GENERATED_IMAGE]{image_result}[/GENERATED_IMAGE]"
             except Exception as img_err:
@@ -480,7 +485,7 @@ Execute this task NOW. Provide a complete, actionable deliverable. Do NOT ask qu
         # For video agent, attempt to generate a video
         if is_video_agent and response:
             try:
-                video_result = await _generate_project_video(response, api_keys, project_id, agent_id)
+                video_result = await _generate_project_video(response, api_keys, project_id, agent_id, user_id=user_id)
                 if video_result:
                     response += f"\n\n[GENERATED_VIDEO]{video_result}[/GENERATED_VIDEO]"
             except Exception as vid_err:
@@ -491,68 +496,55 @@ Execute this task NOW. Provide a complete, actionable deliverable. Do NOT ask qu
         raise Exception(f"Agent {agent.get('name', 'Unknown')} execution failed: {str(e)[:200]}")
 
 
-async def _generate_project_image(agent_response: str, api_keys: dict, project_id: str, agent_id: str) -> str:
-    """Generate an image based on the agent's creative description."""
+async def _generate_project_image(agent_response: str, api_keys: dict, project_id: str, agent_id: str, user_id: str = "system") -> str:
+    """Generate an image based on the agent's creative description, through the MAARS media router."""
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
-
-        # Extract a concise image prompt from the agent's response
-        prompter = LlmChat(
-            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-            session_id=f"img_prompt_{project_id}_{uuid.uuid4().hex[:6]}",
-            system_message="Extract a concise image generation prompt from the creative description. Return ONLY the prompt text, nothing else. Max 200 characters."
-        ).with_model("openai", "gpt-4o-mini")
-
-        img_prompt = await prompter.send_message(UserMessage(text=f"Extract image prompt from:\n{agent_response[:1500]}"))
-        img_prompt = img_prompt.strip()[:200]
-
+        from services.llm_gateway import complete_text
+        img_prompt = (await complete_text(
+            user_id=user_id,
+            system_prompt="Extract a concise image generation prompt from the creative description. Return ONLY the prompt text, nothing else. Max 200 characters.",
+            user_prompt=f"Extract image prompt from:\n{agent_response[:1500]}",
+            model="maars/economy",
+            source="orchestration.image_prompt_extract",
+        )).strip()[:200]
         if not img_prompt:
             return ""
 
-        from emergentintegrations.llm.image import ImageChat
-        image_chat = ImageChat(
-            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-            session_id=f"project_img_{project_id}_{uuid.uuid4().hex[:6]}"
-        )
-        result = await image_chat.generate_image(img_prompt)
-        if result and hasattr(result, 'url'):
-            return result.url
-        elif result and isinstance(result, str):
-            return result
-        return ""
+        from services.media_router import route_image
+        from shared.constants import UPLOAD_DIR
+        image_bytes, meta = await route_image(prompt=img_prompt, quality="standard")
+        filename = f"proj_{project_id}_{uuid.uuid4().hex[:8]}.png"
+        filepath = UPLOAD_DIR / filename
+        with open(filepath, "wb") as f:
+            f.write(image_bytes)
+        return f"/files/{filename}"
     except Exception as e:
         logger.error(f"Image generation in project failed: {e}")
         return ""
 
 
-async def _generate_project_video(agent_response: str, api_keys: dict, project_id: str, agent_id: str) -> str:
-    """Generate a video based on the agent's creative description."""
+async def _generate_project_video(agent_response: str, api_keys: dict, project_id: str, agent_id: str, user_id: str = "system") -> str:
+    """Generate a video based on the agent's creative description, through the MAARS media router."""
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
-
-        prompter = LlmChat(
-            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-            session_id=f"vid_prompt_{project_id}_{uuid.uuid4().hex[:6]}",
-            system_message="Extract a concise video generation prompt from the creative description. Return ONLY the prompt text, nothing else. Max 200 characters."
-        ).with_model("openai", "gpt-4o-mini")
-
-        vid_prompt = await prompter.send_message(UserMessage(text=f"Extract video prompt from:\n{agent_response[:1500]}"))
-        vid_prompt = vid_prompt.strip()[:200]
-
+        from services.llm_gateway import complete_text
+        vid_prompt = (await complete_text(
+            user_id=user_id,
+            system_prompt="Extract a concise video generation prompt from the creative description. Return ONLY the prompt text, nothing else. Max 200 characters.",
+            user_prompt=f"Extract video prompt from:\n{agent_response[:1500]}",
+            model="maars/economy",
+            source="orchestration.video_prompt_extract",
+        )).strip()[:200]
         if not vid_prompt:
             return ""
 
-        from emergentintegrations.llm.video import VideoChat
-        video_chat = VideoChat(
-            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-            session_id=f"project_vid_{project_id}_{uuid.uuid4().hex[:6]}"
-        )
-        result = await video_chat.generate_video(vid_prompt)
-        if result and hasattr(result, 'url'):
-            return result.url
-        elif result and isinstance(result, str):
-            return result
-        return ""
+        from services.media_router import route_video
+        from shared.constants import UPLOAD_DIR
+        video_bytes, meta = await route_video(prompt=vid_prompt, duration=4, size="1280x720")
+        filename = f"proj_{project_id}_{uuid.uuid4().hex[:8]}.mp4"
+        filepath = UPLOAD_DIR / filename
+        with open(filepath, "wb") as f:
+            f.write(video_bytes)
+        return f"/files/{filename}"
     except Exception as e:
         logger.error(f"Video generation in project failed: {e}")
         return ""

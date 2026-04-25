@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "../App";
 import { BarChart3, Plus, X, TrendingUp, Activity, Shield, Plug, PieChart, Clock, Workflow, Cpu } from "lucide-react";
 import { BarChart, Bar, PieChart as RPie, Pie, Cell, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 const COLORS = ["#4fd1c5", "#10b981", "#f59e0b", "#ef4444", "#a78bfa", "#ec4899", "#14b8a6", "#f97316"];
 
 const T = {
@@ -38,9 +38,9 @@ export default function AnalyticsDashboard() {
   const [lastRefresh, setLastRefresh] = useState(null);
   const [autoRefresh, setAutoRefresh] = useState(false);
 
-  const h = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const h = useMemo(() => ({ Authorization: `Bearer ${token}`, "Content-Type": "application/json" }), [token]);
 
-  const fetchData = async (silent = false) => {
+  const fetchData = useCallback(async (silent = false) => {
     if (!silent) setRefreshing(true);
     try {
       const [catRes, dashRes] = await Promise.all([
@@ -64,16 +64,16 @@ export default function AnalyticsDashboard() {
     } catch {}
     setLoading(false);
     setRefreshing(false);
-  };
+  }, [h]);
 
-  useEffect(() => { fetchData(); }, [token]);
+  useEffect(() => { fetchData(); }, [fetchData]);
 
   // Auto-refresh every 30 seconds when enabled
   useEffect(() => {
     if (!autoRefresh) return;
     const interval = setInterval(() => fetchData(true), 30000);
     return () => clearInterval(interval);
-  }, [autoRefresh, token]);
+  }, [autoRefresh, fetchData]);
 
   const addWidget = async (widgetId) => {
     const widgets = [...(dashboard.widgets || []), { widget_id: widgetId, x: 0, y: dashboard.widgets.length }];

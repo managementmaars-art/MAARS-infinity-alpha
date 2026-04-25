@@ -1,0 +1,242 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e5]:
+      - strong [ref=e6]: "Trinity Large Thinking:"
+      - text: Now available on OpenRouter.
+    - link "Try now ↗" [ref=e7] [cursor=pointer]:
+      - /url: https://openrouter.ai/arcee-ai/trinity-large-thinking
+      - generic [ref=e8]: Try now ↗
+  - banner [ref=e9]:
+    - generic [ref=e10]:
+      - link "home" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - img [ref=e13]
+      - navigation [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - button "PRODUCTS" [ref=e19] [cursor=pointer]:
+              - generic [ref=e20]: PRODUCTS
+              - img [ref=e22]
+            - button "ENTERPRISE" [ref=e25] [cursor=pointer]:
+              - generic [ref=e26]: ENTERPRISE
+              - img [ref=e28]
+            - link "RESEARCH" [ref=e30] [cursor=pointer]:
+              - /url: /research
+              - generic [ref=e31]: RESEARCH
+            - button "COMPANY" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: COMPANY
+              - img [ref=e36]
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - button:
+                - generic:
+                  - img
+              - button [ref=e40] [cursor=pointer]:
+                - img [ref=e42]
+            - link "Get API" [ref=e44] [cursor=pointer]:
+              - /url: https://chat.arcee.ai
+              - generic [ref=e45]: Get API
+  - main [ref=e46]:
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - 'heading "Arcee AI: A US-based Open Intelligence Lab" [level=1] [ref=e53]'
+          - paragraph [ref=e55]: Three frontier models in six months. All open-weight.
+        - link "Trinity Models" [ref=e56] [cursor=pointer]:
+          - /url: /trinity
+          - generic [ref=e57]: Trinity Models
+      - img [ref=e60]
+    - generic [ref=e131]:
+      - heading "How We Lead in AI" [level=2] [ref=e132]
+      - generic [ref=e133]:
+        - generic [ref=e134]:
+          - generic [ref=e135]:
+            - heading "Models That Matter." [level=3] [ref=e136]
+            - paragraph [ref=e137]: Three releases in six months. Open weights, real benchmarks, no vaporware.
+          - img [ref=e141]
+        - generic [ref=e173]:
+          - generic [ref=e174]:
+            - heading "Models That Improve." [level=3] [ref=e175]
+            - paragraph [ref=e176]: Online RL means continuous learning. Deploy once, improve continuously with rapid iteration.
+          - img [ref=e180]
+        - generic [ref=e198]:
+          - generic [ref=e199]:
+            - heading "Models That Scale." [level=3] [ref=e200]
+            - paragraph [ref=e201]: Our architectures keep costs low. Frontier performance without frontier pricing.
+          - img [ref=e205]
+    - generic [ref=e237]:
+      - heading "Our Partners" [level=2] [ref=e238]
+      - list [ref=e240]:
+        - listitem [ref=e241]:
+          - img "Nvidia" [ref=e242]
+          - img "Nvidia" [ref=e243]
+        - listitem [ref=e244]:
+          - img "Intel" [ref=e245]
+          - img "Intel" [ref=e246]
+        - listitem [ref=e247]:
+          - img "ARM" [ref=e248]
+          - img "ARM" [ref=e249]
+        - listitem [ref=e250]:
+          - img "Cisco" [ref=e251]
+          - img "Cisco" [ref=e252]
+        - listitem [ref=e253]:
+          - img "Clarifai" [ref=e254]
+          - img "Clarifai" [ref=e255]
+        - listitem [ref=e256]:
+          - img "Together.AI" [ref=e257]
+          - img "Together.AI" [ref=e258]
+        - listitem [ref=e259]:
+          - img "Datology.Ai" [ref=e260]
+          - img "Datology.Ai" [ref=e261]
+        - listitem [ref=e262]:
+          - img "Prime Intellect" [ref=e263]
+          - img "Prime Intellect" [ref=e264]
+        - listitem [ref=e265]:
+          - img "AWS" [ref=e266]
+          - img "AWS" [ref=e267]
+        - listitem [ref=e268]:
+          - img "Microsoft" [ref=e269]
+          - img "Microsoft" [ref=e270]
+        - listitem [ref=e271]:
+          - img "Hugging Face" [ref=e272]
+          - img "Hugging Face" [ref=e273]
+        - listitem [ref=e274]:
+          - img "Digital Ocean" [ref=e275]
+          - img "Digital Ocean" [ref=e276]
+        - listitem [ref=e277]:
+          - img "OpenRouter" [ref=e278]
+          - img "OpenRouter" [ref=e279]
+        - listitem [ref=e280]:
+          - img "Kilo Code" [ref=e281]
+          - img "Kilo Code" [ref=e282]
+        - listitem [ref=e283]:
+          - img "Cline" [ref=e284]
+          - img "Cline" [ref=e285]
+        - listitem [ref=e286]:
+          - img "Open Code" [ref=e287]
+          - img "Open Code" [ref=e288]
+    - generic [ref=e292]:
+      - heading "Latest Blogs" [level=2] [ref=e293]
+      - list [ref=e295]:
+        - listitem [ref=e296]:
+          - link "Company • April 14, 2026 Introducing the Trinity Builders Program A community credit grant for developers, researchers, and open source builders working with Trinity models. Apply for free inference access on the Arcee API." [ref=e297] [cursor=pointer]:
+            - /url: /blog/introducing-the-trinity-builders-program
+            - generic [ref=e299]:
+              - generic [ref=e300]:
+                - generic [ref=e301]:
+                  - generic [ref=e302]: Company
+                  - generic [ref=e303]: •
+                  - generic [ref=e304]: April 14, 2026
+                - heading "Introducing the Trinity Builders Program" [level=3] [ref=e305]
+              - paragraph [ref=e306]: A community credit grant for developers, researchers, and open source builders working with Trinity models. Apply for free inference access on the Arcee API.
+        - listitem [ref=e307]:
+          - link "Agentic AI • April 3, 2026 How to Use Hermes Agent with Trinity Large Thinking Learn how to set up Hermes Agent powered by Trinity-Large-Thinking. This guide covers installation, tool configuration, and launching your AI assistant." [ref=e308] [cursor=pointer]:
+            - /url: /blog/how-to-use-hermes-agent-with-trinity-large-thinking
+            - generic [ref=e310]:
+              - generic [ref=e311]:
+                - generic [ref=e312]:
+                  - generic [ref=e313]: Agentic AI
+                  - generic [ref=e314]: •
+                  - generic [ref=e315]: April 3, 2026
+                - heading "How to Use Hermes Agent with Trinity Large Thinking" [level=3] [ref=e316]
+              - paragraph [ref=e317]: Learn how to set up Hermes Agent powered by Trinity-Large-Thinking. This guide covers installation, tool configuration, and launching your AI assistant.
+        - listitem [ref=e318]:
+          - 'link "News • April 1, 2026 Trinity-Large-Thinking: Scaling an Open Source Frontier Agent Trinity-Large-Thinking is live. A frontier open reasoning model for complex, long-horizon agents and multi-turn tool calling released under Apache 2.0." [ref=e319] [cursor=pointer]':
+            - /url: /blog/trinity-large-thinking
+            - generic [ref=e321]:
+              - generic [ref=e322]:
+                - generic [ref=e323]:
+                  - generic [ref=e324]: News
+                  - generic [ref=e325]: •
+                  - generic [ref=e326]: April 1, 2026
+                - 'heading "Trinity-Large-Thinking: Scaling an Open Source Frontier Agent" [level=3] [ref=e327]'
+              - paragraph [ref=e328]: Trinity-Large-Thinking is live. A frontier open reasoning model for complex, long-horizon agents and multi-turn tool calling released under Apache 2.0.
+      - link "View More" [ref=e329] [cursor=pointer]:
+        - /url: /blog
+        - generic [ref=e330]: View More
+  - contentinfo [ref=e331]:
+    - generic [ref=e334]:
+      - generic [ref=e335]:
+        - generic [ref=e336]:
+          - link [ref=e337] [cursor=pointer]:
+            - /url: /
+            - img [ref=e339]
+          - generic [ref=e341]:
+            - link "Follow us on LinkedIn" [ref=e342] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/arcee-ai
+              - img [ref=e344]
+            - link "Follow us on X (formerly Twitter)" [ref=e346] [cursor=pointer]:
+              - /url: https://x.com/arcee_ai
+              - img [ref=e348]
+            - link "Watch our video on YouTube" [ref=e350] [cursor=pointer]:
+              - /url: https://www.youtube.com/channel/UCVtYdqkprxxKZyh7jlp9dFQ
+              - img [ref=e352]
+            - link "Check out our code on GitHub" [ref=e354] [cursor=pointer]:
+              - /url: https://github.com/arcee-ai
+              - img [ref=e356]
+            - link "More about us on Hugging Face" [ref=e358] [cursor=pointer]:
+              - /url: https://huggingface.co/arcee-ai
+              - img [ref=e360]
+        - generic [ref=e362]:
+          - generic [ref=e363]:
+            - generic [ref=e364]: PRODUCTS
+            - generic [ref=e365]:
+              - link "Trinity Models" [ref=e366] [cursor=pointer]:
+                - /url: /trinity
+                - generic [ref=e367]: Trinity Models
+              - link "Open Source Catalog" [ref=e368] [cursor=pointer]:
+                - /url: /open-source-catalog
+                - generic [ref=e369]: Open Source Catalog
+              - link "Playground" [ref=e370] [cursor=pointer]:
+                - /url: https://chat.arcee.ai/login
+                - generic [ref=e371]: Playground
+              - link "Docs" [ref=e372] [cursor=pointer]:
+                - /url: https://docs.arcee.ai/
+                - generic [ref=e373]: Docs
+          - generic [ref=e374]:
+            - generic [ref=e375]: ENTERPRISE
+            - link "Work With Us" [ref=e377] [cursor=pointer]:
+              - /url: /work-with-us
+              - generic [ref=e378]: Work With Us
+          - generic [ref=e379]:
+            - generic [ref=e380]: LEARN
+            - link "Research" [ref=e382] [cursor=pointer]:
+              - /url: /research
+              - generic [ref=e383]: Research
+          - generic [ref=e384]:
+            - generic [ref=e385]: company
+            - generic [ref=e386]:
+              - link "Blog" [ref=e387] [cursor=pointer]:
+                - /url: /blog
+                - generic [ref=e388]: Blog
+              - link "About Us" [ref=e389] [cursor=pointer]:
+                - /url: /about
+                - generic [ref=e390]: About Us
+              - link "Careers" [ref=e391] [cursor=pointer]:
+                - /url: /careers
+                - generic [ref=e392]: Careers
+        - generic [ref=e393]:
+          - link "support@arcee.ai" [ref=e394] [cursor=pointer]:
+            - /url: mailto:support@arcee.ai
+            - img [ref=e396]
+            - paragraph [ref=e399]: support@arcee.ai
+          - generic [ref=e400]:
+            - generic [ref=e401]: Proudly Supporting
+            - link "The ATOM Project" [ref=e402] [cursor=pointer]:
+              - /url: https://www.atomproject.ai/
+              - generic [ref=e403]: The ATOM Project
+          - generic [ref=e404]:
+            - button:
+              - generic:
+                - img
+            - button [ref=e405] [cursor=pointer]:
+              - img [ref=e407]
+      - generic [ref=e409]:
+        - generic [ref=e410]:
+          - link "Privacy Policy" [ref=e411] [cursor=pointer]:
+            - /url: /privacy-policy
+            - generic [ref=e412]: Privacy Policy
+          - link "Terms & Conditions" [ref=e413] [cursor=pointer]:
+            - /url: /terms-and-conditions
+            - generic [ref=e414]: Terms & Conditions
+        - generic [ref=e415]: ©2026 Arcee AI. All rights reserved.

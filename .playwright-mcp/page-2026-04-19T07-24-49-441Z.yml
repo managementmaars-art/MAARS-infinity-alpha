@@ -1,0 +1,11 @@
+- generic [active] [ref=e1]:
+  - main [ref=e4]:
+    - button "Language English" [ref=e14] [cursor=pointer]:
+      - text: English
+      - generic [ref=e15]:
+        - img
+    - link "Amazon Web Services Marketing" [ref=e22]:
+      - /url: https://aws.amazon.com/savingsplans/database-pricing/?sc_icampaign=aware_riv-database-savings-plan_2026&sc_ichannel=ha&sc_iplace=signin&trk=0f660cd4-9a3b-4f99-9ac5-61651d5f6e01
+      - img "Amazon Web Services Marketing" [ref=e23]
+    - generic [ref=e25]: © 2026 Amazon Web Services, Inc. or its affiliates. All rights reserved.
+  - alert [ref=e26]

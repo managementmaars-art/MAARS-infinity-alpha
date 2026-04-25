@@ -1,0 +1,574 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: Official Seedance 2.0 API is now live 🚀 Get your token package and be the pioneer!
+        - link "Purchase" [ref=e11] [cursor=pointer]:
+          - /url: https://www.byteplus.com/en/activity/seedance2-0
+          - generic [ref=e12]: Purchase
+      - img [ref=e15] [cursor=pointer]
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - link "BytePlus" [ref=e23] [cursor=pointer]:
+          - /url: https://www.byteplus.com/en
+          - img "BytePlus" [ref=e24]
+        - generic [ref=e30]:
+          - tab "Try AI solutions" [selected] [ref=e31] [cursor=pointer]:
+            - link "Try AI solutions" [ref=e34]:
+              - /url: https://www.byteplus.com/en/ai-playground
+              - generic [ref=e36]: Try AI solutions
+          - tab "Products" [ref=e37] [cursor=pointer]:
+            - button "Products" [ref=e40]
+          - tab "Solutions" [ref=e41] [cursor=pointer]:
+            - button "Solutions" [ref=e44]
+          - tab "Pricing" [ref=e45] [cursor=pointer]:
+            - button "Pricing" [ref=e48]
+          - tab "Docs" [ref=e49] [cursor=pointer]:
+            - link "Docs" [ref=e52]:
+              - /url: https://docs.byteplus.com/en/docs
+              - generic [ref=e53]: Docs
+          - tab "Resources" [ref=e54] [cursor=pointer]:
+            - button "Resources" [ref=e57]
+      - generic [ref=e59]:
+        - button "Search" [ref=e60] [cursor=pointer]
+        - link "Support" [ref=e63] [cursor=pointer]:
+          - /url: https://console.byteplus.com/workorder/create
+          - generic [ref=e64]: Support
+        - link "Contact sales" [ref=e66] [cursor=pointer]:
+          - /url: https://www.byteplus.com/contact-us
+          - generic [ref=e67]: Contact sales
+        - link "Sign in" [ref=e69] [cursor=pointer]:
+          - /url: https://console.byteplus.com/auth/login?redirectURI=https%3A%2F%2Fwww.byteplus.com%2Fen%2Fproduct%2FModelArk
+          - generic [ref=e70]: Sign in
+        - link "Sign up" [ref=e72] [cursor=pointer]:
+          - /url: https://console.byteplus.com/auth/signup?redirectURI=https%3A%2F%2Fwww.byteplus.com%2Fen%2Fproduct%2FModelArk&skipAccountProfile=true
+          - generic [ref=e73]: Sign up
+    - generic [ref=e78]:
+      - generic [ref=e81]:
+        - list [ref=e83]:
+          - listitem [ref=e84]:
+            - link "NEW Seedance 2.0 is available. Try it now!" [ref=e85] [cursor=pointer]:
+              - /url: https://www.byteplus.com/en/experience/modelark?mode=vision&modelId=seedance-1-5-pro-251215&tab=GenVideo
+              - generic [ref=e86]: NEW
+              - generic [ref=e87]: Seedance 2.0 is available. Try it now!
+              - img [ref=e88]
+          - listitem [ref=e90]:
+            - link "NEW Seedream 5.0 lite API is live - 200 free 4K images!" [ref=e91] [cursor=pointer]:
+              - /url: https://console.byteplus.com/ark/region:ark+ap-southeast-1/experience/vision?_gl=1%2Ap59lso%2A_gcl_aw%2AR0NMLjE3NzAxNzk1MjAuQ2p3S0NBaUExb2JNQmhBYkVpd0FzVUJiSWczR2VneW9Wbm96NU9LRVdhV2d3b1VfeUZHSEJOSUhzSE55LWVRSmdMWHNRZjQ5Z250c2dCb0NGdFlRQXZEX0J3RQ..%2A_gcl_au%2AMTI0OTU1OTUyOS4xNzY5NDE0MDI0%2A_ga%2AMTE3Mjg3NjA1Ni4xNzY3NzY5NzEz%2A_ga_2377LE7GQM%2AczE3NzEyMzA0MDEkbzMxJGcxJHQxNzcxMjMxMzM1JGo2MCRsMCRoNzQ0NDYyNTc1%2A_ga_3H57BBC3B9%2AczE3NzEyMzA0MDEkbzMxJGcxJHQxNzcxMjMxMzM1JGo2MCRsMCRoMTg4NTEwMDQzOA..&csid=excs-202602161642-%5BNmcHMqsN3IBVjSHcGHx_u%5D&modelId=seedream-5-0-260128&tab=GenImage
+              - generic [ref=e92]: NEW
+              - generic [ref=e93]: Seedream 5.0 lite API is live - 200 free 4K images!
+              - img [ref=e94]
+          - listitem [ref=e96]:
+            - link "NEW Dola-Seed-2.0-Code is here – start your free trial!" [ref=e97] [cursor=pointer]:
+              - /url: https://console.byteplus.com/ark/region:ark+ap-southeast-1/experience/chat?_gl=1*3qilgn*_gcl_aw*R0NMLjE3NzAxNzk1MjAuQ2p3S0NBaUExb2JNQmhBYkVpd0FzVUJiSWczR2VneW9Wbm96NU9LRVdhV2d3b1VfeUZHSEJOSUhzSE55LWVRSmdMWHNRZjQ5Z250c2dCb0NGdFlRQXZEX0J3RQ..*_gcl_au*MTI0OTU1OTUyOS4xNzY5NDE0MDI0*_ga*MTE3Mjg3NjA1Ni4xNzY3NzY5NzEz*_ga_2377LE7GQM*czE3NzExNTE1MDUkbzI5JGcxJHQxNzcxMTUxNjMxJGo2MCRsMCRoODk3MzIwNzE4*_ga_3H57BBC3B9*czE3NzExNTE0OTAkbzI5JGcxJHQxNzcxMTUxNjMxJGo2MCRsMCRoMTQ4MDA4MTk2Mg..&modelId=seed-2-0-mini-260215&csid=excs-202602151833-%5BX4_rXhSp8_Nct151Tyg8N%5D
+              - generic [ref=e98]: NEW
+              - generic [ref=e99]: Dola-Seed-2.0-Code is here – start your free trial!
+              - img [ref=e100]
+          - listitem [ref=e102]:
+            - link "NEW DeepSeek-V3.2 is available. Try it now!" [ref=e103] [cursor=pointer]:
+              - /url: https://www.byteplus.com/en/experience/modelark?mode=chat&modelId=deepseek-v3-2-251201&csid=excs-202602061054-%5BSaRuFVvwRx2voE_JzQIpK%5D
+              - generic [ref=e104]: NEW
+              - generic [ref=e105]: DeepSeek-V3.2 is available. Try it now!
+              - img [ref=e106]
+        - heading "ModelArk" [level=1] [ref=e109]
+        - heading "One-stop large language model service platform" [level=2] [ref=e110]
+        - generic [ref=e111]: Powerful AI | Secure Conversations | Scalable Performance
+        - generic [ref=e112]:
+          - link "Try for free" [ref=e113] [cursor=pointer]:
+            - /url: https://console.byteplus.com/ark/region:ark+ap-southeast-1/experience
+            - generic [ref=e114]: Try for free
+          - link "Contact sales" [ref=e115] [cursor=pointer]:
+            - /url: https://www.byteplus.com/contact
+            - generic [ref=e116]: Contact sales
+          - link "Get API key" [ref=e117] [cursor=pointer]:
+            - /url: https://console.byteplus.com/ark/region:ark+ap-southeast-1/apiKey
+            - generic [ref=e118]: Get API key
+      - generic [ref=e122]:
+        - link "Free quota Hot Up to 2M free tokens per model" [ref=e123] [cursor=pointer]:
+          - /url: https://console.byteplus.com/ark/region:ark+ap-southeast-1/experience
+          - generic [ref=e125]:
+            - generic [ref=e126]: Free quota
+            - generic [ref=e127]: Hot
+          - generic [ref=e128]: Up to 2M free tokens per model
+        - link "Pricing and billing Pricing and billing by model" [ref=e129] [cursor=pointer]:
+          - /url: https://docs.byteplus.com/docs/ModelArk/1099320
+          - generic [ref=e132]: Pricing and billing
+          - generic [ref=e133]: Pricing and billing by model
+        - link "API documentation Quick start for call" [ref=e134] [cursor=pointer]:
+          - /url: https://docs.byteplus.com/docs/ModelArk/api
+          - generic [ref=e137]: API documentation
+          - generic [ref=e138]: Quick start for call
+        - link "Go to discord Powering your AI, from dev to growth" [ref=e139] [cursor=pointer]:
+          - /url: https://discord.com/invite/YVdSTh852b
+          - generic [ref=e142]: Go to discord
+          - generic [ref=e143]: Powering your AI, from dev to growth
+      - generic [ref=e144]:
+        - generic [ref=e146]:
+          - heading "Explore all our models" [level=2] [ref=e147]
+          - generic [ref=e148]:
+            - text: View the model list and choose the ones that fit your needs!
+            - link "Explore more." [ref=e149] [cursor=pointer]:
+              - /url: https://docs.byteplus.com/en/docs/ModelArk/1330310
+        - generic [ref=e153]:
+          - generic [ref=e156]:
+            - generic [ref=e158]: Dreamina-Seedance-2.0
+            - generic [ref=e159]:
+              - generic [ref=e160]: Vision models
+              - generic [ref=e161]: Video generation
+            - generic [ref=e163]: Seedance 2.0 is a next-gen professional multimodal video model for creators. Supporting image, video and audio inputs, it delivers high-fidelity rendering, stable cinematography and synchronized audio-visual output with editing and extension features, ideal for advertising, media and social marketing.
+            - generic [ref=e164]:
+              - link "Try it now" [ref=e165] [cursor=pointer]:
+                - /url: https://console.byteplus.com/ark/region:ark+ap-southeast-1/experience/vision?modelId=dreamina-seedance-2-0-260128&tab=GenVideo
+              - link "View details" [ref=e166] [cursor=pointer]:
+                - /url: https://console.byteplus.com/ark/region:ark+ap-southeast-1/model/detail?Id=dreamina-seedance-2-0
+            - generic [ref=e167]: NEW
+          - generic [ref=e173]:
+            - generic [ref=e175]: Dreamina-Seedance-2.0-fast
+            - generic [ref=e176]:
+              - generic [ref=e177]: Visual Model
+              - generic [ref=e178]: Video generation
+            - generic [ref=e180]: Seedance 2.0 Fast is a multimodal video model that inherits core strengths from Seedance 2.0. With faster generation speed, it supports multimodal inputs and editing for stable, professional creation.
+            - generic [ref=e181]:
+              - link "Try it now" [ref=e182] [cursor=pointer]:
+                - /url: "https://console.byteplus.com/ark/region:ark+ap-southeast-1/experience/vision?modelId=dreamina-seedance-2-0-fast-260128&tab=GenVideo\n"
+              - link "View details" [ref=e183] [cursor=pointer]:
+                - /url: "https://console.byteplus.com/ark/region:ark+ap-southeast-1/model/detail?Id=dreamina-seedance-2-0-fast\n"
+            - generic [ref=e184]: NEW
+          - generic [ref=e187]:
+            - generic [ref=e189]: Dola-Seed-2.0-Code
+            - generic [ref=e190]:
+              - generic [ref=e191]: Multimodal Model
+              - generic [ref=e192]: Reason
+              - generic [ref=e193]: Visual understanding
+            - generic [ref=e195]: A coding model optimized for real-world development environments, with reliable tool use in common IDEs such as Claude Code. It delivers strong front-end performance and supports Skills.
+            - generic [ref=e196]:
+              - link "Try it now" [ref=e197] [cursor=pointer]:
+                - /url: https://console.byteplus.com/ark/region:ark+ap-southeast-1/experience/chat?csid=excs-202604202231-%5Blp75woDK5r8BD4qvsNWN0%5D&modelId=seed-2-0-code-preview-260328
+              - link "View details" [ref=e198] [cursor=pointer]:
+                - /url: https://console.byteplus.com/ark/region:ark+ap-southeast-1/model/detail?Id=seed-2-0-code
+            - generic [ref=e199]: NEW
+          - generic [ref=e202]:
+            - generic [ref=e204]: Dola-Seedream-5.0-lite
+            - generic [ref=e205]:
+              - generic [ref=e206]: Visual Model
+              - generic [ref=e207]: Image generation
+            - generic [ref=e209]: Supports text, single-image and multi-image inputs, and enables the generation of image sets.
+            - generic [ref=e210]:
+              - link "Try it now" [ref=e211] [cursor=pointer]:
+                - /url: https://console.byteplus.com/ark/region:ark+ap-southeast-1/experience/vision?_gl=1%2Ap59lso%2A_gcl_aw%2AR0NMLjE3NzAxNzk1MjAuQ2p3S0NBaUExb2JNQmhBYkVpd0FzVUJiSWczR2VneW9Wbm96NU9LRVdhV2d3b1VfeUZHSEJOSUhzSE55LWVRSmdMWHNRZjQ5Z250c2dCb0NGdFlRQXZEX0J3RQ..%2A_gcl_au%2AMTI0OTU1OTUyOS4xNzY5NDE0MDI0%2A_ga%2AMTE3Mjg3NjA1Ni4xNzY3NzY5NzEz%2A_ga_2377LE7GQM%2AczE3NzEyMzA0MDEkbzMxJGcxJHQxNzcxMjMxMzM1JGo2MCRsMCRoNzQ0NDYyNTc1%2A_ga_3H57BBC3B9%2AczE3NzEyMzA0MDEkbzMxJGcxJHQxNzcxMjMxMzM1JGo2MCRsMCRoMTg4NTEwMDQzOA..&csid=excs-202602161642-%5BNmcHMqsN3IBVjSHcGHx_u%5D&modelId=seedream-5-0-260128&tab=GenImage
+              - generic [ref=e212] [cursor=pointer]: View details
+          - generic [ref=e215]:
+            - generic [ref=e217]: DeepSeek-V3.2
+            - generic [ref=e218]:
+              - generic [ref=e219]: LLM
+              - generic [ref=e220]: Reason
+            - generic [ref=e222]: "DeepSeek-V3.2 Official Version: Balances reasoning capabilities with output length, ideal for daily use cases such as Q&A scenarios and general Agent task scenarios."
+            - generic [ref=e223]:
+              - link "Try it now" [ref=e224] [cursor=pointer]:
+                - /url: https://www.byteplus.com/en/experience/modelark?mode=chat&csid=excs-202602041237-%5B50DnR7mFdoHQ5JDt43SV3%5D&modelId=deepseek-v3-2-251201
+              - generic [ref=e225] [cursor=pointer]: View details
+      - generic [ref=e226]:
+        - heading "Experience ModelArk today" [level=2] [ref=e229]
+        - generic [ref=e233]:
+          - generic [ref=e236]:
+            - generic [ref=e238]: Start your AI journey with ease
+            - generic [ref=e240]: Get started with 500,000 free tokens for every Large Language Model and 2,000,000 free tokens for every vision model. Enterprise customers can unlock even greater value with our exclusive partnership program, receiving 5 million tokens to power their AI initiatives.
+            - link "Try it now" [ref=e242] [cursor=pointer]:
+              - /url: https://www.byteplus.com/en/experience/modelark
+          - generic [ref=e245]:
+            - generic [ref=e247]:
+              - generic [ref=e249]: Build applications with powerful APIs
+              - generic [ref=e251]: Access capabilities including inference, fine-tuning, evaluation and so on. Integrate web search plugins, knowledge bases, and agents to power scalable enterprise-grade AI solutions.
+              - generic [ref=e253] [cursor=pointer]: Get API
+            - generic [ref=e258]:
+              - generic [ref=e261]:
+                - generic [ref=e264] [cursor=pointer]: Foundation models
+                - generic [ref=e266]: Explore a full range of models
+              - generic [ref=e269]:
+                - generic [ref=e272] [cursor=pointer]: Deploy and use
+                - generic [ref=e274]: Online and batch inference
+              - generic [ref=e277]:
+                - generic [ref=e280] [cursor=pointer]: PromptPilot
+                - generic [ref=e282]: Optimize your prompts
+              - generic [ref=e285]:
+                - generic [ref=e288] [cursor=pointer]: Starter apps
+                - generic [ref=e290]: Build enterprise AI solutions
+      - generic [ref=e291]:
+        - generic [ref=e293]:
+          - heading "Flexible and diverse pricing schemes" [level=2] [ref=e294]
+          - link "View pricing" [ref=e295] [cursor=pointer]:
+            - /url: https://docs.byteplus.com/docs/ModelArk/1099320
+            - generic [ref=e296]: View pricing
+            - img [ref=e297]
+        - generic [ref=e301]:
+          - generic [ref=e302]:
+            - generic [ref=e306] [cursor=pointer]:
+              - generic [ref=e307]: Standard
+              - generic [ref=e308]: Pay-as-you-go
+            - generic [ref=e313] [cursor=pointer]:
+              - generic [ref=e314]: Free tokens
+              - generic [ref=e315]: Experience the models for free
+          - generic [ref=e320]:
+            - generic [ref=e321]:
+              - table [ref=e322]:
+                - rowgroup [ref=e327]:
+                  - row [ref=e328]:
+                    - cell [ref=e329]
+                    - cell [ref=e330]
+                    - cell [ref=e331]
+                  - row "Dola-Seed-2.0-Code $0.45USD/M input tokens $2.7USD/M output tokens" [ref=e332]:
+                    - cell [ref=e333]:
+                      - paragraph [ref=e334]
+                    - cell "Dola-Seed-2.0-Code" [ref=e335]:
+                      - paragraph [ref=e336]:
+                        - generic [ref=e337]: Dola-Seed-2.0-Code
+                    - cell "$0.45USD/M input tokens $2.7USD/M output tokens" [ref=e338]:
+                      - paragraph [ref=e339]:
+                        - generic [ref=e340]: $0.45USD/M input tokens
+                        - generic [ref=e341]: $2.7USD/M output tokens
+                  - row "Dola-Seed-2.0-pro $0.45USD/M input tokens $2.7USD/M output tokens" [ref=e342]:
+                    - cell "Dola-Seed-2.0-pro" [ref=e343]:
+                      - paragraph [ref=e344]:
+                        - generic [ref=e345]: Dola-Seed-2.0-pro
+                    - cell "$0.45USD/M input tokens $2.7USD/M output tokens" [ref=e346]:
+                      - paragraph [ref=e347]:
+                        - generic [ref=e348]: $0.45USD/M input tokens
+                        - generic [ref=e349]: $2.7USD/M output tokens
+                  - row "Dola-Seed-2.0-lite $0.225USD/M input tokens $1.8USD/M output tokens" [ref=e350]:
+                    - cell "Dola-Seed-2.0-lite" [ref=e351]:
+                      - paragraph [ref=e352]:
+                        - generic [ref=e353]: Dola-Seed-2.0-lite
+                    - cell "$0.225USD/M input tokens $1.8USD/M output tokens" [ref=e354]:
+                      - paragraph [ref=e355]:
+                        - generic [ref=e356]: $0.225USD/M input tokens
+                        - generic [ref=e357]: $1.8USD/M output tokens
+                  - row "Dola-Seed-2.0-mini $0.09USD/M input tokens $0.36USD/M input tokens" [ref=e358]:
+                    - cell "Dola-Seed-2.0-mini" [ref=e359]:
+                      - paragraph [ref=e360]:
+                        - generic [ref=e361]: Dola-Seed-2.0-mini
+                    - cell "$0.09USD/M input tokens $0.36USD/M input tokens" [ref=e362]:
+                      - paragraph [ref=e363]:
+                        - generic [ref=e364]: $0.09USD/M input tokens
+                        - generic [ref=e365]: $0.36USD/M input tokens
+                  - row "DeepSeek-V3.2 $0.28USD/M input tokens $0.42USD/M output tokens" [ref=e366]:
+                    - cell "DeepSeek-V3.2" [ref=e367]:
+                      - paragraph [ref=e368]:
+                        - generic [ref=e369]: DeepSeek-V3.2
+                    - cell "$0.28USD/M input tokens $0.42USD/M output tokens" [ref=e370]:
+                      - paragraph [ref=e371]:
+                        - generic [ref=e372]: $0.28USD/M input tokens
+                        - generic [ref=e373]: $0.42USD/M output tokens
+                  - row "ByteDance-Seed-1.8 $0.25USD/M input tokens $2.00USD/M output tokens" [ref=e374]:
+                    - cell "ByteDance-Seed-1.8" [ref=e375]:
+                      - paragraph [ref=e376]:
+                        - generic [ref=e377]: ByteDance-Seed-1.8
+                    - cell "$0.25USD/M input tokens $2.00USD/M output tokens" [ref=e378]:
+                      - paragraph [ref=e379]:
+                        - generic [ref=e380]: $0.25USD/M input tokens
+                        - generic [ref=e381]: $2.00USD/M output tokens
+                  - row "DeepSeek-V3.1 $0.56USD/M input tokens $1.68USD/M output tokens" [ref=e382]:
+                    - cell "DeepSeek-V3.1" [ref=e383]:
+                      - paragraph [ref=e384]:
+                        - generic [ref=e385]: DeepSeek-V3.1
+                    - cell "$0.56USD/M input tokens $1.68USD/M output tokens" [ref=e386]:
+                      - paragraph [ref=e387]:
+                        - generic [ref=e388]: $0.56USD/M input tokens
+                        - generic [ref=e389]: $1.68USD/M output tokens
+                  - row "ByteDance-Seed-1.6 From $0.25USD/M input tokens From $2.00USD/M output tokens" [ref=e390]:
+                    - cell "ByteDance-Seed-1.6" [ref=e391]:
+                      - paragraph [ref=e392]:
+                        - generic [ref=e393]: ByteDance-Seed-1.6
+                    - cell "From $0.25USD/M input tokens From $2.00USD/M output tokens" [ref=e394]:
+                      - paragraph [ref=e395]:
+                        - generic [ref=e396]: From $0.25USD/M input tokens
+                        - generic [ref=e397]: From $2.00USD/M output tokens
+                  - row "ByteDance-Seed-1.6-flash From $0.075USD/M input tokens From $0.30USD/M output tokens" [ref=e398]:
+                    - cell "ByteDance-Seed-1.6-flash" [ref=e399]:
+                      - paragraph [ref=e400]:
+                        - generic [ref=e401]: ByteDance-Seed-1.6-flash
+                    - cell "From $0.075USD/M input tokens From $0.30USD/M output tokens" [ref=e402]:
+                      - paragraph [ref=e403]:
+                        - generic [ref=e404]: From $0.075USD/M input tokens
+                        - generic [ref=e405]: From $0.30USD/M output tokens
+                  - row "GPT-OSS-120B $0.10USD/M input tokens $0.50USD/M output tokens" [ref=e406]:
+                    - cell "GPT-OSS-120B" [ref=e407]:
+                      - paragraph [ref=e408]:
+                        - generic [ref=e409]: GPT-OSS-120B
+                    - cell "$0.10USD/M input tokens $0.50USD/M output tokens" [ref=e410]:
+                      - paragraph [ref=e411]:
+                        - generic [ref=e412]: $0.10USD/M input tokens
+                        - generic [ref=e413]: $0.50USD/M output tokens
+                  - row "Kimi-K2 (250905) $0.60USD/M input tokens $2.50USD/M output tokens" [ref=e414]:
+                    - cell "Kimi-K2 (250905)" [ref=e415]:
+                      - paragraph [ref=e416]:
+                        - generic [ref=e417]: Kimi-K2 (250905)
+                    - cell "$0.60USD/M input tokens $2.50USD/M output tokens" [ref=e418]:
+                      - paragraph [ref=e419]:
+                        - generic [ref=e420]: $0.60USD/M input tokens
+                        - generic [ref=e421]: $2.50USD/M output tokens
+                  - row "Skylark-pro $0.40USD/M input tokens $1.60USD/M output tokens" [ref=e422]:
+                    - cell "Skylark-pro" [ref=e423]:
+                      - paragraph [ref=e424]:
+                        - generic [ref=e425]: Skylark-pro
+                    - cell "$0.40USD/M input tokens $1.60USD/M output tokens" [ref=e426]:
+                      - paragraph [ref=e427]:
+                        - generic [ref=e428]: $0.40USD/M input tokens
+                        - generic [ref=e429]: $1.60USD/M output tokens
+              - table [ref=e430]:
+                - rowgroup [ref=e435]:
+                  - row "Vision models Model name Inference" [ref=e436]:
+                    - cell "Vision models" [ref=e437]:
+                      - paragraph [ref=e438]: Vision models
+                    - cell "Model name" [ref=e439]:
+                      - paragraph [ref=e440]: Model name
+                    - cell "Inference" [ref=e441]:
+                      - paragraph [ref=e442]: Inference
+                  - row "Dreamina-Seedance-2.0 $4.3USD/M tokens input with video $7USD/M tokens input without video" [ref=e443]:
+                    - cell [ref=e444]:
+                      - paragraph [ref=e445]
+                    - cell "Dreamina-Seedance-2.0" [ref=e446]:
+                      - paragraph [ref=e447]:
+                        - generic [ref=e448]: Dreamina-Seedance-2.0
+                    - cell "$4.3USD/M tokens input with video $7USD/M tokens input without video" [ref=e449]:
+                      - paragraph [ref=e450]:
+                        - generic [ref=e451]: $4.3USD/M tokens input with video
+                        - generic [ref=e452]: $7USD/M tokens input without video
+                  - row "Dreamina-Seedance-2.0-fast $3.3USD/M tokens input with video $5.6USD/M tokens input without video" [ref=e453]:
+                    - cell "Dreamina-Seedance-2.0-fast" [ref=e454]:
+                      - paragraph [ref=e455]:
+                        - generic [ref=e456]: Dreamina-Seedance-2.0-fast
+                    - cell "$3.3USD/M tokens input with video $5.6USD/M tokens input without video" [ref=e457]:
+                      - paragraph [ref=e458]:
+                        - generic [ref=e459]: $3.3USD/M tokens input with video
+                        - generic [ref=e460]: $5.6USD/M tokens input without video
+                  - row "Dola-Seedream-5.0-lite $0.035USD/output image" [ref=e461]:
+                    - cell "Dola-Seedream-5.0-lite" [ref=e462]:
+                      - paragraph [ref=e463]:
+                        - generic [ref=e464]: Dola-Seedream-5.0-lite
+                    - cell "$0.035USD/output image" [ref=e465]:
+                      - paragraph [ref=e466]:
+                        - generic [ref=e467]: $0.035USD/output image
+                  - row "ByteDance-Seedream-4.5 $0.04USD/output image" [ref=e468]:
+                    - cell "ByteDance-Seedream-4.5" [ref=e469]:
+                      - paragraph [ref=e470]:
+                        - generic [ref=e471]: ByteDance-Seedream-4.5
+                    - cell "$0.04USD/output image" [ref=e472]:
+                      - paragraph [ref=e473]:
+                        - generic [ref=e474]: $0.04USD/output image
+                  - row "ByteDance-Seedance-1.5-pro From $1.20USD/M output tokens" [ref=e475]:
+                    - cell "ByteDance-Seedance-1.5-pro" [ref=e476]:
+                      - paragraph [ref=e477]:
+                        - generic [ref=e478]: ByteDance-Seedance-1.5-pro
+                    - cell "From $1.20USD/M output tokens" [ref=e479]:
+                      - paragraph [ref=e480]:
+                        - generic [ref=e481]: From $1.20USD/M output tokens
+                  - row "Bytedance-Seedream-4.0 $0.03USD/output image" [ref=e482]:
+                    - cell "Bytedance-Seedream-4.0" [ref=e483]:
+                      - paragraph [ref=e484]:
+                        - generic [ref=e485]: Bytedance-Seedream-4.0
+                    - cell "$0.03USD/output image" [ref=e486]:
+                      - paragraph [ref=e487]:
+                        - generic [ref=e488]: $0.03USD/output image
+                  - row "Bytedance-Seedance-1.0-pro $2.50USD/M output tokens" [ref=e489]:
+                    - cell "Bytedance-Seedance-1.0-pro" [ref=e490]:
+                      - paragraph [ref=e491]:
+                        - generic [ref=e492]: Bytedance-Seedance-1.0-pro
+                    - cell "$2.50USD/M output tokens" [ref=e493]:
+                      - paragraph [ref=e494]:
+                        - generic [ref=e495]: $2.50USD/M output tokens
+            - generic [ref=e496]:
+              - generic [ref=e497]: LLM
+              - generic [ref=e498]: Model name
+              - generic [ref=e499]: Inference
+      - generic [ref=e500]:
+        - generic [ref=e502]:
+          - heading "LLM application scenarios" [level=2] [ref=e503]
+          - generic [ref=e504]: Rich application scenarios and solutions to meet a variety of business needs
+        - generic [ref=e507]:
+          - generic [ref=e510]:
+            - generic "Smart cockpit" [ref=e511] [cursor=pointer]: Smart cockpit Smart cockpit
+            - generic "Personal assistant" [ref=e512] [cursor=pointer]
+            - generic "Education" [ref=e513] [cursor=pointer]
+            - generic "Customer support" [ref=e514] [cursor=pointer]
+            - generic "Marketing" [ref=e515] [cursor=pointer]
+            - generic "Retail" [ref=e516] [cursor=pointer]
+          - generic [ref=e524]:
+            - generic [ref=e526]: "Drive smarter, not harder: Get real-time guidance on your vehicle's features and stay safe with up-to-date traffic regulations, all in one place."
+            - generic [ref=e528]: "Discover your next adventure: Find hidden gems and plan unforgettable trips with personalized POI recommendations and seamless route planning."
+            - generic [ref=e530]: "Personalized news digest: Get the news you need, summarized and delivered instantly. Cut through the noise so you can stay informed effortlessly."
+            - generic [ref=e531]:
+              - link "Contact sales" [ref=e532] [cursor=pointer]:
+                - /url: https://www.byteplus.com/contact
+              - link "View models" [ref=e533] [cursor=pointer]:
+                - /url: https://docs.byteplus.com/docs/ModelArk/1399009
+      - generic [ref=e536]:
+        - generic [ref=e538]:
+          - heading "Full-cycle security and trustworthiness with secure sessions" [level=2] [ref=e539]
+          - generic [ref=e540]: Only you can see, use, own the data
+        - generic [ref=e544]:
+          - generic [ref=e547]:
+            - generic [ref=e549]: Full-link encryption
+            - generic [ref=e551]: Your data, locked down. End-to-end encryption keeps your connection to ModelArk completely private.
+          - generic [ref=e556]:
+            - generic [ref=e558]: High data confidentiality
+            - generic [ref=e560]: Your privacy is paramount. Your data remains invisible to everyone except you.
+          - generic [ref=e565]:
+            - generic [ref=e567]: Strong environmental isolation
+            - generic [ref=e569]: Impenetrable security. ModelArk uses TrustPod and network isolation to eliminate data breaches and leaks.
+          - generic [ref=e574]:
+            - generic [ref=e576]: Operational auditability
+            - generic [ref=e578]: Full audit trails. We track all data activity, ensuring policy compliance and identifying potential threats.
+        - link "View security information" [ref=e583] [cursor=pointer]:
+          - /url: https://docs.byteplus.com/docs/ModelArk/1099355
+      - generic [ref=e584]:
+        - heading "ModelArk capability support" [level=2] [ref=e587]
+        - generic [ref=e591]:
+          - generic [ref=e594]:
+            - generic [ref=e596]: Power your business with AI
+            - generic [ref=e598]: Unlock the full potential of your data with our expert algorithm services. From diagnosis and optimization to seamless implementation, we empower your business to achieve AI-driven success.
+            - generic [ref=e600]: Unlocks customer data's unique value
+            - generic [ref=e602]: Guarantees last-mile implementation
+            - generic [ref=e604]: Enables customer success
+          - generic [ref=e609]:
+            - generic [ref=e611]: Build powerful AI applications
+            - generic [ref=e613]: Extend your model's capabilities with our comprehensive suite of tools. From online plug-ins and knowledge bases to our Coze AI platform, we empower you to build custom AI solutions tailored to your business needs.
+            - generic [ref=e615]: Improves model search capability
+            - generic [ref=e617]: Provides massive high-quality image and video content
+            - generic [ref=e619]: Supports high-performance retrieval
+          - generic [ref=e624]:
+            - generic [ref=e626]: Scale your AI effortlessly
+            - generic [ref=e628]: Effectively protects data security in model training, deployment, and inference through transmission encryption, data encryption, and security sandbox technologies.
+            - generic [ref=e630]: Abundant public cloud GPU resource pools
+            - generic [ref=e632]: Instant availability after creation of fine-tuned model endpoint
+            - generic [ref=e634]: Minute-level scaling of thousands of GPUs
+          - generic [ref=e639]:
+            - generic [ref=e641]: Secure your AI journey
+            - generic [ref=e643]: Protect your valuable data with robust security measures at every stage. From encryption to sandboxing, we ensure the safety and integrity of your AI initiatives.
+            - generic [ref=e645]: Controlled and auditable access
+            - generic [ref=e647]: Multi-layer data encryption and environmental isolation
+            - generic [ref=e649]: Security fencing for content risk identification
+      - generic [ref=e654]:
+        - generic [ref=e655]: Ready to get started or still have questions? Get in touch.
+        - generic [ref=e656]:
+          - link "Try for free" [ref=e657] [cursor=pointer]:
+            - /url: https://www.byteplus.com/experience/modelark
+            - text: Try for free
+            - img [ref=e658]
+          - link "Contact sales" [ref=e660] [cursor=pointer]:
+            - /url: https://www.byteplus.com/contact
+            - text: Contact sales
+            - img [ref=e661]
+    - generic [ref=e664]:
+      - generic [ref=e665]:
+        - generic [ref=e666]:
+          - img "BytePlus" [ref=e667]
+          - generic [ref=e668]:
+            - link "Follow on LinkedIn" [ref=e669] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/byteplus
+              - img "Follow on LinkedIn" [ref=e670]
+            - link "BytePlus Discord Community" [ref=e671] [cursor=pointer]:
+              - /url: https://discord.gg/YVdSTh852b
+              - img "BytePlus Discord Community" [ref=e672]
+            - link "BytePlus on YouTube" [ref=e673] [cursor=pointer]:
+              - /url: https://www.youtube.com/@byteplusglobal
+              - img "BytePlus on YouTube" [ref=e674]
+            - link "Follow on X" [ref=e675] [cursor=pointer]:
+              - /url: https://x.com/BytePlusGlobal
+              - img "Follow on X" [ref=e676]
+        - generic [ref=e677]:
+          - generic [ref=e678]:
+            - generic [ref=e679]:
+              - generic [ref=e680]: Products and solutions
+              - link "See all products" [ref=e683] [cursor=pointer]:
+                - /url: https://www.byteplus.com/en/product/list
+              - link "Pricing" [ref=e686] [cursor=pointer]:
+                - /url: https://www.byteplus.com/en/pricing
+            - generic [ref=e687]:
+              - generic [ref=e688]: Developers
+              - link "Documentation" [ref=e691] [cursor=pointer]:
+                - /url: https://docs.byteplus.com/en/docs
+              - link "API explorer" [ref=e694] [cursor=pointer]:
+                - /url: https://api.byteplus.com/api-explorer
+              - link "SDK" [ref=e697] [cursor=pointer]:
+                - /url: https://api.byteplus.com/api-sdk
+              - link "BytePlus Discord Community" [ref=e700] [cursor=pointer]:
+                - /url: https://discord.gg/YVdSTh852b
+          - generic [ref=e702]:
+            - generic [ref=e703]: Learn and build
+            - link "BytePlus Free Tier" [ref=e706] [cursor=pointer]:
+              - /url: https://www.byteplus.com/activity/free
+            - link "AI Startups Accelerator" [ref=e709] [cursor=pointer]:
+              - /url: https://www.byteplus.com/en/activity/vstart
+            - link "BytePlus Concepts" [ref=e712] [cursor=pointer]:
+              - /url: https://www.byteplus.com/en/what-is
+            - link "Customer success" [ref=e715] [cursor=pointer]:
+              - /url: https://www.byteplus.com/en/customer-success
+            - link "BytePlus Academy" [ref=e718] [cursor=pointer]:
+              - /url: https://www.byteplus.com/en/byteplus-academy
+            - link "Blog" [ref=e721] [cursor=pointer]:
+              - /url: https://www.byteplus.com/en/blog
+            - link "Insights" [ref=e724] [cursor=pointer]:
+              - /url: https://www.byteplus.com/en/insights
+          - generic [ref=e725]:
+            - generic [ref=e726]:
+              - generic [ref=e727]: Connect
+              - link "Partner Central" [ref=e730] [cursor=pointer]:
+                - /url: https://partnercentral.byteplus.com
+              - link "Partner Network" [ref=e733] [cursor=pointer]:
+                - /url: https://www.byteplus.com/en/partners
+              - link "Events & webinars" [ref=e736] [cursor=pointer]:
+                - /url: https://www.byteplus.com/en/events
+            - generic [ref=e737]:
+              - generic [ref=e738]: Company
+              - link "About us" [ref=e741] [cursor=pointer]:
+                - /url: https://www.byteplus.com/en/about-us
+              - link "Trust center" [ref=e744] [cursor=pointer]:
+                - /url: https://www.byteplus.com/en/trust-center
+              - link "Careers" [ref=e747] [cursor=pointer]:
+                - /url: https://www.byteplus.com/en/careers
+          - generic [ref=e749]:
+            - generic [ref=e750]: Engage and support
+            - link "Contact sales" [ref=e753] [cursor=pointer]:
+              - /url: https://www.byteplus.com/contact-us
+            - link "Contact support" [ref=e756] [cursor=pointer]:
+              - /url: https://console.byteplus.com/workorder/create
+            - link "Become a Partner" [ref=e759] [cursor=pointer]:
+              - /url: https://www.byteplus.com/en/partners/become-a-partner
+            - link "Report abuse" [ref=e762] [cursor=pointer]:
+              - /url: https://www.byteplus.com/en/support-hub/report-abuse
+            - link "Sitemap" [ref=e765] [cursor=pointer]:
+              - /url: https://www.byteplus.com/en/sitemap
+      - generic [ref=e766]:
+        - generic [ref=e767]:
+          - generic [ref=e768]: © 2026 BytePlus Pte Ltd.
+          - link "Term of Service" [ref=e771] [cursor=pointer]:
+            - /url: https://docs.byteplus.com/en/legal/docs/terms-of-service
+          - generic [ref=e772]: •
+          - link "Privacy Policy" [ref=e774] [cursor=pointer]:
+            - /url: https://docs.byteplus.com/en/legal/docs/privacy-policy
+          - generic [ref=e775]: •
+          - generic [ref=e776] [cursor=pointer]: Cookie preferences
+        - generic [ref=e777]:
+          - generic [ref=e778]: The AI-native enterprise partner from
+          - link "ByteDance logo" [ref=e779] [cursor=pointer]:
+            - /url: https://www.bytedance.com/en/products
+            - img "ByteDance logo" [ref=e780]
+        - button "Change language English" [ref=e784] [cursor=pointer]:
+          - img "Change language" [ref=e785]
+          - generic [ref=e786]: English
+  - generic [ref=e787]:
+    - generic [ref=e788]: Accept cookies from BytePlus on this browser?
+    - generic [ref=e789]:
+      - text: We and our partners use cookies and similar technologies to operate, improve, protect, and analyze our websites. Essential cookies are required for the site to function properly. By clicking "Accept All," you consent to us and our partners using optional cookies for purposes like such as website usage analysis, personalized ads, and measuring Byteplus' ad effectiveness. Clicking "Reject All" disables these optional cookies. Learn more in our
+      - link "Cookies Policy" [ref=e790] [cursor=pointer]:
+        - /url: https://docs.byteplus.com/en/docs/legal/docs-cookie-policy
+      - text: . You can manage your cookie preferences by clicking on the "Cookie Settings" below.
+    - generic [ref=e791]:
+      - generic [ref=e792]:
+        - button "Accept all" [ref=e793] [cursor=pointer]
+        - button "Reject all" [ref=e794] [cursor=pointer]
+      - button "Cookie Settings" [ref=e795] [cursor=pointer]
+  - img [ref=e797] [cursor=pointer]
+  - generic [ref=e798]:
+    - generic [ref=e799]: 👋🏻 Live chat with sales
+    - generic [ref=e800] [cursor=pointer]: ✕

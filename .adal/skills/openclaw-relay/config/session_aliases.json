@@ -1,4 +1,0 @@
-{
-  "main": "agent:<agentId>:main",
-  "maintainers": "agent:<agentId>:discord:channel:<channelId>"
-}

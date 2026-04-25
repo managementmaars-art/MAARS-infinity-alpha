@@ -3,18 +3,18 @@
 Uses Reference Intelligence Style Blueprints to generate on-brand content
 matching a reference's tone, structure, and aesthetic.
 """
-import os
 import uuid
 import logging
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, Request, Depends
+from pydantic import BaseModel
 from db import db
 from auth import get_current_user, User
+from services.llm_gateway import complete_text
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
-EMERGENT_LLM_KEY = os.environ.get("EMERGENT_LLM_KEY", "")
 
 CONTENT_TYPES = [
     {"id": "marketing_copy", "label": "Marketing Copy", "description": "Landing pages, product descriptions, value props"},
@@ -93,7 +93,6 @@ TYPE: {ref.get('type', 'text')}
     }
 
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
         provider, model = await _get_user_llm_config(current_user.user_id)
 
         system_msg = f"""You are a world-class content creator and brand strategist. Generate high-quality, on-brand content.
@@ -112,13 +111,15 @@ RULES:
 4. Format appropriately for the content type
 5. Include concrete details and actionable elements"""
 
-        chat = LlmChat(
-            api_key=EMERGENT_LLM_KEY,
-            session_id=f"content_gen_{uuid.uuid4().hex[:8]}",
-            system_message=system_msg
-        ).with_model(provider, model)
-
-        generated = await chat.send_message(UserMessage(text=prompt))
+        # Route through the Universal Gateway — handles provider selection,
+        # wallet reserve/settle, usage logging, fallback. Single router.
+        generated = await complete_text(
+            user_id=current_user.user_id,
+            system_prompt=system_msg,
+            user_prompt=prompt,
+            model="maars/auto",
+            source="content.generate",
+        )
 
         result = {
             "content_id": f"cnt_{uuid.uuid4().hex[:10]}",
@@ -159,3 +160,32 @@ async def delete_content(content_id: str, current_user: User = Depends(get_curre
     if result.deleted_count == 0:
         raise HTTPException(404, "Content not found")
     return {"success": True}
+
+
+class _PublishBody(BaseModel):
+    platforms: list[str]
+    extras: dict | None = None
+    media_urls: list[str] | None = None
+    text_override: str | None = None
+    schedule_at: float | None = None
+
+
+@router.post("/content/{content_id}/publish")
+async def publish_generated_content(
+    content_id: str,
+    body: _PublishBody,
+    current_user: User = Depends(get_current_user),
+):
+    """Publish previously-generated content (or text_override) to N
+    platforms in parallel. Returns per-platform results.
+    Platforms: x / twitter, linkedin, instagram, facebook, tiktok, youtube."""
+    from services.content_publisher import publish_content
+    return await publish_content(
+        user_id=current_user.user_id,
+        content_id=content_id if not body.text_override else None,
+        text=body.text_override,
+        media_urls=body.media_urls,
+        platforms=body.platforms,
+        extras=body.extras or {},
+        schedule_at=body.schedule_at,
+    )

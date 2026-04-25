@@ -1,0 +1,124 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation "primary navigation" [ref=e3]:
+      - link "Higgsfield AI – AI Video & Image Generation Platform" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img [ref=e5]
+      - generic [ref=e8]:
+        - link "Explore" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - button "Image" [ref=e11] [cursor=pointer]
+        - button "Video" [ref=e13] [cursor=pointer]
+        - button "Audio" [ref=e15] [cursor=pointer]
+        - link "Collab" [ref=e16] [cursor=pointer]:
+          - /url: /generate
+        - button "Edit" [ref=e18] [cursor=pointer]
+        - button "Character" [ref=e20] [cursor=pointer]
+        - link "Marketing Studio New" [ref=e21] [cursor=pointer]:
+          - /url: /marketing-studio
+          - text: Marketing Studio
+          - generic [ref=e22]: New
+        - link "Cinema Studio 3.5" [ref=e23] [cursor=pointer]:
+          - /url: /cinema-studio?autoSelectFolder=true
+          - text: Cinema Studio
+          - generic [ref=e24]: "3.5"
+        - link "Originals New" [ref=e25] [cursor=pointer]:
+          - /url: /original-series
+          - text: Originals
+          - generic [ref=e26]: New
+        - link "Apps" [ref=e27] [cursor=pointer]:
+          - /url: /apps
+        - link "Assist" [ref=e28] [cursor=pointer]:
+          - /url: /chat
+        - button "Community" [ref=e30] [cursor=pointer]
+      - generic [ref=e32]:
+        - img [ref=e36] [cursor=pointer]
+        - img [ref=e39]
+  - main [ref=e42]:
+    - generic [ref=e43]:
+      - generic [ref=e44]:
+        - navigation [ref=e45]:
+          - generic [ref=e46] [cursor=pointer]: Create Video
+          - generic [ref=e47] [cursor=pointer]: Edit Video
+          - generic [ref=e48] [cursor=pointer]: Motion Control
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - group [ref=e52]:
+              - button "General Kling 3.0" [ref=e53]:
+                - img "Loading the media file..."
+                - generic [ref=e54]: Your browser does not support the video.
+                - generic [ref=e56]:
+                  - paragraph [ref=e57]: General
+                  - paragraph [ref=e58]: Kling 3.0
+                - button "Change" [ref=e60] [cursor=pointer]:
+                  - img [ref=e61]
+                  - text: Change
+            - generic [ref=e63]:
+              - generic [ref=e66]:
+                - generic [ref=e68]:
+                  - generic:
+                    - paragraph: Optional
+                  - generic [ref=e70] [cursor=pointer]:
+                    - button "Start frame" [ref=e71]
+                    - img [ref=e73]
+                    - paragraph [ref=e77]: Start frame
+                - generic [ref=e79]:
+                  - generic:
+                    - paragraph: Optional
+                  - generic [ref=e81] [cursor=pointer]:
+                    - button "End frame" [ref=e82]
+                    - img [ref=e84]
+                    - paragraph [ref=e88]: End frame
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]: Multi-shot
+                  - button [ref=e93] [cursor=pointer]:
+                    - img [ref=e94]
+                - switch [ref=e96] [cursor=pointer]
+              - generic [ref=e98]:
+                - generic [ref=e99]:
+                  - textbox [ref=e100]
+                  - generic: Describe your video, like "A woman walking through a neon-lit city". Add elements using @
+                - generic [ref=e101]:
+                  - generic [ref=e102] [cursor=pointer]:
+                    - img [ref=e104]
+                    - generic [ref=e106]: Enhance on
+                    - checkbox "Enhance on" [checked] [ref=e107]
+                  - generic [ref=e108] [cursor=pointer]:
+                    - img [ref=e110]
+                    - generic [ref=e112]: "On"
+                    - checkbox "On" [checked] [ref=e113]
+                  - button "Elements" [ref=e114] [cursor=pointer]:
+                    - img [ref=e115]
+                    - text: Elements
+              - button "Model" [ref=e119] [cursor=pointer]:
+                - generic [ref=e120]:
+                  - generic [ref=e121]: Model
+                  - paragraph [ref=e124]: Kling 3.0
+                - img [ref=e125]
+              - generic [ref=e127]:
+                - button "Duration" [ref=e129] [cursor=pointer]:
+                  - img [ref=e130]
+                  - generic [ref=e132]: 5s
+                - generic [ref=e134]:
+                  - button "16:9 Ratio" [ref=e136] [cursor=pointer]:
+                    - img [ref=e138]
+                    - generic [ref=e140]: 16:9
+                  - combobox [ref=e143]
+                - generic [ref=e145]:
+                  - button "720p Resolution" [ref=e147] [cursor=pointer]:
+                    - img [ref=e149]
+                    - generic [ref=e151]: 720p
+                  - combobox [ref=e154]
+          - button "Generate" [ref=e157] [cursor=pointer]
+      - generic [ref=e158]:
+        - tablist [ref=e160]:
+          - tab "History" [selected] [ref=e161] [cursor=pointer]:
+            - img [ref=e162]
+            - text: History
+          - tab "How it works" [ref=e165] [cursor=pointer]:
+            - img [ref=e166]
+            - text: How it works
+        - img "flower loader" [ref=e170]
+  - region "Notifications Alt+T"
+  - alert [ref=e171]

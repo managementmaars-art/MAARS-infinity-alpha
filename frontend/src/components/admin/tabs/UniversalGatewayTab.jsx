@@ -9,11 +9,17 @@ import {
   Pencil, Check, X, Search, ChevronDown, ChevronUp,
   Play, Zap, Webhook, GitCompare, Send, Settings2, SlidersHorizontal,
   MessageSquare, PlusCircle, Trash2, TestTube2, ExternalLink, Code2,
-  Wallet, CreditCard, ArrowUpRight, Percent
+  Wallet, CreditCard, ArrowUpRight, Percent, Sparkles, Package,
+  GraduationCap, Workflow, Brain, Crown
 } from "lucide-react";
 import { API } from "../../../App";
 import { toast } from "sonner";
 import { useAuth } from "../../../App";
+import ProviderIntelligencePage from "../../../pages/ProviderIntelligencePage";
+import { UniversalGatewayTraining } from "./UniversalGatewayTraining";
+import { UniversalGatewayWorkflows } from "./UniversalGatewayWorkflows";
+import { UniversalGatewayRAG } from "./UniversalGatewayRAG";
+import { UniversalGatewayCommander } from "./UniversalGatewayCommander";
 
 const PROVIDER_COLORS = {
   openai:     "text-emerald-400",
@@ -123,10 +129,20 @@ export const UniversalGatewayTab = ({ token }) => {
   const [logs, setLogs] = useState([]);
   const [health, setHealth] = useState(null);
   const [clientKeys, setClientKeys] = useState(null);
+  const [badges, setBadges] = useState({});
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [expandedLog, setExpandedLog] = useState(null);
-  const [activeSection, setActiveSection] = useState("overview");
+  // Honor ?tab=<section> on mount so deep-links (and the redirect from the
+  // retired /admin/provider-intelligence page) land on the right sub-tab.
+  const _initialTab = (() => {
+    try {
+      const p = new URLSearchParams(window.location.search).get("tab");
+      const valid = ["overview","cost_health","onboarding","offices","teams","treasury","cost_automation","financials","playground","compare","clients","webhooks","sdk","providers","intelligence","advisor","breakdown","logs"];
+      return valid.includes(p) ? p : "overview";
+    } catch { return "overview"; }
+  })();
+  const [activeSection, setActiveSection] = useState(_initialTab);
   const [keySearch, setKeySearch] = useState("");
   const [revealedKeys, setRevealedKeys] = useState({});
   const [editingBudget, setEditingBudget] = useState({});
@@ -168,25 +184,128 @@ export const UniversalGatewayTab = ({ token }) => {
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const { user: admin } = useAuth();
 
+  // Operator P&L state — merged in from the former /admin/metrics page.
+  const [pnlDays, setPnlDays] = useState(7);
+  const [pnlRevenue, setPnlRevenue] = useState(null);
+  const [pnlProfit, setPnlProfit] = useState(null);
+  const [pnlSpend, setPnlSpend] = useState(null);
+  const [pnlRouting, setPnlRouting] = useState(null);
+  // Per-track blended rates (chat/code/image_std/image_hd/video/voiceover/tts/stt).
+  // Shared source-of-truth with PricingManager, Package Advisor, and the router.
+  const [blendedByCategory, setBlendedByCategory] = useState(null);
+
+  // Balance data — merged into Provider Health tab so each provider renders
+  // exactly once with balance + tier + health + actions.
+  const [balanceData, setBalanceData] = useState(null);
+  const [balanceRefreshing, setBalanceRefreshing] = useState(false);
+  const [configSlug, setConfigSlug] = useState(null);
+  const [configBalance, setConfigBalance] = useState("");
+  const [configThreshold, setConfigThreshold] = useState("");
+
   const load = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     else setRefreshing(true);
     try {
-      const [statsRes, logsRes, healthRes, keysRes] = await Promise.all([
+      const [statsRes, logsRes, healthRes, keysRes,
+             revRes, profRes, spendRes, routRes, balRes, bbcRes] = await Promise.all([
         fetch(`${API}/admin/gateway/stats`, { headers }),
         fetch(`${API}/admin/gateway/logs?limit=50`, { headers }),
         fetch(`${API}/admin/gateway/health`, { headers }),
         fetch(`${API}/admin/gateway/client-keys`, { headers }),
+        // Operator P&L — same gateway data, aggregated for the financial view.
+        fetch(`${API}/admin/metrics/revenue?days=${pnlDays}`, { headers }),
+        fetch(`${API}/admin/metrics/profitability?days=${pnlDays}`, { headers }),
+        fetch(`${API}/admin/metrics/provider-spend?days=${pnlDays}`, { headers }),
+        fetch(`${API}/admin/metrics/routing?days=${pnlDays}`, { headers }),
+        fetch(`${API}/admin/metrics/provider-balances`, { headers }),
+        // Per-track blended rates — shared with Pricing Manager + Advisor
+        // so routing / attribution / pricing all read the same numbers.
+        fetch(`${API}/admin/pricing/blended-by-category`, { headers }),
       ]);
       if (statsRes.ok) setStats(await statsRes.json());
       if (logsRes.ok) { const d = await logsRes.json(); setLogs(d.logs || []); }
       if (healthRes.ok) setHealth(await healthRes.json());
       if (keysRes.ok) setClientKeys(await keysRes.json());
+      if (revRes.ok)   setPnlRevenue(await revRes.json());
+      if (profRes.ok)  setPnlProfit(await profRes.json());
+      if (spendRes.ok) setPnlSpend(await spendRes.json());
+      if (routRes.ok)  setPnlRouting(await routRes.json());
+      if (balRes.ok)   setBalanceData(await balRes.json());
+      if (bbcRes.ok)   setBlendedByCategory(await bbcRes.json());
     } catch { toast.error("Failed to load gateway data"); }
     finally { setLoading(false); setRefreshing(false); }
-  }, [token]);
+  }, [token, pnlDays]);
+
+  const refreshBalances = async () => {
+    setBalanceRefreshing(true);
+    try {
+      const r = await fetch(`${API}/admin/metrics/provider-balances/refresh`,
+                            { method: "POST", headers });
+      if (r.ok) {
+        toast.success("Balances refreshed");
+        const fresh = await fetch(`${API}/admin/metrics/provider-balances`, { headers });
+        if (fresh.ok) setBalanceData(await fresh.json());
+      }
+    } catch { toast.error("Refresh failed"); }
+    finally { setBalanceRefreshing(false); }
+  };
+
+  const saveProviderConfig = async () => {
+    if (!configSlug) return;
+    try {
+      const body = { slug: configSlug };
+      if (configBalance) body.starting_balance_usd = parseFloat(configBalance);
+      if (configThreshold) body.alert_threshold_usd = parseFloat(configThreshold);
+      const r = await fetch(`${API}/admin/metrics/provider-balances/config`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...headers },
+        body: JSON.stringify(body),
+      });
+      if (r.ok) {
+        toast.success(`Config saved for ${configSlug}`);
+        setConfigSlug(null);
+        setConfigBalance("");
+        setConfigThreshold("");
+        const fresh = await fetch(`${API}/admin/metrics/provider-balances`, { headers });
+        if (fresh.ok) setBalanceData(await fresh.json());
+      }
+    } catch { toast.error("Failed to save config"); }
+  };
 
   useEffect(() => { load(); }, [load]);
+
+  // Refresh per-tab badge counts every 30s so Training / Workflows /
+  // Commander tabs show red-dot counts when action is needed.
+  useEffect(() => {
+    let cancelled = false;
+    const tick = async () => {
+      try {
+        const tk = token || localStorage.getItem("token") || "";
+        const r = await fetch(`${API}/admin/gateway/badges`, {
+          headers: { Authorization: `Bearer ${tk}` },
+        });
+        if (!cancelled && r.ok) {
+          const d = await r.json();
+          setBadges(d.badges || {});
+        }
+      } catch {}
+    };
+    tick();
+    const id = setInterval(tick, 30000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, [token]);
+
+  // Auto-sync: silently refetch every 60s while the tab is mounted so Provider
+  // Health reflects the backend's auto-sync (smoke every 10min, balances every
+  // 5min) + any operator-side actions (top-ups, EULA-accepts) within a minute.
+  // Pause while the browser tab is hidden to avoid burning network on idle tabs.
+  useEffect(() => {
+    const tick = () => { if (!document.hidden) load(true); };
+    const id = setInterval(tick, 60_000);
+    const visHandler = () => { if (!document.hidden) load(true); };
+    document.addEventListener("visibilitychange", visHandler);
+    return () => { clearInterval(id); document.removeEventListener("visibilitychange", visHandler); };
+  }, [load]);
 
   useEffect(() => {
     // Auto-detect admin's own MAARS key from clientKeys
@@ -444,12 +563,25 @@ export const UniversalGatewayTab = ({ token }) => {
 
   const sections = [
     { id: "overview",    label: "Overview",        icon: Activity },
+    { id: "cost_health", label: "Cost Health",     icon: DollarSign },
+    { id: "onboarding",  label: "Provider Onboarding", icon: Key },
+    { id: "offices",     label: "Agent Offices",   icon: Users },
+    { id: "teams",       label: "Agent Teams",     icon: Users },
+    { id: "treasury",    label: "Treasury",        icon: DollarSign },
+    { id: "cost_automation", label: "Cost Automation", icon: DollarSign },
+    { id: "financials",  label: "Financials",      icon: DollarSign },
     { id: "playground",  label: "Playground",       icon: Play },
     { id: "compare",     label: "Compare Models",   icon: GitCompare },
     { id: "clients",     label: "Client Keys",      icon: Key },
     { id: "webhooks",    label: "Webhooks",         icon: Webhook },
     { id: "sdk",         label: "API Reference",    icon: Shield },
     { id: "providers",   label: "Provider Health",  icon: Network },
+    { id: "training",    label: "Agent Training",   icon: GraduationCap },
+    { id: "workflows",   label: "Workflows",        icon: Workflow },
+    { id: "rag",         label: "RAG",              icon: Brain },
+    { id: "commander",   label: "Commander Intel",  icon: Crown },
+    { id: "intelligence",label: "Intelligence",      icon: Sparkles },
+    { id: "advisor",     label: "Package Advisor",  icon: Package },
     { id: "breakdown",   label: "Usage Breakdown",  icon: BarChart3 },
     { id: "logs",        label: "Routing Log",      icon: Shield },
   ];
@@ -518,12 +650,21 @@ export const UniversalGatewayTab = ({ token }) => {
         </div>
       )}
 
-      {/* Sub-nav */}
-      <div className="flex gap-1 bg-zinc-900/50 p-1 rounded-lg border border-white/10 overflow-x-auto">
+      {/* Sub-nav — wraps to a second row on narrow viewports so no tab
+          (Package Advisor, Usage Breakdown, Routing Log) ever gets clipped. */}
+      <div className="flex gap-1 flex-wrap bg-zinc-900/50 p-1 rounded-lg border border-white/10">
         {sections.map(s => (
           <button
             key={s.id}
-            onClick={() => setActiveSection(s.id)}
+            onClick={() => {
+              setActiveSection(s.id);
+              // Keep URL ?tab= in sync so the tab is deep-linkable / bookmarkable.
+              try {
+                const u = new URL(window.location.href);
+                u.searchParams.set("tab", s.id);
+                window.history.replaceState({}, "", u.toString());
+              } catch {}
+            }}
             className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all whitespace-nowrap ${
               activeSection === s.id
                 ? "bg-gradient-to-r from-indigo-500 to-violet-500 text-white"
@@ -532,6 +673,11 @@ export const UniversalGatewayTab = ({ token }) => {
           >
             <s.icon className="w-4 h-4" />
             {s.label}
+            {(badges[s.id] || 0) > 0 && (
+              <span className="ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold rounded-full bg-rose-500 text-white">
+                {badges[s.id] > 99 ? "99+" : badges[s.id]}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -582,6 +728,276 @@ export const UniversalGatewayTab = ({ token }) => {
               </CardContent>
             </Card>
           )}
+        </div>
+      )}
+
+      {/* ── COST HEALTH ── 6 metrics that tell you where money leaks */}
+      {activeSection === "cost_health" && (
+        <CostHealthSection token={token} />
+      )}
+
+      {/* ── PROVIDER ONBOARDING ── activate dormant providers */}
+      {activeSection === "onboarding" && (
+        <ProviderOnboardingSection token={token} />
+      )}
+
+      {/* ── AGENT OFFICES ── every agent's workspace, SOP, skills, quality rules */}
+      {activeSection === "offices" && (
+        <AgentOfficesSection token={token} />
+      )}
+
+      {/* ── AGENT TEAMS ── 29 collaborative workspaces, 499 agents */}
+      {activeSection === "teams" && (
+        <AgentTeamsSection token={token} />
+      )}
+
+      {/* ── TREASURY ── Revenue / COGS reserve / Profit, the unified money view */}
+      {activeSection === "treasury" && (
+        <TreasurySection token={token} />
+      )}
+
+      {/* ── COST AUTOMATION ── daily P&L + provider balances + auto-recharge setup */}
+      {activeSection === "cost_automation" && (
+        <CostAutomationSection token={token} />
+      )}
+
+      {/* ── FINANCIALS / OPERATOR P&L ── (absorbed from /admin/metrics) */}
+      {activeSection === "financials" && (
+        <div className="space-y-6">
+          {/* Window selector */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-zinc-500 uppercase tracking-wide mr-2">Window</span>
+            {[1, 7, 30, 90].map(d => (
+              <Button
+                key={d}
+                size="sm"
+                variant={pnlDays === d ? "default" : "outline"}
+                onClick={() => setPnlDays(d)}
+                className={pnlDays === d ? "bg-indigo-600 hover:bg-indigo-500" : "border-white/10 text-zinc-400"}
+              >
+                {d}d
+              </Button>
+            ))}
+            <span className="text-[10px] text-zinc-600 ml-3">Reads from gateway_usage_logs · single source of truth.</span>
+          </div>
+
+          {/* KPI row — the 5 operator unit-economics numbers */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <StatBox
+              label="Requests"
+              value={(pnlRouting?.total_requests || 0).toLocaleString()}
+              sub={`${pnlDays}-day window`}
+              icon={Activity}
+              color="indigo"
+            />
+            <StatBox
+              label="Operator Revenue (Subs Split)"
+              value={`$${(pnlRevenue?.total_revenue_usd || 0).toFixed(2)}`}
+              sub={`${(pnlRevenue?.by_package || []).length} packages`}
+              icon={DollarSign}
+              color="emerald"
+            />
+            <StatBox
+              label="Provider Spend (USD)"
+              value={`$${(pnlSpend?.total_cost_usd || 0).toFixed(4)}`}
+              sub="What MAARS pays providers"
+              icon={TrendingUp}
+              color="violet"
+            />
+            <StatBox
+              label="Margin @ 1000/USD"
+              value={`${pnlProfit?.margin_pct || 0}%`}
+              sub={`$${(pnlProfit?.net_usd || 0).toFixed(4)} net`}
+              icon={BarChart3}
+              color="amber"
+            />
+            <StatBox
+              label="Fallback Rate"
+              value={`${stats?.fallback_rate_pct || 0}%`}
+              sub={`${stats?.fallback_count || 0} of ${totalCalls.toLocaleString()} calls`}
+              icon={RefreshCw}
+              color="rose"
+            />
+          </div>
+
+          {/* ── Per-Track Routing + Cost Attribution ─────────────────
+              Every deliverable type has its own dedicated $/credit rate
+              (no merging). This strip shows, for the selected window,
+              how traffic split across the 8 tracks and what it cost
+              the operator by track. Pulls live from /admin/pricing/
+              blended-by-category which powers the same rates the
+              Pricing Command Center, Package Advisor, and router
+              all consume — single source of truth. */}
+          {blendedByCategory && (
+          <Card className="bg-zinc-900/50 border-white/10">
+            <CardContent className="p-5">
+              <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-teal-400" />
+                Per-Track Routing + Cost
+                <span className="text-[10px] text-zinc-500 font-normal ml-2">
+                  live $/credit · each track dedicated · no merging
+                </span>
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
+                {[
+                  { key: "chat",      label: "Chat",      color: "text-emerald-400 border-emerald-500/30 bg-emerald-500/5" },
+                  { key: "code",      label: "Code/Vibe", color: "text-violet-400  border-violet-500/30  bg-violet-500/5"  },
+                  { key: "image_std", label: "Image Std", color: "text-rose-300    border-rose-500/30    bg-rose-500/5"    },
+                  { key: "image_hd",  label: "Image HD",  color: "text-fuchsia-400 border-fuchsia-500/30 bg-fuchsia-500/5" },
+                  { key: "video",     label: "Video",     color: "text-amber-400   border-amber-500/30   bg-amber-500/5"   },
+                  { key: "voiceover", label: "Voiceover", color: "text-sky-400     border-sky-500/30     bg-sky-500/5"     },
+                  { key: "tts",       label: "TTS",       color: "text-cyan-400    border-cyan-500/30    bg-cyan-500/5"    },
+                  { key: "stt",       label: "STT",       color: "text-teal-400    border-teal-500/30    bg-teal-500/5"    },
+                ].map(({ key, label, color }) => {
+                  const t = blendedByCategory[key] || {};
+                  const v = t.value || 0;
+                  const calls = t.call_count || 0;
+                  const isMeasured = t.source === "real_usage" || t.source === "real_usage_calls_proxy";
+                  const spent = (t.total_cost_usd || 0);
+                  return (
+                    <div key={key} className={`p-2.5 rounded-lg border ${color}`}>
+                      <p className="text-[10px] font-semibold mb-1 flex items-center gap-1">
+                        {label}
+                        <span className={`inline-block w-1.5 h-1.5 rounded-full ${isMeasured ? "bg-emerald-400 animate-pulse" : "bg-zinc-500"}`} />
+                      </p>
+                      <p className="text-sm font-bold font-mono">
+                        {v === 0 ? "FREE" : `$${v.toFixed(8)}`}
+                      </p>
+                      <p className="text-[9px] text-zinc-500 mt-0.5">
+                        {calls.toLocaleString()} calls{spent > 0 && ` · $${spent.toFixed(4)} spent`}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-3 text-[10px] text-zinc-600 leading-relaxed">
+                Measured tracks (chat / code) read from <span className="font-mono text-zinc-400">gateway_usage_logs</span> grouped by source classification.
+                Configured tracks (media) derive from <span className="font-mono text-zinc-400">engine_config</span> × live blended cost.
+                Router uses these rates for per-call attribution + auto-escalates to premium when a client has tagged credits for that track.
+              </div>
+            </CardContent>
+          </Card>
+          )}
+
+          {/* Revenue by package + Top buyers side by side */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="bg-zinc-900/50 border-white/10">
+              <CardContent className="p-5">
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-emerald-400" /> Revenue by Package (subscription split)
+                </h3>
+                {(pnlRevenue?.by_package || []).length === 0 ? (
+                  <p className="text-zinc-500 text-sm">No subscription revenue in this window yet.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {pnlRevenue.by_package.map((p, i) => (
+                      <div key={p.package_id} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+                        <div>
+                          <div className="text-sm text-white">{p.package_id}</div>
+                          <div className="text-[10px] text-zinc-500">
+                            {p.count} sales · split {p.operator_share_pct != null ? `${Math.round(p.operator_share_pct * 100)}%` : "?"}
+                          </div>
+                        </div>
+                        <div className="text-sm font-mono text-emerald-400">${(p.revenue_usd || 0).toFixed(2)}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="bg-zinc-900/50 border-white/10">
+              <CardContent className="p-5">
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-indigo-400" /> Top Buyers
+                </h3>
+                {(pnlRevenue?.top_users || []).length === 0 ? (
+                  <p className="text-zinc-500 text-sm">No buyers in this window yet.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {pnlRevenue.top_users.slice(0, 10).map((u, i) => (
+                      <div key={u.user_id} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+                        <div className="text-sm text-zinc-300 truncate max-w-[60%]">{u.user_id}</div>
+                        <div className="text-sm font-mono text-indigo-400">${(u.revenue_usd || 0).toFixed(2)}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Routing by source + mode */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="bg-zinc-900/50 border-white/10">
+              <CardContent className="p-5">
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-amber-400" /> Routing — by Source (feature)
+                </h3>
+                {Object.keys(pnlRouting?.by_task_type || {}).length === 0 ? (
+                  <p className="text-zinc-500 text-sm">No data in this window yet.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {Object.entries(pnlRouting.by_task_type).slice(0, 12).map(([k, v]) => (
+                      <BarRow key={k} label={k} value={v} total={pnlRouting.total_requests || 1} color="amber" />
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="bg-zinc-900/50 border-white/10">
+              <CardContent className="p-5">
+                <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-indigo-400" /> Routing — by Mode
+                </h3>
+                {Object.keys(pnlRouting?.by_routing_mode || {}).length === 0 ? (
+                  <p className="text-zinc-500 text-sm">No data in this window yet.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {Object.entries(pnlRouting.by_routing_mode).map(([k, v]) => (
+                      <BarRow key={k} label={k} value={v} total={pnlRouting.total_requests || 1} color="indigo" />
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Provider spend table */}
+          <Card className="bg-zinc-900/50 border-white/10">
+            <CardContent className="p-5">
+              <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-violet-400" /> Provider Spend
+              </h3>
+              {(pnlSpend?.providers || []).length === 0 ? (
+                <p className="text-zinc-500 text-sm">No provider spend in this window yet.</p>
+              ) : (
+                <table className="w-full text-[11px]">
+                  <thead className="text-zinc-500 border-b border-white/5">
+                    <tr>
+                      <th className="text-left py-2 font-normal">Provider</th>
+                      <th className="text-right py-2 font-normal">Calls</th>
+                      <th className="text-right py-2 font-normal">Input Tokens</th>
+                      <th className="text-right py-2 font-normal">Output Tokens</th>
+                      <th className="text-right py-2 font-normal">Cost (USD)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pnlSpend.providers.map((p) => (
+                      <tr key={p.provider} className="border-b border-white/5 hover:bg-white/[0.02]">
+                        <td className="py-2 text-white">{p.provider}</td>
+                        <td className="py-2 text-right text-zinc-400 font-mono">{p.calls}</td>
+                        <td className="py-2 text-right text-zinc-400 font-mono">{(p.input_tokens || 0).toLocaleString()}</td>
+                        <td className="py-2 text-right text-zinc-400 font-mono">{(p.output_tokens || 0).toLocaleString()}</td>
+                        <td className="py-2 text-right text-violet-400 font-mono">${(p.cost_usd || 0).toFixed(4)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </CardContent>
+          </Card>
         </div>
       )}
 
@@ -1169,53 +1585,465 @@ curl ${window.location.origin}/api/v1/usage \\
         </div>
       )}
 
-      {/* ── PROVIDER HEALTH ── */}
-      {activeSection === "providers" && health && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {health.providers?.map(p => (
-              <Card key={p.id} className={`border ${
-                p.is_active ? "bg-zinc-900/50 border-white/10" : "bg-zinc-950/50 border-red-500/20"
-              }`}>
+      {/* ── PROVIDER HEALTH ── (balance + health + models + actions merged into one card per provider) */}
+      {activeSection === "providers" && health && (() => {
+        // Normalize aliases between the two endpoints (balance uses "google" /
+        // "nvidia_nim" / "bedrock"; health uses "gemini" / "nvidia" / "amazon").
+        // Canonical form is whatever the balance endpoint uses since it covers
+        // more providers (38 vs 25).
+        const CANONICAL = {
+          gemini: "google", nvidia: "nvidia_nim", amazon: "bedrock",
+          llama: "meta_llama_api",
+        };
+        const canon = (s) => CANONICAL[s] || s;
+        // Build a joined map: canonical-slug → { ...balance, ...health }
+        const byId = {};
+        (balanceData?.providers || []).forEach(b => { byId[canon(b.slug)] = { ...b }; });
+        (health.providers || []).forEach(h => {
+          const k = canon(h.id);
+          byId[k] = { ...(byId[k] || {}), ...h, slug: k };
+        });
+        const providers = Object.values(byId);
+        const alerts = balanceData?.alerts || [];
+        const configs = balanceData?.configs || [];
+        // Sort: failing-with-key first (operator-actionable), then low-balance,
+        // then healthy, then inactive (no key) last.
+        providers.sort((a, b) => {
+          const aActive = a.is_active ? 1 : 0;
+          const bActive = b.is_active ? 1 : 0;
+          const aFail = a.smoke_status === "fail" ? 1 : 0;
+          const bFail = b.smoke_status === "fail" ? 1 : 0;
+          if (aFail !== bFail) return bFail - aFail;
+          if (aActive !== bActive) return bActive - aActive;
+          const aLow = (a.balance_usd != null && a.tier !== "free" && a.balance_usd < 2) ? 1 : 0;
+          const bLow = (b.balance_usd != null && b.tier !== "free" && b.balance_usd < 2) ? 1 : 0;
+          if (aLow !== bLow) return bLow - aLow;
+          return 0;
+        });
+
+        // Badge reflects whether the provider actually works RIGHT NOW.
+        // A successful smoke call IS a live probe — if the provider returned
+        // a real chat completion, "Live" is the accurate label regardless of
+        // whether we can also scrape their dollar balance. The historical
+        // tier1_api/tier2_estimated split only describes how the $ figure is
+        // computed (their billing API vs our usage-log sum) and belongs in a
+        // tooltip, not as the primary card badge.
+        const badgeFor = (p) => {
+          if (p.smoke_status === "ok")         return { cls: "bg-teal-500/20 text-teal-300",       label: "Live" };
+          if (p.smoke_status === "media_only") return { cls: "bg-violet-500/20 text-violet-300",   label: "Live" };
+          if (p.smoke_status === "fail")       return { cls: "bg-rose-500/20 text-rose-300",       label: "Needs Fix" };
+          if (p.tier === "free")               return { cls: "bg-emerald-500/20 text-emerald-300", label: "Free Tier" };
+          if (p.tier === "unconfigured")       return { cls: "bg-zinc-500/20 text-zinc-400",       label: "No Key" };
+          if (p.is_active)                     return { cls: "bg-amber-500/20 text-amber-300",     label: "Untested" };
+          return { cls: "bg-zinc-500/20 text-zinc-400", label: "Inactive" };
+        };
+        const tierTooltip = {
+          tier1_api: "Balance read from provider's own billing API",
+          tier2_estimated: "Balance estimated from gateway_usage_logs (provider has no public balance endpoint)",
+          free: "Free tier — no balance to track",
+          unconfigured: "No API key configured",
+        };
+
+        return (
+          <div className="space-y-4">
+            {/* Summary + Refresh + Smoke-Test */}
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="text-sm text-zinc-400">
+                <span className="text-white font-semibold">{providers.length}</span> providers ·{" "}
+                <span className="text-emerald-400">{providers.filter(p => p.smoke_status === "ok" || p.smoke_status === "media_only").length} reachable</span> ·{" "}
+                <span className="text-red-400">{providers.filter(p => p.smoke_status === "fail").length} pending fix</span> ·{" "}
+                <span className="text-zinc-500">{providers.filter(p => !p.is_active).length} need signup</span>
+                {alerts.length > 0 && <> · <span className="text-red-400">{alerts.length} low-balance alert{alerts.length !== 1 ? "s" : ""}</span></>}
+                {health.smoke_generated_at && (
+                  <div className="text-[10px] text-zinc-600 mt-0.5">Last smoke test: {health.smoke_generated_at}</div>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={async () => {
+                    setBalanceRefreshing(true);
+                    try {
+                      const r = await fetch(`${API}/admin/gateway/smoke-test`, { method: "POST", headers });
+                      if (r.ok) {
+                        toast.success("Smoke test complete — refreshing");
+                        await load(true);
+                      } else toast.error("Smoke test failed");
+                    } catch { toast.error("Smoke test error"); }
+                    finally { setBalanceRefreshing(false); }
+                  }}
+                  disabled={balanceRefreshing}
+                  className="border-white/10 text-zinc-400 hover:text-white"
+                >
+                  <TestTube2 className={`w-3 h-3 mr-2 ${balanceRefreshing ? "animate-spin" : ""}`} />
+                  Run Smoke Test
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={refreshBalances}
+                  disabled={balanceRefreshing}
+                  className="border-white/10 text-zinc-400 hover:text-white"
+                >
+                  <RefreshCw className={`w-3 h-3 mr-2 ${balanceRefreshing ? "animate-spin" : ""}`} />
+                  Refresh Balances
+                </Button>
+              </div>
+            </div>
+
+            {/* Low-balance alert banner */}
+            {alerts.length > 0 && (
+              <Card className="bg-red-500/5 border-red-500/30">
                 <CardContent className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-2 h-2 rounded-full ${p.is_active ? "bg-emerald-400" : "bg-red-400"}`} />
-                      <span className={`text-sm font-medium ${PROVIDER_COLORS[p.id] || "text-zinc-300"}`}>
-                        {p.name}
-                      </span>
-                    </div>
-                    <Badge className={
-                      p.key_source === "direct"   ? "bg-emerald-500/20 text-emerald-300 text-[10px]" :
-                      p.key_source === "emergent" ? "bg-blue-500/20 text-blue-300 text-[10px]" :
-                      "bg-red-500/20 text-red-300 text-[10px]"
-                    }>
-                      {p.key_source === "direct" ? "Direct Key" :
-                       p.key_source === "emergent" ? "MAARS Key" : "No Key"}
-                    </Badge>
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {p.models?.slice(0, 2).map(m => (
-                      <span key={m} className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">{m}</span>
+                  <div className="text-xs font-semibold text-red-300 uppercase tracking-wide mb-2">Low Balance Alerts</div>
+                  <div className="space-y-1">
+                    {alerts.map(a => (
+                      <div key={a.slug} className="flex items-center justify-between text-xs">
+                        <span className="text-zinc-300">
+                          <span className={a.severity === "critical" ? "text-red-400" : "text-amber-400"}>●</span>{" "}
+                          <strong>{a.display_name}</strong>: ${a.balance_usd?.toFixed(2)}{" "}
+                          <span className="text-zinc-500">(threshold ${a.threshold_usd?.toFixed(2)})</span>
+                        </span>
+                        {a.dashboard_url && (
+                          <a href={a.dashboard_url} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:text-teal-300">Top Up →</a>
+                        )}
+                      </div>
                     ))}
-                  </div>
-                  <div className="mt-2 flex items-center gap-1">
-                    {p.is_active
-                      ? <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                      : <XCircle className="w-3 h-3 text-red-400" />}
-                    <span className={`text-[11px] ${p.is_active ? "text-emerald-400" : "text-red-400"}`}>
-                      {p.is_active ? "Ready to route" : "No API key — configure in API Keys tab"}
-                    </span>
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            )}
+
+            {/* ── UNBLOCK CENTER ── Single consolidated panel listing every
+                Needs-Fix provider + exact action + deposit + deep-link. Lets the
+                operator knock them out in one session instead of hunting card-by-card. */}
+            {(() => {
+              const blocked = providers.filter(p => p.smoke_status === "fail" && p.fix_hint);
+              if (blocked.length === 0) return null;
+              // Order: free console-clicks → support cases → cheapest deposit → biggest deposit.
+              const kindRank = { console: 0, support_case: 1, deposit: 2 };
+              const sorted = [...blocked].sort((a, b) => {
+                const ak = kindRank[a.fix_hint.kind] ?? 9;
+                const bk = kindRank[b.fix_hint.kind] ?? 9;
+                if (ak !== bk) return ak - bk;
+                return (a.fix_hint.min_deposit_usd || 0) - (b.fix_hint.min_deposit_usd || 0);
+              });
+              const totalDeposit = sorted.reduce((s, p) => s + (p.fix_hint.min_deposit_usd || 0), 0);
+              const freeCount = sorted.filter(p => p.fix_hint.kind === "console").length;
+              const supportCaseCount = sorted.filter(p => p.fix_hint.kind === "support_case").length;
+              return (
+                <Card className="bg-gradient-to-br from-amber-500/5 to-rose-500/5 border-amber-500/30">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <div className="text-sm font-semibold text-amber-300">Unblock Center</div>
+                        <div className="text-[11px] text-zinc-500">
+                          {sorted.length} provider{sorted.length !== 1 ? "s" : ""} blocked ·{" "}
+                          {freeCount > 0 && <><span className="text-emerald-400">{freeCount} free click-through</span> · </>}
+                          {supportCaseCount > 0 && <><span className="text-sky-400">{supportCaseCount} support case</span> · </>}
+                          <span className="text-amber-400">${totalDeposit} total deposit</span> unlocks all paid
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      {sorted.map(p => {
+                        const h = p.fix_hint;
+                        const kind = h.kind;
+                        const kindStyles = {
+                          console:      { row: "bg-emerald-500/5 border-emerald-500/20", tag: "text-emerald-400", cta: "text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10", label: "FREE",    action: "Open ↗" },
+                          support_case: { row: "bg-sky-500/5 border-sky-500/20",         tag: "text-sky-400",     cta: "text-sky-400 border-sky-500/30 hover:bg-sky-500/10",         label: "CASE",    action: "Open case ↗" },
+                          deposit:      { row: "bg-zinc-900/50 border-white/5",          tag: "text-amber-400",   cta: "text-amber-400 border-amber-500/30 hover:bg-amber-500/10",   label: `$${h.min_deposit_usd}`, action: "Top Up ↗" },
+                        };
+                        const st = kindStyles[kind] || kindStyles.deposit;
+                        return (
+                          <div key={p.id} className={`flex items-start gap-3 px-3 py-2 rounded border ${st.row}`}>
+                            <div className="flex-shrink-0 w-14 text-right">
+                              <span className={`text-[10px] font-mono ${st.tag}`}>{st.label}</span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className={`text-xs font-medium ${PROVIDER_COLORS[p.slug] || "text-zinc-200"}`}>
+                                  {p.display_name || p.name}
+                                </span>
+                                <span className="text-[10px] text-zinc-500">· {h.action}</span>
+                              </div>
+                              <div className="text-[10px] text-zinc-500 mt-0.5 line-clamp-1">{h.detail}</div>
+                            </div>
+                            <a
+                              href={h.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`flex-shrink-0 text-[11px] px-2 py-1 rounded border ${st.cta}`}
+                            >
+                              {st.action}
+                            </a>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })()}
+
+            {/* Unified provider grid — one card per provider */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {providers.map(p => {
+                const bal = p.balance_usd;
+                const isLow = bal != null && p.tier !== "free" && bal < 2;
+                const configEntry = configs.find(c => c.slug === p.slug);
+                return (
+                  <Card key={p.slug} className={`border ${
+                    isLow ? "bg-zinc-950/50 border-red-500/30" :
+                    p.is_active ? "bg-zinc-900/50 border-white/10" : "bg-zinc-950/50 border-white/5 opacity-75"
+                  }`}>
+                    <CardContent className="p-4">
+                      {/* Header row — name + tier badge */}
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-2 h-2 rounded-full ${p.is_active ? "bg-emerald-400" : "bg-zinc-600"}`} />
+                          <span className={`text-sm font-medium ${PROVIDER_COLORS[p.slug] || "text-zinc-200"}`}>
+                            {p.display_name || p.name || p.slug}
+                          </span>
+                        </div>
+                        {(() => {
+                          const b = badgeFor(p);
+                          return (
+                            <Badge
+                              className={`text-[10px] ${b.cls}`}
+                              title={tierTooltip[p.tier] || ""}
+                            >
+                              {b.label}
+                            </Badge>
+                          );
+                        })()}
+                      </div>
+
+                      {/* Balance line */}
+                      {p.tier === "free" ? (
+                        <div className="text-lg font-bold text-emerald-400">Free</div>
+                      ) : bal != null ? (
+                        <div className={`text-lg font-bold font-mono ${isLow ? "text-red-400" : bal > 10 ? "text-emerald-400" : "text-amber-400"}`}>
+                          ${bal.toFixed(2)}
+                          {p.unlimited && <span className="text-xs text-zinc-500 ml-2 font-normal">unlimited</span>}
+                        </div>
+                      ) : p.needs_starting_balance ? (
+                        <div className="text-xs text-amber-400">Set starting balance to track →</div>
+                      ) : p.is_active ? (
+                        <div className="text-xs text-zinc-500">Balance not tracked for this provider</div>
+                      ) : (
+                        <div className="text-xs text-red-400">No API key — configure in API Keys tab</div>
+                      )}
+
+                      {/* Burn rate + days left */}
+                      {p.daily_burn_usd != null && (
+                        <div className="text-[10px] text-zinc-500 mt-1">
+                          Burn: ${p.daily_burn_usd.toFixed(2)}/day
+                          {p.days_until_empty != null && (
+                            <span className={p.days_until_empty < 3 ? "text-red-400" : p.days_until_empty < 10 ? "text-amber-400" : "text-emerald-400"}>
+                              {" "}· {p.days_until_empty.toFixed(0)}d left
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {/* ElevenLabs characters */}
+                      {p.characters_remaining != null && (
+                        <div className="text-[10px] text-zinc-500 mt-1">
+                          {p.characters_remaining.toLocaleString()} / {p.characters_limit?.toLocaleString()} chars
+                          <div className="w-full h-1 bg-zinc-800 rounded-full mt-1 overflow-hidden">
+                            <div className="h-full bg-teal-500" style={{ width: `${Math.min(100, (p.characters_remaining / (p.characters_limit || 1)) * 100)}%` }} />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Models */}
+                      {p.models?.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {p.models.slice(0, 3).map(m => (
+                            <span key={m} className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">{m}</span>
+                          ))}
+                          {p.models.length > 3 && (
+                            <span className="text-[10px] text-zinc-600">+{p.models.length - 3}</span>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Health status + key source */}
+                      <div className="mt-2 flex items-center justify-between">
+                        <div className="flex items-center gap-1">
+                          {p.smoke_status === "ok" ? (
+                            <><CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                              <span className="text-[11px] text-emerald-400">Live · tested OK</span>
+                              {p.smoke_wall_ms && <span className="text-[9px] text-zinc-600 ml-1">{p.smoke_wall_ms}ms</span>}</>
+                          ) : p.smoke_status === "fail" ? (
+                            <><XCircle className="w-3 h-3 text-red-400" />
+                              <span className="text-[11px] text-red-400" title={p.smoke_error}>
+                                Key present · provider rejected
+                              </span></>
+                          ) : p.smoke_status === "media_only" ? (
+                            <><CheckCircle2 className="w-3 h-3 text-violet-400" />
+                              <span className="text-[11px] text-violet-400">Media-only provider</span></>
+                          ) : p.is_active ? (
+                            <><CheckCircle2 className="w-3 h-3 text-amber-400" />
+                              <span className="text-[11px] text-amber-400">Key set · untested</span></>
+                          ) : (
+                            <><XCircle className="w-3 h-3 text-zinc-500" /><span className="text-[11px] text-zinc-500">Inactive</span></>
+                          )}
+                        </div>
+                        {p.key_source && (
+                          <Badge className={`text-[9px] ${
+                            p.key_source === "direct"   ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
+                            p.key_source === "emergent" ? "bg-blue-500/10 text-blue-400 border-blue-500/20" :
+                                                          "bg-zinc-500/10 text-zinc-500 border-zinc-500/20"
+                          }`}>
+                            {p.key_source === "direct" ? "Direct Key" : p.key_source === "emergent" ? "MAARS Key" : "No Key"}
+                          </Badge>
+                        )}
+                      </div>
+
+                      {/* Fix-hint banner for failing providers — shows exactly what to do */}
+                      {p.fix_hint && (
+                        <div className="mt-2 p-2 rounded bg-red-500/10 border border-red-500/20">
+                          <div className="text-[10px] font-semibold text-red-300">{p.fix_hint.action}</div>
+                          <div className="text-[9px] text-zinc-400 mt-0.5 leading-relaxed">{p.fix_hint.detail}</div>
+                          {p.fix_hint.link && (
+                            <a
+                              href={p.fix_hint.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[10px] text-red-300 hover:text-red-200 mt-1 inline-block font-semibold"
+                            >
+                              Fix now ↗
+                            </a>
+                          )}
+                        </div>
+                      )}
+                      {/* Raw smoke error (only when no fix_hint to avoid dup) */}
+                      {p.smoke_status === "fail" && p.smoke_error && !p.fix_hint && (
+                        <div className="mt-1 text-[9px] text-red-300/70 font-mono truncate" title={p.smoke_error}>
+                          {p.smoke_error.length > 80 ? p.smoke_error.slice(0, 80) + "…" : p.smoke_error}
+                        </div>
+                      )}
+
+                      {/* Actions */}
+                      <div className="mt-3 flex gap-2">
+                        {p.dashboard_url && (
+                          <a
+                            href={p.dashboard_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-2 py-1 rounded text-[10px] font-medium bg-teal-500/10 text-teal-300 border border-teal-500/20 hover:bg-teal-500/20"
+                          >
+                            Top Up ↗
+                          </a>
+                        )}
+                        <button
+                          onClick={() => {
+                            setConfigSlug(p.slug);
+                            setConfigBalance(configEntry?.starting_balance_usd || "");
+                            setConfigThreshold(configEntry?.alert_threshold_usd || "");
+                          }}
+                          className="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-zinc-400 border border-white/10 hover:bg-white/10"
+                        >
+                          Configure
+                        </button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+
+            <p className="text-xs text-zinc-500">
+              Configure API keys in the <strong className="text-zinc-400">API Keys & Integrations</strong> tab.
+              Providers without a direct key show as inactive. Free-tier providers (Groq, Gemini, Cerebras, etc.) have no balance to track.
+            </p>
+
+            {/* Configure modal */}
+            {configSlug && (
+              <div
+                className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+                onClick={() => setConfigSlug(null)}
+              >
+                <Card
+                  className="bg-zinc-900 border-white/10 w-96 max-w-[90vw]"
+                  onClick={e => e.stopPropagation()}
+                >
+                  <CardContent className="p-5">
+                    <h3 className="text-base font-semibold text-white mb-4">Configure: {configSlug}</h3>
+                    <label className="text-xs text-zinc-400 mb-1 block">Starting Balance (USD)</label>
+                    <input
+                      type="number" step="0.01" value={configBalance}
+                      onChange={e => setConfigBalance(e.target.value)}
+                      placeholder="e.g. 20.00"
+                      className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white mb-3 focus:outline-none focus:border-teal-500"
+                    />
+                    <label className="text-xs text-zinc-400 mb-1 block">Alert Threshold (USD)</label>
+                    <input
+                      type="number" step="0.01" value={configThreshold}
+                      onChange={e => setConfigThreshold(e.target.value)}
+                      placeholder="e.g. 2.00"
+                      className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white mb-4 focus:outline-none focus:border-teal-500"
+                    />
+                    <div className="flex gap-2 justify-end">
+                      <Button size="sm" variant="outline" onClick={() => setConfigSlug(null)} className="border-white/10 text-zinc-400">Cancel</Button>
+                      <Button size="sm" onClick={saveProviderConfig} className="bg-teal-600 hover:bg-teal-500">Save</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </div>
-          <p className="text-xs text-zinc-500">
-            Configure API keys in the <strong className="text-zinc-400">API Keys & Integrations</strong> tab.
-            Providers without a direct key will use the MAARS universal key if configured (OpenAI, Anthropic, Gemini only).
-          </p>
-        </div>
+        );
+      })()}
+
+      {/* ── AGENT TRAINING ── curate golden examples, review training queue,
+          rank agents by quality. Lives under Universal Gateway per the
+          centralization rule: every AI/LLM admin surface here, not
+          scattered across standalone pages. */}
+      {activeSection === "training" && (
+        <UniversalGatewayTraining token={token} />
+      )}
+
+      {/* ── WORKFLOWS ── fleet-wide workflow run health + spend. Reads the
+          same gateway_usage_logs as the Financials tab so workflow spend
+          is attributed consistently. Links out to /workflow-builder for
+          authoring; this tab is pure observability + replay/diagnose. */}
+      {activeSection === "workflows" && (
+        <UniversalGatewayWorkflows token={token} />
+      )}
+
+      {/* ── RAG ── agentic retrieval: doc ingest, corrective-RAG query,
+          citations. Uses Docling parser + cosine search over Mongo. */}
+      {activeSection === "rag" && (
+        <UniversalGatewayRAG token={token} />
+      )}
+
+      {/* ── COMMANDER INTELLIGENCE ── consolidated surface for:
+          memory graph, SME corrections queue, LLM-judge eval harness,
+          MCP token manager, retrieval router playground. */}
+      {activeSection === "commander" && (
+        <UniversalGatewayCommander token={token} />
+      )}
+
+      {/* ── INTELLIGENCE ── embeds the same ProviderIntelligencePage that
+          /admin/provider-intelligence used to show as a standalone page. The
+          component was designed with embedded=true mode from day one; we just
+          host it here so the operator has one admin surface for everything
+          gateway-related. Unique function preserved: live /v1/models counts
+          per provider (real data, not a static frontend list) and per-provider
+          balance/tier/dashboard links pulled from their actual billing APIs. */}
+      {activeSection === "intelligence" && (
+        <ProviderIntelligencePage embedded={true} initialTab="providers" />
+      )}
+
+      {/* ── PACKAGE ADVISOR ── same component, second tab — recommends which
+          customer-facing subscription packages are viable based on the live
+          capacity (models × free-tier × paid balance) the operator can serve. */}
+      {activeSection === "advisor" && (
+        <ProviderIntelligencePage embedded={true} initialTab="recommendations" />
       )}
 
       {/* ── USAGE BREAKDOWN ── */}
@@ -1916,5 +2744,1244 @@ curl ${window.location.origin}/api/v1/usage \\
     </div>
   );
 };
+
+/* ── Cost Health: 6-metric leak-finder ─────────────────────────────── */
+
+const CostHealthSection = ({ token }) => {
+  const [days, setDays] = useState(7);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    fetch(`${API}/admin/gateway/cost-health?days=${days}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(r => r.json())
+      .then(d => { if (!cancelled) setData(d); })
+      .catch(() => { if (!cancelled) setData({ ok: false }); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [days, token]);
+
+  if (loading && !data) return <div className="text-zinc-500 py-10 text-center">Loading cost metrics…</div>;
+  if (!data?.ok) return <div className="text-zinc-500 py-10 text-center">No data yet — start routing some calls.</div>;
+  if (data.empty) return <div className="text-zinc-500 py-10 text-center">gateway_usage_logs is empty. Metrics populate after first LLM call.</div>;
+
+  const m = data.metrics || {};
+  const t = data.targets || {};
+
+  const grade = (name, value, reversed = false) => {
+    const target = t[name]?.target;
+    if (value == null || target == null) return "neutral";
+    const ok = reversed ? value >= target : value <= target;
+    // Direction from the API: "high"=higher is better, "low"=lower is better
+    const dir = t[name]?.direction;
+    if (dir === "high") return value >= target ? "good" : "bad";
+    if (dir === "low")  return value <= target ? "good" : "bad";
+    return ok ? "good" : "bad";
+  };
+
+  const colorFor = (g) => g === "good" ? "#34d399" : g === "bad" ? "#fca5a5" : "#a3a3a3";
+
+  const Metric = ({ label, value, unit, targetText, g }) => (
+    <Card className="bg-zinc-900/50 border-white/10">
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between">
+          <div className="text-xs text-zinc-500 uppercase tracking-wide">{label}</div>
+          <span style={{
+            width: 8, height: 8, borderRadius: 999, background: colorFor(g),
+          }} />
+        </div>
+        <div className="text-2xl font-bold mt-2" style={{ color: colorFor(g) }}>
+          {value ?? "—"} <span className="text-xs text-zinc-500">{unit}</span>
+        </div>
+        {targetText && <div className="text-[10px] text-zinc-500 mt-1">target: {targetText}</div>}
+      </CardContent>
+    </Card>
+  );
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-bold text-white font-['Outfit']">Cost Health</h3>
+          <p className="text-xs text-zinc-500 mt-1">Where money leaks — each red dot is a fix to do.</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-zinc-500 uppercase tracking-wide mr-2">Window</span>
+          {[1, 7, 30, 90].map(d => (
+            <Button key={d} size="sm"
+              className={days === d ? "bg-violet-600 text-white" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"}
+              onClick={() => setDays(d)}>
+              {d}d
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+        <Metric
+          label="Cost per credit"
+          value={`$${(m.cost_per_credit ?? 0).toFixed(6)}`}
+          unit="USD/credit"
+          targetText={`< $${t.cost_per_credit?.target}`}
+          g={grade("cost_per_credit", m.cost_per_credit)}
+        />
+        <Metric
+          label="Free-provider absorption"
+          value={`${m.free_absorption_pct ?? 0}%`}
+          unit=""
+          targetText={`> ${t.free_absorption_pct?.target}%`}
+          g={grade("free_absorption_pct", m.free_absorption_pct)}
+        />
+        <Metric
+          label="Cache hit rate"
+          value={`${m.cache_hit_pct ?? 0}%`}
+          unit=""
+          targetText={`> ${t.cache_hit_pct?.target}%`}
+          g={grade("cache_hit_pct", m.cache_hit_pct)}
+        />
+        <Metric
+          label="Cascade escalation"
+          value={m.escalation_pct == null ? "—" : `${m.escalation_pct}%`}
+          unit=""
+          targetText={`< ${t.escalation_pct?.target}%`}
+          g={grade("escalation_pct", m.escalation_pct)}
+        />
+        <Metric
+          label="Retry multiplier"
+          value={`${m.retry_multiplier ?? 1}x`}
+          unit=""
+          targetText={`< ${t.retry_multiplier?.target}x`}
+          g={grade("retry_multiplier", m.retry_multiplier)}
+        />
+        <Card className="bg-zinc-900/50 border-white/10">
+          <CardContent className="p-5">
+            <div className="text-xs text-zinc-500 uppercase tracking-wide">Totals ({data.window_days}d)</div>
+            <div className="mt-2 space-y-1 text-xs text-zinc-400">
+              <div>Calls: <span className="text-white font-medium">{data.totals?.calls?.toLocaleString()}</span></div>
+              <div>Credits: <span className="text-white font-medium">{data.totals?.credits?.toLocaleString()}</span></div>
+              <div>API cost: <span className="text-white font-medium">${data.totals?.cost_usd}</span></div>
+              <div>Billed: <span className="text-white font-medium">${data.totals?.billed_usd}</span></div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Free-quota utilisation */}
+      <div>
+        <h4 className="text-sm font-semibold text-white mb-3">Free-quota utilisation (today)</h4>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {Object.entries(m.free_quota_util || {}).map(([prov, q]) => {
+            const pct = q.util_pct ?? 0;
+            const bar = q.cap ? Math.min(100, pct) : null;
+            return (
+              <div key={prov} className="bg-zinc-900/50 border border-white/10 rounded-lg p-3">
+                <div className="flex items-center justify-between">
+                  <div className="text-xs text-white font-medium">{prov}</div>
+                  <div className="text-[10px] text-zinc-500">{q.cap_unit || "—"}</div>
+                </div>
+                <div className="mt-2 text-[11px] text-zinc-400">
+                  {q.used?.toLocaleString() ?? 0} {q.cap ? `/ ${q.cap.toLocaleString()}` : ""}
+                </div>
+                {bar != null && (
+                  <div className="mt-2 h-1.5 bg-zinc-800 rounded">
+                    <div className="h-1.5 rounded"
+                      style={{
+                        width: `${bar}%`,
+                        background: bar > 95 ? "#f59e0b" : bar > 50 ? "#34d399" : "#71717a",
+                      }} />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Provider distribution (by calls) */}
+      <div>
+        <h4 className="text-sm font-semibold text-white mb-3">Provider distribution</h4>
+        <div className="bg-zinc-900/50 border border-white/10 rounded-lg divide-y divide-white/5">
+          {(data.providers || []).slice(0, 15).map(p => (
+            <div key={p.provider} className="flex items-center justify-between p-3 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-white">{p.provider}</span>
+                {p.free_tier && <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-900/40 text-emerald-300">FREE</span>}
+              </div>
+              <div className="flex items-center gap-4 text-xs text-zinc-400">
+                <div>{p.calls.toLocaleString()} calls</div>
+                <div className="text-white font-medium">${p.cost_usd.toFixed(4)}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ── Provider Onboarding: activate the dormant providers ──────────── */
+
+const ProviderOnboardingSection = ({ token }) => {
+  const [providers, setProviders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState({});           // per-provider busy flag
+  const [pasteFor, setPasteFor] = useState(null); // provider id receiving manual paste
+  const [pasteValue, setPasteValue] = useState("");
+  const [result, setResult] = useState(null);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const r = await fetch(`${API}/admin/providers/onboarding`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const d = await r.json();
+      setProviders(d.providers || []);
+    } catch (e) {
+      setResult({ ok: false, error: String(e?.message || e) });
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => { load(); }, []);
+
+  const startSignup = async (prov) => {
+    setBusy(b => ({ ...b, [prov]: "starting" }));
+    try {
+      const r = await fetch(`${API}/admin/providers/onboarding/start`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ provider: prov }),
+      });
+      const d = await r.json();
+      if (d.session_id) {
+        // Open the in-app BrowserPanel with this session so the operator
+        // sees the provider's signup page and can click through themselves.
+        window.open(`/browser?session=${d.session_id}&provider=${prov}`, "_blank");
+        setResult({ ok: true, msg: `Session opened for ${prov}. Sign in + come back and click "Grab API key".`, session_id: d.session_id, provider: prov });
+      } else {
+        setResult({ ok: false, error: d.detail || d.error || "start failed" });
+      }
+    } catch (e) {
+      setResult({ ok: false, error: String(e?.message || e) });
+    } finally {
+      setBusy(b => ({ ...b, [prov]: null }));
+    }
+  };
+
+  const grabKey = async (prov) => {
+    if (!result?.session_id || result?.provider !== prov) {
+      setResult({ ok: false, error: `No active session for ${prov}. Click "Start signup" first.` });
+      return;
+    }
+    setBusy(b => ({ ...b, [prov]: "grabbing" }));
+    try {
+      const r = await fetch(`${API}/admin/providers/onboarding/grab-key`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ provider: prov, session_id: result.session_id }),
+      });
+      const d = await r.json();
+      if (d.ok) {
+        setResult({ ok: true, msg: `${prov} LIVE. Key: ${d.key_preview}` });
+        await load();
+      } else {
+        setResult({ ok: false, error: d.detail || d.error || "grab failed",
+                   hint: "Use 'Paste manually' below to enter the key directly." });
+      }
+    } catch (e) {
+      setResult({ ok: false, error: String(e?.message || e) });
+    } finally {
+      setBusy(b => ({ ...b, [prov]: null }));
+    }
+  };
+
+  const pasteKey = async (prov) => {
+    if (!pasteValue || pasteValue.length < 10) {
+      setResult({ ok: false, error: "Paste a valid key first." });
+      return;
+    }
+    setBusy(b => ({ ...b, [prov]: "pasting" }));
+    try {
+      const r = await fetch(`${API}/admin/providers/onboarding/paste`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ provider: prov, api_key: pasteValue }),
+      });
+      const d = await r.json();
+      if (d.ok) {
+        setResult({ ok: true, msg: `${prov} LIVE via paste. Key: ${d.key_preview}` });
+        setPasteFor(null);
+        setPasteValue("");
+        await load();
+      } else {
+        setResult({ ok: false, error: d.detail || d.error || "paste failed" });
+      }
+    } catch (e) {
+      setResult({ ok: false, error: String(e?.message || e) });
+    } finally {
+      setBusy(b => ({ ...b, [prov]: null }));
+    }
+  };
+
+  if (loading) return <div className="text-zinc-500 py-10 text-center">Loading onboardable providers…</div>;
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <h3 className="text-lg font-bold text-white font-['Outfit']">Provider Onboarding</h3>
+        <p className="text-xs text-zinc-500 mt-1">
+          Activate dormant providers. "Start signup" opens the provider's page in the in-app browser — sign in yourself (2FA, payment, ToS), then click "Grab API key" and MAARS reads the key via DOM and saves it to the vault + .env.
+        </p>
+      </div>
+
+      {result && (
+        <div className={`p-3 rounded border text-xs ${result.ok ? "bg-emerald-900/20 border-emerald-500/30 text-emerald-300" : "bg-red-900/20 border-red-500/30 text-red-300"}`}>
+          {result.msg || result.error} {result.hint && <span className="block mt-1 text-zinc-400">{result.hint}</span>}
+        </div>
+      )}
+
+      <div className="grid gap-3">
+        {providers.map(p => {
+          const isLive = p.status === "live";
+          const b = busy[p.provider];
+          return (
+            <div key={p.provider} className="bg-zinc-900/50 border border-white/10 rounded-lg p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-white">{p.display_name}</span>
+                    {p.supports_google_oauth && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-900/40 text-blue-300">Google OAuth</span>
+                    )}
+                    {p.needs_credit_card && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-900/40 text-amber-300">Credit card</span>
+                    )}
+                    {isLive
+                      ? <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-900/40 text-emerald-300">LIVE</span>
+                      : <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">NEEDS KEY</span>}
+                  </div>
+                  <div className="text-[11px] text-zinc-500 mt-1">{p.signup_notes}</div>
+                  <div className="text-[10px] text-zinc-600 mt-1 font-mono">env: {p.env_var}</div>
+                </div>
+                <div className="flex gap-2">
+                  {!isLive && (
+                    <>
+                      <Button
+                        size="sm"
+                        onClick={() => startSignup(p.provider)}
+                        disabled={!!b}
+                        className="bg-violet-600 text-white hover:bg-violet-700"
+                      >
+                        {b === "starting" ? "Opening…" : "Start signup"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => grabKey(p.provider)}
+                        disabled={!!b}
+                        className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                      >
+                        {b === "grabbing" ? "Grabbing…" : "Grab API key"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => { setPasteFor(pasteFor === p.provider ? null : p.provider); setPasteValue(""); }}
+                        className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                      >
+                        {pasteFor === p.provider ? "Cancel" : "Paste manually"}
+                      </Button>
+                    </>
+                  )}
+                  <a href={p.api_keys_url} target="_blank" rel="noopener noreferrer"
+                    className="px-3 py-1.5 text-xs text-zinc-400 hover:text-white rounded">
+                    Open externally ↗
+                  </a>
+                </div>
+              </div>
+
+              {pasteFor === p.provider && !isLive && (
+                <div className="mt-3 flex gap-2">
+                  <input
+                    type="password"
+                    value={pasteValue}
+                    onChange={(e) => setPasteValue(e.target.value)}
+                    placeholder="Paste API key from provider dashboard"
+                    className="flex-1 bg-zinc-800 border border-white/10 rounded px-3 py-1.5 text-xs text-white"
+                  />
+                  <Button
+                    size="sm"
+                    onClick={() => pasteKey(p.provider)}
+                    disabled={!pasteValue || !!b}
+                    className="bg-emerald-600 text-white hover:bg-emerald-700"
+                  >
+                    {b === "pasting" ? "Saving…" : "Save"}
+                  </Button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+/* ── Agent Offices: every agent's workspace + SOP ─────────────────── */
+
+const AgentOfficesSection = ({ token }) => {
+  const [departments, setDepartments] = useState([]);
+  const [selected, setSelected] = useState(null);         // { department: "..." } or null (show all depts)
+  const [offices, setOffices] = useState([]);             // offices in selected department
+  const [openAgent, setOpenAgent] = useState(null);       // full office view
+  const [loading, setLoading] = useState(false);
+  const [runResult, setRunResult] = useState(null);
+  const [sampleRequest, setSampleRequest] = useState("");
+  const [seeding, setSeeding] = useState(false);
+
+  const fetchJ = async (path, opts = {}) => {
+    const r = await fetch(`${API}${path}`, {
+      ...opts,
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", ...(opts.headers || {}) },
+    });
+    if (!r.ok) throw new Error(`${r.status}`);
+    return r.json();
+  };
+
+  useEffect(() => {
+    fetchJ("/admin/offices/departments").then(d => setDepartments(d.departments || [])).catch(() => {});
+  }, []);
+
+  const loadDepartment = async (dept) => {
+    setLoading(true);
+    try {
+      const d = await fetchJ(`/admin/offices?department=${encodeURIComponent(dept)}`);
+      setOffices(d.offices || []);
+      setSelected({ department: dept });
+      setOpenAgent(null);
+    } finally { setLoading(false); }
+  };
+
+  const openOffice = async (agent_id) => {
+    setLoading(true);
+    try { setOpenAgent(await fetchJ(`/admin/offices/${agent_id}`)); }
+    finally { setLoading(false); }
+  };
+
+  const runSop = async () => {
+    if (!openAgent || !sampleRequest.trim()) return;
+    setRunResult({ pending: true });
+    try {
+      const r = await fetchJ("/admin/offices/run-sop", {
+        method: "POST",
+        body: JSON.stringify({
+          agent_id: openAgent.agent_id,
+          user_request: sampleRequest,
+          dry_run: false,
+        }),
+      });
+      setRunResult(r);
+    } catch (e) {
+      setRunResult({ ok: false, error: String(e?.message || e) });
+    }
+  };
+
+  const reseed = async () => {
+    setSeeding(true);
+    try {
+      const r = await fetchJ("/admin/offices/seed", {
+        method: "POST",
+        body: JSON.stringify({ force_rebuild: true }),
+      });
+      alert(`Reseeded ${r.offices_created} offices.`);
+      const d = await fetchJ("/admin/offices/departments");
+      setDepartments(d.departments || []);
+    } finally { setSeeding(false); }
+  };
+
+  // ── Agent detail view ──
+  if (openAgent) {
+    return (
+      <div className="space-y-4">
+        <button onClick={() => setOpenAgent(null)} className="text-xs text-zinc-400 hover:text-white">← back to {selected?.department || "offices"}</button>
+        <div>
+          <div className="flex items-start justify-between">
+            <div>
+              <h3 className="text-xl font-bold text-white font-['Outfit']">{openAgent.studio_name}</h3>
+              <p className="text-xs text-zinc-500 mt-1">{openAgent.agent_name} · {openAgent.department} · network <code className="text-indigo-300">{openAgent.network}</code></p>
+            </div>
+            <div className="text-right">
+              <div className="text-[10px] text-zinc-500 uppercase">monthly budget</div>
+              <div className="text-sm text-white font-mono">{openAgent.monthly_budget_credits?.toLocaleString()} credits</div>
+            </div>
+          </div>
+          <p className="text-sm text-zinc-300 mt-3 italic">"{openAgent.mission}"</p>
+        </div>
+
+        <Card className="bg-zinc-900/50 border-white/10">
+          <CardContent className="p-4">
+            <div className="text-xs text-zinc-500 uppercase mb-2">Standard Operating Procedure</div>
+            <div className="space-y-2">
+              {(openAgent.sop || []).map((step, i) => (
+                <div key={i} className="flex gap-3 items-start">
+                  <div className="text-[10px] text-zinc-500 pt-1 w-6 text-right">{i+1}.</div>
+                  <div className="flex-1">
+                    <div className="text-sm font-bold text-violet-300">{step.name}</div>
+                    <div className="text-xs text-zinc-400 mt-0.5">{step.description}</div>
+                    {step.tools?.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {step.tools.map(t => <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-900/40 text-indigo-300">{t}</span>)}
+                      </div>
+                    )}
+                    {step.expected_output && (
+                      <div className="text-[10px] text-zinc-500 mt-0.5">→ {step.expected_output}</div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card className="bg-zinc-900/50 border-white/10">
+            <CardContent className="p-4">
+              <div className="text-xs text-zinc-500 uppercase mb-2">Studio Tools ({(openAgent.studio_tools || []).length})</div>
+              <div className="flex flex-wrap gap-1">
+                {(openAgent.studio_tools || []).map(t => (
+                  <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300">{t}</span>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-zinc-900/50 border-white/10">
+            <CardContent className="p-4">
+              <div className="text-xs text-zinc-500 uppercase mb-2">Quality Rules ({(openAgent.quality_rules || []).length})</div>
+              <div className="space-y-1">
+                {(openAgent.quality_rules || []).map(q => (
+                  <div key={q.name} className="text-xs">
+                    <span className={`font-medium ${q.severity === 'hard' ? 'text-rose-300' : 'text-amber-300'}`}>{q.name}</span>
+                    <span className="text-zinc-500 ml-2">{q.check}</span>
+                  </div>
+                ))}
+                {(openAgent.quality_rules || []).length === 0 && <div className="text-xs text-zinc-500 italic">no quality rules</div>}
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-zinc-900/50 border-white/10">
+            <CardContent className="p-4">
+              <div className="text-xs text-zinc-500 uppercase mb-2">Skills Library ({(openAgent.skills_library || []).length})</div>
+              <div className="space-y-2">
+                {(openAgent.skills_library || []).map(s => (
+                  <div key={s.skill_id} className="text-xs">
+                    <div className="font-medium text-emerald-300">{s.name} <span className="text-zinc-500">· {s.avg_credits} cr</span></div>
+                    <div className="text-zinc-400 text-[10px] mt-0.5">{s.description}</div>
+                  </div>
+                ))}
+                {(openAgent.skills_library || []).length === 0 && <div className="text-xs text-zinc-500 italic">no prebuilt skills yet</div>}
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-zinc-900/50 border-white/10">
+            <CardContent className="p-4">
+              <div className="text-xs text-zinc-500 uppercase mb-2">Languages · Memory Tags · Training</div>
+              <div className="text-[11px] text-zinc-400">
+                <div><span className="text-zinc-500">languages:</span> {(openAgent.languages_supported || []).join(", ")}</div>
+                <div className="mt-1"><span className="text-zinc-500">memory tags:</span> {(openAgent.reference_memory_tags || []).join(", ") || "—"}</div>
+                <div className="mt-1"><span className="text-zinc-500">golden examples:</span> {openAgent.training_examples_count || 0} curated</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="bg-violet-900/10 border-violet-500/30">
+          <CardContent className="p-4">
+            <div className="text-xs text-violet-300 uppercase mb-2">Test this office's SOP</div>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={sampleRequest}
+                onChange={(e) => setSampleRequest(e.target.value)}
+                placeholder="e.g. 'generate a 30-second product ad for the iPhone 17 Pro Max, lifestyle tone, Spanish voiceover'"
+                className="flex-1 bg-zinc-800 border border-white/10 rounded px-3 py-2 text-xs text-white"
+              />
+              <Button
+                size="sm"
+                onClick={runSop}
+                disabled={!sampleRequest.trim() || runResult?.pending}
+                className="bg-violet-600 text-white hover:bg-violet-700"
+              >
+                {runResult?.pending ? "Running..." : "Run SOP"}
+              </Button>
+            </div>
+            {runResult && !runResult.pending && (
+              <pre className="mt-3 p-2 bg-zinc-950 border border-white/5 rounded text-[10px] text-zinc-300 overflow-auto max-h-80">
+                {JSON.stringify(runResult, null, 2)}
+              </pre>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // ── Department list view ──
+  if (selected) {
+    return (
+      <div className="space-y-3">
+        <button onClick={() => setSelected(null)} className="text-xs text-zinc-400 hover:text-white">← back to departments</button>
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-bold text-white font-['Outfit']">{selected.department} <span className="text-zinc-500 font-normal">· {offices.length} offices</span></h3>
+        </div>
+        {loading ? <div className="text-zinc-500 text-sm py-6 text-center">Loading...</div> : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {offices.map(o => (
+              <div
+                key={o.agent_id}
+                onClick={() => openOffice(o.agent_id)}
+                className="bg-zinc-900/50 border border-white/10 rounded-lg p-3 cursor-pointer hover:border-violet-500/40"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="text-sm font-bold text-white">{o.agent_name}</div>
+                    <div className="text-[10px] text-zinc-500">{o.studio_name}</div>
+                  </div>
+                  <div className="text-[10px] text-zinc-600">{o.sop?.length || 0} steps</div>
+                </div>
+                <div className="text-[11px] text-zinc-400 mt-2 line-clamp-2">{o.mission}</div>
+                <div className="flex gap-1 mt-2 flex-wrap">
+                  {(o.skills_library || []).slice(0, 3).map(s => (
+                    <span key={s.skill_id} className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-900/40 text-emerald-300">{s.skill_id}</span>
+                  ))}
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">{(o.languages_supported || ["en"]).length} lang</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ── Department overview (default) ──
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-bold text-white font-['Outfit']">Agent Offices</h3>
+          <p className="text-xs text-zinc-500 mt-1">Every agent has a dedicated studio with a research-first SOP, role-specific tools, skills library, and quality rules. {departments.reduce((s, d) => s + d.office_count, 0)} offices across {departments.length} departments.</p>
+        </div>
+        <Button size="sm" onClick={reseed} disabled={seeding} className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700">
+          {seeding ? "Reseeding..." : "Rebuild all offices"}
+        </Button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        {departments.map(d => (
+          <div
+            key={d.department}
+            onClick={() => loadDepartment(d.department)}
+            className="bg-zinc-900/50 border border-white/10 rounded-lg p-4 cursor-pointer hover:border-violet-500/40 transition-colors"
+          >
+            <div className="flex items-center justify-between">
+              <div className="text-sm font-bold text-white">{d.department}</div>
+              <div className="text-lg font-mono text-violet-300">{d.office_count}</div>
+            </div>
+            <div className="text-[11px] text-zinc-500 mt-2 line-clamp-2">
+              {d.agents_sample?.slice(0, 3).join(" · ") || "—"}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════════════
+// AgentTeamsSection — 29 collaborative workspaces grouping 499 agents.
+// ═══════════════════════════════════════════════════════════════════════
+// Teams are the layer above individual agent offices: Video Production
+// Team, Strategy Room, Growth & Marketing, etc. Commander Orion delegates
+// to teams; teams coordinate their members internally.
+//
+// Data comes from:
+//   GET  /admin/teams                — list with member counts
+//   GET  /admin/teams/:id            — one team (mission, tools, members)
+//   GET  /admin/teams/:id/members    — resolved agent rows
+//   POST /admin/teams/seed           — rebuild from registry
+// ═══════════════════════════════════════════════════════════════════════
+const AgentTeamsSection = ({ token }) => {
+  const [teams, setTeams] = useState([]);
+  const [openTeam, setOpenTeam] = useState(null);
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [seeding, setSeeding] = useState(false);
+
+  const fetchJ = async (path, opts = {}) => {
+    const r = await fetch(`${API}${path}`, {
+      ...opts,
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", ...(opts.headers || {}) },
+    });
+    if (!r.ok) throw new Error(`${r.status}`);
+    return r.json();
+  };
+
+  const loadTeams = async () => {
+    setLoading(true);
+    try {
+      const d = await fetchJ("/admin/teams");
+      setTeams(d.teams || []);
+    } finally { setLoading(false); }
+  };
+
+  useEffect(() => { loadTeams(); }, []);
+
+  const openTeamDetail = async (team_id) => {
+    setLoading(true);
+    try {
+      const [team, m] = await Promise.all([
+        fetchJ(`/admin/teams/${team_id}`),
+        fetchJ(`/admin/teams/${team_id}/members`),
+      ]);
+      setOpenTeam(team);
+      setMembers(m.members || []);
+    } finally { setLoading(false); }
+  };
+
+  const reseed = async () => {
+    setSeeding(true);
+    try {
+      const r = await fetchJ("/admin/teams/seed", {
+        method: "POST",
+        body: JSON.stringify({ force_rebuild: true }),
+      });
+      alert(`Seeded ${r.teams_upserted} teams, assigned ${r.agents_assigned}/${r.agents_scanned} agents.`);
+      await loadTeams();
+    } finally { setSeeding(false); }
+  };
+
+  // ── Team detail view ──
+  if (openTeam) {
+    return (
+      <div className="space-y-4">
+        <button onClick={() => { setOpenTeam(null); setMembers([]); }}
+                className="text-xs text-zinc-400 hover:text-white">
+          ← back to all teams
+        </button>
+        <div>
+          <div className="flex items-start justify-between">
+            <div>
+              <h3 className="text-xl font-bold text-white font-['Outfit']">{openTeam.studio_name}</h3>
+              <p className="text-xs text-zinc-500 mt-1">
+                {openTeam.name} · {openTeam.department} · {openTeam.member_count} members
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="text-[10px] text-zinc-500 uppercase">monthly budget</div>
+              <div className="text-sm text-white font-mono">{openTeam.monthly_budget_credits?.toLocaleString()} credits</div>
+            </div>
+          </div>
+          <p className="text-sm text-zinc-300 mt-3 italic">"{openTeam.mission}"</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card className="bg-zinc-900/50 border-white/10">
+            <CardContent className="p-4">
+              <div className="text-xs text-zinc-500 uppercase mb-2">
+                Team Members ({members.length})
+              </div>
+              <div className="space-y-1 max-h-[340px] overflow-y-auto">
+                {members.map(m => (
+                  <div key={m.agent_id}
+                       className="flex items-center gap-2 text-xs py-1 border-b border-white/5 last:border-0">
+                    <span className="text-emerald-300 font-medium truncate flex-1">{m.name}</span>
+                    <span className="text-zinc-500 text-[10px] truncate max-w-[40%]">{m.role}</span>
+                    {m.is_commander && <span className="text-[9px] px-1 rounded bg-amber-900/40 text-amber-300">CMD</span>}
+                  </div>
+                ))}
+                {members.length === 0 && <div className="text-xs text-zinc-500 italic">no members</div>}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-zinc-900/50 border-white/10">
+            <CardContent className="p-4">
+              <div className="text-xs text-zinc-500 uppercase mb-2">
+                Shared Tools ({(openTeam.shared_tools || []).length})
+              </div>
+              <div className="flex flex-wrap gap-1 mb-4">
+                {(openTeam.shared_tools || []).map(t => (
+                  <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-900/40 text-indigo-300">{t}</span>
+                ))}
+              </div>
+              <div className="text-xs text-zinc-500 uppercase mb-2">Role Families</div>
+              <div className="flex flex-wrap gap-1 mb-4">
+                {(openTeam.role_families || []).map(f => (
+                  <span key={f} className="text-[10px] px-1.5 py-0.5 rounded bg-violet-900/40 text-violet-300">{f}</span>
+                ))}
+              </div>
+              <div className="text-xs text-zinc-500 uppercase mb-2">Memory Tags</div>
+              <div className="flex flex-wrap gap-1 mb-4">
+                {(openTeam.memory_tags || []).map(t => (
+                  <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">{t}</span>
+                ))}
+              </div>
+              <div className="text-[11px] text-zinc-400">
+                <span className="text-zinc-500">languages:</span> {(openTeam.languages_supported || []).join(", ")}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Teams grid ──
+  return (
+    <div className="space-y-4">
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="text-lg font-bold text-white font-['Outfit']">
+            Agent Teams <span className="text-zinc-500 font-normal">· {teams.length} teams · {teams.reduce((s, t) => s + (t.member_count || 0), 0)} agents</span>
+          </h3>
+          <p className="text-xs text-zinc-500 mt-1">
+            Collaborative workspaces grouping the 499 agents. Commander Orion
+            delegates to teams; teams coordinate their members on shared SOPs.
+          </p>
+        </div>
+        <button onClick={reseed} disabled={seeding}
+                className="text-xs px-3 py-1.5 rounded bg-indigo-900/40 hover:bg-indigo-800/40 text-indigo-300 disabled:opacity-50">
+          {seeding ? "Reseeding..." : "Rebuild all teams"}
+        </button>
+      </div>
+
+      {loading && <div className="text-xs text-zinc-500">loading…</div>}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        {teams.map(t => (
+          <button
+            key={t.team_id}
+            onClick={() => openTeamDetail(t.team_id)}
+            className="text-left bg-zinc-900/50 border border-white/10 hover:border-violet-500/60 rounded-lg p-4 transition-colors"
+          >
+            <div className="flex items-start justify-between mb-1">
+              <div className="text-sm font-bold text-white truncate">{t.studio_name}</div>
+              <div className="text-[10px] text-violet-300 font-mono shrink-0 ml-2">{t.member_count}</div>
+            </div>
+            <div className="text-[10px] text-zinc-500 mb-2">{t.department}</div>
+            <div className="text-xs text-zinc-400 line-clamp-2">{t.mission}</div>
+            <div className="flex flex-wrap gap-1 mt-2">
+              {(t.role_families || []).slice(0, 3).map(f => (
+                <span key={f} className="text-[9px] px-1 py-0.5 rounded bg-violet-900/30 text-violet-300">{f}</span>
+              ))}
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+// ═══════════════════════════════════════════════════════════════════════
+// CostAutomationSection — operator P&L + provider-balance monitor +
+// native auto-recharge setup guide.
+// ═══════════════════════════════════════════════════════════════════════
+// Backend: services/billing/cost_automation.py + routes/admin_cost_automation.py
+//   GET /admin/cost-automation/pnl          → daily P&L rows (30d window)
+//   GET /admin/cost-automation/providers    → per-provider COGS + balance
+//   GET /admin/cost-automation/alerts       → low-balance alerts
+//   GET /admin/cost-automation/setup-guide  → native auto-recharge URLs
+//   POST /admin/cost-automation/run         → force a snapshot tick
+// ═══════════════════════════════════════════════════════════════════════
+const CostAutomationSection = ({ token }) => {
+  const [pnl, setPnl] = useState(null);
+  const [providers, setProviders] = useState(null);
+  const [alerts, setAlerts] = useState([]);
+  const [guide, setGuide] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [running, setRunning] = useState(false);
+  const [days, setDays] = useState(30);
+
+  const fetchJ = async (path, opts = {}) => {
+    const r = await fetch(`${API}${path}`, {
+      ...opts,
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", ...(opts.headers || {}) },
+    });
+    if (!r.ok) throw new Error(`${r.status}`);
+    return r.json();
+  };
+
+  const loadAll = async (windowDays = days) => {
+    setLoading(true);
+    try {
+      const [pnlRes, provRes, alertsRes, guideRes] = await Promise.all([
+        fetchJ(`/admin/cost-automation/pnl?days=${windowDays}`),
+        fetchJ(`/admin/cost-automation/providers?days=${windowDays}`),
+        fetchJ("/admin/cost-automation/alerts"),
+        fetchJ("/admin/cost-automation/setup-guide"),
+      ]);
+      setPnl(pnlRes);
+      setProviders(provRes);
+      setAlerts(alertsRes.alerts || []);
+      setGuide(guideRes.providers || []);
+    } catch (e) {
+      console.error("cost automation load failed", e);
+    } finally { setLoading(false); }
+  };
+
+  useEffect(() => { loadAll(days); }, [days]);
+
+  const forceTick = async () => {
+    setRunning(true);
+    try {
+      await fetchJ("/admin/cost-automation/run", { method: "POST" });
+      await loadAll(days);
+    } finally { setRunning(false); }
+  };
+
+  const fmt$ = (v) => `$${(Number(v) || 0).toFixed(v >= 1 ? 2 : 4)}`;
+  const fmt$big = (v) => `$${(Number(v) || 0).toLocaleString(undefined, {maximumFractionDigits: 2})}`;
+
+  // Aggregate across the window
+  const summary = pnl?.days?.reduce((s, d) => ({
+    revenue: s.revenue + (d.revenue_usd || 0),
+    cogs:    s.cogs    + (d.cogs_usd    || 0),
+    calls:   s.calls   + (d.call_count  || 0),
+  }), { revenue: 0, cogs: 0, calls: 0 }) || { revenue: 0, cogs: 0, calls: 0 };
+  const totalMargin = summary.revenue - summary.cogs;
+  const avgMarginPct = summary.revenue > 0 ? (totalMargin / summary.revenue) * 100 : 100;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="text-lg font-bold text-white font-['Outfit']">Cost Automation</h3>
+          <p className="text-xs text-zinc-500 mt-1">
+            Operator P&amp;L + provider balances + native auto-recharge setup. Tick runs every 30 min; writes daily snapshots + alerts when any provider drops below threshold.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 text-xs text-zinc-500">
+            Window:
+            {[7, 30, 90].map(d => (
+              <button key={d} onClick={() => setDays(d)}
+                className={`px-2 py-0.5 rounded ${days===d ? 'bg-indigo-900/40 text-indigo-300' : 'text-zinc-500 hover:text-white'}`}>
+                {d}d
+              </button>
+            ))}
+          </div>
+          <button onClick={forceTick} disabled={running}
+            className="text-xs px-3 py-1.5 rounded bg-indigo-900/40 hover:bg-indigo-800/40 text-indigo-300 disabled:opacity-50">
+            {running ? "Running..." : "Force tick"}
+          </button>
+        </div>
+      </div>
+
+      {/* ── P&L aggregate summary ─────────────────────────────── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <Card className="bg-zinc-900/50 border-white/10">
+          <CardContent className="p-4">
+            <div className="text-[10px] text-zinc-500 uppercase tracking-wide">Revenue · {days}d</div>
+            <div className="text-2xl font-bold text-emerald-400 mt-1 font-mono">{fmt$big(summary.revenue)}</div>
+          </CardContent>
+        </Card>
+        <Card className="bg-zinc-900/50 border-white/10">
+          <CardContent className="p-4">
+            <div className="text-[10px] text-zinc-500 uppercase tracking-wide">COGS · {days}d</div>
+            <div className="text-2xl font-bold text-rose-400 mt-1 font-mono">{fmt$big(summary.cogs)}</div>
+          </CardContent>
+        </Card>
+        <Card className="bg-zinc-900/50 border-white/10">
+          <CardContent className="p-4">
+            <div className="text-[10px] text-zinc-500 uppercase tracking-wide">Gross Margin</div>
+            <div className="text-2xl font-bold text-white mt-1 font-mono">{fmt$big(totalMargin)}</div>
+            <div className="text-[11px] text-zinc-400 mt-1">{avgMarginPct.toFixed(1)}%</div>
+          </CardContent>
+        </Card>
+        <Card className="bg-zinc-900/50 border-white/10">
+          <CardContent className="p-4">
+            <div className="text-[10px] text-zinc-500 uppercase tracking-wide">Total Calls · {days}d</div>
+            <div className="text-2xl font-bold text-white mt-1 font-mono">{(summary.calls || 0).toLocaleString()}</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* ── Low-balance alerts ─────────────────────────────────── */}
+      {alerts.length > 0 && (
+        <Card className="bg-rose-950/40 border-rose-900/50">
+          <CardContent className="p-4">
+            <div className="text-xs font-bold text-rose-300 uppercase tracking-wide mb-3">
+              Low-Balance Alerts ({alerts.length})
+            </div>
+            <div className="space-y-2">
+              {alerts.map(a => (
+                <div key={a.provider} className="flex items-center justify-between text-xs">
+                  <span className="text-white font-medium">{a.provider}</span>
+                  <span className="text-rose-300 font-mono">
+                    {fmt$(a.balance_usd)} <span className="text-zinc-500">/ threshold {fmt$(a.threshold_usd)}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ── Per-provider COGS + balance table ──────────────────── */}
+      <Card className="bg-zinc-900/50 border-white/10">
+        <CardContent className="p-4">
+          <div className="text-xs font-bold text-zinc-300 uppercase tracking-wide mb-3">
+            Per-Provider COGS · {days}d
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-zinc-500 uppercase text-[10px] tracking-wide">
+                  <th className="text-left py-2">Provider</th>
+                  <th className="text-right py-2">COGS</th>
+                  <th className="text-right py-2">Calls</th>
+                  <th className="text-right py-2">Avg/call</th>
+                  <th className="text-right py-2">Balance</th>
+                </tr>
+              </thead>
+              <tbody className="text-zinc-300">
+                {(providers?.providers || []).map(p => (
+                  <tr key={p.provider} className="border-t border-white/5">
+                    <td className="py-2 font-medium text-white">{p.provider}</td>
+                    <td className="py-2 text-right font-mono text-rose-300">{fmt$(p.cogs_usd)}</td>
+                    <td className="py-2 text-right font-mono">{p.call_count}</td>
+                    <td className="py-2 text-right font-mono text-zinc-400">{fmt$(p.avg_usd)}</td>
+                    <td className="py-2 text-right font-mono">
+                      {p.balance_usd != null
+                        ? <span className={p.balance_usd < 5 ? "text-amber-300" : "text-emerald-300"}>{fmt$(p.balance_usd)}</span>
+                        : <span className="text-zinc-600">—</span>}
+                    </td>
+                  </tr>
+                ))}
+                {(!providers?.providers || providers.providers.length === 0) && (
+                  <tr><td colSpan="5" className="py-6 text-center text-zinc-500 italic">
+                    No COGS data for window. Run a few API calls first.
+                  </td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ── Auto-recharge setup guide ─────────────────────────── */}
+      <Card className="bg-zinc-900/50 border-white/10">
+        <CardContent className="p-4">
+          <div className="text-xs font-bold text-zinc-300 uppercase tracking-wide mb-1">
+            Native Auto-Recharge Setup
+          </div>
+          <p className="text-[11px] text-zinc-500 mb-3">
+            Providers don't accept revenue-split payments — each one bills the operator's payment method directly.
+            Enable native auto-recharge once per provider; MAARS then monitors balances + alerts. Zero manual reconciliation.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {guide.map(p => (
+              <a key={p.provider} href={p.url} target="_blank" rel="noopener noreferrer"
+                 className="flex items-start gap-3 p-3 rounded bg-zinc-800/40 hover:bg-zinc-800/80 border border-white/5 transition">
+                <div className={`mt-1 h-2 w-2 rounded-full shrink-0 ${p.has_key ? 'bg-emerald-400' : 'bg-zinc-600'}`}
+                     title={p.has_key ? 'Configured' : 'Not configured'} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-white">{p.display}</span>
+                    <span className="text-[10px] text-zinc-500">
+                      thresh {fmt$(p.recommended_threshold_usd)} · refill {fmt$(p.recommended_topup_usd)}
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-zinc-400 mt-1 line-clamp-2">{p.howto}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {loading && <div className="text-xs text-zinc-500">loading…</div>}
+    </div>
+  );
+};
+
+
+// ═══════════════════════════════════════════════════════════════════════
+// TreasurySection — the unified operator money view.
+// ═══════════════════════════════════════════════════════════════════════
+// Revenue / COGS Reserve / Operator Profit — all three booked automatically
+// at every Stripe charge and debited on every API call. No per-provider
+// manual reconciliation.
+//
+// Backend: services/billing/treasury.py + /admin/treasury/* routes.
+// ═══════════════════════════════════════════════════════════════════════
+const TreasurySection = ({ token }) => {
+  const [snap, setSnap] = useState(null);
+  const [log, setLog]  = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [running, setRunning] = useState(false);
+
+  const fetchJ = async (path, opts = {}) => {
+    const r = await fetch(`${API}${path}`, {
+      ...opts,
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", ...(opts.headers || {}) },
+    });
+    if (!r.ok) throw new Error(`${r.status}`);
+    return r.json();
+  };
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const [s, l] = await Promise.all([
+        fetchJ("/admin/treasury"),
+        fetchJ("/admin/treasury/log?limit=50"),
+      ]);
+      setSnap(s);
+      setLog(l.data || []);
+    } finally { setLoading(false); }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const reconcile = async () => {
+    if (!confirm("Close the month: roll any COGS surplus into profit, flag deficits. Proceed?")) return;
+    setRunning(true);
+    try {
+      const r = await fetchJ("/admin/treasury/reconcile", { method: "POST" });
+      alert(`Reconcile: ${r.action} ${r.amount_usd ? `($${r.amount_usd.toFixed(2)})` : ''}`);
+      await load();
+    } finally { setRunning(false); }
+  };
+
+  const fmt$ = (v) => `$${(Number(v) || 0).toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2})}`;
+
+  const kindColor = {
+    revenue:             "text-emerald-300",
+    profit:              "text-emerald-200",
+    reserve:             "text-amber-300",
+    cogs_actual:         "text-rose-300",
+    reconcile_surplus:   "text-indigo-300",
+    reconcile_deficit:   "text-rose-400",
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="text-lg font-bold text-white font-['Outfit']">Treasury</h3>
+          <p className="text-xs text-zinc-500 mt-1 max-w-2xl">
+            One unified money view. Every client payment auto-splits into
+            <span className="text-emerald-300"> Revenue</span> · <span className="text-amber-300">COGS Reserve</span> ·
+            <span className="text-emerald-200"> Profit</span>. Every API call debits the reserve by actual provider cost.
+            You never pick which provider gets what — providers auto-charge your card via their own native auto-recharge; MAARS tracks the money.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={load} disabled={loading}
+            className="text-xs px-3 py-1.5 rounded bg-zinc-800/60 hover:bg-zinc-700/60 text-zinc-200 disabled:opacity-50">
+            {loading ? "Loading..." : "Refresh"}
+          </button>
+          <button onClick={reconcile} disabled={running}
+            className="text-xs px-3 py-1.5 rounded bg-indigo-900/40 hover:bg-indigo-800/40 text-indigo-200 disabled:opacity-50">
+            {running ? "Reconciling..." : "Close month"}
+          </button>
+        </div>
+      </div>
+
+      {snap && (
+        <>
+          {/* ── Three headline cards ───────────────────────────── */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <Card className="bg-emerald-950/30 border-emerald-900/40">
+              <CardContent className="p-5">
+                <div className="text-[10px] text-emerald-400 uppercase tracking-widest font-bold">Revenue (lifetime)</div>
+                <div className="text-3xl font-bold text-emerald-300 mt-2 font-mono">{fmt$(snap.revenue_usd)}</div>
+                <div className="text-[11px] text-emerald-400/70 mt-1">Stripe + credit packages + top-ups</div>
+              </CardContent>
+            </Card>
+            <Card className="bg-amber-950/30 border-amber-900/40">
+              <CardContent className="p-5">
+                <div className="text-[10px] text-amber-400 uppercase tracking-widest font-bold">COGS Reserve</div>
+                <div className="text-3xl font-bold text-amber-300 mt-2 font-mono">{fmt$(snap.cogs_reserve_usd)}</div>
+                <div className="text-[11px] text-amber-400/70 mt-1">
+                  Actual COGS spent: {fmt$(snap.cogs_actual_usd)}
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-indigo-950/30 border-indigo-900/40">
+              <CardContent className="p-5">
+                <div className="text-[10px] text-indigo-400 uppercase tracking-widest font-bold">Operator Profit</div>
+                <div className="text-3xl font-bold text-indigo-200 mt-2 font-mono">{fmt$(snap.operator_profit_usd)}</div>
+                <div className="text-[11px] text-indigo-400/70 mt-1">
+                  Gross margin {snap.gross_margin_pct}% · Net profit {fmt$(snap.net_profit_usd)}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* ── Surplus rolled + alerts row ───────────────────── */}
+          <div className="grid grid-cols-2 gap-3">
+            <Card className="bg-zinc-900/50 border-white/10">
+              <CardContent className="p-4">
+                <div className="text-[10px] text-zinc-500 uppercase tracking-wide">Surplus rolled to profit</div>
+                <div className="text-xl font-bold text-emerald-300 mt-1 font-mono">{fmt$(snap.surplus_rolled_usd)}</div>
+                <div className="text-[11px] text-zinc-500 mt-1">Unused COGS reserve reclaimed at each reconcile</div>
+              </CardContent>
+            </Card>
+            <Card className={`border-white/10 ${snap.deficit_alerts > 0 ? 'bg-rose-950/30 border-rose-900/40' : 'bg-zinc-900/50'}`}>
+              <CardContent className="p-4">
+                <div className="text-[10px] text-zinc-500 uppercase tracking-wide">Deficit alerts</div>
+                <div className={`text-xl font-bold mt-1 font-mono ${snap.deficit_alerts > 0 ? 'text-rose-300' : 'text-white'}`}>{snap.deficit_alerts}</div>
+                <div className="text-[11px] text-zinc-500 mt-1">Times COGS reserve went negative since start</div>
+              </CardContent>
+            </Card>
+          </div>
+        </>
+      )}
+
+      {/* ── Recent activity ───────────────────────────────────── */}
+      <Card className="bg-zinc-900/50 border-white/10">
+        <CardContent className="p-4">
+          <div className="text-xs font-bold text-zinc-300 uppercase tracking-wide mb-3">Recent Treasury Activity</div>
+          {log.length === 0 ? (
+            <div className="text-xs text-zinc-500 italic">No activity yet. First payment or API call will show here.</div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="text-zinc-500 uppercase text-[10px] tracking-wide">
+                    <th className="text-left py-2">Kind</th>
+                    <th className="text-right py-2">Amount</th>
+                    <th className="text-left py-2 pl-3">Description</th>
+                    <th className="text-right py-2">When</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {log.slice(0, 40).map((row, i) => (
+                    <tr key={i} className="border-t border-white/5">
+                      <td className={`py-1.5 font-bold ${kindColor[row.kind] || 'text-zinc-400'}`}>{row.kind}</td>
+                      <td className="py-1.5 text-right font-mono">{fmt$(row.amount_usd)}</td>
+                      <td className="py-1.5 pl-3 text-zinc-400 truncate max-w-xs">
+                        {row.metadata?.description || row.metadata?.provider || row.metadata?.plan_id || ''}
+                      </td>
+                      <td className="py-1.5 text-right text-zinc-500 text-[10px] whitespace-nowrap">
+                        {row.ts ? new Date(row.ts).toLocaleString() : ''}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
 
 export default UniversalGatewayTab;

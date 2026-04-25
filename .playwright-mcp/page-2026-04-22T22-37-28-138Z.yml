@@ -1,0 +1,34 @@
+- generic [ref=e4]:
+  - generic [ref=e11]:
+    - link [ref=e13] [cursor=pointer]:
+      - /url: //www.volcengine.com
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e17]:
+          - generic [ref=e18] [cursor=pointer]: 最新活动
+          - generic [ref=e19] [cursor=pointer]: 大模型
+          - generic [ref=e20] [cursor=pointer]: 产品
+          - generic [ref=e21] [cursor=pointer]: 解决方案
+          - generic [ref=e22] [cursor=pointer]: 定价
+          - generic [ref=e23] [cursor=pointer]: 生态与合作
+          - generic [ref=e24] [cursor=pointer]: 支持与服务
+          - generic [ref=e25] [cursor=pointer]: 开发者
+          - generic [ref=e26] [cursor=pointer]: 了解我们
+        - img [ref=e28] [cursor=pointer]
+      - img [ref=e33] [cursor=pointer]
+    - generic [ref=e38]:
+      - link "文档" [ref=e39] [cursor=pointer]:
+        - /url: https://www.volcengine.com/docs
+      - link "备案" [ref=e40] [cursor=pointer]:
+        - /url: https://www.volcengine.com/beian
+      - link "控制台" [ref=e41] [cursor=pointer]:
+        - /url: https://console.volcengine.com
+      - generic [ref=e43]:
+        - link "登录" [ref=e44] [cursor=pointer]:
+          - /url: //console.volcengine.com/auth/login?redirectURI=%2F%2Fwww.volcengine.com%2Fproduct%2Fdoubao
+        - link "立即注册" [ref=e45] [cursor=pointer]:
+          - /url: //console.volcengine.com/auth/signup?redirectURI=%2F%2Fwww.volcengine.com%2Fproduct%2Fdoubao
+  - generic [ref=e49]:
+    - button "animation" [ref=e50]:
+      - img [ref=e51]
+    - paragraph [ref=e59]: 内容加载中

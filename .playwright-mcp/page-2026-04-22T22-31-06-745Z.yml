@@ -1,0 +1,56 @@
+- generic [active] [ref=e1]:
+  - main [ref=e4]:
+    - generic [ref=e5]:
+      - link "Sign up" [ref=e6] [cursor=pointer]:
+        - /url: /sign-up
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - generic [ref=e12]:
+            - link "Reka" [ref=e14] [cursor=pointer]:
+              - /url: https://reka.ai/
+              - img "Reka" [ref=e15]
+            - generic [ref=e16]:
+              - heading "Sign in to Reka" [level=1] [ref=e17]
+              - paragraph [ref=e18]: Welcome back! Please sign in to continue
+          - generic [ref=e19]:
+            - button "Sign in with Google Continue with Google" [ref=e22] [cursor=pointer]:
+              - generic [ref=e23]:
+                - img "Sign in with Google" [ref=e25]
+                - generic [ref=e26]: Continue with Google
+            - paragraph [ref=e29]: or
+            - generic [ref=e31]:
+              - generic [ref=e32]:
+                - generic [ref=e35]:
+                  - generic [ref=e37]: Email address
+                  - textbox "Email address" [ref=e38]:
+                    - /placeholder: Enter your email address
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: Password
+                      - generic:
+                        - textbox "Password":
+                          - /placeholder: Enter your password
+                        - button "Show password":
+                          - img
+              - button "Continue" [ref=e41] [cursor=pointer]:
+                - generic [ref=e42]:
+                  - text: Continue
+                  - img [ref=e43]
+        - generic [ref=e46]:
+          - generic [ref=e47]: Don’t have an account?
+          - link "Sign up" [ref=e48] [cursor=pointer]:
+            - /url: https://platform.reka.ai/sign-up#/?redirect_url=https%3A%2F%2Fplatform.reka.ai%2Fsignup
+  - region "Notifications alt+T"
+  - button "Report a Bug" [ref=e51] [cursor=pointer]:
+    - img [ref=e52]
+    - generic [ref=e55]: Report a Bug
+  - alert [ref=e56]
+  - generic:
+    - region "Notifications-top"
+    - region "Notifications-top-left"
+    - region "Notifications-top-right"
+    - region "Notifications-bottom-left"
+    - region "Notifications-bottom"
+    - region "Notifications-bottom-right"

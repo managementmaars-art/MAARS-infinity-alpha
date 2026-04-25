@@ -450,50 +450,40 @@ async def send_cold_email(
     }
     await db.cold_outreach.insert_one({**email_record, "_id": None})
 
-    # Attempt actual send if provider credentials exist
-    integration_keys = await get_integration_keys()
-    provider = body.provider.lower()
-    sent = False
-
-    if provider == "sendgrid":
-        sg_key = (integration_keys.get("sendgrid") or {}).get("api_key", "")
-        if sg_key:
-            try:
-                import httpx
-                async with httpx.AsyncClient() as client:
-                    resp = await client.post(
-                        "https://api.sendgrid.com/v3/mail/send",
-                        headers={"Authorization": f"Bearer {sg_key}", "Content-Type": "application/json"},
-                        json={
-                            "personalizations": [{"to": [{"email": body.to_email, "name": body.to_name or ""}], "dynamic_template_data": body.personalization}],
-                            "from": {"email": body.from_name or "noreply@maarscommand.com", "name": body.from_name},
-                            "reply_to": {"email": body.reply_to} if body.reply_to else None,
-                            "subject": body.subject,
-                            "content": [{"type": "text/html", "value": body.body_html}],
-                        },
-                        timeout=10,
-                    )
-                    sent = resp.status_code in (200, 202)
-            except Exception as e:
-                logger.warning(f"SendGrid send failed: {e}")
-    elif provider == "resend":
-        resend_key = (integration_keys.get("resend") or {}).get("api_key", "")
-        if resend_key:
-            try:
-                import httpx
-                async with httpx.AsyncClient() as client:
-                    resp = await client.post(
-                        "https://api.resend.com/emails",
-                        headers={"Authorization": f"Bearer {resend_key}", "Content-Type": "application/json"},
-                        json={"from": f"{body.from_name} <noreply@maarscommand.com>", "to": [body.to_email], "subject": body.subject, "html": body.body_html},
-                        timeout=10,
-                    )
-                    sent = resp.status_code == 200
-            except Exception as e:
-                logger.warning(f"Resend send failed: {e}")
-
-    await db.cold_outreach.update_one({"email_id": email_id}, {"$set": {"status": "sent" if sent else "queued"}})
-    return {"email_id": email_id, "status": "sent" if sent else "queued", "language": language, "provider": provider}
+    # Delegate transport to the shared email_sender — same module the
+    # background scheduler uses, so compliance headers + provider fallback
+    # behave identically whether the send fires immediately or from a
+    # scheduled_at entry.
+    from services.email_sender import send_email
+    result = await send_email(
+        to=body.to_email,
+        to_name=body.to_name,
+        subject=body.subject,
+        body_html=body.body_html,
+        from_name=body.from_name,
+        reply_to=body.reply_to,
+        provider=body.provider,
+        personalization=body.personalization,
+    )
+    sent = bool(result.get("ok"))
+    await db.cold_outreach.update_one(
+        {"email_id": email_id},
+        {"$set": {
+            "status": "sent" if sent else "failed",
+            "provider": result.get("provider"),
+            "provider_message_id": result.get("message_id"),
+            "error": result.get("error"),
+        }},
+    )
+    return {
+        "email_id": email_id,
+        "status": "sent" if sent else "failed",
+        "language": language,
+        # Provider deliberately omitted from client response — MAARS
+        # routes through multiple transports; clients don't need to
+        # know which one served their message.
+        "error": result.get("error"),
+    }
 
 
 @router.post("/social/cold-call")

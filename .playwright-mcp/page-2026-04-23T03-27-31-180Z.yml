@@ -1,0 +1,59 @@
+- generic [ref=e1]:
+  - link "GPT Image 2 is now on fal! 🚀" [ref=e3] [cursor=pointer]:
+    - /url: https://fal.ai/models/openai/gpt-image-2/edit
+  - generic [ref=e80]:
+    - img "Onboarding illustration" [ref=e83]
+    - generic [ref=e84]:
+      - generic [ref=e85]:
+        - img [ref=e86]
+        - generic [ref=e96]: Mirza
+      - generic [ref=e99]:
+        - generic [ref=e100]:
+          - heading "Tell us a bit about your team — this helps us route you to the right support & pricing options." [level=1] [ref=e102]
+          - generic [ref=e103]:
+            - generic [ref=e104]:
+              - generic [ref=e105]: What's your email?
+              - textbox "your.email@company.com" [ref=e106]: management.maars@marsgc.net
+            - generic [ref=e107]:
+              - generic [ref=e108]: What's your role?
+              - combobox [ref=e109] [cursor=pointer]:
+                - img [ref=e110]
+              - combobox [ref=e112]
+            - generic [ref=e113]:
+              - generic [ref=e114]: Which best describes your job level?
+              - generic [ref=e115]:
+                - button "Individual contributor" [ref=e116] [cursor=pointer]
+                - button "Manager" [ref=e117] [cursor=pointer]
+                - button "Executive" [ref=e118] [cursor=pointer]
+                - button "Other" [ref=e119] [cursor=pointer]
+            - generic [ref=e120]:
+              - generic [ref=e121]: How many people work at your company?
+              - generic [ref=e122]:
+                - generic [ref=e123] [cursor=pointer]:
+                  - radio "Just me" [checked] [active] [ref=e124]
+                  - generic [ref=e125]: Just me
+                - generic [ref=e126] [cursor=pointer]:
+                  - radio "2-10 people" [ref=e127]
+                  - generic [ref=e128]: 2-10 people
+                - generic [ref=e129] [cursor=pointer]:
+                  - radio "11-50 people" [ref=e130]
+                  - generic [ref=e131]: 11-50 people
+                - generic [ref=e132] [cursor=pointer]:
+                  - radio "51-200 people" [ref=e133]
+                  - generic [ref=e134]: 51-200 people
+                - generic [ref=e135] [cursor=pointer]:
+                  - radio "201-1,000 people" [ref=e136]
+                  - generic [ref=e137]: 201-1,000 people
+                - generic [ref=e138] [cursor=pointer]:
+                  - radio "1,000 - 2,000 people" [ref=e139]
+                  - generic [ref=e140]: 1,000 - 2,000 people
+                - generic [ref=e141] [cursor=pointer]:
+                  - radio "2,000+ people" [ref=e142]
+                  - generic [ref=e143]: 2,000+ people
+        - button "Back" [ref=e146] [cursor=pointer]:
+          - img [ref=e147]
+          - text: Back
+        - button "Continue" [ref=e151] [cursor=pointer]
+  - region "Notifications alt+T"
+  - alert [ref=e50]
+  - iframe

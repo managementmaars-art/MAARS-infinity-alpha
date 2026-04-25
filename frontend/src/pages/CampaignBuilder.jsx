@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useAuth } from "../App";
 import { Play, Plus, Trash2, Clock, CheckCircle, AlertCircle, ChevronRight, ChevronDown, FileText, Zap, ArrowLeft, Download, CalendarClock } from "lucide-react";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const T = {
   glass: "rgba(255,255,255,0.03)",
@@ -83,13 +83,13 @@ export default function CampaignBuilder() {
   const [contextInput, setContextInput] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [pollTimer, setPollTimer] = useState(null);
   const [showSchedule, setShowSchedule] = useState(false);
   const [scheduleData, setScheduleData] = useState({ frequency: "weekly", day_of_week: 1, hour: 9 });
+  const pollTimerRef = useRef(null);
 
-  const h = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const h = useMemo(() => ({ Authorization: `Bearer ${token}`, "Content-Type": "application/json" }), [token]);
 
-  const fetchAll = async () => {
+  const fetchAll = useCallback(async () => {
     try {
       const [tRes, cRes] = await Promise.all([
         fetch(`${API}/api/kernel/campaign-templates`, { headers: h }),
@@ -99,9 +99,14 @@ export default function CampaignBuilder() {
       if (cRes.ok) setCampaigns(await cRes.json());
     } catch {}
     setLoading(false);
-  };
+  }, [h]);
 
-  useEffect(() => { fetchAll(); return () => { if (pollTimer) clearInterval(pollTimer); }; }, [token]);
+  useEffect(() => {
+    fetchAll();
+    return () => {
+      if (pollTimerRef.current) clearInterval(pollTimerRef.current);
+    };
+  }, [fetchAll]);
 
   const createCampaign = async () => {
     if (!selectedTemplate) return;
@@ -122,6 +127,7 @@ export default function CampaignBuilder() {
   const runCampaign = async (campId) => {
     const res = await fetch(`${API}/api/kernel/campaigns/${campId}/run`, { method: "POST", headers: h });
     if (res.ok) {
+      if (pollTimerRef.current) clearInterval(pollTimerRef.current);
       const interval = setInterval(async () => {
         const r = await fetch(`${API}/api/kernel/campaigns/${campId}`, { headers: h });
         if (r.ok) {
@@ -130,11 +136,11 @@ export default function CampaignBuilder() {
           setCampaigns(prev => prev.map(c => c.campaign_id === campId ? data : c));
           if (data.status === "completed" || data.status === "failed") {
             clearInterval(interval);
-            setPollTimer(null);
+            pollTimerRef.current = null;
           }
         }
       }, 1500);
-      setPollTimer(interval);
+      pollTimerRef.current = interval;
       setSelected(prev => prev ? { ...prev, status: "running" } : prev);
     }
   };

@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import AgentAvatar from "../components/AgentAvatar";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const T = {
   glass: "rgba(255,255,255,0.03)",

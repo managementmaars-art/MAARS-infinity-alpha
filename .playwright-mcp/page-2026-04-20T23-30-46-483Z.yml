@@ -1,0 +1,63 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - link "MAARS Command" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7]: MAARS Command
+        - generic [ref=e8]:
+          - link "Pricing" [ref=e9] [cursor=pointer]:
+            - /url: /pricing
+          - link "Changelog" [ref=e10] [cursor=pointer]:
+            - /url: /changelog
+          - link "Login" [ref=e11] [cursor=pointer]:
+            - /url: /login
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - img [ref=e14]
+        - text: Comparisons
+      - heading "MAARS vs. the alternatives" [level=1] [ref=e16]
+      - paragraph [ref=e17]: Direct feature-by-feature comparisons. Honest claims. No inflated benchmarks.
+    - generic [ref=e19]:
+      - link "MAARS vs Jasper AI For marketers tired of paying $49+/mo for just copy." [ref=e20] [cursor=pointer]:
+        - /url: /alternatives/jasper
+        - generic [ref=e21]:
+          - generic [ref=e22]: MAARS vs
+          - img [ref=e23]
+        - heading "Jasper AI" [level=2] [ref=e25]
+        - paragraph [ref=e26]: For marketers tired of paying $49+/mo for just copy.
+      - link "MAARS vs Copy.ai Workflows that reach real people, not just the clipboard." [ref=e27] [cursor=pointer]:
+        - /url: /alternatives/copy-ai
+        - generic [ref=e28]:
+          - generic [ref=e29]: MAARS vs
+          - img [ref=e30]
+        - heading "Copy.ai" [level=2] [ref=e32]
+        - paragraph [ref=e33]: Workflows that reach real people, not just the clipboard.
+      - link "MAARS vs Cursor Your IDE is covered. Let MAARS run the other 80%." [ref=e34] [cursor=pointer]:
+        - /url: /alternatives/cursor
+        - generic [ref=e35]:
+          - generic [ref=e36]: MAARS vs
+          - img [ref=e37]
+        - heading "Cursor" [level=2] [ref=e39]
+        - paragraph [ref=e40]: Your IDE is covered. Let MAARS run the other 80%.
+      - link "MAARS vs Lovable Build the app in a weekend. Run it with MAARS." [ref=e41] [cursor=pointer]:
+        - /url: /alternatives/lovable
+        - generic [ref=e42]:
+          - generic [ref=e43]: MAARS vs
+          - img [ref=e44]
+        - heading "Lovable" [level=2] [ref=e46]
+        - paragraph [ref=e47]: Build the app in a weekend. Run it with MAARS.
+    - contentinfo [ref=e48]:
+      - text: MAARS Command © 2026 ·
+      - link "Privacy" [ref=e49] [cursor=pointer]:
+        - /url: /privacy
+      - text: ·
+      - link "Terms" [ref=e50] [cursor=pointer]:
+        - /url: /terms
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

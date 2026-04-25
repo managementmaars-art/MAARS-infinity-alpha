@@ -1,0 +1,161 @@
+- generic [active] [ref=e1]:
+  - banner
+  - banner [ref=e2]:
+    - navigation "primary navigation" [ref=e3]:
+      - link "Higgsfield AI – AI Video & Image Generation Platform" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img [ref=e5]
+      - generic [ref=e8]:
+        - link "Explore" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - button "Image" [ref=e11] [cursor=pointer]
+        - button "Video" [ref=e13] [cursor=pointer]
+        - button "Audio" [ref=e15] [cursor=pointer]
+        - link "Collab" [ref=e16] [cursor=pointer]:
+          - /url: /generate
+        - button "Edit" [ref=e18] [cursor=pointer]
+        - button "Character" [ref=e20] [cursor=pointer]
+        - link "Marketing Studio New" [ref=e21] [cursor=pointer]:
+          - /url: /marketing-studio
+          - text: Marketing Studio
+          - generic [ref=e22]: New
+        - link "Cinema Studio 3.5" [ref=e23] [cursor=pointer]:
+          - /url: /cinema-studio?autoSelectFolder=true
+          - text: Cinema Studio
+          - generic [ref=e24]: "3.5"
+        - link "Originals New" [ref=e25] [cursor=pointer]:
+          - /url: /original-series
+          - text: Originals
+          - generic [ref=e26]: New
+        - link "Apps" [ref=e27] [cursor=pointer]:
+          - /url: /apps
+        - link "Assist" [ref=e28] [cursor=pointer]:
+          - /url: /chat
+        - button "Community" [ref=e30] [cursor=pointer]
+      - generic [ref=e32]:
+        - link "Upgrade 55% OFF" [ref=e200] [cursor=pointer]:
+          - /url: /pricing
+          - generic [ref=e34]:
+            - img [ref=e201]
+            - text: Upgrade
+            - generic [ref=e37]: 55% OFF
+        - separator [ref=e38]
+        - generic [ref=e204]:
+          - button "Notifications" [ref=e206] [cursor=pointer]:
+            - img [ref=e207]
+          - link "Folder icon Assets" [ref=e209] [cursor=pointer]:
+            - /url: /asset/all
+            - img "Folder icon" [ref=e211]
+            - generic [ref=e212]: Assets
+          - button "user profile" [ref=e214] [cursor=pointer]:
+            - generic [ref=e217]:
+              - img "user profile" [ref=e219]
+              - img [ref=e220]
+  - main [ref=e49]:
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - navigation [ref=e52]:
+          - generic [ref=e53] [cursor=pointer]: Create Video
+          - generic [ref=e54] [cursor=pointer]: Edit Video
+          - generic [ref=e55] [cursor=pointer]: Motion Control
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - group [ref=e59]:
+              - button "General Kling 3.0" [ref=e60]:
+                - generic [ref=e61]: Your browser does not support the video.
+                - generic [ref=e63]:
+                  - paragraph [ref=e64]: General
+                  - paragraph [ref=e65]: Kling 3.0
+                - button "Change" [ref=e67] [cursor=pointer]:
+                  - img [ref=e68]
+                  - text: Change
+            - generic [ref=e70]:
+              - generic [ref=e73]:
+                - generic [ref=e75]:
+                  - generic:
+                    - paragraph: Optional
+                  - generic [ref=e77] [cursor=pointer]:
+                    - button "Start frame" [ref=e78]
+                    - img [ref=e80]
+                    - paragraph [ref=e84]: Start frame
+                - generic [ref=e86]:
+                  - generic:
+                    - paragraph: Optional
+                  - generic [ref=e88] [cursor=pointer]:
+                    - button "End frame" [ref=e89]
+                    - img [ref=e91]
+                    - paragraph [ref=e95]: End frame
+              - generic [ref=e97]:
+                - generic [ref=e98]:
+                  - generic [ref=e99]: Multi-shot
+                  - button [ref=e100] [cursor=pointer]:
+                    - img [ref=e101]
+                - switch [ref=e103] [cursor=pointer]
+              - generic [ref=e105]:
+                - textbox [ref=e107]:
+                  - paragraph [ref=e228]: "Jamal — a 25-year-old Black man, warm dark brown skin, short cropped curly hair with a clean fade, light stubble, heather-grey hoodie over plain white t-shirt — sits at a single small desk in a tiny studio apartment at midnight. Open laptop in front of him. Sticky notes around the monitor: \"BUSINESS IDEAS?\", \"DROPSHIPPING?\", \"AGENCY?\", \"SAAS???\" — all crossed out. He's scrolling through 14 browser tabs (\"how to start a business\", \"what business should I start quiz\", \"side hustle ideas 2026\") with a defeated, exhausted expression, lit only by the screen glow. A barista apron is hung on a hook on the wall behind him. Camera slowly pulls back to reveal the lonely studio. Cinematic 35mm film, golden lamplight, photorealistic, shallow depth of field, melancholic mood."
+                - generic [ref=e108]:
+                  - generic [ref=e109] [cursor=pointer]:
+                    - img [ref=e111]
+                    - generic [ref=e113]: Enhance on
+                    - checkbox "Enhance on" [checked] [ref=e114]
+                  - generic [ref=e115] [cursor=pointer]:
+                    - img [ref=e117]
+                    - generic [ref=e119]: "On"
+                    - checkbox "On" [checked] [ref=e120]
+                  - button "Elements" [ref=e121] [cursor=pointer]:
+                    - img [ref=e122]
+                    - text: Elements
+              - button "Model" [ref=e126] [cursor=pointer]:
+                - generic [ref=e127]:
+                  - generic [ref=e128]: Model
+                  - generic [ref=e130]:
+                    - paragraph [ref=e131]: Kling 3.0
+                    - img [ref=e133]
+                - img [ref=e135]
+              - generic [ref=e137]:
+                - button "Duration" [ref=e139] [cursor=pointer]:
+                  - img [ref=e140]
+                  - generic [ref=e142]: 5s
+                - generic [ref=e144]:
+                  - button "16:9 Ratio" [ref=e146] [cursor=pointer]:
+                    - img [ref=e148]
+                    - generic [ref=e150]: 16:9
+                  - combobox [ref=e153]
+                - generic [ref=e155]:
+                  - button "720p Resolution" [ref=e157] [cursor=pointer]:
+                    - img [ref=e159]
+                    - generic [ref=e161]: 720p
+                  - combobox [ref=e164]
+          - button [disabled] [ref=e229]:
+            - img [ref=e230]
+      - generic [ref=e168]:
+        - tablist [ref=e170]:
+          - tab "History" [ref=e171] [cursor=pointer]:
+            - img [ref=e172]
+            - text: History
+          - tab "How it works" [selected] [ref=e174] [cursor=pointer]:
+            - img [ref=e175]
+            - text: How it works
+        - generic [ref=e179]:
+          - generic [ref=e180]:
+            - heading "Make videos in one click" [level=1] [ref=e181]
+            - paragraph [ref=e182]: 250+ presets for camera control, framing, and high-quality VFX - or use the general preset for manual control.
+          - generic [ref=e183]:
+            - article [ref=e184]:
+              - figure [ref=e185]:
+                - img "Add image" [ref=e186]
+              - heading "Add image" [level=2] [ref=e187]
+              - paragraph [ref=e188]: Upload or generate an image to start your animation
+            - article [ref=e189]:
+              - figure [ref=e190]:
+                - generic "Choose preset" [ref=e191]: Your browser does not support the video.
+              - heading "Choose preset" [level=2] [ref=e192]
+              - paragraph [ref=e193]: Pick a preset to control your image movement
+            - article [ref=e194]:
+              - figure [ref=e195]:
+                - generic "Get video" [ref=e196]: Your browser does not support the video.
+              - heading "Get video" [level=2] [ref=e197]
+              - paragraph [ref=e198]: Click generate to create your final animated video!
+  - region "Notifications Alt+T"
+  - alert [ref=e199]

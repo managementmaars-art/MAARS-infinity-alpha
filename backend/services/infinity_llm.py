@@ -5,7 +5,6 @@ Supports all 33 providers with smart routing, auto-selection and fallback chain.
 import uuid
 import time
 import logging
-from shared.constants import EMERGENT_LLM_KEY
 
 logger = logging.getLogger(__name__)
 
@@ -113,67 +112,47 @@ async def call(
     model_name: str = None,
     provider: str = None,
     max_retries: int = 3,
+    user_id: str = "system",
 ):
-    """Call an LLM with auto-selection and fallback chain across all 33 providers.
-    Returns dict: {response, provider, model, latency_ms}"""
-    from services.llm_service import call_direct_llm
-    from shared.utils import get_api_keys
+    """Call an LLM through the MAARS Universal Gateway.
 
-    api_keys = await get_api_keys()
+    Kept as a back-compat wrapper for Infinity callers — all routing, fallback,
+    wallet billing, and usage logging happens inside llm_gateway.complete().
+    """
+    from services.llm_gateway import complete
+    start = time.time()
 
-    # Build candidate chain
-    chain = []
+    # Map ROUTER_MODEL_MAP short names into the gateway's provider/model form.
     if model_name:
         mapped = ROUTER_MODEL_MAP.get(model_name)
         if mapped:
-            chain.append(mapped)
+            prov, mdl = mapped
+            gw_model = f"{prov}/{mdl}"
         elif provider:
-            chain.append((provider, model_name))
+            gw_model = f"{provider}/{model_name}"
+        else:
+            gw_model = model_name  # hope the gateway understands it
+    else:
+        gw_model = "maars/auto"
 
-    for fb in FALLBACK_CHAIN:
-        if fb not in chain:
-            chain.append(fb)
-
-    last_error = None
-    attempts = 0
-    for prov, model_id in chain:
-        if attempts >= max_retries + 1:
-            break
-
-        key = api_keys.get(prov, "")
-        if not key:
-            # Try EMERGENT_LLM_KEY as last resort for openai/anthropic/gemini
-            if prov in ("openai", "anthropic", "gemini") and EMERGENT_LLM_KEY:
-                key = EMERGENT_LLM_KEY
-            else:
-                continue
-
-        attempts += 1
-        try:
-            start = time.time()
-            response = await call_direct_llm(
-                provider=prov,
-                model_name=model_id,
-                system_prompt=system_message,
-                content=prompt,
-                attachments=[],
-                api_key=key,
-            )
-            latency_ms = int((time.time() - start) * 1000)
-
-            return {
-                "response": response,
-                "provider": prov,
-                "model": model_id,
-                "latency_ms": latency_ms,
-                "attempt": attempts,
-            }
-        except Exception as e:
-            last_error = str(e)
-            logger.warning(f"Infinity LLM failed ({prov}/{model_id}): {e}")
-            continue
-
-    raise RuntimeError(f"All providers failed: {last_error}")
+    r = await complete(
+        user_id=user_id,
+        messages=[
+            {"role": "system", "content": system_message},
+            {"role": "user",   "content": prompt},
+        ],
+        model=gw_model,
+        source="infinity_llm.call",
+    )
+    latency_ms = int((time.time() - start) * 1000)
+    maars_meta = r.get("maars", {})
+    return {
+        "response": r["choices"][0]["message"]["content"],
+        "provider": maars_meta.get("provider", ""),
+        "model":    maars_meta.get("model", gw_model),
+        "latency_ms": latency_ms,
+        "attempt": 1,
+    }
 
 
 async def call_json(

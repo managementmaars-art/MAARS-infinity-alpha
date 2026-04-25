@@ -6,11 +6,15 @@ import { Eye, EyeOff, X } from "lucide-react";
 import { usePreviewMode, PREVIEW_PLANS } from "./PreviewModeContext";
 
 export default function PreviewModeBanner() {
-  const { previewMode, previewPlan, switchPreviewPlan, exitPreview } = usePreviewMode();
+  const { previewMode, previewPlan, switchPreviewPlan, exitPreview, previewPlans } = usePreviewMode();
 
   if (!previewMode) return null;
 
-  const plan = PREVIEW_PLANS[previewPlan] || PREVIEW_PLANS.free;
+  // `previewPlans` comes live from /api/plans (unified 5-tier catalog).
+  // Falls back to the static PREVIEW_PLANS constants if the fetch hasn't
+  // completed yet on first render.
+  const plansMap = previewPlans || PREVIEW_PLANS;
+  const plan = plansMap[previewPlan] || plansMap.free || PREVIEW_PLANS.free;
 
   return (
     <div
@@ -28,16 +32,16 @@ export default function PreviewModeBanner() {
       {/* Divider */}
       <div className="h-4 w-px bg-amber-500/30 shrink-0" />
 
-      {/* Plan switcher */}
+      {/* Plan switcher — sourced from live /api/plans (unified 5-tier) */}
       <div className="flex items-center gap-1 flex-wrap">
         <span className="text-[10px] text-amber-500/60 mr-1">Switch plan:</span>
-        {Object.entries(PREVIEW_PLANS).map(([key, p]) => (
+        {Object.entries(plansMap).map(([key, p]) => (
           <button
             key={key}
             onClick={() => switchPreviewPlan(key)}
             className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition-all ${
               previewPlan === key
-                ? `${p.bg} ${p.color} ring-1 ring-current/40`
+                ? `${p.bg || 'bg-zinc-500/20'} ${p.color || 'text-zinc-400'} ring-1 ring-current/40`
                 : "text-amber-600/70 hover:text-amber-400 hover:bg-amber-500/10"
             }`}
           >

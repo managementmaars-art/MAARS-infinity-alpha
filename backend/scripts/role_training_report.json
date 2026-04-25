@@ -1,0 +1,1171 @@
+{
+  "started_at": 1776908937,
+  "samples": [
+    {
+      "agent_id": "agent_secretary",
+      "agent_name": "Nadia Kessler",
+      "role": "Personal Secretary",
+      "role_family": "secretary",
+      "studio_name": "Nadia Kessler Executive Office",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "verify_context",
+        "execute",
+        "confirm",
+        "track"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "schedule_meeting",
+        "inbox_triage",
+        "travel_arrangement"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "pt",
+        "ja",
+        "zh",
+        "ar",
+        "hi"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "verify_context",
+        "execute",
+        "confirm",
+        "track"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_marketing",
+      "agent_name": "Zara Mitchell",
+      "role": "Marketing Specialist",
+      "role_family": "marketer",
+      "studio_name": "Zara Mitchell Growth Office",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "audience_research",
+        "plan",
+        "produce",
+        "measure",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "multi_channel_launch",
+        "retargeting_design",
+        "weekly_content_plan"
+      ],
+      "quality_rule_count": 5,
+      "languages": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "pt"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "audience_research",
+        "plan",
+        "produce",
+        "measure",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_strategist",
+      "agent_name": "Victor Ashford",
+      "role": "Business Strategist",
+      "role_family": "strategist",
+      "studio_name": "Victor Ashford Strategy Room",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "research",
+        "frame",
+        "options",
+        "recommend",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "market_entry",
+        "swot_deep",
+        "competitive_audit"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "research",
+        "frame",
+        "options",
+        "recommend",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_webdesigner",
+      "agent_name": "Luna Bergstr\u00f6m",
+      "role": "Web Designer",
+      "role_family": "designer",
+      "studio_name": "Luna Bergstr\u00f6m Design Studio",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "moodboard_research",
+        "style_direction",
+        "generate",
+        "verify",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "social_post_set",
+        "landing_hero",
+        "pitch_deck_cover"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "pt",
+        "ja",
+        "zh",
+        "ar",
+        "hi"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "moodboard_research",
+        "style_direction",
+        "generate",
+        "verify",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_appdev",
+      "agent_name": "Kai Nakamoto",
+      "role": "App Developer",
+      "role_family": "developer",
+      "studio_name": "Kai Nakamoto Engineering Bay",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "investigate",
+        "design",
+        "implement",
+        "verify",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "feature_implement",
+        "bug_fix_repro",
+        "refactor_small"
+      ],
+      "quality_rule_count": 4,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "investigate",
+        "design",
+        "implement",
+        "verify",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_copywriter",
+      "agent_name": "Scarlett Monroe",
+      "role": "Copywriter",
+      "role_family": "writer",
+      "studio_name": "Scarlett Monroe Writing Desk",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "research",
+        "outline",
+        "draft",
+        "edit",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "seo_article_1500",
+        "landing_copy_full",
+        "email_sequence_5"
+      ],
+      "quality_rule_count": 4,
+      "languages": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "pt",
+        "ja",
+        "zh",
+        "ar",
+        "hi",
+        "it"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "research",
+        "outline",
+        "draft",
+        "edit",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_sales",
+      "agent_name": "Marcus Drake",
+      "role": "Sales Representative",
+      "role_family": "sdr",
+      "studio_name": "Marcus Drake Sales Office",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "research",
+        "qualify",
+        "outreach",
+        "followup",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "cold_email_icp",
+        "linkedin_dm_connect",
+        "multi_touch_sequence"
+      ],
+      "quality_rule_count": 4,
+      "languages": [
+        "en",
+        "es"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "research",
+        "qualify",
+        "outreach",
+        "followup",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_analyst",
+      "agent_name": "Ethan Yates",
+      "role": "Data Analyst",
+      "role_family": "data_analyst",
+      "studio_name": "Ethan Yates Analytics Desk",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "gather",
+        "analyze",
+        "recommend",
+        "verify",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "cohort_analysis",
+        "funnel_breakdown",
+        "ab_test_readout"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "gather",
+        "analyze",
+        "recommend",
+        "verify",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_customerservice",
+      "agent_name": "Maya Thompson",
+      "role": "Customer Service Rep",
+      "role_family": "customer_success",
+      "studio_name": "Maya Thompson Support Studio",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "research",
+        "solve",
+        "respond",
+        "verify",
+        "close_log"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "first_contact_resolve",
+        "refund_process",
+        "escalation_handover"
+      ],
+      "quality_rule_count": 4,
+      "languages": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "pt",
+        "ja",
+        "zh",
+        "ar",
+        "hi"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "research",
+        "solve",
+        "respond",
+        "verify",
+        "close_log"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_projectmanager",
+      "agent_name": "Nathan Cross",
+      "role": "Project Manager",
+      "role_family": "project_mgr",
+      "studio_name": "Nathan Cross PMO",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "plan",
+        "kickoff",
+        "run",
+        "control",
+        "close"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "project_kickoff",
+        "status_report",
+        "postmortem_project"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "plan",
+        "kickoff",
+        "run",
+        "control",
+        "close"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_researcher",
+      "agent_name": "Dr. Clara Voss",
+      "role": "Research Specialist",
+      "role_family": "researcher",
+      "studio_name": "Dr. Clara Voss Research Desk",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "search",
+        "extract",
+        "synthesize",
+        "verify",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "competitor_teardown",
+        "industry_primer",
+        "fact_check"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "search",
+        "extract",
+        "synthesize",
+        "verify",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_finance",
+      "agent_name": "Benjamin Cole",
+      "role": "Financial Analyst",
+      "role_family": "finance_analyst",
+      "studio_name": "Benjamin Cole Finance Desk",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "gather",
+        "model",
+        "verify",
+        "recommend",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "monthly_close_pack",
+        "board_financial",
+        "cash_forecast"
+      ],
+      "quality_rule_count": 2,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "gather",
+        "model",
+        "verify",
+        "recommend",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_hr",
+      "agent_name": "Amara Johnson",
+      "role": "HR Specialist",
+      "role_family": "hr",
+      "studio_name": "Amara Johnson People Office",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "research",
+        "plan",
+        "execute",
+        "document",
+        "followup"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "role_jd_write",
+        "offer_letter",
+        "performance_plan"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "research",
+        "plan",
+        "execute",
+        "document",
+        "followup"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_legal",
+      "agent_name": "Alexandra Reid",
+      "role": "Legal Assistant",
+      "role_family": "legal",
+      "studio_name": "Alexandra Reid Legal Desk",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "research",
+        "redline_or_draft",
+        "verify",
+        "flag_human",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "nda_review",
+        "msa_review",
+        "privacy_policy"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "research",
+        "redline_or_draft",
+        "verify",
+        "flag_human",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_cybersecurity",
+      "agent_name": "Damien Voss",
+      "role": "Cybersecurity Officer",
+      "role_family": "security",
+      "studio_name": "Damien Voss Security Operations Center",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "scope",
+        "assess",
+        "remediate",
+        "verify",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "threat_model",
+        "incident_response",
+        "security_audit"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "scope",
+        "assess",
+        "remediate",
+        "verify",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_automation",
+      "agent_name": "Serena Okafor",
+      "role": "Automation Engineer",
+      "role_family": "data_platform",
+      "studio_name": "Serena Okafor Platform Office",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "design",
+        "implement",
+        "test",
+        "deploy",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "etl_pipeline_build",
+        "ci_cd_setup",
+        "monitoring_wire_up"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "design",
+        "implement",
+        "test",
+        "deploy",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_compliance",
+      "agent_name": "Victoria Harrington",
+      "role": "Compliance Officer",
+      "role_family": "risk_governance",
+      "studio_name": "Victoria Harrington Risk Office",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "scope",
+        "assess",
+        "recommend",
+        "verify",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "risk_assessment_annual",
+        "incident_review",
+        "policy_draft"
+      ],
+      "quality_rule_count": 2,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "scope",
+        "assess",
+        "recommend",
+        "verify",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_aioptimizer",
+      "agent_name": "Dr. Luca Bernstein",
+      "role": "AI Optimization Specialist",
+      "role_family": "ai_optimizer",
+      "studio_name": "Dr. Luca Bernstein AI Lab",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "baseline",
+        "hypothesize",
+        "test",
+        "roll_out",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "prompt_compress",
+        "model_swap_eval",
+        "cache_tune"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "baseline",
+        "hypothesize",
+        "test",
+        "roll_out",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_revenue",
+      "agent_name": "Maximilian Wolfe",
+      "role": "Revenue Strategist",
+      "role_family": "revenue_strategy",
+      "studio_name": "Maximilian Wolfe Revenue Strategy Room",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "diagnose",
+        "design",
+        "prioritize",
+        "plan",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "quarterly_plan",
+        "comp_plan_review",
+        "pricing_sensitivity"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "diagnose",
+        "design",
+        "prioritize",
+        "plan",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_investor",
+      "agent_name": "Richard Ashworth",
+      "role": "Investor Relations Manager",
+      "role_family": "investor_relations",
+      "studio_name": "Richard Ashworth IR Desk",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "gather",
+        "narrative",
+        "draft",
+        "verify",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "quarterly_investor_update",
+        "earnings_qa_prep",
+        "pitch_deck_refresh"
+      ],
+      "quality_rule_count": 2,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "gather",
+        "narrative",
+        "draft",
+        "verify",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_productmgr",
+      "agent_name": "Elena Kovacs",
+      "role": "Product Manager",
+      "role_family": "product_mgr",
+      "studio_name": "Elena Kovacs Product Office",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "customer_signal",
+        "solution_options",
+        "spec",
+        "coordinate",
+        "measure"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "prd_draft",
+        "feature_discovery",
+        "launch_readout"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "customer_signal",
+        "solution_options",
+        "spec",
+        "coordinate",
+        "measure"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_brand",
+      "agent_name": "Valentina Cruz",
+      "role": "Brand Architect",
+      "role_family": "brand_pr",
+      "studio_name": "Valentina Cruz Brand & PR Office",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "research",
+        "strategize",
+        "produce",
+        "verify",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "press_release",
+        "crisis_statement",
+        "thought_leadership_op_ed"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "pt",
+        "ja",
+        "zh",
+        "ar",
+        "hi"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "research",
+        "strategize",
+        "produce",
+        "verify",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_procurement",
+      "agent_name": "Adrian Stone",
+      "role": "Procurement & Vendor Manager",
+      "role_family": "procurement",
+      "studio_name": "Adrian Stone Procurement Desk",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "shortlist",
+        "rfp",
+        "negotiate",
+        "contract",
+        "onboard"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "rfp_issue",
+        "vendor_review_annual",
+        "contract_renewal"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "shortlist",
+        "rfp",
+        "negotiate",
+        "contract",
+        "onboard"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_knowledge",
+      "agent_name": "Dr. Eleanor Shaw",
+      "role": "Knowledge Architect",
+      "role_family": "knowledge_architect",
+      "studio_name": "Dr. Eleanor Shaw Knowledge Graph Office",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "inventory",
+        "model",
+        "ingest",
+        "verify",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "taxonomy_design",
+        "docs_cleanup",
+        "rag_eval"
+      ],
+      "quality_rule_count": 2,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "inventory",
+        "model",
+        "ingest",
+        "verify",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_localization",
+      "agent_name": "Layla Mansouri",
+      "role": "Localization & Global Expansion Specialist",
+      "role_family": "industry_specialist",
+      "studio_name": "Layla Mansouri Domain Desk",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "research",
+        "analyze",
+        "recommend",
+        "verify",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "sector_briefing",
+        "domain_analysis",
+        "compliance_map"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "research",
+        "analyze",
+        "recommend",
+        "verify",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_10p_anomaly",
+      "agent_name": "Anomaly Detection Agent",
+      "role": "Anomaly Detector",
+      "role_family": "verifier",
+      "studio_name": "Anomaly Detection Agent Verification Desk",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "enumerate",
+        "check",
+        "report",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "claim_fact_check",
+        "code_review_safety",
+        "launch_gate"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "enumerate",
+        "check",
+        "report",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_10p_deploy_sec",
+      "agent_name": "Deployment Security Agent",
+      "role": "Deployment Security Manager",
+      "role_family": "executor",
+      "studio_name": "Deployment Security Agent Execution Console",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "precheck",
+        "approve",
+        "execute",
+        "verify",
+        "log"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "safe_deploy",
+        "bulk_action",
+        "controlled_execute"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "precheck",
+        "approve",
+        "execute",
+        "verify",
+        "log"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_10p_incident",
+      "agent_name": "Incident Response Agent",
+      "role": "Security Incident Responder",
+      "role_family": "recovery",
+      "studio_name": "Incident Response Agent Incident Room",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "classify",
+        "contain",
+        "restore",
+        "communicate",
+        "root_cause",
+        "prevent"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "incident_response_playbook",
+        "postmortem_write",
+        "disaster_recovery_drill"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "classify",
+        "contain",
+        "restore",
+        "communicate",
+        "root_cause",
+        "prevent"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_10q_summarization",
+      "agent_name": "Memory Summarization Agent",
+      "role": "Memory Summarizer",
+      "role_family": "memory_ops",
+      "studio_name": "Memory Summarization Agent Memory Ops Desk",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "audit",
+        "act",
+        "retrieval_test",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "memory_compact",
+        "freshness_sweep",
+        "provenance_audit"
+      ],
+      "quality_rule_count": 2,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "audit",
+        "act",
+        "retrieval_test",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_10u_ab",
+      "agent_name": "A/B Test Agent",
+      "role": "A/B Test Manager",
+      "role_family": "experimenter",
+      "studio_name": "A/B Test Agent Experimentation Lab",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "hypothesize",
+        "design",
+        "launch",
+        "monitor",
+        "analyze",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "ab_test_full",
+        "pricing_test",
+        "funnel_experiment"
+      ],
+      "quality_rule_count": 2,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "hypothesize",
+        "design",
+        "launch",
+        "monitor",
+        "analyze",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    },
+    {
+      "agent_id": "agent_10v_final",
+      "agent_name": "Final Recommendation Agent",
+      "role": "Final Recommender",
+      "role_family": "reporting",
+      "studio_name": "Final Recommendation Agent Executive Reporting Desk",
+      "studio_suffix_match": true,
+      "sop_steps": [
+        "understand",
+        "gather",
+        "synthesize",
+        "draft",
+        "verify",
+        "deliver"
+      ],
+      "sop_steps_match_template": true,
+      "skill_count": 3,
+      "skill_ids": [
+        "weekly_exec_memo",
+        "board_update",
+        "investor_dashboard"
+      ],
+      "quality_rule_count": 3,
+      "languages": [
+        "en"
+      ],
+      "dry_run_trace_steps": [
+        "understand",
+        "gather",
+        "synthesize",
+        "draft",
+        "verify",
+        "deliver"
+      ],
+      "persona_has_system_prompt": true
+    }
+  ],
+  "summary": {
+    "role_families_in_registry": 31,
+    "families_sampled": 31,
+    "families_missing_sample": [],
+    "all_step_matches": true,
+    "all_studio_matches": true,
+    "all_have_skills": true,
+    "all_have_persona": true
+  },
+  "finished_at": 1776908937
+}

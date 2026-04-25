@@ -1,6 +1,0 @@
--- Add theme_color column to communities table for custom accent colors
--- 
--- NOTE: This migration has been consolidated into 0001_initial_schema.sql
--- - communities.theme_color already exists
---
--- This file is kept as a no-op to maintain migration history consistency.

@@ -1,0 +1,16 @@
+- generic [ref=e2]:
+  - navigation [ref=e9]
+  - generic [ref=e15]:
+    - combobox "English (US)" [ref=e17] [cursor=pointer]:
+      - generic [ref=e20]: English (US)
+    - list [ref=e22]:
+      - listitem [ref=e23]:
+        - link "Privacy Policy" [ref=e24] [cursor=pointer]:
+          - /url: /exit?url=https:%2F%2Fwww.nvidia.com%2Fen-us%2Fabout-nvidia%2Fprivacy-policy%2F
+      - listitem [ref=e25]:
+        - link "Legal Info" [ref=e26] [cursor=pointer]:
+          - /url: /exit?url=https:%2F%2Fwww.nvidia.com%2Fen-us%2Fabout-nvidia%2Flegal-info%2F
+      - listitem [ref=e27]:
+        - link "Contact Us" [ref=e28] [cursor=pointer]:
+          - /url: /exit?url=https:%2F%2Fwww.nvidia.com%2Fen-us%2Fcontact%2F
+    - generic [ref=e29]: Copyright © 2026 NVIDIA Corporation

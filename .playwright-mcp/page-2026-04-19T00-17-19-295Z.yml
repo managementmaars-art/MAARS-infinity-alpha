@@ -1,0 +1,165 @@
+- generic [active] [ref=e1]:
+  - banner
+  - banner [ref=e18]:
+    - navigation "primary navigation" [ref=e19]:
+      - link "Higgsfield AI – AI Video & Image Generation Platform" [ref=e20] [cursor=pointer]:
+        - /url: /
+        - img [ref=e21]
+      - generic [ref=e24]:
+        - link "Explore" [ref=e25] [cursor=pointer]:
+          - /url: /
+        - button "Image" [ref=e27] [cursor=pointer]
+        - button "Video" [ref=e29] [cursor=pointer]
+        - button "Audio" [ref=e31] [cursor=pointer]
+        - link "Collab" [ref=e32] [cursor=pointer]:
+          - /url: /generate
+        - button "Edit" [ref=e34] [cursor=pointer]
+        - button "Character" [ref=e36] [cursor=pointer]
+        - link "Marketing Studio New" [ref=e37] [cursor=pointer]:
+          - /url: /marketing-studio
+          - text: Marketing Studio
+          - generic [ref=e38]: New
+        - link "Cinema Studio 3.5" [ref=e39] [cursor=pointer]:
+          - /url: /cinema-studio?autoSelectFolder=true
+          - text: Cinema Studio
+          - generic [ref=e40]: "3.5"
+        - link "Originals New" [ref=e41] [cursor=pointer]:
+          - /url: /original-series
+          - text: Originals
+          - generic [ref=e42]: New
+        - link "Apps" [ref=e43] [cursor=pointer]:
+          - /url: /apps
+        - link "Assist" [ref=e44] [cursor=pointer]:
+          - /url: /chat
+        - button "Community" [ref=e46] [cursor=pointer]
+      - generic [ref=e48]:
+        - link "Upgrade 55% OFF" [ref=e288] [cursor=pointer]:
+          - /url: /pricing
+          - generic [ref=e50]:
+            - img [ref=e289]
+            - text: Upgrade
+            - generic [ref=e53]: 55% OFF
+        - separator [ref=e54]
+        - generic [ref=e55]:
+          - button "Notifications" [ref=e57] [cursor=pointer]:
+            - img [ref=e58]
+          - link "Folder icon Assets" [ref=e60] [cursor=pointer]:
+            - /url: /asset/all
+            - img "Folder icon" [ref=e62]
+            - generic [ref=e63]: Assets
+          - button "user profile" [ref=e65] [cursor=pointer]:
+            - generic [ref=e68]:
+              - img "user profile" [ref=e70]
+              - img [ref=e71]
+  - main [ref=e74]:
+    - generic [ref=e75]:
+      - generic [ref=e76]:
+        - navigation [ref=e77]:
+          - generic [ref=e78] [cursor=pointer]: Create Video
+          - generic [ref=e79] [cursor=pointer]: Edit Video
+          - generic [ref=e80] [cursor=pointer]: Motion Control
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - group [ref=e84]:
+              - button "General Kling 3.0" [ref=e85]:
+                - generic [ref=e86]: Your browser does not support the video.
+                - generic [ref=e88]:
+                  - paragraph [ref=e89]: General
+                  - paragraph [ref=e90]: Kling 3.0
+                - button "Change" [ref=e92] [cursor=pointer]:
+                  - img [ref=e93]
+                  - text: Change
+            - generic [ref=e95]:
+              - generic [ref=e98]:
+                - generic [ref=e100]:
+                  - generic:
+                    - paragraph: Optional
+                  - generic [ref=e102] [cursor=pointer]:
+                    - button "Start frame" [ref=e103]
+                    - img [ref=e105]
+                    - paragraph [ref=e109]: Start frame
+                - generic [ref=e111]:
+                  - generic:
+                    - paragraph: Optional
+                  - generic [ref=e113] [cursor=pointer]:
+                    - button "End frame" [ref=e114]
+                    - img [ref=e116]
+                    - paragraph [ref=e120]: End frame
+              - generic [ref=e122]:
+                - generic [ref=e123]:
+                  - generic [ref=e124]: Multi-shot
+                  - button [ref=e125] [cursor=pointer]:
+                    - img [ref=e126]
+                - switch [ref=e128] [cursor=pointer]
+              - generic [ref=e130]:
+                - generic [ref=e131]:
+                  - textbox [ref=e132]
+                  - generic: Describe your video, like "A woman walking through a neon-lit city". Add elements using @
+                - generic [ref=e133]:
+                  - generic [ref=e134] [cursor=pointer]:
+                    - img [ref=e136]
+                    - generic [ref=e138]: Enhance on
+                    - checkbox "Enhance on" [checked] [ref=e139]
+                  - generic [ref=e140] [cursor=pointer]:
+                    - img [ref=e142]
+                    - generic [ref=e144]: "On"
+                    - checkbox "On" [checked] [ref=e145]
+                  - button "Elements" [ref=e146] [cursor=pointer]:
+                    - img [ref=e147]
+                    - text: Elements
+              - button "Model" [ref=e151] [cursor=pointer]:
+                - generic [ref=e152]:
+                  - generic [ref=e153]: Model
+                  - generic [ref=e155]:
+                    - paragraph [ref=e156]: Kling 3.0
+                    - img [ref=e158]
+                - img [ref=e160]
+              - generic [ref=e186]:
+                - button "Duration" [ref=e188] [cursor=pointer]:
+                  - img [ref=e189]
+                  - generic [ref=e191]: 5s
+                - generic [ref=e193]:
+                  - button "16:9 Ratio" [ref=e195] [cursor=pointer]:
+                    - img [ref=e197]
+                    - generic [ref=e199]: 16:9
+                  - combobox [ref=e202]
+                - generic [ref=e204]:
+                  - button "720p Resolution" [ref=e206] [cursor=pointer]:
+                    - img [ref=e208]
+                    - generic [ref=e210]: 720p
+                  - combobox [ref=e213]
+          - button "Generate 10" [ref=e216] [cursor=pointer]:
+            - text: Generate
+            - generic [ref=e217]:
+              - img [ref=e218]
+              - text: "10"
+      - generic [ref=e221]:
+        - tablist [ref=e223]:
+          - tab "History" [ref=e224] [cursor=pointer]:
+            - img [ref=e225]
+            - text: History
+          - tab "How it works" [selected] [ref=e227] [cursor=pointer]:
+            - img [ref=e228]
+            - text: How it works
+        - generic [ref=e232]:
+          - generic [ref=e233]:
+            - heading "Make videos in one click" [level=1] [ref=e234]
+            - paragraph [ref=e235]: 250+ presets for camera control, framing, and high-quality VFX - or use the general preset for manual control.
+          - generic [ref=e236]:
+            - article [ref=e237]:
+              - figure [ref=e238]:
+                - img "Add image" [ref=e239]
+              - heading "Add image" [level=2] [ref=e240]
+              - paragraph [ref=e241]: Upload or generate an image to start your animation
+            - article [ref=e242]:
+              - figure [ref=e243]:
+                - generic "Choose preset" [ref=e244]: Your browser does not support the video.
+              - heading "Choose preset" [level=2] [ref=e245]
+              - paragraph [ref=e246]: Pick a preset to control your image movement
+            - article [ref=e247]:
+              - figure [ref=e248]:
+                - generic "Get video" [ref=e249]: Your browser does not support the video.
+              - heading "Get video" [level=2] [ref=e250]
+              - paragraph [ref=e251]: Click generate to create your final animated video!
+  - region "Notifications Alt+T"
+  - alert [ref=e286]

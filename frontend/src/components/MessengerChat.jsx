@@ -15,7 +15,7 @@ import AgentAvatar from "./AgentAvatar";
 import { Send, X, Minus, Maximize2, Rocket, FolderPlus, Loader2, Search, Plus } from "lucide-react";
 import { toast } from "sonner";
 
-const _BASE = process.env.REACT_APP_BACKEND_URL?.trim() || "http://localhost:8000";
+const _BASE = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 const API   = `${_BASE}/api`;
 const EA  = "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/";
 

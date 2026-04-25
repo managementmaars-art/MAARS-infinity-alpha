@@ -1,1 +1,0 @@
-# Voxel Art - Sharp Edges

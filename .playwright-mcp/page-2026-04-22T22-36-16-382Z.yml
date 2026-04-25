@@ -1,0 +1,68 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e5]:
+    - generic [ref=e6]:
+      - link "logo":
+        - /url: //www.alibabacloud.com
+        - img "logo" [ref=e7] [cursor=pointer]
+      - generic [ref=e8]:
+        - link "Sign Up" [ref=e9] [cursor=pointer]:
+          - /url: https://account.alibabacloud.com/register/intl_register.htm?oauth_callback=https%3A%2F%2Fbailian.console.alibabacloud.com%2Fcn-beijing%3Ftab%3Dmodel%23%2Fmodel-market
+        - generic [ref=e11] [cursor=pointer]:
+          - img [ref=e12]
+          - text: English
+  - generic [ref=e15]:
+    - generic [ref=e17]:
+      - iframe [ref=e19]:
+        - generic [ref=f883e3]:
+          - generic [ref=f883e4]: Sign In
+          - generic [ref=f883e5]:
+            - generic [ref=f883e6]:
+              - term [ref=f883e7]:
+                - generic [ref=f883e8]: Account .
+              - definition [ref=f883e9]:
+                - textbox "Account" [ref=f883e11]:
+                  - /placeholder: Enter your email
+            - generic [ref=f883e12]:
+              - term [ref=f883e13]:
+                - generic [ref=f883e14]: Password .
+              - definition [ref=f883e15]:
+                - textbox "Password" [ref=f883e17]:
+                  - /placeholder: Enter your password
+            - generic:
+              - definition
+            - text: .
+          - generic [ref=f883e19]:
+            - button "Sign In" [ref=f883e20] [cursor=pointer]
+            - generic [ref=f883e21] [cursor=pointer]: Sign In as RAM User
+          - text: .
+      - generic [ref=e20]:
+        - generic [ref=e21]: Or
+        - link "Sign in with Google" [ref=e22] [cursor=pointer]:
+          - /url: https://account.alibabacloud.com/login/third_party_bind_login.htm?type=google&oauth_callback=https%3A%2F%2Fbailian.console.alibabacloud.com%2Fcn-beijing%3Ftab%3Dmodel%23%2Fmodel-market
+          - img [ref=e23]
+          - text: Sign in with Google
+        - link "Sign in with Github" [ref=e24] [cursor=pointer]:
+          - /url: https://account.alibabacloud.com/login/third_party_bind_login.htm?type=github&oauth_callback=https%3A%2F%2Fbailian.console.alibabacloud.com%2Fcn-beijing%3Ftab%3Dmodel%23%2Fmodel-market
+          - img [ref=e25]
+          - text: Sign in with Github
+        - generic [ref=e26]:
+          - text: New to Alibaba Cloud?
+          - link "Sign Up Now" [ref=e27] [cursor=pointer]:
+            - /url: https://account.alibabacloud.com/register/intl_register.htm?oauth_callback=https%3A%2F%2Fbailian.console.alibabacloud.com%2Fcn-beijing%3Ftab%3Dmodel%23%2Fmodel-market
+          - link "Forgot Password" [ref=e28] [cursor=pointer]:
+            - /url: https://passport.alibabacloud.com/ac/password_find.htm?fromSite=6&lang=en_US&appName=intl-aliyun&fromSite=6
+          - text: or
+          - link "Other Sign In Difficulties?" [ref=e29] [cursor=pointer]:
+            - /url: https://account.alibabacloud.com/account_appeal_intl/appealIntl.html
+    - generic [ref=e30]:
+      - generic [ref=e31]: © 2009-2026 Copyright by Alibaba Cloud. All Rights Reserved.
+      - generic [ref=e32]:
+        - link "Privacy Policy" [ref=e33] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/help/doc-detail/42425.htm
+        - link "Terms of Use" [ref=e34] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/help/doc-detail/42417.htm
+        - link "Membership Agreement" [ref=e35] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/help/doc-detail/42427.htm
+        - link "Product Terms" [ref=e36] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/help/doc-detail/42416.htm
+  - img [ref=e38]

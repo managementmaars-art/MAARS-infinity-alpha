@@ -1,0 +1,170 @@
+{
+  "sim_version": 1,
+  "started_at": 1776928316,
+  "finished_at": 1776928650,
+  "wall_s": 334.2,
+  "user_id": "cost_sim_user_maars",
+  "iterations": {
+    "chat_short": 80,
+    "chat_long": 40,
+    "agent_sop": 20,
+    "vibe_create": 10,
+    "vibe_chat": 10,
+    "image": 20,
+    "video": 8,
+    "tts": 18,
+    "stt": 6
+  },
+  "buckets": {
+    "chat_short": {
+      "calls": 180,
+      "total_usd": 0.000325,
+      "per_call_usd": 2e-06,
+      "per_call_p50": 0.0,
+      "per_call_p95": 1e-05,
+      "per_call_max": 9.7e-05,
+      "total_credits": 10,
+      "providers": {
+        "cache": 170,
+        "groq": 2,
+        "cerebras": 8
+      },
+      "models": {
+        "?": 180
+      }
+    },
+    "chat_long": {
+      "calls": 90,
+      "total_usd": 0.002594,
+      "per_call_usd": 2.9e-05,
+      "per_call_p50": 0.0,
+      "per_call_p95": 7.2e-05,
+      "per_call_max": 0.000741,
+      "total_credits": 13,
+      "providers": {
+        "cache": 85,
+        "groq": 5
+      },
+      "models": {
+        "?": 90
+      }
+    },
+    "vibe_create": {
+      "calls": 23,
+      "total_usd": 0.001592,
+      "per_call_usd": 6.9e-05,
+      "per_call_p50": 0.0,
+      "per_call_p95": 0.000553,
+      "per_call_max": 0.000921,
+      "total_credits": 3,
+      "providers": {
+        "cache": 20,
+        "cerebras": 1,
+        "groq": 2
+      },
+      "models": {
+        "?": 23
+      }
+    },
+    "vibe_chat": {
+      "calls": 23,
+      "total_usd": 0.000427,
+      "per_call_usd": 1.9e-05,
+      "per_call_p50": 0.0,
+      "per_call_p95": 0.000147,
+      "per_call_max": 0.000149,
+      "total_credits": 3,
+      "providers": {
+        "cache": 20,
+        "cerebras": 3
+      },
+      "models": {
+        "?": 23
+      }
+    },
+    "agent_sop": {
+      "calls": 0,
+      "total_usd": 0,
+      "per_call_usd": 0.0,
+      "per_call_p50": 0.0,
+      "per_call_p95": 0.0,
+      "per_call_max": 0.0,
+      "total_credits": 0,
+      "providers": {}
+    },
+    "image": {
+      "calls": 20,
+      "ok_calls": 20,
+      "fail_calls": 0,
+      "total_usd_catalog": 0.0,
+      "total_usd_actual": 0.0,
+      "per_call_usd": 0.0,
+      "per_call_p50": 0.0,
+      "per_call_p95": 0.0,
+      "per_call_max": 0.0,
+      "providers": {
+        "pollinations": 20
+      },
+      "models": {
+        "flux": 20
+      },
+      "failure_samples": []
+    },
+    "video": {
+      "calls": 8,
+      "ok_calls": 8,
+      "fail_calls": 0,
+      "total_usd_catalog": 0.16,
+      "total_usd_actual": 0.16,
+      "per_call_usd": 0.02,
+      "per_call_p50": 0.02,
+      "per_call_p95": 0.02,
+      "per_call_max": 0.02,
+      "providers": {
+        "fal": 8
+      },
+      "models": {
+        "fal-ai/ltx-video": 8
+      },
+      "failure_samples": []
+    },
+    "tts": {
+      "calls": 18,
+      "ok_calls": 18,
+      "fail_calls": 0,
+      "total_usd_catalog": 0.0054,
+      "total_usd_actual": 0.0054,
+      "per_call_usd": 0.0003,
+      "per_call_p50": 0.0,
+      "per_call_p95": 0.0018,
+      "per_call_max": 0.0018,
+      "providers": {
+        "edge": 15,
+        "openai": 3
+      },
+      "models": {
+        "en-US-ChristopherNeural": 15,
+        "tts-1-hd": 3
+      },
+      "failure_samples": []
+    },
+    "stt": {
+      "calls": 6,
+      "ok_calls": 6,
+      "fail_calls": 0,
+      "total_usd_catalog": 0.0,
+      "total_usd_actual": 0.0,
+      "per_call_usd": 0.0,
+      "per_call_p50": 0.0,
+      "per_call_p95": 0.0,
+      "per_call_max": 0.0,
+      "providers": {
+        "groq": 6
+      },
+      "models": {
+        "whisper-large-v3-turbo": 6
+      },
+      "failure_samples": []
+    }
+  }
+}

@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #030712;
+        font-family: 'Inter', system-ui, sans-serif;
+        color: #ffffff;
+      }
+      #root { position: relative; width: 1920px; height: 1080px; }
+
+      .scene {
+        position: absolute; inset: 0;
+        width: 1920px; height: 1080px;
+        overflow: hidden;
+      }
+
+      h1, h2, h3 { font-family: 'Outfit', sans-serif; letter-spacing: -0.02em; }
+
+      .accent-teal { color: #4FD1C5; }
+      .accent-purple { color: #A78BFA; }
+      .accent-pink { color: #F472B6; }
+      .accent-green { color: #34D399; }
+      .accent-amber { color: #FBBF24; }
+
+      .grad-text {
+        background: linear-gradient(90deg, #4FD1C5, #A78BFA, #F472B6);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .eyebrow {
+        font-family: 'Inter', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.32em;
+        color: #A78BFA;
+        margin-bottom: 22px;
+      }
+
+      .vignette {
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.8) 100%);
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      /* Layout A — split: text left, screenshot right */
+      .split { display: flex; height: 100%; }
+      .split .left {
+        width: 720px;
+        padding: 0 60px 0 90px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        z-index: 3;
+      }
+      .split .right {
+        flex: 1;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 70px 60px 0;
+      }
+      .split .right .frame {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow:
+          0 40px 100px rgba(0,0,0,0.7),
+          0 0 0 1px rgba(167,139,250,0.18),
+          0 0 80px rgba(167,139,250,0.18);
+      }
+      .split .right .frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top left;
+      }
+      .split h2 {
+        font-size: 80px;
+        font-weight: 900;
+        line-height: 1.0;
+        margin-bottom: 26px;
+      }
+      .split p {
+        font-size: 26px;
+        color: #D4D4D8;
+        line-height: 1.5;
+      }
+      .split .ftags {
+        margin-top: 32px;
+        display: flex; flex-wrap: wrap; gap: 10px;
+      }
+      .split .ftag {
+        padding: 10px 18px;
+        background: rgba(167,139,250,0.12);
+        border: 1px solid rgba(167,139,250,0.32);
+        border-radius: 999px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #C4B5FD;
+      }
+      .split .bg-blur {
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(ellipse at 20% 30%, rgba(167,139,250,0.18), transparent 55%),
+          radial-gradient(ellipse at 80% 70%, rgba(79,209,197,0.14), transparent 55%),
+          #030712;
+      }
+
+      /* Layout B — full bleed with bottom-third text */
+      .fullbleed { position: relative; height: 100%; }
+      .fullbleed img.bg {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+      }
+      .fullbleed .veil {
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, rgba(3,7,18,0.55) 0%, rgba(3,7,18,0.45) 50%, rgba(3,7,18,0.95) 100%);
+      }
+      .fullbleed .caption {
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        padding: 0 90px 90px;
+        z-index: 3;
+      }
+      .fullbleed .caption h2 {
+        font-size: 96px;
+        font-weight: 900;
+        line-height: 0.95;
+        text-shadow: 0 4px 24px rgba(0,0,0,0.85);
+        margin-bottom: 18px;
+      }
+      .fullbleed .caption p {
+        font-size: 28px;
+        color: #E2E8F0;
+        max-width: 1200px;
+        text-shadow: 0 2px 14px rgba(0,0,0,0.85);
+      }
+
+      /* Layout C — hero (centered) */
+      .hero { display: flex; align-items: center; justify-content: center; height: 100%; position: relative; }
+      .hero .h-bg {
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(ellipse at 30% 30%, rgba(167,139,250,0.32), transparent 55%),
+          radial-gradient(ellipse at 70% 75%, rgba(79,209,197,0.28), transparent 55%),
+          #030712;
+      }
+      .hero .h-bgimg {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+        opacity: 0.22;
+        filter: blur(2px) saturate(1.3);
+      }
+      .hero .content {
+        position: relative; z-index: 3;
+        text-align: center;
+        max-width: 1500px;
+        padding: 0 60px;
+      }
+
+      /* Brand bug always visible */
+      .brand-bug {
+        position: absolute;
+        z-index: 50;
+        bottom: 36px;
+        right: 50px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: 0.4em;
+        color: rgba(255,255,255,0.72);
+        text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      }
+
+      /* Number ticker for stats */
+      .stat-row {
+        display: flex; gap: 50px;
+        margin-top: 28px;
+      }
+      .stat-row .s {
+        text-align: left;
+      }
+      .stat-row .v {
+        font-family: 'Outfit', sans-serif;
+        font-size: 64px; font-weight: 900;
+        line-height: 1;
+      }
+      .stat-row .l {
+        font-size: 16px;
+        color: #A1A1AA;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        margin-top: 6px;
+      }
+
+      /* CTA scene */
+      #scene-cta .cta-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 0.45em;
+        color: #A1A1AA;
+        margin-bottom: 36px;
+      }
+      #scene-cta h2 {
+        font-size: 168px;
+        font-weight: 900;
+        line-height: 0.95;
+        margin-bottom: 28px;
+      }
+      #scene-cta .sub {
+        font-size: 38px; color: #E2E8F0; margin-bottom: 60px;
+      }
+      #scene-cta .cta-btn {
+        display: inline-block;
+        padding: 28px 70px;
+        font-size: 32px;
+        font-weight: 800;
+        color: #030712;
+        background: linear-gradient(90deg, #4FD1C5, #A78BFA);
+        border-radius: 999px;
+        box-shadow: 0 25px 70px rgba(167,139,250,0.5);
+      }
+      #scene-cta .url {
+        margin-top: 40px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 24px;
+        color: #A78BFA;
+        letter-spacing: 0.05em;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="162"
+      data-width="1920"
+      data-height="1080"
+    >
+
+      <!-- ============================================================ -->
+      <!-- SCENE 1 — HOOK (0–8s) -->
+      <!-- ============================================================ -->
+      <div id="s1" class="scene clip" data-start="0" data-duration="8.2" data-track-index="1" style="z-index:1">
+        <div class="hero">
+          <div class="h-bg"></div>
+          <img class="h-bgimg s1-bg" src="images/landing-hero.png" alt="" />
+          <div class="content">
+            <div class="s1-eyebrow eyebrow">Once you subscribe</div>
+            <h2 class="s1-line1" style="font-size:152px;font-weight:900;line-height:1;margin-bottom:24px;">Your sales team.</h2>
+            <h2 class="s1-line2" style="font-size:152px;font-weight:900;line-height:1;margin-bottom:24px;">Your marketers.</h2>
+            <h2 class="s1-line3 grad-text" style="font-size:152px;font-weight:900;line-height:1;">Working 24/7.</h2>
+          </div>
+          <div class="vignette"></div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 2 — DAY 1 DASHBOARD (8–22s) -->
+      <!-- ============================================================ -->
+      <div id="s2" class="scene clip" data-start="8" data-duration="14" data-track-index="2" style="z-index:2">
+        <div class="fullbleed">
+          <img class="bg s2-bg" src="images/dashboard.png" alt="" />
+          <div class="veil"></div>
+          <div class="caption">
+            <div class="s2-eyebrow eyebrow">Day One. After Subscribe.</div>
+            <h2 class="s2-h">Your AI <span class="grad-text">Command Center.</span></h2>
+            <p class="s2-p">499 specialists standing by. Commander Orion ready to delegate. Every mission tracked, every dollar audited — from the moment you log in.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 3 — MEET YOUR TEAM (22–34s) -->
+      <!-- ============================================================ -->
+      <div id="s3" class="scene clip" data-start="22" data-duration="12" data-track-index="3" style="z-index:3">
+        <div class="fullbleed">
+          <img class="bg s3-bg" src="images/agents.png" alt="" />
+          <div class="veil"></div>
+          <div class="caption">
+            <div class="s3-eyebrow eyebrow">499 Specialists</div>
+            <h2 class="s3-h">Meet Your <span class="accent-pink">Workforce.</span></h2>
+            <p class="s3-p">Sales reps. Email marketers. Cold callers. Copywriters. SEO specialists. Designers. Analysts. All on payroll. None on your payroll.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 4 — CONTENT GENERATION (34–48s) -->
+      <!-- ============================================================ -->
+      <div id="s4" class="scene clip" data-start="34" data-duration="14" data-track-index="4" style="z-index:4">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s4-eyebrow eyebrow">Content Generator</div>
+            <h2 class="s4-h">Marketing copy. Posts. <span class="accent-teal">Articles.</span> In seconds.</h2>
+            <p class="s4-p">On-brand content using your style blueprints. From a single prompt to a publishable asset — across every format you need.</p>
+            <div class="s4-tags ftags">
+              <div class="ftag">Marketing Copy</div>
+              <div class="ftag">Social Media</div>
+              <div class="ftag">Email Campaigns</div>
+              <div class="ftag">Blog Articles</div>
+              <div class="ftag">Ad Copy</div>
+              <div class="ftag">Press Release</div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="frame s4-frame">
+              <img src="images/content-generator.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 5 — AUTO-POSTING SOCIAL (48–62s) -->
+      <!-- ============================================================ -->
+      <div id="s5" class="scene clip" data-start="48" data-duration="14" data-track-index="5" style="z-index:5">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s5-eyebrow eyebrow" style="color:#34D399">Auto-Posting</div>
+            <h2 class="s5-h">Post once. <span class="accent-green">Publish everywhere.</span></h2>
+            <p class="s5-p">Facebook. Instagram. X. TikTok. LinkedIn. WhatsApp. YouTube. Telegram. Auto-translated for every region. Scheduled or live.</p>
+            <div class="s5-tags ftags">
+              <div class="ftag">10 platforms</div>
+              <div class="ftag">9 regions</div>
+              <div class="ftag">Auto-translate</div>
+              <div class="ftag">Schedule + publish</div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="frame s5-frame">
+              <img src="images/social-media.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 6 — COLD EMAIL (62–75s) -->
+      <!-- ============================================================ -->
+      <div id="s6" class="scene clip" data-start="62" data-duration="13" data-track-index="6" style="z-index:6">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s6-eyebrow eyebrow" style="color:#F472B6">Cold Email</div>
+            <h2 class="s6-h">Cold emails. <span class="accent-pink">Sent while you sleep.</span></h2>
+            <p class="s6-p">Personalized. Merge fields. SendGrid integrated. Subject lines that open. Bodies that convert. Every prospect, every region.</p>
+          </div>
+          <div class="right">
+            <div class="frame s6-frame">
+              <img src="images/cold-outreach.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 7 — COLD CALLING (75–88s) -->
+      <!-- ============================================================ -->
+      <div id="s7" class="scene clip" data-start="75" data-duration="13" data-track-index="7" style="z-index:7">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s7-eyebrow eyebrow" style="color:#FBBF24">AI Cold Calling</div>
+            <h2 class="s7-h">AI calls your prospects. <span class="accent-amber">In any language.</span></h2>
+            <p class="s7-p">Your script. Your voice. Their language. The AI dials, pitches, and qualifies — at scale, around the clock.</p>
+            <div class="s7-tags ftags">
+              <div class="ftag">Multi-language</div>
+              <div class="ftag">E.164 dialing</div>
+              <div class="ftag">Live call logs</div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="frame s7-frame">
+              <img src="images/cold-call.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 8 — CAMPAIGN BUILDER (88–101s) -->
+      <!-- ============================================================ -->
+      <div id="s8" class="scene clip" data-start="88" data-duration="13" data-track-index="8" style="z-index:8">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s8-eyebrow eyebrow" style="color:#A78BFA">Campaign Builder</div>
+            <h2 class="s8-h">Multi-step campaigns. <span class="accent-purple">One click.</span></h2>
+            <p class="s8-p">Sales outreach. Customer onboarding. Product launch. Content marketing. Pre-built playbooks running on autopilot.</p>
+            <div class="s8-tags ftags">
+              <div class="ftag">Content Marketing</div>
+              <div class="ftag">Product Launch</div>
+              <div class="ftag">Customer Onboarding</div>
+              <div class="ftag">Sales Outreach</div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="frame s8-frame">
+              <img src="images/campaigns.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 9 — WORKFLOW BUILDER (101–113s) -->
+      <!-- ============================================================ -->
+      <div id="s9" class="scene clip" data-start="101" data-duration="12" data-track-index="9" style="z-index:9">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s9-eyebrow eyebrow" style="color:#4FD1C5">Workflow Builder</div>
+            <h2 class="s9-h">Build your own. <span class="accent-teal">Drag. Drop. Deploy.</span></h2>
+            <p class="s9-p">Chain agents. Branch on conditions. Loop. Call APIs. Run code. Anything you can diagram, MAARS can run.</p>
+          </div>
+          <div class="right">
+            <div class="frame s9-frame">
+              <img src="images/workflow-builder.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 10 — COMMANDER ORION (113–125s) -->
+      <!-- ============================================================ -->
+      <div id="s10" class="scene clip" data-start="113" data-duration="12" data-track-index="10" style="z-index:10">
+        <div class="fullbleed">
+          <img class="bg s10-bg" src="images/commander.png" alt="" />
+          <div class="veil"></div>
+          <div class="caption">
+            <div class="s10-eyebrow eyebrow" style="color:#FBBF24">Commander Orion</div>
+            <h2 class="s10-h">One goal in. <span class="accent-amber">Whole team out.</span></h2>
+            <p class="s10-p">Describe the outcome. Commander Orion classifies, decomposes, executes, verifies, reports. Your AI workforce — orchestrated.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 11 — ACTIVITY MONITOR (125–135s) -->
+      <!-- ============================================================ -->
+      <div id="s11" class="scene clip" data-start="125" data-duration="10" data-track-index="11" style="z-index:11">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s11-eyebrow eyebrow" style="color:#34D399">Live Activity Monitor</div>
+            <h2 class="s11-h">Watch them work. <span class="accent-green">In real time.</span></h2>
+            <p class="s11-p">Every agent, every action, every tool call — live. Communication flows. Task graphs. Audited end-to-end.</p>
+          </div>
+          <div class="right">
+            <div class="frame s11-frame">
+              <img src="images/activity-monitor.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 12 — SMART ROUTING (135–145s) -->
+      <!-- ============================================================ -->
+      <div id="s12" class="scene clip" data-start="135" data-duration="10" data-track-index="12" style="z-index:12">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s12-eyebrow eyebrow">Model Router</div>
+            <h2 class="s12-h">Behind every call: <span class="grad-text">smart routing.</span></h2>
+            <p class="s12-p">Across 33 providers. 175,000+ models. The cheapest model that gets the job done — picked automatically, every time.</p>
+          </div>
+          <div class="right">
+            <div class="frame s12-frame">
+              <img src="images/model-router.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 13 — ANALYTICS + GOVERNANCE (145–155s) -->
+      <!-- ============================================================ -->
+      <div id="s13" class="scene clip" data-start="145" data-duration="10" data-track-index="13" style="z-index:13">
+        <div class="fullbleed">
+          <img class="bg s13-bg" src="images/analytics.png" alt="" />
+          <div class="veil"></div>
+          <div class="caption">
+            <div class="s13-eyebrow eyebrow" style="color:#34D399">Governed. Audited. Measured.</div>
+            <h2 class="s13-h">Trust scores. Cost trends. <span class="accent-green">Every dollar tracked.</span></h2>
+            <p class="s13-p">Live dashboards. Wallet ledger. Audit trail. Know what every agent did, what it cost, and what it returned.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SCENE 14 — CTA (155–162s) -->
+      <!-- ============================================================ -->
+      <div id="scene-cta" class="scene clip" data-start="155" data-duration="7" data-track-index="14" style="z-index:14">
+        <div class="hero">
+          <div class="h-bg"></div>
+          <div class="content">
+            <div class="cta-logo">M A A R S &nbsp; C O M M A N D</div>
+            <h2><span class="grad-text">Stop hiring.</span></h2>
+            <h2 style="margin-top:8px">Start commanding.</h2>
+            <p class="sub" style="margin-top:48px">Your AI workforce — live, today.</p>
+            <div class="cta-btn">Start Free at maars.ai</div>
+            <div class="url">→ no credit card · 499 agents · instant access</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="brand-bug">MAARS COMMAND</div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      /* helper for scene fade-out */
+      function out(id, at) {
+        tl.to('#' + id, { opacity: 0, duration: 0.6, ease: 'power2.in' }, at);
+      }
+
+      /* ===== SCENE 1 — HOOK (0–8s) ===== */
+      tl.from('#s1 .s1-bg', { opacity: 0, scale: 1.05, duration: 1.2 }, 0)
+        .to('#s1 .s1-bg', { scale: 1.12, duration: 7, ease: 'none' }, 0)
+        .from('#s1 .s1-eyebrow', { opacity: 0, y: 20, duration: 0.6 }, 0.4)
+        .from('#s1 .s1-line1', { opacity: 0, x: -80, duration: 0.8, ease: 'power3.out' }, 0.8)
+        .from('#s1 .s1-line2', { opacity: 0, x: -80, duration: 0.8, ease: 'power3.out' }, 1.4)
+        .from('#s1 .s1-line3', { opacity: 0, x: -80, duration: 0.9, ease: 'power3.out' }, 2.0);
+      out('s1', 7.4);
+
+      /* ===== SCENE 2 — DASHBOARD (8–22s) ===== */
+      tl.from('#s2', { opacity: 0, duration: 0.5 }, 8)
+        .from('#s2 .s2-bg', { scale: 1.0, duration: 13, ease: 'none' }, 8)
+        .to('#s2 .s2-bg', { scale: 1.1, duration: 13, ease: 'none' }, 8)
+        .from('#s2 .s2-eyebrow', { opacity: 0, y: 24, duration: 0.6 }, 8.6)
+        .from('#s2 .s2-h', { opacity: 0, y: 50, duration: 0.9, ease: 'power3.out' }, 9.0)
+        .from('#s2 .s2-p', { opacity: 0, y: 30, duration: 0.7 }, 9.7);
+      out('s2', 21.4);
+
+      /* ===== SCENE 3 — TEAM (22–34s) ===== */
+      tl.from('#s3', { opacity: 0, duration: 0.5 }, 22)
+        .from('#s3 .s3-bg', { scale: 1.05, x: 40, duration: 11, ease: 'none' }, 22)
+        .to('#s3 .s3-bg', { scale: 1.12, x: -40, duration: 11, ease: 'none' }, 22)
+        .from('#s3 .s3-eyebrow', { opacity: 0, y: 24, duration: 0.6 }, 22.6)
+        .from('#s3 .s3-h', { opacity: 0, y: 50, duration: 0.9, ease: 'power3.out' }, 23.0)
+        .from('#s3 .s3-p', { opacity: 0, y: 30, duration: 0.7 }, 23.7);
+      out('s3', 33.4);
+
+      /* ===== SCENE 4 — CONTENT GENERATOR (34–48s) ===== */
+      tl.from('#s4', { opacity: 0, duration: 0.5 }, 34)
+        .from('#s4 .s4-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 34.4)
+        .from('#s4 .s4-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 34.7)
+        .from('#s4 .s4-p', { opacity: 0, x: -40, duration: 0.6 }, 35.3)
+        .from('#s4 .s4-tags .ftag', { opacity: 0, y: 16, duration: 0.4, stagger: 0.06 }, 35.8)
+        .from('#s4 .s4-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 35.0);
+      out('s4', 47.4);
+
+      /* ===== SCENE 5 — SOCIAL AUTO-POSTING (48–62s) ===== */
+      tl.from('#s5', { opacity: 0, duration: 0.5 }, 48)
+        .from('#s5 .s5-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 48.4)
+        .from('#s5 .s5-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 48.7)
+        .from('#s5 .s5-p', { opacity: 0, x: -40, duration: 0.6 }, 49.3)
+        .from('#s5 .s5-tags .ftag', { opacity: 0, y: 16, duration: 0.4, stagger: 0.07 }, 49.8)
+        .from('#s5 .s5-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 49.0);
+      out('s5', 61.4);
+
+      /* ===== SCENE 6 — COLD EMAIL (62–75s) ===== */
+      tl.from('#s6', { opacity: 0, duration: 0.5 }, 62)
+        .from('#s6 .s6-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 62.4)
+        .from('#s6 .s6-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 62.7)
+        .from('#s6 .s6-p', { opacity: 0, x: -40, duration: 0.6 }, 63.3)
+        .from('#s6 .s6-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 63.0);
+      out('s6', 74.4);
+
+      /* ===== SCENE 7 — COLD CALLING (75–88s) ===== */
+      tl.from('#s7', { opacity: 0, duration: 0.5 }, 75)
+        .from('#s7 .s7-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 75.4)
+        .from('#s7 .s7-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 75.7)
+        .from('#s7 .s7-p', { opacity: 0, x: -40, duration: 0.6 }, 76.3)
+        .from('#s7 .s7-tags .ftag', { opacity: 0, y: 16, duration: 0.4, stagger: 0.07 }, 76.8)
+        .from('#s7 .s7-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 76.0);
+      out('s7', 87.4);
+
+      /* ===== SCENE 8 — CAMPAIGNS (88–101s) ===== */
+      tl.from('#s8', { opacity: 0, duration: 0.5 }, 88)
+        .from('#s8 .s8-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 88.4)
+        .from('#s8 .s8-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 88.7)
+        .from('#s8 .s8-p', { opacity: 0, x: -40, duration: 0.6 }, 89.3)
+        .from('#s8 .s8-tags .ftag', { opacity: 0, y: 16, duration: 0.4, stagger: 0.07 }, 89.8)
+        .from('#s8 .s8-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 89.0);
+      out('s8', 100.4);
+
+      /* ===== SCENE 9 — WORKFLOW BUILDER (101–113s) ===== */
+      tl.from('#s9', { opacity: 0, duration: 0.5 }, 101)
+        .from('#s9 .s9-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 101.4)
+        .from('#s9 .s9-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 101.7)
+        .from('#s9 .s9-p', { opacity: 0, x: -40, duration: 0.6 }, 102.3)
+        .from('#s9 .s9-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 102.0);
+      out('s9', 112.4);
+
+      /* ===== SCENE 10 — COMMANDER ORION (113–125s) ===== */
+      tl.from('#s10', { opacity: 0, duration: 0.5 }, 113)
+        .from('#s10 .s10-bg', { scale: 1.0, duration: 11, ease: 'none' }, 113)
+        .to('#s10 .s10-bg', { scale: 1.1, duration: 11, ease: 'none' }, 113)
+        .from('#s10 .s10-eyebrow', { opacity: 0, y: 24, duration: 0.6 }, 113.6)
+        .from('#s10 .s10-h', { opacity: 0, y: 50, duration: 0.9, ease: 'power3.out' }, 114.0)
+        .from('#s10 .s10-p', { opacity: 0, y: 30, duration: 0.7 }, 114.7);
+      out('s10', 124.4);
+
+      /* ===== SCENE 11 — ACTIVITY MONITOR (125–135s) ===== */
+      tl.from('#s11', { opacity: 0, duration: 0.5 }, 125)
+        .from('#s11 .s11-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 125.4)
+        .from('#s11 .s11-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 125.7)
+        .from('#s11 .s11-p', { opacity: 0, x: -40, duration: 0.6 }, 126.3)
+        .from('#s11 .s11-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 126.0);
+      out('s11', 134.4);
+
+      /* ===== SCENE 12 — SMART ROUTING (135–145s) ===== */
+      tl.from('#s12', { opacity: 0, duration: 0.5 }, 135)
+        .from('#s12 .s12-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 135.4)
+        .from('#s12 .s12-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 135.7)
+        .from('#s12 .s12-p', { opacity: 0, x: -40, duration: 0.6 }, 136.3)
+        .from('#s12 .s12-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 136.0);
+      out('s12', 144.4);
+
+      /* ===== SCENE 13 — ANALYTICS (145–155s) ===== */
+      tl.from('#s13', { opacity: 0, duration: 0.5 }, 145)
+        .from('#s13 .s13-bg', { scale: 1.0, duration: 9, ease: 'none' }, 145)
+        .to('#s13 .s13-bg', { scale: 1.08, duration: 9, ease: 'none' }, 145)
+        .from('#s13 .s13-eyebrow', { opacity: 0, y: 24, duration: 0.6 }, 145.6)
+        .from('#s13 .s13-h', { opacity: 0, y: 50, duration: 0.9, ease: 'power3.out' }, 146.0)
+        .from('#s13 .s13-p', { opacity: 0, y: 30, duration: 0.7 }, 146.7);
+      out('s13', 154.4);
+
+      /* ===== SCENE 14 — CTA (155–162s) ===== */
+      tl.from('#scene-cta', { opacity: 0, duration: 0.5 }, 155)
+        .from('#scene-cta .cta-logo', { opacity: 0, letterSpacing: '0.8em', duration: 0.8, ease: 'power2.out' }, 155.2)
+        .from('#scene-cta h2', { opacity: 0, y: 60, scale: 0.92, duration: 0.9, stagger: 0.18, ease: 'power3.out' }, 155.6)
+        .from('#scene-cta .sub', { opacity: 0, y: 30, duration: 0.6 }, 156.6)
+        .from('#scene-cta .cta-btn', { opacity: 0, scale: 0.7, duration: 0.7, ease: 'back.out(1.6)' }, 157.1)
+        .to('#scene-cta .cta-btn', { scale: 1.05, duration: 1.4, yoyo: true, repeat: 2, ease: 'sine.inOut' }, 157.8)
+        .from('#scene-cta .url', { opacity: 0, y: 20, duration: 0.5 }, 157.8);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

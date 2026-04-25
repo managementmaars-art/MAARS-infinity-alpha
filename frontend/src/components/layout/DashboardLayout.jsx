@@ -9,7 +9,7 @@ import {
   Globe, HardDrive, Megaphone, Plug, Building2, PieChart, Sparkles,
   CreditCard, Key, Mail, Paintbrush, BookOpen, ScrollText, TrendingUp,
   Diamond, Plus, Eye, Crown, UserPlus, Store, Satellite, FlaskConical,
-  Lightbulb, Radar, Terminal
+  Lightbulb, Radar, Terminal, LayoutGrid
 } from "lucide-react";
 import { useState, useEffect, useCallback, Suspense, useRef } from "react";
 import CommandPalette from "../CommandPalette";
@@ -18,7 +18,7 @@ import PreviewModeBanner from "../PreviewModeBanner";
 import { usePreviewMode, PREVIEW_PLANS } from "../PreviewModeContext";
 import MessengerChat from "../MessengerChat";
 
-const API = process.env.REACT_APP_BACKEND_URL?.trim() || "http://localhost:8000";
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 /* ─── Palette tokens ──────────────────────────────────────────────────────── */
 const T = {
@@ -228,6 +228,7 @@ function SidebarCredits({ collapsed }) {
 const navSections = [
   { label: null, items: [
     { icon: LayoutDashboard, label: "Dashboard", to: "/dashboard" },
+    { icon: TrendingUp,      label: "Results",   to: "/outcomes"  },
   ]},
   { label: "Workspace", items: [
     { icon: Rocket,       label: "Projects",   to: "/projects"  },
@@ -238,43 +239,31 @@ const navSections = [
   { label: "AI Tools", items: [
     { icon: Bot,       label: "Agents",             to: "/agents"               },
     { icon: UserPlus,  label: "Team Builder",        to: "/team-builder"         },
-    { icon: Brain,     label: "Workspace Brain",     to: "/workspace"            },
-    { icon: Cpu,       label: "Brain Profiles",      to: "/brain-profiles"       },
     { icon: Code,      label: "Vibe Coding",         to: "/vibe-coding"          },
     { icon: Lightbulb, label: "Reference Intel",     to: "/reference-intelligence"},
     { icon: PenTool,   label: "Content Generator",   to: "/content-generator"    },
   ]},
-  { label: "Intelligence", items: [
+  { label: "Operations", items: [
     { icon: Layers,    label: "Kernel",           to: "/kernel"           },
     { icon: Network,   label: "Agent Networks",   to: "/networks"         },
-    { icon: GitBranch, label: "Task Graphs",      to: "/task-graphs"      },
-    { icon: Share2,    label: "Knowledge Graph",  to: "/knowledge-graph"  },
-    { icon: Shield,    label: "Trust Scores",     to: "/trust-scores"     },
     { icon: Zap,       label: "Execution Gateway",to: "/execution-gateway"},
     { icon: Workflow,  label: "Workflow Builder", to: "/workflow-builder" },
     { icon: Megaphone, label: "Campaign Builder", to: "/campaigns"        },
     { icon: Plug,      label: "Integrations",     to: "/integrations"     },
     { icon: Globe,     label: "Embedded Browser", to: "/browser"          },
-    { icon: Satellite, label: "Social Media",     to: "/social"           },
     { icon: Key,       label: "Universal Key",    to: "/universal-key"    },
-    { icon: PieChart,  label: "Analytics",        to: "/analytics"        },
-    { icon: Sparkles,  label: "Agent Suggestions",to: "/agent-suggestions"},
     { icon: Globe,     label: "Environments",     to: "/environments"     },
-    { icon: HardDrive, label: "Memory Hierarchy", to: "/memory-hierarchy" },
+  ]},
+  { label: "Monitoring", items: [
+    { icon: BarChart3, label: "My Insights",      to: "/insights"         },
+    { icon: GitBranch, label: "Task Graphs",      to: "/task-graphs"      },
     { icon: Database,  label: "Memory",           to: "/memory"           },
     { icon: Activity,  label: "Collaborations",   to: "/collaborations"   },
-    { icon: Gauge,     label: "KPI Dashboard",    to: "/kpi-dashboard"    },
-    { icon: Radio,     label: "Activity Monitor", to: "/activity-monitor" },
-    { icon: BarChart3, label: "My Insights",      to: "/insights"         },
   ]},
   { label: "MAARS Infinity", items: [
     { icon: Terminal,   label: "Developer API",     to: "/developer"         },
-    { icon: Radar,      label: "Observability",     to: "/observability"     },
-    { icon: FlaskConical,label:"Model Router",      to: "/model-router"      },
     { icon: Satellite,  label: "Commander Orion",   to: "/commander"         },
     { icon: TrendingUp, label: "Venture Portfolio", to: "/venture-portfolio" },
-    { icon: Shield,     label: "Operator Panel",    to: "/operator"          },
-    { icon: Store,      label: "Agent Catalog",     to: "/agent-catalog"     },
   ]},
   { label: "Manage", items: [
     { icon: Package,   label: "Products",     to: "/products"      },
@@ -441,10 +430,11 @@ const DashboardLayout = ({ children }) => {
             { icon: Activity,    label: "Overview",          to: "/admin/overview"        },
             { icon: BarChart3,   label: "Analytics",         to: "/admin/analytics"       },
             { icon: Globe,       label: "Universal Gateway", to: "/admin/gateway"         },
+
             { icon: Users,       label: "Users",             to: "/admin/users"           },
             { icon: Bot,         label: "Agents",            to: "/admin/agents"          },
             { icon: DollarSign,  label: "Transactions",      to: "/admin/transactions"    },
-            { icon: TrendingUp,  label: "Pricing",           to: "/admin/pricing-manager" },
+            { icon: TrendingUp,  label: "Pricing & Splits",  to: "/admin/pricing-manager" },
             { icon: Key,         label: "API Keys",          to: "/admin/api-keys"        },
             { icon: CreditCard,  label: "Payment Setup",     to: "/admin/payments"        },
             { icon: Mail,        label: "Email (SMTP)",      to: "/admin/smtp"            },
@@ -452,9 +442,7 @@ const DashboardLayout = ({ children }) => {
             { icon: BookOpen,    label: "Knowledge Base",    to: "/admin/knowledge"       },
             { icon: ScrollText,  label: "Audit Log",         to: "/admin/audit"           },
             { icon: FileCode,    label: "Code Explorer",     to: "/admin/code-explorer"   },
-            { icon: Lock,        label: "Access Control",    to: "/rbac"                  },
-            { icon: CircuitBoard,label: "Circuit Breakers",  to: "/circuit-breakers"      },
-            { icon: Gauge,       label: "Cost Governance",   to: "/cost-governance"       },
+            { icon: Shield,      label: "Governance",        to: "/admin/governance"      },
           ].map(item => (
             <NavItem key={item.to} icon={item.icon} label={item.label} to={item.to}
               onClick={closeMobile ? () => { navigate(item.to); closeMobile(); } : undefined} />

@@ -1,5 +1,4 @@
 """Collaboration Engine, KPI Framework, Cost Governance, and System Controls API."""
-import os
 from fastapi import APIRouter, Depends, HTTPException, Request
 from datetime import datetime, timezone
 import uuid
@@ -8,7 +7,6 @@ from auth import get_current_user
 from models.schemas import User
 
 router = APIRouter()
-EMERGENT_KEY = os.environ.get("EMERGENT_LLM_KEY", "")
 
 
 # ============== COLLABORATION ENGINE ==============
@@ -459,20 +457,17 @@ async def analyze_reference(request: Request, current_user: User = Depends(get_c
     content = data.get("content", "")
     image_url = data.get("image_url", "")
 
-    EMERGENT_KEY_VAL = os.environ.get("EMERGENT_LLM_KEY", "") or EMERGENT_KEY
-    provider, model = await _get_user_llm_config(current_user.user_id)
+    from services.llm_gateway import complete_text
 
     if ref_type == "image" and image_url:
         try:
-            from emergentintegrations.llm.chat import LlmChat, UserMessage
-            chat = LlmChat(
-                api_key=EMERGENT_KEY_VAL,
-                session_id=f"ref_analyze_{uuid.uuid4().hex[:8]}",
-                system_message="You are a brand and visual intelligence analyst. Analyze the image and extract: 1) Brand/product identification (if recognizable), 2) Visual style elements (colors, typography, composition), 3) Emotional tone and mood, 4) Target audience impression, 5) Key design patterns. Return structured JSON."
-            ).with_model(provider, model)
-
-            analysis = await chat.send_message(UserMessage(text=f"Analyze this image: {image_url}\n\nProvide a structured analysis including brand detection, visual style, tone, and key elements. Return as clear sections."))
-
+            analysis = await complete_text(
+                user_id=current_user.user_id,
+                system_prompt="You are a brand and visual intelligence analyst. Analyze the image and extract: 1) Brand/product identification (if recognizable), 2) Visual style elements (colors, typography, composition), 3) Emotional tone and mood, 4) Target audience impression, 5) Key design patterns. Return structured JSON.",
+                user_prompt=f"Analyze this image: {image_url}\n\nProvide a structured analysis including brand detection, visual style, tone, and key elements. Return as clear sections.",
+                model="maars/auto",
+                source="enterprise.reference_analyze.image",
+            )
             result = {
                 "ref_id": f"ref_{uuid.uuid4().hex[:8]}",
                 "type": "image",
@@ -488,14 +483,13 @@ async def analyze_reference(request: Request, current_user: User = Depends(get_c
 
     elif ref_type == "text" and content:
         try:
-            from emergentintegrations.llm.chat import LlmChat, UserMessage
-            chat = LlmChat(
-                api_key=EMERGENT_KEY_VAL,
-                session_id=f"ref_text_{uuid.uuid4().hex[:8]}",
-                system_message="You are a brand and content intelligence analyst. Analyze the text reference to extract: 1) Writing style and tone, 2) Target audience, 3) Key messaging patterns, 4) Brand voice characteristics, 5) Structural elements. Create a Style Blueprint that can guide content creation."
-            ).with_model(provider, model)
-
-            analysis = await chat.send_message(UserMessage(text=f"Analyze this reference content and create a Style Blueprint:\n\n{content[:3000]}"))
+            analysis = await complete_text(
+                user_id=current_user.user_id,
+                system_prompt="You are a brand and content intelligence analyst. Analyze the text reference to extract: 1) Writing style and tone, 2) Target audience, 3) Key messaging patterns, 4) Brand voice characteristics, 5) Structural elements. Create a Style Blueprint that can guide content creation.",
+                user_prompt=f"Analyze this reference content and create a Style Blueprint:\n\n{content[:3000]}",
+                model="maars/auto",
+                source="enterprise.reference_analyze.text",
+            )
 
             result = {
                 "ref_id": f"ref_{uuid.uuid4().hex[:8]}",
@@ -586,7 +580,7 @@ async def retry_failed_task(request: Request, current_user: User = Depends(get_c
 @router.get("/router/stats")
 async def get_router_stats(current_user: User = Depends(get_current_user)):
     """Get LLM routing statistics: model usage, complexity distribution, cost."""
-    from services.llm_router import get_routing_stats
+    from services.routing.llm_router import get_routing_stats
     return await get_routing_stats(current_user.user_id)
 
 
@@ -599,7 +593,7 @@ async def analyze_task_routing(request: Request, current_user: User = Depends(ge
     if not content:
         raise HTTPException(400, "content is required")
 
-    from services.llm_router import route_to_model, classify_task_complexity
+    from services.routing.llm_router import route_to_model, classify_task_complexity
     routing = await route_to_model(content, agent_role, current_user.user_id)
     classification = classify_task_complexity(content, agent_role)
     return {**routing, "classification": classification}

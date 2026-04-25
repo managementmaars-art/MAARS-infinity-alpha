@@ -1,8 +1,35 @@
-import { useRef, useMemo, useEffect } from "react";
+import { useRef, useMemo, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
 import * as THREE from "three";
 
 const NODE_COUNT = 72;
+
+// Agent labels cycled across the 72 fibonacci-sphere nodes — pulled from
+// the catalog names so what users see in the 3D scene matches the
+// products they'll interact with once signed in. Kept short; full names
+// appear in the hover overlay.
+const AGENT_ROLES = [
+  "Chief Strategy",    "Marketing Lead",  "Content Creator",    "Social Manager",
+  "Lead Research",     "Sales Closer",    "Cold Email Ops",     "Sales Engineer",
+  "Full-Stack Eng.",   "Frontend Eng.",   "Backend Eng.",       "DevOps Lead",
+  "Designer",          "Brand Designer",  "UX Researcher",      "Motion Designer",
+  "Video Producer",    "Image Director",  "Voiceover Artist",   "Podcaster",
+  "Analyst",           "Data Scientist",  "Business Intel.",    "Finance Ops",
+  "Recruiter",         "People Ops",      "Customer Success",   "Support Agent",
+  "Product Manager",   "QA Engineer",     "Security Analyst",   "Legal Advisor",
+  "Operations Lead",   "Logistics",       "Supply Chain",       "Inventory",
+  "E-commerce Mgr.",   "Retail Ops",      "Account Executive",  "Partnerships",
+  "Investor Relations","PR Specialist",   "Copywriter",         "SEO Specialist",
+  "Growth Hacker",     "Paid Media",      "Email Marketer",     "Influencer Ops",
+  "Community Mgr.",    "Event Producer",  "Training Lead",      "Curriculum Dev.",
+  "Translation",       "Localization",    "Research Scientist", "Grant Writer",
+  "Bid Specialist",    "Procurement",     "Contract Mgr.",      "Risk Analyst",
+  "Compliance",        "Auditor",         "Tax Specialist",     "Treasury",
+  "Venture Scout",     "M&A Analyst",     "Due Diligence",      "Strategy Intern",
+  "Executive Asst.",   "Scheduler",       "Note-taker",         "Transcriber",
+];
+const NODE_LABEL = (i) => AGENT_ROLES[i % AGENT_ROLES.length];
 const CONNECTION_THRESHOLD = 3.8;
 
 // Fibonacci sphere distribution — perfectly even spacing, not boring random
@@ -22,31 +49,73 @@ function fibonacciSphere(count, radius) {
   return points;
 }
 
-// Each node pulses at a slightly different phase — organic breathing
-function NodeSphere({ position, color, phase, size }) {
+// Each node pulses at a slightly different phase — organic breathing.
+// Hover: scales up 3×, emissive intensity triples, HTML label appears.
+// Click: signals parent to lock this node in focus mode (handled upstream).
+function NodeSphere({ position, color, phase, size, label, onSelect }) {
   const ref = useRef();
+  const [hovered, setHovered] = useState(false);
   useFrame(({ clock }) => {
     if (!ref.current) return;
     const t = clock.elapsedTime;
-    const s = size * (0.85 + 0.15 * Math.sin(t * 1.2 + phase));
-    ref.current.scale.setScalar(s);
+    const breathScale = size * (0.85 + 0.15 * Math.sin(t * 1.2 + phase));
+    const hoverScale = hovered ? breathScale * 3 : breathScale;
+    // Smooth lerp toward target so hover feels tactile, not snappy.
+    ref.current.scale.x += (hoverScale - ref.current.scale.x) * 0.25;
+    ref.current.scale.y = ref.current.scale.z = ref.current.scale.x;
     ref.current.position.x = position.x + Math.sin(t * 0.3 + phase) * 0.08;
     ref.current.position.y = position.y + Math.cos(t * 0.25 + phase * 1.3) * 0.08;
     ref.current.position.z = position.z + Math.sin(t * 0.2 + phase * 0.7) * 0.08;
   });
   return (
-    <mesh ref={ref} position={position}>
-      <sphereGeometry args={[size, 8, 8]} />
-      <meshStandardMaterial
-        color={color}
-        emissive={color}
-        emissiveIntensity={1.2}
-        roughness={0.1}
-        metalness={0.8}
-        transparent
-        opacity={0.85}
-      />
-    </mesh>
+    <group>
+      <mesh
+        ref={ref}
+        position={position}
+        onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = "pointer"; }}
+        onPointerOut={() => { setHovered(false); document.body.style.cursor = "auto"; }}
+        onClick={(e) => { e.stopPropagation(); onSelect && onSelect(label); }}
+      >
+        <sphereGeometry args={[size, 12, 12]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={hovered ? 3.6 : 1.2}
+          roughness={0.1}
+          metalness={0.8}
+          transparent
+          opacity={hovered ? 1 : 0.85}
+        />
+      </mesh>
+      {hovered && (
+        <Html
+          position={position}
+          center
+          distanceFactor={8}
+          style={{ pointerEvents: "none", userSelect: "none" }}
+          occlude={false}
+        >
+          <div
+            style={{
+              background: "rgba(3, 7, 18, 0.92)",
+              border: "1px solid rgba(79, 209, 197, 0.5)",
+              borderRadius: 8,
+              padding: "6px 10px",
+              color: "#4fd1c5",
+              fontFamily: "system-ui, -apple-system, sans-serif",
+              fontSize: 11,
+              fontWeight: 600,
+              whiteSpace: "nowrap",
+              backdropFilter: "blur(8px)",
+              boxShadow: "0 0 20px rgba(79, 209, 197, 0.4)",
+              transform: "translateY(-30px)",
+            }}
+          >
+            {label}
+          </div>
+        </Html>
+      )}
+    </group>
   );
 }
 
@@ -66,7 +135,7 @@ function DataParticle({ start, end, speed, color }) {
   );
 }
 
-export default function AgentNodes({ mouseRef }) {
+export default function AgentNodes({ mouseRef, onSelect }) {
   const groupRef   = useRef();
   const linesRef   = useRef();
 
@@ -149,7 +218,7 @@ export default function AgentNodes({ mouseRef }) {
         <lineBasicMaterial vertexColors transparent opacity={0.6} />
       </lineSegments>
 
-      {/* Agent nodes */}
+      {/* Agent nodes — each hoverable + clickable with role label overlay */}
       {positions.map((pos, i) => (
         <NodeSphere
           key={i}
@@ -157,6 +226,8 @@ export default function AgentNodes({ mouseRef }) {
           color={colors[i]}
           phase={phases[i]}
           size={sizes[i]}
+          label={NODE_LABEL(i)}
+          onSelect={onSelect}
         />
       ))}
 

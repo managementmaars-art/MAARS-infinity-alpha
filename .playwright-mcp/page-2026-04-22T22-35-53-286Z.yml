@@ -1,0 +1,289 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e8]:
+    - generic [ref=e9]:
+      - img "logo" [ref=e12] [cursor=pointer]
+      - generic [ref=e13]:
+        - generic [ref=e15] [cursor=pointer]: Model Service
+        - generic [ref=e17] [cursor=pointer]: Docs
+        - generic [ref=e19] [cursor=pointer]: API References
+      - generic [ref=e20]:
+        - separator [ref=e21]
+        - generic [ref=e23] [cursor=pointer]:
+          - generic [ref=e24]: China (Beijing)
+          - img "spark-down-line" [ref=e25]:
+            - img [ref=e26]
+        - generic [ref=e29] [cursor=pointer]: 
+        - generic [ref=e30] [cursor=pointer]:
+          - text: Log In
+          - generic [ref=e31]: 
+    - generic [ref=e32]:
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - generic [ref=e36] [cursor=pointer]:
+            - img "spark-modePlaza-line" [ref=e38]:
+              - img [ref=e39]
+            - generic [ref=e41]: Models
+          - generic [ref=e42]: Playground
+          - generic [ref=e43] [cursor=pointer]:
+            - img "spark-text-line" [ref=e45]:
+              - img [ref=e46]
+            - generic [ref=e48]: Text
+          - generic [ref=e49] [cursor=pointer]:
+            - img "spark-voiceChat02-line" [ref=e51]:
+              - img [ref=e52]
+            - generic [ref=e54]: Speech
+          - generic [ref=e55] [cursor=pointer]:
+            - img "spark-camera-line" [ref=e57]:
+              - img [ref=e58]
+            - generic [ref=e61]: Visual
+          - generic [ref=e62]: Dashboard
+          - generic [ref=e63] [cursor=pointer]:
+            - img "spark-batch-line" [ref=e65]:
+              - img [ref=e66]
+            - generic [ref=e68]: Batches
+          - generic [ref=e69] [cursor=pointer]:
+            - img "spark-deployment-line" [ref=e71]:
+              - img [ref=e72]
+            - generic [ref=e74]: Deployments
+          - generic [ref=e75] [cursor=pointer]:
+            - img "spark-pieChart-line" [ref=e77]:
+              - img [ref=e78]
+            - generic [ref=e80]: Monitoring
+          - generic [ref=e81] [cursor=pointer]:
+            - img "spark-alert-line" [ref=e83]:
+              - img [ref=e84]
+            - generic [ref=e87]: Alerts
+          - generic [ref=e88] [cursor=pointer]:
+            - img "spark-token-line" [ref=e90]:
+              - img [ref=e91]
+            - generic [ref=e93]: Rate Limit Increase
+        - generic [ref=e94]:
+          - generic [ref=e95] [cursor=pointer]:
+            - img "spark-user-line" [ref=e97]:
+              - img [ref=e98]
+            - generic [ref=e101]: Permissions
+          - generic [ref=e102] [cursor=pointer]:
+            - img "spark-apiKey-line" [ref=e104]:
+              - img [ref=e105]
+            - generic [ref=e107]: API Key
+        - button "spark-operateLeft-line" [ref=e110] [cursor=pointer]:
+          - img "spark-operateLeft-line" [ref=e112]:
+            - img [ref=e113]
+      - generic [ref=e119]:
+        - generic [ref=e120]:
+          - navigation [ref=e122]:
+            - list [ref=e123]:
+              - listitem [ref=e124]:
+                - generic [ref=e125]: Models
+          - radiogroup "segmented control" [ref=e127]:
+            - generic [ref=e128]:
+              - generic [ref=e129] [cursor=pointer]:
+                - radio "Featured Models" [checked]
+                - generic "Featured Models" [ref=e130]
+              - generic [ref=e131] [cursor=pointer]:
+                - radio "All Models"
+                - generic "All Models" [ref=e132]
+          - button "Model Comparison" [ref=e134] [cursor=pointer]:
+            - generic [ref=e135]: Model Comparison
+        - generic [ref=e141]:
+          - generic [ref=e142]:
+            - generic [ref=e143]: Featured Model
+            - generic [ref=e144]: Flagship Models of Model Studio
+          - generic [ref=e145]:
+            - generic [ref=e146] [cursor=pointer]:
+              - img [ref=e148]
+              - generic [ref=e149]: Qwen3.6-Plus
+              - generic [ref=e150]: Native multimodality, a leap in coding capabilities
+            - generic [ref=e151] [cursor=pointer]:
+              - img [ref=e153]
+              - generic [ref=e154]: Wan2.7-Image to Video
+              - generic [ref=e155]: "All-in-One Creation: Start/End Frames and extend, Superior Storytelling"
+            - generic [ref=e156] [cursor=pointer]:
+              - img [ref=e158]
+              - generic [ref=e159]: Qwen3.6-Max-Preview
+              - generic [ref=e160]: Largest in scale and strongest in comprehensive capability
+          - generic [ref=e161]:
+            - generic [ref=e163]:
+              - img "spark-deepThink-line" [ref=e164]:
+                - img [ref=e165]
+              - text: Advanced Reasoning
+            - generic [ref=e167]:
+              - generic [ref=e168]:
+                - generic [ref=e169]: qwen3.6-plus
+                - generic [ref=e170]: Lower costs, smarter insights, and support for the Responses API
+                - generic [ref=e171]:
+                  - button "Try Now" [ref=e172] [cursor=pointer]:
+                    - generic [ref=e173]: Try Now
+                  - button "API Reference" [ref=e174] [cursor=pointer]:
+                    - generic [ref=e175]: API Reference
+              - generic [ref=e176]:
+                - generic [ref=e177]: qwen3-max-2026-01-23
+                - generic [ref=e178]: Exceptionally strong reasoning capabilities, supports the Responses API
+                - generic [ref=e179]:
+                  - button "Try Now" [ref=e180] [cursor=pointer]:
+                    - generic [ref=e181]: Try Now
+                  - button "API Reference" [ref=e182] [cursor=pointer]:
+                    - generic [ref=e183]: API Reference
+              - generic [ref=e184]:
+                - generic [ref=e185]: deepseek-v3.2
+                - generic [ref=e186]: New Hybrid Reasoning Architecture
+                - generic [ref=e187]:
+                  - button "Try Now" [ref=e188] [cursor=pointer]:
+                    - generic [ref=e189]: Try Now
+                  - button "API Reference" [ref=e190] [cursor=pointer]:
+                    - generic [ref=e191]: API Reference
+          - generic [ref=e192]:
+            - generic [ref=e194]:
+              - img "spark-text-line" [ref=e195]:
+                - img [ref=e196]
+              - text: Text Generation
+            - generic [ref=e198]:
+              - generic [ref=e199]:
+                - generic [ref=e200]: qwen3.6-max-preview
+                - generic [ref=e201]: Enhanced coding capabilities and more efficient agent execution
+                - generic [ref=e202]:
+                  - button "Try Now" [ref=e203] [cursor=pointer]:
+                    - generic [ref=e204]: Try Now
+                  - button "API Reference" [ref=e205] [cursor=pointer]:
+                    - generic [ref=e206]: API Reference
+              - generic [ref=e207]:
+                - generic [ref=e208]: qwen3.6-flash
+                - generic [ref=e209]: Higher efficiency, lower costs
+                - generic [ref=e210]:
+                  - button "Try Now" [ref=e211] [cursor=pointer]:
+                    - generic [ref=e212]: Try Now
+                  - button "API Reference" [ref=e213] [cursor=pointer]:
+                    - generic [ref=e214]: API Reference
+          - generic [ref=e215]:
+            - generic [ref=e217]:
+              - img "spark-visualQuestionanswering-line" [ref=e218]:
+                - img [ref=e219]
+              - text: Visual Understanding
+            - generic [ref=e221]:
+              - generic [ref=e222]:
+                - generic [ref=e223]: qwen3-vl-plus
+                - generic [ref=e224]: Leading in the visual intelligence industry
+                - generic [ref=e225]:
+                  - button "Try Now" [ref=e226] [cursor=pointer]:
+                    - generic [ref=e227]: Try Now
+                  - button "API Reference" [ref=e228] [cursor=pointer]:
+                    - generic [ref=e229]: API Reference
+              - generic [ref=e230]:
+                - generic [ref=e231]: qwen3-vl-flash
+                - generic [ref=e232]: Fast response and high cost performance
+                - generic [ref=e233]:
+                  - button "Try Now" [ref=e234] [cursor=pointer]:
+                    - generic [ref=e235]: Try Now
+                  - button "API Reference" [ref=e236] [cursor=pointer]:
+                    - generic [ref=e237]: API Reference
+          - generic [ref=e238]:
+            - generic [ref=e240]:
+              - img "spark-addPicture-line" [ref=e241]:
+                - img [ref=e242]
+              - text: Image Generation
+            - generic [ref=e244]:
+              - generic [ref=e245]:
+                - generic [ref=e246]: wan2.7-image-pro
+                - generic [ref=e247]: Precise instruction following, consistency, 4K
+                - generic [ref=e248]:
+                  - button "Try Now" [ref=e249] [cursor=pointer]:
+                    - generic [ref=e250]: Try Now
+                  - button "API Reference" [ref=e251] [cursor=pointer]:
+                    - generic [ref=e252]: API Reference
+              - generic [ref=e253]:
+                - generic [ref=e254]: qwen-image-2.0
+                - generic [ref=e255]: Combines image generation and editing for faster, more powerful results
+                - generic [ref=e256]:
+                  - button "Try Now" [ref=e257] [cursor=pointer]:
+                    - generic [ref=e258]: Try Now
+                  - button "API Reference" [ref=e259] [cursor=pointer]:
+                    - generic [ref=e260]: API Reference
+              - generic [ref=e261]:
+                - generic [ref=e262]: z-image-turbo
+                - generic [ref=e263]: Great value for money, photo-quality results
+                - generic [ref=e264]:
+                  - button "Try Now" [ref=e265] [cursor=pointer]:
+                    - generic [ref=e266]: Try Now
+                  - button "API Reference" [ref=e267] [cursor=pointer]:
+                    - generic [ref=e268]: API Reference
+          - generic [ref=e269]:
+            - generic [ref=e271]:
+              - img "spark-audioVideo-line" [ref=e272]:
+                - img [ref=e273]
+              - text: Video Generation
+            - generic [ref=e277]:
+              - generic [ref=e278]:
+                - generic [ref=e279]: wan2.7-i2v
+                - generic [ref=e280]: Vivid Emotion & Motion, Seamless Cinematic Flow
+                - generic [ref=e281]:
+                  - button "Try Now" [ref=e282] [cursor=pointer]:
+                    - generic [ref=e283]: Try Now
+                  - button "API Reference" [ref=e284] [cursor=pointer]:
+                    - generic [ref=e285]: API Reference
+              - generic [ref=e286]:
+                - generic [ref=e287]: wan2.7-r2v
+                - generic [ref=e288]: Precise Subject Guidance, Customizable Voice
+                - generic [ref=e289]:
+                  - button "Try Now" [ref=e290] [cursor=pointer]:
+                    - generic [ref=e291]: Try Now
+                  - button "API Reference" [ref=e292] [cursor=pointer]:
+                    - generic [ref=e293]: API Reference
+              - generic [ref=e294]:
+                - generic [ref=e295]: wan2.7-videoedit
+                - generic [ref=e296]: Instruction Editing, Creative Replication
+                - button "API Reference" [ref=e298] [cursor=pointer]:
+                  - generic [ref=e299]: API Reference
+          - generic [ref=e300]:
+            - generic [ref=e302]:
+              - img "spark-voiceChat02-line" [ref=e303]:
+                - img [ref=e304]
+              - text: Speech/Voice
+            - generic [ref=e306]:
+              - generic [ref=e307]:
+                - generic [ref=e308]: qwen3-tts-flash
+                - generic [ref=e309]: Highly expressive, multilingual, anthropomorphic TTS
+                - generic [ref=e310]:
+                  - button "Try Now" [ref=e311] [cursor=pointer]:
+                    - generic [ref=e312]: Try Now
+                  - button "API Reference" [ref=e313] [cursor=pointer]:
+                    - generic [ref=e314]: API Reference
+              - generic [ref=e315]:
+                - generic [ref=e316]: qwen3-asr-flash
+                - generic [ref=e317]: Accurate multilingual transcription and emotion recognition
+                - generic [ref=e318]:
+                  - button "Try Now" [ref=e319] [cursor=pointer]:
+                    - generic [ref=e320]: Try Now
+                  - button "API Reference" [ref=e321] [cursor=pointer]:
+                    - generic [ref=e322]: API Reference
+              - generic [ref=e323]:
+                - generic [ref=e324]: fun-asr
+                - generic [ref=e325]: High-Accuracy Multilingual and Dialect Speech Recognition
+                - generic [ref=e326]:
+                  - button "Try Now" [ref=e327] [cursor=pointer]:
+                    - generic [ref=e328]: Try Now
+                  - button "API Reference" [ref=e329] [cursor=pointer]:
+                    - generic [ref=e330]: API Reference
+          - button "All Models spark-right-line" [ref=e332] [cursor=pointer]:
+            - generic [ref=e333]: All Models
+            - img "spark-right-line" [ref=e334]:
+              - img [ref=e335]
+      - generic [ref=e338]:
+        - generic [ref=e339]:
+          - button "spark-fee-line" [ref=e341] [cursor=pointer]:
+            - img "spark-fee-line" [ref=e343]:
+              - img [ref=e344]
+          - button "spark-headset-line" [ref=e346] [cursor=pointer]:
+            - img "spark-headset-line" [ref=e348]:
+              - img [ref=e349]
+          - button "spark-document-line" [ref=e353] [cursor=pointer]:
+            - img "spark-document-line" [ref=e355]:
+              - img [ref=e356]
+        - button "spark-right-line" [ref=e359] [cursor=pointer]:
+          - img "spark-right-line" [ref=e361]:
+            - img [ref=e362]
+  - iframe [ref=e4]:
+    
+  - iframe [ref=e5]:
+    
+  - iframe [ref=e364]:
+    

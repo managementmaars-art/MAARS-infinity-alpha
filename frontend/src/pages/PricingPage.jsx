@@ -6,6 +6,7 @@ import { Bot, Check, Sparkles, Zap, Crown, Building, CreditCard,
 import { useAuth, API } from "../App";
 import { toast } from "sonner";
 import { BrandFooter } from "../components/BrandFooter";
+import { BUCKETS, sortedAllowanceEntries, fmtCredits } from "../lib/bucketMeta";
 
 const T = {
   glass: "rgba(255,255,255,0.03)",
@@ -147,6 +148,38 @@ const PricingPage = () => {
     { id: "credits_700", credits: 700, price_usd: 42, price_bdt: 4450 },
     { id: "credits_1500", credits: 1500, price_usd: 90, price_bdt: 9540 }
   ]);
+  // Category filter for the "Need More Credits?" section. "all" =
+  // every pack visible; otherwise show only packs tagged with that
+  // category. Admin tags packs via CustomPackagesTab → the tag flows
+  // through /api/plans.credit_packages.category. When a client buys a
+  // tagged pack, Stripe checkout metadata carries the category, which
+  // the webhook records in category_topups for per-category revenue
+  // tracking + router premium-tier auto-escalation. Deep-link support:
+  // /pricing?topup=code opens the page with the Code tab pre-selected
+  // — used by the per-bucket tiles on /wallet to send clients directly
+  // to the targeted top-up flow.
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const hint = params.get("topup");
+      if (hint) return hint;
+    } catch {}
+    return "all";
+  });
+  const CATEGORY_TABS = [
+    { key: "all",       label: "All",         color: "#d4d4d8" },
+    { key: "general",   label: "General",     color: "#a1a1aa" },
+    { key: "chat",      label: "Chat",        color: "#4fd1c5" },
+    { key: "code",      label: "Code / Vibe", color: "#a78bfa" },
+    { key: "image_std", label: "Image Std",   color: "#fda4af" },
+    { key: "image_hd",  label: "Image HD",    color: "#e879f9" },
+    { key: "video",     label: "Video",       color: "#fbbf24" },
+    { key: "voiceover", label: "Voiceover",   color: "#38bdf8" },
+    { key: "tts",       label: "TTS",         color: "#22d3ee" },
+    { key: "stt",       label: "STT",         color: "#2dd4bf" },
+  ];
+  const categoryColorFor = (cat) => (CATEGORY_TABS.find(c => c.key === cat) || CATEGORY_TABS[0]).color;
+  const categoryLabelFor = (cat) => (CATEGORY_TABS.find(c => c.key === cat) || CATEGORY_TABS[1]).label;
 
   const formatPrice = (plan) => {
     if (currency === "bdt") {
@@ -174,12 +207,19 @@ const PricingPage = () => {
     }
   }, [user]);
 
+  const [plansV2, setPlansV2] = useState(null);
+
   const fetchPlans = async () => {
     try {
       const res = await fetch(`${API}/plans`);
       if (res.ok) {
         const data = await res.json();
         setDynamicPlans(data.plans);
+        // NEW: plans_v2 is the unified 5-tier catalog with deliverables.
+        // Prefer it for rendering; fall back to legacy on older backends.
+        if (Array.isArray(data.plans_v2) && data.plans_v2.length > 0) {
+          setPlansV2(data.plans_v2);
+        }
         if (data.custom_package) setCustomConfig(data.custom_package);
         if (data.credit_packages) {
           const pkgs = Object.entries(data.credit_packages).map(([id, p]) => ({ id, ...p }));
@@ -199,16 +239,37 @@ const PricingPage = () => {
     } catch {}
   };
 
-  const plans = dynamicPlans ? Object.entries(dynamicPlans).map(([id, p]) => ({
-    id,
-    name: p.name,
-    price_usd: p.price_usd,
-    price_bdt: p.price_bdt,
-    credits: p.credits,
-    icon: icons[id] || <Sparkles style={{ width: 24, height: 24 }} />,
-    features: p.features || [],
-    popular: id === "pro"
-  })) : defaultPlans;
+  // Prefer unified 5-tier plans_v2 (with deliverables) — fall back to
+  // legacy 13-tier dict shape only when v2 payload is missing.
+  const plans = plansV2 && plansV2.length > 0
+    ? plansV2.map(p => ({
+        id: p.plan_id,
+        name: p.name,
+        tagline: p.tagline,
+        price_usd: p.price_usd,
+        price_bdt: p.price_bdt,
+        credits: p.credits,
+        icon: icons[p.plan_id] || <Sparkles style={{ width: 24, height: 24 }} />,
+        // Prefer highlights as the short feature list; keep full features for legacy.
+        features: p.highlights || p.features || [],
+        popular: p.popular || p.plan_id === "creator",
+        deliverables: p.deliverables || [],
+        bucket_allowances: p.bucket_allowances || null,
+        allow_general_fallback: p.allow_general_fallback || false,
+      }))
+    : (dynamicPlans ? Object.entries(dynamicPlans).map(([id, p]) => ({
+        id,
+        name: p.name,
+        price_usd: p.price_usd,
+        price_bdt: p.price_bdt,
+        credits: p.credits,
+        icon: icons[id] || <Sparkles style={{ width: 24, height: 24 }} />,
+        features: p.features || [],
+        popular: id === "pro",
+        deliverables: [],
+        bucket_allowances: p.bucket_allowances || null,
+        allow_general_fallback: p.allow_general_fallback || false,
+      })) : defaultPlans);
 
   const fetchSubscription = async () => {
     try {
@@ -432,6 +493,34 @@ const PricingPage = () => {
             </div>
           )}
 
+          {/* ── Trust strip — makes the pricing page feel enterprise
+              without over-promising. Each item is genuinely true of the
+              current platform. No inflated claims = no refund hooks. */}
+          <div style={{ marginTop: 28, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
+            {[
+              "Cancel anytime",
+              "Credits never expire",
+              "No long-term contract",
+              "24/7 automated agents",
+              "Global availability",
+              "GDPR & CAN-SPAM ready",
+              "Stripe-secured payments",
+              "Human support inbox",
+            ].map((label, i) => (
+              <span
+                key={i}
+                style={{
+                  fontSize: 11, padding: "5px 12px", borderRadius: 999,
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: "#a1a1aa", fontWeight: 500,
+                }}
+              >
+                ✓ {label}
+              </span>
+            ))}
+          </div>
+
           {/* Admin Controls */}
           {isAdmin && (
             <div style={{ marginTop: 16, display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }} data-testid="admin-pricing-controls">
@@ -564,8 +653,48 @@ const PricingPage = () => {
                         <span style={{ fontSize: 36, fontWeight: 700, color: "#fff" }}>{formatPrice(plan)}</span>
                         <span style={{ color: T.zinc, fontSize: 14 }}>/month</span>
                       </div>
-                      <p style={{ fontSize: 14, color: T.indigo, margin: "4px 0 0" }}>{plan.credits} credits/month</p>
+                      {plan.tagline && (
+                        <p style={{ fontSize: 12, color: T.zinc, margin: "6px 0 0", minHeight: 30 }}>
+                          {plan.tagline}
+                        </p>
+                      )}
                     </div>
+                    {/* Deliverables — the UNIFIED user-facing view: tangible
+                        monthly quantities (X chats, Y images, Z videos) instead
+                        of abstract credits. Comes from plans_v2.deliverables. */}
+                    {plan.deliverables && plan.deliverables.length > 0 && (
+                      <div style={{
+                        marginBottom: 20,
+                        padding: "12px 14px",
+                        borderRadius: 10,
+                        background: "rgba(129,140,248,0.06)",
+                        border: "1px solid rgba(129,140,248,0.15)",
+                      }} data-testid={`plan-deliverables-${plan.id}`}>
+                        <div style={{
+                          fontSize: 10, textTransform: "uppercase", letterSpacing: 0.6,
+                          fontWeight: 600, color: T.indigo, marginBottom: 10,
+                        }}>
+                          What's included / month
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                          {plan.deliverables.filter(d => d.count !== 0 || d.unlimited).map(d => (
+                            <div key={d.key}
+                              title={d.hint}
+                              style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, fontSize: 13 }}>
+                              <span style={{ color: "#d4d4d8" }}>{d.label}</span>
+                              <span style={{
+                                fontVariantNumeric: "tabular-nums",
+                                fontWeight: 700,
+                                color: d.unlimited ? T.green : "#fff",
+                                whiteSpace: "nowrap",
+                              }}>
+                                {d.unlimited ? "Unlimited" : fmtCredits(d.count)}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     {/* Features */}
                     <ul style={{ listStyle: "none", padding: 0, margin: "0 0 24px", display: "flex", flexDirection: "column", gap: 12 }}>
                       {plan.features.map((feature, idx) => (
@@ -790,45 +919,128 @@ const PricingPage = () => {
           </div>
         )}
 
-        {/* Credit Top-ups */}
+        {/* Credit Top-ups — now with per-category tabs. Each pack carries
+            an optional `category` tag set by the operator in Custom
+            Packages. Clicking a tab filters packs to that track and the
+            Stripe checkout metadata carries the category through so
+            revenue + router escalation know which workload this top-up
+            is for. "All" tab shows everything; "General" shows untagged
+            packs (work across any track). */}
         <div style={{ marginBottom: 48 }}>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: "#fff", textAlign: "center", marginBottom: 24, fontFamily: "Outfit, sans-serif" }}>
+          <h2 style={{ fontSize: 28, fontWeight: 700, color: "#fff", textAlign: "center", marginBottom: 8, fontFamily: "Outfit, sans-serif" }}>
             Need More Credits?
           </h2>
-          <p style={{ color: T.zinc, textAlign: "center", marginBottom: 32, marginTop: 0 }}>
-            Buy additional credits anytime. They never expire.
+          <p style={{ color: T.zinc, textAlign: "center", marginBottom: 24, marginTop: 0 }}>
+            Buy additional credits anytime. They never expire. Category-tagged
+            packs boost that track's routing to premium models automatically.
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 16, maxWidth: 768, margin: "0 auto" }}>
-            {creditPackages.map((pkg) => (
-              <div
-                key={pkg.id}
-                style={{ background: "rgba(24,24,27,0.5)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: 16, textAlign: "center", transition: "border-color .2s" }}
-                data-testid={`credits-${pkg.id}`}
-              >
-                <p style={{ fontSize: 28, fontWeight: 700, color: "#fff", margin: "0 0 4px" }}>{pkg.credits}</p>
-                <p style={{ fontSize: 14, color: T.zinc, margin: "0 0 12px" }}>credits</p>
+
+          {/* Category tabs */}
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8, marginBottom: 24 }}>
+            {CATEGORY_TABS.map(tab => {
+              const active = selectedCategory === tab.key;
+              // Hide tabs with no matching packs (except "all" + "general")
+              const count = tab.key === "all"
+                ? creditPackages.length
+                : creditPackages.filter(p =>
+                    tab.key === "general"
+                      ? !p.category || p.category === "general"
+                      : p.category === tab.key
+                  ).length;
+              if (count === 0 && tab.key !== "all" && tab.key !== "general") return null;
+              return (
                 <button
-                  onClick={() => handleBuyCredits(pkg.id)}
-                  disabled={loading || !user}
+                  key={tab.key}
+                  onClick={() => setSelectedCategory(tab.key)}
                   style={{
-                    width: "100%", padding: "8px 12px", borderRadius: 8,
-                    border: "1px solid rgba(255,255,255,0.1)", background: "transparent",
-                    color: "#d4d4d8", fontSize: 14, fontWeight: 600,
-                    cursor: (loading || !user) ? "not-allowed" : "pointer",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontFamily: "inherit", opacity: (loading || !user) ? 0.5 : 1,
-                    transition: "background .2s",
+                    padding: "6px 14px", borderRadius: 999,
+                    border: `1px solid ${active ? tab.color : "rgba(255,255,255,0.12)"}`,
+                    background: active ? `${tab.color}22` : "rgba(24,24,27,0.5)",
+                    color: active ? tab.color : "#a1a1aa",
+                    fontSize: 12, fontWeight: 600, cursor: "pointer",
+                    fontFamily: "inherit", transition: "all .15s",
                   }}
-                  data-testid={`buy-${pkg.id}`}
+                  data-testid={`topup-tab-${tab.key}`}
                 >
-                  {processingPlan === pkg.id ? (
-                    <div style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
-                  ) : (
-                    formatCreditPrice(pkg)
-                  )}
+                  {tab.label} {count > 0 && <span style={{ opacity: 0.6, fontWeight: 400, marginLeft: 4 }}>· {count}</span>}
                 </button>
+              );
+            })}
+          </div>
+
+          {/* Filtered packs — one grid, one handler, category metadata
+              auto-propagated by the existing handleBuyCredits flow. */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 16, maxWidth: 960, margin: "0 auto" }}>
+            {creditPackages
+              .filter(pkg => {
+                if (selectedCategory === "all") return true;
+                if (selectedCategory === "general") return !pkg.category || pkg.category === "general";
+                return pkg.category === selectedCategory;
+              })
+              .map((pkg) => {
+                const packCategory = pkg.category || "general";
+                const packColor = categoryColorFor(packCategory);
+                const packLabel = categoryLabelFor(packCategory);
+                return (
+                  <div
+                    key={pkg.id}
+                    style={{
+                      background: "rgba(24,24,27,0.5)",
+                      border: `1px solid ${packCategory !== "general" ? packColor + "44" : "rgba(255,255,255,0.1)"}`,
+                      borderRadius: 12, padding: 16, textAlign: "center",
+                      transition: "border-color .2s",
+                      position: "relative",
+                    }}
+                    data-testid={`credits-${pkg.id}`}
+                  >
+                    {packCategory !== "general" && (
+                      <div style={{
+                        position: "absolute", top: 8, right: 8,
+                        padding: "2px 8px", borderRadius: 999,
+                        background: packColor + "22",
+                        color: packColor, fontSize: 9, fontWeight: 700,
+                        textTransform: "uppercase", letterSpacing: 0.5,
+                      }}>
+                        {packLabel}
+                      </div>
+                    )}
+                    <p style={{ fontSize: 28, fontWeight: 700, color: "#fff", margin: "4px 0 4px" }}>{pkg.credits}</p>
+                    <p style={{ fontSize: 14, color: T.zinc, margin: "0 0 12px" }}>credits</p>
+                    <button
+                      onClick={() => handleBuyCredits(pkg.id)}
+                      disabled={loading || !user}
+                      style={{
+                        width: "100%", padding: "8px 12px", borderRadius: 8,
+                        border: `1px solid ${packCategory !== "general" ? packColor + "55" : "rgba(255,255,255,0.1)"}`,
+                        background: "transparent",
+                        color: packCategory !== "general" ? packColor : "#d4d4d8",
+                        fontSize: 14, fontWeight: 600,
+                        cursor: (loading || !user) ? "not-allowed" : "pointer",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontFamily: "inherit", opacity: (loading || !user) ? 0.5 : 1,
+                        transition: "background .2s",
+                      }}
+                      data-testid={`buy-${pkg.id}`}
+                    >
+                      {processingPlan === pkg.id ? (
+                        <div style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+                      ) : (
+                        formatCreditPrice(pkg)
+                      )}
+                    </button>
+                  </div>
+                );
+              })}
+            {creditPackages.filter(pkg => {
+              if (selectedCategory === "all") return true;
+              if (selectedCategory === "general") return !pkg.category || pkg.category === "general";
+              return pkg.category === selectedCategory;
+            }).length === 0 && (
+              <div style={{ gridColumn: "1 / -1", textAlign: "center", color: T.zinc, padding: 32, fontSize: 14 }}>
+                No {categoryLabelFor(selectedCategory)} top-up packs configured yet.
+                Try another category or ask the operator to add one.
               </div>
-            ))}
+            )}
           </div>
         </div>
 

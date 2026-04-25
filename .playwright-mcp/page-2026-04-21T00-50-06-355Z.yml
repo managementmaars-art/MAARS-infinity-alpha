@@ -1,0 +1,461 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - region
+    - generic [ref=e3]:
+      - link "Skip to content" [ref=e4] [cursor=pointer]:
+        - /url: "#start-of-content"
+      - banner [ref=e6]:
+        - heading "Navigation Menu" [level=2] [ref=e7]
+        - generic [ref=e8]:
+          - link "Homepage" [ref=e10] [cursor=pointer]:
+            - /url: /
+            - img [ref=e11]
+          - generic [ref=e13]:
+            - navigation "Global" [ref=e16]:
+              - list [ref=e17]:
+                - listitem [ref=e18]:
+                  - button "Platform" [ref=e20] [cursor=pointer]:
+                    - text: Platform
+                    - img [ref=e21]
+                - listitem [ref=e23]:
+                  - button "Solutions" [ref=e25] [cursor=pointer]:
+                    - text: Solutions
+                    - img [ref=e26]
+                - listitem [ref=e28]:
+                  - button "Resources" [ref=e30] [cursor=pointer]:
+                    - text: Resources
+                    - img [ref=e31]
+                - listitem [ref=e33]:
+                  - button "Open Source" [ref=e35] [cursor=pointer]:
+                    - text: Open Source
+                    - img [ref=e36]
+                - listitem [ref=e38]:
+                  - button "Enterprise" [ref=e40] [cursor=pointer]:
+                    - text: Enterprise
+                    - img [ref=e41]
+                - listitem [ref=e43]:
+                  - link "Pricing" [ref=e44] [cursor=pointer]:
+                    - /url: https://github.com/pricing
+                    - generic [ref=e45]: Pricing
+            - generic [ref=e46]:
+              - button "Search or jump to…" [ref=e49] [cursor=pointer]:
+                - img [ref=e51]
+                - generic [ref=e53]: Search or jump to...
+                - img [ref=e55]
+              - link "Sign in" [ref=e59] [cursor=pointer]:
+                - /url: /login?return_to=https%3A%2F%2Fgithub.com%2FNVIDIA-AI-Blueprints%2Fllm-router%2Ftree%2Fmain%2Fsrc
+              - link "Sign up" [ref=e60] [cursor=pointer]:
+                - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Ffiles%2Fdisambiguate&source=header-repo&source_repo=NVIDIA-AI-Blueprints%2Fllm-router
+              - button "Appearance settings" [ref=e63] [cursor=pointer]:
+                - img
+    - main [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e69]:
+          - generic [ref=e71]:
+            - img [ref=e72]
+            - link "NVIDIA-AI-Blueprints" [ref=e75] [cursor=pointer]:
+              - /url: /NVIDIA-AI-Blueprints
+            - generic [ref=e76]: /
+            - strong [ref=e77]:
+              - link "llm-router" [ref=e78] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router
+            - generic [ref=e79]: Public
+          - generic [ref=e80]:
+            - list:
+              - listitem [ref=e81]:
+                - link "You must be signed in to change notification settings" [ref=e82] [cursor=pointer]:
+                  - /url: /login?return_to=%2FNVIDIA-AI-Blueprints%2Fllm-router
+                  - img [ref=e83]
+                  - text: Notifications
+              - listitem [ref=e85]:
+                - link "Fork 66" [ref=e86] [cursor=pointer]:
+                  - /url: /login?return_to=%2FNVIDIA-AI-Blueprints%2Fllm-router
+                  - img [ref=e87]
+                  - text: Fork
+                  - generic "66" [ref=e89]
+              - listitem [ref=e90]:
+                - link "You must be signed in to star a repository" [ref=e92] [cursor=pointer]:
+                  - /url: /login?return_to=%2FNVIDIA-AI-Blueprints%2Fllm-router
+                  - img [ref=e93]
+                  - text: Star
+                  - generic "248 users starred this repository" [ref=e95]: "248"
+        - navigation "Repository" [ref=e96]:
+          - list [ref=e97]:
+            - listitem [ref=e98]:
+              - link "Code" [ref=e99] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main
+                - img [ref=e100]
+                - generic [ref=e102]: Code
+            - listitem [ref=e103]:
+              - link "Issues 3" [ref=e104] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/issues
+                - img [ref=e105]
+                - generic [ref=e108]: Issues
+                - generic "3" [ref=e109]
+            - listitem [ref=e110]:
+              - link "Pull requests 2" [ref=e111] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/pulls
+                - img [ref=e112]
+                - generic [ref=e114]: Pull requests
+                - generic "2" [ref=e115]
+            - listitem [ref=e116]:
+              - link "Actions" [ref=e117] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/actions
+                - img [ref=e118]
+                - generic [ref=e120]: Actions
+            - listitem [ref=e121]:
+              - link "Projects" [ref=e122] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/projects
+                - img [ref=e123]
+                - generic [ref=e125]: Projects
+            - listitem [ref=e126]:
+              - link "Security and quality" [ref=e127] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/security
+                - img [ref=e128]
+                - generic [ref=e130]: Security and quality
+            - listitem [ref=e131]:
+              - link "Insights" [ref=e132] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/pulse
+                - img [ref=e133]
+                - generic [ref=e135]: Insights
+      - generic [ref=e143]:
+        - generic [ref=e145]:
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - generic [ref=e150]:
+                - heading "Collapse file tree" [level=2] [ref=e151]:
+                  - button "Collapse file tree" [expanded] [ref=e152] [cursor=pointer]:
+                    - img [ref=e153]
+                - heading "Files" [level=2] [ref=e156]
+              - generic [ref=e157]:
+                - generic [ref=e159]:
+                  - button "View file on default branch" [disabled] [ref=e161]:
+                    - img [ref=e162]
+                  - button "main branch" [ref=e165] [cursor=pointer]:
+                    - generic [ref=e166]:
+                      - generic [ref=e168]:
+                        - img [ref=e170]
+                        - generic [ref=e173]: main
+                      - generic:
+                        - img
+                - button "Search this repository (forward slash)" [ref=e175] [cursor=pointer]:
+                  - img [ref=e176]
+            - generic [ref=e179]:
+              - img [ref=e181]
+              - combobox "Go to file" [ref=e183]
+            - navigation "File Tree Navigation" [ref=e189]:
+              - tree "Files" [ref=e191]:
+                - treeitem ".github" [level=1] [ref=e192]:
+                  - generic [ref=e193] [cursor=pointer]:
+                    - img [ref=e195]
+                    - generic [ref=e197]:
+                      - img [ref=e201]
+                      - generic [ref=e203]: .github
+                - treeitem "assets" [level=1] [ref=e204]:
+                  - generic [ref=e205] [cursor=pointer]:
+                    - img [ref=e207]
+                    - generic [ref=e209]:
+                      - img [ref=e213]
+                      - generic [ref=e215]: assets
+                - treeitem "customize" [level=1] [ref=e216]:
+                  - generic [ref=e217] [cursor=pointer]:
+                    - img [ref=e219]
+                    - generic [ref=e221]:
+                      - img [ref=e225]
+                      - generic [ref=e227]: customize
+                - treeitem "demo" [level=1] [ref=e228]:
+                  - generic [ref=e229] [cursor=pointer]:
+                    - img [ref=e231]
+                    - generic [ref=e233]:
+                      - img [ref=e237]
+                      - generic [ref=e239]: demo
+                - treeitem "deploy" [level=1] [ref=e240]:
+                  - generic [ref=e241] [cursor=pointer]:
+                    - img [ref=e243]
+                    - generic [ref=e245]:
+                      - img [ref=e249]
+                      - generic [ref=e251]: deploy
+                - treeitem "launchable" [level=1] [ref=e252]:
+                  - generic [ref=e253] [cursor=pointer]:
+                    - img [ref=e255]
+                    - generic [ref=e257]:
+                      - img [ref=e261]
+                      - generic [ref=e263]: launchable
+                - treeitem "routers" [level=1] [ref=e264]:
+                  - generic [ref=e265] [cursor=pointer]:
+                    - img [ref=e267]
+                    - generic [ref=e269]:
+                      - img [ref=e273]
+                      - generic [ref=e275]: routers
+                - treeitem "src" [expanded] [level=1] [ref=e276]:
+                  - generic [ref=e277] [cursor=pointer]:
+                    - img [ref=e279]
+                    - generic [ref=e281]:
+                      - img [ref=e285]
+                      - generic [ref=e287]: src
+                  - group "src" [ref=e288]:
+                    - treeitem "grafana" [level=2] [ref=e289]:
+                      - generic [ref=e290] [cursor=pointer]:
+                        - img [ref=e295]
+                        - generic [ref=e297]:
+                          - img [ref=e301]
+                          - generic [ref=e303]: grafana
+                    - treeitem "prometheus" [level=2] [ref=e304]:
+                      - generic [ref=e305] [cursor=pointer]:
+                        - img [ref=e310]
+                        - generic [ref=e312]:
+                          - img [ref=e316]
+                          - generic [ref=e318]: prometheus
+                    - treeitem "router-controller" [level=2] [ref=e319]:
+                      - generic [ref=e320] [cursor=pointer]:
+                        - img [ref=e325]
+                        - generic [ref=e327]:
+                          - img [ref=e331]
+                          - generic [ref=e333]: router-controller
+                    - treeitem "router-server" [level=2] [ref=e334]:
+                      - generic [ref=e335] [cursor=pointer]:
+                        - img [ref=e340]
+                        - generic [ref=e342]:
+                          - img [ref=e346]
+                          - generic [ref=e348]: router-server
+                    - treeitem "readme.md" [level=2] [ref=e349]:
+                      - generic [ref=e354] [cursor=pointer]:
+                        - img [ref=e357]
+                        - generic [ref=e359]: readme.md
+                    - treeitem "test_router.py" [level=2] [ref=e360]:
+                      - generic [ref=e365] [cursor=pointer]:
+                        - img [ref=e368]
+                        - generic [ref=e370]: test_router.py
+                    - treeitem "test_router.sh" [level=2] [ref=e371]:
+                      - generic [ref=e376] [cursor=pointer]:
+                        - img [ref=e379]
+                        - generic [ref=e381]: test_router.sh
+                    - treeitem "update_config_yaml_helper.py" [level=2] [ref=e382]:
+                      - generic [ref=e387] [cursor=pointer]:
+                        - img [ref=e390]
+                        - generic [ref=e392]: update_config_yaml_helper.py
+                - treeitem ".gitignore" [level=1] [ref=e393]:
+                  - generic [ref=e395] [cursor=pointer]:
+                    - img [ref=e398]
+                    - generic [ref=e400]: .gitignore
+                - treeitem "CHANGELOG.md" [level=1] [ref=e401]:
+                  - generic [ref=e403] [cursor=pointer]:
+                    - img [ref=e406]
+                    - generic [ref=e408]: CHANGELOG.md
+                - treeitem "LICENSE" [level=1] [ref=e409]:
+                  - generic [ref=e411] [cursor=pointer]:
+                    - img [ref=e414]
+                    - generic [ref=e416]: LICENSE
+                - treeitem "Makefile" [level=1] [ref=e417]:
+                  - generic [ref=e419] [cursor=pointer]:
+                    - img [ref=e422]
+                    - generic [ref=e424]: Makefile
+                - treeitem "README.md" [level=1] [ref=e425]:
+                  - generic [ref=e427] [cursor=pointer]:
+                    - img [ref=e430]
+                    - generic [ref=e432]: README.md
+                - treeitem "SECURITY.md" [level=1] [ref=e433]:
+                  - generic [ref=e435] [cursor=pointer]:
+                    - img [ref=e438]
+                    - generic [ref=e440]: SECURITY.md
+                - treeitem "docker-compose.yaml" [level=1] [ref=e441]:
+                  - generic [ref=e443] [cursor=pointer]:
+                    - img [ref=e446]
+                    - generic [ref=e448]: docker-compose.yaml
+                - treeitem "requirements.txt" [level=1] [ref=e449]:
+                  - generic [ref=e451] [cursor=pointer]:
+                    - img [ref=e454]
+                    - generic [ref=e456]: requirements.txt
+                - treeitem "setup.sh" [level=1] [ref=e457]:
+                  - generic [ref=e459] [cursor=pointer]:
+                    - img [ref=e462]
+                    - generic [ref=e464]: setup.sh
+          - slider "Draggable pane splitter" [ref=e466]
+        - generic [ref=e469]:
+          - generic [ref=e473]:
+            - generic [ref=e475]:
+              - navigation "Breadcrumbs" [ref=e476]:
+                - heading "Breadcrumbs" [level=2] [ref=e477]
+                - list [ref=e478]:
+                  - listitem [ref=e479]:
+                    - link "llm-router" [ref=e480] [cursor=pointer]:
+                      - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main
+              - generic [ref=e481]:
+                - text: /
+                - heading "src" [level=1] [ref=e482]
+                - text: /
+              - button "Copy path" [ref=e483] [cursor=pointer]:
+                - img [ref=e484]
+            - generic [ref=e489]:
+              - heading "Directory actions" [level=2] [ref=e490]
+              - heading "More options" [level=2] [ref=e491]
+              - button "More options" [ref=e492] [cursor=pointer]:
+                - img [ref=e493]
+          - generic [ref=e495]:
+            - generic [ref=e497]:
+              - heading "Latest commit" [level=2] [ref=e498]
+              - generic [ref=e499]:
+                - generic [ref=e501]:
+                  - link "arunraman" [ref=e502] [cursor=pointer]:
+                    - /url: /arunraman
+                    - img "arunraman" [ref=e503]
+                  - link "commits by arunraman" [ref=e504] [cursor=pointer]:
+                    - /url: /NVIDIA-AI-Blueprints/llm-router/commits?author=arunraman
+                    - text: arunraman
+                - generic [ref=e505]:
+                  - generic [ref=e507]:
+                    - link "Adding better support for k8s deployment via Helm (" [ref=e508] [cursor=pointer]:
+                      - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                    - link "#7" [ref=e509] [cursor=pointer]:
+                      - /url: https://github.com/NVIDIA-AI-Blueprints/llm-router/pull/7
+                    - link ")" [ref=e510] [cursor=pointer]:
+                      - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                  - button "Open commit details" [ref=e511] [cursor=pointer]:
+                    - img [ref=e512]
+                  - button "failure" [ref=e514] [cursor=pointer]:
+                    - img [ref=e515]
+              - generic [ref=e517]:
+                - generic [ref=e519]:
+                  - link "Commit 4b5cbe5" [ref=e520] [cursor=pointer]:
+                    - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                    - text: 4b5cbe5
+                  - text: ·
+                  - generic "Jun 27, 2025, 5:18 AM GMT+7" [ref=e521]: Jun 27, 202510 months ago
+                - generic [ref=e522]:
+                  - heading "History" [level=2] [ref=e523]
+                  - link "History" [ref=e524] [cursor=pointer]:
+                    - /url: /NVIDIA-AI-Blueprints/llm-router/commits/main/src
+                    - generic [ref=e525]:
+                      - generic:
+                        - img
+                      - generic [ref=e526]: History
+            - generic [ref=e528]:
+              - text: This branch is
+              - link "22 commits ahead of" [ref=e529] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/compare/experimental...main
+              - text: and
+              - link "66 commits behind" [ref=e530] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/compare/main...experimental
+              - generic [ref=e531]: experimental
+              - text: .
+            - generic [ref=e533]:
+              - heading "Folders and files" [level=2] [ref=e534]
+              - table "Folders and files" [ref=e535]:
+                - rowgroup [ref=e536]:
+                  - row "Name Last commit message Last commit date" [ref=e537]:
+                    - columnheader "Name" [ref=e538]
+                    - columnheader "Last commit message" [ref=e539]:
+                      - generic "Last commit message" [ref=e540]
+                    - columnheader "Last commit date" [ref=e541]:
+                      - generic "Last commit date" [ref=e542]
+                - rowgroup [ref=e543]:
+                  - row "parent directory Parent directory" [ref=e544]:
+                    - cell "parent directory Parent directory" [ref=e545]:
+                      - heading "parent directory" [level=3] [ref=e546]
+                      - link "Parent directory" [ref=e547] [cursor=pointer]:
+                        - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main
+                        - generic [ref=e548]:
+                          - img [ref=e549]
+                          - text: ..
+                  - row "grafana, (Directory) release candidate Feb 12, 2025last year" [ref=e551]:
+                    - cell "grafana, (Directory)" [ref=e552]:
+                      - generic [ref=e553]:
+                        - img [ref=e554]
+                        - link "grafana, (Directory)" [ref=e559] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main/src/grafana
+                          - text: grafana
+                    - cell "release candidate" [ref=e560]:
+                      - link "release candidate" [ref=e563] [cursor=pointer]:
+                        - /url: /NVIDIA-AI-Blueprints/llm-router/commit/49121593bbee91f8555d6f80b7ba59ee46421984
+                    - cell "Feb 12, 2025last year" [ref=e564]:
+                      - generic [ref=e565]: Feb 12, 2025last year
+                  - row "prometheus, (Directory) release candidate Feb 12, 2025last year" [ref=e566]:
+                    - cell "prometheus, (Directory)" [ref=e567]:
+                      - generic [ref=e568]:
+                        - img [ref=e569]
+                        - link "prometheus, (Directory)" [ref=e574] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main/src/prometheus
+                          - text: prometheus
+                    - cell "release candidate" [ref=e575]:
+                      - link "release candidate" [ref=e578] [cursor=pointer]:
+                        - /url: /NVIDIA-AI-Blueprints/llm-router/commit/49121593bbee91f8555d6f80b7ba59ee46421984
+                    - cell "Feb 12, 2025last year" [ref=e579]:
+                      - generic [ref=e580]: Feb 12, 2025last year
+                  - row "router-controller, (Directory) Adding better support for k8s deployment via Helm (#7) Jun 27, 202510 months ago" [ref=e581]:
+                    - cell "router-controller, (Directory)" [ref=e582]:
+                      - generic [ref=e583]:
+                        - img [ref=e584]
+                        - link "router-controller, (Directory)" [ref=e589] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main/src/router-controller
+                          - text: router-controller
+                    - cell "Adding better support for k8s deployment via Helm (#7)" [ref=e590]:
+                      - generic [ref=e592]:
+                        - link "Adding better support for k8s deployment via Helm (" [ref=e593] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                        - link "#7" [ref=e594] [cursor=pointer]:
+                          - /url: https://github.com/NVIDIA-AI-Blueprints/llm-router/pull/7
+                        - link ")" [ref=e595] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                    - cell "Jun 27, 202510 months ago" [ref=e596]:
+                      - generic [ref=e597]: Jun 27, 202510 months ago
+                  - row "router-server, (Directory) release candidate Feb 12, 2025last year" [ref=e598]:
+                    - cell "router-server, (Directory)" [ref=e599]:
+                      - generic [ref=e600]:
+                        - img [ref=e601]
+                        - link "router-server, (Directory)" [ref=e606] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main/src/router-server
+                          - text: router-server
+                    - cell "release candidate" [ref=e607]:
+                      - link "release candidate" [ref=e610] [cursor=pointer]:
+                        - /url: /NVIDIA-AI-Blueprints/llm-router/commit/49121593bbee91f8555d6f80b7ba59ee46421984
+                    - cell "Feb 12, 2025last year" [ref=e611]:
+                      - generic [ref=e612]: Feb 12, 2025last year
+                  - row "readme.md, (File) Initial commit Feb 12, 2025last year" [ref=e613]:
+                    - cell "readme.md, (File)" [ref=e614]:
+                      - generic [ref=e615]:
+                        - img [ref=e616]
+                        - link "readme.md, (File)" [ref=e621] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/blob/main/src/readme.md
+                          - text: readme.md
+                    - cell "Initial commit" [ref=e622]:
+                      - link "Initial commit" [ref=e625] [cursor=pointer]:
+                        - /url: /NVIDIA-AI-Blueprints/llm-router/commit/c1fdd0aa479cf625e7715955bf81d0eb4c9a82c3
+                    - cell "Feb 12, 2025last year" [ref=e626]:
+                      - generic [ref=e627]: Feb 12, 2025last year
+                  - row "test_router.py, (File) spdx update Feb 15, 2025last year" [ref=e628]:
+                    - cell "test_router.py, (File)" [ref=e629]:
+                      - generic [ref=e630]:
+                        - img [ref=e631]
+                        - link "test_router.py, (File)" [ref=e636] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/blob/main/src/test_router.py
+                          - text: test_router.py
+                    - cell "spdx update" [ref=e637]:
+                      - link "spdx update" [ref=e640] [cursor=pointer]:
+                        - /url: /NVIDIA-AI-Blueprints/llm-router/commit/9f9e6686882db9d50bf3d93c5508c8352c80e594
+                    - cell "Feb 15, 2025last year" [ref=e641]:
+                      - generic [ref=e642]: Feb 15, 2025last year
+                  - row "test_router.sh, (File) release candidate Feb 12, 2025last year" [ref=e643]:
+                    - cell "test_router.sh, (File)" [ref=e644]:
+                      - generic [ref=e645]:
+                        - img [ref=e646]
+                        - link "test_router.sh, (File)" [ref=e651] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/blob/main/src/test_router.sh
+                          - text: test_router.sh
+                    - cell "release candidate" [ref=e652]:
+                      - link "release candidate" [ref=e655] [cursor=pointer]:
+                        - /url: /NVIDIA-AI-Blueprints/llm-router/commit/49121593bbee91f8555d6f80b7ba59ee46421984
+                    - cell "Feb 12, 2025last year" [ref=e656]:
+                      - generic [ref=e657]: Feb 12, 2025last year
+                  - row "update_config_yaml_helper.py, (File) spdx update Feb 15, 2025last year" [ref=e658]:
+                    - cell "update_config_yaml_helper.py, (File)" [ref=e659]:
+                      - generic [ref=e660]:
+                        - img [ref=e661]
+                        - link "update_config_yaml_helper.py, (File)" [ref=e666] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/blob/main/src/update_config_yaml_helper.py
+                          - text: update_config_yaml_helper.py
+                    - cell "spdx update" [ref=e667]:
+                      - link "spdx update" [ref=e670] [cursor=pointer]:
+                        - /url: /NVIDIA-AI-Blueprints/llm-router/commit/9f9e6686882db9d50bf3d93c5508c8352c80e594
+                    - cell "Feb 15, 2025last year" [ref=e671]:
+                      - generic [ref=e672]: Feb 15, 2025last year
+  - alert [ref=e676]

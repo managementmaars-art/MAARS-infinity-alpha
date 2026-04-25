@@ -1,0 +1,940 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e7]:
+      - generic [ref=e8]:
+        - link "MAARS MAARS Command by MAARS Global Corporation" [ref=e10] [cursor=pointer]:
+          - /url: /dashboard
+          - img "MAARS" [ref=e11]
+          - generic [ref=e12]:
+            - heading "MAARS Command" [level=1] [ref=e13]
+            - paragraph [ref=e14]: by MAARS Global Corporation
+        - generic [ref=e15]:
+          - generic [ref=e17]: ONLINE
+          - generic [ref=e18]: 499 agents
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]:
+              - img [ref=e27]
+              - generic [ref=e29]: Unlimited
+            - generic [ref=e30]: Owner
+          - paragraph [ref=e31]: No credit limits apply
+        - button "Personal Workspace 1 members" [ref=e33] [cursor=pointer]:
+          - img [ref=e35]
+          - generic [ref=e39]:
+            - paragraph [ref=e40]: Personal Workspace
+            - paragraph [ref=e41]: 1 members
+          - img [ref=e42]
+        - button "Search… /" [ref=e45] [cursor=pointer]:
+          - img [ref=e46]
+          - generic [ref=e49]: Search…
+          - generic [ref=e50]: /
+        - navigation [ref=e51]:
+          - button "Dashboard" [ref=e53] [cursor=pointer]:
+            - img [ref=e54]
+            - generic [ref=e59]: Dashboard
+          - generic [ref=e60]:
+            - generic [ref=e63]: Workspace
+            - button "Projects" [ref=e65] [cursor=pointer]:
+              - img [ref=e66]
+              - generic [ref=e71]: Projects
+            - button "Chat" [ref=e72] [cursor=pointer]:
+              - img [ref=e73]
+              - generic [ref=e75]: Chat
+            - button "Tasks" [ref=e76] [cursor=pointer]:
+              - img [ref=e77]
+              - generic [ref=e80]: Tasks
+            - button "Approvals" [ref=e81] [cursor=pointer]:
+              - img [ref=e82]
+              - generic [ref=e86]: Approvals
+          - generic [ref=e87]:
+            - generic [ref=e90]: AI Tools
+            - button "Agents" [ref=e92] [cursor=pointer]:
+              - img [ref=e93]
+              - generic [ref=e96]: Agents
+            - button "Team Builder" [ref=e97] [cursor=pointer]:
+              - img [ref=e98]
+              - generic [ref=e101]: Team Builder
+            - button "Workspace Brain" [ref=e102] [cursor=pointer]:
+              - img [ref=e103]
+              - generic [ref=e113]: Workspace Brain
+            - button "Brain Profiles" [ref=e114] [cursor=pointer]:
+              - img [ref=e115]
+              - generic [ref=e118]: Brain Profiles
+            - button "Vibe Coding" [ref=e119] [cursor=pointer]:
+              - img [ref=e120]
+              - generic [ref=e123]: Vibe Coding
+            - button "Reference Intel" [ref=e124] [cursor=pointer]:
+              - img [ref=e125]
+              - generic [ref=e127]: Reference Intel
+            - button "Content Generator" [ref=e128] [cursor=pointer]:
+              - img [ref=e129]
+              - generic [ref=e134]: Content Generator
+          - generic [ref=e135]:
+            - generic [ref=e138]: Intelligence
+            - button "Kernel" [ref=e140] [cursor=pointer]:
+              - img [ref=e141]
+              - generic [ref=e145]: Kernel
+            - button "Agent Networks" [ref=e146] [cursor=pointer]:
+              - img [ref=e147]
+              - generic [ref=e152]: Agent Networks
+            - button "Task Graphs" [ref=e153] [cursor=pointer]:
+              - img [ref=e154]
+              - generic [ref=e158]: Task Graphs
+            - button "Knowledge Graph" [ref=e159] [cursor=pointer]:
+              - img [ref=e160]
+              - generic [ref=e166]: Knowledge Graph
+            - button "Trust Scores" [ref=e167] [cursor=pointer]:
+              - img [ref=e168]
+              - generic [ref=e170]: Trust Scores
+            - button "Execution Gateway" [ref=e171] [cursor=pointer]:
+              - img [ref=e172]
+              - generic [ref=e174]: Execution Gateway
+            - button "Workflow Builder" [ref=e175] [cursor=pointer]:
+              - img [ref=e176]
+              - generic [ref=e180]: Workflow Builder
+            - button "Campaign Builder" [ref=e181] [cursor=pointer]:
+              - img [ref=e182]
+              - generic [ref=e185]: Campaign Builder
+            - button "Integrations" [ref=e186] [cursor=pointer]:
+              - img [ref=e187]
+              - generic [ref=e189]: Integrations
+            - button "Embedded Browser" [ref=e190] [cursor=pointer]:
+              - img [ref=e191]
+              - generic [ref=e194]: Embedded Browser
+            - button "Social Media" [ref=e195] [cursor=pointer]:
+              - img [ref=e196]
+              - generic [ref=e202]: Social Media
+            - button "Universal Key" [ref=e203] [cursor=pointer]:
+              - img [ref=e204]
+              - generic [ref=e208]: Universal Key
+            - button "Analytics" [ref=e209] [cursor=pointer]:
+              - img [ref=e210]
+              - generic [ref=e213]: Analytics
+            - button "Agent Suggestions" [ref=e214] [cursor=pointer]:
+              - img [ref=e215]
+              - generic [ref=e217]: Agent Suggestions
+            - button "Environments" [ref=e218] [cursor=pointer]:
+              - img [ref=e219]
+              - generic [ref=e222]: Environments
+            - button "Memory Hierarchy" [ref=e223] [cursor=pointer]:
+              - img [ref=e224]
+              - generic [ref=e226]: Memory Hierarchy
+            - button "Memory" [ref=e227] [cursor=pointer]:
+              - img [ref=e228]
+              - generic [ref=e232]: Memory
+            - button "Collaborations" [ref=e233] [cursor=pointer]:
+              - img [ref=e234]
+              - generic [ref=e236]: Collaborations
+            - button "KPI Dashboard" [ref=e237] [cursor=pointer]:
+              - img [ref=e238]
+              - generic [ref=e241]: KPI Dashboard
+            - button "Activity Monitor" [ref=e242] [cursor=pointer]:
+              - img [ref=e243]
+              - generic [ref=e249]: Activity Monitor
+            - button "My Insights" [ref=e250] [cursor=pointer]:
+              - img [ref=e251]
+              - generic [ref=e253]: My Insights
+          - generic [ref=e254]:
+            - generic [ref=e257]: MAARS Infinity
+            - button "Developer API" [ref=e259] [cursor=pointer]:
+              - img [ref=e260]
+              - generic [ref=e262]: Developer API
+            - button "Observability" [ref=e263] [cursor=pointer]:
+              - img [ref=e264]
+              - generic [ref=e271]: Observability
+            - button "Model Router" [ref=e272] [cursor=pointer]:
+              - img [ref=e273]
+              - generic [ref=e275]: Model Router
+            - button "Commander Orion" [ref=e276] [cursor=pointer]:
+              - img [ref=e277]
+              - generic [ref=e283]: Commander Orion
+            - button "Venture Portfolio" [ref=e284] [cursor=pointer]:
+              - img [ref=e285]
+              - generic [ref=e288]: Venture Portfolio
+            - button "Operator Panel" [ref=e289] [cursor=pointer]:
+              - img [ref=e290]
+              - generic [ref=e292]: Operator Panel
+            - button "Agent Catalog" [ref=e293] [cursor=pointer]:
+              - img [ref=e294]
+              - generic [ref=e299]: Agent Catalog
+          - generic [ref=e300]:
+            - generic [ref=e303]: Manage
+            - button "Products" [ref=e305] [cursor=pointer]:
+              - img [ref=e306]
+              - generic [ref=e310]: Products
+            - button "Team" [ref=e311] [cursor=pointer]:
+              - img [ref=e312]
+              - generic [ref=e317]: Team
+            - button "Organization" [ref=e318] [cursor=pointer]:
+              - img [ref=e319]
+              - generic [ref=e323]: Organization
+            - button "Settings" [ref=e324] [cursor=pointer]:
+              - img [ref=e325]
+              - generic [ref=e328]: Settings
+            - button "About" [ref=e329] [cursor=pointer]:
+              - img [ref=e330]
+              - generic [ref=e332]: About
+          - generic [ref=e335]: Admin
+          - button "Overview" [ref=e337] [cursor=pointer]:
+            - img [ref=e338]
+            - generic [ref=e340]: Overview
+          - button "Analytics" [ref=e341] [cursor=pointer]:
+            - img [ref=e342]
+            - generic [ref=e344]: Analytics
+          - button "Universal Gateway" [ref=e345] [cursor=pointer]:
+            - img [ref=e347]
+            - generic [ref=e350]: Universal Gateway
+          - button "Provider Intel" [ref=e352] [cursor=pointer]:
+            - img [ref=e353]
+            - generic [ref=e355]: Provider Intel
+          - button "Users" [ref=e356] [cursor=pointer]:
+            - img [ref=e357]
+            - generic [ref=e362]: Users
+          - button "Agents" [ref=e363] [cursor=pointer]:
+            - img [ref=e364]
+            - generic [ref=e367]: Agents
+          - button "Transactions" [ref=e368] [cursor=pointer]:
+            - img [ref=e369]
+            - generic [ref=e371]: Transactions
+          - button "Pricing & Splits" [ref=e372] [cursor=pointer]:
+            - img [ref=e373]
+            - generic [ref=e376]: Pricing & Splits
+          - button "API Keys" [ref=e377] [cursor=pointer]:
+            - img [ref=e378]
+            - generic [ref=e382]: API Keys
+          - button "Payment Setup" [ref=e383] [cursor=pointer]:
+            - img [ref=e384]
+            - generic [ref=e386]: Payment Setup
+          - button "Email (SMTP)" [ref=e387] [cursor=pointer]:
+            - img [ref=e388]
+            - generic [ref=e391]: Email (SMTP)
+          - button "Branding" [ref=e392] [cursor=pointer]:
+            - img [ref=e393]
+            - generic [ref=e397]: Branding
+          - button "Knowledge Base" [ref=e398] [cursor=pointer]:
+            - img [ref=e399]
+            - generic [ref=e401]: Knowledge Base
+          - button "Audit Log" [ref=e402] [cursor=pointer]:
+            - img [ref=e403]
+            - generic [ref=e406]: Audit Log
+          - button "Code Explorer" [ref=e407] [cursor=pointer]:
+            - img [ref=e408]
+            - generic [ref=e413]: Code Explorer
+          - button "Access Control" [ref=e414] [cursor=pointer]:
+            - img [ref=e415]
+            - generic [ref=e418]: Access Control
+          - button "Circuit Breakers" [ref=e419] [cursor=pointer]:
+            - img [ref=e420]
+            - generic [ref=e426]: Circuit Breakers
+          - button "Cost Governance" [ref=e427] [cursor=pointer]:
+            - img [ref=e428]
+            - generic [ref=e431]: Cost Governance
+          - button "Preview Client View" [ref=e432] [cursor=pointer]:
+            - img [ref=e433]
+            - generic [ref=e436]: Preview Client View
+        - button "Collapse" [ref=e438] [cursor=pointer]:
+          - img [ref=e439]
+          - generic [ref=e442]: Collapse
+        - generic [ref=e443]:
+          - generic [ref=e449]:
+            - paragraph [ref=e450]: Mirza Arafat Abbas
+            - paragraph [ref=e451]: management.maars@marsgc.net
+          - generic [ref=e452]:
+            - generic [ref=e453]: LIVE
+            - generic [ref=e454]: MAARS v2.0
+          - button "Log Out" [ref=e459] [cursor=pointer]:
+            - img [ref=e460]
+            - generic [ref=e463]: Log Out
+    - generic [ref=e466]:
+      - generic [ref=e467]:
+        - generic [ref=e469]:
+          - img [ref=e471]
+          - generic [ref=e474]:
+            - heading "MAARS Universal AI Gateway" [level=2] [ref=e475]
+            - paragraph [ref=e476]: 33 providers · 175,000+ models · live validation · owner-only view
+        - button "Refresh" [ref=e477] [cursor=pointer]:
+          - img
+          - generic [ref=e478]: Refresh
+      - generic [ref=e479]:
+        - img [ref=e480]
+        - generic [ref=e483]:
+          - paragraph [ref=e484]: Gateway Operational
+          - paragraph [ref=e485]: 20 / 19 providers active · No universal key — direct keys only
+        - generic [ref=e486]:
+          - generic [ref=e487]: OpenAI
+          - generic [ref=e488]: Anthropic
+          - generic [ref=e489]: Google Gemini
+          - generic [ref=e490]: xAI (Grok)
+          - generic [ref=e491]: DeepSeek
+          - generic [ref=e492]: Mistral AI
+          - generic [ref=e493]: +14 more
+      - generic [ref=e494]:
+        - button "Overview" [ref=e495] [cursor=pointer]:
+          - img [ref=e496]
+          - text: Overview
+        - button "Financials" [ref=e498] [cursor=pointer]:
+          - img [ref=e499]
+          - text: Financials
+        - button "Playground" [ref=e501] [cursor=pointer]:
+          - img [ref=e502]
+          - text: Playground
+        - button "Compare Models" [ref=e504] [cursor=pointer]:
+          - img [ref=e505]
+          - text: Compare Models
+        - button "Client Keys" [ref=e510] [cursor=pointer]:
+          - img [ref=e511]
+          - text: Client Keys
+        - button "Webhooks" [ref=e515] [cursor=pointer]:
+          - img [ref=e516]
+          - text: Webhooks
+        - button "API Reference" [ref=e520] [cursor=pointer]:
+          - img [ref=e521]
+          - text: API Reference
+        - button "Provider Health" [active] [ref=e523] [cursor=pointer]:
+          - img [ref=e524]
+          - text: Provider Health
+        - button "Usage Breakdown" [ref=e529] [cursor=pointer]:
+          - img [ref=e530]
+          - text: Usage Breakdown
+        - button "Routing Log" [ref=e532] [cursor=pointer]:
+          - img [ref=e533]
+          - text: Routing Log
+      - generic [ref=e667]:
+        - generic [ref=e668]:
+          - generic [ref=e669]:
+            - text: 35 providers ·
+            - generic [ref=e670]: 15 reachable
+            - text: ·
+            - generic [ref=e671]: 5 pending fix
+            - text: ·
+            - generic [ref=e672]: 15 need signup
+            - text: ·
+            - generic [ref=e673]: 5 low-balance alerts
+            - generic [ref=e674]: "Last smoke test: 2026-04-19 06:16:48 UTC"
+          - generic [ref=e675]:
+            - button "Run Smoke Test" [ref=e676] [cursor=pointer]:
+              - img
+              - text: Run Smoke Test
+            - button "Refresh Balances" [ref=e677] [cursor=pointer]:
+              - img
+              - text: Refresh Balances
+        - generic [ref=e679]:
+          - generic [ref=e680]: Low Balance Alerts
+          - generic [ref=e681]:
+            - generic [ref=e682]:
+              - generic [ref=e683]:
+                - text: ●
+                - strong [ref=e684]: Zhipu / GLM
+                - text: ": $0.00"
+                - generic [ref=e685]: (threshold $2.00)
+              - link "Top Up →" [ref=e686] [cursor=pointer]:
+                - /url: https://open.bigmodel.cn/usercenter/apikeys
+            - generic [ref=e687]:
+              - generic [ref=e688]:
+                - text: ●
+                - strong [ref=e689]: Moonshot / Kimi
+                - text: ": $0.00"
+                - generic [ref=e690]: (threshold $2.00)
+              - link "Top Up →" [ref=e691] [cursor=pointer]:
+                - /url: https://platform.moonshot.cn/console/api-keys
+            - generic [ref=e692]:
+              - generic [ref=e693]:
+                - text: ●
+                - strong [ref=e694]: Writer / Palmyra
+                - text: ": $0.00"
+                - generic [ref=e695]: (threshold $2.00)
+              - link "Top Up →" [ref=e696] [cursor=pointer]:
+                - /url: https://app.writer.com/aistudio/organization/keys
+            - generic [ref=e697]:
+              - generic [ref=e698]:
+                - text: ●
+                - strong [ref=e699]: Inception AI
+                - text: ": $0.00"
+                - generic [ref=e700]: (threshold $2.00)
+              - link "Top Up →" [ref=e701] [cursor=pointer]:
+                - /url: https://www.inceptionlabs.ai/
+            - generic [ref=e702]:
+              - generic [ref=e703]:
+                - text: ●
+                - strong [ref=e704]: Bytez
+                - text: ": $0.00"
+                - generic [ref=e705]: (threshold $2.00)
+              - link "Top Up →" [ref=e706] [cursor=pointer]:
+                - /url: https://bytez.com/auth
+        - generic [ref=e707]:
+          - generic [ref=e709]:
+            - generic [ref=e710]:
+              - generic [ref=e713]: Novita AI
+              - generic [ref=e714]: Estimated
+            - generic [ref=e715]: $0.00
+            - generic [ref=e716]:
+              - generic [ref=e717]: Llama 4 Scout
+              - generic [ref=e718]: Qwen3-235B
+              - generic [ref=e719]: DeepSeek R1
+            - generic [ref=e720]:
+              - generic [ref=e721]:
+                - img [ref=e722]
+                - 'generic "HTTPStatusError: Client error ''403 Forbidden'' for url ''https://api.novita.ai/v3/openai/chat/completions'' For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403" [ref=e726]': Key present · provider rejected
+              - generic [ref=e727]: Direct Key
+            - generic [ref=e728]:
+              - generic [ref=e729]: Add balance to Novita AI
+              - generic [ref=e730]: All models return NOT_ENOUGH_BALANCE until you add funds.
+              - link "Fix now ↗" [ref=e731] [cursor=pointer]:
+                - /url: https://novita.ai/settings/billing
+            - generic [ref=e732]:
+              - link "Top Up ↗" [ref=e733] [cursor=pointer]:
+                - /url: https://novita.ai/settings/key-management
+              - button "Configure" [ref=e734] [cursor=pointer]
+          - generic [ref=e736]:
+            - generic [ref=e737]:
+              - generic [ref=e740]: Moonshot / Kimi
+              - generic [ref=e741]: Estimated
+            - generic [ref=e742]: $0.00
+            - generic [ref=e743]:
+              - generic [ref=e744]: Kimi Auto
+              - generic [ref=e745]: Kimi 128K
+            - generic [ref=e746]:
+              - generic [ref=e747]:
+                - img [ref=e748]
+                - 'generic "HTTPStatusError: Client error ''429 Too Many Requests'' for url ''https://api.moonshot.ai/v1/chat/completions'' For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429" [ref=e752]': Key present · provider rejected
+              - generic [ref=e753]: Direct Key
+            - 'generic "HTTPStatusError: Client error ''429 Too Many Requests'' for url ''https://api.moonshot.ai/v1/chat/completions'' For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429" [ref=e754]': "HTTPStatusError: Client error '429 Too Many Requests' for url 'https://api.moons…"
+            - generic [ref=e755]:
+              - link "Top Up ↗" [ref=e756] [cursor=pointer]:
+                - /url: https://platform.moonshot.cn/console/api-keys
+              - button "Configure" [ref=e757] [cursor=pointer]
+          - generic [ref=e759]:
+            - generic [ref=e760]:
+              - generic [ref=e763]: xAI (Grok)
+              - generic [ref=e764]: Estimated
+            - generic [ref=e765]: $25.00
+            - generic [ref=e766]:
+              - generic [ref=e767]: Grok 3
+              - generic [ref=e768]: Grok 3 Mini
+            - generic [ref=e769]:
+              - generic [ref=e770]:
+                - img [ref=e771]
+                - 'generic "HTTPStatusError: Client error ''403 Forbidden'' for url ''https://api.x.ai/v1/chat/completions'' For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403" [ref=e775]': Key present · provider rejected
+              - generic [ref=e776]: Direct Key
+            - generic [ref=e777]:
+              - generic [ref=e778]: Add credits to your xAI team
+              - generic [ref=e779]: Newly-created teams start with 0 credits. Visit the console and add a payment method or request credits.
+              - link "Fix now ↗" [ref=e780] [cursor=pointer]:
+                - /url: https://console.x.ai/team/default/billing
+            - generic [ref=e781]:
+              - link "Top Up ↗" [ref=e782] [cursor=pointer]:
+                - /url: https://console.x.ai/
+              - button "Configure" [ref=e783] [cursor=pointer]
+          - generic [ref=e785]:
+            - generic [ref=e786]:
+              - generic [ref=e789]: Together AI
+              - generic [ref=e790]: Estimated
+            - generic [ref=e791]: $5.00
+            - generic [ref=e792]:
+              - generic [ref=e793]: Llama 4 Maverick FP8
+              - generic [ref=e794]: DeepSeek R1
+            - generic [ref=e795]:
+              - generic [ref=e796]:
+                - img [ref=e797]
+                - 'generic "HTTPStatusError: Client error ''402 Payment Required'' for url ''https://api.together.xyz/v1/chat/completions'' For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/402" [ref=e801]': Key present · provider rejected
+              - generic [ref=e802]: Direct Key
+            - generic [ref=e803]:
+              - generic [ref=e804]: Top up Together AI balance
+              - generic [ref=e805]: Credit limit exceeded. Add funds to continue (min ~$1).
+              - link "Fix now ↗" [ref=e806] [cursor=pointer]:
+                - /url: https://api.together.xyz/settings/billing
+            - generic [ref=e807]:
+              - link "Top Up ↗" [ref=e808] [cursor=pointer]:
+                - /url: https://api.together.xyz/settings/api-keys
+              - button "Configure" [ref=e809] [cursor=pointer]
+          - generic [ref=e811]:
+            - generic [ref=e812]:
+              - generic [ref=e815]: AWS Bedrock
+              - generic [ref=e816]: Estimated
+            - generic [ref=e817]: $200.00
+            - generic [ref=e818]:
+              - generic [ref=e819]: Nova Pro
+              - generic [ref=e820]: Nova Lite
+              - generic [ref=e821]: Nova Micro
+            - generic [ref=e822]:
+              - generic [ref=e823]:
+                - img [ref=e824]
+                - 'generic "ValidationException: An error occurred (ValidationException) when calling the Converse operation: Operation not allowed" [ref=e828]': Key present · provider rejected
+              - generic [ref=e829]: Direct Key
+            - generic [ref=e830]:
+              - generic [ref=e831]: "Attach IAM policy: AmazonBedrockFullAccess"
+              - generic [ref=e832]: The IAM user lacks bedrock:InvokeModel + bedrock:Converse permissions. Attach the AmazonBedrockFullAccess managed policy (or bedrock:* minimum) to the IAM user whose credentials are in .env.
+              - link "Fix now ↗" [ref=e833] [cursor=pointer]:
+                - /url: https://console.aws.amazon.com/iam/home#/users
+            - generic [ref=e834]:
+              - link "Top Up ↗" [ref=e835] [cursor=pointer]:
+                - /url: https://console.aws.amazon.com/bedrock
+              - button "Configure" [ref=e836] [cursor=pointer]
+          - generic [ref=e838]:
+            - generic [ref=e839]:
+              - generic [ref=e842]: NVIDIA NIM
+              - generic [ref=e843]: Estimated
+            - generic [ref=e844]: $0.00
+            - generic [ref=e845]:
+              - generic [ref=e846]: Nemotron Ultra 253B
+              - generic [ref=e847]: Nemotron Super 49B
+            - generic [ref=e848]:
+              - generic [ref=e849]:
+                - img [ref=e850]
+                - generic [ref=e853]: Live · tested OK
+                - generic [ref=e854]: 685ms
+              - generic [ref=e855]: Direct Key
+            - generic [ref=e856]:
+              - link "Top Up ↗" [ref=e857] [cursor=pointer]:
+                - /url: https://build.nvidia.com/
+              - button "Configure" [ref=e858] [cursor=pointer]
+          - generic [ref=e860]:
+            - generic [ref=e861]:
+              - generic [ref=e864]: Inception AI
+              - generic [ref=e865]: Estimated
+            - generic [ref=e866]: $0.00
+            - generic [ref=e867]:
+              - generic [ref=e868]: Mercury Coder Small
+              - generic [ref=e869]: Mercury Coder Large
+            - generic [ref=e870]:
+              - generic [ref=e871]:
+                - img [ref=e872]
+                - generic [ref=e875]: Live · tested OK
+                - generic [ref=e876]: 1299ms
+              - generic [ref=e877]: Direct Key
+            - generic [ref=e878]:
+              - link "Top Up ↗" [ref=e879] [cursor=pointer]:
+                - /url: https://www.inceptionlabs.ai/
+              - button "Configure" [ref=e880] [cursor=pointer]
+          - generic [ref=e882]:
+            - generic [ref=e883]:
+              - generic [ref=e886]: OpenAI
+              - generic [ref=e887]: Estimated
+            - generic [ref=e888]: $20.00
+            - generic [ref=e889]:
+              - generic [ref=e890]: GPT-5
+              - generic [ref=e891]: GPT-4.1
+              - generic [ref=e892]: O4
+            - generic [ref=e893]:
+              - generic [ref=e894]:
+                - img [ref=e895]
+                - generic [ref=e898]: Live · tested OK
+                - generic [ref=e899]: 1221ms
+              - generic [ref=e900]: Direct Key
+            - generic [ref=e901]:
+              - link "Top Up ↗" [ref=e902] [cursor=pointer]:
+                - /url: https://platform.openai.com/api-keys
+              - button "Configure" [ref=e903] [cursor=pointer]
+          - generic [ref=e905]:
+            - generic [ref=e906]:
+              - generic [ref=e909]: Anthropic
+              - generic [ref=e910]: Estimated
+            - generic [ref=e911]: $20.00
+            - generic [ref=e912]:
+              - generic [ref=e913]: Claude Opus 4.6
+              - generic [ref=e914]: Claude Sonnet 4.6
+            - generic [ref=e915]:
+              - generic [ref=e916]:
+                - img [ref=e917]
+                - generic [ref=e920]: Live · tested OK
+                - generic [ref=e921]: 1050ms
+              - generic [ref=e922]: Direct Key
+            - generic [ref=e923]:
+              - link "Top Up ↗" [ref=e924] [cursor=pointer]:
+                - /url: https://console.anthropic.com/settings/keys
+              - button "Configure" [ref=e925] [cursor=pointer]
+          - generic [ref=e927]:
+            - generic [ref=e928]:
+              - generic [ref=e931]: Groq
+              - generic [ref=e932]: Free Tier
+            - generic [ref=e933]: Free
+            - generic [ref=e934]:
+              - generic [ref=e935]: Llama 4 Scout
+              - generic [ref=e936]: Llama 4 Maverick
+            - generic [ref=e937]:
+              - generic [ref=e938]:
+                - img [ref=e939]
+                - generic [ref=e942]: Live · tested OK
+                - generic [ref=e943]: 515ms
+              - generic [ref=e944]: Direct Key
+            - generic [ref=e945]:
+              - link "Top Up ↗" [ref=e946] [cursor=pointer]:
+                - /url: https://console.groq.com/keys
+              - button "Configure" [ref=e947] [cursor=pointer]
+          - generic [ref=e949]:
+            - generic [ref=e950]:
+              - generic [ref=e953]: DeepSeek
+              - generic [ref=e954]: Live API
+            - generic [ref=e955]: $19.99
+            - generic [ref=e956]:
+              - generic [ref=e957]: DeepSeek V3
+              - generic [ref=e958]: DeepSeek R1
+            - generic [ref=e959]:
+              - generic [ref=e960]:
+                - img [ref=e961]
+                - generic [ref=e964]: Live · tested OK
+                - generic [ref=e965]: 1407ms
+              - generic [ref=e966]: Direct Key
+            - generic [ref=e967]:
+              - link "Top Up ↗" [ref=e968] [cursor=pointer]:
+                - /url: https://platform.deepseek.com/api_keys
+              - button "Configure" [ref=e969] [cursor=pointer]
+          - generic [ref=e971]:
+            - generic [ref=e972]:
+              - generic [ref=e975]: Google Gemini
+              - generic [ref=e976]: Free Tier
+            - generic [ref=e977]: Free
+            - generic [ref=e978]:
+              - generic [ref=e979]: Gemini 2.5 Pro
+              - generic [ref=e980]: Gemini 2.5 Flash
+            - generic [ref=e981]:
+              - generic [ref=e982]:
+                - img [ref=e983]
+                - generic [ref=e986]: Live · tested OK
+                - generic [ref=e987]: 1665ms
+              - generic [ref=e988]: Direct Key
+            - generic [ref=e989]:
+              - link "Top Up ↗" [ref=e990] [cursor=pointer]:
+                - /url: https://aistudio.google.com/app/apikey
+              - button "Configure" [ref=e991] [cursor=pointer]
+          - generic [ref=e993]:
+            - generic [ref=e994]:
+              - generic [ref=e997]: Mistral
+              - generic [ref=e998]: Estimated
+            - generic [ref=e999]: $5.00
+            - generic [ref=e1000]:
+              - generic [ref=e1001]: Mistral Large
+              - generic [ref=e1002]: Codestral
+            - generic [ref=e1003]:
+              - generic [ref=e1004]:
+                - img [ref=e1005]
+                - generic [ref=e1008]: Live · tested OK
+                - generic [ref=e1009]: 1182ms
+              - generic [ref=e1010]: Direct Key
+            - generic [ref=e1011]:
+              - link "Top Up ↗" [ref=e1012] [cursor=pointer]:
+                - /url: https://console.mistral.ai/api-keys/
+              - button "Configure" [ref=e1013] [cursor=pointer]
+          - generic [ref=e1015]:
+            - generic [ref=e1016]:
+              - generic [ref=e1019]: Perplexity
+              - generic [ref=e1020]: Estimated
+            - generic [ref=e1021]: $5.00
+            - generic [ref=e1022]:
+              - generic [ref=e1023]: Sonar Pro
+              - generic [ref=e1024]: Sonar Deep Research
+            - generic [ref=e1025]:
+              - generic [ref=e1026]:
+                - img [ref=e1027]
+                - generic [ref=e1030]: Live · tested OK
+                - generic [ref=e1031]: 3037ms
+              - generic [ref=e1032]: Direct Key
+            - generic [ref=e1033]:
+              - link "Top Up ↗" [ref=e1034] [cursor=pointer]:
+                - /url: https://www.perplexity.ai/settings/api
+              - button "Configure" [ref=e1035] [cursor=pointer]
+          - generic [ref=e1037]:
+            - generic [ref=e1038]:
+              - generic [ref=e1041]: Cohere
+              - generic [ref=e1042]: Estimated
+            - generic [ref=e1043]: $5.00
+            - generic [ref=e1044]:
+              - generic [ref=e1045]: Command A
+              - generic [ref=e1046]: Command R+
+            - generic [ref=e1047]:
+              - generic [ref=e1048]:
+                - img [ref=e1049]
+                - generic [ref=e1052]: Live · tested OK
+                - generic [ref=e1053]: 754ms
+              - generic [ref=e1054]: Direct Key
+            - generic [ref=e1055]:
+              - link "Top Up ↗" [ref=e1056] [cursor=pointer]:
+                - /url: https://dashboard.cohere.com/api-keys
+              - button "Configure" [ref=e1057] [cursor=pointer]
+          - generic [ref=e1059]:
+            - generic [ref=e1060]:
+              - generic [ref=e1063]: AI21 Labs
+              - generic [ref=e1064]: Estimated
+            - generic [ref=e1065]: $10.00
+            - generic [ref=e1066]:
+              - generic [ref=e1067]: Jamba Large 1.7
+              - generic [ref=e1068]: Jamba Mini 1.7
+            - generic [ref=e1069]:
+              - generic [ref=e1070]:
+                - img [ref=e1071]
+                - generic [ref=e1074]: Live · tested OK
+                - generic [ref=e1075]: 1462ms
+              - generic [ref=e1076]: Direct Key
+            - generic [ref=e1077]:
+              - link "Top Up ↗" [ref=e1078] [cursor=pointer]:
+                - /url: https://studio.ai21.com/account/api-key
+              - button "Configure" [ref=e1079] [cursor=pointer]
+          - generic [ref=e1081]:
+            - generic [ref=e1082]:
+              - generic [ref=e1085]: Fireworks AI
+              - generic [ref=e1086]: Estimated
+            - generic [ref=e1087]: $6.00
+            - generic [ref=e1088]:
+              - generic [ref=e1089]: Llama 4 Scout
+              - generic [ref=e1090]: DeepSeek V3
+            - generic [ref=e1091]:
+              - generic [ref=e1092]:
+                - img [ref=e1093]
+                - generic [ref=e1096]: Live · tested OK
+                - generic [ref=e1097]: 2156ms
+              - generic [ref=e1098]: Direct Key
+            - generic [ref=e1099]:
+              - link "Top Up ↗" [ref=e1100] [cursor=pointer]:
+                - /url: https://app.fireworks.ai/settings/users/api-keys
+              - button "Configure" [ref=e1101] [cursor=pointer]
+          - generic [ref=e1103]:
+            - generic [ref=e1104]:
+              - generic [ref=e1107]: SambaNova
+              - generic [ref=e1108]: Free Tier
+            - generic [ref=e1109]: Free
+            - generic [ref=e1110]:
+              - generic [ref=e1111]: Llama 4 Maverick
+              - generic [ref=e1112]: DeepSeek R1-0528
+            - generic [ref=e1113]:
+              - generic [ref=e1114]:
+                - img [ref=e1115]
+                - generic [ref=e1118]: Live · tested OK
+                - generic [ref=e1119]: 1451ms
+              - generic [ref=e1120]: Direct Key
+            - generic [ref=e1121]:
+              - link "Top Up ↗" [ref=e1122] [cursor=pointer]:
+                - /url: https://cloud.sambanova.ai/apis
+              - button "Configure" [ref=e1123] [cursor=pointer]
+          - generic [ref=e1125]:
+            - generic [ref=e1126]:
+              - generic [ref=e1129]: Cerebras
+              - generic [ref=e1130]: Free Tier
+            - generic [ref=e1131]: Free
+            - generic [ref=e1132]:
+              - generic [ref=e1133]: Llama 3.3 70B
+              - generic [ref=e1134]: Llama 3.1 70B
+            - generic [ref=e1135]:
+              - generic [ref=e1136]:
+                - img [ref=e1137]
+                - generic [ref=e1140]: Live · tested OK
+                - generic [ref=e1141]: 698ms
+              - generic [ref=e1142]: Direct Key
+            - generic [ref=e1143]:
+              - link "Top Up ↗" [ref=e1144] [cursor=pointer]:
+                - /url: https://cloud.cerebras.ai/
+              - button "Configure" [ref=e1145] [cursor=pointer]
+          - generic [ref=e1147]:
+            - generic [ref=e1148]:
+              - generic [ref=e1151]: ElevenLabs
+              - generic [ref=e1152]: Live API
+            - generic [ref=e1153]: Balance not tracked for this provider
+            - generic [ref=e1154]: 10,000 / 10,000 chars
+            - generic [ref=e1157]:
+              - generic [ref=e1158]: Multilingual v2
+              - generic [ref=e1159]: Turbo v2.5
+            - generic [ref=e1160]:
+              - generic [ref=e1161]:
+                - img [ref=e1162]
+                - generic [ref=e1165]: Media-only provider
+              - generic [ref=e1166]: Direct Key
+            - generic [ref=e1167]:
+              - link "Top Up ↗" [ref=e1168] [cursor=pointer]:
+                - /url: https://elevenlabs.io/app/settings/api-keys
+              - button "Configure" [ref=e1169] [cursor=pointer]
+          - generic [ref=e1171]:
+            - generic [ref=e1172]:
+              - generic [ref=e1175]: Hyperbolic
+              - generic [ref=e1176]: Estimated
+            - generic [ref=e1177]: $0.00
+            - generic [ref=e1179]:
+              - img [ref=e1180]
+              - generic [ref=e1184]: Inactive
+            - generic [ref=e1185]:
+              - link "Top Up ↗" [ref=e1186] [cursor=pointer]:
+                - /url: https://app.hyperbolic.xyz/settings
+              - button "Configure" [ref=e1187] [cursor=pointer]
+          - generic [ref=e1189]:
+            - generic [ref=e1190]:
+              - generic [ref=e1193]: Zhipu / GLM
+              - generic [ref=e1194]: Estimated
+            - generic [ref=e1195]: $0.00
+            - generic [ref=e1197]:
+              - img [ref=e1198]
+              - generic [ref=e1202]: Inactive
+            - generic [ref=e1203]:
+              - link "Top Up ↗" [ref=e1204] [cursor=pointer]:
+                - /url: https://open.bigmodel.cn/usercenter/apikeys
+              - button "Configure" [ref=e1205] [cursor=pointer]
+          - generic [ref=e1207]:
+            - generic [ref=e1208]:
+              - generic [ref=e1211]: Writer / Palmyra
+              - generic [ref=e1212]: Estimated
+            - generic [ref=e1213]: $0.00
+            - generic [ref=e1215]:
+              - img [ref=e1216]
+              - generic [ref=e1220]: Inactive
+            - generic [ref=e1221]:
+              - link "Top Up ↗" [ref=e1222] [cursor=pointer]:
+                - /url: https://app.writer.com/aistudio/organization/keys
+              - button "Configure" [ref=e1223] [cursor=pointer]
+          - generic [ref=e1225]:
+            - generic [ref=e1226]:
+              - generic [ref=e1229]: Bytez
+              - generic [ref=e1230]: Estimated
+            - generic [ref=e1231]: $0.00
+            - generic [ref=e1233]:
+              - img [ref=e1234]
+              - generic [ref=e1238]: Inactive
+            - generic [ref=e1239]:
+              - link "Top Up ↗" [ref=e1240] [cursor=pointer]:
+                - /url: https://bytez.com/auth
+              - button "Configure" [ref=e1241] [cursor=pointer]
+          - generic [ref=e1243]:
+            - generic [ref=e1244]:
+              - generic [ref=e1247]: HuggingFace
+              - generic [ref=e1248]: Free Tier
+            - generic [ref=e1249]: Free
+            - generic [ref=e1251]:
+              - img [ref=e1252]
+              - generic [ref=e1256]: Inactive
+            - generic [ref=e1257]:
+              - link "Top Up ↗" [ref=e1258] [cursor=pointer]:
+                - /url: https://huggingface.co/settings/tokens
+              - button "Configure" [ref=e1259] [cursor=pointer]
+          - generic [ref=e1261]:
+            - generic [ref=e1262]:
+              - generic [ref=e1265]: Lepton AI
+              - generic [ref=e1266]: No Key
+            - generic [ref=e1267]: No API key — configure in API Keys tab
+            - generic [ref=e1268]:
+              - generic [ref=e1269]: Llama 4 Maverick
+              - generic [ref=e1270]: DeepSeek R1-0528
+            - generic [ref=e1271]:
+              - generic [ref=e1272]:
+                - img [ref=e1273]
+                - generic [ref=e1277]: Inactive
+              - generic [ref=e1278]: No Key
+            - button "Configure" [ref=e1280] [cursor=pointer]
+          - generic [ref=e1282]:
+            - generic [ref=e1283]:
+              - generic [ref=e1286]: Lambda Labs
+              - generic [ref=e1287]: No Key
+            - generic [ref=e1288]: No API key — configure in API Keys tab
+            - generic [ref=e1289]:
+              - generic [ref=e1290]: Llama 4 Scout
+              - generic [ref=e1291]: Hermes 3 405B
+            - generic [ref=e1292]:
+              - generic [ref=e1293]:
+                - img [ref=e1294]
+                - generic [ref=e1298]: Inactive
+              - generic [ref=e1299]: No Key
+            - button "Configure" [ref=e1301] [cursor=pointer]
+          - generic [ref=e1303]:
+            - generic [ref=e1304]:
+              - generic [ref=e1307]: Qwen / Alibaba
+              - generic [ref=e1308]: No Key
+            - generic [ref=e1309]: No API key — configure in API Keys tab
+            - generic [ref=e1310]:
+              - generic [ref=e1311]: Qwen Max
+              - generic [ref=e1312]: QwQ-32B
+            - generic [ref=e1313]:
+              - generic [ref=e1314]:
+                - img [ref=e1315]
+                - generic [ref=e1319]: Inactive
+              - generic [ref=e1320]: No Key
+            - button "Configure" [ref=e1322] [cursor=pointer]
+          - generic [ref=e1324]:
+            - generic [ref=e1325]:
+              - generic [ref=e1328]: Yi / 01.AI
+              - generic [ref=e1329]: No Key
+            - generic [ref=e1330]: No API key — configure in API Keys tab
+            - generic [ref=e1332]:
+              - img [ref=e1333]
+              - generic [ref=e1337]: Inactive
+            - button "Configure" [ref=e1339] [cursor=pointer]
+          - generic [ref=e1341]:
+            - generic [ref=e1342]:
+              - generic [ref=e1345]: Doubao / ByteDance
+              - generic [ref=e1346]: No Key
+            - generic [ref=e1347]: No API key — configure in API Keys tab
+            - generic [ref=e1349]:
+              - img [ref=e1350]
+              - generic [ref=e1354]: Inactive
+            - button "Configure" [ref=e1356] [cursor=pointer]
+          - generic [ref=e1358]:
+            - generic [ref=e1359]:
+              - generic [ref=e1362]: MiniMax
+              - generic [ref=e1363]: No Key
+            - generic [ref=e1364]: No API key — configure in API Keys tab
+            - generic [ref=e1365]:
+              - generic [ref=e1366]: MiniMax-Text-01
+              - generic [ref=e1367]: MiniMax-VL-01
+            - generic [ref=e1368]:
+              - generic [ref=e1369]:
+                - img [ref=e1370]
+                - generic [ref=e1374]: Inactive
+              - generic [ref=e1375]: No Key
+            - button "Configure" [ref=e1377] [cursor=pointer]
+          - generic [ref=e1379]:
+            - generic [ref=e1380]:
+              - generic [ref=e1383]: Upstage / Solar
+              - generic [ref=e1384]: Estimated
+            - generic [ref=e1385]: $10.00
+            - generic [ref=e1387]:
+              - img [ref=e1388]
+              - generic [ref=e1392]: Inactive
+            - generic [ref=e1393]:
+              - link "Top Up ↗" [ref=e1394] [cursor=pointer]:
+                - /url: https://console.upstage.ai/api-keys
+              - button "Configure" [ref=e1395] [cursor=pointer]
+          - generic [ref=e1397]:
+            - generic [ref=e1398]:
+              - generic [ref=e1401]: Arcee AI
+              - generic [ref=e1402]: No Key
+            - generic [ref=e1403]: No API key — configure in API Keys tab
+            - generic [ref=e1404]:
+              - generic [ref=e1405]: Arcee Maestro
+              - generic [ref=e1406]: Arcee Blaze
+            - generic [ref=e1407]:
+              - generic [ref=e1408]:
+                - img [ref=e1409]
+                - generic [ref=e1413]: Inactive
+              - generic [ref=e1414]: No Key
+            - button "Configure" [ref=e1416] [cursor=pointer]
+          - generic [ref=e1418]:
+            - generic [ref=e1419]:
+              - generic [ref=e1422]: Meta Llama API
+              - generic [ref=e1423]: No Key
+            - generic [ref=e1424]: No API key — configure in API Keys tab
+            - generic [ref=e1426]:
+              - img [ref=e1427]
+              - generic [ref=e1431]: Inactive
+            - button "Configure" [ref=e1433] [cursor=pointer]
+          - generic [ref=e1435]:
+            - generic [ref=e1436]:
+              - generic [ref=e1439]: OpenRouter
+              - generic [ref=e1440]: Live API
+            - generic [ref=e1441]: No API key — configure in API Keys tab
+            - generic [ref=e1443]:
+              - img [ref=e1444]
+              - generic [ref=e1448]: Inactive
+            - generic [ref=e1449]:
+              - link "Top Up ↗" [ref=e1450] [cursor=pointer]:
+                - /url: https://openrouter.ai/settings/keys
+              - button "Configure" [ref=e1451] [cursor=pointer]
+        - paragraph [ref=e1452]:
+          - text: Configure API keys in the
+          - strong [ref=e1453]: API Keys & Integrations
+          - text: tab. Providers without a direct key show as inactive. Free-tier providers (Groq, Gemini, Cerebras, etc.) have no balance to track.
+    - generic [ref=e657]:
+      - generic "Chat with Commander Orion" [ref=e658] [cursor=pointer]:
+        - img "Commander Orion" [ref=e661]
+      - button "Start a new chat" [ref=e663] [cursor=pointer]:
+        - img [ref=e664]
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

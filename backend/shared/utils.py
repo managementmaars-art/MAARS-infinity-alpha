@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 import httpx
 from db import db
 from shared.constants import (
-    EMERGENT_LLM_KEY, SMTP_EMAIL, SMTP_PASSWORD,
+    SMTP_EMAIL, SMTP_PASSWORD,
     DIRECT_API_KEYS, INTEGRATION_SERVICES,
     DEFAULT_CUSTOM_PACKAGE_CONFIG, DEFAULT_CREDIT_PACKAGES
 )
@@ -48,7 +48,7 @@ async def send_email_notification(to_email: str, subject: str, html_body: str):
 
 
 async def get_api_keys():
-    """Get API keys - prioritize DB-stored keys, then env vars, then Emergent key"""
+    """Get API keys - prioritize DB-stored keys, then env vars, then Emergent key."""
     config = await db.platform_config.find_one({"config_type": "api_keys"}, {"_id": 0})
     all_providers = [
         "openai", "anthropic", "gemini", "xai", "deepseek", "mistral",
@@ -58,14 +58,41 @@ async def get_api_keys():
         "yi", "zhipu", "doubao", "hyperbolic", "upstage", "writer", "huggingface", "llama",
         # New direct providers (replacing OpenRouter)
         "novita", "lepton", "lambda", "amazon", "minimax", "inception", "arcee",
+        "bytez", "openrouter",
+        # Media providers (image/video/audio/STT)
+        "fal", "deepgram", "replicate", "stability", "ideogram", "runway", "pika",
+        # Canonical aliases (legacy names retained above for backward compatibility)
+        "google", "nvidia_nim", "meta_llama_api", "bedrock",
     ]
+    provider_aliases = {
+        "google": "gemini",
+        "nvidia_nim": "nvidia",
+        "meta_llama_api": "llama",
+        "bedrock": "amazon",
+    }
+
     keys = {p: "" for p in all_providers}
-    keys["emergent"] = EMERGENT_LLM_KEY
-    keys["active_provider"] = "emergent"
+    keys["active_provider"] = "direct"
+
     if config:
         for p in all_providers:
             keys[p] = config.get(f"{p}_key", "") or DIRECT_API_KEYS.get(p, "")
-        keys["active_provider"] = config.get("active_provider", "emergent")
+        keys["active_provider"] = config.get("active_provider", "direct")
+    else:
+        # No DB override doc - fall through to env-var DIRECT_API_KEYS so a
+        # fresh install with keys in .env routes correctly without first
+        # writing a platform_config row.
+        for p in all_providers:
+            keys[p] = DIRECT_API_KEYS.get(p, "")
+        keys["active_provider"] = "direct"
+
+    # Keep canonical and legacy provider slugs in sync for downstream callers.
+    for canonical, legacy in provider_aliases.items():
+        resolved = keys.get(canonical) or keys.get(legacy) or ""
+        if resolved:
+            keys[canonical] = resolved
+            keys[legacy] = resolved
+
     return keys
 
 
@@ -143,3 +170,4 @@ async def create_notification(user_id: str, ntype: str, title: str, message: str
         "read": False,
         "created_at": datetime.now(timezone.utc).isoformat()
     })
+

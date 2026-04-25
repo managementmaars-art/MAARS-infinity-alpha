@@ -1,0 +1,147 @@
+- generic [active] [ref=e1]:
+  - main [ref=e3]:
+    - navigation [ref=e5]:
+      - generic [ref=e6]:
+        - link "logo" [ref=e8] [cursor=pointer]:
+          - /url: /
+          - img "logo" [ref=e9]
+        - generic [ref=e10]:
+          - generic [ref=e11]:
+            - link "Model APIs" [ref=e12] [cursor=pointer]:
+              - /url: /models
+            - link "Agent Sandbox new" [ref=e13] [cursor=pointer]:
+              - /url: /sandbox
+              - generic [ref=e14]:
+                - generic [ref=e15]: Agent Sandbox
+                - img "new" [ref=e16]
+            - button "GPUs" [ref=e18] [cursor=pointer]:
+              - text: GPUs
+              - img [ref=e19]
+            - link "Pricing" [ref=e21] [cursor=pointer]:
+              - /url: /pricing
+            - link "Docs" [ref=e22] [cursor=pointer]:
+              - /url: /docs/guides/introduction
+            - link "Blog" [ref=e23] [cursor=pointer]:
+              - /url: https://blogs.novita.ai
+            - link "Console" [ref=e24] [cursor=pointer]:
+              - /url: /console
+          - generic [ref=e25]:
+            - generic [ref=e27] [cursor=pointer]:
+              - img [ref=e28]
+              - generic [ref=e32]: "Credits Remaining:"
+              - generic [ref=e33]: $0.0000
+              - img [ref=e34]
+            - img [ref=e37] [cursor=pointer]
+            - img [ref=e44] [cursor=pointer]
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - heading "Page not found" [level=1] [ref=e49]
+        - paragraph [ref=e50]:
+          - text: Sorry, we can't find the page you're looking for. If you followeed a broken link from somewhere, you can hop into our
+          - link "Discord channel" [ref=e51] [cursor=pointer]:
+            - /url: https://discord.gg/YyPRAzwp7P
+          - text: or
+          - link "contact us" [ref=e52] [cursor=pointer]:
+            - /url: mailto:support@novita.ai
+          - text: and let us know.
+        - link "Go to home page" [ref=e53] [cursor=pointer]:
+          - /url: /
+      - generic [ref=e55]:
+        - generic [ref=e56]: If you're browsing around, just look at this one we've pickedput for you!
+        - generic [ref=e57]:
+          - generic [ref=e58] [cursor=pointer]:
+            - generic [ref=e59]: Build with Model APIs
+            - generic [ref=e60]: Build Gen AI products seamlessly
+            - generic [ref=e61]:
+              - generic [ref=e62]: View product
+              - generic [ref=e63]: 
+          - generic [ref=e64] [cursor=pointer]:
+            - generic [ref=e65]: Scale with Serverless
+            - generic [ref=e66]: Scale without managing GPU infrastructure
+            - generic [ref=e67]:
+              - generic [ref=e68]: View product
+              - generic [ref=e69]: 
+          - generic [ref=e70] [cursor=pointer]:
+            - generic [ref=e71]: Deploy with GPU Instance
+            - generic [ref=e72]: Cut costs by up to 50%
+            - generic [ref=e73]:
+              - generic [ref=e74]: View product
+              - generic [ref=e75]: 
+          - generic [ref=e76] [cursor=pointer]:
+            - generic [ref=e77]: Launch Agent Sandbox
+            - generic [ref=e78]: The Runtime Infrastructure for Secure & Scalable AI Agents
+            - generic [ref=e79]:
+              - generic [ref=e80]: View product
+              - generic [ref=e81]: 
+    - generic [ref=e83]:
+      - img [ref=e88]
+      - generic [ref=e157]:
+        - generic [ref=e158]: Ready to build smarter? Start today.
+        - generic [ref=e159]:
+          - generic [ref=e160]: Get started with Novita AI and unlock the power of affordable, reliable, and scalable AI inference for your applications.
+          - generic [ref=e161]:
+            - link "Get Started" [ref=e162] [cursor=pointer]:
+              - /url: /console
+            - button "Book a Demo" [ref=e163] [cursor=pointer]:
+              - link "Book a Demo" [ref=e164]:
+                - /url: https://meetings-na2.hubspot.com/junyu
+    - generic [ref=e167]:
+      - generic [ref=e168]:
+        - generic [ref=e169]:
+          - link [ref=e170] [cursor=pointer]:
+            - /url: /
+          - link "All systems normal" [ref=e173] [cursor=pointer]:
+            - /url: https://status.novita.ai
+        - generic [ref=e174]:
+          - link "" [ref=e175] [cursor=pointer]:
+            - /url: https://x.com/novita_labs
+            - generic [ref=e176]: 
+          - link "" [ref=e177] [cursor=pointer]:
+            - /url: https://www.youtube.com/channel/UCXiLucAkStZWXOQy3ACiaig
+            - generic [ref=e178]: 
+          - link "" [ref=e179] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/novita-ai-labs/
+            - generic [ref=e180]: 
+          - link "" [ref=e181] [cursor=pointer]:
+            - /url: https://discord.gg/YyPRAzwp7P
+            - generic [ref=e182]: 
+      - generic [ref=e183]:
+        - generic [ref=e184]:
+          - generic [ref=e185]:
+            - paragraph [ref=e186]: CONTACT
+            - link "Contact Support" [ref=e187] [cursor=pointer]:
+              - /url: mailto:support@novita.ai
+            - link "Book a Demo" [ref=e188] [cursor=pointer]:
+              - /url: https://meetings-na2.hubspot.com/junyu
+            - link "Supply GPUs" [ref=e189] [cursor=pointer]:
+              - /url: mailto:gpu@novita.ai
+          - generic [ref=e190]:
+            - paragraph [ref=e191]: RESOURCES
+            - link "Docs" [ref=e192] [cursor=pointer]:
+              - /url: /docs/guides/introduction
+            - link "FAQ" [ref=e193] [cursor=pointer]:
+              - /url: /docs/guides/faq
+            - link "Blog" [ref=e194] [cursor=pointer]:
+              - /url: https://blogs.novita.ai
+            - link "Templates Library" [ref=e195] [cursor=pointer]:
+              - /url: /gpus-console/templates-library
+            - link "Arena Demo" [ref=e196] [cursor=pointer]:
+              - /url: https://renderarena.novita.ai/api/auth/callback
+          - generic [ref=e197]:
+            - paragraph [ref=e198]: COMPANY
+            - link "Terms of Service" [ref=e199] [cursor=pointer]:
+              - /url: /legal/terms-of-service
+            - link "Privacy Policy" [ref=e200] [cursor=pointer]:
+              - /url: /legal/privacy-policy
+            - link "Careers" [ref=e201] [cursor=pointer]:
+              - /url: https://jobs.ashbyhq.com/novita-ai
+            - link "Trust Center" [ref=e202] [cursor=pointer]:
+              - /url: https://trust.novita.ai
+          - generic [ref=e203]:
+            - paragraph [ref=e204]: PARTNERS
+            - link "Affiliate Program" [ref=e205] [cursor=pointer]:
+              - /url: /affiliate-new
+        - paragraph [ref=e207]: © 2026 NOVITA AI. ALL RIGHTS RESERVED. 156 2ND STREET, SAN FRANCISCO, CA 94105
+  - region "Notifications (F8)":
+    - list
+  - alert [ref=e208]

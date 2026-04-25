@@ -1,0 +1,478 @@
+- generic:
+  - generic:
+    - link:
+      - /url: https://fal.ai/models/openai/gpt-image-2/edit
+      - text: GPT Image 2 is now on fal! 🚀
+  - generic:
+    - generic:
+      - generic:
+        - generic [ref=e244]:
+          - generic [ref=e245]:
+            - link [ref=e248] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e250]
+              - img [ref=e253]
+            - navigation [ref=e653]:
+              - list [ref=e259]:
+                - listitem [ref=e261]:
+                  - img [ref=e262]
+                - listitem [ref=e266]:
+                  - link [ref=e654] [cursor=pointer]:
+                    - /url: /dashboard
+                    - text: Home
+                - listitem [ref=e269]:
+                  - img [ref=e270]
+                - listitem [ref=e274]:
+                  - link [ref=e655] [cursor=pointer]:
+                    - /url: /dashboard/account/details
+                    - text: Settings
+                - listitem [ref=e277]:
+                  - img [ref=e278]
+                - listitem [ref=e282]:
+                  - generic [ref=e283]: API Keys
+          - generic [ref=e285]:
+            - generic [ref=e286]:
+              - button [ref=e656] [cursor=pointer]:
+                - img [ref=e288]
+                - generic [ref=e290]: Search anything
+                - generic [ref=e291]:
+                  - generic [ref=e292]: CTRL
+                  - generic [ref=e293]: K
+              - link [ref=e657] [cursor=pointer]:
+                - /url: /dashboard/usage-billing/credits
+                - img [ref=e630]
+                - generic [ref=e639]:
+                  - generic [ref=e640]: "Credits:"
+                  - generic [ref=e641]: $0.00
+              - generic [ref=e309]:
+                - link [ref=e658] [cursor=pointer]:
+                  - /url: https://docs.fal.ai
+                  - text: Docs
+                - button [ref=e311] [cursor=pointer]:
+                  - img [ref=e312]
+              - button [ref=e659] [cursor=pointer]:
+                - img [ref=e315]
+              - button [ref=e660] [cursor=pointer]:
+                - img [ref=e661]: M
+            - generic:
+              - button:
+                - img
+              - link:
+                - /url: /dashboard/usage-billing/credits
+                - generic:
+                  - img
+                - generic:
+                  - generic: $0.00
+              - generic:
+                - button:
+                  - text: Resources
+                  - img
+              - button:
+                - img
+              - button:
+                - img: M
+        - navigation [ref=e662]:
+          - list [ref=e324]:
+            - listitem [ref=e326]:
+              - link [ref=e663] [cursor=pointer]:
+                - /url: /dashboard
+                - generic [ref=e328]:
+                  - img [ref=e329]
+                  - generic [ref=e331]: Home
+            - listitem [ref=e333]:
+              - link [ref=e664] [cursor=pointer]:
+                - /url: /explore
+                - generic [ref=e335]:
+                  - img [ref=e336]
+                  - generic [ref=e338]: Explore
+            - listitem [ref=e340]:
+              - button [ref=e665] [cursor=pointer]:
+                - generic [ref=e342]:
+                  - img [ref=e343]
+                  - generic [ref=e346]: Generate
+                - img [ref=e347]
+            - listitem [ref=e350]:
+              - link [ref=e666] [cursor=pointer]:
+                - /url: /dashboard/serverless-get-started
+                - generic [ref=e352]:
+                  - img [ref=e353]
+                  - generic [ref=e355]: Serverless
+            - listitem [ref=e357]:
+              - button [ref=e667] [cursor=pointer]:
+                - generic [ref=e359]:
+                  - img [ref=e360]
+                  - generic [ref=e362]: Workflows
+                - img [ref=e363]
+            - listitem [ref=e366]:
+              - button [ref=e668] [cursor=pointer]:
+                - generic [ref=e368]:
+                  - img [ref=e369]
+                  - generic [ref=e372]: Settings
+                - img [ref=e373]
+        - generic:
+          - generic:
+            - generic:
+              - navigation:
+                - generic:
+                  - list:
+                    - generic:
+                      - listitem:
+                        - link:
+                          - /url: /dashboard
+                          - generic:
+                            - img
+                            - generic: Home
+                    - generic:
+                      - listitem:
+                        - link:
+                          - /url: /explore
+                          - generic:
+                            - img
+                            - generic: Explore
+                    - generic:
+                      - listitem:
+                        - button:
+                          - generic:
+                            - img
+                            - generic: Generate
+                          - img
+                    - generic:
+                      - listitem:
+                        - link:
+                          - /url: /dashboard/serverless-get-started
+                          - generic:
+                            - img
+                            - generic: Serverless
+                    - generic:
+                      - listitem:
+                        - button:
+                          - generic:
+                            - img
+                            - generic: Workflows
+                          - img
+                    - generic:
+                      - listitem:
+                        - button:
+                          - generic:
+                            - img
+                            - generic: Settings
+                          - img
+      - generic:
+        - main:
+          - generic:
+            - main:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading [level=2]: Settings
+                    - generic: Everything for account, billing, and developer configuration.
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - img
+                              - textbox:
+                                - /placeholder: Search
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: General
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/account/details
+                                        - img
+                                        - generic: Account
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/notifications/settings
+                                        - img
+                                        - generic: Notification Settings
+                              - generic:
+                                - generic:
+                                  - generic: Usage & Billing
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/usage-billing
+                                        - img
+                                        - generic: Overview
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/account/billing/address
+                                        - img
+                                        - generic: Address
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/usage-billing/credits
+                                        - img
+                                        - generic: Credits
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/usage-billing/concurrency
+                                        - img
+                                        - generic: Concurrency Limits
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/usage-billing/billing
+                                        - img
+                                        - generic: Billing
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/usage-billing/invoices
+                                        - img
+                                        - generic: Invoices
+                              - generic:
+                                - generic:
+                                  - generic: Developer
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/keys
+                                        - img
+                                        - generic: API Keys
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/webhooks
+                                        - img
+                                        - generic: Webhooks
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/drains
+                                        - img
+                                        - generic: Log Drains
+                              - generic:
+                                - generic:
+                                  - generic: Analytics & Monitoring
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/manage/errors
+                                        - img
+                                        - generic: Errors
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/recent-history
+                                        - img
+                                        - generic: Request History
+                                    - listitem:
+                                      - link:
+                                        - /url: /dashboard/account/recent-trainings
+                                        - img
+                                        - generic: Training History
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - heading [level=2]: API Keys
+                          - paragraph: Manage your API keys and their settings.
+                        - generic:
+                          - button:
+                            - img
+                            - text: Add key
+                      - generic:
+                        - generic:
+                          - generic:
+                            - table:
+                              - rowgroup:
+                                - row:
+                                  - columnheader: Description
+                                  - columnheader: Key
+                                  - columnheader: Created At
+                                  - columnheader: Tags
+                                  - columnheader: Scope
+                                  - columnheader
+                              - rowgroup:
+                                - row:
+                                  - cell:
+                                    - button:
+                                      - generic: "PRODUCTION: MAARS Command Universal AI Gateway (video + image + music via media_router)"
+                                      - generic:
+                                        - img
+                                  - cell:
+                                    - code: 0435b23e-••••••••
+                                  - cell: 04/23/2026, 10:28 AM
+                                  - cell:
+                                    - generic:
+                                      - button:
+                                        - generic:
+                                          - generic:
+                                            - generic:
+                                              - img
+                                              - generic: Add tag
+                                  - cell:
+                                    - generic: API
+                                  - cell:
+                                    - generic:
+                                      - button:
+                                        - img
+      - generic:
+        - contentinfo:
+          - generic:
+            - heading [level=2]: Ready to transform your enterprise with AI?
+            - link:
+              - /url: /enterprise#contact-sales
+              - text: Contact Sales
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - heading [level=4]: Learn More
+                  - generic:
+                    - link:
+                      - /url: https://status.fal.ai
+                      - text: Status
+                    - link:
+                      - /url: /about
+                      - text: About Us
+                    - link:
+                      - /url: https://docs.fal.ai
+                      - text: Documentation
+                    - link:
+                      - /url: https://job-boards.greenhouse.io/fal
+                      - text: Careers
+                    - link:
+                      - /url: /pricing
+                      - text: Pricing
+                    - link:
+                      - /url: https://blog.fal.ai
+                      - text: Blog
+                    - link:
+                      - /url: /enterprise
+                      - text: Enterprise
+                    - link:
+                      - /url: mailto:support@fal.ai
+                      - text: Get in touch
+                    - link:
+                      - /url: /gen-media-report-volume-1
+                      - text: Gen Media Report 2026
+                    - link:
+                      - /url: /grants
+                      - text: Grants
+                    - link:
+                      - /url: /events
+                      - text: Events
+                    - link:
+                      - /url: /learn
+                      - text: Learn
+                    - link:
+                      - /url: /legal
+                      - text: Legal
+                    - link:
+                      - /url: /report-content
+                      - text: Report Content
+                - generic:
+                  - generic: Models
+                  - link:
+                    - /url: /gpt-image-2
+                    - text: ChatGPT Images 2.0
+                  - link:
+                    - /url: /seedance-2.0
+                    - text: Seedance 2.0
+                  - link:
+                    - /url: /models/fal-ai/flux-2-flex
+                    - text: Flux 2
+                  - link:
+                    - /url: /models/fal-ai/kling-video/o3/standard/image-to-video
+                    - text: Kling 3.0
+                  - link:
+                    - /url: /models/fal-ai/veo3.1/first-last-frame-to-video
+                    - text: Veo 3.1
+                  - link:
+                    - /url: /models/fal-ai/nano-banana-pro/edit
+                    - text: Nano Banana Pro
+                  - link:
+                    - /url: /models
+                    - text: Explore More
+                - generic:
+                  - heading [level=4]: Playgrounds
+                  - link:
+                    - /url: /sandbox
+                    - text: Sandbox
+                  - link:
+                    - /url: /workflows
+                    - text: Workflows
+                  - link:
+                    - /url: /models/fal-ai/flux-lora-fast-training
+                    - text: Training
+                  - link:
+                    - /url: /demos
+                    - text: Demos
+                - generic:
+                  - heading [level=4]: Socials
+                  - link:
+                    - /url: https://discord.gg/fal-ai
+                    - text: Discord
+                  - link:
+                    - /url: https://github.com/fal-ai
+                    - text: GitHub
+                  - link:
+                    - /url: https://www.reddit.com/r/fal/
+                    - text: Reddit
+                  - link:
+                    - /url: https://twitter.com/fal
+                    - text: Twitter
+                  - link:
+                    - /url: https://www.linkedin.com/company/features-and-labels/
+                    - text: LinkedIn
+                  - link:
+                    - /url: https://www.youtube.com/@Fal.AI.Official
+                    - text: YouTube
+                  - link:
+                    - /url: https://www.instagram.com/madeonfal
+                    - text: Instagram
+                  - link:
+                    - /url: https://www.tiktok.com/@madeonfal
+                    - text: TikTok
+              - generic:
+                - text: features and labels, 2025. All Rights Reserved.
+                - link:
+                  - /url: /legal/terms-of-service
+                  - text: Terms of Service
+                - text: and
+                - link:
+                  - /url: /legal/privacy-policy
+                  - text: Privacy Policy
+            - img
+  - region "Notifications alt+T"
+  - alert
+  - dialog "New Key" [active] [ref=e670]:
+    - heading "New Key" [level=2] [ref=e672]
+    - generic [ref=e673]:
+      - generic [ref=e674]:
+        - text: Scope
+        - combobox [disabled] [ref=e675]:
+          - generic: API
+          - img [ref=e676]
+        - paragraph [ref=e678]: For running models and calling inference endpoints. Cannot manage keys, billing, usage, or compute. Recommended for most use cases.
+      - generic [ref=e679]:
+        - text: Description
+        - 'textbox "What is this key for? e.g PRODUCTION: Feature X DEVELOPER: John Doe" [disabled] [ref=e680]':
+          - /placeholder: "What is this key for? e.g\nPRODUCTION: Feature X\nDEVELOPER: John Doe"
+          - text: "PRODUCTION: MAARS Command Universal AI Gateway (video + image + music via media_router)"
+    - generic [ref=e697]:
+      - paragraph [ref=e698]: Your new key
+      - generic [ref=e703]: 0435b23e-09d6-4f6e-b7aa-edd5e50b2054:dd564f5db50ea27d84d285112fd2e9fd
+      - paragraph [ref=e704]:
+        - text: Store it in your environment, e.g. GitHub Secrets or
+        - code [ref=e705]: .env.local
+    - generic [ref=e691]:
+      - button "Done" [ref=e706] [cursor=pointer]
+      - button "Copy Key" [ref=e707] [cursor=pointer]:
+        - generic [ref=e708]:
+          - img [ref=e710]
+          - img [ref=e713]
+        - text: Copy Key
+    - button [ref=e694] [cursor=pointer]:
+      - img [ref=e695]

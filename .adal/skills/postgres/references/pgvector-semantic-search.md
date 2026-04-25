@@ -1,1 +1,0 @@
-../../pgvector-semantic-search/SKILL.md

@@ -1,0 +1,5 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - img [ref=e4]
+  - region "Notifications Alt+T"
+  - alert [ref=e7]

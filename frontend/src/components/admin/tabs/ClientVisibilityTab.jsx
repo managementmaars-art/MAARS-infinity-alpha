@@ -59,7 +59,6 @@ const ALL_NAV_SECTIONS = [
     label: "MAARS Infinity",
     items: [
       { label: "Observability",      to: "/observability" },
-      { label: "Model Router",       to: "/model-router" },
       { label: "Commander Orion",    to: "/commander" },
       { label: "Venture Portfolio",  to: "/venture-portfolio" },
       { label: "Operator Panel",     to: "/operator" },

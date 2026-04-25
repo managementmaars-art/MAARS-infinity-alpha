@@ -2,7 +2,7 @@
 Exposes kernel, router, verification, governance, orchestrator, memory, intelligence, portfolio endpoints."""
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List
 from datetime import datetime, timezone
 from db import db
@@ -23,7 +23,9 @@ from kernel.scheduler import (
 )
 from kernel.tool_registry import register_tool, get_tools, validate_schema, record_tool_call, get_tool_health
 from kernel.approval_controller import request_approval, decide_approval, get_pending_approvals, get_approval_history
-from router.engine import route_task, get_model_performance, log_model_result, classify_task, PROVIDER_CATALOG
+# `router.engine` helpers were only used by the deleted /router/* endpoints.
+# log_model_result is no longer imported here — if any other module needs it,
+# import directly from router.engine there.
 from verification.engine import (
     verify_output, crosscheck, get_verification_results,
     get_verification_stats,
@@ -83,10 +85,6 @@ class BudgetLimitRequest(BaseModel):
     entity_id: str
     period: str
     limit: float
-
-class RouteRequest(BaseModel):
-    task_description: str
-    metadata: Optional[dict] = None
 
 class VerifyRequest(BaseModel):
     task_id: str
@@ -196,35 +194,12 @@ async def api_check_policies(context: dict):
     return await check_all_policies(context)
 
 
-# ─── MODEL ROUTER ───
-
-@router.post("/router/route")
-async def api_route_task(req: RouteRequest):
-    return await route_task(req.task_description, req.metadata)
-
-@router.post("/router/classify")
-async def api_classify_task(req: RouteRequest):
-    return classify_task(req.task_description, req.metadata)
-
-@router.get("/router/performance")
-async def api_model_performance(provider: Optional[str] = None):
-    return await get_model_performance(provider)
-
-@router.get("/router/providers")
-async def api_get_providers():
-    return PROVIDER_CATALOG
-
-
-class ExecuteTaskRequest(BaseModel):
-    task_description: str
-    context: Optional[str] = ""
-    metadata: Optional[dict] = None
-
-
-@router.post("/router/execute")
-async def api_execute_task(req: ExecuteTaskRequest):
-    from router.engine import execute_routed_task
-    return await execute_routed_task(req.task_description, req.context, req.metadata)
+# ─── MODEL ROUTER (removed) ───
+# /router/route, /router/classify, /router/performance, /router/providers,
+# /router/execute were deleted — they exposed provider picks to clients
+# (breaking the Universal Gateway's client-opacity design) and duplicated
+# the execution path handled by /v1/chat/completions + llm_gateway.complete().
+# Internal callers use services.llm_gateway.complete() directly.
 
 
 # ─── VERIFICATION ───
@@ -502,12 +477,16 @@ async def api_get_citations(verified_only: bool = False, limit: int = 50):
 # ─── Tool Registry ───
 
 class ToolRegisterRequest(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
     tool_id: str
     name: str
     description: str
-    tool_schema: dict
+    tool_schema: dict = Field(default_factory=dict, alias="schema")
     permissions: Optional[list] = None
     category: Optional[str] = "general"
+    contract: Optional[dict] = None
+    version: Optional[str] = "1.0"
+    tags: Optional[list] = None
 
 class ToolCallRequest(BaseModel):
     tool_id: str
@@ -516,7 +495,17 @@ class ToolCallRequest(BaseModel):
 
 @router.post("/tools/register")
 async def api_register_tool(req: ToolRegisterRequest):
-    return await register_tool(req.tool_id, req.name, req.description, req.tool_schema, req.permissions, req.category)
+    return await register_tool(
+        req.tool_id,
+        req.name,
+        req.description,
+        req.tool_schema,
+        req.permissions,
+        req.category,
+        contract=req.contract,
+        version=req.version or "1.0",
+        tags=req.tags,
+    )
 
 @router.get("/tools")
 async def api_get_tools(category: Optional[str] = None):

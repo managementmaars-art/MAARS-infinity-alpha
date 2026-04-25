@@ -1,4 +1,0 @@
-interface:
-  display_name: "URL To Markdown"
-  short_description: "Convert a public URL into a reusable Markdown file"
-  default_prompt: "Convert this public URL into Markdown, prefer r.jina.ai and only fallback to markdown.new when r.jina.ai is unavailable, and save with --output using ./output/ by default (unless the user explicitly specifies another output path). Return the saved path plus provider/options used."

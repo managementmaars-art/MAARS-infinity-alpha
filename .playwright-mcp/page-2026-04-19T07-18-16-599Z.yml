@@ -1,0 +1,165 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - navigation "Main" [ref=e4]:
+        - list [ref=e6]:
+          - listitem [ref=e7]:
+            - link "Home" [ref=e8] [cursor=pointer]:
+              - /url: /
+              - img "Home"
+          - listitem [ref=e9]:
+            - button "Personal" [ref=e10] [cursor=pointer]:
+              - generic [ref=e11]: Personal
+              - img
+        - list [ref=e13]:
+          - listitem [ref=e14]:
+            - link "Docs" [ref=e15] [cursor=pointer]:
+              - /url: https://docs.hyperbolic.ai/overview/overview
+              - generic [ref=e16]:
+                - img
+                - img
+                - text: Docs
+          - listitem [ref=e17]:
+            - link "Pricing" [ref=e18] [cursor=pointer]:
+              - /url: https://docs.hyperbolic.ai/general/billing-payments
+              - generic [ref=e19]:
+                - img
+                - img
+                - text: Pricing
+          - listitem [ref=e20]:
+            - generic [ref=e21]:
+              - generic [ref=e22]:
+                - img [ref=e23]
+                - generic [ref=e26]: "0.00"
+              - button "Deposit" [ref=e27] [cursor=pointer]
+          - listitem [ref=e28]:
+            - button "User avatar" [ref=e29] [cursor=pointer]:
+              - img "User avatar" [ref=e31]
+              - img
+      - navigation "Main" [ref=e33]:
+        - list [ref=e35]:
+          - listitem [ref=e36]:
+            - link [ref=e37] [cursor=pointer]:
+              - /url: /
+              - img
+          - listitem [ref=e38]:
+            - link "Home" [ref=e39] [cursor=pointer]:
+              - /url: /
+              - generic [ref=e40]: Home
+          - listitem [ref=e41]:
+            - link "GPUs" [ref=e42] [cursor=pointer]:
+              - /url: /gpus
+              - generic [ref=e43]: GPUs
+          - listitem [ref=e44]:
+            - link "Models" [ref=e45] [cursor=pointer]:
+              - /url: /models
+              - generic [ref=e46]: Models
+          - listitem [ref=e47]:
+            - link "Usage" [ref=e48] [cursor=pointer]:
+              - /url: /usage
+              - generic [ref=e49]: Usage
+          - listitem [ref=e50]:
+            - link "Settings" [ref=e51] [cursor=pointer]:
+              - /url: /settings
+              - generic [ref=e52]: Settings
+          - listitem [ref=e53]:
+            - link "Support" [ref=e54] [cursor=pointer]:
+              - /url: /support
+              - generic [ref=e55]: Support
+    - generic [ref=e56]:
+      - heading "Account Settings" [level=1] [ref=e59]
+      - main [ref=e60]:
+        - generic [ref=e61]:
+          - complementary [ref=e62]:
+            - list [ref=e64]:
+              - listitem [ref=e66]:
+                - list [ref=e68]:
+                  - listitem [ref=e69]:
+                    - link "Profile" [ref=e70] [cursor=pointer]:
+                      - /url: /settings
+                      - generic [ref=e71]: Profile
+                  - listitem [ref=e72]:
+                    - link "Plan" [ref=e73] [cursor=pointer]:
+                      - /url: /settings/plan
+                      - generic [ref=e74]: Plan
+                  - listitem [ref=e75]:
+                    - link "Billing" [ref=e76] [cursor=pointer]:
+                      - /url: /settings/billing
+                      - generic [ref=e77]: Billing
+                  - listitem [ref=e78]:
+                    - link "API Keys" [ref=e79] [cursor=pointer]:
+                      - /url: /settings/api-keys
+                      - generic [ref=e80]: API Keys
+                  - listitem [ref=e81]:
+                    - link "SSH Keys" [ref=e82] [cursor=pointer]:
+                      - /url: /settings/ssh-keys
+                      - generic [ref=e83]: SSH Keys
+                  - listitem [ref=e84]:
+                    - link "Coupon Code" [ref=e85] [cursor=pointer]:
+                      - /url: /settings/coupon-code
+                      - generic [ref=e86]: Coupon Code
+          - article [ref=e87]:
+            - generic [ref=e88]:
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - heading "Profile" [level=2] [ref=e92]
+                  - paragraph [ref=e93]: Here you can view and edit your profile details.
+                - generic [ref=e94]:
+                  - generic [ref=e95]:
+                    - generic [ref=e96]: Display Name
+                    - textbox [ref=e97]: Mirza Arafat Abbas
+                  - generic [ref=e98]:
+                    - generic [ref=e99]: Email
+                    - generic [ref=e100]:
+                      - textbox [disabled] [ref=e101]: management.maars@marsgc.net
+                      - generic:
+                        - img
+                    - generic [ref=e102]:
+                      - text: Email can't be changed. Contact
+                      - link "support@hyperbolic.ai" [ref=e103] [cursor=pointer]:
+                        - /url: mailto:support@hyperbolic.ai
+                      - text: if you need to update your email address.
+              - generic [ref=e106] [cursor=pointer]:
+                - img
+                - heading "Danger Zone" [level=2] [ref=e107]
+    - navigation "Main" [ref=e109]:
+      - list [ref=e111]:
+        - listitem [ref=e112]:
+          - link "Home © 2025" [ref=e113] [cursor=pointer]:
+            - /url: /
+            - img "Home"
+            - generic [ref=e114]: © 2025
+      - list [ref=e116]:
+        - generic [ref=e117]:
+          - listitem [ref=e118]:
+            - link "FAQ" [ref=e119] [cursor=pointer]:
+              - /url: /support
+          - listitem [ref=e120]:
+            - link "Terms of Use" [ref=e121] [cursor=pointer]:
+              - /url: https://hyperbolic.ai/terms
+          - listitem [ref=e122]:
+            - link "Privacy Policy" [ref=e123] [cursor=pointer]:
+              - /url: https://hyperbolic.ai/privacy
+          - listitem [ref=e124]:
+            - link "Docs" [ref=e125] [cursor=pointer]:
+              - /url: https://docs.hyperbolic.ai/overview/overview
+          - listitem [ref=e126]:
+            - link "Credits" [ref=e127] [cursor=pointer]:
+              - /url: /credits
+          - listitem [ref=e128]:
+            - link "Hyperbolic" [ref=e129] [cursor=pointer]:
+              - /url: https://hyperbolic.ai
+              - text: Hyperbolic
+              - img
+        - generic [ref=e130]:
+          - listitem [ref=e131]:
+            - link [ref=e132] [cursor=pointer]:
+              - /url: https://x.com/hyperbolic_labs
+              - img
+          - listitem [ref=e133]:
+            - link [ref=e134] [cursor=pointer]:
+              - /url: https://github.com/HyperbolicLabs
+              - img
+  - alert [ref=e135]
+  - iframe [ref=e136]:
+    

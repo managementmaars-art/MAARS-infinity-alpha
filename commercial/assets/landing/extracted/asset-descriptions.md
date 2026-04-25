@@ -1,0 +1,58 @@
+# Asset Descriptions
+
+One line per file. Read this instead of opening every image individually.
+
+- image-0.png — 1367KB, A professional-looking man with grey hair and beard wears a dark suit and blue tie against a dark grey background.
+- image-1.png — 1197KB, A smiling woman with brown hair, wearing a dark suit and light blouse, is shown from the
+- image-10.png — 1395KB, A man in a light blue suit and white shirt with a dark blue tie is pictured against a dark
+- image-11.png — 1226KB, A professional woman in a navy blazer and light pink blouse is centered against a dark blue
+- image-12.png — 1341KB, A professional woman in a grey suit and teal top smiles against a dark blue-grey gradient background.
+- image-13.png — 1435KB, A man in a dark grey suit and light blue shirt is centered against a dark grey background with
+- image-14.png — 1155KB, A professional woman in a dark suit and white blouse, wearing glasses, is depicted against a
+- image-15.png — 1284KB, A man in a dark blue suit, white shirt, and red tie looks forward against a dark
+- image-16.png — 1216KB, A professional headshot of a woman with dark skin, wearing a black blazer and purple top, against a dark grey background.
+- image-17.png — 1388KB, A man with curly brown hair, wearing a black turtleneck and a tan jacket, looks forward against a
+- image-18.png — 1175KB, A professional woman with brown hair, wearing a black suit and silver blouse, poses against a dark blue-grey background.
+- image-19.png — 1298KB, A man in a navy quarter-zip sweater and white shirt smiles against a dark grey-blue background.
+- image-2.png — 1206KB, A smiling Black woman in a maroon blazer and white blouse is pictured against a dark, patterned background.
+- image-20.png — 1215KB, A young man in an olive green bomber jacket and black shirt looks directly at the camera against a dark grey background.
+- image-21.png — 1252KB, A serious-looking man in a black jacket and dark shirt is featured against a dark grey background.
+- image-22.png — 1317KB, A smiling professional woman with dark reddish-brown hair and a dark complexion wears a white blouse
+- image-23.png — 1236KB, A man with light brown hair, blue eyes, and a beard, wearing a black hoodie under a black blazer, is shown against a dark gray background.
+- image-24.png — 1215KB, A professional-looking woman with grey hair in a dark blue blazer and a gold brooch smiles against a dark blue-grey background.
+- image-25.png — 1443KB, A man with a beard and glasses wears a dark suit, looking forward against a dark grey gradient background.
+- image-26.png — 1111KB, A professional woman with dark hair, wearing a maroon blazer and white top, stands with arms crossed against a dark gray-blue background.
+- image-27.png — 1244KB, A well-dressed man with a grey beard wears a blue suit and gold tie against a dark blue
+- image-28.png — 1219KB, A portrait of a mature woman wearing a black suit, cream blouse, and pearl jewelry, against a dark grey background.
+- image-29.png — 1395KB, A man with grey hair in a dark pinstripe suit, white shirt, and red tie looks directly at the camera against a dark grey background.
+- image-3.png — 1315KB, A man in a dark blue pinstripe suit and light grey tie is shown against a dark
+- image-30.png — 1359KB, A mid-shot of a woman in a blue blazer and white blouse, looking directly at the camera
+- image-31.png — 1243KB, A man in a dark jacket and grey sweater is shown from the chest up against a dark blue background.
+- image-32.png — 1182KB, A poised woman in a black blazer and gold jewelry poses with crossed arms against a dark grey background.
+- image-33.png — 1274KB, A medium shot of an Asian woman in a light gray blazer and white top, looking upward to the right, against a dark gray background with subtle geometric lines.
+- image-34.png — 1354KB, A man in a black turtleneck and grey suit jacket is shown against a dark blue-grey background.
+- image-35.png — 1147KB, A professional woman in a red blouse and black blazer smiles against a dark blue-grey background.
+- image-36.png — 1228KB, A man in a dark blue suit and light blue shirt is pictured against a dark grey
+- image-37.png — 1362KB, A smiling woman with dark curly hair, wearing a light green blouse and grey suit jacket, is shown
+- image-38.png — 1286KB, A man with white hair in a dark suit, white shirt, and patterned tie stands against a dark grey background.
+- image-39.png — 1200KB, A professional woman with reddish-brown hair and glasses, wearing a cream turtleneck and dark blazer
+- image-4.png — 1272KB, A professional woman in a grey blazer and black turtleneck looks directly at the viewer against a dark grey background
+- image-40.png — 1328KB, A professional woman with dark hair wears a teal blazer and a patterned white blouse, looking directly at the camera against a dark grey-blue background.
+- image-5.png — 1195KB, A man with dark hair wearing a dark grey suit and black shirt poses against a dark grey background with subtle light geometric lines.
+- image-6.png — 1211KB, A red-haired woman in a green top and black blazer looks at the camera against
+- image-7.png — 1244KB, A man in a dark blue suit, white shirt, and blue tie, wearing glasses, is shown
+- image-8.png — 1322KB, A professionally dressed man in a dark grey suit and white shirt is shown from the chest up against a dark blue-grey background with subtle geometric patterns.
+- image-9.png — 1192KB, A smiling woman with dark hair wears a white blazer and coral top against a dark gray background.
+- svgs/lucide-arrow-right.svg — icon: lucide-arrow-right
+- svgs/lucide-bot.svg — icon: lucide-bot
+- svgs/lucide-chart-column.svg — icon: lucide-chart-column
+- svgs/lucide-chevron-down.svg — icon: lucide-chevron-down
+- svgs/lucide-globe.svg — icon: lucide-globe
+- svgs/lucide-key.svg — icon: lucide-key
+- svgs/lucide-menu.svg — icon: lucide-menu
+- svgs/lucide-message-square.svg — icon: lucide-message-square
+- svgs/lucide-sparkles.svg — icon: lucide-sparkles
+- svgs/lucide-terminal.svg — icon: lucide-terminal
+- svgs/lucide-users.svg — icon: lucide-users
+- svgs/lucide-zap.svg — icon: lucide-zap
+- fonts/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg.ttf — font file

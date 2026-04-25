@@ -1,0 +1,555 @@
+MAARS Command
+Features
+Agents
+Models
+Pricing
+Login
+Get Started
+The AI Workforce OS — MAARS Infinity
+458 AI Specialists.
+One Command.
+The world's first enterprise-grade AI workforce platform. Chat with 458+ specialists, command them in parallel, and govern every action with live trust scoring — across 33 providers and 175,000+ models.
+Deploy Your AI Team
+Sign In
+Powered by
+GPT-5
+Claude
+Gemini
+Grok
+DeepSeek
+175k+
+Scroll
+458+
+AI Agents
+Agent Networks
+LLM Providers
+609+
+Curated Models
+175k+
+HF Pass-through
+Universal Key
+Platform Capabilities
+Everything You Need to
+Command AI
+458+ Specialized AI Agents
+Pre-built expert agents across 28 networks — engineering, finance, legal, creative, and more.
+175,000+ AI Models
+609 curated models + all of HuggingFace's open-source catalogue via universal pass-through.
+Agent Collaboration
+Multiple agents working in concert across 28 specialized networks to tackle complex goals.
+Chat with Any Agent
+Natural conversation with 458+ context-aware AI agents, each with unique expertise and tools.
+Trust Scores & Governance
+Every action governed, metered, and audited. Agent trust scores built from live execution history.
+One Key. All Providers.
+Single OpenAI-compatible endpoint for all 33 providers. Drop-in replace base_url and you're done.
+Getting Started
+From Zero to
+AI Command Center
+in Minutes
+Three steps to a fully operational AI workforce — no DevOps, no infrastructure, no model juggling.
+< 60 seconds
+Get One API Key
+Sign up and receive your maars-sk key. One credential, universal access — 33 providers, 175,000+ models, all 458 agents.
+No-code or API
+Deploy Your Agents
+Chat with any of the 458 pre-built specialists or build custom agents with your own persona, tools, and knowledge base.
+Enterprise-ready
+Scale & Govern
+Trust scores, audit logs, budget controls, and live governance let you run autonomous agents at scale — safely.
+The Workforce
+Meet Your
+AI Team
+458+ specialists, each alive and working for you — right now.
+Access All 458 Agents
+⚡ COMMANDER
+LIVE
+Monitoring missions…
+AI Commander
+Commander Orion
+Task Delegation
+Strategy
+LIVE
+Scheduling meeting…
+Personal Secretary
+Nadia Kessler
+Scheduling
+To-Do Lists
+LIVE
+Building audience…
+Marketing Specialist
+Zara Mitchell
+Social Media
+Ad Copy
+LIVE
+Building strategy…
+Business Strategist
+Victor Ashford
+Strategy
+Market Research
+LIVE
+Refining UI layout…
+Web Designer
+Luna Bergström
+UI/UX
+Landing Pages
+LIVE
+Optimizing query…
+App Developer
+Kai Nakamoto
+Web Apps
+Mobile Apps
+LIVE
+SEO-optimizing…
+Copywriter
+Scarlett Monroe
+Blog Posts
+Ad Copy
+LIVE
+Audit in progress…
+SEO Specialist
+Derek Huang
+Keywords
+Technical SEO
+LIVE
+Following up lead…
+Sales Representative
+Marcus Drake
+Outreach
+Proposals
+LIVE
+Scheduling posts…
+Social Media Manager
+Isla Fernandez
+Content Strategy
+Engagement
+LIVE
+Running SQL query…
+Data Analyst
+Ethan Yates
+Data Viz
+Reports
+LIVE
+Final proofread…
+Content Writer
+Olivia Sinclair
+Articles
+Stories
+LIVE
+Processing request…
+Customer Service Rep
+Maya Thompson
+Support
+FAQ
+LIVE
+Stakeholder update…
+Project Manager
+Nathan Cross
+Agile
+Planning
+LIVE
+Hypothesis testing…
+Research Specialist
+Dr. Clara Voss
+Papers
+Analysis
+LIVE
+Cleaning dataset…
+Financial Analyst
+Benjamin Cole
+Forecasting
+Budgets
+LIVE
+Onboarding check…
+HR Specialist
+Amara Johnson
+Recruiting
+Policies
+LIVE
+Building component…
+Graphic Designer
+Felix Romano
+Logos
+Illustrations
+LIVE
+Compliance check…
+Legal Assistant
+Alexandra Reid
+Contracts
+Compliance
+LIVE
+Writing ad copy…
+Email Marketing
+Jasper Wells
+Campaigns
+Newsletters
+LIVE
+Storyboarding…
+Video Content
+Riley Chen
+Scripts
+Storyboards
+LIVE
+Threat scanning…
+Cybersecurity Officer
+Damien Voss
+Security Audits
+Threat Analysis
+LIVE
+Building workflow…
+Automation Engineer
+Serena Okafor
+Workflows
+Integrations
+LIVE
+Funnel analysis…
+Growth Hacker
+Axel Brennan
+Growth Experiments
+A/B Testing
+LIVE
+Regulatory scan…
+Compliance Officer
+Victoria Harrington
+Regulatory
+Audits
+LIVE
+Tuning prompts…
+AI Optimizer
+Dr. Luca Bernstein
+AI Tuning
+Cost Reduction
+LIVE
+Timeline review…
+Operations Manager
+Diana Morales
+Process
+Supply Chain
+LIVE
+Forecasting trends…
+Revenue Strategist
+Maximilian Wolfe
+Pricing
+Revenue Models
+LIVE
+Vision alignment…
+Chief Strategy Officer
+Cassandra Steele
+Corporate Strategy
+Market Expansion
+LIVE
+Cap table review…
+Investor Relations
+Richard Ashworth
+Pitch Decks
+Fundraising
+LIVE
+Timeline review…
+Product Manager
+Elena Kovacs
+Roadmaps
+User Stories
+LIVE
+Warehouse sync…
+Data Engineer
+Nikolai Volkov
+Pipelines
+ETL
+LIVE
+Tone of voice…
+Brand Architect
+Valentina Cruz
+Brand Identity
+Guidelines
+LIVE
+Hypothesis testing…
+UX Researcher
+Yuki Tanaka
+User Research
+Usability
+LIVE
+Asset texturing…
+3D Specialist
+Marco De Luca
+3D Rendering
+Motion Graphics
+LIVE
+Stakeholder update…
+PR Manager
+Catherine Blake
+PR Strategy
+Crisis Mgmt
+LIVE
+Stakeholder update…
+Procurement Manager
+Adrian Stone
+Vendor Mgmt
+Contracts
+LIVE
+Touchpoint audit…
+CX Architect
+Sofia Reyes
+Journey Maps
+Loyalty
+LIVE
+Policy drafting…
+Ethics Officer
+Prof. James Whitfield
+Ethics
+Risk
+LIVE
+Wiki structuring…
+Knowledge Architect
+Dr. Eleanor Shaw
+Knowledge Mgmt
+Documentation
+LIVE
+Locale testing…
+Localization Specialist
+Layla Mansouri
+Localization
+Translation
+Model Infrastructure
+33 Providers.
+175,000+ Models.
+609 curated models across every frontier provider, plus universal pass-through to all of HuggingFace's open-source catalogue.
+OpenAI
+GPT-5
+Flagship
+GPT-4o
+Fast
+Reasoning
+Anthropic
+Claude Opus 4.6
+Premium
+Claude Sonnet 4.6
+Flagship
+Google
+Gemini 3 Flash
+Fast
+Gemini 3 Pro
+Flagship
+xAI (Grok)
+Grok 4
+Flagship
+Grok 3 Mini
+Economy
+DeepSeek
+DeepSeek Chat
+Economy
+DeepSeek Reasoner
+Reasoning
+Mistral AI
+Mistral Large
+Flagship
+Mistral Small
+Economy
+Groq + Cerebras
+Llama 4 Maverick
+Ultra-Fast
+QwQ-32B
+Reasoning
+Together AI
+Llama 4 Maverick FP8
+Fast
+Qwen 3 235B
+Flagship
+NVIDIA
+Nemotron Ultra 253B
+Premium
+Nemotron Super 49B
+Fast
+SambaNova
+DeepSeek R1-0528
+Reasoning
+Llama 4 Maverick
+Fast
+Perplexity
+Sonar Pro
+Research
+Sonar
+Search
+Cohere
+Command R+
+Flagship
+Command R
+Economy
+Amazon Bedrock
+Nova Pro
+Flagship
+Nova Lite
+Fast
+HuggingFace
+huggingface/{any}
+Pass-Through
+175,000+ Models
+Open-Source
+Meta Llama API
+Llama 4 Scout
+Fast
+Llama 4 Maverick
+Flagship
+Moonshot AI
+Kimi 1M Context
+Long-Context
+Moonshot v1
+Fast
+Qwen / Alibaba
+Qwen Max
+Flagship
+Qwen 3 235B
+Open
+Yi / 01.AI
+Yi Lightning
+Fast
+Yi Large FC
+Tool-Use
+Zhipu AI (GLM)
+GLM-5
+Flagship
+CodeGeeX-4
+Code
+ByteDance Doubao
+Seed 1.6
+Flagship
+Doubao Pro 128K
+Long-Context
+Upstage Solar
+Solar Pro
+Flagship
+Solar Mini
+Economy
+Writer Palmyra
+Palmyra X 004
+Flagship
+Palmyra Med
+Medical
+Hyperbolic
+Llama 3.1 405B
+Flagship
+DeepSeek-R1
+Reasoning
+Novita AI
+Llama 4 Maverick
+Fast
+DeepSeek R1
+Reasoning
+Lepton AI
+Llama 4 Scout
+Economy
+Mixtral 8x7B
+Fast
+Lambda Labs
+Hermes 3 405B
+Flagship
+Llama 3.3 70B
+Fast
+Minimax
+MiniMax Text-01
+Flagship
+MiniMax-01
+Vision
+Inception AI
+Mercury Coder Small
+Code
+Mercury Coder Mini
+Fast
+Arcee AI
+Arcee Maestro
+Reasoning
+Arcee Spark
+Fast
+AI21 Labs
+Jamba Large 1.7
+Flagship
+Jamba Mini 1.7
+Fast
+Fireworks AI
+Llama 4 Maverick FP8
+Fast
+DeepSeek R1
+Reasoning
+Hugging Face (Hub)
+175,000+ models
+Open-Source
+ElevenLabs (TTS)
+Multilingual v2
+Voice
+Turbo v2.5
+Fast-TTS
+Smart Routing
+Each agent selects the optimal model for the task — coding, writing, research, or analysis.
+Developer API
+One Key.
+175,000+ Models.
+Zero Hassle.
+Single OpenAI-compatible endpoint. Drop-in replace your
+base_url
+and call 175,000+ models with your existing SDK.
+33 Providers + 175,000+ Models
+609 curated models across all major providers, plus every HuggingFace open-source model via universal pass-through.
+10 Smart Aliases
+Use maars/auto, maars/code, maars/fast — MAARS routes to the best model for your task and budget automatically.
+One maars-sk Key
+Instant access to all 175,000+ models. Manage budgets, rate limits, and webhooks from a single admin panel.
+Python — drop-in replacement
+from openai import OpenAI
+
+client = OpenAI(
+    base_url
+https://maars.ai/api
+# ← change only this
+api_key
+maars-sk-...
+",
+)
+# Access 175,000+ models across 33 providers
+response = client.chat.completions.create(
+    model
+maars/auto
+# smart routing
+messages=[{
+"role"
+"user"
+"content"
+"Hello!"
+}],
+)
+Get Your Free API Key
+No credit card required · Free tier included · Full docs after sign-up
+Why Teams Choose MAARS
+Built for Teams That
+Move Fast
+10×
+Faster execution
+vs. manual workflows
+458+
+Expert agents
+ready in seconds
+175k+
+Models available
+from 33 providers
+100%
+Governance
+every action audited
+We replaced three separate SaaS tools and a contractor with MAARS. The 458 pre-built agents cover everything from SEO audits to financial modeling.
+Head of Growth
+Series B SaaS
+The Commander orchestration is a game-changer. One instruction fans out to 12 specialized agents in parallel. Tasks that took days now take minutes.
+CTO
+AI-native startup
+Governance was our blocker for AI adoption. MAARS trust scores, audit logs and RBAC gave us exactly what the legal team needed to approve it.
+VP Engineering
+FinTech scale-up
+Command Your AI Workforce
+Ready to Build Your
+AI Team?
+Join professionals leveraging AI to supercharge their workflow. One key. Every model. Unlimited potential.
+Get Started Free
+MAARS Command by MAARS Global Corporation © 2026
+175,000+ Models
+458+ Agents
+Developer API
+Pricing
+MAARS COMMAND
+by MAARS Global Corporation

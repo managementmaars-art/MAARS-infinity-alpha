@@ -1,0 +1,64 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "logo" [ref=e5] [cursor=pointer]:
+        - /url: /chat
+        - img "logo" [ref=e6]
+      - navigation [ref=e8]:
+        - link "Chat" [ref=e9] [cursor=pointer]:
+          - /url: /chat
+        - link "API" [ref=e10] [cursor=pointer]:
+          - /url: /model-api
+        - link "Contact" [ref=e11] [cursor=pointer]:
+          - /url: /contact
+  - main [ref=e15]
+  - contentinfo [ref=e16]:
+    - generic [ref=e18]:
+      - generic [ref=e21]: Z.ai
+      - generic [ref=e22]:
+        - heading "Product" [level=3] [ref=e23]
+        - list [ref=e24]:
+          - listitem [ref=e25]:
+            - link "Language Models" [ref=e26] [cursor=pointer]:
+              - /url: https://docs.z.ai/guides/llm/glm-4.6
+          - listitem [ref=e27]:
+            - link "Video Generation Models" [ref=e28] [cursor=pointer]:
+              - /url: https://docs.z.ai/guides/video/cogvideox-3
+          - listitem [ref=e29]:
+            - link "Agent" [ref=e30] [cursor=pointer]:
+              - /url: https://docs.z.ai/guides/agents/slide
+      - generic [ref=e31]:
+        - heading "Contact" [level=3] [ref=e32]
+        - list [ref=e33]:
+          - listitem [ref=e34]:
+            - link "Contact Sales" [ref=e35] [cursor=pointer]:
+              - /url: https://z.ai/consultation?type=zaiweb
+          - listitem [ref=e36]:
+            - link "Discord" [ref=e37] [cursor=pointer]:
+              - /url: https://discord.com/invite/QR7SARHRxK
+          - listitem [ref=e38]:
+            - link "More" [ref=e39] [cursor=pointer]:
+              - /url: /contact
+      - generic [ref=e40]:
+        - heading "API Management" [level=3] [ref=e41]
+        - list [ref=e42]:
+          - listitem [ref=e43]:
+            - link "API Keys" [ref=e44] [cursor=pointer]:
+              - /url: /manage-apikey/apikey-list
+          - listitem [ref=e45]:
+            - link "Payment Method" [ref=e46] [cursor=pointer]:
+              - /url: /manage-apikey/billing
+          - listitem [ref=e47]:
+            - link "Rate Limit" [ref=e48] [cursor=pointer]:
+              - /url: /manage-apikey/rate-limits
+      - generic [ref=e49]:
+        - heading "Resource" [level=3] [ref=e50]
+        - list [ref=e51]:
+          - listitem [ref=e52]:
+            - link "Term of service" [ref=e53] [cursor=pointer]:
+              - /url: https://docs.z.ai/legal-agreement/terms-of-use
+          - listitem [ref=e54]:
+            - link "Privacy Policy" [ref=e55] [cursor=pointer]:
+              - /url: https://docs.z.ai/legal-agreement/privacy-policy
+  - region "Notifications alt+T"
+  - alert [ref=e56]

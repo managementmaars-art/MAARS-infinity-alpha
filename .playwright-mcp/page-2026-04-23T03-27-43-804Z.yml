@@ -1,0 +1,90 @@
+- generic:
+  - generic:
+    - link:
+      - /url: https://fal.ai/models/openai/gpt-image-2/edit
+      - text: GPT Image 2 is now on fal! 🚀
+  - generic:
+    - generic:
+      - generic:
+        - img
+    - generic:
+      - generic:
+        - img
+        - generic:
+          - generic: Mirza
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - heading [level=1]: Tell us a bit about your team — this helps us route you to the right support & pricing options.
+              - generic:
+                - generic:
+                  - generic: What's your email?
+                  - textbox:
+                    - /placeholder: your.email@company.com
+                    - text: management.maars@marsgc.net
+                - generic:
+                  - generic: What's your role?
+                  - combobox [expanded]:
+                    - img
+                  - combobox
+                - generic:
+                  - generic: Which best describes your job level?
+                  - generic:
+                    - button: Individual contributor
+                    - button: Manager
+                    - button: Executive
+                    - button: Other
+                - generic:
+                  - generic: How many people work at your company?
+                  - generic:
+                    - generic:
+                      - radio [checked]
+                      - generic: Just me
+                    - generic:
+                      - radio
+                      - generic: 2-10 people
+                    - generic:
+                      - radio
+                      - generic: 11-50 people
+                    - generic:
+                      - radio
+                      - generic: 51-200 people
+                    - generic:
+                      - radio
+                      - generic: 201-1,000 people
+                    - generic:
+                      - radio
+                      - generic: 1,000 - 2,000 people
+                    - generic:
+                      - radio
+                      - generic: 2,000+ people
+            - generic:
+              - button:
+                - img
+                - text: Back
+            - generic:
+              - generic:
+                - button: Continue
+  - region "Notifications alt+T"
+  - alert
+  - listbox [ref=e152]:
+    - option "Engineer" [active] [ref=e153] [cursor=pointer]:
+      - generic [ref=e155]: Engineer
+    - option "Designer" [ref=e156] [cursor=pointer]:
+      - generic [ref=e158]: Designer
+    - option "Product Manager" [ref=e159] [cursor=pointer]:
+      - generic [ref=e161]: Product Manager
+    - option "Data Scientist" [ref=e162] [cursor=pointer]:
+      - generic [ref=e164]: Data Scientist
+    - option "Researcher" [ref=e165] [cursor=pointer]:
+      - generic [ref=e167]: Researcher
+    - option "Marketing" [ref=e168] [cursor=pointer]:
+      - generic [ref=e170]: Marketing
+    - option "Sales" [ref=e171] [cursor=pointer]:
+      - generic [ref=e173]: Sales
+    - option "Executive" [ref=e174] [cursor=pointer]:
+      - generic [ref=e176]: Executive
+    - option "Other" [ref=e177] [cursor=pointer]:
+      - generic [ref=e179]: Other

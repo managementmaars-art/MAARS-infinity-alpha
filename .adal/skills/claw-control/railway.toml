@@ -1,5 +1,0 @@
-# Railway deployment configuration for Claw Control
-# Let Railway auto-detect Dockerfile
-
-[start]
-cmd = "serve -s dist -l $PORT"

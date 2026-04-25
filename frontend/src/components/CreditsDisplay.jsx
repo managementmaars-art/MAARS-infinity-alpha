@@ -2,10 +2,12 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Diamond, Plus, Settings, Gift, RefreshCw, X, HelpCircle, Sparkles, ChevronDown } from "lucide-react";
 import { API, useAuth } from "../App";
 import { toast } from "sonner";
+import { BUCKETS, getPool, fmtCredits } from "../lib/bucketMeta";
 
 export const CreditsDisplay = () => {
   const { token } = useAuth();
   const [sub, setSub] = useState(null);
+  const [wallet, setWallet] = useState(null);        // /v1/credits → { buckets, … }
   const [showDropdown, setShowDropdown] = useState(false);
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [customAmount, setCustomAmount] = useState("");
@@ -18,11 +20,14 @@ export const CreditsDisplay = () => {
   const fetchSub = useCallback(async () => {
     if (!token) return;
     try {
-      const res = await fetch(`${API}/subscription`, { headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) setSub(await res.json());
+      const [subRes, walletRes] = await Promise.all([
+        fetch(`${API}/subscription`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API}/v1/credits`,   { headers: { Authorization: `Bearer ${token}` } }),
+      ]);
+      if (subRes.ok)    setSub(await subRes.json());
+      if (walletRes.ok) setWallet(await walletRes.json());
     } catch (e) {
-      console.error("Subscription fetch error:", e);
+      console.error("Subscription / wallet fetch error:", e);
     }
   }, [token]);
 
@@ -132,11 +137,22 @@ export const CreditsDisplay = () => {
 
   const currencySymbol = currency === "bdt" ? "৳" : "$";
 
-  const totalCredits = sub?.credits ?? 0;
-  const planCredits = sub?.plan_info?.credits ?? 50;
-  const planName = sub?.plan_info?.name ?? "Free";
-  const freeCredits = Math.min(50, totalCredits);
-  const topUpCredits = Math.max(0, totalCredits - planCredits);
+  // Unified token-quota view — the CLIENT sees credits only. One pool,
+  // spendable on any model across 33 providers.
+  const quotaView = wallet?.credits || null;
+  const creditsRemaining = quotaView?.credits_remaining ?? (sub?.credits ?? 0);
+  const creditsQuota     = quotaView?.credits_quota ?? (sub?.plan_info?.credits ?? 50);
+  const planName         = quotaView?.plan_name || sub?.plan_info?.name || "Free";
+  const pctUsed          = quotaView?.pct_used ?? 0;
+  const totalCalls       = quotaView?.total_calls ?? 0;
+  const periodEnd        = quotaView?.period_end;
+  const renewsIn = (() => {
+    if (!periodEnd) return null;
+    try {
+      const days = Math.max(0, Math.ceil((new Date(periodEnd) - Date.now()) / 86400000));
+      return days === 0 ? "today" : days === 1 ? "tomorrow" : `${days}d`;
+    } catch { return null; }
+  })();
 
   return (
     <>
@@ -147,8 +163,10 @@ export const CreditsDisplay = () => {
           data-testid="credits-balance-btn"
         >
           <Diamond className="w-4 h-4 text-amber-400" />
-          <span className="text-sm font-bold text-amber-400">{sub ? totalCredits.toFixed(2) : "..."}</span>
-          <span className="text-xs text-amber-500/60 font-medium ml-1 hidden sm:inline">+ Buy Credits</span>
+          <span className="text-sm font-bold text-amber-400">
+            {wallet || sub ? Number(creditsRemaining).toLocaleString(undefined, {maximumFractionDigits: 2}) : "..."}
+          </span>
+          <span className="text-xs text-amber-500/60 font-medium ml-1 hidden sm:inline">credits</span>
         </button>
 
         {showDropdown && (
@@ -156,16 +174,30 @@ export const CreditsDisplay = () => {
             <div className="p-5 pb-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-zinc-400">Available Credits</span>
-                  <HelpCircle className="w-3.5 h-3.5 text-zinc-600" />
+                  <span className="text-sm text-zinc-400">Credits Remaining</span>
+                  <HelpCircle className="w-3.5 h-3.5 text-zinc-600"
+                    title="One pool, spendable on any AI model. The router auto-picks the cheapest capable provider per request." />
                 </div>
                 <span className="px-3 py-1 text-xs font-bold rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center gap-1.5">
                   {planName} <Sparkles className="w-3 h-3" />
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-3xl font-bold text-amber-400">{totalCredits.toFixed(2)}</span>
-                <Diamond className="w-5 h-5 text-amber-400" />
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-amber-400">
+                  {Number(creditsRemaining).toLocaleString(undefined, {maximumFractionDigits: 2})}
+                </span>
+                <span className="text-sm text-zinc-500">/ {Number(creditsQuota).toLocaleString()} this period</span>
+              </div>
+              {/* Progress bar */}
+              <div className="mt-3 h-2 bg-zinc-800 rounded-full overflow-hidden">
+                <div
+                  className={`h-full transition-all ${pctUsed >= 90 ? "bg-rose-500" : pctUsed >= 75 ? "bg-amber-500" : "bg-emerald-500"}`}
+                  style={{width: `${Math.min(100, pctUsed)}%`}}
+                />
+              </div>
+              <div className="flex items-center justify-between mt-2 text-[11px] text-zinc-500">
+                <span>{pctUsed.toFixed(1)}% used · {totalCalls.toLocaleString()} calls</span>
+                {renewsIn && <span>Renews in {renewsIn}</span>}
               </div>
             </div>
 
@@ -191,6 +223,16 @@ export const CreditsDisplay = () => {
                 </div>
                 <span className="text-sm text-zinc-300 font-medium">{topUpCredits.toFixed(2)}</span>
               </div>
+            </div>
+
+            {/* UNIFIED CLIENT VIEW — one pool of credits, spendable on
+                any model across all providers. The router auto-picks
+                the cheapest capable provider per call so you get the
+                best quality and the operator keeps the margin. No
+                per-modality sub-budgets, no bucket math — the credit
+                number above is the hard cap for this period. */}
+            <div className="mx-5 mb-4 text-[11px] text-zinc-500 leading-relaxed">
+              Credits work everywhere — chat, app builds, images, videos, voice, transcription. Use them however you want; MAARS routes to the cheapest capable model automatically.
             </div>
 
             <div className="border-t border-dashed border-white/10 p-4 space-y-2.5">

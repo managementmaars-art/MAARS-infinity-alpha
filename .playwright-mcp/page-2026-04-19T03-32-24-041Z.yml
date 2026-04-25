@@ -1,0 +1,450 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e7]:
+      - generic [ref=e8]:
+        - link "MAARS MAARS Command by MAARS Global Corporation" [ref=e10] [cursor=pointer]:
+          - /url: /dashboard
+          - img "MAARS" [ref=e11]
+          - generic [ref=e12]:
+            - heading "MAARS Command" [level=1] [ref=e13]
+            - paragraph [ref=e14]: by MAARS Global Corporation
+        - generic [ref=e15]:
+          - generic [ref=e17]: ONLINE
+          - generic [ref=e18]: 499 agents
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - generic [ref=e28]:
+              - img [ref=e29]
+              - generic [ref=e31]: Unlimited
+            - generic [ref=e32]: Owner
+          - paragraph [ref=e33]: No credit limits apply
+        - button "Personal Workspace 1 members" [ref=e35] [cursor=pointer]:
+          - img [ref=e37]
+          - generic [ref=e41]:
+            - paragraph [ref=e42]: Personal Workspace
+            - paragraph [ref=e43]: 1 members
+          - img [ref=e44]
+        - button "Search… /" [ref=e47] [cursor=pointer]:
+          - img [ref=e48]
+          - generic [ref=e51]: Search…
+          - generic [ref=e52]: /
+        - navigation [ref=e53]:
+          - button "Dashboard" [ref=e55] [cursor=pointer]:
+            - img [ref=e56]
+            - generic [ref=e61]: Dashboard
+          - generic [ref=e62]:
+            - generic [ref=e65]: Workspace
+            - button "Projects" [ref=e67] [cursor=pointer]:
+              - img [ref=e68]
+              - generic [ref=e73]: Projects
+            - button "Chat" [ref=e74] [cursor=pointer]:
+              - img [ref=e75]
+              - generic [ref=e77]: Chat
+            - button "Tasks" [ref=e78] [cursor=pointer]:
+              - img [ref=e79]
+              - generic [ref=e82]: Tasks
+            - button "Approvals" [ref=e83] [cursor=pointer]:
+              - img [ref=e84]
+              - generic [ref=e88]: Approvals
+          - generic [ref=e89]:
+            - generic [ref=e92]: AI Tools
+            - button "Agents" [ref=e94] [cursor=pointer]:
+              - img [ref=e95]
+              - generic [ref=e98]: Agents
+            - button "Team Builder" [ref=e99] [cursor=pointer]:
+              - img [ref=e100]
+              - generic [ref=e103]: Team Builder
+            - button "Workspace Brain" [ref=e104] [cursor=pointer]:
+              - img [ref=e105]
+              - generic [ref=e115]: Workspace Brain
+            - button "Brain Profiles" [ref=e116] [cursor=pointer]:
+              - img [ref=e117]
+              - generic [ref=e120]: Brain Profiles
+            - button "Vibe Coding" [ref=e121] [cursor=pointer]:
+              - img [ref=e122]
+              - generic [ref=e125]: Vibe Coding
+            - button "Reference Intel" [ref=e126] [cursor=pointer]:
+              - img [ref=e127]
+              - generic [ref=e129]: Reference Intel
+            - button "Content Generator" [ref=e130] [cursor=pointer]:
+              - img [ref=e131]
+              - generic [ref=e136]: Content Generator
+          - generic [ref=e137]:
+            - generic [ref=e140]: Intelligence
+            - button "Kernel" [ref=e142] [cursor=pointer]:
+              - img [ref=e143]
+              - generic [ref=e147]: Kernel
+            - button "Agent Networks" [ref=e148] [cursor=pointer]:
+              - img [ref=e149]
+              - generic [ref=e154]: Agent Networks
+            - button "Task Graphs" [ref=e155] [cursor=pointer]:
+              - img [ref=e156]
+              - generic [ref=e160]: Task Graphs
+            - button "Knowledge Graph" [ref=e161] [cursor=pointer]:
+              - img [ref=e162]
+              - generic [ref=e168]: Knowledge Graph
+            - button "Trust Scores" [ref=e169] [cursor=pointer]:
+              - img [ref=e170]
+              - generic [ref=e172]: Trust Scores
+            - button "Execution Gateway" [ref=e173] [cursor=pointer]:
+              - img [ref=e174]
+              - generic [ref=e176]: Execution Gateway
+            - button "Workflow Builder" [ref=e177] [cursor=pointer]:
+              - img [ref=e178]
+              - generic [ref=e182]: Workflow Builder
+            - button "Campaign Builder" [ref=e183] [cursor=pointer]:
+              - img [ref=e184]
+              - generic [ref=e187]: Campaign Builder
+            - button "Integrations" [ref=e188] [cursor=pointer]:
+              - img [ref=e189]
+              - generic [ref=e191]: Integrations
+            - button "Embedded Browser" [ref=e192] [cursor=pointer]:
+              - img [ref=e193]
+              - generic [ref=e196]: Embedded Browser
+            - button "Social Media" [ref=e197] [cursor=pointer]:
+              - img [ref=e198]
+              - generic [ref=e204]: Social Media
+            - button "Universal Key" [ref=e205] [cursor=pointer]:
+              - img [ref=e206]
+              - generic [ref=e210]: Universal Key
+            - button "Analytics" [ref=e211] [cursor=pointer]:
+              - img [ref=e212]
+              - generic [ref=e215]: Analytics
+            - button "Agent Suggestions" [ref=e216] [cursor=pointer]:
+              - img [ref=e217]
+              - generic [ref=e219]: Agent Suggestions
+            - button "Environments" [ref=e220] [cursor=pointer]:
+              - img [ref=e221]
+              - generic [ref=e224]: Environments
+            - button "Memory Hierarchy" [ref=e225] [cursor=pointer]:
+              - img [ref=e226]
+              - generic [ref=e228]: Memory Hierarchy
+            - button "Memory" [ref=e229] [cursor=pointer]:
+              - img [ref=e230]
+              - generic [ref=e234]: Memory
+            - button "Collaborations" [ref=e235] [cursor=pointer]:
+              - img [ref=e236]
+              - generic [ref=e238]: Collaborations
+            - button "KPI Dashboard" [ref=e239] [cursor=pointer]:
+              - img [ref=e240]
+              - generic [ref=e243]: KPI Dashboard
+            - button "Activity Monitor" [ref=e244] [cursor=pointer]:
+              - img [ref=e245]
+              - generic [ref=e251]: Activity Monitor
+            - button "My Insights" [ref=e252] [cursor=pointer]:
+              - img [ref=e253]
+              - generic [ref=e255]: My Insights
+          - generic [ref=e256]:
+            - generic [ref=e259]: MAARS Infinity
+            - button "Developer API" [ref=e261] [cursor=pointer]:
+              - img [ref=e262]
+              - generic [ref=e264]: Developer API
+            - button "Observability" [ref=e265] [cursor=pointer]:
+              - img [ref=e266]
+              - generic [ref=e273]: Observability
+            - button "Model Router" [ref=e274] [cursor=pointer]:
+              - img [ref=e275]
+              - generic [ref=e277]: Model Router
+            - button "Commander Orion" [ref=e278] [cursor=pointer]:
+              - img [ref=e279]
+              - generic [ref=e285]: Commander Orion
+            - button "Venture Portfolio" [ref=e286] [cursor=pointer]:
+              - img [ref=e287]
+              - generic [ref=e290]: Venture Portfolio
+            - button "Operator Panel" [ref=e291] [cursor=pointer]:
+              - img [ref=e292]
+              - generic [ref=e294]: Operator Panel
+            - button "Agent Catalog" [ref=e295] [cursor=pointer]:
+              - img [ref=e296]
+              - generic [ref=e301]: Agent Catalog
+          - generic [ref=e302]:
+            - generic [ref=e305]: Manage
+            - button "Products" [ref=e307] [cursor=pointer]:
+              - img [ref=e308]
+              - generic [ref=e312]: Products
+            - button "Team" [ref=e313] [cursor=pointer]:
+              - img [ref=e314]
+              - generic [ref=e319]: Team
+            - button "Organization" [ref=e320] [cursor=pointer]:
+              - img [ref=e321]
+              - generic [ref=e325]: Organization
+            - button "Settings" [ref=e326] [cursor=pointer]:
+              - img [ref=e327]
+              - generic [ref=e330]: Settings
+            - button "About" [ref=e331] [cursor=pointer]:
+              - img [ref=e332]
+              - generic [ref=e334]: About
+          - generic [ref=e337]: Admin
+          - button "Overview" [ref=e339] [cursor=pointer]:
+            - img [ref=e340]
+            - generic [ref=e342]: Overview
+          - button "Analytics" [ref=e343] [cursor=pointer]:
+            - img [ref=e344]
+            - generic [ref=e346]: Analytics
+          - button "Universal Gateway" [ref=e347] [cursor=pointer]:
+            - img [ref=e348]
+            - generic [ref=e351]: Universal Gateway
+          - button "Provider Intel" [ref=e352] [cursor=pointer]:
+            - img [ref=e354]
+            - generic [ref=e356]: Provider Intel
+          - button "Users" [ref=e358] [cursor=pointer]:
+            - img [ref=e359]
+            - generic [ref=e364]: Users
+          - button "Agents" [ref=e365] [cursor=pointer]:
+            - img [ref=e366]
+            - generic [ref=e369]: Agents
+          - button "Transactions" [ref=e370] [cursor=pointer]:
+            - img [ref=e371]
+            - generic [ref=e373]: Transactions
+          - button "Pricing & Splits" [ref=e374] [cursor=pointer]:
+            - img [ref=e375]
+            - generic [ref=e378]: Pricing & Splits
+          - button "Operator Metrics" [ref=e379] [cursor=pointer]:
+            - img [ref=e380]
+            - generic [ref=e382]: Operator Metrics
+          - button "API Keys" [ref=e383] [cursor=pointer]:
+            - img [ref=e384]
+            - generic [ref=e388]: API Keys
+          - button "Payment Setup" [ref=e389] [cursor=pointer]:
+            - img [ref=e390]
+            - generic [ref=e392]: Payment Setup
+          - button "Email (SMTP)" [ref=e393] [cursor=pointer]:
+            - img [ref=e394]
+            - generic [ref=e397]: Email (SMTP)
+          - button "Branding" [ref=e398] [cursor=pointer]:
+            - img [ref=e399]
+            - generic [ref=e403]: Branding
+          - button "Knowledge Base" [ref=e404] [cursor=pointer]:
+            - img [ref=e405]
+            - generic [ref=e407]: Knowledge Base
+          - button "Audit Log" [ref=e408] [cursor=pointer]:
+            - img [ref=e409]
+            - generic [ref=e412]: Audit Log
+          - button "Code Explorer" [ref=e413] [cursor=pointer]:
+            - img [ref=e414]
+            - generic [ref=e419]: Code Explorer
+          - button "Access Control" [ref=e420] [cursor=pointer]:
+            - img [ref=e421]
+            - generic [ref=e424]: Access Control
+          - button "Circuit Breakers" [ref=e425] [cursor=pointer]:
+            - img [ref=e426]
+            - generic [ref=e432]: Circuit Breakers
+          - button "Cost Governance" [ref=e433] [cursor=pointer]:
+            - img [ref=e434]
+            - generic [ref=e437]: Cost Governance
+          - button "Preview Client View" [ref=e438] [cursor=pointer]:
+            - img [ref=e439]
+            - generic [ref=e442]: Preview Client View
+        - button "Collapse" [ref=e444] [cursor=pointer]:
+          - img [ref=e445]
+          - generic [ref=e448]: Collapse
+        - generic [ref=e449]:
+          - generic [ref=e455]:
+            - paragraph [ref=e456]: Mirza Arafat Abbas
+            - paragraph [ref=e457]: management.maars@marsgc.net
+          - generic [ref=e458]:
+            - generic [ref=e459]: LIVE
+            - generic [ref=e460]: MAARS v2.0
+          - button "Log Out" [ref=e465] [cursor=pointer]:
+            - img [ref=e466]
+            - generic [ref=e469]: Log Out
+    - generic [ref=e473]:
+      - generic [ref=e474]:
+        - generic [ref=e475]:
+          - heading "Provider Intelligence" [level=1] [ref=e476]
+          - paragraph [ref=e477]: Live data from 22 provider APIs | 751 models accessible
+        - generic [ref=e478]:
+          - button "Providers" [ref=e479] [cursor=pointer]
+          - button "Package Advisor" [ref=e480] [cursor=pointer]
+          - button "Refresh Live" [ref=e481] [cursor=pointer]
+      - generic [ref=e482]:
+        - generic [ref=e483]:
+          - generic [ref=e484]: Providers
+          - generic [ref=e485]: "22"
+        - generic [ref=e486]:
+          - generic [ref=e487]: Models
+          - generic [ref=e488]: "751"
+        - generic [ref=e489]:
+          - generic [ref=e490]: Free Tier
+          - generic [ref=e491]: "7"
+        - generic [ref=e492]:
+          - generic [ref=e493]: With Balance
+          - generic [ref=e494]: "12"
+        - generic [ref=e495]:
+          - generic [ref=e496]: Budget
+          - generic [ref=e497]: $131
+      - generic [ref=e498]:
+        - generic [ref=e507]:
+          - heading "Your Operator Split = Your Profit Margin" [level=3] [ref=e508]
+          - paragraph [ref=e509]:
+            - text: Your smart router sends ~70% of traffic to
+            - strong [ref=e510]: 6 free-tier providers
+            - text: at $0 cost. The remaining 30% routes to cheap providers (DeepSeek, Together, Fireworks) at ~$0.50/1M tokens. Your real cost to serve each customer is
+            - strong [ref=e511]: near zero
+            - text: . This means your
+            - strong [ref=e512]: operator split percentage IS your profit margin
+            - text: — you keep it all.
+        - generic [ref=e513]:
+          - generic [ref=e514]:
+            - generic [ref=e515]: Providers Live
+            - generic [ref=e516]: "22"
+          - generic [ref=e517]:
+            - generic [ref=e518]: Free Providers
+            - generic [ref=e519]: "7"
+            - generic [ref=e520]: ($0 routing cost)
+          - generic [ref=e521]:
+            - generic [ref=e522]: Models Available
+            - generic [ref=e523]: "751"
+          - generic [ref=e524]:
+            - generic [ref=e525]: Provider Budget
+            - generic [ref=e526]: $131
+            - generic [ref=e527]: for paid routing only
+        - generic [ref=e528]:
+          - heading "Package Profitability" [level=2] [ref=e529]
+          - paragraph [ref=e530]:
+            - text: AI Cost = credits × blended cost per credit (client's strict cap). Profit = Price - AI Cost.
+            - generic [ref=e531]: "Live cost: $0.000038/credit"
+          - table [ref=e533]:
+            - rowgroup [ref=e534]:
+              - row "Package Price Credits AI Cost (cap) Profit Margin Capacity" [ref=e535]:
+                - columnheader "Package" [ref=e536]
+                - columnheader "Price" [ref=e537]
+                - columnheader "Credits" [ref=e538]
+                - columnheader "AI Cost (cap)" [ref=e539]
+                - columnheader "Profit" [ref=e540]
+                - columnheader "Margin" [ref=e541]
+                - columnheader "Capacity" [ref=e542]
+                - columnheader [ref=e543]
+            - rowgroup [ref=e544]:
+              - row "Starter▼ $50 300 $0.01 $49.99 ∞ 999+ PROFITABLE" [ref=e545] [cursor=pointer]:
+                - cell "Starter▼" [ref=e546]
+                - cell "$50" [ref=e547]
+                - cell "300" [ref=e548]
+                - cell "$0.01" [ref=e549]
+                - cell "$49.99" [ref=e550]:
+                  - generic [ref=e551]: $49.99
+                - cell "∞" [ref=e552]
+                - cell "999+" [ref=e553]
+                - cell "PROFITABLE" [ref=e554]
+              - row "Essential▼ $100 600 $0.02 $99.98 ∞ 999+ PROFITABLE" [ref=e555] [cursor=pointer]:
+                - cell "Essential▼" [ref=e556]
+                - cell "$100" [ref=e557]
+                - cell "600" [ref=e558]
+                - cell "$0.02" [ref=e559]
+                - cell "$99.98" [ref=e560]:
+                  - generic [ref=e561]: $99.98
+                - cell "∞" [ref=e562]
+                - cell "999+" [ref=e563]
+                - cell "PROFITABLE" [ref=e564]
+              - row "Basic▼ $200 1,200 $0.05 $199.95 ∞ 999+ PROFITABLE" [ref=e565] [cursor=pointer]:
+                - cell "Basic▼" [ref=e566]
+                - cell "$200" [ref=e567]
+                - cell "1,200" [ref=e568]
+                - cell "$0.05" [ref=e569]
+                - cell "$199.95" [ref=e570]:
+                  - generic [ref=e571]: $199.95
+                - cell "∞" [ref=e572]
+                - cell "999+" [ref=e573]
+                - cell "PROFITABLE" [ref=e574]
+              - row "Standard▼ $350 2,000 $0.08 $349.92 ∞ 999+ PROFITABLE" [ref=e575] [cursor=pointer]:
+                - cell "Standard▼" [ref=e576]
+                - cell "$350" [ref=e577]
+                - cell "2,000" [ref=e578]
+                - cell "$0.08" [ref=e579]
+                - cell "$349.92" [ref=e580]:
+                  - generic [ref=e581]: $349.92
+                - cell "∞" [ref=e582]
+                - cell "999+" [ref=e583]
+                - cell "PROFITABLE" [ref=e584]
+              - row "Professional▼ $500 3,000 $0.12 $499.88 ∞ 999+ PROFITABLE" [ref=e585] [cursor=pointer]:
+                - cell "Professional▼" [ref=e586]
+                - cell "$500" [ref=e587]
+                - cell "3,000" [ref=e588]
+                - cell "$0.12" [ref=e589]
+                - cell "$499.88" [ref=e590]:
+                  - generic [ref=e591]: $499.88
+                - cell "∞" [ref=e592]
+                - cell "999+" [ref=e593]
+                - cell "PROFITABLE" [ref=e594]
+              - row "Advanced▼ $750 4,000 $0.15 $749.85 ∞ 853 PROFITABLE" [ref=e595] [cursor=pointer]:
+                - cell "Advanced▼" [ref=e596]
+                - cell "$750" [ref=e597]
+                - cell "4,000" [ref=e598]
+                - cell "$0.15" [ref=e599]
+                - cell "$749.85" [ref=e600]:
+                  - generic [ref=e601]: $749.85
+                - cell "∞" [ref=e602]
+                - cell "853" [ref=e603]
+                - cell "PROFITABLE" [ref=e604]
+              - row "Business▼ $1000 5,000 $0.19 $999.81 ∞ 682 PROFITABLE" [ref=e605] [cursor=pointer]:
+                - cell "Business▼" [ref=e606]
+                - cell "$1000" [ref=e607]
+                - cell "5,000" [ref=e608]
+                - cell "$0.19" [ref=e609]
+                - cell "$999.81" [ref=e610]:
+                  - generic [ref=e611]: $999.81
+                - cell "∞" [ref=e612]
+                - cell "682" [ref=e613]
+                - cell "PROFITABLE" [ref=e614]
+              - row "Agency▼ $1500 6,500 $0.25 $1499.75 ∞ 525 PROFITABLE" [ref=e615] [cursor=pointer]:
+                - cell "Agency▼" [ref=e616]
+                - cell "$1500" [ref=e617]
+                - cell "6,500" [ref=e618]
+                - cell "$0.25" [ref=e619]
+                - cell "$1499.75" [ref=e620]:
+                  - generic [ref=e621]: $1499.75
+                - cell "∞" [ref=e622]
+                - cell "525" [ref=e623]
+                - cell "PROFITABLE" [ref=e624]
+              - row "Studio▼ $2500 7,500 $0.29 $2499.71 ∞ 455 PROFITABLE" [ref=e625] [cursor=pointer]:
+                - cell "Studio▼" [ref=e626]
+                - cell "$2500" [ref=e627]
+                - cell "7,500" [ref=e628]
+                - cell "$0.29" [ref=e629]
+                - cell "$2499.71" [ref=e630]:
+                  - generic [ref=e631]: $2499.71
+                - cell "∞" [ref=e632]
+                - cell "455" [ref=e633]
+                - cell "PROFITABLE" [ref=e634]
+              - row "Enterprise▼ $3500 8,500 $0.33 $3499.67 ∞ 401 PROFITABLE" [ref=e635] [cursor=pointer]:
+                - cell "Enterprise▼" [ref=e636]
+                - cell "$3500" [ref=e637]
+                - cell "8,500" [ref=e638]
+                - cell "$0.33" [ref=e639]
+                - cell "$3499.67" [ref=e640]:
+                  - generic [ref=e641]: $3499.67
+                - cell "∞" [ref=e642]
+                - cell "401" [ref=e643]
+                - cell "PROFITABLE" [ref=e644]
+              - row "Corporate▼ $5000 9,500 $0.36 $4999.64 ∞ 359 PROFITABLE" [ref=e645] [cursor=pointer]:
+                - cell "Corporate▼" [ref=e646]
+                - cell "$5000" [ref=e647]
+                - cell "9,500" [ref=e648]
+                - cell "$0.36" [ref=e649]
+                - cell "$4999.64" [ref=e650]:
+                  - generic [ref=e651]: $4999.64
+                - cell "∞" [ref=e652]
+                - cell "359" [ref=e653]
+                - cell "PROFITABLE" [ref=e654]
+              - row "Elite▼ $8000 10,000 $0.38 $7999.62 ∞ 341 PROFITABLE" [ref=e655] [cursor=pointer]:
+                - cell "Elite▼" [ref=e656]
+                - cell "$8000" [ref=e657]
+                - cell "10,000" [ref=e658]
+                - cell "$0.38" [ref=e659]
+                - cell "$7999.62" [ref=e660]:
+                  - generic [ref=e661]: $7999.62
+                - cell "∞" [ref=e662]
+                - cell "341" [ref=e663]
+                - cell "PROFITABLE" [ref=e664]
+    - generic [ref=e499]:
+      - generic "Chat with Commander Orion" [ref=e500] [cursor=pointer]:
+        - img "Commander Orion" [ref=e503]
+      - button "Start a new chat" [ref=e505] [cursor=pointer]:
+        - img [ref=e506]
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

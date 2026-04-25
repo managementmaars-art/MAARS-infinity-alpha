@@ -1,0 +1,186 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#content-area"
+    - generic [ref=e5]:
+      - generic [ref=e9]:
+        - generic [ref=e12]:
+          - link "Bytez home page light logo" [ref=e14] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e15]: Bytez home page
+            - img "light logo" [ref=e16]
+          - button "Open search" [ref=e18] [cursor=pointer]:
+            - generic [ref=e19]:
+              - img [ref=e20]
+              - generic [ref=e23]: Search...
+            - generic [ref=e24]: Ctrl K
+          - generic [ref=e25]:
+            - navigation [ref=e26]:
+              - list [ref=e27]:
+                - listitem [ref=e28]:
+                  - link "Discord" [ref=e29] [cursor=pointer]:
+                    - /url: https://discord.com/invite/Z723PfCFWf
+                - listitem [ref=e30]:
+                  - link "Get support" [ref=e31] [cursor=pointer]:
+                    - /url: https://discord.com/invite/Z723PfCFWf
+                - listitem [ref=e32] [cursor=pointer]:
+                  - link "Bytez-com/docs" [ref=e33]:
+                    - /url: https://github.com/Bytez-com/docs
+                    - generic [ref=e35]:
+                      - img [ref=e36]
+                      - generic [ref=e38]: Bytez-com/docs
+            - button "Toggle dark mode" [ref=e40] [cursor=pointer]:
+              - img [ref=e41]
+        - generic [ref=e49]:
+          - link "Docs" [ref=e50] [cursor=pointer]:
+            - /url: /model-api/docs/welcome
+            - text: Docs
+          - link "HTTP Reference" [ref=e52] [cursor=pointer]:
+            - /url: /http-reference/overview
+            - text: HTTP Reference
+          - link "Integrations" [ref=e54] [cursor=pointer]:
+            - /url: /integrations/langchain
+            - text: Integrations
+          - link "API status" [ref=e56] [cursor=pointer]:
+            - /url: /model-api/docs/status
+            - text: API status
+      - generic [ref=e58]:
+        - generic [ref=e63]:
+          - heading "Model API" [level=5] [ref=e65]
+          - list [ref=e66]:
+            - listitem [ref=e67]:
+              - link "Welcome" [ref=e68] [cursor=pointer]:
+                - /url: /model-api/docs/welcome
+                - img [ref=e70]
+                - generic [ref=e73]: Welcome
+            - listitem [ref=e74]:
+              - link "Get started" [ref=e75] [cursor=pointer]:
+                - /url: /model-api/docs/get-started
+                - img [ref=e77]
+                - generic [ref=e80]: Get started
+            - listitem [ref=e81]:
+              - button "Toggle Understand the API section" [expanded] [ref=e82] [cursor=pointer]:
+                - img [ref=e84]
+                - generic [ref=e85]: Understand the API
+                - img [ref=e87]
+              - list [ref=e89]:
+                - listitem [ref=e90]:
+                  - link "Open vs Closed models" [ref=e91] [cursor=pointer]:
+                    - /url: /model-api/docs/understand-the-api
+                    - img [ref=e93]
+                    - generic [ref=e96]: Open vs Closed models
+                - listitem [ref=e97]:
+                  - link "Billing & Credits" [ref=e98] [cursor=pointer]:
+                    - /url: /model-api/docs/billing
+                    - img [ref=e100]
+                    - generic [ref=e103]: Billing & Credits
+            - listitem [ref=e104]:
+              - button "Toggle Open AI Completions section" [ref=e105] [cursor=pointer]:
+                - img [ref=e107]
+                - generic [ref=e108]: Open AI Completions
+                - img [ref=e110]
+            - listitem [ref=e112]:
+              - button "Toggle Closed Source Params section" [ref=e113] [cursor=pointer]:
+                - img [ref=e115]
+                - generic [ref=e116]: Closed Source Params
+                - img [ref=e118]
+            - listitem [ref=e120]:
+              - button "Toggle Chat Models section" [ref=e121] [cursor=pointer]:
+                - img [ref=e123]
+                - generic [ref=e124]: Chat Models
+                - img [ref=e126]
+            - listitem [ref=e128]:
+              - button "Toggle Language Models section" [ref=e129] [cursor=pointer]:
+                - img [ref=e131]
+                - generic [ref=e132]: Language Models
+                - img [ref=e134]
+            - listitem [ref=e136]:
+              - button "Toggle Image Models section" [ref=e137] [cursor=pointer]:
+                - img [ref=e139]
+                - generic [ref=e140]: Image Models
+                - img [ref=e142]
+            - listitem [ref=e144]:
+              - button "Toggle Video Models section" [ref=e145] [cursor=pointer]:
+                - img [ref=e147]
+                - generic [ref=e148]: Video Models
+                - img [ref=e150]
+            - listitem [ref=e152]:
+              - button "Toggle Audio Models section" [ref=e153] [cursor=pointer]:
+                - img [ref=e155]
+                - generic [ref=e156]: Audio Models
+                - img [ref=e158]
+            - listitem [ref=e160]:
+              - button "Toggle Multimodal Models section" [ref=e161] [cursor=pointer]:
+                - img [ref=e163]
+                - generic [ref=e164]: Multimodal Models
+                - img [ref=e166]
+            - listitem [ref=e168]:
+              - link "Containers" [ref=e169] [cursor=pointer]:
+                - /url: /model-api/docs/containers
+                - img [ref=e171]
+                - generic [ref=e174]: Containers
+            - listitem [ref=e175]:
+              - link "Request a model" [ref=e176] [cursor=pointer]:
+                - /url: /model-api/docs/requestAModel
+                - img [ref=e178]
+                - generic [ref=e181]: Request a model
+        - generic [ref=e184]:
+          - banner [ref=e185]:
+            - generic [ref=e186]:
+              - generic [ref=e187]: Model API
+              - heading "Get started" [level=1] [ref=e189]
+            - paragraph [ref=e191]: Install our API libraries and run inference in seconds
+          - generic [ref=e193]:
+            - group [ref=e194]:
+              - generic "Install sdk" [ref=e195] [cursor=pointer]:
+                - img [ref=e197]
+                - img [ref=e199]
+                - paragraph [ref=e201]: Install sdk
+            - group [ref=e202]:
+              - generic "Auth" [ref=e203] [cursor=pointer]:
+                - img [ref=e205]
+                - img [ref=e207]
+                - paragraph [ref=e209]: Auth
+            - group [ref=e210]:
+              - generic "Run a model" [ref=e211] [cursor=pointer]:
+                - img [ref=e213]
+                - img [ref=e215]
+                - paragraph [ref=e217]: Run a model
+            - group [ref=e218]:
+              - generic "List tasks and models" [ref=e219] [cursor=pointer]:
+                - img [ref=e221]
+                - img [ref=e223]
+                - paragraph [ref=e225]: List tasks and models
+          - generic [ref=e226]:
+            - link "Welcome" [ref=e227] [cursor=pointer]:
+              - /url: /model-api/docs/welcome
+              - img [ref=e228]
+              - generic [ref=e230]: Welcome
+            - link "Open vs Closed models" [ref=e231] [cursor=pointer]:
+              - /url: /model-api/docs/understand-the-api
+              - generic [ref=e232]: Open vs Closed models
+              - img [ref=e233]
+          - contentinfo [ref=e235]:
+            - generic [ref=e236]:
+              - link "x" [ref=e237] [cursor=pointer]:
+                - /url: https://x.com/bytez
+                - generic [ref=e238]: x
+                - img [ref=e239]
+              - link "github" [ref=e240] [cursor=pointer]:
+                - /url: https://github.com/bytez-com
+                - generic [ref=e241]: github
+                - img [ref=e242]
+              - link "linkedin" [ref=e243] [cursor=pointer]:
+                - /url: https://linkedin.com/company/bytez
+                - generic [ref=e244]: linkedin
+                - img [ref=e245]
+              - link "discord" [ref=e246] [cursor=pointer]:
+                - /url: https://discord.com/invite/Z723PfCFWf
+                - generic [ref=e247]: discord
+                - img [ref=e248]
+            - link "Powered by This documentation is built and hosted on Mintlify, a developer documentation platform" [ref=e251] [cursor=pointer]:
+              - /url: https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=bytez
+              - generic [ref=e252]: Powered by
+              - img [ref=e253]
+              - generic [ref=e262]: This documentation is built and hosted on Mintlify, a developer documentation platform
+  - alert [ref=e263]

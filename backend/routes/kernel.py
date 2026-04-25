@@ -21,8 +21,8 @@ from services.kernel_service import (
     get_memory_layers, get_memory_stats,
     get_campaign_templates, get_campaigns, get_campaign,
     create_campaign, update_campaign, delete_campaign, execute_campaign,
-    get_integrations, get_user_integrations, save_user_integration,
-    disconnect_integration, toggle_integration,
+    get_integrations, get_integration_overview, get_user_integrations, save_user_integration,
+    disconnect_integration, toggle_integration, verify_user_integration,
     generate_campaign_pdf,
     get_trust_analytics,
     schedule_campaign, get_scheduled_campaigns, remove_schedule,
@@ -549,14 +549,7 @@ class IntegrationToggle(BaseModel):
 
 @router.get("/integrations/available")
 async def list_available_integrations(user=Depends(get_current_user)):
-    available = await get_integrations()
-    user_integrations = await get_user_integrations(user.user_id)
-    connected_ids = {i["integration_id"] for i in user_integrations}
-    return {
-        "available": available,
-        "connected": user_integrations,
-        "connected_ids": list(connected_ids),
-    }
+    return await get_integration_overview(user.user_id)
 
 
 @router.post("/integrations/connect")
@@ -576,6 +569,14 @@ async def remove_integration(integration_id: str, user=Depends(get_current_user)
 @router.put("/integrations/{integration_id}/toggle")
 async def toggle_int(integration_id: str, data: IntegrationToggle, user=Depends(get_current_user)):
     result = await toggle_integration(user.user_id, integration_id, data.enabled)
+    if not result:
+        raise HTTPException(status_code=404, detail="Integration not found")
+    return result
+
+
+@router.post("/integrations/{integration_id}/verify")
+async def verify_int(integration_id: str, user=Depends(get_current_user)):
+    result = await verify_user_integration(user.user_id, integration_id)
     if not result:
         raise HTTPException(status_code=404, detail="Integration not found")
     return result

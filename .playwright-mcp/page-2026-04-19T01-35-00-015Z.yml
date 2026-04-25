@@ -1,0 +1,630 @@
+- generic [ref=e1]:
+  - banner
+  - banner [ref=e2]:
+    - navigation "primary navigation" [ref=e3]:
+      - link "Higgsfield AI – AI Video & Image Generation Platform" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img [ref=e5]
+      - generic [ref=e8]:
+        - link "Explore" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - button "Image" [ref=e11] [cursor=pointer]
+        - button "Video" [ref=e13] [cursor=pointer]
+        - button "Audio" [ref=e15] [cursor=pointer]
+        - link "Collab" [ref=e16] [cursor=pointer]:
+          - /url: /generate
+        - button "Edit" [ref=e18] [cursor=pointer]
+        - button "Character" [ref=e20] [cursor=pointer]
+        - link "Marketing Studio New" [ref=e21] [cursor=pointer]:
+          - /url: /marketing-studio
+          - text: Marketing Studio
+          - generic [ref=e22]: New
+        - link "Cinema Studio 3.5" [ref=e23] [cursor=pointer]:
+          - /url: /cinema-studio?autoSelectFolder=true
+          - text: Cinema Studio
+          - generic [ref=e24]: "3.5"
+        - link "Originals New" [ref=e25] [cursor=pointer]:
+          - /url: /original-series
+          - text: Originals
+          - generic [ref=e26]: New
+        - link "Apps" [ref=e27] [cursor=pointer]:
+          - /url: /apps
+        - link "Assist" [ref=e28] [cursor=pointer]:
+          - /url: /chat
+        - button "Community" [ref=e30] [cursor=pointer]
+      - generic [ref=e172]:
+        - link "Upgrade 55% OFF" [ref=e173] [cursor=pointer]:
+          - /url: /pricing
+          - generic [ref=e174]:
+            - img [ref=e175]
+            - text: Upgrade
+            - generic [ref=e178]: 55% OFF
+        - separator [ref=e179]
+        - generic [ref=e180]:
+          - button "Notifications" [ref=e182] [cursor=pointer]:
+            - img [ref=e183]
+          - link "Folder icon Assets" [ref=e185] [cursor=pointer]:
+            - /url: /asset/all
+            - img "Folder icon" [ref=e187]
+            - generic [ref=e188]: Assets
+          - button "user profile" [ref=e190] [cursor=pointer]:
+            - generic [ref=e193]:
+              - img "user profile" [ref=e195]
+              - img [ref=e196]
+  - main [ref=e42]:
+    - generic [ref=e43]:
+      - generic [ref=e44]:
+        - navigation [ref=e45]:
+          - generic [ref=e46] [cursor=pointer]: Create Video
+          - generic [ref=e47] [cursor=pointer]: Edit Video
+          - generic [ref=e48] [cursor=pointer]: Motion Control
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - group [ref=e52]:
+              - button "General Kling 3.0" [ref=e53]:
+                - generic [ref=e54]: Your browser does not support the video.
+                - generic [ref=e56]:
+                  - paragraph [ref=e57]: General
+                  - paragraph [ref=e58]: Kling 3.0
+                - button "Change" [ref=e60] [cursor=pointer]:
+                  - img [ref=e61]
+                  - text: Change
+            - generic [ref=e63]:
+              - generic [ref=e66]:
+                - generic [ref=e70] [cursor=pointer]:
+                  - button "Uploaded image" [ref=e1559]
+                  - generic [ref=e1561]:
+                    - button "Uploaded image" [ref=e1565]
+                    - button [ref=e1569]:
+                      - img [ref=e1570]
+                - generic [ref=e79]:
+                  - generic:
+                    - paragraph: Optional
+                  - generic [ref=e81] [cursor=pointer]:
+                    - button "End frame" [ref=e82]
+                    - img [ref=e84]
+                    - paragraph [ref=e88]: End frame
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]: Multi-shot
+                  - button [ref=e93] [cursor=pointer]:
+                    - img [ref=e94]
+                - switch [ref=e96] [cursor=pointer]
+              - generic [ref=e98]:
+                - textbox [active] [ref=e100]:
+                  - paragraph [ref=e340]: "Commander Orion stands center frame. The \"Describe your goal\" field types itself: \"Launch our Q2 marketing campaign across all channels.\" The \"Execute Goal\" button pulses orange. Then from Commander Orion's portrait, glowing cyan and purple beams of light fan outward in 12 directions across a dark void, each beam connecting to a distant glowing agent portrait avatar (sales, marketing, design, copywriting, analytics, social media). Each connection point pulses as agents activate. Camera cranes up and pulls back to reveal the full constellation of activated agents working in parallel. Photorealistic UI for the foreground panel, cosmic cinematic background, smooth orchestration animation."
+                - generic [ref=e101]:
+                  - generic [ref=e102] [cursor=pointer]:
+                    - img [ref=e104]
+                    - generic [ref=e106]: Enhance on
+                    - checkbox "Enhance on" [checked] [ref=e107]
+                  - generic [ref=e108] [cursor=pointer]:
+                    - img [ref=e110]
+                    - generic [ref=e112]: "On"
+                    - checkbox "On" [checked] [ref=e113]
+                  - button "Elements" [ref=e114] [cursor=pointer]:
+                    - img [ref=e115]
+                    - text: Elements
+              - button "Model" [ref=e119] [cursor=pointer]:
+                - generic [ref=e120]:
+                  - generic [ref=e121]: Model
+                  - generic [ref=e123]:
+                    - paragraph [ref=e124]: Kling 3.0
+                    - img [ref=e200]
+                - img [ref=e125]
+              - generic [ref=e127]:
+                - button "Duration" [ref=e129] [cursor=pointer]:
+                  - img [ref=e130]
+                  - generic [ref=e132]: 5s
+                - generic [ref=e145]:
+                  - button "720p Resolution" [ref=e147] [cursor=pointer]:
+                    - img [ref=e149]
+                    - generic [ref=e151]: 720p
+                  - combobox [ref=e154]
+          - button "Generate 10" [ref=e2643] [cursor=pointer]:
+            - text: Generate
+            - generic [ref=e2644]:
+              - img [ref=e2645]
+              - text: "10"
+      - generic [ref=e158]:
+        - tablist [ref=e160]:
+          - tab "History" [selected] [ref=e161] [cursor=pointer]:
+            - img [ref=e162]
+            - text: History
+          - tab "How it works" [ref=e165] [cursor=pointer]:
+            - img [ref=e166]
+            - text: How it works
+        - generic [ref=e168]:
+          - generic [ref=e209]:
+            - button [ref=e210] [cursor=pointer]:
+              - img [ref=e211]
+            - slider [ref=e215]
+            - tablist [ref=e217]:
+              - tab "List" [selected] [ref=e219] [cursor=pointer]:
+                - img [ref=e220]
+                - text: List
+              - tab "Grid" [ref=e225] [cursor=pointer]:
+                - img [ref=e226]
+                - text: Grid
+          - generic [ref=e230]:
+            - img [ref=e232]
+            - generic [ref=e235]:
+              - listitem [ref=e2649]:
+                - generic [ref=e2650]:
+                  - generic [ref=e2656]:
+                    - generic [ref=e2657]:
+                      - img [ref=e2658]
+                      - generic [ref=e2661]: Generating
+                    - button "Rerun" [ref=e2663] [cursor=pointer]:
+                      - img [ref=e2664]
+                      - generic [ref=e2666]: Rerun
+                  - generic [ref=e2668]:
+                    - button "Kling 3.0" [ref=e2670] [cursor=pointer]:
+                      - img [ref=e2671]
+                      - text: Kling 3.0
+                    - textbox [ref=e2675]:
+                      - paragraph [ref=e2676]: "Commander Orion stands center frame. The \"Describe your goal\" field types itself: \"Launch our Q2 marketing campaign across all channels.\" The \"Execute Goal\" button pulses orange. Then from Commander Orion's portrait, glowing cyan and purple beams of light fan outward in 12 directions across a dark void, each beam connecting to a distant glowing agent portrait avatar (sales, marketing, design, copywriting, analytics, social media). Each connection point pulses as agents activate. Camera cranes up and pulls back to reveal the full constellation of activated agents working in parallel. Photorealistic UI for the foreground panel, cosmic cinematic background, smooth orchestration animation."
+                    - button "media of input-image" [ref=e2678] [cursor=pointer]:
+                      - img "media of input-image" [ref=e2679]
+                      - img [ref=e2681]
+                    - generic [ref=e2683]:
+                      - button "720p" [ref=e2684]:
+                        - img [ref=e2686]
+                        - text: 720p
+                      - button "5.0s" [ref=e2688]:
+                        - img [ref=e2690]
+                        - text: 5.0s
+                      - button "16:9" [ref=e2692]:
+                        - img [ref=e2694]
+                        - text: 16:9
+                      - button "Audio" [ref=e2696]:
+                        - img [ref=e2698]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e2700]:
+                      - button "Rerun" [ref=e2701] [cursor=pointer]:
+                        - img [ref=e2702]
+                        - generic [ref=e2704]: Rerun
+                      - generic [ref=e2705]:
+                        - button [ref=e2706] [cursor=pointer]:
+                          - img [ref=e2707]
+                        - button [ref=e2710] [cursor=pointer]:
+                          - img [ref=e2711]
+              - listitem [ref=e2559]:
+                - generic [ref=e2560]:
+                  - generic [ref=e2566]:
+                    - generic [ref=e2567]:
+                      - img [ref=e2568]
+                      - generic [ref=e2571]: Generating
+                    - button "Rerun" [ref=e2622] [cursor=pointer]:
+                      - img [ref=e2623]
+                      - generic [ref=e2576]: Rerun
+                  - generic [ref=e2578]:
+                    - button "Kling 3.0" [ref=e2580] [cursor=pointer]:
+                      - img [ref=e2581]
+                      - text: Kling 3.0
+                    - textbox [ref=e2585]:
+                      - paragraph [ref=e2586]: The MAARS Workflow Builder canvas comes alive. Nodes from the left palette (Agent, Prompt, Branch, Loop, Merge, Trigger, Output, API Call, Code, Sub-Flow) are dragged into the canvas one after another and connected with glowing animated lines, building a multi-step automation graph. As the workflow connects, glowing data packets begin flowing through the connections from left to right. Camera does a smooth drone-arc above the canvas. Photorealistic UI, every label preserved exactly, only nodes and connections animate.
+                    - button "media of input-image" [ref=e2588] [cursor=pointer]:
+                      - img "media of input-image" [ref=e2589]
+                      - img [ref=e2591]
+                    - generic [ref=e2593]:
+                      - button "720p" [ref=e2594]:
+                        - img [ref=e2596]
+                        - text: 720p
+                      - button "5.0s" [ref=e2598]:
+                        - img [ref=e2600]
+                        - text: 5.0s
+                      - button "16:9" [ref=e2602]:
+                        - img [ref=e2604]
+                        - text: 16:9
+                      - button "Audio" [ref=e2606]:
+                        - img [ref=e2608]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e2610]:
+                      - button "Rerun" [ref=e2625] [cursor=pointer]:
+                        - img [ref=e2626]
+                        - generic [ref=e2628]: Rerun
+                      - generic [ref=e2611]:
+                        - button [ref=e2612] [cursor=pointer]:
+                          - img [ref=e2613]
+                        - button [ref=e2629] [cursor=pointer]:
+                          - img [ref=e2630]
+              - listitem [ref=e2486]:
+                - generic [ref=e2487]:
+                  - generic [ref=e2493]:
+                    - generic [ref=e2494]:
+                      - img [ref=e2495]
+                      - generic [ref=e2498]: Generating
+                    - button "Rerun" [ref=e2543] [cursor=pointer]:
+                      - img [ref=e2544]
+                      - generic [ref=e2503]: Rerun
+                  - generic [ref=e2505]:
+                    - button "Kling 3.0" [ref=e2507] [cursor=pointer]:
+                      - img [ref=e2508]
+                      - text: Kling 3.0
+                    - textbox [ref=e2512]:
+                      - paragraph [ref=e2513]: The MAARS Campaign Builder page lights up. The 5 quick-start template buttons across the top — "Content Marketing Campaign", "Product Launch", "Customer Onboarding", "Sales Outreach Campaign", "Security Audit" — each pulse and glow in sequence with their respective colors (pink, blue, green, orange, red). Below "Your Campaigns" section, 5 active campaign cards animate into existence one by one, each with a progress bar filling and an "active" badge. Camera moves in a smooth robo-arm sweep across the templates. Photorealistic UI, every label preserved exactly.
+                    - button "media of input-image" [ref=e2515] [cursor=pointer]:
+                      - img "media of input-image" [ref=e2516]
+                      - img [ref=e2518]
+                    - generic [ref=e2520]:
+                      - button "720p" [ref=e2521]:
+                        - img [ref=e2523]
+                        - text: 720p
+                      - button "5.0s" [ref=e2525]:
+                        - img [ref=e2527]
+                        - text: 5.0s
+                      - button "16:9" [ref=e2529]:
+                        - img [ref=e2531]
+                        - text: 16:9
+                      - button "Audio" [ref=e2533]:
+                        - img [ref=e2535]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e2537]:
+                      - button "Rerun" [ref=e2546] [cursor=pointer]:
+                        - img [ref=e2547]
+                        - generic [ref=e2549]: Rerun
+                      - generic [ref=e2538]:
+                        - button [ref=e2539] [cursor=pointer]:
+                          - img [ref=e2540]
+                        - button [ref=e2550] [cursor=pointer]:
+                          - img [ref=e2551]
+              - listitem [ref=e2410]:
+                - generic [ref=e2411]:
+                  - figure [ref=e2714]:
+                    - img "media asset by id of 8094ded5-e040-4550-80f1-f8f25018f4dc" [ref=e2715]
+                    - img [ref=e2717]
+                    - button [ref=e2719] [cursor=pointer]
+                  - generic [ref=e2429]:
+                    - button "Kling 3.0" [ref=e2431] [cursor=pointer]:
+                      - img [ref=e2432]
+                      - text: Kling 3.0
+                    - textbox [ref=e2436]:
+                      - paragraph [ref=e2437]: "The MAARS Social Media Command shifts: the \"Boost & Promote\" tab becomes active and glows. A \"Boost Budget\" field shows $500, then a launch button pulses orange. The view transitions to a stylized analytics chart climbing rapidly upward — engagement metrics, reach numbers, and CTR percentages tick up: 12K → 47K → 230K impressions. Glowing arrows and trend lines sweep upward across the screen. Photorealistic UI, every label preserved, only data and metrics animate, smooth cinematic motion."
+                    - button "media of input-image" [ref=e2439] [cursor=pointer]:
+                      - img "media of input-image" [ref=e2440]
+                      - img [ref=e2442]
+                    - generic [ref=e2444]:
+                      - button "720p" [ref=e2445]:
+                        - img [ref=e2447]
+                        - text: 720p
+                      - button "5.0s" [ref=e2449]:
+                        - img [ref=e2451]
+                        - text: 5.0s
+                      - button "16:9" [ref=e2453]:
+                        - img [ref=e2455]
+                        - text: 16:9
+                      - button "Audio" [ref=e2457]:
+                        - img [ref=e2459]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e2461]:
+                      - button "Rerun" [ref=e2462] [cursor=pointer]:
+                        - img [ref=e2463]
+                        - generic [ref=e2465]: Rerun
+                      - generic [ref=e2466]:
+                        - button [ref=e2467] [cursor=pointer]:
+                          - img [ref=e2468]
+                        - button [ref=e2471] [cursor=pointer]:
+                          - img [ref=e2472]
+              - listitem [ref=e2329]:
+                - generic [ref=e2330]:
+                  - figure [ref=e2633]:
+                    - img "media asset by id of 8baa6668-d397-452b-8993-ec131e19ca4d" [ref=e2634]
+                    - img [ref=e2636]
+                    - button [ref=e2638] [cursor=pointer]
+                  - generic [ref=e2348]:
+                    - button "Kling 3.0" [ref=e2350] [cursor=pointer]:
+                      - img [ref=e2351]
+                      - text: Kling 3.0
+                    - textbox [ref=e2355]:
+                      - paragraph [ref=e2356]: The MAARS AI Cold Call panel activates. The "Initiate Cold Call" button pulses green and glows. A live waveform appears across the call script box, modulating as if the AI is speaking. The phone number field +12025551234 pulses. On the right "Recent Calls" panel, a new call entry slides in with a pulsing green "LIVE" badge and a duration counter ticking upward. Camera slowly pushes in toward the waveform. Photorealistic UI, every label preserved exactly, only the waveform and dynamic data animate.
+                    - button "media of input-image" [ref=e2358] [cursor=pointer]:
+                      - img "media of input-image" [ref=e2359]
+                      - img [ref=e2361]
+                    - generic [ref=e2363]:
+                      - button "720p" [ref=e2364]:
+                        - img [ref=e2366]
+                        - text: 720p
+                      - button "5.0s" [ref=e2368]:
+                        - img [ref=e2370]
+                        - text: 5.0s
+                      - button "16:9" [ref=e2372]:
+                        - img [ref=e2374]
+                        - text: 16:9
+                      - button "Audio" [ref=e2376]:
+                        - img [ref=e2378]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e2380]:
+                      - button "Rerun" [ref=e2381] [cursor=pointer]:
+                        - img [ref=e2382]
+                        - generic [ref=e2384]: Rerun
+                      - generic [ref=e2385]:
+                        - button [ref=e2386] [cursor=pointer]:
+                          - img [ref=e2387]
+                        - button [ref=e2390] [cursor=pointer]:
+                          - img [ref=e2391]
+              - listitem [ref=e2245]:
+                - generic [ref=e2246]:
+                  - figure [ref=e2616]:
+                    - img "media asset by id of ec7f27ae-ac1c-44ce-b5d2-6c8aa17f5245" [ref=e2617]
+                    - img [ref=e2619]
+                    - button [ref=e2621] [cursor=pointer]
+                  - generic [ref=e2264]:
+                    - button "Kling 3.0" [ref=e2266] [cursor=pointer]:
+                      - img [ref=e2267]
+                      - text: Kling 3.0
+                    - textbox [ref=e2271]:
+                      - paragraph [ref=e2272]: The MAARS Cold Email form is filled with a polished outreach email. The user clicks "Send Cold Email." The button pulses pink, the form shimmers, and the email animates as a glowing envelope flying out of the screen toward a black void. The envelope multiplies into hundreds of envelopes streaming through space toward distant glowing inboxes. On the right "Recent Emails" panel, new entries cascade in rapidly with green "delivered" badges. Photorealistic UI, every form label preserved exactly, smooth send-animation, dark cinematic.
+                    - button "media of input-image" [ref=e2274] [cursor=pointer]:
+                      - img "media of input-image" [ref=e2275]
+                      - img [ref=e2277]
+                    - generic [ref=e2279]:
+                      - button "720p" [ref=e2280]:
+                        - img [ref=e2282]
+                        - text: 720p
+                      - button "5.0s" [ref=e2284]:
+                        - img [ref=e2286]
+                        - text: 5.0s
+                      - button "16:9" [ref=e2288]:
+                        - img [ref=e2290]
+                        - text: 16:9
+                      - button "Audio" [ref=e2292]:
+                        - img [ref=e2294]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e2296]:
+                      - button "Rerun" [ref=e2297] [cursor=pointer]:
+                        - img [ref=e2298]
+                        - generic [ref=e2300]: Rerun
+                      - generic [ref=e2301]:
+                        - button [ref=e2302] [cursor=pointer]:
+                          - img [ref=e2303]
+                        - button [ref=e2306] [cursor=pointer]:
+                          - img [ref=e2307]
+              - listitem [ref=e2161]:
+                - generic [ref=e2162]:
+                  - figure [ref=e2475]:
+                    - img "media asset by id of 214a122a-ed08-4afb-809e-fdca669156c3" [ref=e2476]
+                    - img [ref=e2478]
+                    - button [ref=e2480] [cursor=pointer]
+                  - generic [ref=e2180]:
+                    - button "Kling 3.0" [ref=e2182] [cursor=pointer]:
+                      - img [ref=e2183]
+                      - text: Kling 3.0
+                    - textbox [ref=e2187]:
+                      - paragraph [ref=e2188]: The MAARS Social Media page pans to the right side and the "Geographic Targeting" section lights up. The 9 region pills (North America, South America, Western Europe, Eastern Europe, Middle East, South Asia, Southeast Asia, East Asia, Africa, Australia & NZ, Global) glow one at a time. Then the camera zooms past the UI into a stylized 3D globe spinning slowly, with bright pulses lighting up across continents — São Paulo, London, Lagos, Mumbai, Jakarta, Tokyo — each pulse spreading outward like a content broadcast. Cinematic neon teal and purple, photorealistic globe, dark space background.
+                    - button "media of input-image" [ref=e2190] [cursor=pointer]:
+                      - img "media of input-image" [ref=e2191]
+                      - img [ref=e2193]
+                    - generic [ref=e2195]:
+                      - button "720p" [ref=e2196]:
+                        - img [ref=e2198]
+                        - text: 720p
+                      - button "5.0s" [ref=e2200]:
+                        - img [ref=e2202]
+                        - text: 5.0s
+                      - button "16:9" [ref=e2204]:
+                        - img [ref=e2206]
+                        - text: 16:9
+                      - button "Audio" [ref=e2208]:
+                        - img [ref=e2210]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e2212]:
+                      - button "Rerun" [ref=e2231] [cursor=pointer]:
+                        - img [ref=e2232]
+                        - generic [ref=e2234]: Rerun
+                      - generic [ref=e2213]:
+                        - button [ref=e2214] [cursor=pointer]:
+                          - img [ref=e2215]
+                        - button [ref=e2235] [cursor=pointer]:
+                          - img [ref=e2236]
+              - listitem [ref=e2080]:
+                - generic [ref=e2081]:
+                  - figure [ref=e2394]:
+                    - img "media asset by id of d5046a9e-84ca-47d8-ab87-144fab90a810" [ref=e2395]
+                    - img [ref=e2397]
+                    - button [ref=e2399] [cursor=pointer]
+                  - generic [ref=e2099]:
+                    - button "Kling 3.0" [ref=e2101] [cursor=pointer]:
+                      - img [ref=e2102]
+                      - text: Kling 3.0
+                    - textbox [ref=e2106]:
+                      - paragraph [ref=e2107]: "The MAARS Social Media Command \"Compose & Post\" page is live. A polished social post appears in the content area. Then the Platforms grid on the right comes alive: Facebook, Instagram, X/Twitter, TikTok, WhatsApp, Viber, LINE, LinkedIn, YouTube, Telegram tiles light up one after another with green checkmarks rapidly cascading down the list as the post is published to each platform simultaneously. Bottom right \"Publish Now\" button pulses. Photorealistic UI, every label exactly preserved, only the icons and checkmarks animate."
+                    - button "media of input-image" [ref=e2109] [cursor=pointer]:
+                      - img "media of input-image" [ref=e2110]
+                      - img [ref=e2112]
+                    - generic [ref=e2114]:
+                      - button "720p" [ref=e2115]:
+                        - img [ref=e2117]
+                        - text: 720p
+                      - button "5.0s" [ref=e2119]:
+                        - img [ref=e2121]
+                        - text: 5.0s
+                      - button "16:9" [ref=e2123]:
+                        - img [ref=e2125]
+                        - text: 16:9
+                      - button "Audio" [ref=e2127]:
+                        - img [ref=e2129]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e2131]:
+                      - button "Rerun" [ref=e2132] [cursor=pointer]:
+                        - img [ref=e2133]
+                        - generic [ref=e2135]: Rerun
+                      - generic [ref=e2136]:
+                        - button [ref=e2137] [cursor=pointer]:
+                          - img [ref=e2138]
+                        - button [ref=e2141] [cursor=pointer]:
+                          - img [ref=e2142]
+              - listitem [ref=e1996]:
+                - generic [ref=e1997]:
+                  - figure [ref=e2310]:
+                    - img "media asset by id of 5e5b37d9-c4d7-498b-b1f1-4d2f5ad88314" [ref=e2311]
+                    - img [ref=e2313]
+                    - button [ref=e2315] [cursor=pointer]
+                  - generic [ref=e2015]:
+                    - button "Kling 3.0" [ref=e2017] [cursor=pointer]:
+                      - img [ref=e2018]
+                      - text: Kling 3.0
+                    - textbox [ref=e2022]:
+                      - paragraph [ref=e2023]: "The MAARS Content Generator page comes alive: a user types into the description field, then the \"Marketing Copy\" tile glows teal. The \"Generate Content\" orange button pulses, and below, in the empty results area, lines of marketing copy materialize one word at a time as if being typed live by AI — a punchy LinkedIn post about an AI product launch fills in. Other content type tiles (Social Media Post, Email Campaign, Blog Article, Ad Copy) softly pulse on the side. Photorealistic UI, every label preserved, motion only on the data."
+                    - button "media of input-image" [ref=e2025] [cursor=pointer]:
+                      - img "media of input-image" [ref=e2026]
+                      - img [ref=e2028]
+                    - generic [ref=e2030]:
+                      - button "720p" [ref=e2031]:
+                        - img [ref=e2033]
+                        - text: 720p
+                      - button "5.0s" [ref=e2035]:
+                        - img [ref=e2037]
+                        - text: 5.0s
+                      - button "16:9" [ref=e2039]:
+                        - img [ref=e2041]
+                        - text: 16:9
+                      - button "Audio" [ref=e2043]:
+                        - img [ref=e2045]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e2047]:
+                      - button "Rerun" [ref=e2066] [cursor=pointer]:
+                        - img [ref=e2067]
+                        - generic [ref=e2069]: Rerun
+                      - generic [ref=e2048]:
+                        - button [ref=e2049] [cursor=pointer]:
+                          - img [ref=e2050]
+                        - button [ref=e2070] [cursor=pointer]:
+                          - img [ref=e2071]
+              - listitem [ref=e1918]:
+                - generic [ref=e1919]:
+                  - figure [ref=e2218]:
+                    - img "media asset by id of d11d5567-f926-4c7c-8459-0e6e34a42f5c" [ref=e2219]
+                    - img [ref=e2221]
+                    - button [ref=e2223] [cursor=pointer]
+                  - generic [ref=e1937]:
+                    - button "Kling 3.0" [ref=e1939] [cursor=pointer]:
+                      - img [ref=e1940]
+                      - text: Kling 3.0
+                    - textbox [ref=e1944]:
+                      - paragraph [ref=e1945]: "The MAARS Commander Orion goal-input page is on screen. The \"Describe your goal\" field types itself live: \"I'm a former personal trainer. I want my own brand. I don't know what to sell yet.\" The \"Execute Goal\" button pulses orange and fires. A research dossier card materializes: \"BUSINESS RECOMMENDED: 'FORMA' — Premium Athleisure + Clean Supplement Subscription · Target: women 25–45 · Combined market $42B · Margin 52% · LTV $1,840 · 21 days to launch.\" The camera pulls back as four side-panels animate in around the dossier in rapid sequence: a sleek FORMA.com Shopify-style storefront builds itself live with hero athleisure model shots, then a green \"DEPLOYED → forma.shop ✓\" badge flashes; an iPhone mockup beside it loads the FORMA mobile shopping app with subscription manager; two supplier cards animate: \"Sourced: athleisure manufacturer (Portugal) · MOQ 200 · Cost $14/unit · Margin 68%\" and \"Sourced: clean supplement producer (USA) · GMP-certified · Subscription cost $8/box · Margin 75%\"; a brand identity sheet — minimal sans-serif \"FORMA\" wordmark, sage/cream/charcoal palette, kraft packaging mockups. Photorealistic UI, every label preserved exactly, only the build/deploy animations move."
+                    - button "media of input-image" [ref=e1947] [cursor=pointer]:
+                      - img "media of input-image" [ref=e1948]
+                      - img [ref=e1950]
+                    - generic [ref=e1952]:
+                      - button "720p" [ref=e1953]:
+                        - img [ref=e1955]
+                        - text: 720p
+                      - button "5.0s" [ref=e1957]:
+                        - img [ref=e1959]
+                        - text: 5.0s
+                      - button "16:9" [ref=e1961]:
+                        - img [ref=e1963]
+                        - text: 16:9
+                      - button "Audio" [ref=e1965]:
+                        - img [ref=e1967]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e1969]:
+                      - button "Rerun" [ref=e1982] [cursor=pointer]:
+                        - img [ref=e1983]
+                        - generic [ref=e1985]: Rerun
+                      - generic [ref=e1970]:
+                        - button [ref=e1971] [cursor=pointer]:
+                          - img [ref=e1972]
+                        - button [ref=e1986] [cursor=pointer]:
+                          - img [ref=e1987]
+              - listitem [ref=e1831]:
+                - generic [ref=e1832]:
+                  - figure [ref=e2145]:
+                    - img "media asset by id of fa134704-0397-4cbe-99ff-e441a789ca5e" [ref=e2146]
+                    - img [ref=e2148]
+                    - button [ref=e2150] [cursor=pointer]
+                  - generic [ref=e1850]:
+                    - button "Kling 3.0" [ref=e1852] [cursor=pointer]:
+                      - img [ref=e1853]
+                      - text: Kling 3.0
+                    - textbox [ref=e1857]:
+                      - paragraph [ref=e1858]: "The MAARS Analytics Dashboard is on screen. A \"Cost Reduction\" panel animates in: three contractor line-items appear with strikethroughs and red \"REPLACED\" badges: \"Sarah (VA) — $4,800/mo · REPLACED by Nadia Kessler ✓\", \"Mark (Marketer) — $3,200/mo · REPLACED by Zara Mitchell ✓\", \"Lisa (Sales) — $5,500/mo · REPLACED by Marcus Drake ✓\". A counter animates from $0 → \"$13,500/mo SAVED\". Then the camera pulls back as four side-panels animate in around the savings counter: a modern customer portal builds itself in real-time replacing David's old website, then a \"DEPLOYED → davidplumbingsupply.com ✓\" badge flashes; a phone mockup loads the new Field Ops mobile app with order placement; an automated invoicing system flashes \"812 unread → 0 · processed automatically\"; a vendor consolidation card: \"Sourced: 4 new wholesale suppliers · Material costs down 22%\". The \"Hours saved this week\" counter ticks to 60+. A green up-arrow on the P&L line: red → green. Photorealistic UI, every label preserved exactly, only the data animates."
+                    - button "media of input-image" [ref=e1860] [cursor=pointer]:
+                      - img "media of input-image" [ref=e1861]
+                      - img [ref=e1863]
+                    - generic [ref=e1865]:
+                      - button "720p" [ref=e1866]:
+                        - img [ref=e1868]
+                        - text: 720p
+                      - button "5.0s" [ref=e1870]:
+                        - img [ref=e1872]
+                        - text: 5.0s
+                      - button "16:9" [ref=e1874]:
+                        - img [ref=e1876]
+                        - text: 16:9
+                      - button "Audio" [ref=e1878]:
+                        - img [ref=e1880]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e1882]:
+                      - button "Rerun" [ref=e1895] [cursor=pointer]:
+                        - img [ref=e1896]
+                        - generic [ref=e1898]: Rerun
+                      - generic [ref=e1883]:
+                        - button [ref=e1884] [cursor=pointer]:
+                          - img [ref=e1885]
+                        - button [ref=e1899] [cursor=pointer]:
+                          - img [ref=e1900]
+              - listitem [ref=e1756]:
+                - generic [ref=e1757]:
+                  - figure [ref=e2053]:
+                    - img "media asset by id of 20161a8e-2a33-4c1a-b115-a61183c76285" [ref=e2054]
+                    - img [ref=e2056]
+                    - button [ref=e2058] [cursor=pointer]
+                  - generic [ref=e1775]:
+                    - button "Kling 3.0" [ref=e1777] [cursor=pointer]:
+                      - img [ref=e1778]
+                      - text: Kling 3.0
+                    - textbox [ref=e1782]:
+                      - paragraph [ref=e1783]: "The MAARS Commander Orion goal-input page is on screen. The \"Describe your goal\" field types itself live: \"I want to start a business but I don't know what\". The \"Execute Goal\" button pulses orange and fires. A research dossier card materializes: \"BUSINESS RECOMMENDED: 'CodeFuel' — Meal Prep for Tech Workers · Market $14B · Margin 38% · Capital $2,400 · 8 days to first revenue.\" Then the camera pulls back as four side-panels animate in around the dossier in rapid sequence: a sleek CodeFuel.com homepage builds itself in real-time with hero image and product menu, then a green \"DEPLOYED → codefuel.com ✓\" badge flashes; an iPhone mockup beside it loads the CodeFuel mobile ordering app with menu and checkout; a supplier card animates with \"Sourced: 4 verified meal-container vendors · Best price locked: $0.42/unit\"; a brand identity sheet appears with logo, color palette, packaging mockup. Photorealistic UI, every label preserved exactly, only the build/deploy animations move."
+                    - button "media of input-image" [ref=e1785] [cursor=pointer]:
+                      - img "media of input-image" [ref=e1786]
+                      - img [ref=e1788]
+                    - generic [ref=e1790]:
+                      - button "720p" [ref=e1791]:
+                        - img [ref=e1793]
+                        - text: 720p
+                      - button "5.0s" [ref=e1795]:
+                        - img [ref=e1797]
+                        - text: 5.0s
+                      - button "16:9" [ref=e1799]:
+                        - img [ref=e1801]
+                        - text: 16:9
+                      - button "Audio" [ref=e1803]:
+                        - img [ref=e1805]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e1807]:
+                      - button "Rerun" [ref=e1808] [cursor=pointer]:
+                        - img [ref=e1809]
+                        - generic [ref=e1811]: Rerun
+                      - generic [ref=e1812]:
+                        - button [ref=e1813] [cursor=pointer]:
+                          - img [ref=e1814]
+                        - button [ref=e1817] [cursor=pointer]:
+                          - img [ref=e1818]
+  - region "Notifications Alt+T"
+  - alert [ref=e171]
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"

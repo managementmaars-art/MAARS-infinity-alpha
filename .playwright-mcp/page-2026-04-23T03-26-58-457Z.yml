@@ -1,0 +1,50 @@
+- generic [active] [ref=e1]:
+  - link "GPT Image 2 is now on fal! 🚀" [ref=e3] [cursor=pointer]:
+    - /url: https://fal.ai/models/openai/gpt-image-2/edit
+  - generic [ref=e4]:
+    - img "Onboarding illustration" [ref=e7]
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - img [ref=e10]
+        - generic [ref=e20]: Mirza
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - heading "Welcome, Mirza 👋" [level=1] [ref=e26]
+            - paragraph [ref=e27]: Let's tailor your fal experience. Tell us a bit about yourself so we can set you up with the right tools.
+          - generic [ref=e28]:
+            - heading "How will you be using fal?" [level=2] [ref=e29]
+            - generic [ref=e30]:
+              - generic [ref=e32] [cursor=pointer]:
+                - img "For myself icon" [ref=e34]
+                - generic [ref=e35]:
+                  - heading "For myself" [level=3] [ref=e36]
+                  - paragraph [ref=e37]: I want to explore fal on my own — for building, side projects, or creative work.
+              - generic [ref=e39] [cursor=pointer]:
+                - img "For my company icon" [ref=e41]
+                - generic [ref=e42]:
+                  - heading "For my company" [level=3] [ref=e43]
+                  - paragraph [ref=e44]: I'm here on behalf of a team or organization and may need custom support.
+          - generic [ref=e52]:
+            - heading "What do you want to do first?" [level=3] [ref=e53]
+            - generic [ref=e54]:
+              - generic [ref=e56] [cursor=pointer]:
+                - img [ref=e58]
+                - generic [ref=e60]:
+                  - heading "Model APIs" [level=4] [ref=e61]
+                  - paragraph [ref=e62]: Access 1000+ production-ready generative models through a simple API.
+              - generic [ref=e64] [cursor=pointer]:
+                - img [ref=e66]
+                - generic [ref=e68]:
+                  - heading "Serverless" [level=4] [ref=e69]
+                  - paragraph [ref=e70]: Run models on demand with auto-scaling and pay only for what you use.
+              - generic [ref=e72] [cursor=pointer]:
+                - img [ref=e74]
+                - generic [ref=e76]:
+                  - heading "Compute" [level=4] [ref=e77]
+                  - paragraph [ref=e78]: Reserve dedicated GPU clusters
+          - paragraph [ref=e45]: This helps us show you the right tools and next steps. You can always change it later.
+        - button "Continue" [ref=e79] [cursor=pointer]
+  - region "Notifications alt+T"
+  - alert [ref=e50]
+  - iframe

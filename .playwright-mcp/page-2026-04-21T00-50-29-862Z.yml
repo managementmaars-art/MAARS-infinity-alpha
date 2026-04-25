@@ -1,0 +1,1031 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - region
+    - generic [ref=e3]:
+      - link "Skip to content" [ref=e4] [cursor=pointer]:
+        - /url: "#start-of-content"
+      - banner [ref=e6]:
+        - heading "Navigation Menu" [level=2] [ref=e7]
+        - generic [ref=e8]:
+          - link "Homepage" [ref=e10] [cursor=pointer]:
+            - /url: /
+            - img [ref=e11]
+          - generic [ref=e13]:
+            - navigation "Global" [ref=e16]:
+              - list [ref=e17]:
+                - listitem [ref=e18]:
+                  - button "Platform" [ref=e20] [cursor=pointer]:
+                    - text: Platform
+                    - img [ref=e21]
+                - listitem [ref=e23]:
+                  - button "Solutions" [ref=e25] [cursor=pointer]:
+                    - text: Solutions
+                    - img [ref=e26]
+                - listitem [ref=e28]:
+                  - button "Resources" [ref=e30] [cursor=pointer]:
+                    - text: Resources
+                    - img [ref=e31]
+                - listitem [ref=e33]:
+                  - button "Open Source" [ref=e35] [cursor=pointer]:
+                    - text: Open Source
+                    - img [ref=e36]
+                - listitem [ref=e38]:
+                  - button "Enterprise" [ref=e40] [cursor=pointer]:
+                    - text: Enterprise
+                    - img [ref=e41]
+                - listitem [ref=e43]:
+                  - link "Pricing" [ref=e44] [cursor=pointer]:
+                    - /url: https://github.com/pricing
+                    - generic [ref=e45]: Pricing
+            - generic [ref=e46]:
+              - button "Search or jump to…" [ref=e49] [cursor=pointer]:
+                - img [ref=e51]
+                - generic [ref=e53]: Search or jump to...
+                - img [ref=e55]
+              - link "Sign in" [ref=e59] [cursor=pointer]:
+                - /url: /login?return_to=https%3A%2F%2Fgithub.com%2FNVIDIA-AI-Blueprints%2Fllm-router%2Ftree%2Fmain%2Fsrc%2Frouter-controller
+              - link "Sign up" [ref=e60] [cursor=pointer]:
+                - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Ffiles%2Fdisambiguate&source=header-repo&source_repo=NVIDIA-AI-Blueprints%2Fllm-router
+              - button "Appearance settings" [ref=e63] [cursor=pointer]:
+                - img
+    - main [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e69]:
+          - generic [ref=e71]:
+            - img [ref=e72]
+            - link "NVIDIA-AI-Blueprints" [ref=e75] [cursor=pointer]:
+              - /url: /NVIDIA-AI-Blueprints
+            - generic [ref=e76]: /
+            - strong [ref=e77]:
+              - link "llm-router" [ref=e78] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router
+            - generic [ref=e79]: Public
+          - generic [ref=e80]:
+            - list:
+              - listitem [ref=e81]:
+                - link "You must be signed in to change notification settings" [ref=e82] [cursor=pointer]:
+                  - /url: /login?return_to=%2FNVIDIA-AI-Blueprints%2Fllm-router
+                  - img [ref=e83]
+                  - text: Notifications
+              - listitem [ref=e85]:
+                - link "Fork 66" [ref=e86] [cursor=pointer]:
+                  - /url: /login?return_to=%2FNVIDIA-AI-Blueprints%2Fllm-router
+                  - img [ref=e87]
+                  - text: Fork
+                  - generic "66" [ref=e89]
+              - listitem [ref=e90]:
+                - link "You must be signed in to star a repository" [ref=e92] [cursor=pointer]:
+                  - /url: /login?return_to=%2FNVIDIA-AI-Blueprints%2Fllm-router
+                  - img [ref=e93]
+                  - text: Star
+                  - generic "248 users starred this repository" [ref=e95]: "248"
+        - navigation "Repository" [ref=e96]:
+          - list [ref=e97]:
+            - listitem [ref=e98]:
+              - link "Code" [ref=e99] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main
+                - img [ref=e100]
+                - generic [ref=e102]: Code
+            - listitem [ref=e103]:
+              - link "Issues 3" [ref=e104] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/issues
+                - img [ref=e105]
+                - generic [ref=e108]: Issues
+                - generic "3" [ref=e109]
+            - listitem [ref=e110]:
+              - link "Pull requests 2" [ref=e111] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/pulls
+                - img [ref=e112]
+                - generic [ref=e114]: Pull requests
+                - generic "2" [ref=e115]
+            - listitem [ref=e116]:
+              - link "Actions" [ref=e117] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/actions
+                - img [ref=e118]
+                - generic [ref=e120]: Actions
+            - listitem [ref=e121]:
+              - link "Projects" [ref=e122] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/projects
+                - img [ref=e123]
+                - generic [ref=e125]: Projects
+            - listitem [ref=e126]:
+              - link "Security and quality" [ref=e127] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/security
+                - img [ref=e128]
+                - generic [ref=e130]: Security and quality
+            - listitem [ref=e131]:
+              - link "Insights" [ref=e132] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/pulse
+                - img [ref=e133]
+                - generic [ref=e135]: Insights
+      - generic [ref=e143]:
+        - generic [ref=e145]:
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - generic [ref=e150]:
+                - heading "Collapse file tree" [level=2] [ref=e151]:
+                  - button "Collapse file tree" [expanded] [ref=e152] [cursor=pointer]:
+                    - img [ref=e153]
+                - heading "Files" [level=2] [ref=e156]
+              - generic [ref=e157]:
+                - generic [ref=e159]:
+                  - button "View file on default branch" [disabled] [ref=e161]:
+                    - img [ref=e162]
+                  - button "main branch" [ref=e165] [cursor=pointer]:
+                    - generic [ref=e166]:
+                      - generic [ref=e168]:
+                        - img [ref=e170]
+                        - generic [ref=e173]: main
+                      - generic:
+                        - img
+                - button "Search this repository (forward slash)" [ref=e175] [cursor=pointer]:
+                  - img [ref=e176]
+            - generic [ref=e179]:
+              - img [ref=e181]
+              - combobox "Go to file" [ref=e183]
+            - navigation "File Tree Navigation" [ref=e190]:
+              - tree "Files" [ref=e192]:
+                - treeitem ".github" [level=1] [ref=e193]:
+                  - generic [ref=e194] [cursor=pointer]:
+                    - img [ref=e196]
+                    - generic [ref=e198]:
+                      - img [ref=e202]
+                      - generic [ref=e204]: .github
+                - treeitem "assets" [level=1] [ref=e205]:
+                  - generic [ref=e206] [cursor=pointer]:
+                    - img [ref=e208]
+                    - generic [ref=e210]:
+                      - img [ref=e214]
+                      - generic [ref=e216]: assets
+                - treeitem "customize" [level=1] [ref=e217]:
+                  - generic [ref=e218] [cursor=pointer]:
+                    - img [ref=e220]
+                    - generic [ref=e222]:
+                      - img [ref=e226]
+                      - generic [ref=e228]: customize
+                - treeitem "demo" [level=1] [ref=e229]:
+                  - generic [ref=e230] [cursor=pointer]:
+                    - img [ref=e232]
+                    - generic [ref=e234]:
+                      - img [ref=e238]
+                      - generic [ref=e240]: demo
+                - treeitem "deploy" [level=1] [ref=e241]:
+                  - generic [ref=e242] [cursor=pointer]:
+                    - img [ref=e244]
+                    - generic [ref=e246]:
+                      - img [ref=e250]
+                      - generic [ref=e252]: deploy
+                - treeitem "launchable" [level=1] [ref=e253]:
+                  - generic [ref=e254] [cursor=pointer]:
+                    - img [ref=e256]
+                    - generic [ref=e258]:
+                      - img [ref=e262]
+                      - generic [ref=e264]: launchable
+                - treeitem "routers" [level=1] [ref=e265]:
+                  - generic [ref=e266] [cursor=pointer]:
+                    - img [ref=e268]
+                    - generic [ref=e270]:
+                      - img [ref=e274]
+                      - generic [ref=e276]: routers
+                - treeitem "src" [expanded] [level=1] [ref=e277]:
+                  - generic [ref=e278] [cursor=pointer]:
+                    - img [ref=e280]
+                    - generic [ref=e282]:
+                      - img [ref=e286]
+                      - generic [ref=e288]: src
+                  - group "src" [ref=e289]:
+                    - treeitem "grafana" [level=2] [ref=e290]:
+                      - generic [ref=e291] [cursor=pointer]:
+                        - img [ref=e296]
+                        - generic [ref=e298]:
+                          - img [ref=e302]
+                          - generic [ref=e304]: grafana
+                    - treeitem "prometheus" [level=2] [ref=e305]:
+                      - generic [ref=e306] [cursor=pointer]:
+                        - img [ref=e311]
+                        - generic [ref=e313]:
+                          - img [ref=e317]
+                          - generic [ref=e319]: prometheus
+                    - treeitem "router-controller" [expanded] [level=2] [ref=e320]:
+                      - generic [ref=e321] [cursor=pointer]:
+                        - img [ref=e326]
+                        - generic [ref=e328]:
+                          - img [ref=e332]
+                          - generic [ref=e334]: router-controller
+                      - group "router-controller" [ref=e335]:
+                        - treeitem "crates" [level=3] [ref=e336]:
+                          - generic [ref=e337] [cursor=pointer]:
+                            - img [ref=e343]
+                            - generic [ref=e345]:
+                              - img [ref=e349]
+                              - generic [ref=e351]: crates
+                        - treeitem "third_party" [level=3] [ref=e352]:
+                          - generic [ref=e353] [cursor=pointer]:
+                            - img [ref=e359]
+                            - generic [ref=e361]:
+                              - img [ref=e365]
+                              - generic [ref=e367]: third_party
+                        - treeitem "Cargo.lock" [level=3] [ref=e368]:
+                          - generic [ref=e374] [cursor=pointer]:
+                            - img [ref=e377]
+                            - generic [ref=e379]: Cargo.lock
+                        - treeitem "Cargo.toml" [level=3] [ref=e380]:
+                          - generic [ref=e386] [cursor=pointer]:
+                            - img [ref=e389]
+                            - generic [ref=e391]: Cargo.toml
+                        - treeitem "config.yaml" [level=3] [ref=e392]:
+                          - generic [ref=e398] [cursor=pointer]:
+                            - img [ref=e401]
+                            - generic [ref=e403]: config.yaml
+                        - treeitem "readme.md" [level=3] [ref=e404]:
+                          - generic [ref=e410] [cursor=pointer]:
+                            - img [ref=e413]
+                            - generic [ref=e415]: readme.md
+                        - treeitem "router-controller.dockerfile" [level=3] [ref=e416]:
+                          - generic [ref=e422] [cursor=pointer]:
+                            - img [ref=e425]
+                            - generic [ref=e427]: router-controller.dockerfile
+                    - treeitem "router-server" [level=2] [ref=e428]:
+                      - generic [ref=e429] [cursor=pointer]:
+                        - img [ref=e434]
+                        - generic [ref=e436]:
+                          - img [ref=e440]
+                          - generic [ref=e442]: router-server
+                    - treeitem "readme.md" [level=2] [ref=e443]:
+                      - generic [ref=e448] [cursor=pointer]:
+                        - img [ref=e451]
+                        - generic [ref=e453]: readme.md
+                    - treeitem "test_router.py" [level=2] [ref=e454]:
+                      - generic [ref=e459] [cursor=pointer]:
+                        - img [ref=e462]
+                        - generic [ref=e464]: test_router.py
+                    - treeitem "test_router.sh" [level=2] [ref=e465]:
+                      - generic [ref=e470] [cursor=pointer]:
+                        - img [ref=e473]
+                        - generic [ref=e475]: test_router.sh
+                    - treeitem "update_config_yaml_helper.py" [level=2] [ref=e476]:
+                      - generic [ref=e481] [cursor=pointer]:
+                        - img [ref=e484]
+                        - generic [ref=e486]: update_config_yaml_helper.py
+                - treeitem ".gitignore" [level=1] [ref=e487]:
+                  - generic [ref=e489] [cursor=pointer]:
+                    - img [ref=e492]
+                    - generic [ref=e494]: .gitignore
+                - treeitem "CHANGELOG.md" [level=1] [ref=e495]:
+                  - generic [ref=e497] [cursor=pointer]:
+                    - img [ref=e500]
+                    - generic [ref=e502]: CHANGELOG.md
+                - treeitem "LICENSE" [level=1] [ref=e503]:
+                  - generic [ref=e505] [cursor=pointer]:
+                    - img [ref=e508]
+                    - generic [ref=e510]: LICENSE
+                - treeitem "Makefile" [level=1] [ref=e511]:
+                  - generic [ref=e513] [cursor=pointer]:
+                    - img [ref=e516]
+                    - generic [ref=e518]: Makefile
+                - treeitem "README.md" [level=1] [ref=e519]:
+                  - generic [ref=e521] [cursor=pointer]:
+                    - img [ref=e524]
+                    - generic [ref=e526]: README.md
+                - treeitem "SECURITY.md" [level=1] [ref=e527]:
+                  - generic [ref=e529] [cursor=pointer]:
+                    - img [ref=e532]
+                    - generic [ref=e534]: SECURITY.md
+                - treeitem "docker-compose.yaml" [level=1] [ref=e535]:
+                  - generic [ref=e537] [cursor=pointer]:
+                    - img [ref=e540]
+                    - generic [ref=e542]: docker-compose.yaml
+                - treeitem "requirements.txt" [level=1] [ref=e543]:
+                  - generic [ref=e545] [cursor=pointer]:
+                    - img [ref=e548]
+                    - generic [ref=e550]: requirements.txt
+                - treeitem "setup.sh" [level=1] [ref=e551]:
+                  - generic [ref=e553] [cursor=pointer]:
+                    - img [ref=e556]
+                    - generic [ref=e558]: setup.sh
+          - slider "Draggable pane splitter" [ref=e560]
+        - generic [ref=e563]:
+          - generic [ref=e567]:
+            - generic [ref=e569]:
+              - navigation "Breadcrumbs" [ref=e570]:
+                - heading "Breadcrumbs" [level=2] [ref=e571]
+                - list [ref=e572]:
+                  - listitem [ref=e573]:
+                    - link "llm-router" [ref=e574] [cursor=pointer]:
+                      - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main
+                  - listitem [ref=e575]:
+                    - text: /
+                    - link "src" [ref=e576] [cursor=pointer]:
+                      - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main/src
+              - generic [ref=e577]:
+                - text: /
+                - heading "router-controller" [level=1] [ref=e578]
+                - text: /
+              - button "Copy path" [ref=e579] [cursor=pointer]:
+                - img [ref=e580]
+            - generic [ref=e585]:
+              - heading "Directory actions" [level=2] [ref=e586]
+              - heading "More options" [level=2] [ref=e587]
+              - button "More options" [ref=e588] [cursor=pointer]:
+                - img [ref=e589]
+          - generic [ref=e591]:
+            - generic [ref=e593]:
+              - heading "Latest commit" [level=2] [ref=e594]
+              - generic [ref=e595]:
+                - generic [ref=e597]:
+                  - link "arunraman" [ref=e598] [cursor=pointer]:
+                    - /url: /arunraman
+                    - img "arunraman" [ref=e599]
+                  - link "commits by arunraman" [ref=e600] [cursor=pointer]:
+                    - /url: /NVIDIA-AI-Blueprints/llm-router/commits?author=arunraman
+                    - text: arunraman
+                - generic [ref=e601]:
+                  - generic [ref=e603]:
+                    - link "Adding better support for k8s deployment via Helm (" [ref=e604] [cursor=pointer]:
+                      - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                    - link "#7" [ref=e605] [cursor=pointer]:
+                      - /url: https://github.com/NVIDIA-AI-Blueprints/llm-router/pull/7
+                    - link ")" [ref=e606] [cursor=pointer]:
+                      - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                  - button "Open commit details" [ref=e607] [cursor=pointer]:
+                    - img [ref=e608]
+                  - button "failure" [ref=e610] [cursor=pointer]:
+                    - img [ref=e611]
+              - generic [ref=e613]:
+                - generic [ref=e615]:
+                  - link "Commit 4b5cbe5" [ref=e616] [cursor=pointer]:
+                    - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                    - text: 4b5cbe5
+                  - text: ·
+                  - generic "Jun 27, 2025, 5:18 AM GMT+7" [ref=e617]: Jun 27, 202510 months ago
+                - generic [ref=e618]:
+                  - heading "History" [level=2] [ref=e619]
+                  - link "History" [ref=e620] [cursor=pointer]:
+                    - /url: /NVIDIA-AI-Blueprints/llm-router/commits/main/src/router-controller
+                    - generic [ref=e621]:
+                      - generic:
+                        - img
+                      - generic [ref=e622]: History
+            - generic [ref=e624]:
+              - text: This branch is
+              - link "22 commits ahead of" [ref=e625] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/compare/experimental...main
+              - text: and
+              - link "66 commits behind" [ref=e626] [cursor=pointer]:
+                - /url: /NVIDIA-AI-Blueprints/llm-router/compare/main...experimental
+              - generic [ref=e627]: experimental
+              - text: .
+            - generic [ref=e628]:
+              - generic [ref=e629]:
+                - heading "Folders and files" [level=2] [ref=e630]
+                - table "Folders and files" [ref=e631]:
+                  - rowgroup [ref=e632]:
+                    - row "Name Last commit message Last commit date" [ref=e633]:
+                      - columnheader "Name" [ref=e634]
+                      - columnheader "Last commit message" [ref=e635]:
+                        - generic "Last commit message" [ref=e636]
+                      - columnheader "Last commit date" [ref=e637]:
+                        - generic "Last commit date" [ref=e638]
+                  - rowgroup [ref=e639]:
+                    - row "parent directory Parent directory" [ref=e640]:
+                      - cell "parent directory Parent directory" [ref=e641]:
+                        - heading "parent directory" [level=3] [ref=e642]
+                        - link "Parent directory" [ref=e643] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main/src
+                          - generic [ref=e644]:
+                            - img [ref=e645]
+                            - text: ..
+                    - row "crates/llm-router-gateway-api, (Directory) Adding better support for k8s deployment via Helm (#7) Jun 27, 202510 months ago" [ref=e647]:
+                      - cell "crates/llm-router-gateway-api, (Directory)" [ref=e648]:
+                        - generic [ref=e649]:
+                          - img [ref=e650]
+                          - link "crates/llm-router-gateway-api, (Directory)" [ref=e655] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main/src/router-controller/crates/llm-router-gateway-api
+                            - text: crates/llm-router-gateway-api
+                      - cell "Adding better support for k8s deployment via Helm (#7)" [ref=e656]:
+                        - generic [ref=e658]:
+                          - link "Adding better support for k8s deployment via Helm (" [ref=e659] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                          - link "#7" [ref=e660] [cursor=pointer]:
+                            - /url: https://github.com/NVIDIA-AI-Blueprints/llm-router/pull/7
+                          - link ")" [ref=e661] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                      - cell "Jun 27, 202510 months ago" [ref=e662]:
+                        - generic [ref=e663]: Jun 27, 202510 months ago
+                    - row "third_party, (Directory) release candidate Feb 12, 2025last year" [ref=e664]:
+                      - cell "third_party, (Directory)" [ref=e665]:
+                        - generic [ref=e666]:
+                          - img [ref=e667]
+                          - link "third_party, (Directory)" [ref=e672] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/tree/main/src/router-controller/third_party
+                            - text: third_party
+                      - cell "release candidate" [ref=e673]:
+                        - link "release candidate" [ref=e676] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/commit/49121593bbee91f8555d6f80b7ba59ee46421984
+                      - cell "Feb 12, 2025last year" [ref=e677]:
+                        - generic [ref=e678]: Feb 12, 2025last year
+                    - row "Cargo.lock, (File) Adding better support for k8s deployment via Helm (#7) Jun 27, 202510 months ago" [ref=e679]:
+                      - cell "Cargo.lock, (File)" [ref=e680]:
+                        - generic [ref=e681]:
+                          - img [ref=e682]
+                          - link "Cargo.lock, (File)" [ref=e687] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/blob/main/src/router-controller/Cargo.lock
+                            - text: Cargo.lock
+                      - cell "Adding better support for k8s deployment via Helm (#7)" [ref=e688]:
+                        - generic [ref=e690]:
+                          - link "Adding better support for k8s deployment via Helm (" [ref=e691] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                          - link "#7" [ref=e692] [cursor=pointer]:
+                            - /url: https://github.com/NVIDIA-AI-Blueprints/llm-router/pull/7
+                          - link ")" [ref=e693] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                      - cell "Jun 27, 202510 months ago" [ref=e694]:
+                        - generic [ref=e695]: Jun 27, 202510 months ago
+                    - row "Cargo.toml, (File) release candidate Feb 12, 2025last year" [ref=e696]:
+                      - cell "Cargo.toml, (File)" [ref=e697]:
+                        - generic [ref=e698]:
+                          - img [ref=e699]
+                          - link "Cargo.toml, (File)" [ref=e704] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/blob/main/src/router-controller/Cargo.toml
+                            - text: Cargo.toml
+                      - cell "release candidate" [ref=e705]:
+                        - link "release candidate" [ref=e708] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/commit/49121593bbee91f8555d6f80b7ba59ee46421984
+                      - cell "Feb 12, 2025last year" [ref=e709]:
+                        - generic [ref=e710]: Feb 12, 2025last year
+                    - row "config.yaml, (File) Adding better support for k8s deployment via Helm (#7) Jun 27, 202510 months ago" [ref=e711]:
+                      - cell "config.yaml, (File)" [ref=e712]:
+                        - generic [ref=e713]:
+                          - img [ref=e714]
+                          - link "config.yaml, (File)" [ref=e719] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/blob/main/src/router-controller/config.yaml
+                            - text: config.yaml
+                      - cell "Adding better support for k8s deployment via Helm (#7)" [ref=e720]:
+                        - generic [ref=e722]:
+                          - link "Adding better support for k8s deployment via Helm (" [ref=e723] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                          - link "#7" [ref=e724] [cursor=pointer]:
+                            - /url: https://github.com/NVIDIA-AI-Blueprints/llm-router/pull/7
+                          - link ")" [ref=e725] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/commit/4b5cbe5a19a86d0ddf081275189f4e70987d0809
+                      - cell "Jun 27, 202510 months ago" [ref=e726]:
+                        - generic [ref=e727]: Jun 27, 202510 months ago
+                    - row "readme.md, (File) Adding better error handing for RC and Locust Feb 16, 2025last year" [ref=e728]:
+                      - cell "readme.md, (File)" [ref=e729]:
+                        - generic [ref=e730]:
+                          - img [ref=e731]
+                          - link "readme.md, (File)" [ref=e736] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/blob/main/src/router-controller/readme.md
+                            - text: readme.md
+                      - cell "Adding better error handing for RC and Locust" [ref=e737]:
+                        - link "Adding better error handing for RC and Locust" [ref=e740] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/commit/947d2d564f84d43e0cce4ecf8ce29cb80c9ccee6
+                      - cell "Feb 16, 2025last year" [ref=e741]:
+                        - generic [ref=e742]: Feb 16, 2025last year
+                    - row "router-controller.dockerfile, (File) release candidate Feb 12, 2025last year" [ref=e743]:
+                      - cell "router-controller.dockerfile, (File)" [ref=e744]:
+                        - generic [ref=e745]:
+                          - img [ref=e746]
+                          - link "router-controller.dockerfile, (File)" [ref=e751] [cursor=pointer]:
+                            - /url: /NVIDIA-AI-Blueprints/llm-router/blob/main/src/router-controller/router-controller.dockerfile
+                            - text: router-controller.dockerfile
+                      - cell "release candidate" [ref=e752]:
+                        - link "release candidate" [ref=e755] [cursor=pointer]:
+                          - /url: /NVIDIA-AI-Blueprints/llm-router/commit/49121593bbee91f8555d6f80b7ba59ee46421984
+                      - cell "Feb 12, 2025last year" [ref=e756]:
+                        - generic [ref=e757]: Feb 12, 2025last year
+              - generic [ref=e759]:
+                - generic [ref=e760]:
+                  - heading "readme.md" [level=2] [ref=e761]:
+                    - link "readme.md" [ref=e762] [cursor=pointer]:
+                      - /url: "#readme"
+                  - button "Outline" [ref=e763] [cursor=pointer]:
+                    - img [ref=e764]
+                - article [ref=e767]:
+                  - generic [ref=e768]:
+                    - heading "Router Controller API and Metrics" [level=1] [ref=e769]
+                    - 'link "Permalink: Router Controller API and Metrics" [ref=e770] [cursor=pointer]':
+                      - /url: "#router-controller-api-and-metrics"
+                      - img [ref=e771]
+                  - generic [ref=e773]:
+                    - heading "Overview" [level=2] [ref=e774]
+                    - 'link "Permalink: Overview" [ref=e775] [cursor=pointer]':
+                      - /url: "#overview"
+                      - img [ref=e776]
+                  - paragraph [ref=e778]:
+                    - text: The
+                    - code [ref=e779]: router-controller
+                    - text: is a service that routes OpenAI compatible requests to appropriate LLMs based on a specified policy. It acts as a proxy, classifying user prompts and directing them to the best-fit model.
+                  - generic [ref=e780]:
+                    - heading "API Endpoints" [level=2] [ref=e781]
+                    - 'link "Permalink: API Endpoints" [ref=e782] [cursor=pointer]':
+                      - /url: "#api-endpoints"
+                      - img [ref=e783]
+                  - generic [ref=e785]:
+                    - heading "/config" [level=3] [ref=e786]:
+                      - code [ref=e787]: /config
+                    - 'link "Permalink: /config" [ref=e788] [cursor=pointer]':
+                      - /url: "#config"
+                      - img [ref=e789]
+                  - list [ref=e791]:
+                    - listitem [ref=e792]:
+                      - strong [ref=e793]: Description
+                      - text: ": Returns the current configuration of the router."
+                    - listitem [ref=e794]:
+                      - strong [ref=e795]: Method
+                      - text: ":"
+                      - code [ref=e796]: GET
+                    - listitem [ref=e797]:
+                      - strong [ref=e798]: Response
+                      - text: ": JSON object containing the sanitized router configuration."
+                  - generic [ref=e799]:
+                    - heading "/health" [level=3] [ref=e800]:
+                      - code [ref=e801]: /health
+                    - 'link "Permalink: /health" [ref=e802] [cursor=pointer]':
+                      - /url: "#health"
+                      - img [ref=e803]
+                  - list [ref=e805]:
+                    - listitem [ref=e806]:
+                      - strong [ref=e807]: Description
+                      - text: ": Health check endpoint."
+                    - listitem [ref=e808]:
+                      - strong [ref=e809]: Method
+                      - text: ":"
+                      - code [ref=e810]: GET
+                    - listitem [ref=e811]:
+                      - strong [ref=e812]: Response
+                      - text: ": JSON object with status"
+                      - code [ref=e813]: OK
+                      - text: .
+                  - generic [ref=e814]:
+                    - heading "/metrics" [level=3] [ref=e815]:
+                      - code [ref=e816]: /metrics
+                    - 'link "Permalink: /metrics" [ref=e817] [cursor=pointer]':
+                      - /url: "#metrics"
+                      - img [ref=e818]
+                  - list [ref=e820]:
+                    - listitem [ref=e821]:
+                      - strong [ref=e822]: Description
+                      - text: ": Provides Prometheus metrics for monitoring the router's performance."
+                    - listitem [ref=e823]:
+                      - strong [ref=e824]: Method
+                      - text: ":"
+                      - code [ref=e825]: GET
+                    - listitem [ref=e826]:
+                      - strong [ref=e827]: Response
+                      - text: ": Prometheus formatted metrics."
+                  - generic [ref=e828]:
+                    - heading "/v1/chat/completions or /completions" [level=3] [ref=e829]:
+                      - code [ref=e830]: /v1/chat/completions
+                      - text: or
+                      - code [ref=e831]: /completions
+                    - 'link "Permalink: /v1/chat/completions or /completions" [ref=e832] [cursor=pointer]':
+                      - /url: "#v1chatcompletions-or-completions"
+                      - img [ref=e833]
+                  - list [ref=e835]:
+                    - listitem [ref=e836]:
+                      - strong [ref=e837]: Description
+                      - text: ": Main endpoint for processing chat completions."
+                    - listitem [ref=e838]:
+                      - strong [ref=e839]: Method
+                      - text: ":"
+                      - code [ref=e840]: POST
+                    - listitem [ref=e841]:
+                      - strong [ref=e842]: Request Body
+                      - text: ": JSON object containing the user prompt and additional parameters."
+                    - listitem [ref=e843]:
+                      - strong [ref=e844]: Response
+                      - text: ": JSON object with the completion result from the selected LLM."
+                  - generic [ref=e845]:
+                    - heading "Request Payload" [level=4] [ref=e846]
+                    - 'link "Permalink: Request Payload" [ref=e847] [cursor=pointer]':
+                      - /url: "#request-payload"
+                      - img [ref=e848]
+                  - paragraph [ref=e850]:
+                    - text: The payload for the POST call to
+                    - code [ref=e851]: /v1/chat/completions
+                    - text: "should be a JSON object with the following structure:"
+                  - generic [ref=e852]:
+                    - generic [ref=e853]:
+                      - text: "{ \"model\":"
+                      - generic [ref=e854]: "\"\""
+                      - text: ", \"messages\": [ { \"role\":"
+                      - generic [ref=e855]: "\"user\""
+                      - text: ", \"content\":"
+                      - generic [ref=e856]: "\"Your input prompt here\""
+                      - text: "} ], \"nim-llm-router\": { \"policy\":"
+                      - generic [ref=e857]: "\"task_router\""
+                      - text: ", \"routing_strategy\":"
+                      - generic [ref=e858]: "\"triton\""
+                      - text: ", }, \"max_tokens\": 100, \"temperature\": 0.7, \"top_p\": 1.0, \"n\": 1, \"stream\": false, \"stop\": ["
+                      - generic [ref=e859]: "\"\\n\""
+                      - text: "] }"
+                    - button "Copy" [ref=e861] [cursor=pointer]:
+                      - img [ref=e862]
+                  - list [ref=e865]:
+                    - listitem [ref=e866]: "model: (string) The name of the model to use for the completion."
+                    - listitem [ref=e867]:
+                      - text: "messages: (array) A list of messages comprising the conversation so far."
+                      - list [ref=e868]:
+                        - listitem [ref=e869]: "role: (string) The role of the message author, either \"user\" or \"system\"."
+                        - listitem [ref=e870]: "content: (string) The content of the message."
+                    - listitem [ref=e871]:
+                      - text: "nim-llm-router: (object) Routing information for the LLM router."
+                      - list [ref=e872]:
+                        - listitem [ref=e873]: "policy: (string) The policy to use for routing. The policy is a mandatory argument."
+                        - listitem [ref=e874]: "routing_strategy: (string) The routing strategy to use, either \"triton\", \"manual\"."
+                        - listitem [ref=e875]: "model: (string) If routing strategy is manual, model name should be specified."
+                    - listitem [ref=e876]: "max_tokens: (integer) The maximum number of tokens to generate in the completion."
+                    - listitem [ref=e877]: "temperature: (float) Sampling temperature to use, between 0 and 1."
+                    - listitem [ref=e878]: "top_p: (float) Nucleus sampling probability, between 0 and 1."
+                    - listitem [ref=e879]: "n: (integer) Number of completions to generate for each prompt."
+                    - listitem [ref=e880]: "stream: (boolean) Whether to stream back partial progress."
+                    - listitem [ref=e881]: "stop: (array of strings) Up to 4 sequences where the API will stop generating further tokens."
+                  - generic [ref=e882]:
+                    - heading "Configuration" [level=2] [ref=e883]
+                    - 'link "Permalink: Configuration" [ref=e884] [cursor=pointer]':
+                      - /url: "#configuration"
+                      - img [ref=e885]
+                  - paragraph [ref=e887]:
+                    - text: The
+                    - code [ref=e888]: router-controller
+                    - text: communicates with the
+                    - code [ref=e889]: router-server
+                    - text: ", which is a Triton Inference Server running the router models for classification."
+                  - paragraph [ref=e890]: The router-controller configuration is defined in a YAML file and includes policies, LLMs, and routing strategies.
+                  - paragraph [ref=e891]:
+                    - text: We can specify multiple policies in the same
+                    - code [ref=e892]: config.yaml
+                  - generic [ref=e893]:
+                    - heading "Routing Strategies" [level=3] [ref=e894]
+                    - 'link "Permalink: Routing Strategies" [ref=e895] [cursor=pointer]':
+                      - /url: "#routing-strategies"
+                      - img [ref=e896]
+                  - paragraph [ref=e898]: Router Controller Support two different routing strategies
+                  - list [ref=e899]:
+                    - listitem [ref=e900]:
+                      - strong [ref=e901]: Triton
+                      - text: ": Uses the routing model hosted in the router server to classify prompts and route them to the appropriate LLM."
+                    - listitem [ref=e902]:
+                      - strong [ref=e903]: Manual
+                      - text: ": Routes user prompts based on selected LLM name from the policy."
+                  - generic [ref=e904]:
+                    - heading "Example Configuration" [level=3] [ref=e905]
+                    - 'link "Permalink: Example Configuration" [ref=e906] [cursor=pointer]':
+                      - /url: "#example-configuration"
+                      - img [ref=e907]
+                  - paragraph [ref=e909]:
+                    - strong [ref=e910]: Note
+                    - text: ": The order of the LLMs under policies in the"
+                    - code [ref=e911]: config.yaml
+                    - text: is very important, as the router server returns a one-hot encoded vector for each classification.
+                  - generic [ref=e912]:
+                    - generic [ref=e913]:
+                      - text: "policies: - name:"
+                      - generic [ref=e914]: "\"task_router\""
+                      - text: "url: http://router-server:8000/v2/models/task_router_ensemble/infer llms: - name: Brainstorming api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-70b-instruct - name: Chatbot api_base: https://integrate.api.nvidia.com api_key: model: mistralai/mixtral-8x22b-instruct-v0.1 - name: Classification api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-8b-instruct - name: Closed QA api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-70b-instruct - name: Code Generation api_base: https://integrate.api.nvidia.com api_key: model: mistralai/mixtral-8x22b-instruct-v0.1 - name: Extraction api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-8b-instruct - name: Open QA api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-70b-instruct - name: Other api_base: https://integrate.api.nvidia.com api_key: model: mistralai/mixtral-8x22b-instruct-v0.1 - name: Rewrite api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-8b-instruct - name: Summarization api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-70b-instruct - name: Text Generation api_base: https://integrate.api.nvidia.com api_key: model: mistralai/mixtral-8x22b-instruct-v0.1 - name: Unknown api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-8b-instruct - name:"
+                      - generic [ref=e915]: "\"complexity_router\""
+                      - text: "url: http://router-server:8000/v2/models/complexity_router_ensemble/infer llms: - name: Creativity api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-70b-instruct - name: Reasoning api_base: https://integrate.api.nvidia.com api_key: model: mistralai/mixtral-8x22b-instruct-v0.1 - name: Contextual-Knowledge api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-8b-instruct - name: Few-Shot api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-70b-instruct - name: Domain-Knowledge api_base: https://integrate.api.nvidia.com api_key: model: mistralai/mixtral-8x22b-instruct-v0.1 - name: No-Label-Reason api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-8b-instruct - name: Constraint api_base: https://integrate.api.nvidia.com api_key: model: meta/llama-3.1-8b-instruct"
+                    - button "Copy" [ref=e917] [cursor=pointer]:
+                      - img [ref=e918]
+                  - generic [ref=e921]:
+                    - heading "config.yaml Parameters" [level=3] [ref=e922]:
+                      - code [ref=e923]: config.yaml
+                      - text: Parameters
+                    - 'link "Permalink: config.yaml Parameters" [ref=e924] [cursor=pointer]':
+                      - /url: "#configyaml-parameters"
+                      - img [ref=e925]
+                  - list [ref=e927]:
+                    - listitem [ref=e928]: "policies: A list of routing policies. Each policy defines how to route user prompts to the appropriate LLMs."
+                    - listitem [ref=e929]: "name: The name of the policy."
+                    - listitem [ref=e930]: "url: The URL of the routing model hosted in the router server."
+                    - listitem [ref=e931]:
+                      - text: "llms: A list of LLMs (Large Language Models) associated with the policy."
+                      - list [ref=e932]:
+                        - listitem [ref=e933]: "name: User defined name of the LLM that you want to associate with the classification."
+                        - listitem [ref=e934]: "api_base: The base URL of the LLM API."
+                        - listitem [ref=e935]: "api_key: The API key to access the LLM."
+                        - listitem [ref=e936]: "model: The specific model to use for the LLM."
+                  - generic [ref=e937]:
+                    - heading "Example of Order Mapping" [level=3] [ref=e938]
+                    - 'link "Permalink: Example of Order Mapping" [ref=e939] [cursor=pointer]':
+                      - /url: "#example-of-order-mapping"
+                      - img [ref=e940]
+                  - paragraph [ref=e942]:
+                    - text: In the above example, the order of the LLMs under the
+                    - code [ref=e943]: task_router
+                    - text: "policy is crucial. The router server returns a one-hot encoded vector for each classification, which corresponds to the order of the LLMs listed. For example:"
+                  - list [ref=e944]:
+                    - listitem [ref=e945]:
+                      - text: If the router server classifies a prompt as
+                      - code [ref=e946]: Brainstorming
+                      - text: ", it will return [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]."
+                    - listitem [ref=e947]:
+                      - text: If the router server classifies a prompt as
+                      - code [ref=e948]: Chatbot
+                      - text: ", it will return [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]."
+                    - listitem [ref=e949]:
+                      - text: If the router server classifies a prompt as
+                      - code [ref=e950]: Classifiction
+                      - text: ", it will return [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]."
+                    - listitem [ref=e951]: .
+                    - listitem [ref=e952]: .
+                  - paragraph [ref=e953]: The router-controller uses this one-hot encoded vector to route the prompt to the appropriate LLM based on the order specified in the config.yaml. Therefore, maintaining the correct order is essential for accurate routing.
+                  - generic [ref=e954]:
+                    - heading "Error Types by Routing Strategy" [level=3] [ref=e955]
+                    - 'link "Permalink: Error Types by Routing Strategy" [ref=e956] [cursor=pointer]':
+                      - /url: "#error-types-by-routing-strategy"
+                      - img [ref=e957]
+                  - generic [ref=e959]:
+                    - heading "Triton Routing Strategy Errors" [level=4] [ref=e960]
+                    - 'link "Permalink: Triton Routing Strategy Errors" [ref=e961] [cursor=pointer]':
+                      - /url: "#triton-routing-strategy-errors"
+                      - img [ref=e962]
+                  - list [ref=e964]:
+                    - listitem [ref=e965]:
+                      - code [ref=e966]: 5xx
+                      - text: ": Server-side errors"
+                      - list [ref=e967]:
+                        - listitem [ref=e968]: Triton server unavailable (503)
+                        - listitem [ref=e969]: Router model loading failures (503)
+                        - listitem [ref=e970]: Triton service error with detailed message and code.
+                  - generic [ref=e971]:
+                    - heading "Manual Routing Strategy Errors" [level=4] [ref=e972]
+                    - 'link "Permalink: Manual Routing Strategy Errors" [ref=e973] [cursor=pointer]':
+                      - /url: "#manual-routing-strategy-errors"
+                      - img [ref=e974]
+                  - list [ref=e976]:
+                    - listitem [ref=e977]:
+                      - code [ref=e978]: 4xx
+                      - text: ": Client-side errors"
+                      - list [ref=e979]:
+                        - listitem [ref=e980]: Model not found in policy (404)
+                        - listitem [ref=e981]: Missing model parameter (400)
+                        - listitem [ref=e982]: Invalid routing parameters (400)
+                        - listitem [ref=e983]: Client error with detailed message and type.
+                  - generic [ref=e984]:
+                    - heading "LLM Service Errors" [level=4] [ref=e985]
+                    - 'link "Permalink: LLM Service Errors" [ref=e986] [cursor=pointer]':
+                      - /url: "#llm-service-errors"
+                      - img [ref=e987]
+                  - list [ref=e989]:
+                    - listitem [ref=e990]:
+                      - text: Original status codes from LLM services are passed through
+                      - list [ref=e991]:
+                        - listitem [ref=e992]: Rate limiting (429)
+                        - listitem [ref=e993]: Service unavailable (503)
+                        - listitem [ref=e994]: Quota Unavailable (402)
+                        - listitem [ref=e995]: Other LLM-specific errors
+                  - generic [ref=e996]:
+                    - heading "Error Response Format" [level=3] [ref=e997]
+                    - 'link "Permalink: Error Response Format" [ref=e998] [cursor=pointer]':
+                      - /url: "#error-response-format"
+                      - img [ref=e999]
+                  - paragraph [ref=e1001]: "When an error occurs, the response will contain:"
+                  - generic [ref=e1002]:
+                    - generic [ref=e1003]:
+                      - text: "{ \"error\": { \"message\":"
+                      - generic [ref=e1004]: "\"Detailed error message\""
+                      - text: ", \"type\":"
+                      - generic [ref=e1005]: "\"error_type\""
+                      - text: ", \"status\": status_code } }"
+                    - button "Copy" [ref=e1007] [cursor=pointer]:
+                      - img [ref=e1008]
+                  - generic [ref=e1011]:
+                    - heading "Metrics" [level=2] [ref=e1012]
+                    - 'link "Permalink: Metrics" [ref=e1013] [cursor=pointer]':
+                      - /url: "#metrics-1"
+                      - img [ref=e1014]
+                  - paragraph [ref=e1016]:
+                    - text: The
+                    - code [ref=e1017]: router-controller
+                    - text: exposes various metrics to help monitor its performance and behavior. These metrics can be accessed via the
+                    - code [ref=e1018]: /metrics
+                    - text: endpoint and are formatted for Prometheus.
+                  - generic [ref=e1019]:
+                    - heading "Stream Options" [level=3] [ref=e1020]
+                    - 'link "Permalink: Stream Options" [ref=e1021] [cursor=pointer]':
+                      - /url: "#stream-options"
+                      - img [ref=e1022]
+                  - paragraph [ref=e1024]:
+                    - text: When making a request to the
+                    - code [ref=e1025]: /v1/chat/completions
+                    - text: endpoint with the
+                    - code [ref=e1026]: stream
+                    - text: parameter set to
+                    - code [ref=e1027]: "true"
+                    - text: ", you can track token usage by including the"
+                    - code [ref=e1028]: stream_options
+                    - text: object in the request payload with the
+                    - code [ref=e1029]: include_usage
+                    - text: field set to
+                    - code [ref=e1030]: "true"
+                    - text: . This ensures that token usage information is included in the response when streaming is enabled.
+                  - paragraph [ref=e1031]: Example Request Payload with Streaming and Token Usage Tracking
+                  - generic [ref=e1032]:
+                    - generic [ref=e1033]:
+                      - text: "{ \"model\":"
+                      - generic [ref=e1034]: "\"\""
+                      - text: ", \"messages\": [ { \"role\":"
+                      - generic [ref=e1035]: "\"user\""
+                      - text: ", \"content\":"
+                      - generic [ref=e1036]: "\"Your input prompt here\""
+                      - text: "} ], \"nim-llm-router\": { \"policy\":"
+                      - generic [ref=e1037]: "\"task_router\""
+                      - text: ", \"routing_strategy\":"
+                      - generic [ref=e1038]: "\"triton\""
+                      - text: "}, \"max_tokens\": 100, \"temperature\": 0.7, \"top_p\": 1.0, \"n\": 1, \"stream\": true, \"stop\": ["
+                      - generic [ref=e1039]: "\"\\n\""
+                      - text: "], \"stream_options\": { \"include_usage\": true } }"
+                    - button "Copy" [ref=e1041] [cursor=pointer]:
+                      - img [ref=e1042]
+                  - paragraph [ref=e1045]:
+                    - text: In this example, the
+                    - code [ref=e1046]: stream_options
+                    - text: object includes the
+                    - code [ref=e1047]: include_usage
+                    - text: field set to
+                    - code [ref=e1048]: "true"
+                    - text: ", indicating that token usage information should be included in the response. This behavior allows the router controller to track token usage for streaming requests. Make sure to add the"
+                    - code [ref=e1049]: stream_options
+                    - text: object with
+                    - code [ref=e1050]: "include_usage: true"
+                    - text: from the client when making streaming requests to enable this feature. Without this, the router controller will not report token usage for streaming requests.
+                  - generic [ref=e1051]:
+                    - heading "Available Metrics" [level=3] [ref=e1052]
+                    - 'link "Permalink: Available Metrics" [ref=e1053] [cursor=pointer]':
+                      - /url: "#available-metrics"
+                      - img [ref=e1054]
+                  - list [ref=e1056]:
+                    - listitem [ref=e1057]:
+                      - paragraph [ref=e1058]:
+                        - strong [ref=e1059]: Total Requests
+                        - text: ":"
+                      - list [ref=e1060]:
+                        - listitem [ref=e1061]:
+                          - strong [ref=e1062]: Name
+                          - text: ":"
+                          - code [ref=e1063]: num_requests
+                        - listitem [ref=e1064]:
+                          - strong [ref=e1065]: Description
+                          - text: ": Total number of requests received."
+                    - listitem [ref=e1066]:
+                      - paragraph [ref=e1067]:
+                        - strong [ref=e1068]: Requests Per Policy
+                        - text: ":"
+                      - list [ref=e1069]:
+                        - listitem [ref=e1070]:
+                          - strong [ref=e1071]: Name
+                          - text: ":"
+                          - code [ref=e1072]: requests_per_policy
+                        - listitem [ref=e1073]:
+                          - strong [ref=e1074]: Description
+                          - text: ": Total number of requests per policy."
+                        - listitem [ref=e1075]:
+                          - strong [ref=e1076]: Labels
+                          - text: ":"
+                          - code [ref=e1077]: policy
+                    - listitem [ref=e1078]:
+                      - paragraph [ref=e1079]:
+                        - strong [ref=e1080]: Requests Per Model
+                        - text: ":"
+                      - list [ref=e1081]:
+                        - listitem [ref=e1082]:
+                          - strong [ref=e1083]: Name
+                          - text: ":"
+                          - code [ref=e1084]: requests_per_model
+                        - listitem [ref=e1085]:
+                          - strong [ref=e1086]: Description
+                          - text: ": Total number of requests per model."
+                        - listitem [ref=e1087]:
+                          - strong [ref=e1088]: Labels
+                          - text: ":"
+                          - code [ref=e1089]: model
+                    - listitem [ref=e1090]:
+                      - paragraph [ref=e1091]:
+                        - strong [ref=e1092]: Request Latency
+                        - text: ":"
+                      - list [ref=e1093]:
+                        - listitem [ref=e1094]:
+                          - strong [ref=e1095]: Name
+                          - text: ":"
+                          - code [ref=e1096]: request_latency_seconds
+                        - listitem [ref=e1097]:
+                          - strong [ref=e1098]: Description
+                          - text: ": Latency of processing requests in seconds."
+                    - listitem [ref=e1099]:
+                      - paragraph [ref=e1100]:
+                        - strong [ref=e1101]: Successful Requests
+                        - text: ":"
+                      - list [ref=e1102]:
+                        - listitem [ref=e1103]:
+                          - strong [ref=e1104]: Name
+                          - text: ":"
+                          - code [ref=e1105]: request_success_total
+                        - listitem [ref=e1106]:
+                          - strong [ref=e1107]: Description
+                          - text: ": Total successful requests."
+                    - listitem [ref=e1108]:
+                      - paragraph [ref=e1109]:
+                        - strong [ref=e1110]: Failed Requests
+                        - text: ":"
+                      - list [ref=e1111]:
+                        - listitem [ref=e1112]:
+                          - strong [ref=e1113]: Name
+                          - text: ":"
+                          - code [ref=e1114]: request_failure_total
+                        - listitem [ref=e1115]:
+                          - strong [ref=e1116]: Description
+                          - text: ": Total failed requests, broken down by error type."
+                        - listitem [ref=e1117]:
+                          - strong [ref=e1118]: Labels
+                          - text: ":"
+                          - code [ref=e1119]: error_type
+                          - list [ref=e1120]:
+                            - listitem [ref=e1121]:
+                              - code [ref=e1122]: 4xx
+                              - text: ": Client errors (e.g., invalid input, bad request)"
+                            - listitem [ref=e1123]:
+                              - code [ref=e1124]: 5xx
+                              - text: ": Server errors (e.g., internal server errors, gateway timeouts)"
+                            - listitem [ref=e1125]:
+                              - code [ref=e1126]: system
+                              - text: ": System-level errors (e.g., network failures, connection timeouts)"
+                            - listitem [ref=e1127]:
+                              - code [ref=e1128]: other
+                              - text: ": Unclassified errors"
+                    - listitem [ref=e1129]:
+                      - paragraph [ref=e1130]:
+                        - strong [ref=e1131]: Routing Policy Usage
+                        - text: ":"
+                      - list [ref=e1132]:
+                        - listitem [ref=e1133]:
+                          - strong [ref=e1134]: Name
+                          - text: ":"
+                          - code [ref=e1135]: routing_policy_usage
+                        - listitem [ref=e1136]:
+                          - strong [ref=e1137]: Description
+                          - text: ": Number of times each routing policy was used."
+                        - listitem [ref=e1138]:
+                          - strong [ref=e1139]: Labels
+                          - text: ":"
+                          - code [ref=e1140]: routing_policy
+                    - listitem [ref=e1141]:
+                      - paragraph [ref=e1142]:
+                        - strong [ref=e1143]: Model Selection Time
+                        - text: ":"
+                      - list [ref=e1144]:
+                        - listitem [ref=e1145]:
+                          - strong [ref=e1146]: Name
+                          - text: ":"
+                          - code [ref=e1147]: model_selection_time_seconds
+                        - listitem [ref=e1148]:
+                          - strong [ref=e1149]: Description
+                          - text: ": Time taken for model selection in seconds."
+                    - listitem [ref=e1150]:
+                      - paragraph [ref=e1151]:
+                        - strong [ref=e1152]: LLM Response Time
+                        - text: ":"
+                      - list [ref=e1153]:
+                        - listitem [ref=e1154]:
+                          - strong [ref=e1155]: Name
+                          - text: ":"
+                          - code [ref=e1156]: llm_response_time_seconds
+                        - listitem [ref=e1157]:
+                          - strong [ref=e1158]: Description
+                          - text: ": Response time for each LLM in seconds."
+                        - listitem [ref=e1159]:
+                          - strong [ref=e1160]: Labels
+                          - text: ":"
+                          - code [ref=e1161]: llm
+                    - listitem [ref=e1162]:
+                      - paragraph [ref=e1163]:
+                        - strong [ref=e1164]: Token Usage
+                        - text: ":"
+                      - list [ref=e1165]:
+                        - listitem [ref=e1166]:
+                          - strong [ref=e1167]: Name
+                          - text: ":"
+                          - code [ref=e1168]: llm_token_usage
+                        - listitem [ref=e1169]:
+                          - strong [ref=e1170]: Description
+                          - text: ": Token usage per LLM."
+                        - listitem [ref=e1171]:
+                          - strong [ref=e1172]: Labels
+                          - text: ":"
+                          - code [ref=e1173]: llm
+                          - text: ","
+                          - code [ref=e1174]: category
+                    - listitem [ref=e1175]:
+                      - paragraph [ref=e1176]:
+                        - strong [ref=e1177]: Proxy Overhead Latency
+                        - text: ":"
+                      - list [ref=e1178]:
+                        - listitem [ref=e1179]:
+                          - strong [ref=e1180]: Name
+                          - text: ":"
+                          - code [ref=e1181]: proxy_overhead_latency_seconds
+                        - listitem [ref=e1182]:
+                          - strong [ref=e1183]: Description
+                          - text: ": Overhead latency of the proxy, calculated as overall latency minus model selection and LLM response time."
+  - alert [ref=e1187]

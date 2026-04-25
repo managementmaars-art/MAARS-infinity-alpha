@@ -1,0 +1,151 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e14]: 🎉 New kimi k2.5 Multi-modal Model released! Now supports multimodal understanding and processing.
+    - generic [ref=e16]:
+      - link [ref=e17] [cursor=pointer]:
+        - /url: /console/account
+        - img
+      - navigation "breadcrumb" [ref=e19]:
+        - list [ref=e20]:
+          - listitem [ref=e21]:
+            - button "Personal" [ref=e22] [cursor=pointer]:
+              - generic [ref=e23]: Personal
+              - img
+          - listitem [ref=e24]:
+            - img [ref=e25]
+          - listitem [ref=e27]:
+            - button "Organization Overview" [ref=e28] [cursor=pointer]:
+              - generic [ref=e29]: Organization Overview
+              - img
+      - navigation "Main" [ref=e30]:
+        - list [ref=e32]:
+          - listitem [ref=e33]:
+            - link "Contact Sales" [ref=e34] [cursor=pointer]:
+              - /url: /contact-sales
+          - listitem [ref=e35]:
+            - link "Blog" [ref=e36] [cursor=pointer]:
+              - /url: /blog
+          - listitem [ref=e37]:
+            - link "Docs" [ref=e38] [cursor=pointer]:
+              - /url: /docs/overview
+          - listitem [ref=e39]:
+            - link "Playground" [ref=e40] [cursor=pointer]:
+              - /url: /playground
+          - listitem [ref=e41]:
+            - link "User Center" [ref=e42] [cursor=pointer]:
+              - /url: /console/account
+      - button [ref=e43] [cursor=pointer]:
+        - img
+    - generic [ref=e45]:
+      - complementary [ref=e46]:
+        - generic [ref=e48]:
+          - menu [ref=e50]:
+            - text: Organization
+            - group [ref=e51]:
+              - menuitem "General" [ref=e52] [cursor=pointer]:
+                - link "General" [ref=e54]:
+                  - /url: /console/general
+              - menuitem "Projects" [ref=e55] [cursor=pointer]:
+                - link "Projects" [ref=e57]:
+                  - /url: /console/projects
+              - menuitem "API Keys" [ref=e58] [cursor=pointer]:
+                - link "API Keys" [ref=e60]:
+                  - /url: /console/api-keys
+              - menuitem "Usage Limits" [ref=e61] [cursor=pointer]:
+                - link "Usage Limits" [ref=e63]:
+                  - /url: /console/limits
+            - text: Resources
+            - group [ref=e64]:
+              - menuitem "Files" [ref=e65] [cursor=pointer]:
+                - link "Files" [ref=e67]:
+                  - /url: /console/file
+            - text: Billing
+            - group [ref=e68]:
+              - menuitem "Overview" [ref=e69] [cursor=pointer]:
+                - link "Overview" [ref=e71]:
+                  - /url: /console/account
+              - menuitem "Recharge" [ref=e72] [cursor=pointer]:
+                - link "Recharge" [ref=e74]:
+                  - /url: /console/pay
+              - menuitem "Recharge Details" [ref=e75] [cursor=pointer]:
+                - link "Recharge Details" [ref=e77]:
+                  - /url: /console/pay-detail
+              - menuitem "Billing Details" [ref=e78] [cursor=pointer]:
+                - link "Billing Details" [ref=e80]:
+                  - /url: /console/fee-detail
+              - menuitem "Voucher" [ref=e81] [cursor=pointer]:
+                - link "Voucher" [ref=e83]:
+                  - /url: /console/voucher-detail
+              - menuitem "Export Records" [ref=e84] [cursor=pointer]:
+                - link "Export Records" [ref=e86]:
+                  - /url: /console/bill-export-records
+          - generic "Switch Theme" [ref=e89] [cursor=pointer]:
+            - generic [ref=e90]:
+              - combobox [ref=e92]
+              - generic "Switch Theme" [ref=e93]:
+                - img [ref=e95]
+      - main [ref=e98]:
+        - generic [ref=e100]:
+          - generic [ref=e101]:
+            - heading "API Key Management" [level=1] [ref=e102]
+            - button "Create API Key" [ref=e103] [cursor=pointer]:
+              - generic [ref=e104]: Create API Key
+          - separator [ref=e105]
+          - generic [ref=e106]:
+            - generic [ref=e107]: As the administrator of this organization, you can view and manage all API Keys in this organization. The organization can retain up to 50 API Keys.
+            - generic [ref=e108]: The key will only be displayed once after creation, please keep it safe. Do not share API Keys with others or expose them in client-side code.
+            - generic [ref=e109]: To protect your account security, Moonshot AI may disable API Keys if they are found to be compromised.
+          - table [ref=e116]:
+            - rowgroup [ref=e118]:
+              - row "ID Name Created At Created By Key Project Actions" [ref=e119]:
+                - columnheader "ID" [ref=e120]
+                - columnheader "Name" [ref=e121]
+                - columnheader "Created At" [ref=e122]
+                - columnheader "Created By" [ref=e123]
+                - columnheader "Key" [ref=e124]
+                - columnheader "Project" [ref=e125]
+                - columnheader "Actions" [ref=e126]
+            - rowgroup [ref=e127]:
+              - row "No data" [ref=e128]:
+                - cell "No data" [ref=e129]:
+                  - generic [ref=e130]:
+                    - img [ref=e132]
+                    - generic [ref=e138]: No data
+  - alert [ref=e9]
+  - generic [ref=e139]:
+    - dialog "Create API Key":
+      - generic [ref=e140]:
+        - button "Close" [ref=e141] [cursor=pointer]:
+          - img "close" [ref=e143]:
+            - img [ref=e144]
+        - generic [ref=e147]: Create API Key
+        - generic [ref=e149]:
+          - generic [ref=e150]:
+            - text: Enter API Key name
+            - textbox "Maximum 32 characters" [ref=e151]: maars-command
+          - generic [ref=e152]:
+            - text: Project
+            - generic [ref=e153] [cursor=pointer]:
+              - generic [ref=e154]:
+                - combobox [expanded] [active] [ref=e156]:
+                  - listbox:
+                    - option "default": proj-9b63a0e3692149a581461032a389fd75
+                - generic: Select project for API Key
+              - generic:
+                - img:
+                  - img
+          - generic [ref=e158]:
+            - text: Accumulated
+            - link "recharge" [ref=e159] [cursor=pointer]:
+              - /url: /console/pay
+            - text: of $10 unlocks Tier1 for an enhanced experience. For details, see
+            - link "Recharge and Rate Limiting" [ref=e160] [cursor=pointer]:
+              - /url: /docs/pricing/limits
+            - text: .
+        - generic [ref=e161]:
+          - button "Cancel" [ref=e162] [cursor=pointer]:
+            - generic [ref=e163]: Cancel
+          - button "OK" [disabled] [ref=e164]:
+            - generic: OK
+  - generic "default" [ref=e171] [cursor=pointer]:
+    - generic [ref=e172]: default

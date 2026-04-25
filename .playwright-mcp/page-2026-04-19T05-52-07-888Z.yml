@@ -1,0 +1,20 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - img [ref=e5]
+  - main [ref=e12]:
+    - img [ref=e14]
+    - generic [ref=e18]: Sign in or sign up with your email address
+    - generic [ref=e20]:
+      - generic [ref=e21]: Email Address
+      - textbox "Email Address" [active] [ref=e22]:
+        - /placeholder: user@domain.com
+      - button "Continue" [disabled] [ref=e24]
+    - generic [ref=e25]:
+      - link "Privacy Policy" [ref=e26] [cursor=pointer]:
+        - /url: https://www.nvidia.com/privacy
+      - generic [ref=e27]: "|"
+      - link "Legal Info" [ref=e28] [cursor=pointer]:
+        - /url: https://www.nvidia.com/legal
+      - generic [ref=e29]: "|"
+      - link "Contact Us" [ref=e30] [cursor=pointer]:
+        - /url: https://www.nvidia.com/contact

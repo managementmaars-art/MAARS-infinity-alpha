@@ -1,0 +1,103 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - link "Reka AI" [ref=e8] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Reka AI" [ref=e9]
+      - list [ref=e11]:
+        - listitem [ref=e12]:
+          - link "Dashboard" [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e14]
+            - generic [ref=e19]: Dashboard
+        - listitem [ref=e20]:
+          - link "API Keys" [ref=e21] [cursor=pointer]:
+            - /url: /apikeys
+            - img [ref=e22]
+            - generic [ref=e26]: API Keys
+        - listitem [ref=e27]:
+          - link "Credits" [ref=e28] [cursor=pointer]:
+            - /url: /credits
+            - img [ref=e29]
+            - generic [ref=e31]: Credits
+        - listitem [ref=e32]:
+          - link "Payment Plans" [ref=e33] [cursor=pointer]:
+            - /url: /payment-plans
+            - img [ref=e34]
+            - generic [ref=e37]: Payment Plans
+        - listitem [ref=e38]:
+          - link "Billing" [ref=e39] [cursor=pointer]:
+            - /url: /billing
+            - img [ref=e40]
+            - generic [ref=e43]: Billing
+        - listitem [ref=e44]:
+          - link "Payments" [ref=e45] [cursor=pointer]:
+            - /url: /api/stripe_portal
+            - img [ref=e46]
+            - generic [ref=e50]: Payments
+      - list [ref=e52]:
+        - listitem [ref=e53]:
+          - button "Documentation" [ref=e54] [cursor=pointer]:
+            - link "Documentation" [ref=e55]:
+              - /url: https://docs.reka.ai
+              - img [ref=e56]
+              - generic [ref=e59]: Documentation
+        - listitem [ref=e60]:
+          - button "Profile" [ref=e61] [cursor=pointer]:
+            - img [ref=e62]
+            - generic [ref=e65]: Profile
+        - listitem [ref=e66]:
+          - button "Logout" [ref=e67] [cursor=pointer]:
+            - img [ref=e68]
+            - generic [ref=e71]: Logout
+    - main [ref=e72]:
+      - generic [ref=e73]:
+        - button "Toggle Sidebar" [ref=e74] [cursor=pointer]:
+          - img
+          - generic [ref=e75]: Toggle Sidebar
+        - generic [ref=e78]: API Keys
+      - main [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - paragraph [ref=e82]: Generate an API key to access Reka programmatically.
+            - button "Create API key" [ref=e83] [cursor=pointer]
+          - table [ref=e86]:
+            - rowgroup [ref=e87]:
+              - row "Name API key Created Status Actions" [ref=e88]:
+                - columnheader "Name" [ref=e89]
+                - columnheader "API key" [ref=e90]
+                - columnheader "Created" [ref=e91]
+                - columnheader "Status" [ref=e92]
+                - columnheader "Actions" [ref=e93]
+              - row [ref=e94]:
+                - cell [ref=e95]:
+                  - separator [ref=e96]
+            - rowgroup [ref=e97]:
+              - row "Default API Key 4a87c433••••••••0bbe Thu Apr 23 2026 Active Deactivate" [ref=e98]:
+                - cell "Default API Key" [ref=e99]
+                - cell "4a87c433••••••••0bbe" [ref=e100]:
+                  - generic [ref=e101]:
+                    - button [ref=e102] [cursor=pointer]:
+                      - img
+                    - button "4a87c433••••••••0bbe" [ref=e103] [cursor=pointer]:
+                      - generic [ref=e104]: 4a87c433••••••••0bbe
+                      - img
+                - cell "Thu Apr 23 2026" [ref=e105]
+                - cell "Active" [ref=e106]
+                - cell "Deactivate" [ref=e107]:
+                  - button "Deactivate" [ref=e108] [cursor=pointer]
+              - row [ref=e109]:
+                - cell [ref=e110]:
+                  - separator [ref=e111]
+  - region "Notifications alt+T"
+  - button "Report a Bug" [ref=e112] [cursor=pointer]:
+    - img [ref=e113]
+    - generic [ref=e116]: Report a Bug
+  - alert [ref=e117]
+  - generic:
+    - region "Notifications-top"
+    - region "Notifications-top-left"
+    - region "Notifications-top-right"
+    - region "Notifications-bottom-left"
+    - region "Notifications-bottom"
+    - region "Notifications-bottom-right"

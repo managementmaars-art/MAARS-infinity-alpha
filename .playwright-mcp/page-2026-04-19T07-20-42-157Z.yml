@@ -1,0 +1,159 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e5]:
+        - button "TEAM Personal team" [ref=e7] [cursor=pointer]:
+          - generic [ref=e8]:
+            - paragraph [ref=e10]: TEAM
+            - paragraph [ref=e11]: Personal team
+          - img [ref=e12]
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]: Explore
+            - list [ref=e19]:
+              - listitem [ref=e20]:
+                - link "Dashboard" [ref=e21] [cursor=pointer]:
+                  - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977
+                  - img [ref=e22]
+                  - generic [ref=e25]: Dashboard
+              - listitem [ref=e26]:
+                - link "API Keys" [ref=e27] [cursor=pointer]:
+                  - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/api-keys
+                  - img [ref=e28]
+                  - generic [ref=e31]: API Keys
+              - listitem [ref=e32]:
+                - link "Models" [ref=e33] [cursor=pointer]:
+                  - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/models
+                  - img [ref=e34]
+                  - generic [ref=e37]: Models
+              - listitem [ref=e38]:
+                - button "Usage" [ref=e39] [cursor=pointer]:
+                  - img [ref=e40]
+                  - generic [ref=e42]: Usage
+                  - img [ref=e43]
+              - listitem [ref=e45]:
+                - link "Tokenizer" [ref=e46] [cursor=pointer]:
+                  - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/tokenizer
+                  - img [ref=e48]
+                  - generic [ref=e50]: Tokenizer
+          - generic [ref=e51]:
+            - generic [ref=e52]: API
+            - list [ref=e54]:
+              - listitem [ref=e55]:
+                - link "Chat" [ref=e56] [cursor=pointer]:
+                  - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/chat-playground
+                  - img [ref=e57]
+                  - generic [ref=e59]: Chat
+              - listitem [ref=e60]:
+                - link "Imagine" [ref=e61] [cursor=pointer]:
+                  - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/imagine
+                  - img [ref=e62]
+                  - generic [ref=e67]: Imagine
+              - listitem [ref=e68]:
+                - button "Voice" [ref=e69] [cursor=pointer]:
+                  - img [ref=e70]
+                  - generic [ref=e71]: Voice
+                  - img [ref=e72]
+              - listitem [ref=e74]:
+                - button "Storage" [ref=e75] [cursor=pointer]:
+                  - img [ref=e76]
+                  - generic [ref=e80]: Storage
+                  - img [ref=e81]
+              - listitem [ref=e83]:
+                - link "Batches" [ref=e84] [cursor=pointer]:
+                  - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/batches
+                  - img [ref=e85]
+                  - generic [ref=e89]: Batches
+          - generic [ref=e90]:
+            - generic [ref=e91]: Platforms
+            - list [ref=e93]:
+              - listitem [ref=e94]:
+                - link "Grok Business" [ref=e95] [cursor=pointer]:
+                  - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/grok-business/overview
+                  - img [ref=e96]
+                  - generic [ref=e99]: Grok Business
+          - generic [ref=e100]:
+            - generic [ref=e101]: Manage
+            - list [ref=e103]:
+              - listitem [ref=e104]:
+                - link "Team members" [ref=e105] [cursor=pointer]:
+                  - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/users
+                  - img [ref=e106]
+                  - generic [ref=e111]: Team members
+              - listitem [ref=e112]:
+                - link "Billing" [ref=e113] [cursor=pointer]:
+                  - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/billing
+                  - img [ref=e114]
+                  - generic [ref=e116]: Billing
+              - listitem [ref=e117]:
+                - link "Settings" [ref=e118] [cursor=pointer]:
+                  - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/settings
+                  - img [ref=e119]
+                  - generic [ref=e130]: Settings
+    - main [ref=e131]:
+      - generic [ref=e134]:
+        - button "Search ⌘ K" [ref=e136] [cursor=pointer]:
+          - generic [ref=e137]:
+            - generic [ref=e138]:
+              - img [ref=e140]
+              - paragraph [ref=e142]: Search
+            - generic [ref=e144]:
+              - generic [ref=e145]: ⌘
+              - generic [ref=e146]: K
+        - link [ref=e147] [cursor=pointer]:
+          - /url: https://docs.x.ai/docs/resources/faq-api/team-management
+          - img [ref=e148]
+        - button [ref=e150] [cursor=pointer]:
+          - img [ref=e151]
+        - button "Toggle theme" [ref=e154] [cursor=pointer]:
+          - img [ref=e156]
+          - generic [ref=e158]: Toggle theme
+        - button "MA" [ref=e159] [cursor=pointer]:
+          - generic [ref=e161]: MA
+      - generic [ref=e162]:
+        - generic [ref=e165]:
+          - link "Go back" [ref=e166] [cursor=pointer]:
+            - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/settings
+            - img [ref=e167]
+            - generic [ref=e169]: Go back
+          - navigation [ref=e170]:
+            - link "Settings" [ref=e171] [cursor=pointer]:
+              - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/settings
+              - paragraph [ref=e172]: Settings
+            - paragraph [ref=e173]: /
+            - paragraph [ref=e174]: Team
+        - generic [ref=e175]:
+          - heading "Manage Team" [level=1] [ref=e181]
+          - generic [ref=e182]:
+            - generic [ref=e183]:
+              - generic [ref=e184]:
+                - generic [ref=e185]:
+                  - heading "Personal team" [level=4] [ref=e186]
+                  - paragraph [ref=e187]: Personal team to get started with the xAI API.
+                - button "Edit team" [ref=e188] [cursor=pointer]
+              - generic [ref=e189]:
+                - generic [ref=e190]:
+                  - generic [ref=e191]: Creator
+                  - generic [ref=e192]:
+                    - paragraph [ref=e193]: Mirza Arafat Abbas
+                    - paragraph [ref=e194]: (m***@marsgc.net)
+                - generic [ref=e195]:
+                  - generic [ref=e196]: Created
+                  - generic [ref=e198]: Feb 28, 2026
+                - generic [ref=e199]:
+                  - generic [ref=e200]: Team ID
+                  - generic [ref=e201]:
+                    - button [ref=e202] [cursor=pointer]:
+                      - img [ref=e204]
+                    - paragraph [ref=e206]: aaa0fff4-e22f-481c-855b-a93497368977
+            - generic [ref=e209]:
+              - generic [ref=e210]:
+                - img [ref=e211]
+                - generic [ref=e216]:
+                  - heading "Team members" [level=4] [ref=e217]
+                  - paragraph [ref=e218]: View and manage the members of your team.
+              - link "Manage team members" [ref=e219] [cursor=pointer]:
+                - /url: /team/aaa0fff4-e22f-481c-855b-a93497368977/users
+                - button "Manage team members" [ref=e220]
+            - heading "Danger Zone" [level=3] [ref=e222]
+  - region "Notifications alt+T"

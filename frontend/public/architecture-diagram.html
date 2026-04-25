@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MAARS-Command — System Architecture</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: radial-gradient(ellipse at top, #0f1729 0%, #030712 55%, #000 100%);
+    color: #e2e8f0;
+    padding: 40px 30px;
+    min-height: 100vh;
+  }
+  .canvas { max-width: 1600px; margin: 0 auto; }
+  h1 {
+    font-size: 32px; font-weight: 800; margin-bottom: 6px;
+    background: linear-gradient(90deg, #c4b5fd, #4fd1c5, #34d399);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .subtitle { color: #64748b; font-size: 13px; margin-bottom: 24px; }
+  .layer {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 14px;
+    padding: 16px 20px 20px;
+    margin-bottom: 14px;
+    backdrop-filter: blur(12px);
+  }
+  .layer-title {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .layer-title .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .row { display: grid; gap: 10px; }
+  .row-4 { grid-template-columns: repeat(4, 1fr); }
+  .row-5 { grid-template-columns: repeat(5, 1fr); }
+  .row-6 { grid-template-columns: repeat(6, 1fr); }
+  .row-3 { grid-template-columns: repeat(3, 1fr); }
+  .row-7 { grid-template-columns: repeat(7, 1fr); }
+  .box {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 10px;
+    padding: 10px 12px;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .box:hover { transform: translateY(-2px); }
+  .box .name { font-size: 12px; font-weight: 700; color: #f1f5f9; margin-bottom: 3px; }
+  .box .desc { font-size: 10px; color: #94a3b8; line-height: 1.4; }
+  .box.primary { border-color: rgba(79, 209, 197, 0.4); background: rgba(79, 209, 197, 0.06); }
+  .box.primary .name { color: #4fd1c5; }
+  .box.commander { border-color: rgba(168, 85, 247, 0.5); background: rgba(168, 85, 247, 0.1); }
+  .box.commander .name { color: #c4b5fd; }
+  .box.external { border-color: rgba(148, 163, 184, 0.25); background: rgba(15, 23, 42, 0.4); }
+  .box.external .name { color: #cbd5e1; }
+  .box .tag {
+    display: inline-block; font-size: 9px; padding: 1px 5px; border-radius: 4px;
+    margin-top: 4px; font-weight: 600;
+  }
+  .tag.new { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+  .tag.core { background: rgba(79, 209, 197, 0.15); color: #4fd1c5; }
+
+  /* Layer colors */
+  .l-client .dot   { background: #34d399; color: #34d399; }
+  .l-client .layer-title { color: #34d399; }
+  .l-gateway .dot  { background: #4fd1c5; }
+  .l-gateway .layer-title { color: #4fd1c5; }
+  .l-agent .dot    { background: #c4b5fd; }
+  .l-agent .layer-title { color: #c4b5fd; }
+  .l-workflow .dot { background: #f59e0b; }
+  .l-workflow .layer-title { color: #f59e0b; }
+  .l-integrations .dot { background: #f472b6; }
+  .l-integrations .layer-title { color: #f472b6; }
+  .l-data .dot     { background: #94a3b8; }
+  .l-data .layer-title { color: #94a3b8; }
+  .l-observability .dot { background: #64748b; }
+  .l-observability .layer-title { color: #64748b; }
+
+  .arrow { text-align: center; color: #475569; font-size: 14px; margin: -2px 0; }
+
+  .sidebar {
+    position: absolute; top: 40px; right: 30px; width: 280px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 12px;
+    padding: 14px; font-size: 11px;
+  }
+  .sidebar h3 {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #94a3b8; margin-bottom: 8px;
+  }
+  .sidebar ul { list-style: none; }
+  .sidebar li { color: #cbd5e1; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .sidebar li::before { content: "✓"; color: #4fd1c5; font-weight: 700; font-size: 10px; }
+  .sidebar .sect { margin-top: 14px; }
+
+  .legend { display: flex; gap: 14px; font-size: 10px; color: #64748b; margin-top: 10px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 4px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+  footer { color: #475569; font-size: 10px; text-align: center; margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <h1>MAARS-Command · System Architecture</h1>
+  <p class="subtitle">Universal AI Gateway · 499 agents · 22 LLM providers · 10 integration drivers · single Commander-orchestrated control plane</p>
+
+  <!-- ───── Client & External ───── -->
+  <div class="layer l-client">
+    <div class="layer-title"><span class="dot"></span>Client Surfaces · /frontend (React + CRA)</div>
+    <div class="row row-7">
+      <div class="box"><div class="name">/dashboard</div><div class="desc">Client home + KPIs</div></div>
+      <div class="box"><div class="name">/chat</div><div class="desc">Agent chat UX</div></div>
+      <div class="box"><div class="name">/workflow-builder</div><div class="desc">Canvas + Commander Orion modal</div></div>
+      <div class="box"><div class="name">/integrations</div><div class="desc">Authority panel + credentials</div></div>
+      <div class="box"><div class="name">/browser</div><div class="desc">In-app Playwright view + Commander drive</div></div>
+      <div class="box"><div class="name">/campaigns</div><div class="desc">Cold email + call</div></div>
+      <div class="box commander"><div class="name">/admin/gateway</div><div class="desc">Overview · Financials · Providers · Agent Training · Workflows · Intelligence</div><span class="tag core">CENTRALIZED</span></div>
+    </div>
+  </div>
+
+  <div class="arrow">↓ HTTP (same-origin via CRA proxy → :8001) · WebSocket · SSE streams</div>
+
+  <!-- ───── API / Gateway Layer ───── -->
+  <div class="layer l-gateway">
+    <div class="layer-title"><span class="dot"></span>API Gateway · /backend/routes</div>
+    <div class="row row-5">
+      <div class="box primary"><div class="name">v1_gateway.py</div><div class="desc">OpenAI-compat /v1/chat/completions · 22 providers · smart_router</div></div>
+      <div class="box primary"><div class="name">universal.py</div><div class="desc">/v1/universal/chat · task-classified multi-LLM</div></div>
+      <div class="box primary"><div class="name">workflows.py</div><div class="desc">CRUD · /generate · /orchestrate · /replay · /autocomplete · /diagnose</div></div>
+      <div class="box primary"><div class="name">integration_drivers.py</div><div class="desc">/drivers · /act · /connect-browser · /authority · /audit</div><span class="tag new">NEW</span></div>
+      <div class="box primary"><div class="name">admin_gateway_intel.py</div><div class="desc">60 routes · Training · Workflows · Bandit · Scorecards · Drift · Role-map</div></div>
+    </div>
+  </div>
+
+  <div class="arrow">↓ service calls</div>
+
+  <!-- ───── Commander & Agents ───── -->
+  <div class="layer l-agent">
+    <div class="layer-title"><span class="dot"></span>Commander Orion ∞ & Agent Fleet · /backend/services</div>
+    <div class="row row-5" style="margin-bottom: 10px;">
+      <div class="box commander"><div class="name">Commander Orion</div><div class="desc">agent_id=agent_commander · orchestrator · drives AI Build · diagnose · repair · ai_branch default</div><span class="tag core">AUTHORITY</span></div>
+      <div class="box"><div class="name">agent_service.py</div><div class="desc">CRUD · delegation · 499 agents across 27 networks</div></div>
+      <div class="box"><div class="name">agent_router_map.py</div><div class="desc">Role → agent_id · quality-ranked fallback</div></div>
+      <div class="box"><div class="name">agent_budget.py</div><div class="desc">Per-agent monthly credit cap + throttle</div><span class="tag new">NEW</span></div>
+      <div class="box"><div class="name">agent_performance.py</div><div class="desc">Quality + feedback + cost rollup</div><span class="tag new">NEW</span></div>
+    </div>
+    <div class="row row-5">
+      <div class="box"><div class="name">agent_prompt_enhancer.py</div><div class="desc">MAARS standards + tool hints + golden-example few-shot injection</div></div>
+      <div class="box"><div class="name">golden_examples.py</div><div class="desc">Agent/network/role-scoped training library</div><span class="tag new">NEW</span></div>
+      <div class="box"><div class="name">skill_cache.py</div><div class="desc">Per-agent response replay · 7d TTL</div><span class="tag new">NEW</span></div>
+      <div class="box"><div class="name">quality_service.py</div><div class="desc">Critic reviews → quality_reviews</div></div>
+      <div class="box"><div class="name">browser_agent.py</div><div class="desc">Autonomous browsing · vision → action loop</div></div>
+    </div>
+  </div>
+
+  <div class="arrow">↓ invokes</div>
+
+  <!-- ───── LLM & Workflow Core ───── -->
+  <div class="layer l-gateway">
+    <div class="layer-title"><span class="dot"></span>LLM Gateway · Workflow Engine</div>
+    <div class="row row-4">
+      <div class="box commander"><div class="name">llm_gateway.complete()</div><div class="desc">THE single LLM entry · agent_id + budget + skill-cache + semantic-cache + usage-log · 22 providers</div><span class="tag core">SINGLE ROUTER</span></div>
+      <div class="box primary"><div class="name">smart_router / bandit_router</div><div class="desc">Cost-weighted pick · Thompson sampling · free-first cascade</div></div>
+      <div class="box primary"><div class="name">workflow_executor.py</div><div class="desc">DAG walker · parallel branches · replay_run · authority gate on integration_action</div></div>
+      <div class="box primary"><div class="name">workflow_generator.py</div><div class="desc">NL→DAG · agent-first · resource-aware · synonym/tool-remap · orphan-wrapper · repair pass</div><span class="tag new">NEW</span></div>
+    </div>
+  </div>
+
+  <div class="arrow">↓ dispatches to</div>
+
+  <!-- ───── Integration Driver Layer ───── -->
+  <div class="layer l-integrations">
+    <div class="layer-title"><span class="dot"></span>Integration Drivers · Commander's Hands</div>
+    <div class="row row-4" style="margin-bottom: 10px;">
+      <div class="box commander"><div class="name">integration_driver.py</div><div class="desc">Unified dispatcher · API-first → browser fallback · authority check · audit log</div><span class="tag new">NEW</span></div>
+      <div class="box"><div class="name">integration_drivers.py</div><div class="desc">10 registered: LinkedIn · X · Instagram · TikTok · YouTube · Facebook · WhatsApp · Slack · Discord · Telegram</div><span class="tag new">NEW</span></div>
+      <div class="box"><div class="name">browser_service.py</div><div class="desc">Playwright pool · per-user cookies · screenshot stream · 2FA handoff</div></div>
+      <div class="box"><div class="name">credential_vault.py</div><div class="desc">Fernet-encrypted OAuth + API tokens · scoped user / org / system</div></div>
+    </div>
+    <div class="row row-6">
+      <div class="box external"><div class="name">workflow_services.py</div><div class="desc">29 legacy integrations (GitHub · Jira · Stripe · HubSpot · Salesforce · Notion · etc.)</div></div>
+      <div class="box external"><div class="name">workflow_tools.py</div><div class="desc">HTTP · SQL · S3 · Slack · Notion append · etc.</div></div>
+      <div class="box external"><div class="name">content_publisher.py</div><div class="desc">Cross-platform publish wrapper</div></div>
+      <div class="box external"><div class="name">email_sender.py</div><div class="desc">SendGrid / Resend dispatcher</div></div>
+      <div class="box external"><div class="name">campaign_orchestrator.py</div><div class="desc">Cold-email + call sequencing</div></div>
+      <div class="box external"><div class="name">voice (Twilio)</div><div class="desc">Outbound cold calls · Telnyx lever (deferred)</div></div>
+    </div>
+  </div>
+
+  <div class="arrow">↓ persists + reads</div>
+
+  <!-- ───── Data ───── -->
+  <div class="layer l-data">
+    <div class="layer-title"><span class="dot"></span>Data Plane · MongoDB (<code style="color:#64748b">db.*</code>) · 13 new indexes added this audit</div>
+    <div class="row row-7">
+      <div class="box"><div class="name">users · wallets</div><div class="desc">Auth + credit balance</div></div>
+      <div class="box"><div class="name">agents (499)</div><div class="desc">core-team · infinity · commander</div><span class="tag new">INDEXED</span></div>
+      <div class="box"><div class="name">gateway_usage_logs</div><div class="desc">Every LLM call · Financials + training + workflow stats read this</div></div>
+      <div class="box"><div class="name">workflows · workflow_runs</div><div class="desc">DAG specs + execution history</div></div>
+      <div class="box"><div class="name">integration_action_log · authority</div><div class="desc">Commander's audit trail + per-agent grants</div><span class="tag new">NEW</span></div>
+      <div class="box"><div class="name">golden_examples · skill_cache</div><div class="desc">Agent training library + replay cache</div><span class="tag new">NEW</span></div>
+      <div class="box"><div class="name">credentials · api_keys</div><div class="desc">Encrypted secrets · client gateway keys</div><span class="tag new">INDEXED</span></div>
+    </div>
+  </div>
+
+  <!-- ───── Observability ───── -->
+  <div class="layer l-observability">
+    <div class="layer-title"><span class="dot"></span>Observability · Governance · Background Jobs</div>
+    <div class="row row-6">
+      <div class="box"><div class="name">scheduler.py</div><div class="desc">APScheduler · scorecards · routing · drift · cost-anomaly · training-loop · workflow-tick</div></div>
+      <div class="box"><div class="name">circuit_breaker.py</div><div class="desc">Per-provider open/half-open/closed</div></div>
+      <div class="box"><div class="name">bandit_router / scorecards</div><div class="desc">Thompson sampling · live quality scores</div></div>
+      <div class="box"><div class="name">prometheus_metrics.py</div><div class="desc">/metrics scrape endpoint</div></div>
+      <div class="box"><div class="name">otel_tracing.py</div><div class="desc">OTel spans across the stack</div></div>
+      <div class="box"><div class="name">audit · trust_scoring</div><div class="desc">Change log · agent reliability</div></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot" style="background: rgba(168,85,247,0.5)"></span>Commander-authority surface</span>
+    <span class="legend-item"><span class="legend-dot" style="background: rgba(79,209,197,0.5)"></span>Centralized core</span>
+    <span class="legend-item"><span class="legend-dot" style="background: rgba(52,211,153,0.3)"></span>Added this sprint</span>
+    <span class="legend-item"><span class="legend-dot" style="background: rgba(148,163,184,0.3)"></span>Legacy / external</span>
+  </div>
+
+  <footer>Generated 2026-04-22 · MAARS-Command architecture snapshot</footer>
+</div>
+</body>
+</html>

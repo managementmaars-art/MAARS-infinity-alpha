@@ -1,0 +1,99 @@
+- main [ref=e4]:
+  - navigation [ref=e5]:
+    - link "Home Icon" [ref=e8] [cursor=pointer]:
+      - /url: /instances
+      - img [ref=e9]
+    - generic [ref=e12]:
+      - link "Status" [ref=e13] [cursor=pointer]:
+        - /url: https://status.lambda.ai/
+        - text: Status
+        - img [ref=e14]
+      - generic "Change theme" [ref=e16]:
+        - generic [ref=e17]:
+          - text: Mode
+          - img [ref=e18]
+      - link "Docs" [ref=e20] [cursor=pointer]:
+        - /url: https://docs.lambda.ai/
+        - text: Docs
+        - img [ref=e21]
+      - button "Sign out" [ref=e23]:
+        - generic [ref=e24] [cursor=pointer]:
+          - text: Sign out
+          - img [ref=e25]
+  - list [ref=e28]:
+    - link "Instances" [ref=e29] [cursor=pointer]:
+      - /url: /instances
+      - generic [ref=e30]:
+        - img [ref=e31]
+        - generic [ref=e33]: Instances
+    - link "1-Click Clusters" [ref=e34] [cursor=pointer]:
+      - /url: /one-click-clusters
+      - generic [ref=e35]:
+        - img [ref=e36]
+        - generic [ref=e38]: 1-Click Clusters
+    - link "Storage" [ref=e39] [cursor=pointer]:
+      - /url: /file-systems
+      - generic [ref=e40]:
+        - img [ref=e41]
+        - generic [ref=e43]: Storage
+    - link "Firewall" [ref=e44] [cursor=pointer]:
+      - /url: /firewall
+      - generic [ref=e45]:
+        - img [ref=e46]
+        - generic [ref=e48]: Firewall
+    - link "SSH keys" [ref=e49] [cursor=pointer]:
+      - /url: /ssh-keys
+      - generic [ref=e50]:
+        - img [ref=e51]
+        - generic [ref=e53]: SSH keys
+    - link "API keys" [ref=e54] [cursor=pointer]:
+      - /url: /api-keys
+      - generic [ref=e56]:
+        - img [ref=e57]
+        - generic [ref=e59]: API keys
+    - link "Usage" [ref=e60] [cursor=pointer]:
+      - /url: /usage
+      - generic [ref=e61]:
+        - img [ref=e62]
+        - generic [ref=e64]: Usage
+    - generic [ref=e66]:
+      - link "Support" [ref=e67] [cursor=pointer]:
+        - /url: https://lambda.ai/support
+        - generic [ref=e68]:
+          - img [ref=e69]
+          - generic [ref=e71]: Support
+      - link "Team" [ref=e72] [cursor=pointer]:
+        - /url: /team
+        - generic [ref=e73]:
+          - img [ref=e74]
+          - generic [ref=e76]: Team
+      - link "Settings" [ref=e77] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e78]:
+          - img [ref=e79]
+          - generic [ref=e81]: Settings
+  - generic [ref=e82]:
+    - heading "API Keys" [level=1] [ref=e85]
+    - generic [ref=e86]:
+      - tablist [ref=e87]:
+        - generic [ref=e88]:
+          - tab "Cloud API" [ref=e89] [cursor=pointer]
+          - tab "Filesystem S3 Adapter" [ref=e90] [cursor=pointer]
+      - tabpanel [ref=e92]:
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - generic [ref=e95]:
+              - heading "Cloud API Keys" [level=2] [ref=e96]
+              - button "Generate API key" [ref=e99]:
+                - generic [ref=e101]: Generate API key
+            - generic [ref=e102]:
+              - text: API Keys allow users to interact with Lambda Cloud through an HTTP API. Learn more about API keys in
+              - link "our docs" [ref=e103] [cursor=pointer]:
+                - /url: https://docs.lambda.ai/on-demand-cloud/cloud-api
+              - text: .
+          - generic [ref=e104]:
+            - heading "No API keys" [level=3] [ref=e105]
+            - generic [ref=e106]:
+              - paragraph [ref=e107]: API keys let you automate Lambda Cloud.
+              - button "Generate an API key" [ref=e108]:
+                - generic [ref=e110]: Generate an API key

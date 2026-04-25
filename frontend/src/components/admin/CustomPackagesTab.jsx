@@ -15,7 +15,9 @@ const CustomPackagesTab = () => {
   const [extraPacks, setExtraPacks] = useState(null);
   const [avgCost, setAvgCost] = useState(0.003);
   const [saving, setSaving] = useState(false);
-  const [targetMargin, setTargetMargin] = useState(200);
+  // targetMargin is a true profit margin % (profit ÷ price). At 95% the
+  // price is 20× cost; SaaS standard. Apply uses mult = 1 / (1 - m/100).
+  const [targetMargin, setTargetMargin] = useState(95);
   const [bdtRate, setBdtRate] = useState(107);
 
   useEffect(() => {
@@ -69,10 +71,14 @@ const CustomPackagesTab = () => {
     finally { setSaving(false); }
   };
 
+  // `category` is a string (chat/code/image_hd/...) or null. Only numeric
+  // fields go through parseFloat; string fields (name, category) pass through.
+  const STRING_FIELDS = new Set(["name", "category"]);
   const updatePreset = (index, field, value) => {
     setConfig(prev => {
       const presets = [...(prev.credit_presets || [])];
-      presets[index] = { ...presets[index], [field]: parseFloat(value) || 0 };
+      const next = STRING_FIELDS.has(field) ? value : (parseFloat(value) || 0);
+      presets[index] = { ...presets[index], [field]: next };
       if (field === "price_usd") {
         presets[index].price_bdt = Math.round((parseFloat(value) || 0) * bdtRate);
       }
@@ -83,7 +89,8 @@ const CustomPackagesTab = () => {
   const updateExtraPack = (index, field, value) => {
     setExtraPacks(prev => {
       const packs = [...prev];
-      packs[index] = { ...packs[index], [field]: field === "name" ? value : (parseFloat(value) || 0) };
+      const next = STRING_FIELDS.has(field) ? value : (parseFloat(value) || 0);
+      packs[index] = { ...packs[index], [field]: next };
       if (field === "price_usd") {
         packs[index].price_bdt = Math.round((parseFloat(value) || 0) * bdtRate);
       }
@@ -92,7 +99,9 @@ const CustomPackagesTab = () => {
   };
 
   const applyMarginToAll = () => {
-    const mult = 1 + (targetMargin / 100);
+    // Margin %: price = cost / (1 - m/100). 95% → price = cost × 20.
+    const m = Math.max(0, Math.min(99.99, targetMargin));
+    const mult = 100 / Math.max(100 - m, 0.01);
     if (config?.credit_presets) {
       setConfig(prev => ({
         ...prev,
@@ -137,7 +146,9 @@ const CustomPackagesTab = () => {
 
   if (!config || !extraPacks) return <div className="text-zinc-400 p-8">Loading...</div>;
 
-  const marginMult = 1 + (targetMargin / 100);
+  // Margin multiplier (price ÷ cost) derived from the margin target.
+  // e.g. 95% margin → 20× cost. Caps at 99.99% to avoid division blow-up.
+  const marginMult = 100 / Math.max(100 - Math.min(targetMargin, 99.99), 0.01);
 
   return (
     <div className="space-y-6" data-testid="custom-packages-tab">
@@ -170,11 +181,11 @@ const CustomPackagesTab = () => {
               <p className="text-[10px] text-emerald-500/70 flex items-center gap-1"><span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live from real usage</p>
             </div>
             <div className="space-y-1">
-              <Label className="text-zinc-300 text-sm">Target Profit Margin (%)</Label>
-              <Input type="number" value={targetMargin}
-                onChange={e => setTargetMargin(parseInt(e.target.value) || 0)}
+              <Label className="text-zinc-300 text-sm">Profit Margin % (profit ÷ price)</Label>
+              <Input type="number" step="0.1" min="0" max="99.99" value={targetMargin}
+                onChange={e => setTargetMargin(parseFloat(e.target.value) || 0)}
                 className="bg-zinc-800/50 border-white/10" data-testid="pkg-calc-margin" />
-              <p className="text-[10px] text-zinc-500">{targetMargin}% means {marginMult.toFixed(1)}x the cost</p>
+              <p className="text-[10px] text-zinc-500">{targetMargin}% margin → price is <span className="font-mono text-emerald-400">{marginMult.toFixed(1)}×</span> cost (SaaS standard)</p>
             </div>
             <div className="space-y-1">
               <Label className="text-zinc-300 text-sm">BDT Exchange Rate</Label>
@@ -240,22 +251,43 @@ const CustomPackagesTab = () => {
 
       <Card className="bg-zinc-900/50 border-white/10">
         <CardHeader>
-          <CardTitle className="text-white text-base flex items-center gap-2">Credit Presets <span className="text-xs text-zinc-500">(Build Your Own package)</span></CardTitle>
+          <CardTitle className="text-white text-base flex items-center gap-2">
+            Credit Presets
+            <span className="text-xs text-zinc-500">(Build Your Own package · optional category = per-track top-up)</span>
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="grid grid-cols-7 gap-2 text-xs text-zinc-500 font-medium px-1">
-              <span>Credits</span><span>AI Cost</span><span>USD Price</span><span>BDT <span className="text-emerald-500/70">(auto)</span></span><span>Profit</span><span>Margin</span><span></span>
+            <div className="grid grid-cols-8 gap-2 text-xs text-zinc-500 font-medium px-1">
+              <span>Credits</span><span>Category</span><span>AI Cost</span><span>USD Price</span><span>BDT <span className="text-emerald-500/70">(auto)</span></span><span>Profit</span><span>Margin</span><span></span>
             </div>
             {(config.credit_presets || []).map((preset, i) => {
               const cost = preset.credits * avgCost;
               const profit = preset.price_usd - cost;
-              const margin = cost > 0 ? ((profit / cost) * 100).toFixed(0) : 0;
+              const margin = preset.price_usd > 0 ? ((profit / preset.price_usd) * 100).toFixed(1) : 0;
+              // Category is optional — null/"general" = credits work for any
+              // workload. Tagging as code/video/etc. lets the client buy a
+              // targeted top-up; router will prefer premium models in that
+              // track. Revenue tracked separately per category in treasury.
+              const category = preset.category || "general";
               return (
-              <div key={preset.id || i} className="grid grid-cols-7 gap-2 items-center">
+              <div key={preset.id || i} className="grid grid-cols-8 gap-2 items-center">
                 <input type="number" value={preset.credits}
                   onChange={e => updatePreset(i, "credits", e.target.value)}
                   className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                <select value={category}
+                  onChange={e => updatePreset(i, "category", e.target.value === "general" ? null : e.target.value)}
+                  className="bg-zinc-800 border border-white/10 rounded-lg px-2 py-2 text-white text-sm">
+                  <option value="general">General (any)</option>
+                  <option value="chat">Chat</option>
+                  <option value="code">Code / Vibe</option>
+                  <option value="image_std">Image Std</option>
+                  <option value="image_hd">Image HD</option>
+                  <option value="video">Video</option>
+                  <option value="voiceover">Voiceover</option>
+                  <option value="tts">TTS</option>
+                  <option value="stt">STT</option>
+                </select>
                 <span className="text-red-400 text-sm px-1">${cost.toFixed(2)}</span>
                 <input type="number" step="0.5" value={preset.price_usd}
                   onChange={e => updatePreset(i, "price_usd", e.target.value)}
@@ -263,7 +295,7 @@ const CustomPackagesTab = () => {
                 <span className="text-zinc-400 text-sm px-1">{preset.price_bdt}</span>
                 <span className="text-amber-400 text-sm px-1">${profit.toFixed(2)}</span>
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${profit > 0 ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}`}>
-                  {profit > 0 ? "+" : ""}{margin}%
+                  {margin}%
                 </span>
                 <button onClick={() => setConfig(p => ({...p, credit_presets: p.credit_presets.filter((_, idx) => idx !== i)}))}
                   className="text-red-400 hover:text-red-300 text-xs">Remove</button>
@@ -271,7 +303,7 @@ const CustomPackagesTab = () => {
               );
             })}
             <Button variant="outline" size="sm" className="border-white/10 text-zinc-400"
-              onClick={() => setConfig(p => ({...p, credit_presets: [...(p.credit_presets||[]), {id:`cp_new_${Date.now()}`, credits:0, price_usd:0, price_bdt:0}]}))}>
+              onClick={() => setConfig(p => ({...p, credit_presets: [...(p.credit_presets||[]), {id:`cp_new_${Date.now()}`, credits:0, price_usd:0, price_bdt:0, category: null}]}))}>
               + Add Preset
             </Button>
           </div>
@@ -280,22 +312,39 @@ const CustomPackagesTab = () => {
 
       <Card className="bg-zinc-900/50 border-white/10">
         <CardHeader>
-          <CardTitle className="text-white text-base flex items-center gap-2">Extra Credit Packs <span className="text-xs text-zinc-500">("Need More Credits?" section)</span></CardTitle>
+          <CardTitle className="text-white text-base flex items-center gap-2">
+            Extra Credit Packs
+            <span className="text-xs text-zinc-500">("Need More Credits?" section · category = per-track top-up)</span>
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="grid grid-cols-8 gap-2 text-xs text-zinc-500 font-medium px-1">
-              <span>Credits</span><span>AI Cost/Credit</span><span>AI Cost</span><span>USD Price</span><span>BDT <span className="text-emerald-500/70">(auto)</span></span><span>Profit</span><span>Margin</span><span></span>
+            <div className="grid grid-cols-9 gap-2 text-xs text-zinc-500 font-medium px-1">
+              <span>Credits</span><span>Category</span><span>AI Cost/Credit</span><span>AI Cost</span><span>USD Price</span><span>BDT <span className="text-emerald-500/70">(auto)</span></span><span>Profit</span><span>Margin</span><span></span>
             </div>
             {extraPacks.map((pack, i) => {
               const cost = pack.credits * avgCost;
               const profit = pack.price_usd - cost;
-              const margin = cost > 0 ? ((profit / cost) * 100).toFixed(0) : 0;
+              const margin = pack.price_usd > 0 ? ((profit / pack.price_usd) * 100).toFixed(1) : 0;
+              const category = pack.category || "general";
               return (
-              <div key={pack.id || i} className="grid grid-cols-8 gap-2 items-center" data-testid={`extra-pack-${i}`}>
+              <div key={pack.id || i} className="grid grid-cols-9 gap-2 items-center" data-testid={`extra-pack-${i}`}>
                 <input type="number" value={pack.credits}
                   onChange={e => updateExtraPack(i, "credits", e.target.value)}
                   className="bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
+                <select value={category}
+                  onChange={e => updateExtraPack(i, "category", e.target.value === "general" ? null : e.target.value)}
+                  className="bg-zinc-800 border border-white/10 rounded-lg px-2 py-2 text-white text-sm">
+                  <option value="general">General</option>
+                  <option value="chat">Chat</option>
+                  <option value="code">Code / Vibe</option>
+                  <option value="image_std">Image Std</option>
+                  <option value="image_hd">Image HD</option>
+                  <option value="video">Video</option>
+                  <option value="voiceover">Voiceover</option>
+                  <option value="tts">TTS</option>
+                  <option value="stt">STT</option>
+                </select>
                 <div className="bg-zinc-800/80 border border-white/5 rounded-lg px-3 py-2 text-amber-400 text-sm font-mono"
                   data-testid={`ai-cost-credit-pack-${i}`}>
                   ${avgCost.toFixed(6)}
@@ -307,7 +356,7 @@ const CustomPackagesTab = () => {
                 <span className="text-zinc-400 text-sm px-1">{pack.price_bdt}</span>
                 <span className="text-amber-400 text-sm px-1">${profit.toFixed(2)}</span>
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${profit > 0 ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}`}>
-                  {profit > 0 ? "+" : ""}{margin}%
+                  {margin}%
                 </span>
                 <button onClick={() => setExtraPacks(prev => prev.filter((_, idx) => idx !== i))}
                   className="text-red-400 hover:text-red-300 text-xs">Remove</button>
@@ -315,7 +364,7 @@ const CustomPackagesTab = () => {
               );
             })}
             <Button variant="outline" size="sm" className="border-white/10 text-zinc-400"
-              onClick={() => setExtraPacks(prev => [...prev, {id:`credits_new_${Date.now()}`, credits:0, price_usd:0, price_bdt:0, name:"New Pack"}])}>
+              onClick={() => setExtraPacks(prev => [...prev, {id:`credits_new_${Date.now()}`, credits:0, price_usd:0, price_bdt:0, name:"New Pack", category: null}])}>
               + Add Pack
             </Button>
           </div>

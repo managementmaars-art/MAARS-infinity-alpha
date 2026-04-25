@@ -1,4 +1,0 @@
-interface:
-  display_name: "Update Audit"
-  short_description: "Review operating-system, app, driver, runtime, package-manager, and core-tool updates"
-  default_prompt: "Use $update-audit to ask for Audit mode or YOLO mode first, then inspect operating system, apps, drivers, runtimes, package managers, and core tools for outdated versions, weak choices, or obvious upgrade and replacement opportunities, separating urgent updates from optional upgrades and backing recommendations with evidence and confidence."

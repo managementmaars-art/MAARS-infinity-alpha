@@ -1,0 +1,52 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - progressbar [ref=e6]
+      - main [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e18]:
+            - img [ref=e20]
+            - generic [ref=e25]: Sign in with Google
+          - generic [ref=e26]:
+            - heading "Choose an account" [level=1] [ref=e27]
+            - generic [ref=e29]:
+              - text: to continue to
+              - button "byteplus.com" [ref=e30] [cursor=pointer]
+        - generic [ref=e33]:
+          - list [ref=e41]:
+            - listitem [ref=e42]:
+              - link "Mirza Arafat Abbas management.maars@marsgc.net" [ref=e43] [cursor=pointer]:
+                - generic [ref=e47]:
+                  - generic [ref=e48]: Mirza Arafat Abbas
+                  - generic [ref=e49]: management.maars@marsgc.net
+            - listitem [ref=e50]:
+              - link "Use another account" [ref=e51] [cursor=pointer]:
+                - generic [ref=e52]:
+                  - img [ref=e54]
+                  - generic [ref=e57]: Use another account
+          - generic [ref=e60]:
+            - text: Before using this app, you can review byteplus.com’s
+            - link "Privacy Policy" [ref=e61] [cursor=pointer]:
+              - /url: https://docs.byteplus.com/en/docs/legal/docs-privacy-policy
+            - text: and
+            - link "Terms of Service" [ref=e62] [cursor=pointer]:
+              - /url: https://docs.byteplus.com/en/docs/legal/docs-terms-of-service
+            - text: .
+    - contentinfo [ref=e67]:
+      - combobox "Change language English (United States)" [ref=e71] [cursor=pointer]:
+        - generic:
+          - generic: English (United States)
+        - generic:
+          - img
+      - list [ref=e73]:
+        - listitem [ref=e74]:
+          - link "Help" [ref=e75] [cursor=pointer]:
+            - /url: https://support.google.com/accounts?hl=en&p=account_iph
+        - listitem [ref=e76]:
+          - link "Privacy" [ref=e77] [cursor=pointer]:
+            - /url: https://accounts.google.com/TOS?loc=TH&hl=en&privacy=true
+        - listitem [ref=e78]:
+          - link "Terms" [ref=e79] [cursor=pointer]:
+            - /url: https://accounts.google.com/TOS?loc=TH&hl=en
+  - iframe [ref=e80]:
+    

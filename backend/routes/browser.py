@@ -336,7 +336,6 @@ _INTEGRATION_CONNECT_URL = {
     "youtube":      "https://accounts.google.com/signin",
     "airtable":     "https://airtable.com/login",
     "calendly":     "https://calendly.com/login",
-    "zapier":       "https://zapier.com/app/login",
     "telegram":     "https://web.telegram.org/",
     "whatsapp":     "https://web.whatsapp.com/",
     "sendgrid":     "https://app.sendgrid.com/login",

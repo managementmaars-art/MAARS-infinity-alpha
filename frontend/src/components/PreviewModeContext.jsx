@@ -9,11 +9,17 @@ import { useAuth, API } from "../App";
 
 const PreviewModeContext = createContext(null);
 
+// UNIFIED 5-tier plans — matches backend services/billing/plan_deliverables.py
+// PLAN_CATALOG and what the public /api/plans plans_v2 returns. Keeping the
+// credits/agent/commander defaults here as a synchronous fallback for the
+// first render before PreviewModeProvider fetches plans from the backend.
+// When you change a plan's credits here, update PLAN_CATALOG too.
 export const PREVIEW_PLANS = {
-  free:     { label: "Free",     color: "text-zinc-400",   bg: "bg-zinc-500/20",   credits: 50,    max_agents: 3,  includes_commander: false },
-  starter:  { label: "Starter",  color: "text-blue-400",   bg: "bg-blue-500/20",   credits: 500,   max_agents: 10, includes_commander: false },
-  pro:      { label: "Pro",      color: "text-violet-400", bg: "bg-violet-500/20", credits: 2000,  max_agents: 25, includes_commander: true  },
-  business: { label: "Business", color: "text-amber-400",  bg: "bg-amber-500/20",  credits: 6000,  max_agents: 41, includes_commander: true  },
+  free:     { label: "Free",     color: "text-zinc-400",   bg: "bg-zinc-500/20",   credits: 10,    max_agents: 3,  includes_commander: false },
+  creator:  { label: "Creator",  color: "text-teal-400",   bg: "bg-teal-500/20",   credits: 50,    max_agents: 12, includes_commander: false },
+  studio:   { label: "Studio",   color: "text-violet-400", bg: "bg-violet-500/20", credits: 200,   max_agents: 25, includes_commander: true  },
+  scale:    { label: "Scale",    color: "text-indigo-400", bg: "bg-indigo-500/20", credits: 750,   max_agents: 41, includes_commander: true  },
+  infinity: { label: "Infinity", color: "text-amber-400",  bg: "bg-amber-500/20",  credits: 5000,  max_agents: -1, includes_commander: true  },
 };
 
 export function PreviewModeProvider({ children }) {
@@ -26,6 +32,34 @@ export function PreviewModeProvider({ children }) {
   const [previewPlan, setPreviewPlan] = useState(() => {
     try { return localStorage.getItem("maars_preview_plan") || "free"; } catch { return "free"; }
   });
+
+  // Live plans from /api/plans — keeps preview toolbar synced with whatever
+  // the operator has published. Falls back to the static PREVIEW_PLANS
+  // constants while the fetch is in flight.
+  const [livePreviewPlans, setLivePreviewPlans] = useState(PREVIEW_PLANS);
+
+  useEffect(() => {
+    fetch(`${API}/plans`).then(r => r.ok ? r.json() : null).then(data => {
+      if (!data) return;
+      const v2 = Array.isArray(data.plans_v2) ? data.plans_v2 : [];
+      if (!v2.length) return;
+      // Merge v2 into the display map; preserve color/bg from static config.
+      const merged = { ...PREVIEW_PLANS };
+      for (const p of v2) {
+        const fallback = merged[p.plan_id] || PREVIEW_PLANS.free;
+        merged[p.plan_id] = {
+          ...fallback,
+          label:              p.name || fallback.label,
+          credits:            p.credits ?? fallback.credits,
+          max_agents:         p.max_agents ?? fallback.max_agents,
+          includes_commander: p.includes_commander ?? fallback.includes_commander,
+          price_usd:          p.price_usd,
+          tagline:            p.tagline,
+        };
+      }
+      setLivePreviewPlans(merged);
+    }).catch(() => {});
+  }, []);
 
   // Map of route path → visible (true = shown to clients, false = hidden)
   const [navVisibility, setNavVisibility] = useState({});
@@ -115,6 +149,7 @@ export function PreviewModeProvider({ children }) {
     <PreviewModeContext.Provider value={{
       previewMode: isAdmin ? previewMode : false,
       previewPlan,
+      previewPlans: livePreviewPlans,   // live plans from /api/plans
       navVisibility,
       visibilityLoaded,
       isRouteVisibleToClient,

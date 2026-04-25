@@ -1,0 +1,450 @@
+- generic [ref=e2]:
+  - banner [ref=e7]:
+    - 'img "Account color: Unset" [ref=e8]'
+    - navigation "Global" [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - link "AWS Console Home" [ref=e12] [cursor=pointer]:
+            - /url: https://us-east-1.console.aws.amazon.com/console/home?region=us-east-1
+            - img
+          - link "Skip to Main Content" [ref=e13] [cursor=pointer]:
+            - /url: "#c"
+          - button "Amazon Q" [ref=e16] [cursor=pointer]:
+            - img [ref=e20]
+          - button "Services" [ref=e26] [cursor=pointer]:
+            - img [ref=e27]
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - img "Search" [ref=e42]:
+              - generic [ref=e43]:
+                - img
+            - generic [ref=e44]:
+              - searchbox
+              - combobox "Search" [ref=e45]
+            - generic: "[Alt+S]"
+          - status [ref=e46]
+        - generic [ref=e47]:
+          - link "CloudShell" [ref=e49] [cursor=pointer]:
+            - /url: https://us-east-1.console.aws.amazon.com/cloudshell/home?region=us-east-1
+            - img
+          - generic "Notifications" [ref=e50] [cursor=pointer]:
+            - button "Notifications (none available)" [ref=e54]:
+              - generic [ref=e55]:
+                - img
+            - generic [ref=e57]:
+              - img
+          - list [ref=e60]:
+            - listitem [ref=e61]:
+              - button "Help & support" [ref=e63] [cursor=pointer]:
+                - img "Support" [ref=e65]
+            - listitem [ref=e68]:
+              - button "Settings" [ref=e70] [cursor=pointer]:
+                - generic [ref=e73]:
+                  - img
+            - listitem [ref=e74]:
+              - combobox "Regions (Global)" [ref=e76] [cursor=pointer]:
+                - generic [ref=e78]: Global
+                - generic [ref=e79]:
+                  - img
+            - listitem [ref=e80]:
+              - button "MAARS%20Global%20Corporation" [ref=e82] [cursor=pointer]:
+                - generic [ref=e86]:
+                  - 'generic "Account color: Unset" [ref=e88]':
+                    - generic [ref=e89]: MAARS Global Corporation (6152-9630-8298)
+                    - generic [ref=e90]:
+                      - img
+                  - generic [ref=e92]: MAARS%20Global%20Corporation
+    - generic:
+      - generic:
+        - list
+  - generic [ref=e99]:
+    - generic [ref=e101]:
+      - button "Open side navigation" [expanded] [ref=e103] [cursor=pointer]:
+        - generic [ref=e104]:
+          - img
+      - navigation "Breadcrumbs" [ref=e107]:
+        - list [ref=e108]:
+          - listitem [ref=e109]:
+            - generic [ref=e110]:
+              - link "Billing and Cost Management" [ref=e111] [cursor=pointer]:
+                - /url: /costmanagement/home#/home
+                - generic [ref=e112]: Billing and Cost Management
+              - generic [ref=e114]:
+                - img
+          - listitem [ref=e115]:
+            - link "Payment Preferences" [disabled] [ref=e117]:
+              - generic [ref=e118]: Payment Preferences
+        - list [ref=e119]:
+          - listitem [ref=e120]:
+            - generic [ref=e121]:
+              - link [ref=e122] [cursor=pointer]:
+                - /url: /costmanagement/home#/home
+                - generic [ref=e123]: Billing and Cost Management
+              - generic [ref=e125]:
+                - img
+          - listitem [ref=e126]:
+            - generic [ref=e129]: Payment Preferences
+      - region "Drawers" [ref=e131]:
+        - toolbar "Drawers" [ref=e132]:
+          - button "Open help panel" [ref=e134] [cursor=pointer]:
+            - generic [ref=e135]:
+              - img
+    - navigation "Side navigation" [ref=e138]:
+      - button "Close side navigation" [ref=e140] [cursor=pointer]:
+        - generic [ref=e141]:
+          - img
+      - generic [ref=e142]:
+        - heading "Billing and Cost Management" [level=2] [ref=e143]:
+          - link "Billing and Cost Management" [ref=e144] [cursor=pointer]:
+            - /url: /costmanagement/home#/home
+            - generic [ref=e145]: Billing and Cost Management
+        - generic [ref=e152]:
+          - generic [ref=e155]:
+            - checkbox "Billing View" [ref=e158]
+            - generic [ref=e160]: Billing View
+          - button "New" [ref=e164] [cursor=pointer]:
+            - generic [ref=e165]: New
+        - generic [ref=e166]:
+          - separator [ref=e169]
+          - list [ref=e170]:
+            - listitem [ref=e171]:
+              - link "Home" [ref=e172] [cursor=pointer]:
+                - /url: /costmanagement/home#/home
+                - generic [ref=e173]: Home
+            - listitem [ref=e174]:
+              - link "Getting Started" [ref=e175] [cursor=pointer]:
+                - /url: /costmanagement/home#/getting-started
+                - generic [ref=e176]: Getting Started
+            - listitem [ref=e177]:
+              - link "Dashboards" [ref=e178] [cursor=pointer]:
+                - /url: /costmanagement/home#/dashboards
+                - generic [ref=e179]: Dashboards
+              - button "New" [ref=e183] [cursor=pointer]:
+                - generic [ref=e184]: New
+            - listitem [ref=e185]:
+              - generic [ref=e186]:
+                - heading "Billing and Payments" [level=3] [ref=e187]:
+                  - generic [ref=e188]: Billing and Payments
+                - list [ref=e189]:
+                  - listitem [ref=e190]:
+                    - link "Bills" [ref=e191] [cursor=pointer]:
+                      - /url: "#/bills"
+                      - generic [ref=e192]: Bills
+                  - listitem [ref=e193]:
+                    - link "Payments" [ref=e194] [cursor=pointer]:
+                      - /url: "#/paymentsoverview"
+                      - generic [ref=e195]: Payments
+                  - listitem [ref=e196]:
+                    - link "Credits" [ref=e197] [cursor=pointer]:
+                      - /url: /costmanagement/home#/credits
+                      - generic [ref=e198]: Credits
+                  - listitem [ref=e199]:
+                    - link "Purchase Orders" [ref=e200] [cursor=pointer]:
+                      - /url: "#/purchaseorders"
+                      - generic [ref=e201]: Purchase Orders
+            - listitem [ref=e202]:
+              - generic [ref=e203]:
+                - heading "Cost and Usage Analysis" [level=3] [ref=e204]:
+                  - generic [ref=e205]: Cost and Usage Analysis
+                - list [ref=e206]:
+                  - listitem [ref=e207]:
+                    - link "Cost Explorer" [ref=e208] [cursor=pointer]:
+                      - /url: /costmanagement/home#/cost-explorer
+                      - generic [ref=e209]: Cost Explorer
+                  - listitem [ref=e210]:
+                    - link "Cost Explorer Saved Reports" [ref=e211] [cursor=pointer]:
+                      - /url: /costmanagement/home#/reports/overview
+                      - generic [ref=e212]: Cost Explorer Saved Reports
+                  - listitem [ref=e213]:
+                    - link "Cost Anomaly Detection" [ref=e214] [cursor=pointer]:
+                      - /url: /costmanagement/home#/anomaly-detection
+                      - generic [ref=e215]: Cost Anomaly Detection
+                  - listitem [ref=e216]:
+                    - link "Free Tier" [ref=e217] [cursor=pointer]:
+                      - /url: /costmanagement/home#/freetier
+                      - generic [ref=e218]: Free Tier
+                  - listitem [ref=e219]:
+                    - link "Data Exports" [ref=e220] [cursor=pointer]:
+                      - /url: /costmanagement/home#/bcm-data-exports
+                      - generic [ref=e221]: Data Exports
+                  - listitem [ref=e222]:
+                    - link "Customer Carbon Footprint Tool" [ref=e223] [cursor=pointer]:
+                      - /url: /costmanagement/home#/customer-carbon-footprint-tool
+                      - generic [ref=e224]: Customer Carbon Footprint Tool
+            - listitem [ref=e225]:
+              - generic [ref=e226]:
+                - heading "Cost Organization" [level=3] [ref=e227]:
+                  - generic [ref=e228]: Cost Organization
+                - list [ref=e229]:
+                  - listitem [ref=e230]:
+                    - link "Cost Categories" [ref=e231] [cursor=pointer]:
+                      - /url: /costmanagement/home#/costcategories
+                      - generic [ref=e232]: Cost Categories
+                  - listitem [ref=e233]:
+                    - link "Cost Allocation Tags" [ref=e234] [cursor=pointer]:
+                      - /url: /costmanagement/home#/tags
+                      - generic [ref=e235]: Cost Allocation Tags
+                  - listitem [ref=e236]:
+                    - link "Billing ConductorOpens in a new tab" [ref=e237] [cursor=pointer]:
+                      - /url: /billingconductor/home
+                      - generic [ref=e238]: Billing Conductor
+                      - img "Opens in a new tab" [ref=e239]:
+                        - generic [ref=e240]:
+                          - img
+            - listitem [ref=e241]:
+              - generic [ref=e242]:
+                - heading "Budgets and Planning" [level=3] [ref=e243]:
+                  - generic [ref=e244]: Budgets and Planning
+                - list [ref=e245]:
+                  - listitem [ref=e246]:
+                    - link "Budgets" [ref=e247] [cursor=pointer]:
+                      - /url: /costmanagement/home#/budgets
+                      - generic [ref=e248]: Budgets
+                    - button "New" [ref=e252] [cursor=pointer]:
+                      - generic [ref=e253]: New
+                  - listitem [ref=e254]:
+                    - link "Budgets Reports" [ref=e255] [cursor=pointer]:
+                      - /url: /costmanagement/home#/budgets/reports
+                      - generic [ref=e256]: Budgets Reports
+                  - listitem [ref=e257]:
+                    - link "Pricing Calculator" [ref=e258] [cursor=pointer]:
+                      - /url: /costmanagement/home#/pricing-calculator
+                      - generic [ref=e259]: Pricing Calculator
+                    - button "New" [ref=e263] [cursor=pointer]:
+                      - generic [ref=e264]: New
+            - listitem [ref=e265]:
+              - generic [ref=e266]:
+                - heading "Savings and Commitments" [level=3] [ref=e267]:
+                  - generic [ref=e268]: Savings and Commitments
+                - list [ref=e269]:
+                  - listitem [ref=e270]:
+                    - link "Cost Optimization Hub" [ref=e271] [cursor=pointer]:
+                      - /url: /costmanagement/home#/cost-optimization-hub
+                      - generic [ref=e272]: Cost Optimization Hub
+                    - button "New" [ref=e276] [cursor=pointer]:
+                      - generic [ref=e277]: New
+                  - listitem [ref=e278]:
+                    - generic [ref=e279]:
+                      - button "Savings Plans" [expanded] [ref=e283] [cursor=pointer]:
+                        - generic [ref=e285]:
+                          - img
+                        - generic [ref=e286]: Savings Plans
+                      - group "Savings Plans" [ref=e287]:
+                        - list [ref=e288]:
+                          - listitem [ref=e289]:
+                            - link "Overview" [ref=e290] [cursor=pointer]:
+                              - /url: /costmanagement/home#/savings-plans/overview
+                              - generic [ref=e291]: Overview
+                          - listitem [ref=e292]:
+                            - link "Inventory" [ref=e293] [cursor=pointer]:
+                              - /url: /costmanagement/home#/savings-plans/inventory
+                              - generic [ref=e294]: Inventory
+                          - listitem [ref=e295]:
+                            - link "Recommendations" [ref=e296] [cursor=pointer]:
+                              - /url: /costmanagement/home#/savings-plans/recommendations
+                              - generic [ref=e297]: Recommendations
+                          - listitem [ref=e298]:
+                            - link "Purchase Analyzer" [ref=e299] [cursor=pointer]:
+                              - /url: /costmanagement/home#/savings-plans/purchase-analyzer
+                              - generic [ref=e300]: Purchase Analyzer
+                            - button "New" [ref=e304] [cursor=pointer]:
+                              - generic [ref=e305]: New
+                          - listitem [ref=e306]:
+                            - link "Utilization Report" [ref=e307] [cursor=pointer]:
+                              - /url: /costmanagement/home#/savings-plans/utilization
+                              - generic [ref=e308]: Utilization Report
+                          - listitem [ref=e309]:
+                            - link "Coverage Report" [ref=e310] [cursor=pointer]:
+                              - /url: /costmanagement/home#/savings-plans/coverage
+                              - generic [ref=e311]: Coverage Report
+                          - listitem [ref=e312]:
+                            - link "Purchase Savings Plans" [ref=e313] [cursor=pointer]:
+                              - /url: /costmanagement/home#/savings-plans/purchase
+                              - generic [ref=e314]: Purchase Savings Plans
+                          - listitem [ref=e315]:
+                            - link "Cart" [ref=e316] [cursor=pointer]:
+                              - /url: /costmanagement/home#/savings-plans/cart
+                            - generic [ref=e318]: "0"
+                  - listitem [ref=e319]:
+                    - generic [ref=e320]:
+                      - button "Reservations" [expanded] [ref=e324] [cursor=pointer]:
+                        - generic [ref=e326]:
+                          - img
+                        - generic [ref=e327]: Reservations
+                      - group "Reservations" [ref=e328]:
+                        - list [ref=e329]:
+                          - listitem [ref=e330]:
+                            - link "Overview" [ref=e331] [cursor=pointer]:
+                              - /url: /costmanagement/home#/ri/dashboard
+                              - generic [ref=e332]: Overview
+                          - listitem [ref=e333]:
+                            - link "Recommendations" [ref=e334] [cursor=pointer]:
+                              - /url: /costmanagement/home#/ri/recommendations
+                              - generic [ref=e335]: Recommendations
+                            - button "New" [ref=e339] [cursor=pointer]:
+                              - generic [ref=e340]: New
+                          - listitem [ref=e341]:
+                            - link "Utilization Report" [ref=e342] [cursor=pointer]:
+                              - /url: /costmanagement/home#/ri/utilization
+                              - generic [ref=e343]: Utilization Report
+                          - listitem [ref=e344]:
+                            - link "Coverage Report" [ref=e345] [cursor=pointer]:
+                              - /url: /costmanagement/home#/ri/coverage
+                              - generic [ref=e346]: Coverage Report
+          - separator [ref=e349]
+          - list [ref=e350]:
+            - listitem [ref=e351]:
+              - generic [ref=e352]:
+                - heading "Preferences and Settings" [level=3] [ref=e353]:
+                  - generic [ref=e354]: Preferences and Settings
+                - list [ref=e355]:
+                  - listitem [ref=e356]:
+                    - link "Payment Preferences" [ref=e357] [cursor=pointer]:
+                      - /url: "#/paymentpreferences"
+                      - generic [ref=e358]: Payment Preferences
+                  - listitem [ref=e359]:
+                    - link "Billing Preferences" [ref=e360] [cursor=pointer]:
+                      - /url: /costmanagement/home#/preferences
+                      - generic [ref=e361]: Billing Preferences
+                  - listitem [ref=e362]:
+                    - link "Cost Management Preferences" [ref=e363] [cursor=pointer]:
+                      - /url: /costmanagement/home#/settings
+                      - generic [ref=e364]: Cost Management Preferences
+                    - button "New" [ref=e368] [cursor=pointer]:
+                      - generic [ref=e369]: New
+                  - listitem [ref=e370]:
+                    - link "Tax Settings" [ref=e371] [cursor=pointer]:
+                      - /url: "#/tax-settings"
+                      - generic [ref=e372]: Tax Settings
+                  - listitem [ref=e373]:
+                    - link "Invoice Configuration" [ref=e374] [cursor=pointer]:
+                      - /url: /costmanagement/home#/invoice-management
+                      - generic [ref=e375]: Invoice Configuration
+                  - listitem [ref=e376]:
+                    - link "Billing Transfer" [ref=e377] [cursor=pointer]:
+                      - /url: /costmanagement/home#/transferbilling
+                      - generic [ref=e378]: Billing Transfer
+                    - button "New" [ref=e382] [cursor=pointer]:
+                      - generic [ref=e383]: New
+          - separator [ref=e386]
+          - list [ref=e387]:
+            - listitem [ref=e388]:
+              - button "Legacy Pages" [ref=e393] [cursor=pointer]:
+                - generic [ref=e395]:
+                  - img
+                - generic [ref=e396]: Legacy Pages
+    - main [ref=e397]:
+      - generic:
+        - region "Notifications"
+      - main [ref=e405]:
+        - region "Notifications" [ref=e408]:
+          - generic [ref=e409]:
+            - generic [ref=e410] [cursor=pointer]:
+              - status [ref=e411]:
+                - heading "Notifications" [level=2] [ref=e412]
+                - generic [ref=e413]:
+                  - generic [ref=e414]:
+                    - generic "Error" [ref=e415]:
+                      - img "Error" [ref=e416]:
+                        - img
+                    - text: "0"
+                  - generic [ref=e417]:
+                    - generic "Warning" [ref=e418]:
+                      - img "Warning" [ref=e419]:
+                        - img
+                    - text: "0"
+                  - generic [ref=e420]:
+                    - generic "Success" [ref=e421]:
+                      - img "Success" [ref=e422]:
+                        - img
+                    - text: "0"
+                  - generic [ref=e423]:
+                    - generic "Info" [ref=e424]:
+                      - img "Info" [ref=e425]:
+                        - img
+                    - text: "2"
+                  - generic [ref=e426]:
+                    - generic "In progress" [ref=e427]:
+                      - img "In progress" [ref=e428]:
+                        - img
+                    - text: "0"
+              - button "All notifications" [ref=e429]:
+                - generic [ref=e430]:
+                  - img
+            - list "Notifications" [ref=e431]:
+              - listitem [ref=e432]:
+                - status [ref=e433]:
+                  - group "Info Backup payment method - new You can now enable the backup payment method feature under the Default payment preferences section. This feature automatically charges an alternate payment method if your default payment fails, and ensures uninterrupted access to your AWS services. You must have at least one alternate payment method registered to use this feature." [ref=e435]:
+                    - img "Info" [ref=e437]:
+                      - img
+                    - generic [ref=e438]:
+                      - generic [ref=e439]:
+                        - text: Backup payment method
+                        - generic [ref=e440]: "- new"
+                      - generic [ref=e441]: You can now enable the backup payment method feature under the Default payment preferences section. This feature automatically charges an alternate payment method if your default payment fails, and ensures uninterrupted access to your AWS services. You must have at least one alternate payment method registered to use this feature.
+                  - button "Dismiss info message" [ref=e443] [cursor=pointer]:
+                    - generic [ref=e444]:
+                      - img
+              - listitem [ref=e445]
+        - generic [ref=e449]:
+          - generic [ref=e452]:
+            - generic [ref=e453]:
+              - heading "Payment preferences" [level=1] [ref=e454]
+              - button "Information about payment preferences" [ref=e457]: Info
+            - link "Contact us (opens in a new tab)" [ref=e460] [cursor=pointer]:
+              - /url: /support/home#/case/create?issueType=customer-service&type=account_billing
+              - text: Contact us
+              - generic [ref=e461]:
+                - img
+          - generic [ref=e465]:
+            - generic [ref=e472]:
+              - heading "Default payment preferences" [level=2] [ref=e473]
+              - button "Info about default payment preferences" [ref=e476]: Info
+            - generic [ref=e486]:
+              - tablist [ref=e489]:
+                - tab "Payment methods" [selected] [ref=e491] [cursor=pointer]:
+                  - generic [ref=e493]: Payment methods
+                - tab "Payment profiles" [ref=e495] [cursor=pointer]:
+                  - generic [ref=e497]: Payment profiles
+              - tabpanel "Payment methods" [ref=e499]:
+                - generic [ref=e504]:
+                  - generic [ref=e506]:
+                    - generic [ref=e508]:
+                      - generic [ref=e509]:
+                        - heading "Payment methods (0)" [level=2] [ref=e510]:
+                          - text: Payment methods
+                          - generic [ref=e511]: (0)
+                        - button "Info about payment methods" [ref=e514]: Info
+                      - generic [ref=e516]:
+                        - button "Set as default" [disabled] [ref=e518]
+                        - button "Edit" [disabled] [ref=e520]
+                        - button "Delete" [disabled] [ref=e522]
+                        - link "Add payment method" [ref=e524] [cursor=pointer]:
+                          - /url: "#/paymentpreferences/paymentmethod/add"
+                    - generic [ref=e528]:
+                      - generic:
+                        - generic:
+                          - img
+                      - searchbox "Filter payment method" [disabled] [ref=e529]
+                  - generic [ref=e535]: Loading payment methods
+  - contentinfo [ref=e540]:
+    - generic [ref=e544]:
+      - generic [ref=e545]:
+        - button "CloudShell" [ref=e547] [cursor=pointer]:
+          - generic [ref=e548]:
+            - img
+          - generic [ref=e549]: CloudShell
+        - button "Feedback" [ref=e550] [cursor=pointer]
+        - button "Console Mobile App" [ref=e552] [cursor=pointer]:
+          - img [ref=e554]
+          - generic [ref=e557]: Console Mobile App
+      - generic [ref=e559]: © 2026, Amazon Web Services, Inc. or its affiliates.
+      - list [ref=e561]:
+        - listitem [ref=e562]:
+          - link "Privacy" [ref=e563] [cursor=pointer]:
+            - /url: https://aws.amazon.com/privacy/
+        - listitem [ref=e564]:
+          - link "Terms" [ref=e565] [cursor=pointer]:
+            - /url: https://aws.amazon.com/terms/
+        - listitem [ref=e566]:
+          - button "Cookie preferences" [ref=e567] [cursor=pointer]

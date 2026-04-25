@@ -1,0 +1,67 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - progressbar [ref=e6]
+    - main [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e17]:
+          - generic [ref=e18]:
+            - img [ref=e20]
+            - generic [ref=e25]: Sign in with Google
+          - img "Reka AI" [ref=e26]
+        - generic [ref=e27]:
+          - heading "Sign in to Reka AI" [level=1] [ref=e28]
+          - link "management.maars@marsgc.net selected. Switch account" [ref=e30] [cursor=pointer]:
+            - generic [ref=e33]: management.maars@marsgc.net
+            - img [ref=e35]
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - heading "Google will allow Reka AI to access this info about you" [level=2] [ref=e47]:
+            - generic [ref=e48]: Google will allow Reka AI to access this info about you
+          - list [ref=e52]:
+            - listitem [ref=e53]:
+              - generic [ref=e54]:
+                - img [ref=e56]
+                - generic [ref=e59]:
+                  - generic [ref=e60]: Mirza Arafat Abbas
+                  - generic [ref=e61]: Name and profile picture
+            - listitem [ref=e62]:
+              - generic [ref=e63]:
+                - img [ref=e65]
+                - generic [ref=e67]:
+                  - generic [ref=e68]: management.maars@marsgc.net
+                  - generic [ref=e69]: Email address
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - text: Review Reka AI’s
+            - link "Privacy Policy" [ref=e74] [cursor=pointer]:
+              - /url: https://reka.ai/privacy-policy/
+            - text: and Terms of Service to understand how Reka AI will process and protect your data.
+          - generic [ref=e75]:
+            - text: To make changes at any time, go to your
+            - link "Google Account" [ref=e76] [cursor=pointer]:
+              - /url: https://myaccount.google.com/connections#filter=4
+            - text: .
+          - generic [ref=e77]:
+            - text: Learn more about
+            - link "Sign in with Google" [ref=e78] [cursor=pointer]:
+              - /url: https://support.google.com/accounts/answer/12921417?sjid=1919169284593837430-NC
+            - text: .
+      - generic [ref=e81]:
+        - button "Cancel" [ref=e85]: Cancel
+        - button "Continue" [ref=e91]: Continue
+  - contentinfo [ref=e97]:
+    - combobox "Change language English (United States)" [ref=e101] [cursor=pointer]:
+      - generic:
+        - generic: English (United States)
+      - generic:
+        - img
+    - list [ref=e103]:
+      - listitem [ref=e104]:
+        - link "Help" [ref=e105] [cursor=pointer]:
+          - /url: https://support.google.com/accounts?hl=en&p=account_iph
+      - listitem [ref=e106]:
+        - link "Privacy" [ref=e107] [cursor=pointer]:
+          - /url: https://accounts.google.com/TOS?loc=TH&hl=en&privacy=true
+      - listitem [ref=e108]:
+        - link "Terms" [ref=e109] [cursor=pointer]:
+          - /url: https://accounts.google.com/TOS?loc=TH&hl=en

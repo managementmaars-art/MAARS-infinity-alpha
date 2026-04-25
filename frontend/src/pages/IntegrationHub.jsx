@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useAuth } from "../App";
+import { Link } from "react-router-dom";
 import {
   Link2, Unlink, Check, ExternalLink, Settings, ToggleLeft, ToggleRight,
   Zap, Globe, MessageCircle, Mail, Phone, Calendar, Database, Code,
   Share2, Radio, Users, ChevronDown, ChevronUp, Shield, Target,
   MapPin, Languages, TrendingUp, Megaphone, Video, Play, Send,
-  Hash, BookOpen, Activity, Plus, X, AlertCircle
+  Hash, BookOpen, Activity, Plus, X, AlertCircle, Circle
 } from "lucide-react";
 import { toast } from "sonner";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const T = {
   glass: "rgba(255,255,255,0.03)",
@@ -45,6 +46,14 @@ const PLATFORM_META = {
   airtable:  { color: "#18BFFF", bg: "rgba(24,191,255,0.1)",  icon: "https://cdn.simpleicons.org/airtable/18BFFF",label: "Airtable",      category: "productivity" },
   calendly:  { color: "#006BFF", bg: "rgba(0,107,255,0.1)",   icon: "https://cdn.simpleicons.org/calendly/006BFF",label: "Calendly",      category: "scheduling" },
   google_suite:{ color:"#4285F4",bg:"rgba(66,133,244,0.1)",   icon: "https://cdn.simpleicons.org/google/4285F4",  label: "Google Suite",  category: "productivity" },
+  shopify:   { color: "#96BF48", bg: "rgba(150,191,72,0.1)",  icon: "https://cdn.simpleicons.org/shopify/96BF48", label: "Shopify",       category: "commerce" },
+  hubspot:   { color: "#FF7A59", bg: "rgba(255,122,89,0.1)",  icon: "https://cdn.simpleicons.org/hubspot/FF7A59", label: "HubSpot",       category: "crm" },
+  salesforce:{ color: "#00A1E0", bg: "rgba(0,161,224,0.1)",   icon: "https://cdn.simpleicons.org/salesforce/00A1E0", label: "Salesforce", category: "crm" },
+  webhooks:  { color: "#0F766E", bg: "rgba(15,118,110,0.1)",  icon: null,                                          label: "Webhooks",      category: "automation" },
+  notion:    { color: "#FFFFFF", bg: "rgba(255,255,255,0.06)",icon: "https://cdn.simpleicons.org/notion/white",   label: "Notion",        category: "knowledge" },
+  jira:      { color: "#0052CC", bg: "rgba(0,82,204,0.1)",    icon: "https://cdn.simpleicons.org/jira/0052CC",    label: "Jira",          category: "knowledge" },
+  confluence:{ color: "#172B4D", bg: "rgba(23,43,77,0.1)",    icon: "https://cdn.simpleicons.org/confluence/172B4D", label: "Confluence", category: "knowledge" },
+  stripe:    { color: "#635BFF", bg: "rgba(99,91,255,0.1)",   icon: "https://cdn.simpleicons.org/stripe/635BFF",  label: "Stripe",        category: "finance" },
 };
 
 const CAPABILITY_ICONS = {
@@ -62,6 +71,11 @@ const CATEGORIES = {
   scheduling: { label: "Scheduling & Calendar", icon: Calendar, color: "#10b981", description: "Book meetings, schedule calls, manage events" },
   productivity: { label: "Productivity & Data", icon: Database, color: "#8b5cf6", description: "Airtable, Google Suite, Slack" },
   development: { label: "Development", icon: Code, color: "#64748b", description: "GitHub repos, PRs, issues" },
+  commerce: { label: "Commerce", icon: Globe, color: "#84cc16", description: "Storefronts, catalog operations, orders, inventory" },
+  crm: { label: "CRM & RevOps", icon: Users, color: "#fb7185", description: "Customer records, pipelines, deals, service workflows" },
+  knowledge: { label: "Knowledge Systems", icon: BookOpen, color: "#38bdf8", description: "Runbooks, docs, issue systems, structured knowledge" },
+  finance: { label: "Finance & Billing", icon: Shield, color: "#6366f1", description: "Payments, subscriptions, billing events, revenue operations" },
+  automation: { label: "Automation Fabric", icon: Zap, color: "#f97316", description: "Webhooks, orchestration triggers, downstream automations" },
 };
 
 const GEO_REGIONS = {
@@ -139,6 +153,39 @@ const PLATFORM_FIELDS = {
     { key: "service_account_json", label: "Service Account JSON", type: "password", help: "console.cloud.google.com/iam-admin/serviceaccounts" },
     { key: "delegate_email", label: "Delegate Email", type: "text" },
   ],
+  shopify:    [
+    { key: "store_url", label: "Store URL", type: "url", help: "Your Shopify admin/store URL" },
+    { key: "access_token", label: "Access Token", type: "password", help: "Admin API access token from Shopify app settings" },
+  ],
+  hubspot:    [
+    { key: "access_token", label: "Access Token", type: "password", help: "Private app token from HubSpot settings" },
+    { key: "portal_id", label: "Portal ID", type: "text" },
+  ],
+  salesforce: [
+    { key: "instance_url", label: "Instance URL", type: "url", help: "e.g. https://your-domain.my.salesforce.com" },
+    { key: "client_id", label: "Client ID", type: "text" },
+    { key: "client_secret", label: "Client Secret", type: "password" },
+    { key: "refresh_token", label: "Refresh Token", type: "password" },
+  ],
+  webhooks:   [
+    { key: "webhook_url", label: "Webhook URL", type: "url", help: "Destination endpoint that will receive signed events" },
+    { key: "signing_secret", label: "Signing Secret", type: "password" },
+  ],
+  notion:     [{ key: "integration_token", label: "Integration Token", type: "password", help: "Create from notion.so/my-integrations" }],
+  jira:       [
+    { key: "base_url", label: "Base URL", type: "url", help: "Your Jira cloud URL" },
+    { key: "email", label: "Atlassian Email", type: "email" },
+    { key: "api_token", label: "API Token", type: "password" },
+  ],
+  confluence: [
+    { key: "base_url", label: "Base URL", type: "url", help: "Your Confluence cloud URL" },
+    { key: "email", label: "Atlassian Email", type: "email" },
+    { key: "api_token", label: "API Token", type: "password" },
+  ],
+  stripe:     [
+    { key: "secret_key", label: "Secret Key", type: "password", help: "Dashboard > Developers > API keys" },
+    { key: "webhook_secret", label: "Webhook Secret", type: "password" },
+  ],
 };
 
 const PLATFORM_CAPABILITIES = {
@@ -160,6 +207,14 @@ const PLATFORM_CAPABILITIES = {
   airtable:  ["post"],
   calendly:  ["schedule"],
   google_suite: ["email", "schedule"],
+  shopify:   ["products", "orders", "customers", "inventory"],
+  hubspot:   ["contacts", "deals", "pipelines"],
+  salesforce:["leads", "opportunities", "cases"],
+  webhooks:  ["webhook", "events"],
+  notion:    ["pages", "databases", "knowledge_sync"],
+  jira:      ["issues", "projects", "transitions"],
+  confluence:["pages", "spaces", "search"],
+  stripe:    ["payments", "subscriptions", "billing"],
 };
 
 const DOCS_URLS = {
@@ -181,82 +236,133 @@ const DOCS_URLS = {
   airtable: "https://airtable.com/create/tokens",
   calendly: "https://calendly.com/integrations/api_webhooks",
   google_suite: "https://console.cloud.google.com/iam-admin/serviceaccounts",
+  shopify: "https://shopify.dev/docs/api",
+  hubspot: "https://developers.hubspot.com/docs/api/overview",
+  salesforce: "https://developer.salesforce.com/docs",
+  webhooks: "https://webhooks.fyi/",
+  notion: "https://developers.notion.com/",
+  jira: "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/",
+  confluence: "https://developer.atlassian.com/cloud/confluence/rest/v2/",
+  stripe: "https://docs.stripe.com/api",
 };
 
 export default function IntegrationHub() {
   const { token } = useAuth();
-  const [connected, setConnected] = useState({});       // platform → creds
-  const [configuring, setConfiguring] = useState(null); // platform being configured
+  const [catalog, setCatalog] = useState([]);
+  const [connected, setConnected] = useState({});
+  const [summary, setSummary] = useState(null);
+  const [configuring, setConfiguring] = useState(null);
   const [configValues, setConfigValues] = useState({});
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [expandedCategory, setExpandedCategory] = useState("social_media");
-  const [testingPlatform, setTestingPlatform] = useState(null);
   const [filterCap, setFilterCap] = useState(null);
-  const [geoSetup, setGeoSetup] = useState(null);
 
-  const h = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const headers = useMemo(() => (
+    { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
+  ), [token]);
 
-  const fetchConnected = async () => {
+  const catalogById = useMemo(() => (
+    Object.fromEntries(catalog.map(item => [item.integration_id, item]))
+  ), [catalog]);
+
+  const getPlatformMeta = useCallback((platformId) => {
+    const backend = catalogById[platformId];
+    const local = PLATFORM_META[platformId] || {};
+    const color = backend?.color || local.color || "#64748b";
+    return {
+      color,
+      bg: local.bg || `${color}18`,
+      icon: local.icon || null,
+      label: backend?.name || local.label || platformId,
+      category: backend?.category || local.category || "productivity",
+      description: backend?.description || "",
+    };
+  }, [catalogById]);
+
+  const getPlatformFields = useCallback((platformId) => (
+    catalogById[platformId]?.config_fields || PLATFORM_FIELDS[platformId] || []
+  ), [catalogById]);
+
+  const getPlatformCapabilities = useCallback((platformId) => (
+    catalogById[platformId]?.capabilities || PLATFORM_CAPABILITIES[platformId] || []
+  ), [catalogById]);
+
+  const getPlatformDocsUrl = useCallback((platformId) => (
+    catalogById[platformId]?.docs_url || DOCS_URLS[platformId]
+  ), [catalogById]);
+
+  const fetchConnected = useCallback(async () => {
+    setLoading(true);
     try {
-      const res = await fetch(`${API}/api/social/accounts`, { headers: h });
-      if (res.ok) {
-        const data = await res.json();
-        const map = {};
-        (data.accounts || []).forEach(a => { map[a.platform] = a; });
-        setConnected(map);
-      }
-      // Also fetch kernel integrations
-      const ki = await fetch(`${API}/api/kernel/integrations/available`, { headers: h });
-      if (ki.ok) {
-        const kdata = await ki.json();
-        const connIds = new Set(kdata.connected_ids || []);
-        connIds.forEach(id => {
-          if (!map) return;
-          // merge kernel connections
-        });
-      }
-    } catch {}
-    setLoading(false);
-  };
+      const res = await fetch(`${API}/api/kernel/integrations/available`, { headers });
+      if (!res.ok) throw new Error("Failed to load integrations");
+      const data = await res.json();
+      setCatalog(data.available || []);
+      setSummary(data.summary || null);
+      const map = {};
+      (data.connected || []).forEach(item => { map[item.integration_id] = item; });
+      setConnected(map);
+    } catch {
+      toast.error("Failed to load integrations");
+    } finally {
+      setLoading(false);
+    }
+  }, [headers]);
 
-  useEffect(() => { fetchConnected(); }, [token]);
+  useEffect(() => {
+    fetchConnected();
+  }, [fetchConnected]);
 
-  const handleSaveConnect = async (platform) => {
+  const handleSaveConnect = useCallback(async (platform) => {
     setSaving(true);
     try {
-      const res = await fetch(`${API}/api/social/connect`, {
-        method: "POST", headers: h,
-        body: JSON.stringify({ platform, credentials: configValues }),
+      const res = await fetch(`${API}/api/kernel/integrations/connect`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ integration_id: platform, config: configValues, enabled: true }),
       });
       if (res.ok) {
-        toast.success(`${PLATFORM_META[platform]?.label || platform} connected!`);
+        toast.success(`${getPlatformMeta(platform).label} connected`);
         setConfiguring(null);
         setConfigValues({});
         fetchConnected();
       } else {
-        toast.error("Failed to connect — check credentials");
+        const data = await res.json().catch(() => ({}));
+        toast.error(data.detail || "Failed to connect. Check the required fields.");
       }
-    } catch { toast.error("Connection failed"); }
-    setSaving(false);
-  };
+    } catch {
+      toast.error("Connection failed");
+    } finally {
+      setSaving(false);
+    }
+  }, [configValues, fetchConnected, getPlatformMeta, headers]);
 
-  const handleDisconnect = async (platform) => {
-    await fetch(`${API}/api/social/connect/${platform}`, { method: "DELETE", headers: h });
-    toast.success(`${PLATFORM_META[platform]?.label} disconnected`);
-    fetchConnected();
-  };
+  const handleDisconnect = useCallback(async (platform) => {
+    try {
+      await fetch(`${API}/api/kernel/integrations/${platform}`, { method: "DELETE", headers });
+      toast.success(`${getPlatformMeta(platform).label} disconnected`);
+      fetchConnected();
+    } catch {
+      toast.error("Disconnect failed");
+    }
+  }, [fetchConnected, getPlatformMeta, headers]);
 
-  // Group platforms by category
-  const platformsByCategory = {};
-  Object.entries(PLATFORM_META).forEach(([id, meta]) => {
-    const cat = meta.category;
-    if (!platformsByCategory[cat]) platformsByCategory[cat] = [];
-    platformsByCategory[cat].push(id);
-  });
+  const platformsByCategory = useMemo(() => {
+    const grouped = {};
+    catalog.forEach(item => {
+      const cat = item.category || getPlatformMeta(item.integration_id).category;
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(item.integration_id);
+    });
+    return grouped;
+  }, [catalog, getPlatformMeta]);
 
   const connectedCount = Object.keys(connected).length;
-  const socialConnected = Object.keys(connected).filter(p => PLATFORM_META[p]?.category === "social_media").length;
+  const socialConnected = Object.keys(connected).filter(
+    platform => getPlatformMeta(platform).category === "social_media"
+  ).length;
+  const readyCount = Object.values(connected).filter(item => item.execution_ready).length;
 
   if (loading) return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 256 }}>
@@ -268,12 +374,19 @@ export default function IntegrationHub() {
     <div style={{ display: "flex", flexDirection: "column", gap: 24, animation: "fadeUp .4s ease" }} data-testid="integration-hub">
       <style>{STYLES}</style>
 
+      {/* Connected apps — quick-launch tiles for the per-provider
+          command center. Replaces the old standalone /apps page; the
+          credential grid below still handles setup for newly-added or
+          advanced integrations. Commander authority grants live under
+          /admin/gateway now, not here. */}
+      <ConnectedAppsGrid token={token} />
+
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 700, color: "#fff", fontFamily: "Outfit, sans-serif", margin: 0 }}>Integration Hub</h1>
           <p style={{ fontSize: 13, color: T.zinc, marginTop: 4, margin: "4px 0 0" }}>
-            Connect social platforms so your agents can post, message, boost, call, and run geo-targeted campaigns — autonomously.
+            Connect the systems your agents actually operate through: social channels, CRM, commerce, knowledge tools, billing, and automation fabric.
           </p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -283,11 +396,32 @@ export default function IntegrationHub() {
           </div>
           <div style={{ width: 1, height: 32, background: "rgba(255,255,255,0.1)" }} />
           <div style={{ textAlign: "right" }}>
+            <p style={{ fontSize: 11, color: "#52525b", margin: 0 }}>Ready</p>
+            <p style={{ fontSize: 18, fontWeight: 700, color: "#34d399", margin: 0 }}>{readyCount}</p>
+          </div>
+          <div style={{ width: 1, height: 32, background: "rgba(255,255,255,0.1)" }} />
+          <div style={{ textAlign: "right" }}>
             <p style={{ fontSize: 11, color: "#52525b", margin: 0 }}>Social Media</p>
             <p style={{ fontSize: 18, fontWeight: 700, color: "#4fd1c5", margin: 0 }}>{socialConnected}</p>
           </div>
         </div>
       </div>
+
+      {summary && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+          {[
+            { label: "Catalog", value: summary.total_available || 0, color: "#fff" },
+            { label: "Ready Now", value: summary.ready || 0, color: "#34d399" },
+            { label: "Needs Config", value: summary.incomplete || 0, color: "#f59e0b" },
+            { label: "Planned", value: summary.planned || 0, color: "#a1a1aa" },
+          ].map(item => (
+            <div key={item.label} style={{ background: "rgba(24,24,27,0.35)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 12, padding: 16 }}>
+              <p style={{ fontSize: 10, color: "#52525b", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>{item.label}</p>
+              <p style={{ fontSize: 24, fontWeight: 700, color: item.color, margin: 0 }}>{item.value}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Connected platforms strip */}
       {connectedCount > 0 && (
@@ -297,15 +431,19 @@ export default function IntegrationHub() {
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {Object.entries(connected).map(([platform, info]) => {
-              const meta = PLATFORM_META[platform];
+              const meta = getPlatformMeta(platform);
               if (!meta) return null;
               return (
                 <div key={platform}
                   style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 12px", borderRadius: 999, border: `1px solid ${meta.color}40`, background: meta.bg }}>
-                  <img src={meta.icon} alt={meta.label} style={{ width: 14, height: 14, objectFit: "contain" }}
-                    onError={e => { e.target.style.display = "none"; }} />
+                  {meta.icon ? (
+                    <img src={meta.icon} alt={meta.label} style={{ width: 14, height: 14, objectFit: "contain" }}
+                      onError={e => { e.target.style.display = "none"; }} />
+                  ) : (
+                    <PlugIcon color={meta.color} />
+                  )}
                   <span style={{ fontSize: 12, fontWeight: 500, color: meta.color }}>{meta.label}</span>
-                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#34d399" }} />
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: info.execution_ready ? "#34d399" : "#f59e0b" }} />
                   <button onClick={() => handleDisconnect(platform)} style={{ color: "#52525b", background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center" }}>
                     <X style={{ width: 12, height: 12 }} />
                   </button>
@@ -343,7 +481,7 @@ export default function IntegrationHub() {
       {Object.entries(CATEGORIES).map(([catKey, catMeta]) => {
         const platformIds = (platformsByCategory[catKey] || []).filter(pid => {
           if (!filterCap) return true;
-          return (PLATFORM_CAPABILITIES[pid] || []).includes(filterCap);
+          return getPlatformCapabilities(pid).includes(filterCap);
         });
         if (platformIds.length === 0) return null;
 
@@ -376,15 +514,15 @@ export default function IntegrationHub() {
                   <PlatformCard
                     key={platformId}
                     platformId={platformId}
-                    meta={PLATFORM_META[platformId]}
-                    fields={PLATFORM_FIELDS[platformId] || []}
-                    capabilities={PLATFORM_CAPABILITIES[platformId] || []}
+                    meta={getPlatformMeta(platformId)}
+                    fields={getPlatformFields(platformId)}
+                    capabilities={getPlatformCapabilities(platformId)}
                     isConnected={!!connected[platformId]}
                     isConfiguring={configuring === platformId}
                     configValues={configValues}
                     saving={saving}
-                    testing={testingPlatform === platformId}
-                    docsUrl={DOCS_URLS[platformId]}
+                    docsUrl={getPlatformDocsUrl(platformId)}
+                    statusInfo={connected[platformId]}
                     onConfigure={() => { setConfiguring(platformId); setConfigValues({}); }}
                     onCancel={() => { setConfiguring(null); setConfigValues({}); }}
                     onFieldChange={(key, val) => setConfigValues(prev => ({ ...prev, [key]: val }))}
@@ -435,8 +573,14 @@ export default function IntegrationHub() {
   );
 }
 
-function PlatformCard({ platformId, meta, fields, capabilities, isConnected, isConfiguring, configValues, saving, testing, docsUrl, onConfigure, onCancel, onFieldChange, onSave, onDisconnect }) {
+function PlugIcon({ color }) {
+  return <Link2 style={{ width: 16, height: 16, color }} />;
+}
+
+function PlatformCard({ platformId, meta, fields, capabilities, isConnected, isConfiguring, configValues, saving, docsUrl, statusInfo, onConfigure, onCancel, onFieldChange, onSave, onDisconnect }) {
   const [showHelp, setShowHelp] = useState(null);
+  const readinessColor = statusInfo?.execution_ready ? "#34d399" : statusInfo?.verification_status === "incomplete" ? "#f59e0b" : "#52525b";
+  const readinessLabel = statusInfo?.execution_ready ? "Ready" : statusInfo?.verification_status === "incomplete" ? "Needs config" : "Connected";
 
   return (
     <div
@@ -451,8 +595,12 @@ function PlatformCard({ platformId, meta, fields, capabilities, isConnected, isC
       {/* Platform header */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, padding: 12 }}>
         <div style={{ width: 36, height: 36, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: meta.bg, border: `1px solid ${meta.color}30` }}>
-          <img src={meta.icon} alt={meta.label} style={{ width: 20, height: 20, objectFit: "contain" }}
-            onError={e => { e.target.style.display = "none"; }} />
+          {meta.icon ? (
+            <img src={meta.icon} alt={meta.label} style={{ width: 20, height: 20, objectFit: "contain" }}
+              onError={e => { e.target.style.display = "none"; }} />
+          ) : (
+            <PlugIcon color={meta.color} />
+          )}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -460,6 +608,12 @@ function PlatformCard({ platformId, meta, fields, capabilities, isConnected, isC
             {isConnected && <Check style={{ width: 14, height: 14, color: "#34d399" }} />}
           </div>
           <p style={{ fontSize: 9, color: T.zinc, margin: 0 }}>{meta.category.replace("_", " ")}</p>
+          {isConnected && (
+            <p style={{ fontSize: 9, color: readinessColor, margin: 0 }}>
+              {readinessLabel}
+              {statusInfo?.runtime_support ? ` • ${statusInfo.runtime_support}` : ""}
+            </p>
+          )}
         </div>
         {docsUrl && (
           <a href={docsUrl} target="_blank" rel="noopener noreferrer" style={{ color: "#52525b", display: "flex" }}>
@@ -501,14 +655,24 @@ function PlatformCard({ platformId, meta, fields, capabilities, isConnected, isC
               {showHelp === field.key && (
                 <p style={{ fontSize: 8, color: T.amber, background: "rgba(245,158,11,0.1)", padding: "4px 8px", borderRadius: 4, marginBottom: 4, margin: "0 0 4px" }}>{field.help}</p>
               )}
-              <input
-                type={field.type || "text"}
-                placeholder={`Enter ${field.label}`}
-                value={configValues[field.key] || ""}
-                onChange={e => onFieldChange(field.key, e.target.value)}
-                style={{ ...formInput, fontSize: 10, padding: "6px 8px", fontFamily: "monospace" }}
-                data-testid={`config-${platformId}-${field.key}`}
-              />
+              {field.type === "textarea" ? (
+                <textarea
+                  placeholder={`Enter ${field.label}`}
+                  value={configValues[field.key] || ""}
+                  onChange={e => onFieldChange(field.key, e.target.value)}
+                  style={{ ...formInput, fontSize: 10, padding: "6px 8px", fontFamily: "monospace", minHeight: 72, resize: "vertical" }}
+                  data-testid={`config-${platformId}-${field.key}`}
+                />
+              ) : (
+                <input
+                  type={field.type || "text"}
+                  placeholder={`Enter ${field.label}`}
+                  value={configValues[field.key] || ""}
+                  onChange={e => onFieldChange(field.key, e.target.value)}
+                  style={{ ...formInput, fontSize: 10, padding: "6px 8px", fontFamily: "monospace" }}
+                  data-testid={`config-${platformId}-${field.key}`}
+                />
+              )}
             </div>
           ))}
         </div>
@@ -516,17 +680,7 @@ function PlatformCard({ platformId, meta, fields, capabilities, isConnected, isC
 
       {/* Actions */}
       <div style={{ padding: "0 12px 12px", display: "flex", alignItems: "center", gap: 8 }}>
-        {isConnected ? (
-          <>
-            <span style={{ fontSize: 10, color: "#34d399", display: "flex", alignItems: "center", gap: 4 }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#34d399" }} />
-              Connected
-            </span>
-            <button onClick={onDisconnect} style={{ marginLeft: "auto", fontSize: 9, color: "#52525b", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit" }}>
-              <Unlink style={{ width: 12, height: 12 }} />Disconnect
-            </button>
-          </>
-        ) : isConfiguring ? (
+        {isConfiguring ? (
           <>
             <button
               onClick={onSave}
@@ -534,10 +688,28 @@ function PlatformCard({ platformId, meta, fields, capabilities, isConnected, isC
               style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 12px", borderRadius: 8, fontSize: 10, fontWeight: 500, color: "#fff", border: "none", cursor: saving ? "not-allowed" : "pointer", background: `linear-gradient(135deg, ${meta.color}cc, ${meta.color}88)`, transition: "all .2s", fontFamily: "inherit", opacity: saving ? 0.7 : 1 }}
               data-testid={`connect-save-${platformId}`}>
               <Link2 style={{ width: 12, height: 12 }} />
-              {saving ? "Saving..." : "Save & Connect"}
+              {saving ? "Saving..." : isConnected ? "Save Changes" : "Save & Connect"}
             </button>
             <button onClick={onCancel} style={{ padding: "6px 8px", borderRadius: 4, fontSize: 10, color: T.zinc, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit" }}>
               Cancel
+            </button>
+          </>
+        ) : isConnected ? (
+          <>
+            <span style={{ fontSize: 10, color: readinessColor, display: "flex", alignItems: "center", gap: 4 }}>
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: readinessColor }} />
+              {readinessLabel}
+            </span>
+            {statusInfo?.missing_required_fields?.length > 0 && (
+              <span style={{ fontSize: 9, color: "#f59e0b" }}>
+                Missing: {statusInfo.missing_required_fields.slice(0, 2).join(", ")}
+              </span>
+            )}
+            <button onClick={onConfigure} style={{ fontSize: 9, color: "#a1a1aa", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit" }}>
+              <Settings style={{ width: 12, height: 12 }} />Configure
+            </button>
+            <button onClick={onDisconnect} style={{ marginLeft: "auto", fontSize: 9, color: "#52525b", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit" }}>
+              <Unlink style={{ width: 12, height: 12 }} />Disconnect
             </button>
           </>
         ) : (
@@ -548,6 +720,68 @@ function PlatformCard({ platformId, meta, fields, capabilities, isConnected, isC
             <Plus style={{ width: 12, height: 12 }} />Connect
           </button>
         )}
+      </div>
+    </div>
+  );
+}
+
+/* ── Connected apps quick-launcher ───────────────────────────────────
+ * Replaces the old /apps landing page. Shows every driver-backed
+ * integration with a "ready" badge; clicking a tile opens the
+ * per-provider command center at /integrations/:provider.
+ */
+function ConnectedAppsGrid({ token }) {
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    (async () => {
+      try {
+        const tk = token || localStorage.getItem("token") || "";
+        const r = await fetch(`${API}/integrations/status-all`, {
+          headers: { Authorization: `Bearer ${tk}` },
+        });
+        if (!r.ok) throw new Error(r.status);
+        const d = await r.json();
+        setRows(d.providers || []);
+      } catch { /* silent — panel is optional */ } finally { setLoading(false); }
+    })();
+  }, [token]);
+  if (loading || rows.length === 0) return null;
+  const catColor = { social: "#60a5fa", messaging: "#34d399", crm: "#fb7185", ecom: "#fbbf24" };
+  return (
+    <div style={{ padding: 16, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, marginBottom: 4 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+        <Activity style={{ width: 16, height: 16, color: "#c4b5fd" }} />
+        <div style={{ fontSize: 13, fontWeight: 600, color: "#f3f4f6" }}>Connected app command centers</div>
+        <div style={{ fontSize: 11, color: "#71717a", marginLeft: "auto" }}>
+          {rows.filter(r => (r.ready_modes || []).length).length} / {rows.length} ready
+        </div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 8 }}>
+        {rows.map((p) => {
+          const ready = (p.ready_modes || []).length > 0;
+          const color = catColor[p.category] || "#a78bfa";
+          return (
+            <Link key={p.provider} to={`/integrations/${p.provider}`} style={{ textDecoration: "none" }}>
+              <div style={{ padding: "10px 12px", background: "rgba(255,255,255,0.03)", border: `1px solid ${ready ? "rgba(52,211,153,0.25)" : "rgba(255,255,255,0.06)"}`, borderRadius: 8, cursor: "pointer", transition: "border-color .2s" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#f3f4f6" }}>{p.display_name}</div>
+                  {ready
+                    ? <Check style={{ width: 12, height: 12, color: "#34d399" }} />
+                    : <Circle style={{ width: 10, height: 10, color: "#52525b" }} />}
+                </div>
+                <div style={{ fontSize: 10, color, textTransform: "uppercase", letterSpacing: 0.4, marginTop: 3 }}>
+                  {p.category}
+                </div>
+                {ready && (
+                  <div style={{ fontSize: 10, color: "#34d399", marginTop: 4 }}>
+                    {(p.ready_modes || []).join(" + ")} · {(p.api_actions || []).length + (p.browser_actions || []).length} actions
+                  </div>
+                )}
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

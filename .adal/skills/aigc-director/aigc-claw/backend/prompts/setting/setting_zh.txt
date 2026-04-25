@@ -1,5 +1,0 @@
-Panoramic landscape, eye-level wide shot, {style} style,
-no characters, no people, no animals,
-cinematic composition, establishing shot,
-high quality, masterpiece, Movie picture quality.
-Scene: {name} — {desc}

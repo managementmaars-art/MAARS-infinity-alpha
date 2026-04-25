@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #030712;
+        font-family: 'Inter', system-ui, sans-serif;
+        color: #ffffff;
+      }
+      #root { position: relative; width: 1920px; height: 1080px; }
+
+      .scene {
+        position: absolute; inset: 0;
+        width: 1920px; height: 1080px;
+        overflow: hidden;
+      }
+
+      h1, h2, h3 { font-family: 'Outfit', sans-serif; letter-spacing: -0.02em; }
+
+      .accent-teal { color: #4FD1C5; }
+      .accent-purple { color: #A78BFA; }
+      .accent-pink { color: #F472B6; }
+      .accent-green { color: #34D399; }
+      .accent-amber { color: #FBBF24; }
+
+      .grad-text {
+        background: linear-gradient(90deg, #4FD1C5, #A78BFA, #F472B6);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .eyebrow {
+        font-family: 'Inter', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.32em;
+        color: #A78BFA;
+        margin-bottom: 22px;
+      }
+
+      .vignette {
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.8) 100%);
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      /* Layout A — split: text left, screenshot right */
+      .split { display: flex; height: 100%; }
+      .split .left {
+        width: 720px;
+        padding: 0 60px 0 90px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        z-index: 3;
+      }
+      .split .right {
+        flex: 1;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 70px 60px 0;
+      }
+      .split .right .frame {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow:
+          0 40px 100px rgba(0,0,0,0.7),
+          0 0 0 1px rgba(167,139,250,0.18),
+          0 0 80px rgba(167,139,250,0.18);
+      }
+      .split .right .frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top left;
+      }
+      .split h2 {
+        font-size: 80px;
+        font-weight: 900;
+        line-height: 1.0;
+        margin-bottom: 26px;
+      }
+      .split p {
+        font-size: 26px;
+        color: #D4D4D8;
+        line-height: 1.5;
+      }
+      .split .ftags {
+        margin-top: 32px;
+        display: flex; flex-wrap: wrap; gap: 10px;
+      }
+      .split .ftag {
+        padding: 10px 18px;
+        background: rgba(167,139,250,0.12);
+        border: 1px solid rgba(167,139,250,0.32);
+        border-radius: 999px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #C4B5FD;
+      }
+      .split .bg-blur {
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(ellipse at 20% 30%, rgba(167,139,250,0.18), transparent 55%),
+          radial-gradient(ellipse at 80% 70%, rgba(79,209,197,0.14), transparent 55%),
+          #030712;
+      }
+
+      /* Layout B — full bleed with bottom-third text */
+      .fullbleed { position: relative; height: 100%; }
+      .fullbleed img.bg {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+      }
+      .fullbleed .veil {
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, rgba(3,7,18,0.55) 0%, rgba(3,7,18,0.45) 50%, rgba(3,7,18,0.95) 100%);
+      }
+      .fullbleed .caption {
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        padding: 0 90px 90px;
+        z-index: 3;
+      }
+      .fullbleed .caption h2 {
+        font-size: 96px;
+        font-weight: 900;
+        line-height: 0.95;
+        text-shadow: 0 4px 24px rgba(0,0,0,0.85);
+        margin-bottom: 18px;
+      }
+      .fullbleed .caption p {
+        font-size: 28px;
+        color: #E2E8F0;
+        max-width: 1200px;
+        text-shadow: 0 2px 14px rgba(0,0,0,0.85);
+      }
+
+      /* Layout C — hero (centered) */
+      .hero { display: flex; align-items: center; justify-content: center; height: 100%; position: relative; }
+      .hero .h-bg {
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(ellipse at 30% 30%, rgba(167,139,250,0.32), transparent 55%),
+          radial-gradient(ellipse at 70% 75%, rgba(79,209,197,0.28), transparent 55%),
+          #030712;
+      }
+      .hero .h-bgimg {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+        opacity: 0.22;
+        filter: blur(2px) saturate(1.3);
+      }
+      .hero .content {
+        position: relative; z-index: 3;
+        text-align: center;
+        max-width: 1500px;
+        padding: 0 60px;
+      }
+
+      /* Brand bug always visible */
+      .brand-bug {
+        position: absolute;
+        z-index: 50;
+        bottom: 36px;
+        right: 50px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: 0.4em;
+        color: rgba(255,255,255,0.72);
+        text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      }
+
+      /* Agent caption overlay (powered-by chip) */
+      .agent-cap {
+        position: absolute;
+        bottom: 50px;
+        left: 60px;
+        z-index: 20;
+        background: rgba(167,139,250,0.18);
+        border: 1px solid rgba(167,139,250,0.4);
+        padding: 14px 22px;
+        border-radius: 14px;
+        font-family: 'Inter', sans-serif;
+        backdrop-filter: blur(10px);
+        max-width: 640px;
+      }
+      .agent-cap .pb {
+        font-size: 13px;
+        color: #A78BFA;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .agent-cap .who {
+        font-size: 20px;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      /* Video scene caption */
+      .vid-cap {
+        position: absolute;
+        bottom: 90px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        z-index: 10;
+        padding: 0 80px;
+      }
+      .vid-cap p {
+        font-size: 56px;
+        font-weight: 800;
+        color: #fff;
+        text-shadow: 0 4px 24px rgba(0,0,0,0.95), 0 2px 8px rgba(0,0,0,0.95);
+        font-family: 'Outfit', sans-serif;
+        line-height: 1.05;
+        max-width: 1500px;
+        margin: 0 auto;
+      }
+
+      /* CTA scene */
+      #scene-cta .cta-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 0.45em;
+        color: #A1A1AA;
+        margin-bottom: 36px;
+      }
+      #scene-cta h2 {
+        font-size: 168px;
+        font-weight: 900;
+        line-height: 0.95;
+        margin-bottom: 28px;
+      }
+      #scene-cta .sub {
+        font-size: 38px; color: #E2E8F0; margin-bottom: 60px;
+      }
+      #scene-cta .cta-btn {
+        display: inline-block;
+        padding: 28px 70px;
+        font-size: 32px;
+        font-weight: 800;
+        color: #030712;
+        background: linear-gradient(90deg, #4FD1C5, #A78BFA);
+        border-radius: 999px;
+        box-shadow: 0 25px 70px rgba(167,139,250,0.5);
+      }
+      #scene-cta .url {
+        margin-top: 40px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 24px;
+        color: #A78BFA;
+        letter-spacing: 0.05em;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="196"
+      data-width="1920"
+      data-height="1080"
+    >
+
+      <!-- ============================================================ -->
+      <!-- 1. VIDEO 0–4s — Jamal pain -->
+      <!-- ============================================================ -->
+      <div id="vid-1" class="scene clip" data-start="0" data-duration="4" data-track-index="1" style="z-index:1">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;bottom:120px;left:0;right:0;text-align:center;z-index:10"><div style="display:inline-block;padding:18px 48px;background:rgba(0,0,0,.85);border-radius:18px"><p style="font-family:Outfit,sans-serif;font-size:48px;font-weight:800;color:#fff;margin:0">You don't know where to start.</p></div></div>
+        <div class="vid-cap">
+          <p class="vid-1-cap">You don't know where to start.</p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 2. VIDEO 4–8s — David pain -->
+      <!-- ============================================================ -->
+      <div id="vid-2" class="scene clip" data-start="4" data-duration="4" data-track-index="2" style="z-index:2">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;bottom:120px;left:0;right:0;text-align:center;z-index:10"><div style="display:inline-block;padding:18px 48px;background:rgba(0,0,0,.85);border-radius:18px"><p style="font-family:Outfit,sans-serif;font-size:48px;font-weight:800;color:#fff;margin:0">You have a team. They cost too much.</p></div></div>
+        <div class="vid-cap">
+          <p class="vid-2-cap">You have a team. They cost too much.</p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 3. VIDEO 8–12s — Aisha pain -->
+      <!-- ============================================================ -->
+      <div id="vid-3" class="scene clip" data-start="8" data-duration="4" data-track-index="3" style="z-index:3">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;bottom:120px;left:0;right:0;text-align:center;z-index:10"><div style="display:inline-block;padding:18px 48px;background:rgba(0,0,0,.85);border-radius:18px"><p style="font-family:Outfit,sans-serif;font-size:46px;font-weight:800;color:#fff;margin:0">You have skills. You don't know what to sell.</p></div></div>
+        <div class="vid-cap">
+          <p class="vid-3-cap">You have skills. You don't know what to sell.</p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 4. VIDEO 12–17s — Question hook (cosmic) -->
+      <!-- ============================================================ -->
+      <div id="vid-4" class="scene clip" data-start="12" data-duration="5" data-track-index="4" style="z-index:4">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10"><h1 style="font-family:Outfit,sans-serif;font-size:120px;font-weight:900;background:linear-gradient(90deg,#4FD1C5,#A78BFA,#F472B6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;line-height:1.05;margin:0">What if 458 specialists<br>worked for you tonight?</h1></div>
+        <div class="vid-cap">
+          <p class="vid-4-cap">What if 458 specialists worked for you... <span class="grad-text">tonight?</span></p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 5. UI HERO 17–23s — "458 AI Specialists. One Command." -->
+      <!-- ============================================================ -->
+      <div id="s1" class="scene clip" data-start="17" data-duration="6" data-track-index="5" style="z-index:5">
+        <div class="hero">
+          <div class="h-bg"></div>
+          <img class="h-bgimg s1-bg" src="images/landing-hero.png" alt="" />
+          <div class="content">
+            <div class="s1-eyebrow eyebrow">MAARS Command</div>
+            <h2 class="s1-line1" style="font-size:152px;font-weight:900;line-height:1;margin-bottom:24px;">458 AI Specialists.</h2>
+            <h2 class="s1-line2 grad-text" style="font-size:152px;font-weight:900;line-height:1;">One Command.</h2>
+          </div>
+          <div class="vignette"></div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 6. UI DASHBOARD 23–35s — "499 active agents" -->
+      <!-- ============================================================ -->
+      <div id="s2" class="scene clip" data-start="23" data-duration="12" data-track-index="6" style="z-index:6">
+        <div class="fullbleed">
+          <img class="bg s2-bg" src="images/dashboard.png" alt="" />
+          <div class="veil"></div>
+          <div class="caption">
+            <div class="s2-eyebrow eyebrow">Day One. After Subscribe.</div>
+            <h2 class="s2-h">Your AI <span class="grad-text">Command Center.</span></h2>
+            <p class="s2-p">
+              <span class="s2-counter accent-teal" style="font-family:'Outfit',sans-serif;font-weight:900;font-size:42px">499</span>
+              active agents standing by. Commander Orion ready to delegate. Every mission tracked, every dollar audited.
+            </p>
+          </div>
+          <div class="agent-cap">
+            <div class="pb">Powered By</div>
+            <div class="who">Commander Orion &middot; Supreme Orchestrator</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 7. UI CONTENT GEN 35–47s — Olivia Sinclair -->
+      <!-- ============================================================ -->
+      <div id="s4" class="scene clip" data-start="35" data-duration="12" data-track-index="7" style="z-index:7">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s4-eyebrow eyebrow">Content Generator</div>
+            <h2 class="s4-h">Marketing copy. Posts. <span class="accent-teal">Articles.</span> In seconds.</h2>
+            <p class="s4-p">On-brand content using your style blueprints. From a single prompt to a publishable asset — across every format you need.</p>
+            <div class="s4-tags ftags">
+              <div class="ftag">Marketing Copy</div>
+              <div class="ftag">Social Media</div>
+              <div class="ftag">Email Campaigns</div>
+              <div class="ftag">Blog Articles</div>
+              <div class="ftag">Ad Copy</div>
+              <div class="ftag">Press Release</div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="frame s4-frame">
+              <img src="images/content-generator.png" alt="" />
+            </div>
+          </div>
+          <div class="agent-cap">
+            <div class="pb">Powered By</div>
+            <div class="who">Olivia Sinclair &middot; Content Writer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 8. UI AUTO-POST 47–59s — Isla Fernandez + Layla Mansouri -->
+      <!-- ============================================================ -->
+      <div id="s5" class="scene clip" data-start="47" data-duration="12" data-track-index="8" style="z-index:8">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s5-eyebrow eyebrow" style="color:#34D399">Auto-Posting</div>
+            <h2 class="s5-h">Post once. <span class="accent-green">Publish everywhere.</span></h2>
+            <p class="s5-p">Facebook. Instagram. X. TikTok. LinkedIn. WhatsApp. YouTube. Telegram. Auto-translated for every region. Scheduled or live.</p>
+            <div class="s5-tags ftags">
+              <div class="ftag">10 platforms</div>
+              <div class="ftag">9 regions</div>
+              <div class="ftag">Auto-translate</div>
+              <div class="ftag">Geo-targeted</div>
+              <div class="ftag">Schedule + publish</div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="frame s5-frame">
+              <img src="images/social-media.png" alt="" />
+            </div>
+          </div>
+          <div class="agent-cap">
+            <div class="pb">Powered By</div>
+            <div class="who">Isla Fernandez + Layla Mansouri &middot; Social &amp; Geo</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 9. UI COLD EMAIL 59–71s — Marcus Drake / SendGrid -->
+      <!-- ============================================================ -->
+      <div id="s6" class="scene clip" data-start="59" data-duration="12" data-track-index="9" style="z-index:9">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s6-eyebrow eyebrow" style="color:#F472B6">Cold Email</div>
+            <h2 class="s6-h">Cold emails. <span class="accent-pink">Sent while you sleep.</span></h2>
+            <p class="s6-p">Personalized. Merge fields. SendGrid integrated. Subject lines that open. Bodies that convert. Every prospect, every region.</p>
+            <div class="s6-tags ftags">
+              <div class="ftag">SendGrid</div>
+              <div class="ftag">Personalized</div>
+              <div class="ftag">200+/day</div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="frame s6-frame">
+              <img src="images/cold-outreach.png" alt="" />
+            </div>
+          </div>
+          <div class="agent-cap">
+            <div class="pb">Powered By</div>
+            <div class="who">Marcus Drake &middot; Sales Rep &middot; 200 cold emails via SendGrid</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 10. VIDEO 71–74s — David inbox flood reaction -->
+      <!-- ============================================================ -->
+      <div id="vid-10" class="scene clip" data-start="71" data-duration="3" data-track-index="10" style="z-index:10">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;top:80px;right:80px;width:540px;background:rgba(15,23,42,.95);border:2px solid #34D399;border-radius:20px;padding:28px;z-index:10;box-shadow:0 30px 80px rgba(0,0,0,.8)"><div style="font-family:Inter,sans-serif;font-size:14px;color:#34D399;text-transform:uppercase;letter-spacing:.2em;margin-bottom:14px;font-weight:700">Inbox &middot; last 60 seconds</div><div style="font-family:Inter,sans-serif;color:#fff;font-size:18px;line-height:1.7">&check; Re: Yes, interested<br>&check; Re: Send a deck<br>&check; Re: Let's book a call<br>&check; Re: Pricing question<br><span style="color:#34D399;font-weight:700;font-size:24px">132 replies &middot; 23 demos booked</span></div></div>
+        <div class="vid-cap">
+          <p class="vid-10-cap">Replies. Cascading.</p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 11. UI COLD CALL 74–86s — Marcus Drake any language -->
+      <!-- ============================================================ -->
+      <div id="s7" class="scene clip" data-start="74" data-duration="12" data-track-index="11" style="z-index:11">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s7-eyebrow eyebrow" style="color:#FBBF24">AI Cold Calling</div>
+            <h2 class="s7-h">AI calls your prospects. <span class="accent-amber">In any language.</span></h2>
+            <p class="s7-p">Your script. Your voice. Their language. The AI dials, pitches, and qualifies — at scale, around the clock.</p>
+            <div class="s7-tags ftags">
+              <div class="ftag">Multi-language</div>
+              <div class="ftag">E.164 dialing</div>
+              <div class="ftag">Live call logs</div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="frame s7-frame">
+              <img src="images/cold-call.png" alt="" />
+            </div>
+          </div>
+          <div class="agent-cap">
+            <div class="pb">Powered By</div>
+            <div class="who">Marcus Drake &middot; Calls in any language</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 12. VIDEO 86–89s — Jamal first international sale -->
+      <!-- ============================================================ -->
+      <div id="vid-12" class="scene clip" data-start="86" data-duration="3" data-track-index="12" style="z-index:12">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;top:60px;left:50%;transform:translateX(-50%);width:600px;background:rgba(15,23,42,.95);border:2px solid #FBBF24;border-radius:20px;padding:24px;z-index:10;box-shadow:0 30px 80px rgba(0,0,0,.85)"><div style="font-family:Inter,sans-serif;font-size:14px;color:#FBBF24;text-transform:uppercase;letter-spacing:.2em;font-weight:700;margin-bottom:8px">CodeFuel &middot; New Order &middot; Brazil</div><div style="font-family:Outfit,sans-serif;font-size:36px;font-weight:800;color:#fff">S&atilde;o Paulo &middot; $89.00</div><div style="font-family:Inter,sans-serif;font-size:16px;color:#A1A1AA;margin-top:8px">First international sale</div></div>
+        <div class="vid-cap">
+          <p class="vid-12-cap"><span class="grad-text">First international sale.</span></p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 13. VIDEO 89–93s — Aisha orders flooding -->
+      <!-- ============================================================ -->
+      <div id="vid-13" class="scene clip" data-start="89" data-duration="4" data-track-index="13" style="z-index:13">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;bottom:80px;left:80px;width:540px;background:rgba(15,23,42,.95);border:2px solid #34D399;border-radius:20px;padding:28px;z-index:10;box-shadow:0 30px 80px rgba(0,0,0,.85)"><div style="font-family:Inter,sans-serif;font-size:14px;color:#34D399;text-transform:uppercase;letter-spacing:.2em;margin-bottom:14px;font-weight:700">FORMA &middot; Today's Orders</div><div style="font-family:Outfit,sans-serif;font-size:64px;font-weight:900;color:#fff;line-height:1">247</div><div style="font-family:Inter,sans-serif;color:#A1A1AA;font-size:18px;margin-top:8px">orders &middot; 78 international &middot; $94 avg cart</div></div>
+        <div class="vid-cap">
+          <p class="vid-13-cap">FORMA orders. Momentum.</p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 14. UI CAMPAIGNS 93–105s — Zara Mitchell -->
+      <!-- ============================================================ -->
+      <div id="s8" class="scene clip" data-start="93" data-duration="12" data-track-index="14" style="z-index:14">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s8-eyebrow eyebrow" style="color:#A78BFA">Campaign Builder</div>
+            <h2 class="s8-h">Multi-step campaigns. <span class="accent-purple">One click.</span></h2>
+            <p class="s8-p">Sales outreach. Customer onboarding. Product launch. Content marketing. Pre-built playbooks running on autopilot.</p>
+            <div class="s8-tags ftags">
+              <div class="ftag">Content Marketing</div>
+              <div class="ftag">Product Launch</div>
+              <div class="ftag">Customer Onboarding</div>
+              <div class="ftag">Sales Outreach</div>
+              <div class="ftag">Webinar Funnel</div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="frame s8-frame">
+              <img src="images/campaigns.png" alt="" />
+            </div>
+          </div>
+          <div class="agent-cap">
+            <div class="pb">Powered By</div>
+            <div class="who">Zara Mitchell &middot; Marketing Specialist</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 15. UI WORKFLOWS 105–117s — Serena Okafor -->
+      <!-- ============================================================ -->
+      <div id="s9" class="scene clip" data-start="105" data-duration="12" data-track-index="15" style="z-index:15">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s9-eyebrow eyebrow" style="color:#4FD1C5">Workflow Builder</div>
+            <h2 class="s9-h">Build your own. <span class="accent-teal">Drag. Drop. Deploy.</span></h2>
+            <p class="s9-p">Chain agents. Branch on conditions. Loop. Call APIs. Run code. Anything you can diagram, MAARS can run.</p>
+            <div class="s9-tags ftags">
+              <div class="ftag">Drag-drop nodes</div>
+              <div class="ftag">Branch + loop</div>
+              <div class="ftag">Run code</div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="frame s9-frame">
+              <img src="images/workflow-builder.png" alt="" />
+            </div>
+          </div>
+          <div class="agent-cap">
+            <div class="pb">Powered By</div>
+            <div class="who">Serena Okafor &middot; Automation Engineer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 16. VIDEO 117–121s — David empty office, automation runs -->
+      <!-- ============================================================ -->
+      <div id="vid-16" class="scene clip" data-start="117" data-duration="4" data-track-index="16" style="z-index:16">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;top:80px;right:80px;width:540px;background:rgba(15,23,42,.95);border:2px solid #4FD1C5;border-radius:20px;padding:28px;z-index:10;box-shadow:0 30px 80px rgba(0,0,0,.85)"><div style="font-family:Inter,sans-serif;font-size:14px;color:#4FD1C5;text-transform:uppercase;letter-spacing:.2em;margin-bottom:14px;font-weight:700">Workflow Status &middot; Live</div><div style="font-family:Inter,sans-serif;color:#fff;font-size:18px;line-height:1.8">&check; Lead qualified<br>&check; Email sent<br>&check; Meeting scheduled<br>&check; Invoice processed<br>&check; Customer onboarded</div></div>
+        <div class="vid-cap">
+          <p class="vid-16-cap">Empty office. <span class="accent-teal">Automation runs.</span></p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 17. VIDEO 121–125s — Aisha wholesale Sephora deal -->
+      <!-- ============================================================ -->
+      <div id="vid-17" class="scene clip" data-start="121" data-duration="4" data-track-index="17" style="z-index:17">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;top:80px;left:50%;transform:translateX(-50%);width:640px;background:rgba(15,23,42,.95);border:2px solid #F472B6;border-radius:20px;padding:28px;z-index:10;box-shadow:0 30px 80px rgba(0,0,0,.85)"><div style="font-family:Inter,sans-serif;font-size:14px;color:#F472B6;text-transform:uppercase;letter-spacing:.2em;margin-bottom:14px;font-weight:700">Sephora Buying Team</div><div style="font-family:Outfit,sans-serif;font-size:36px;font-weight:800;color:#fff;line-height:1.2">Re: FORMA wholesale partnership</div><div style="font-family:Outfit,sans-serif;font-size:48px;font-weight:900;color:#34D399;margin-top:14px">APPROVED &check;</div></div>
+        <div class="vid-cap">
+          <p class="vid-17-cap"><span class="accent-pink">Sephora wholesale.</span> Closed.</p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 18. UI COMMANDER ORION 125–137s -->
+      <!-- ============================================================ -->
+      <div id="s10" class="scene clip" data-start="125" data-duration="12" data-track-index="18" style="z-index:18">
+        <div class="fullbleed">
+          <img class="bg s10-bg" src="images/commander.png" alt="" />
+          <div class="veil"></div>
+          <div class="caption">
+            <div class="s10-eyebrow eyebrow" style="color:#FBBF24">Commander Orion</div>
+            <h2 class="s10-h">One goal in. <span class="accent-amber">Whole team out.</span></h2>
+            <p class="s10-p">Describe the outcome. Commander Orion classifies, decomposes, executes, verifies, reports — beaming work to every specialist on demand.</p>
+          </div>
+          <div class="agent-cap">
+            <div class="pb">Powered By</div>
+            <div class="who">Commander Orion &middot; Supreme Orchestrator</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 19. UI ACTIVITY MONITOR 137–147s -->
+      <!-- ============================================================ -->
+      <div id="s11" class="scene clip" data-start="137" data-duration="10" data-track-index="19" style="z-index:19">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s11-eyebrow eyebrow" style="color:#34D399">Live Activity Monitor</div>
+            <h2 class="s11-h">Watch them work. <span class="accent-green">In real time.</span></h2>
+            <p class="s11-p">Every agent, every action, every tool call — live. Communication flows. Task graphs. Audited end-to-end.</p>
+          </div>
+          <div class="right">
+            <div class="frame s11-frame">
+              <img src="images/activity-monitor.png" alt="" />
+            </div>
+          </div>
+          <div class="agent-cap">
+            <div class="pb">Live Feed</div>
+            <div class="who">Every agent &middot; Every action &middot; Every second</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 20. UI SMART ROUTING 147–157s — Dr. Luca Bernstein -->
+      <!-- ============================================================ -->
+      <div id="s12" class="scene clip" data-start="147" data-duration="10" data-track-index="20" style="z-index:20">
+        <div class="split">
+          <div class="bg-blur"></div>
+          <div class="left">
+            <div class="s12-eyebrow eyebrow">Model Router</div>
+            <h2 class="s12-h">Across 33 providers: <span class="grad-text">smart routing.</span></h2>
+            <p class="s12-p">175,000+ models. The cheapest model that gets the job done — picked automatically, every time.</p>
+            <div class="s12-tags ftags">
+              <div class="ftag">33 providers</div>
+              <div class="ftag">175k+ models</div>
+              <div class="ftag">Cost-optimal</div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="frame s12-frame">
+              <img src="images/model-router.png" alt="" />
+            </div>
+          </div>
+          <div class="agent-cap">
+            <div class="pb">Powered By</div>
+            <div class="who">Dr. Luca Bernstein &middot; AI Optimization</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 21. UI ANALYTICS 157–167s — Trust + Cost + Projection -->
+      <!-- ============================================================ -->
+      <div id="s13" class="scene clip" data-start="157" data-duration="10" data-track-index="21" style="z-index:21">
+        <div class="fullbleed">
+          <img class="bg s13-bg" src="images/analytics.png" alt="" />
+          <div class="veil"></div>
+          <div class="caption">
+            <div class="s13-eyebrow eyebrow" style="color:#34D399">Governed. Audited. Measured.</div>
+            <h2 class="s13-h">Trust scores climbing. <span class="accent-green">Costs trending down.</span></h2>
+            <p class="s13-p">Live dashboards. Wallet ledger. Audit trail. Forward projection charts. Know what every agent did, what it cost, and what it returned.</p>
+          </div>
+          <div class="agent-cap">
+            <div class="pb">Realtime</div>
+            <div class="who">Trust &uarr; &middot; Cost &darr; &middot; Projection forward</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 22. VIDEO 167–171s — Jamal at transformed desk -->
+      <!-- ============================================================ -->
+      <div id="vid-22" class="scene clip" data-start="167" data-duration="4" data-track-index="22" style="z-index:22">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;bottom:80px;left:80px;width:600px;background:rgba(15,23,42,.95);border:2px solid #A78BFA;border-radius:20px;padding:28px;z-index:10;box-shadow:0 30px 80px rgba(0,0,0,.85)"><div style="font-family:Inter,sans-serif;font-size:14px;color:#A78BFA;text-transform:uppercase;letter-spacing:.2em;margin-bottom:12px;font-weight:700">CodeFuel &middot; Live Dashboard</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:18px"><div><div style="font-family:Outfit,sans-serif;font-size:42px;font-weight:900;color:#fff;line-height:1">$48,200</div><div style="font-size:14px;color:#A1A1AA;margin-top:4px">MRR</div></div><div><div style="font-family:Outfit,sans-serif;font-size:42px;font-weight:900;color:#fff;line-height:1">4,847</div><div style="font-size:14px;color:#A1A1AA;margin-top:4px">subscribers</div></div><div><div style="font-family:Outfit,sans-serif;font-size:42px;font-weight:900;color:#34D399;line-height:1">+42%</div><div style="font-size:14px;color:#A1A1AA;margin-top:4px">margin</div></div><div><div style="font-family:Outfit,sans-serif;font-size:42px;font-weight:900;color:#fff;line-height:1">23</div><div style="font-size:14px;color:#A1A1AA;margin-top:4px">cities</div></div></div></div>
+        <div class="vid-cap">
+          <p class="vid-22-cap">Momentum.</p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 23. VIDEO 171–176s — David family lunch -->
+      <!-- ============================================================ -->
+      <div id="vid-23" class="scene clip" data-start="171" data-duration="5" data-track-index="23" style="z-index:23">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;bottom:80px;right:80px;width:580px;background:rgba(15,23,42,.95);border:2px solid #34D399;border-radius:20px;padding:28px;z-index:10;box-shadow:0 30px 80px rgba(0,0,0,.85)"><div style="font-family:Inter,sans-serif;font-size:14px;color:#34D399;text-transform:uppercase;letter-spacing:.2em;margin-bottom:12px;font-weight:700">David's Plumbing Supply &middot; Today</div><div style="font-family:Outfit,sans-serif;font-size:56px;font-weight:900;color:#fff;line-height:1">$22,400</div><div style="font-family:Inter,sans-serif;color:#A1A1AA;font-size:16px;margin-top:12px;line-height:1.6">&check; 47 cold calls made<br>&check; 213 emails sent<br>&check; 18 invoices auto-processed<br><span style="color:#34D399;font-weight:700">Costs cut: $13,500/mo &middot; 60+ hrs/wk back</span></div></div>
+        <div class="vid-cap">
+          <p class="vid-23-cap">Time back.</p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 24. VIDEO 176–181s — Aisha at Sephora storefront -->
+      <!-- ============================================================ -->
+      <div id="vid-24" class="scene clip" data-start="176" data-duration="5" data-track-index="24" style="z-index:24">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;top:60px;left:50%;transform:translateX(-50%);padding:18px 36px;background:rgba(15,23,42,.95);border:2px solid #A78BFA;border-radius:999px;z-index:10;box-shadow:0 20px 60px rgba(0,0,0,.85)"><span style="font-family:Outfit,sans-serif;font-size:24px;font-weight:800;color:#fff">FORMA &middot; Now at Sephora</span></div><div style="position:absolute;bottom:120px;left:0;right:0;text-align:center;z-index:10"><div style="display:inline-block;padding:14px 36px;background:rgba(0,0,0,.85);border-radius:999px"><span style="font-family:Outfit,sans-serif;font-size:32px;font-weight:800;color:#fff">MRR $84,200 &middot; 11 countries &middot; 2 retail accounts</span></div></div>
+        <div class="vid-cap">
+          <p class="vid-24-cap"><span class="accent-pink">On the shelf.</span></p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 25. VIDEO 181–187s — Three lives converge / triptych -->
+      <!-- ============================================================ -->
+      <div id="vid-25" class="scene clip" data-start="181" data-duration="6" data-track-index="25" style="z-index:25">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;bottom:120px;left:0;right:0;text-align:center;z-index:10"><div style="display:inline-block;padding:18px 48px;background:rgba(0,0,0,.85);border-radius:999px;border:2px solid #A78BFA"><span style="font-family:Outfit,sans-serif;font-size:42px;font-weight:800;background:linear-gradient(90deg,#4FD1C5,#A78BFA,#F472B6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">From nothing. From chaos. From plateau.</span></div></div>
+        <div class="vid-cap">
+          <p class="vid-25-cap">Three lives. <span class="grad-text">One command.</span></p>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 26. VIDEO 187–191s — MAARS COMMAND logo reveal -->
+      <!-- ============================================================ -->
+      <div id="vid-26" class="scene clip" data-start="187" data-duration="4" data-track-index="26" style="z-index:26">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10"><h1 style="font-family:Outfit,sans-serif;font-size:160px;font-weight:900;letter-spacing:.3em;color:#fff;margin:0;text-shadow:0 0 100px rgba(167,139,250,.6)">MAARS COMMAND</h1></div><div style="position:absolute;bottom:160px;left:0;right:0;text-align:center;z-index:10"><p style="font-family:Inter,sans-serif;font-size:32px;color:#A1A1AA;letter-spacing:.1em;margin:0">Your AI Workforce. Live.</p></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 27. VIDEO 191–196s — CTA button glow -->
+      <!-- ============================================================ -->
+      <div id="vid-27" class="scene clip" data-start="191" data-duration="5" data-track-index="27" style="z-index:27">
+        <div style="position:absolute;inset:0;width:100%;height:100%;background:#FF00FF"></div><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;gap:40px"><div style="padding:32px 80px;background:linear-gradient(90deg,#4FD1C5,#A78BFA);border-radius:999px;box-shadow:0 30px 80px rgba(167,139,250,.5)"><span style="font-family:Outfit,sans-serif;font-size:48px;font-weight:800;color:#030712">Start Free at maars.ai</span></div><p style="font-family:JetBrains Mono,monospace;font-size:24px;color:#A78BFA;margin:0">no credit card &middot; 458 agents &middot; live today</p></div>
+        <div class="vid-cap" style="bottom:140px">
+          <p class="vid-27-cap"><span class="grad-text">Start free at maars.ai</span></p>
+        </div>
+      </div>
+
+      <div class="brand-bug">MAARS COMMAND</div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      /* helper for scene fade-out */
+      function out(id, at) {
+        tl.to('#' + id, { opacity: 0, duration: 0.6, ease: 'power2.in' }, at);
+      }
+
+      /* ===================================================== */
+      /* 1. VIDEO 0–4 — Jamal pain                              */
+      /* ===================================================== */
+      tl.from('#vid-1', { opacity: 0, duration: 0.4 }, 0)
+        .from('.vid-1-cap', { opacity: 0, y: 30, duration: 0.6, ease: 'power2.out' }, 0.4);
+      out('vid-1', 3.5);
+
+      /* ===================================================== */
+      /* 2. VIDEO 4–8 — David pain                              */
+      /* ===================================================== */
+      tl.from('#vid-2', { opacity: 0, duration: 0.4 }, 4)
+        .from('.vid-2-cap', { opacity: 0, y: 30, duration: 0.6, ease: 'power2.out' }, 4.4);
+      out('vid-2', 7.5);
+
+      /* ===================================================== */
+      /* 3. VIDEO 8–12 — Aisha pain                             */
+      /* ===================================================== */
+      tl.from('#vid-3', { opacity: 0, duration: 0.4 }, 8)
+        .from('.vid-3-cap', { opacity: 0, y: 30, duration: 0.6, ease: 'power2.out' }, 8.4);
+      out('vid-3', 11.5);
+
+      /* ===================================================== */
+      /* 4. VIDEO 12–17 — Question hook                         */
+      /* ===================================================== */
+      tl.from('#vid-4', { opacity: 0, duration: 0.4 }, 12)
+        .from('.vid-4-cap', { opacity: 0, y: 30, duration: 0.7, ease: 'power2.out' }, 12.5);
+      out('vid-4', 16.5);
+
+      /* ===================================================== */
+      /* 5. UI HERO 17–23                                       */
+      /* ===================================================== */
+      tl.from('#s1', { opacity: 0, duration: 0.5 }, 17)
+        .from('#s1 .s1-bg', { opacity: 0, scale: 1.05, duration: 1.2 }, 17)
+        .to('#s1 .s1-bg', { scale: 1.12, duration: 5.5, ease: 'none' }, 17)
+        .from('#s1 .s1-eyebrow', { opacity: 0, y: 20, duration: 0.6 }, 17.4)
+        .from('#s1 .s1-line1', { opacity: 0, x: -80, duration: 0.8, ease: 'power3.out' }, 17.8)
+        .from('#s1 .s1-line2', { opacity: 0, x: -80, duration: 0.9, ease: 'power3.out' }, 18.6);
+      out('s1', 22.5);
+
+      /* ===================================================== */
+      /* 6. UI DASHBOARD 23–35 — counter ticks                  */
+      /* ===================================================== */
+      tl.from('#s2', { opacity: 0, duration: 0.5 }, 23)
+        .from('#s2 .s2-bg', { scale: 1.0, duration: 11, ease: 'none' }, 23)
+        .to('#s2 .s2-bg', { scale: 1.1, duration: 11, ease: 'none' }, 23)
+        .from('#s2 .s2-eyebrow', { opacity: 0, y: 24, duration: 0.6 }, 23.6)
+        .from('#s2 .s2-h', { opacity: 0, y: 50, duration: 0.9, ease: 'power3.out' }, 24.0)
+        .from('#s2 .s2-p', { opacity: 0, y: 30, duration: 0.7 }, 24.7)
+        .from('#s2 .agent-cap', { opacity: 0, x: -40, duration: 0.6 }, 25.4)
+        .fromTo('#s2 .s2-counter',
+          { innerText: 0 },
+          { innerText: 499, duration: 2.4, ease: 'power2.out',
+            snap: { innerText: 1 },
+            onUpdate: function () {
+              const el = this.targets()[0];
+              if (el) el.innerText = Math.round(parseFloat(el.innerText));
+            }
+          }, 24.8);
+      out('s2', 34.5);
+
+      /* ===================================================== */
+      /* 7. UI CONTENT GEN 35–47                                */
+      /* ===================================================== */
+      tl.from('#s4', { opacity: 0, duration: 0.5 }, 35)
+        .from('#s4 .s4-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 35.4)
+        .from('#s4 .s4-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 35.7)
+        .from('#s4 .s4-p', { opacity: 0, x: -40, duration: 0.6 }, 36.3)
+        .from('#s4 .s4-tags .ftag', { opacity: 0, y: 16, duration: 0.4, stagger: 0.06 }, 36.8)
+        .from('#s4 .s4-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 36.0)
+        .from('#s4 .agent-cap', { opacity: 0, y: 30, duration: 0.6 }, 37.4);
+      out('s4', 46.5);
+
+      /* ===================================================== */
+      /* 8. UI AUTO-POST 47–59                                  */
+      /* ===================================================== */
+      tl.from('#s5', { opacity: 0, duration: 0.5 }, 47)
+        .from('#s5 .s5-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 47.4)
+        .from('#s5 .s5-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 47.7)
+        .from('#s5 .s5-p', { opacity: 0, x: -40, duration: 0.6 }, 48.3)
+        .from('#s5 .s5-tags .ftag', { opacity: 0, y: 16, duration: 0.4, stagger: 0.07 }, 48.8)
+        .from('#s5 .s5-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 48.0)
+        .from('#s5 .agent-cap', { opacity: 0, y: 30, duration: 0.6 }, 49.4);
+      out('s5', 58.5);
+
+      /* ===================================================== */
+      /* 9. UI COLD EMAIL 59–71                                 */
+      /* ===================================================== */
+      tl.from('#s6', { opacity: 0, duration: 0.5 }, 59)
+        .from('#s6 .s6-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 59.4)
+        .from('#s6 .s6-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 59.7)
+        .from('#s6 .s6-p', { opacity: 0, x: -40, duration: 0.6 }, 60.3)
+        .from('#s6 .s6-tags .ftag', { opacity: 0, y: 16, duration: 0.4, stagger: 0.07 }, 60.8)
+        .from('#s6 .s6-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 60.0)
+        .from('#s6 .agent-cap', { opacity: 0, y: 30, duration: 0.6 }, 61.4);
+      out('s6', 70.5);
+
+      /* ===================================================== */
+      /* 10. VIDEO 71–74 — David inbox flood                    */
+      /* ===================================================== */
+      tl.from('#vid-10', { opacity: 0, duration: 0.4 }, 71)
+        .from('.vid-10-cap', { opacity: 0, y: 30, duration: 0.5, ease: 'power2.out' }, 71.4);
+      out('vid-10', 73.5);
+
+      /* ===================================================== */
+      /* 11. UI COLD CALL 74–86                                 */
+      /* ===================================================== */
+      tl.from('#s7', { opacity: 0, duration: 0.5 }, 74)
+        .from('#s7 .s7-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 74.4)
+        .from('#s7 .s7-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 74.7)
+        .from('#s7 .s7-p', { opacity: 0, x: -40, duration: 0.6 }, 75.3)
+        .from('#s7 .s7-tags .ftag', { opacity: 0, y: 16, duration: 0.4, stagger: 0.07 }, 75.8)
+        .from('#s7 .s7-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 75.0)
+        .from('#s7 .agent-cap', { opacity: 0, y: 30, duration: 0.6 }, 76.4);
+      out('s7', 85.5);
+
+      /* ===================================================== */
+      /* 12. VIDEO 86–89 — Jamal first sale                     */
+      /* ===================================================== */
+      tl.from('#vid-12', { opacity: 0, duration: 0.4 }, 86)
+        .from('.vid-12-cap', { opacity: 0, y: 30, duration: 0.5, ease: 'power2.out' }, 86.4);
+      out('vid-12', 88.5);
+
+      /* ===================================================== */
+      /* 13. VIDEO 89–93 — Aisha orders flooding                */
+      /* ===================================================== */
+      tl.from('#vid-13', { opacity: 0, duration: 0.4 }, 89)
+        .from('.vid-13-cap', { opacity: 0, y: 30, duration: 0.5, ease: 'power2.out' }, 89.4);
+      out('vid-13', 92.5);
+
+      /* ===================================================== */
+      /* 14. UI CAMPAIGNS 93–105                                */
+      /* ===================================================== */
+      tl.from('#s8', { opacity: 0, duration: 0.5 }, 93)
+        .from('#s8 .s8-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 93.4)
+        .from('#s8 .s8-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 93.7)
+        .from('#s8 .s8-p', { opacity: 0, x: -40, duration: 0.6 }, 94.3)
+        .from('#s8 .s8-tags .ftag', { opacity: 0, y: 16, duration: 0.4, stagger: 0.07 }, 94.8)
+        .from('#s8 .s8-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 94.0)
+        .from('#s8 .agent-cap', { opacity: 0, y: 30, duration: 0.6 }, 95.4);
+      out('s8', 104.5);
+
+      /* ===================================================== */
+      /* 15. UI WORKFLOWS 105–117                               */
+      /* ===================================================== */
+      tl.from('#s9', { opacity: 0, duration: 0.5 }, 105)
+        .from('#s9 .s9-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 105.4)
+        .from('#s9 .s9-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 105.7)
+        .from('#s9 .s9-p', { opacity: 0, x: -40, duration: 0.6 }, 106.3)
+        .from('#s9 .s9-tags .ftag', { opacity: 0, y: 16, duration: 0.4, stagger: 0.07 }, 106.8)
+        .from('#s9 .s9-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 106.0)
+        .from('#s9 .agent-cap', { opacity: 0, y: 30, duration: 0.6 }, 107.4);
+      out('s9', 116.5);
+
+      /* ===================================================== */
+      /* 16. VIDEO 117–121 — David empty office                 */
+      /* ===================================================== */
+      tl.from('#vid-16', { opacity: 0, duration: 0.4 }, 117)
+        .from('.vid-16-cap', { opacity: 0, y: 30, duration: 0.6, ease: 'power2.out' }, 117.4);
+      out('vid-16', 120.5);
+
+      /* ===================================================== */
+      /* 17. VIDEO 121–125 — Aisha wholesale deal               */
+      /* ===================================================== */
+      tl.from('#vid-17', { opacity: 0, duration: 0.4 }, 121)
+        .from('.vid-17-cap', { opacity: 0, y: 30, duration: 0.6, ease: 'power2.out' }, 121.4);
+      out('vid-17', 124.5);
+
+      /* ===================================================== */
+      /* 18. UI COMMANDER ORION 125–137                         */
+      /* ===================================================== */
+      tl.from('#s10', { opacity: 0, duration: 0.5 }, 125)
+        .from('#s10 .s10-bg', { scale: 1.0, duration: 11, ease: 'none' }, 125)
+        .to('#s10 .s10-bg', { scale: 1.1, duration: 11, ease: 'none' }, 125)
+        .from('#s10 .s10-eyebrow', { opacity: 0, y: 24, duration: 0.6 }, 125.6)
+        .from('#s10 .s10-h', { opacity: 0, y: 50, duration: 0.9, ease: 'power3.out' }, 126.0)
+        .from('#s10 .s10-p', { opacity: 0, y: 30, duration: 0.7 }, 126.7)
+        .from('#s10 .agent-cap', { opacity: 0, x: -40, duration: 0.6 }, 127.4);
+      out('s10', 136.5);
+
+      /* ===================================================== */
+      /* 19. UI ACTIVITY MONITOR 137–147                        */
+      /* ===================================================== */
+      tl.from('#s11', { opacity: 0, duration: 0.5 }, 137)
+        .from('#s11 .s11-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 137.4)
+        .from('#s11 .s11-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 137.7)
+        .from('#s11 .s11-p', { opacity: 0, x: -40, duration: 0.6 }, 138.3)
+        .from('#s11 .s11-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 138.0)
+        .from('#s11 .agent-cap', { opacity: 0, y: 30, duration: 0.6 }, 139.0);
+      out('s11', 146.5);
+
+      /* ===================================================== */
+      /* 20. UI SMART ROUTING 147–157                           */
+      /* ===================================================== */
+      tl.from('#s12', { opacity: 0, duration: 0.5 }, 147)
+        .from('#s12 .s12-eyebrow', { opacity: 0, x: -40, duration: 0.6 }, 147.4)
+        .from('#s12 .s12-h', { opacity: 0, x: -60, duration: 0.9, ease: 'power3.out' }, 147.7)
+        .from('#s12 .s12-p', { opacity: 0, x: -40, duration: 0.6 }, 148.3)
+        .from('#s12 .s12-tags .ftag', { opacity: 0, y: 16, duration: 0.4, stagger: 0.07 }, 148.8)
+        .from('#s12 .s12-frame', { opacity: 0, x: 80, scale: 0.96, duration: 1.0, ease: 'power3.out' }, 148.0)
+        .from('#s12 .agent-cap', { opacity: 0, y: 30, duration: 0.6 }, 149.0);
+      out('s12', 156.5);
+
+      /* ===================================================== */
+      /* 21. UI ANALYTICS 157–167                               */
+      /* ===================================================== */
+      tl.from('#s13', { opacity: 0, duration: 0.5 }, 157)
+        .from('#s13 .s13-bg', { scale: 1.0, duration: 9, ease: 'none' }, 157)
+        .to('#s13 .s13-bg', { scale: 1.08, duration: 9, ease: 'none' }, 157)
+        .from('#s13 .s13-eyebrow', { opacity: 0, y: 24, duration: 0.6 }, 157.6)
+        .from('#s13 .s13-h', { opacity: 0, y: 50, duration: 0.9, ease: 'power3.out' }, 158.0)
+        .from('#s13 .s13-p', { opacity: 0, y: 30, duration: 0.7 }, 158.7)
+        .from('#s13 .agent-cap', { opacity: 0, x: -40, duration: 0.6 }, 159.4);
+      out('s13', 166.5);
+
+      /* ===================================================== */
+      /* 22. VIDEO 167–171 — Jamal momentum                     */
+      /* ===================================================== */
+      tl.from('#vid-22', { opacity: 0, duration: 0.4 }, 167)
+        .from('.vid-22-cap', { opacity: 0, y: 30, duration: 0.6, ease: 'power2.out' }, 167.4);
+      out('vid-22', 170.5);
+
+      /* ===================================================== */
+      /* 23. VIDEO 171–176 — David family lunch                 */
+      /* ===================================================== */
+      tl.from('#vid-23', { opacity: 0, duration: 0.4 }, 171)
+        .from('.vid-23-cap', { opacity: 0, y: 30, duration: 0.6, ease: 'power2.out' }, 171.4);
+      out('vid-23', 175.5);
+
+      /* ===================================================== */
+      /* 24. VIDEO 176–181 — Aisha Sephora                      */
+      /* ===================================================== */
+      tl.from('#vid-24', { opacity: 0, duration: 0.4 }, 176)
+        .from('.vid-24-cap', { opacity: 0, y: 30, duration: 0.6, ease: 'power2.out' }, 176.4);
+      out('vid-24', 180.5);
+
+      /* ===================================================== */
+      /* 25. VIDEO 181–187 — Three lives converge               */
+      /* ===================================================== */
+      tl.from('#vid-25', { opacity: 0, duration: 0.4 }, 181)
+        .from('.vid-25-cap', { opacity: 0, y: 30, duration: 0.7, ease: 'power2.out' }, 181.4);
+      out('vid-25', 186.5);
+
+      /* ===================================================== */
+      /* 26. VIDEO 187–191 — Logo reveal                        */
+      /* ===================================================== */
+      tl.from('#vid-26', { opacity: 0, duration: 0.5 }, 187);
+      out('vid-26', 190.5);
+
+      /* ===================================================== */
+      /* 27. VIDEO 191–196 — CTA button glow                    */
+      /* ===================================================== */
+      tl.from('#vid-27', { opacity: 0, duration: 0.5 }, 191)
+        .from('.vid-27-cap', { opacity: 0, y: 30, scale: 0.92, duration: 0.7, ease: 'back.out(1.6)' }, 191.5);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

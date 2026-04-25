@@ -1,0 +1,189 @@
+- generic:
+  - dialog "Log In with Hyperbolic" [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - heading "Log In with Hyperbolic" [level=2] [ref=e5]:
+          - img "Hyperbolic Logo" [ref=e6]
+        - img [ref=e9]
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - button "Continue with Google" [ref=e20] [cursor=pointer]:
+              - img
+              - generic [ref=e21]: Continue with Google
+            - button "Continue with GitHub" [ref=e22] [cursor=pointer]:
+              - img
+              - generic [ref=e23]: Continue with GitHub
+          - generic [ref=e28]: or Sign Up with Email
+        - generic [ref=e29]:
+          - generic [ref=e30]:
+            - generic [ref=e31]:
+              - generic [ref=e32]:
+                - generic [ref=e33]: Email
+                - textbox "Email" [active] [ref=e34]:
+                  - /placeholder: E.g. johndoe@gmail.com
+              - generic [ref=e35]:
+                - generic [ref=e37]: Password
+                - textbox "Password" [ref=e38]:
+                  - /placeholder: Enter your password
+            - button "Sign Up" [ref=e40] [cursor=pointer]
+          - generic [ref=e41]:
+            - generic [ref=e42]: Already a user?
+            - button "Log In" [ref=e43] [cursor=pointer]:
+              - text: Log In
+              - img
+          - paragraph [ref=e44]:
+            - text: By signing up, you agree to Hyperbolic's
+            - link "privacy policy" [ref=e45] [cursor=pointer]:
+              - /url: https://hyperbolic.xyz/privacy?__hstc=19465511.ce330b4bce1e70a970a00b7d8c2d23f8.1776576289826.1776576289826.1776581845976.2&__hssc=19465511.2.1776581845976&__hsfp=90b8298e685586933db97eb4c7db3cdf
+            - text: and
+            - link "terms of use" [ref=e46] [cursor=pointer]:
+              - /url: https://hyperbolic.xyz/terms?__hstc=19465511.ce330b4bce1e70a970a00b7d8c2d23f8.1776576289826.1776576289826.1776581845976.2&__hssc=19465511.2.1776581845976&__hsfp=90b8298e685586933db97eb4c7db3cdf
+  - generic:
+    - generic:
+      - navigation:
+        - generic:
+          - list:
+            - listitem:
+              - link:
+                - /url: /
+                - img
+        - generic:
+          - list:
+            - listitem:
+              - link:
+                - /url: https://docs.hyperbolic.ai/overview/overview
+                - generic:
+                  - img
+                  - img
+                  - text: Docs
+            - listitem:
+              - link:
+                - /url: https://docs.hyperbolic.ai/general/billing-payments
+                - generic:
+                  - img
+                  - img
+                  - text: Pricing
+            - listitem:
+              - button: Sign Up
+            - listitem:
+              - button: Log In
+      - generic:
+        - navigation:
+          - generic:
+            - list:
+              - listitem:
+                - link:
+                  - /url: /
+                  - img
+              - listitem:
+                - link:
+                  - /url: /
+                  - generic: Home
+              - listitem:
+                - link:
+                  - /url: /gpus
+                  - generic: GPUs
+              - listitem:
+                - link:
+                  - /url: /models
+                  - generic: Models
+              - listitem:
+                - link:
+                  - /url: /usage
+                  - generic: Usage
+              - listitem:
+                - link:
+                  - /url: /support
+                  - generic: Support
+    - generic:
+      - generic:
+        - generic:
+          - heading [level=1]: Welcome!
+          - paragraph: Launch, monitor, and scale AI workloads - from model testing to GPU clusters - all in one place.
+      - main:
+        - generic:
+          - article:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - img
+                    - heading [level=2]: Model Playground
+                  - paragraph: Test SOTA open-source models and integrate production-ready API keys in your app seamlessly.
+                - generic:
+                  - link:
+                    - /url: /models
+                    - img
+                    - text: Try Models
+              - generic:
+                - generic:
+                  - generic:
+                    - img
+                    - heading [level=2]: On-Demand GPU Clusters
+                  - paragraph: Spin up H100/H200 GPU clusters at unbeatable pay-as-you-go pricing.
+                - generic:
+                  - link:
+                    - /url: /gpus
+                    - img
+                    - text: Deploy GPUs
+              - generic:
+                - generic:
+                  - generic:
+                    - img
+                    - heading [level=2]: Dedicated Model Hosting
+                  - paragraph: Get enterprise-grade hosting with guaranteed performance, custom pricing, and SLA guarantees.
+                - generic:
+                  - link:
+                    - /url: https://calendly.com/d/cq79-jyv-jg4/hyperbolic-intro-call
+                    - img
+                    - text: Contact Sales
+    - generic:
+      - navigation:
+        - generic:
+          - list:
+            - listitem:
+              - link:
+                - /url: /
+                - img
+                - generic: © 2025
+        - generic:
+          - list:
+            - generic:
+              - listitem:
+                - link:
+                  - /url: /support
+                  - text: FAQ
+              - listitem:
+                - link:
+                  - /url: https://hyperbolic.ai/terms
+                  - text: Terms of Use
+              - listitem:
+                - link:
+                  - /url: https://hyperbolic.ai/privacy
+                  - text: Privacy Policy
+              - listitem:
+                - link:
+                  - /url: https://docs.hyperbolic.ai/overview/overview
+                  - text: Docs
+              - listitem:
+                - link:
+                  - /url: /credits
+                  - text: Credits
+              - listitem:
+                - link:
+                  - /url: https://hyperbolic.ai
+                  - text: Hyperbolic
+                  - img
+            - generic:
+              - listitem:
+                - link:
+                  - /url: https://x.com/hyperbolic_labs
+                  - img
+              - listitem:
+                - link:
+                  - /url: https://github.com/HyperbolicLabs
+                  - img
+  - alert
+  - iframe [ref=e47]:
+    

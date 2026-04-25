@@ -7,7 +7,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, Depends, Request, UploadFile, File, Form
 from db import db
 from auth import get_current_user, User
-from shared.constants import UPLOAD_DIR, EMERGENT_LLM_KEY
+from shared.constants import UPLOAD_DIR
 from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
@@ -69,7 +69,7 @@ async def upload_knowledge_doc(
 
     from routes.knowledge import process_document_async
     asyncio.create_task(process_document_async(
-        db, doc_id, agent_id, str(filepath), filename, EMERGENT_LLM_KEY
+        db, doc_id, agent_id, str(filepath), filename
     ))
 
     return {
@@ -115,6 +115,6 @@ async def search_agent_knowledge(agent_id: str, request: Request, current_user: 
         raise HTTPException(400, "Query is required")
     from services.rag_service import search_knowledge_base
     results = await search_knowledge_base(
-        db, agent_id, query, top_k=5, threshold=0.05, api_key=EMERGENT_LLM_KEY
+        db, agent_id, query, top_k=5, threshold=0.05
     )
     return {"results": results, "count": len(results)}

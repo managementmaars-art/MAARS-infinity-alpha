@@ -43,6 +43,8 @@ class Agent(BaseModel):
     creator_id: Optional[str] = None
     capabilities: List[str] = []
     tools: List[str] = []
+    monthly_budget_credits: Optional[int] = None
+    throttle_at_pct: Optional[float] = None
     created_at: Optional[datetime] = None
 
 class AgentCreate(BaseModel):
@@ -112,7 +114,9 @@ class CheckoutRequest(BaseModel):
     plan_id: Optional[str] = None
     package_id: Optional[str] = None
     origin_url: str
-    currency: str = "usd"
+    currency: str = "usd"                # usd | eur | gbp | bdt
+    billing: Optional[str] = "monthly"   # monthly | annual — subscription only
+    referral_code: Optional[str] = None  # attach an inbound referral to the purchase
 
 class Task(BaseModel):
     model_config = ConfigDict(extra="ignore")

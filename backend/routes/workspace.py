@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException, Depends, Body
 
 from db import db
 from auth import get_current_user, User
+from services.artifact_service import list_artifacts, get_artifact
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -124,3 +125,22 @@ async def get_tool_logs(limit: int = 50, current_user: User = Depends(get_curren
     ).sort("created_at", -1).to_list(limit)
     total = await db.tool_logs.count_documents({"user_id": current_user.user_id})
     return {"logs": logs, "total": total}
+
+
+@router.get("/workspace/artifacts")
+async def get_workspace_artifacts(
+    limit: int = 50,
+    artifact_type: str = None,
+    current_user: User = Depends(get_current_user),
+):
+    """List durable artifacts created by agents and tools."""
+    artifacts = await list_artifacts(current_user.user_id, artifact_type=artifact_type, limit=limit)
+    return {"artifacts": artifacts, "total": len(artifacts)}
+
+
+@router.get("/workspace/artifacts/{artifact_id}")
+async def get_workspace_artifact(artifact_id: str, current_user: User = Depends(get_current_user)):
+    artifact = await get_artifact(current_user.user_id, artifact_id)
+    if not artifact:
+        raise HTTPException(status_code=404, detail="Artifact not found")
+    return artifact

@@ -7,9 +7,17 @@ import httpx
 from pathlib import Path
 from typing import Optional
 
-from shared.constants import EMERGENT_LLM_KEY, UPLOAD_DIR
+from shared.constants import UPLOAD_DIR
 
 logger = logging.getLogger(__name__)
+
+
+def _env_flag_enabled(name: str) -> bool:
+    return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _dev_mock_llm_enabled() -> bool:
+    return _env_flag_enabled("MAARS_DEV_MOCK_LLM")
 
 
 # ============== MODEL COST MAPS ==============
@@ -37,11 +45,73 @@ MODEL_COSTS_MAP = {
     "mistral-small-latest": {"input": 0.10, "output": 0.30, "provider": "mistral"},
     "sonar": {"input": 1.00, "output": 1.00, "provider": "perplexity"},
     "sonar-pro": {"input": 3.00, "output": 15.00, "provider": "perplexity"},
-    "command-r-plus": {"input": 2.50, "output": 10.00, "provider": "cohere"},
+    "command-r-plus": {"input": 2.50, "output": 10.00, "provider": "cohere", "alias_of": "command-r-plus-08-2024"},  # retired 2025-09-15; aliased to 08-2024
+    "command-r-plus-08-2024": {"input": 2.50, "output": 10.00, "provider": "cohere"},
+    "command-a-03-2025": {"input": 2.50, "output": 10.00, "provider": "cohere"},
     "command-r": {"input": 0.15, "output": 0.60, "provider": "cohere"},
     "gpt-image-1": {"input": 0.02, "output": 0.0, "provider": "openai", "per_unit": "image"},
     "dall-e-3": {"input": 0.04, "output": 0.0, "provider": "openai", "per_unit": "image"},
     "sora-2": {"input": 0.10, "output": 0.0, "provider": "openai", "per_unit": "second"},
+    # TTS / STT / voice-over
+    "tts-1": {"input": 0.015, "output": 0.0, "provider": "openai", "per_unit": "1k_char"},
+    "tts-1-hd": {"input": 0.030, "output": 0.0, "provider": "openai", "per_unit": "1k_char"},
+    "whisper-1": {"input": 0.006, "output": 0.0, "provider": "openai", "per_unit": "minute"},
+    "eleven_turbo_v2_5": {"input": 0.18, "output": 0.0, "provider": "elevenlabs", "per_unit": "1k_char"},
+    "eleven_multilingual_v2": {"input": 0.30, "output": 0.0, "provider": "elevenlabs", "per_unit": "1k_char"},
+    "eleven_flash_v2_5": {"input": 0.10, "output": 0.0, "provider": "elevenlabs", "per_unit": "1k_char"},
+    # ── Fal.ai video (per-second pricing, Apr 2026) ──────────────────
+    # Published rates from fal.ai/pricing — these are what Fal charges
+    # the operator per second of output. LTX is the cheap workhorse at
+    # ~$0.005/s; Sora-equivalents cost 30-80× more.
+    "fal-ai/ltx-video":                               {"input": 0.005, "output": 0.0, "provider": "fal", "per_unit": "second"},
+    "fal-ai/cogvideox-5b":                            {"input": 0.007, "output": 0.0, "provider": "fal", "per_unit": "second"},
+    "fal-ai/mochi-v1":                                {"input": 0.012, "output": 0.0, "provider": "fal", "per_unit": "second"},
+    "fal-ai/pika/v2/turbo/text-to-video":             {"input": 0.040, "output": 0.0, "provider": "fal", "per_unit": "second"},
+    "fal-ai/minimax/hailuo-02/standard/text-to-video":{"input": 0.045, "output": 0.0, "provider": "fal", "per_unit": "second"},
+    "fal-ai/luma-dream-machine/ray-2":                {"input": 0.060, "output": 0.0, "provider": "fal", "per_unit": "second"},
+    "fal-ai/kling-video/v2/master/text-to-video":     {"input": 0.095, "output": 0.0, "provider": "fal", "per_unit": "second"},
+    "fal-ai/veo3/fast":                               {"input": 0.100, "output": 0.0, "provider": "fal", "per_unit": "second"},
+    # ── Fal.ai image (FLUX family on Fal) ────────────────────────────
+    "fal-ai/flux/schnell":                            {"input": 0.003, "output": 0.0, "provider": "fal", "per_unit": "image"},
+    "fal-ai/flux/dev":                                {"input": 0.025, "output": 0.0, "provider": "fal", "per_unit": "image"},
+    "fal-ai/flux-pro":                                {"input": 0.050, "output": 0.0, "provider": "fal", "per_unit": "image"},
+    # ── Fal.ai audio / music ─────────────────────────────────────────
+    "fal-ai/stable-audio":                            {"input": 0.02, "output": 0.0, "provider": "fal", "per_unit": "clip"},
+    "fal-ai/musicgen":                                {"input": 0.02, "output": 0.0, "provider": "fal", "per_unit": "clip"},
+    # ── Other image providers (published rates) ──────────────────────
+    "black-forest-labs/FLUX.1-schnell-Free":          {"input": 0.0,   "output": 0.0, "provider": "together", "per_unit": "image"},
+    "black-forest-labs/FLUX.1-dev":                   {"input": 0.025, "output": 0.0, "provider": "together", "per_unit": "image"},
+    "black-forest-labs/FLUX.1-schnell":               {"input": 0.003, "output": 0.0, "provider": "huggingface", "per_unit": "image"},
+    "accounts/fireworks/models/flux-1-schnell-fp8":   {"input": 0.003, "output": 0.0, "provider": "fireworks", "per_unit": "image"},
+    "accounts/fireworks/models/flux-1-dev-fp8":       {"input": 0.025, "output": 0.0, "provider": "fireworks", "per_unit": "image"},
+    "FLUX.1-dev":                                     {"input": 0.02,  "output": 0.0, "provider": "hyperbolic", "per_unit": "image"},
+    "flux-1-schnell":                                 {"input": 0.005, "output": 0.0, "provider": "novita", "per_unit": "image"},
+    "flux":                                           {"input": 0.0,   "output": 0.0, "provider": "pollinations", "per_unit": "image"},  # Pollinations = free
+    # ── Groq Whisper (free on their tier, ~$0 at scale) ──────────────
+    "whisper-large-v3-turbo":                         {"input": 0.0,   "output": 0.0, "provider": "groq", "per_unit": "minute"},
+    "nova-2":                                         {"input": 0.0043,"output": 0.0, "provider": "deepgram", "per_unit": "minute"},
+    # ── Edge TTS (always free) ───────────────────────────────────────
+    "en-US-JennyNeural":                              {"input": 0.0,   "output": 0.0, "provider": "edge", "per_unit": "1k_char"},
+    "en-US-ChristopherNeural":                        {"input": 0.0,   "output": 0.0, "provider": "edge", "per_unit": "1k_char"},
+    # ── MiniMax Hailuo video / image (direct) ────────────────────────
+    "MiniMax-Hailuo-02":                              {"input": 0.043, "output": 0.0, "provider": "minimax", "per_unit": "second"},
+    "T2V-01":                                         {"input": 0.043, "output": 0.0, "provider": "minimax", "per_unit": "second"},
+    "I2V-01":                                         {"input": 0.043, "output": 0.0, "provider": "minimax", "per_unit": "second"},
+    "image-01":                                       {"input": 0.005, "output": 0.0, "provider": "minimax", "per_unit": "image"},
+    # ── Zhipu / Z.ai CogView + CogVideoX ─────────────────────────────
+    "cogview-3-plus":                                 {"input": 0.015, "output": 0.0, "provider": "zhipu", "per_unit": "image"},
+    "cogview-3":                                      {"input": 0.010, "output": 0.0, "provider": "zhipu", "per_unit": "image"},
+    "cogview-3-flash":                                {"input": 0.0,   "output": 0.0, "provider": "zhipu", "per_unit": "image"},  # free tier
+    "cogvideox-flash":                                {"input": 0.010, "output": 0.0, "provider": "zhipu", "per_unit": "second"},
+    "cogvideox-3":                                    {"input": 0.020, "output": 0.0, "provider": "zhipu", "per_unit": "second"},
+    # ── Novita video ─────────────────────────────────────────────────
+    "wan-v2-1":                                       {"input": 0.010, "output": 0.0, "provider": "novita", "per_unit": "second"},
+    "wan-v2-2":                                       {"input": 0.015, "output": 0.0, "provider": "novita", "per_unit": "second"},
+    "ltx-video-v2":                                   {"input": 0.007, "output": 0.0, "provider": "novita", "per_unit": "second"},
+    "hunyuan-video-fast":                             {"input": 0.020, "output": 0.0, "provider": "novita", "per_unit": "second"},
+    # ── Bytez aggregator (rough estimates; they meter on usage) ─────
+    # The entry exists so Bytez calls don't fall back to the default $0.02
+    # catalog; actual cost depends on the model Bytez routes to.
     # Groq (Meta Llama 4)
     "llama-4-scout-17b-16e-instruct": {"input": 0.11, "output": 0.34, "provider": "groq"},
     "llama-4-maverick-17b-128e-instruct": {"input": 0.50, "output": 0.77, "provider": "groq"},
@@ -244,6 +314,12 @@ MODEL_CREDIT_COSTS = {
     "gemini-3-pro-image-preview": 5, "gemini-nano-banana-2": 5,
     "gpt-image-1": 5, "dall-e-3": 5,
     "sora-2": 10,
+    # TTS (per 1K chars billed; 1 credit floor, else ceil(chars/1000 * per_credit))
+    "tts-1": 1, "tts-1-hd": 1,
+    # STT (per call; actual cost depends on audio length)
+    "whisper-1": 1,
+    # ElevenLabs (premium voice — higher cost tier)
+    "eleven_turbo_v2_5": 2, "eleven_multilingual_v2": 3, "eleven_flash_v2_5": 1,
     # Groq (Meta Llama 4)
     "llama-4-scout-17b-16e-instruct": 1, "llama-4-maverick-17b-128e-instruct": 1,
     "llama-3.3-70b-versatile": 1,
@@ -299,13 +375,54 @@ MODEL_CREDIT_COSTS = {
 
 
 def get_credit_cost(model_name: str, has_image: bool = False, has_video: bool = False) -> int:
+    """Legacy chat-path cost — static per-call credits. Does NOT reflect real
+    media fulfillment cost. For image/video/TTS/STT, use media_credit_cost()."""
     model_clean = model_name.split("/")[-1] if "/" in model_name else model_name
     base_cost = MODEL_CREDIT_COSTS.get(model_clean, 2)
     if has_image:
-        base_cost += MODEL_CREDIT_COSTS.get("gemini-nano-banana-2", 5)
+        base_cost += media_credit_cost("image", "gpt-image-1")  # ~20 credits
     if has_video:
-        base_cost += MODEL_CREDIT_COSTS.get("sora-2", 10)
+        base_cost += media_credit_cost("video", "sora-2", units=4)  # 400 credits / 4-sec clip
     return base_cost
+
+
+# ============== MEDIA CREDIT COSTS (USAGE-AWARE) ==============
+# 1 credit = $0.001 USD (from shared.constants.CREDITS_PER_USD = 1000).
+# These helpers compute the real credit cost from actual usage, not a static
+# per-call floor. Use these for image / video / TTS / STT billing.
+
+import math as _math
+
+
+def media_credit_cost(modality: str, model: str, units: float = 1) -> int:
+    """Credits required for a media call, computed from MODEL_COSTS_MAP.
+
+    modality: "image" | "video" | "tts" | "stt"
+    model:    registry key (e.g. "dall-e-3", "sora-2", "tts-1", "whisper-1")
+    units:    image → count (usually 1)
+              video → seconds
+              tts   → characters
+              stt   → seconds of audio
+
+    Returns ceil(cost_usd / 0.001), floor 1.
+    """
+    pricing = MODEL_COSTS_MAP.get(model, {})
+    per_unit = pricing.get("input", 0.0)
+    per_unit_kind = pricing.get("per_unit", "")
+    if modality == "image":
+        usd = per_unit * max(units, 1)
+    elif modality == "video":
+        # per-second pricing
+        usd = per_unit * max(units, 1)
+    elif modality == "tts":
+        # per-1K-char pricing
+        usd = per_unit * (max(units, 1) / 1000)
+    elif modality == "stt":
+        # per-minute pricing
+        usd = per_unit * (max(units, 1) / 60)
+    else:
+        usd = per_unit * max(units, 1)
+    return max(1, _math.ceil(usd / 0.001))
 
 
 # ============== DETECTION FUNCTIONS ==============
@@ -583,6 +700,10 @@ def auto_select_model(content: str, agent_role: str) -> tuple:
 
 async def call_direct_llm(provider: str, model_name: str, system_prompt: str, content: str, attachments: list, api_key: str) -> str:
     import json as json_lib
+    # Auto-resolve retired-model aliases (e.g. cohere/command-r-plus → command-r-plus-08-2024).
+    _entry = MODEL_COSTS_MAP.get(model_name, {})
+    if isinstance(_entry, dict) and _entry.get("alias_of"):
+        model_name = _entry["alias_of"]
     if provider == "openai":
         async with httpx.AsyncClient(timeout=120) as client:
             messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": content}]
@@ -647,21 +768,57 @@ async def call_direct_llm(provider: str, model_name: str, system_prompt: str, co
     elif provider == "minimax":
         return await _call_openai_compatible("https://api.minimaxi.chat/v1/chat/completions", model_name, system_prompt, content, api_key)
     elif provider == "inception":
-        return await _call_openai_compatible("https://api.inception.ai/v1/chat/completions", model_name, system_prompt, content, api_key)
+        return await _call_openai_compatible("https://api.inceptionlabs.ai/v1/chat/completions", model_name, system_prompt, content, api_key)
     elif provider == "arcee":
         return await _call_openai_compatible("https://api.arcee.ai/v1/chat/completions", model_name, system_prompt, content, api_key)
     elif provider == "amazon":
-        return await _call_openai_compatible("https://bedrock-runtime.us-east-1.amazonaws.com/v1/chat/completions", model_name, system_prompt, content, api_key)
+        # AWS Bedrock doesn't expose an OpenAI-compatible chat endpoint — uses
+        # SigV4-signed POST /model/{id}/invoke. Use boto3 (installed) with
+        # credentials from env. Response shape is model-family-specific; we
+        # handle the two MAARS registers: Nova (Converse API) + legacy Claude.
+        import os as _os, asyncio as _aio, json as _json
+        try:
+            import boto3
+        except ImportError:
+            raise RuntimeError("bedrock requires boto3 (pip install boto3)")
+        # AWS creds: either via the api_key (we stuffed both into it
+        # "AKIA...:secret") or via env (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY).
+        aws_key_id = _os.environ.get("AWS_ACCESS_KEY_ID", "")
+        aws_secret = _os.environ.get("AWS_SECRET_ACCESS_KEY", "")
+        region = _os.environ.get("AWS_REGION", "us-east-1")
+        if ":" in (api_key or "") and not aws_key_id:
+            aws_key_id, aws_secret = api_key.split(":", 1)
+        if not aws_key_id or not aws_secret:
+            raise RuntimeError("bedrock needs AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY in env")
+
+        def _invoke():
+            client = boto3.client(
+                "bedrock-runtime", region_name=region,
+                aws_access_key_id=aws_key_id, aws_secret_access_key=aws_secret,
+            )
+            # Use the modern Converse API — works for Nova, Claude, Llama, Mistral on Bedrock.
+            resp = client.converse(
+                modelId=model_name,
+                system=[{"text": system_prompt}] if system_prompt else [],
+                messages=[{"role": "user", "content": [{"text": content}]}],
+                inferenceConfig={"maxTokens": 4096},
+            )
+            return resp["output"]["message"]["content"][0]["text"]
+        return await _aio.to_thread(_invoke)
     elif provider == "nvidia":
         return await _call_openai_compatible("https://integrate.api.nvidia.com/v1/chat/completions", model_name, system_prompt, content, api_key)
     elif provider == "moonshot":
-        return await _call_openai_compatible("https://api.moonshot.cn/v1/chat/completions", model_name, system_prompt, content, api_key)
+        # International Kimi Open Platform (platform.moonshot.ai) uses api.moonshot.ai;
+        # api.moonshot.cn is the mainland-China endpoint and rejects intl keys with 401.
+        return await _call_openai_compatible("https://api.moonshot.ai/v1/chat/completions", model_name, system_prompt, content, api_key)
     elif provider == "qwen":
         return await _call_openai_compatible("https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions", model_name, system_prompt, content, api_key)
     elif provider == "yi":
         return await _call_openai_compatible("https://api.lingyiwanwu.com/v1/chat/completions", model_name, system_prompt, content, api_key)
     elif provider == "zhipu":
-        return await _call_openai_compatible("https://open.bigmodel.cn/api/paas/v4/chat/completions", model_name, system_prompt, content, api_key)
+        # Z.ai international endpoint (api.z.ai). BigModel mainland (open.bigmodel.cn)
+        # rate-limits international keys heavily (429s).
+        return await _call_openai_compatible("https://api.z.ai/api/paas/v4/chat/completions", model_name, system_prompt, content, api_key)
     elif provider == "doubao":
         return await _call_openai_compatible("https://ark.cn-beijing.volces.com/api/v3/chat/completions", model_name, system_prompt, content, api_key)
     elif provider == "hyperbolic":
@@ -669,11 +826,57 @@ async def call_direct_llm(provider: str, model_name: str, system_prompt: str, co
     elif provider == "upstage":
         return await _call_openai_compatible("https://api.upstage.ai/v1/chat/completions", model_name, system_prompt, content, api_key)
     elif provider == "writer":
+        # Writer uses /v1/chat NOT /v1/chat/completions, and requires `model` + `messages`.
         return await _call_openai_compatible("https://api.writer.com/v1/chat", model_name, system_prompt, content, api_key)
+    elif provider == "bytez":
+        # Bytez: /models/v2/{model_id} with `Authorization: Key {api_key}` (not Bearer).
+        # Response shape is {"error": null, "output": {"role": "assistant", "content": "..."}}.
+        # Free tier gated to `sm` size models (e.g. microsoft/DialoGPT-small).
+        async with httpx.AsyncClient(timeout=60) as client:
+            resp = await client.post(
+                f"https://api.bytez.com/models/v2/{model_name}",
+                headers={"Authorization": f"Key {api_key}", "Content-Type": "application/json"},
+                json={"messages": [
+                    {"role": "system", "content": system_prompt} if system_prompt else None,
+                    {"role": "user", "content": content},
+                ][1:] if not system_prompt else [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": content},
+                ]},
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("error"):
+                raise RuntimeError(f"bytez error: {data['error']}")
+            out = data.get("output", {})
+            return out.get("content", "") if isinstance(out, dict) else str(out)
     elif provider == "huggingface":
-        return await _call_openai_compatible("https://api-inference.huggingface.co/v1/chat/completions", model_name, system_prompt, content, api_key)
+        # HF's OpenAI-compat route is per-model at /models/{model}/v1/chat/completions.
+        # The flat /v1/chat/completions endpoint doesn't exist.
+        return await _call_openai_compatible(
+            f"https://router.huggingface.co/v1/chat/completions",
+            model_name, system_prompt, content, api_key,
+        )
     elif provider == "llama":
         return await _call_openai_compatible("https://api.llama.com/v1/chat/completions", model_name, system_prompt, content, api_key)
+    elif provider == "openrouter":
+        # OpenRouter: OpenAI-compat but needs HTTP-Referer + X-Title headers.
+        async with httpx.AsyncClient(timeout=120) as client:
+            resp = await client.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://maars.global",
+                    "X-Title": "MAARS Universal Gateway",
+                },
+                json={"model": model_name,
+                      "messages": [{"role": "system", "content": system_prompt},
+                                   {"role": "user", "content": content}],
+                      "max_tokens": 4096},
+            )
+            resp.raise_for_status()
+            return resp.json()["choices"][0]["message"]["content"]
     raise ValueError(f"Unsupported provider: {provider}")
 
 
@@ -687,6 +890,7 @@ async def _call_openai_compatible(url: str, model_name: str, system_prompt: str,
 
 
 async def call_llm_with_fallback(api_keys, model_provider, model_name, system_prompt, content, attachments, chat_id, temperature=None, max_tokens=None):
+    api_keys = api_keys or {}
     fallback_models = [
         (model_provider, model_name),
         ("openai", "gpt-5"),
@@ -702,50 +906,27 @@ async def call_llm_with_fallback(api_keys, model_provider, model_name, system_pr
             seen.add(key)
             unique_fallbacks.append((mp, mn))
 
+    if _dev_mock_llm_enabled():
+        has_direct_key = any(api_keys.get(provider) for provider, _ in unique_fallbacks)
+        if not has_direct_key:
+            preview = " ".join((content or "").split())
+            if len(preview) > 220:
+                preview = preview[:220].rstrip() + "..."
+            mock_text = (
+                "MAARS dev mock response (MAARS_DEV_MOCK_LLM=1): no direct provider key is configured. "
+                f"Echo preview: {preview or 'No user content provided.'}"
+            )
+            logger.warning("call_llm_with_fallback using dev mock response (no LLM keys configured).")
+            return mock_text, "mock", "mock-dev"
+
     last_error = None
     for fb_provider, fb_model in unique_fallbacks:
+        direct_key = api_keys.get(fb_provider, "")
+        if not direct_key:
+            logger.debug(f"no direct key for {fb_provider}, skipping {fb_model}")
+            continue
         try:
-            if api_keys["active_provider"] == "direct":
-                direct_key = api_keys.get(fb_provider, "")
-                if direct_key:
-                    result = await call_direct_llm(fb_provider, fb_model, system_prompt, content, attachments, direct_key)
-                    return result, fb_provider, fb_model
-
-            from emergentintegrations.llm.chat import LlmChat, UserMessage
-            llm_chat = LlmChat(
-                api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-                session_id=f"{chat_id}_{uuid.uuid4().hex[:6]}",
-                system_message=system_prompt
-            ).with_model(fb_provider, fb_model)
-            extra_params = {}
-            if temperature is not None:
-                extra_params["temperature"] = temperature
-            if max_tokens is not None:
-                extra_params["max_tokens"] = max_tokens
-            if extra_params:
-                llm_chat = llm_chat.with_params(**extra_params)
-
-            file_contents = []
-            if attachments:
-                from emergentintegrations.llm.chat import ImageContent
-                for att in attachments:
-                    if isinstance(att, str):
-                        if att.startswith("data:image"):
-                            b64data = att.split(",", 1)[1] if "," in att else att
-                            file_contents.append(ImageContent(b64data))
-                        elif att.startswith("/files/") or att.startswith("http"):
-                            try:
-                                img_path = UPLOAD_DIR / att.replace("/files/", "") if att.startswith("/files/") else None
-                                if img_path and img_path.exists():
-                                    import base64 as b64mod
-                                    with open(img_path, "rb") as f:
-                                        b64data = b64mod.b64encode(f.read()).decode()
-                                    file_contents.append(ImageContent(b64data))
-                            except Exception:
-                                pass
-
-            user_message = UserMessage(text=content, file_contents=file_contents if file_contents else None)
-            result = await llm_chat.send_message(user_message)
+            result = await call_direct_llm(fb_provider, fb_model, system_prompt, content, attachments, direct_key)
             return result, fb_provider, fb_model
         except Exception as e:
             last_error = e

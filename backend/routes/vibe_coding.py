@@ -1,26 +1,47 @@
-"""Vibe Coding App Builder - Chat-based full-stack app building."""
+"""Vibe Coding App Builder - Chat-based full-stack app building.
+
+Every call routes through the Universal AI Gateway — NO separate routing
+module. We just pass `model="maars/code"` and the gateway's
+`_resolve_maars_alias` picks the best available code-specialist
+(Claude Sonnet 4.5 → Codestral → DeepSeek-Coder → Qwen-Coder → Kimi-K2
+→ o3, etc.) based on which provider keys are configured and which aren't
+rate-limited.
+"""
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import StreamingResponse
 from datetime import datetime, timezone
 import uuid
-import os
 import json
 from db import db
 from auth import get_current_user
 from models.schemas import User
+from services.llm_gateway import complete_text
 
 router = APIRouter()
-EMERGENT_LLM_KEY = os.environ.get("EMERGENT_LLM_KEY", "")
 
 
-async def _get_vibe_llm_config(user_id: str):
-    """Get user's preferred LLM for vibe coding."""
+async def _pick_vibe_model(user_id: str) -> str:
+    """Return the model alias to use for this user's vibe-coding call.
+
+    Honors an explicit user override from system_config; otherwise routes
+    through the Universal Gateway's `maars/code` alias — which itself
+    picks the best code-tuned model from the configured providers.
+    This keeps ALL routing decisions inside the gateway.
+    """
     config = await db.system_config.find_one(
         {"user_id": user_id, "config_type": "llm_preference"}, {"_id": 0}
     )
-    if config:
-        return config.get("provider", "openai"), config.get("model", "gpt-5.2")
-    return "openai", "gpt-5.2"
+    if config and config.get("provider") and config.get("model"):
+        return f"{config['provider']}/{config['model']}"
+    return "maars/code"
+
+
+async def _get_vibe_llm_config(user_id: str):
+    """Legacy API — kept for backward-compat with older callers."""
+    model = await _pick_vibe_model(user_id)
+    if "/" in model and not model.startswith("maars/"):
+        provider, model_id = model.split("/", 1)
+        return provider, model_id
+    return "maars", "code"
 
 
 @router.post("/vibe/projects")
@@ -43,15 +64,9 @@ async def create_vibe_project(request: Request, current_user: User = Depends(get
         "updated_at": datetime.now(timezone.utc).isoformat(),
     }
 
-    # Generate initial app structure using LLM
+    # Route through the Universal Gateway.
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
-        provider, model = await _get_vibe_llm_config(current_user.user_id)
-
-        chat = LlmChat(
-            api_key=EMERGENT_LLM_KEY,
-            session_id=f"vibe_{project['vibe_id']}",
-            system_message="""You are an expert full-stack developer. The user describes an app they want to build. Generate a complete, working single-page application.
+        system_msg = """You are an expert full-stack developer. The user describes an app they want to build. Generate a complete, working single-page application.
 
 RULES:
 1. Generate a SINGLE HTML file that includes all CSS and JavaScript inline
@@ -72,9 +87,14 @@ Return ONLY valid JSON in this exact format:
 }
 
 Do NOT include markdown formatting or code blocks. Return ONLY the JSON object."""
-        ).with_model(provider, model)
-
-        response = await chat.send_message(UserMessage(text=f"Build this app: {description}"))
+        picked_model = await _pick_vibe_model(current_user.user_id)
+        response = await complete_text(
+            user_id=current_user.user_id,
+            system_prompt=system_msg,
+            user_prompt=f"Build this app: {description}",
+            model=picked_model,
+            source="vibe.create",
+        )
 
         # Parse the JSON response
         try:
@@ -148,18 +168,12 @@ async def vibe_chat(vibe_id: str, request: Request, current_user: User = Depends
         raise HTTPException(404, "Project not found")
 
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
-        provider, model = await _get_vibe_llm_config(current_user.user_id)
-
         # Build context from existing files
         files_context = ""
         for f in project.get("files", []):
             files_context += f"\n--- {f['name']} ---\n{f['content'][:2000]}\n"
 
-        chat = LlmChat(
-            api_key=EMERGENT_LLM_KEY,
-            session_id=f"vibe_chat_{vibe_id}_{uuid.uuid4().hex[:6]}",
-            system_message=f"""You are modifying an existing web application. Here are the current files:
+        system_msg = f"""You are modifying an existing web application. Here are the current files:
 {files_context}
 
 The user wants to make changes. Generate the COMPLETE updated files.
@@ -167,9 +181,17 @@ Return ONLY valid JSON:
 {{"files": [{{"name": "filename", "language": "lang", "content": "full updated code"}}], "changes_summary": "what changed"}}
 
 Return the COMPLETE file content, not just the changes. Do NOT use markdown code blocks."""
-        ).with_model(provider, model)
-
-        response = await chat.send_message(UserMessage(text=message))
+        # Vibe chat carries the ENTIRE file in context — the gateway's
+        # maars/code candidate list is already ranked by context window
+        # so models like Kimi-K2 (200k) and Claude (200k) are preferred.
+        picked_model = await _pick_vibe_model(current_user.user_id)
+        response = await complete_text(
+            user_id=current_user.user_id,
+            system_prompt=system_msg,
+            user_prompt=message,
+            model=picked_model,
+            source="vibe.chat",
+        )
 
         # Parse response
         try:
@@ -238,3 +260,63 @@ async def delete_vibe_project(vibe_id: str, current_user: User = Depends(get_cur
     if result.deleted_count == 0:
         raise HTTPException(404, "Project not found")
     return {"success": True}
+
+
+# ── Phase-2 glue: live iframe preview + one-click deploy ─────────────
+from pathlib import Path
+import os
+from fastapi.responses import HTMLResponse
+
+
+@router.get("/vibe/projects/{vibe_id}/render", response_class=HTMLResponse)
+async def render_vibe_project(vibe_id: str, current_user: User = Depends(get_current_user)):
+    """Return the project's assembled HTML raw (not JSON-wrapped), so a
+    frontend `<iframe src>` can point here and get a live preview."""
+    project = await db.vibe_projects.find_one(
+        {"vibe_id": vibe_id, "user_id": current_user.user_id},
+        {"_id": 0, "files": 1},
+    )
+    if not project:
+        raise HTTPException(404, "Project not found")
+    # Prefer an index.html; else the first .html file; else a shell.
+    files = project.get("files") or []
+    html = next((f.get("content", "") for f in files
+                 if f.get("name", "").lower() in ("index.html", "main.html")), None)
+    if html is None:
+        html = next((f.get("content", "") for f in files
+                     if f.get("name", "").endswith(".html")), "")
+    return HTMLResponse(html or "<!doctype html><title>empty project</title>")
+
+
+@router.post("/vibe/projects/{vibe_id}/deploy")
+async def deploy_vibe_project(vibe_id: str, current_user: User = Depends(get_current_user)):
+    """Deploy the project to a static directory served at
+    /api/static/deployed/{vibe_id}/. Returns the public URL.
+
+    Future adapters can swap this for Cloudflare Pages / S3 / Vercel.
+    """
+    project = await db.vibe_projects.find_one(
+        {"vibe_id": vibe_id, "user_id": current_user.user_id},
+        {"_id": 0, "files": 1, "name": 1},
+    )
+    if not project:
+        raise HTTPException(404, "Project not found")
+
+    root = Path(os.environ.get("MAARS_STATIC_DIR", "static")) / "deployed" / vibe_id
+    root.mkdir(parents=True, exist_ok=True)
+    for f in project.get("files") or []:
+        name = f.get("name") or "index.html"
+        # Safety: refuse path traversal
+        if ".." in name or name.startswith("/") or "\\" in name:
+            continue
+        fp = root / name
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        fp.write_text(f.get("content", ""), encoding="utf-8")
+
+    base = os.environ.get("MAARS_BASE_URL", "").rstrip("/")
+    url = f"{base}/api/static/deployed/{vibe_id}/" if base else f"/api/static/deployed/{vibe_id}/"
+    await db.vibe_projects.update_one(
+        {"vibe_id": vibe_id, "user_id": current_user.user_id},
+        {"$set": {"deployed_url": url, "deployed_at": datetime.now(timezone.utc).isoformat()}},
+    )
+    return {"ok": True, "url": url, "vibe_id": vibe_id}

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../App";
 import { Search, ZoomIn, ZoomOut, Maximize2, X, Circle, ArrowRight } from "lucide-react";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const TYPE_COLORS = {
   network: { fill: "#4fd1c5", stroke: "#6ee7df", bg: "bg-teal-500/10", text: "text-teal-400" },

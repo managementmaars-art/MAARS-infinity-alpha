@@ -60,7 +60,48 @@ async function api(path, { method = "GET", body, baseOverride } = {}) {
     const err = await resp.text();
     throw new Error(`${resp.status} from ${url}: ${err}`);
   }
-  return resp.json();
+  const raw = await resp.text();
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    const preview = raw.slice(0, 240).replace(/\s+/g, " ");
+    throw new Error(`invalid JSON from ${url}: ${preview}`);
+  }
+}
+
+function extractIntegrationList(payload) {
+  if (Array.isArray(payload)) return payload;
+  if (payload && Array.isArray(payload.integrations)) return payload.integrations;
+  if (payload && Array.isArray(payload.available)) return payload.available;
+  return [];
+}
+
+function hasIntegrationShape(payload) {
+  return (
+    Array.isArray(payload) ||
+    (payload && Array.isArray(payload.integrations)) ||
+    (payload && Array.isArray(payload.available))
+  );
+}
+
+function normalizeIntegrations(payload) {
+  const byId = new Map();
+  for (const raw of extractIntegrationList(payload)) {
+    if (!raw || typeof raw !== "object") continue;
+    const integrationId = String(raw.integration_id || raw.id || "").trim();
+    if (!integrationId) continue;
+    const key = integrationId.toLowerCase();
+    if (byId.has(key)) continue;
+    byId.set(key, {
+      ...raw,
+      integration_id: integrationId,
+      name: raw.name || integrationId,
+    });
+  }
+  return [...byId.values()].sort((a, b) =>
+    String(a.name || a.integration_id).localeCompare(String(b.name || b.integration_id))
+  );
 }
 
 /* ─── Main ─────────────────────────────────────────────────────────────── */
@@ -77,6 +118,8 @@ export default function BrowserPanel() {
   const [fullscreen, setFullscreen] = useState(false);
   const [leftTab, setLeftTab]     = useState("sessions");   // "sessions" | "integrations"
   const [integrations, setIntegrations] = useState([]);
+  const [integrationsLoading, setIntegrationsLoading] = useState(false);
+  const [integrationsError, setIntegrationsError] = useState("");
 
   // Streaming config
   const [streamMode, setStreamMode] = useState(() => localStorage.getItem("browserStreamMode") || "event");
@@ -106,6 +149,15 @@ export default function BrowserPanel() {
     try {
       const list = await api("/sessions");
       setSessions(list);
+      // Honor ?session=X from a deep link (e.g. from the Integration
+      // Hub's "Connect Browser" button) so the operator lands on the
+      // right Playwright session without manually picking it.
+      const qs = new URLSearchParams(window.location.search);
+      const wantedId = qs.get("session");
+      if (wantedId) {
+        const match = list.find(s => s.session_id === wantedId);
+        if (match) { setActive(match); return; }
+      }
       if (list.length && !active) setActive(list[0]);
     } catch (_) { /* auth / unavailable */ }
   }, [active]);
@@ -115,13 +167,30 @@ export default function BrowserPanel() {
   }, []);
 
   const loadIntegrations = useCallback(async () => {
+    setIntegrationsLoading(true);
+    setIntegrationsError("");
     try {
-      const list = await fetch(
-        `${API}/enterprise/integrations`,
-        { headers: authHeaders() }
-      ).then((r) => r.ok ? r.json() : []);
-      setIntegrations(Array.isArray(list) ? list : (list.integrations || []));
-    } catch (_) { setIntegrations([]); }
+      try {
+        const enterprisePayload = await api("/integrations", { baseOverride: `${API}/enterprise` });
+        const normalized = normalizeIntegrations(enterprisePayload);
+        if (normalized.length > 0 || hasIntegrationShape(enterprisePayload)) {
+          setIntegrations(normalized);
+          return;
+        }
+      } catch (_) {
+        // fall through to kernel fallback
+      }
+
+      try {
+        const kernelPayload = await api("/integrations/available", { baseOverride: `${API}/kernel` });
+        setIntegrations(normalizeIntegrations(kernelPayload));
+      } catch (_) {
+        setIntegrations([]);
+        setIntegrationsError("Could not load integrations right now.");
+      }
+    } finally {
+      setIntegrationsLoading(false);
+    }
   }, []);
 
   useEffect(() => { loadHealth(); loadSessions(); loadUsage(); loadIntegrations(); },
@@ -334,6 +403,35 @@ export default function BrowserPanel() {
   }
   function stopAgent() { agentAbort.current?.abort(); }
 
+  /* --- Commander-driven goal ----------------------------------------- */
+  async function runCommanderGoal() {
+    if (!goal.trim()) { toast.error("Describe the goal first"); return; }
+    if (!active?.session_id) { toast.error("Open a session first"); return; }
+    if (agentRunning) return;
+    setAgentEvents([]);
+    setAgentRunning(true);
+    try {
+      const resp = await fetch(`${API}/commander/drive-browser`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...authHeaders() },
+        body: JSON.stringify({
+          session_id: active.session_id,
+          goal,
+          max_steps: 10,
+        }),
+      });
+      if (!resp.ok) throw new Error((await resp.text()) || `HTTP ${resp.status}`);
+      const data = await resp.json();
+      (data.trace || []).forEach(t => setAgentEvents(ev => [...ev, { kind: t.kind, message: t.summary, step: t.step }]));
+      toast.success(`Commander Orion ran ${data.steps} step(s) toward: ${data.goal.slice(0, 60)}…`);
+    } catch (e) {
+      toast.error(`Commander drive failed: ${e.message}`);
+    } finally {
+      setAgentRunning(false);
+      loadUsage(); loadSessions();
+    }
+  }
+
   /* ─── Render ────────────────────────────────────────────────────── */
   const notAvailable = health && !health.available;
   const activeTabs   = active?.tabs || [];
@@ -437,9 +535,20 @@ export default function BrowserPanel() {
           onKeyDown={(e) => e.key === "Enter" && runAgentGoal()}
         />
         {!agentRunning
-          ? <button onClick={runAgentGoal} disabled={!goal.trim()} style={{ ...btnStyle(), background: `${T.teal}25`, borderColor: T.teal }}>
-              <Play size={12} /> Run
-            </button>
+          ? <>
+              <button onClick={runAgentGoal} disabled={!goal.trim()}
+                      title="Run the generic BrowserAgent (vision → action loop)"
+                      style={{ ...btnStyle(), background: `${T.teal}25`, borderColor: T.teal }}>
+                <Play size={12} /> Run
+              </button>
+              <button onClick={runCommanderGoal} disabled={!goal.trim() || !active?.session_id}
+                      title="Commander Orion drives this session toward the goal. His authority, training, and audit trail apply."
+                      style={{ ...btnStyle(),
+                               background: "linear-gradient(90deg, rgba(168,85,247,0.3), rgba(79,209,197,0.3))",
+                               borderColor: "rgba(168,85,247,0.5)", color: "#c4b5fd" }}>
+                <Sparkles size={12} /> Commander
+              </button>
+            </>
           : <button onClick={stopAgent} style={{ ...btnStyle(), background: `${T.red}25`, borderColor: T.red }}>
               <StopCircle size={12} /> Stop
             </button>
@@ -594,9 +703,19 @@ export default function BrowserPanel() {
                     </button>
                   );
                 })}
-                {integrations.length === 0 && (
+                {integrationsLoading && (
                   <div style={{ gridColumn: "1 / -1", fontSize: 11, color: T.mute, padding: 8, textAlign: "center" }}>
                     Loading integrations…
+                  </div>
+                )}
+                {!integrationsLoading && integrationsError && (
+                  <div style={{ gridColumn: "1 / -1", fontSize: 11, color: T.red, padding: 8, textAlign: "center" }}>
+                    {integrationsError}
+                  </div>
+                )}
+                {!integrationsLoading && !integrationsError && integrations.length === 0 && (
+                  <div style={{ gridColumn: "1 / -1", fontSize: 11, color: T.mute, padding: 8, textAlign: "center" }}>
+                    No integrations available.
                   </div>
                 )}
               </div>

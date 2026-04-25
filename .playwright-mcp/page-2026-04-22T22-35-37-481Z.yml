@@ -1,0 +1,1046 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - link "Free AgentBay:Multimodal Sandbox For Al Agent Try for Free Now" [ref=e6] [cursor=pointer]:
+      - /url: https://www.alibabacloud.com/product/agentbay?utm_content=g_1000412065
+      - paragraph [ref=e7]:
+        - emphasis [ref=e8]: Free
+        - generic [ref=e9]: AgentBay:Multimodal Sandbox For Al Agent
+        - generic [ref=e10]: Try for Free Now
+    - banner [ref=e12]:
+      - link [ref=e13] [cursor=pointer]:
+        - /url: https://www.alibabacloud.com/
+        - img [ref=e14]
+      - generic [ref=e31]:
+        - text: 
+        - generic [ref=e32]:
+          - navigation:
+            - button "Models" [ref=e33] [cursor=pointer]
+            - button "Overview" [ref=e34] [cursor=pointer]
+            - button "Products" [ref=e35] [cursor=pointer]
+            - button "Solutions" [ref=e36] [cursor=pointer]
+            - button "Pricing" [ref=e37] [cursor=pointer]
+            - button "Resources" [ref=e38] [cursor=pointer]
+            - button "Partners" [ref=e39] [cursor=pointer]
+            - button "Support" [ref=e40] [cursor=pointer]
+        - text: 
+      - generic [ref=e46]:
+        - button "Search Icon" [ref=e47] [cursor=pointer]:
+          - img "Search Icon" [ref=e48]
+        - textbox "ECS" [ref=e55]
+      - generic [ref=e59]:
+        - link [ref=e60] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/ai-assistant?displayMode=side
+          - img [ref=e63]
+        - button " EN" [ref=e64] [cursor=pointer]:
+          - generic [ref=e65]: 
+          - text: EN
+        - link "Contact Us" [ref=e66] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/contact-sales
+        - link "Docs" [ref=e67] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/help
+        - link "Console" [ref=e68] [cursor=pointer]:
+          - /url: https://home.console.alibabacloud.com/
+        - link "Login" [ref=e69] [cursor=pointer]:
+          - /url: https://account.alibabacloud.com/login/login.htm?oauth_callback=https%3A%2F%2Fwww.alibabacloud.com%2Fen%2Fproduct%2Fmodelstudio%3F_p_lc%3D1
+        - link "Free Trial" [ref=e70] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/free
+  - iframe [ref=e74]:
+    - generic [active] [ref=f871e1]:
+      - generic [ref=f871e2]:
+        - banner [ref=f871e6]:
+          - navigation [ref=f871e7]:
+            - img "logo" [ref=f871e8]
+            - generic [ref=f871e9]:
+              - link "Models" [ref=f871e10] [cursor=pointer]:
+                - /url: https://modelstudio.console.alibabacloud.com
+              - link "Docs" [ref=f871e11] [cursor=pointer]:
+                - /url: https://modelstudio.console.alibabacloud.com/?tab=doc#/doc
+              - link "API Guide" [ref=f871e12] [cursor=pointer]:
+                - /url: https://modelstudio.console.alibabacloud.com/?tab=api#/api
+            - link "Start Free" [ref=f871e14] [cursor=pointer]:
+              - /url: https://modelstudio.console.alibabacloud.com
+          - generic [ref=f871e16]:
+            - generic [ref=f871e17]: "⚡️ Model Studio x ESA: Fastest Token Delivery Service FLASH SALE"
+            - link "Learn More →" [ref=f871e18] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/help/en/edge-security-acceleration/esa/user-guide/accelerate-coding-plan-or-model-studio-api#promotional-offers-intl
+          - heading "Foundation for AI Creation" [level=1] [ref=f871e19]
+          - paragraph [ref=f871e20]: Accelerate deployment and scaling of Qwen, Wan, and more leading models on one secure Alibaba Cloud platform
+          - link "Claim 1M Free Tokens per Model" [ref=f871e22] [cursor=pointer]:
+            - /url: https://modelstudio.console.alibabacloud.com
+        - main [ref=f871e23]:
+          - generic [ref=f871e24]:
+            - heading "Explore Industry-Leading Foundational Models" [level=2] [ref=f871e25]
+            - generic [ref=f871e26]:
+              - link "Flagship" [ref=f871e27] [cursor=pointer]:
+                - /url: "#"
+              - link "Cost-optimized" [ref=f871e28] [cursor=pointer]:
+                - /url: "#"
+              - link "Visual" [ref=f871e29] [cursor=pointer]:
+                - /url: "#"
+              - link "Wan" [ref=f871e30] [cursor=pointer]:
+                - /url: "#"
+              - link "Audio" [ref=f871e31] [cursor=pointer]:
+                - /url: "#"
+              - link "Multi-modal & Embeddings" [ref=f871e32] [cursor=pointer]:
+                - /url: "#"
+              - link "ThirdParty" [ref=f871e33] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=f871e34]:
+              - generic [ref=f871e36]:
+                - generic [ref=f871e37]:
+                  - generic [ref=f871e38]: Qwen3.6-Plus
+                  - generic [ref=f871e39]: Native multimodal, 1M context, agentic coding
+                  - generic [ref=f871e40]:
+                    - generic [ref=f871e41]: Qwen3.6
+                    - generic [ref=f871e43]: Text Generation
+                    - generic [ref=f871e44]: Visual
+                - generic [ref=f871e45]:
+                  - generic [ref=f871e46]:
+                    - generic [ref=f871e47]:
+                      - generic [ref=f871e48]: Input
+                      - generic [ref=f871e49]: $0.5-$2
+                      - generic [ref=f871e50]: per 1M tokens
+                    - generic [ref=f871e51]:
+                      - generic [ref=f871e52]: Output
+                      - generic [ref=f871e53]: $3-$6
+                      - generic [ref=f871e54]: per 1M tokens
+                  - generic [ref=f871e55]: "Launch time: 2026-04-02"
+              - generic [ref=f871e57]:
+                - generic [ref=f871e58]:
+                  - generic [ref=f871e59]: Qwen3-Max
+                  - generic [ref=f871e60]: Frontier reasoning, 1T+ params, agentic workflow mastery
+                  - generic [ref=f871e61]:
+                    - generic [ref=f871e62]: Qwen3
+                    - generic [ref=f871e64]: Text Generation
+                - generic [ref=f871e65]:
+                  - generic [ref=f871e66]:
+                    - generic [ref=f871e67]:
+                      - generic [ref=f871e68]: Input
+                      - generic [ref=f871e69]: $1.2
+                      - generic [ref=f871e70]: per 1M tokens
+                    - generic [ref=f871e71]:
+                      - generic [ref=f871e72]: Output
+                      - generic [ref=f871e73]: $6
+                      - generic [ref=f871e74]: per 1M tokens
+                  - generic [ref=f871e75]: "Launch time: 2026-01-23"
+              - generic [ref=f871e77]:
+                - generic [ref=f871e78]:
+                  - generic [ref=f871e79]: Qwen3-Coder-Next
+                  - generic [ref=f871e80]: Multi-turn tool interactions, future-ready development support
+                  - generic [ref=f871e81]:
+                    - generic [ref=f871e82]: Qwen3
+                    - generic [ref=f871e84]: Agentic Coding
+                - generic [ref=f871e85]:
+                  - generic [ref=f871e86]:
+                    - generic [ref=f871e87]:
+                      - generic [ref=f871e88]: Input
+                      - generic [ref=f871e89]: $0.3
+                      - generic [ref=f871e90]: per 1M tokens
+                    - generic [ref=f871e91]:
+                      - generic [ref=f871e92]: Output
+                      - generic [ref=f871e93]: $1.5
+                      - generic [ref=f871e94]: per 1M tokens
+                  - generic [ref=f871e95]: "Launch time: 2026-02-20"
+              - generic [ref=f871e97]:
+                - generic [ref=f871e98]:
+                  - generic [ref=f871e99]: Qwen-Plus
+                  - generic [ref=f871e100]: Balanced intelligence, efficient inference, production-ready performance
+                  - generic [ref=f871e102]: Qwen3
+                - generic [ref=f871e104]:
+                  - generic [ref=f871e105]:
+                    - generic [ref=f871e106]:
+                      - generic [ref=f871e107]: Input
+                      - generic [ref=f871e108]: $0.4
+                      - generic [ref=f871e109]: per 1M tokens
+                    - generic [ref=f871e110]:
+                      - generic [ref=f871e111]: Output
+                      - generic [ref=f871e112]: $1.2
+                      - generic [ref=f871e113]: per 1M tokens
+                  - generic [ref=f871e114]: "Launch time: 2025-12-01"
+            - link "More models" [ref=f871e115] [cursor=pointer]:
+              - /url: https://modelstudio.console.alibabacloud.com
+          - generic [ref=f871e116]:
+            - heading "Why Model Studio?" [level=3] [ref=f871e117]
+            - generic [ref=f871e118]:
+              - list [ref=f871e119]:
+                - listitem [ref=f871e120] [cursor=pointer]:
+                  - img "Diverse Model Ecosystem" [ref=f871e121]
+                  - generic [ref=f871e122]: Diverse Model Ecosystem
+                  - generic [ref=f871e123]: Easily experience and quickly access Alibaba Cloud's latest foundational models (FM), including Qwen-Max, Qwen-Plus, Qwen-Turbo, Qwen-VL, and the Wan series.
+                - listitem [ref=f871e124] [cursor=pointer]:
+                  - generic [ref=f871e125]: Efficient Full-Chain Development
+                - listitem [ref=f871e126] [cursor=pointer]:
+                  - generic [ref=f871e127]: Enterprise-Grade Security
+              - img "Diverse Model Ecosystem" [ref=f871e129]
+          - generic [ref=f871e130]:
+            - heading "Latest Updates" [level=3] [ref=f871e131]
+            - list [ref=f871e132]:
+              - listitem [ref=f871e133] [cursor=pointer]:
+                - generic [ref=f871e134]:
+                  - generic [ref=f871e135]: 2026-04-03
+                  - img "Wan2.7 Video" [ref=f871e137]
+                  - generic [ref=f871e138]: New Model Launched
+                  - generic [ref=f871e139]: /Wan2.7 Video
+                - paragraph [ref=f871e140]:
+                  - text: Wan2.7-I2V, Wan2.7-T2V, Wan2.7-R2V and Wan2.7-Videoedit, performance fully reimagined. Delivering nuanced and organic emotional depth in narrative arcs and visceral, bone-crunching impact in action sequences. Enhanced by rhythmic cinematic cuts for unparalleled storytelling power. Supports both localized and global editing with prompt. Seamlessly replace elements using image references and replicate complex dynamic processes, including motion, special effects, and camera movements.
+                  - link "Try Now" [ref=f871e141]:
+                    - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a3c0i.7911826.nav-v2-dropdown-menu-0.d_main_2_1_0.62da31f7DO8eRB&tab=dashboard&scm=20140722.M_6668._.V_1#/efm/model_experience_center/vision/videoGenerate
+              - listitem [ref=f871e142] [cursor=pointer]:
+                - generic [ref=f871e143]:
+                  - generic [ref=f871e144]: 2026-04-02
+                  - generic [ref=f871e147]: New Model Launched
+                  - generic [ref=f871e148]: /Qwen3.6-Plus
+                - paragraph [ref=f871e149]
+              - listitem [ref=f871e150] [cursor=pointer]:
+                - generic [ref=f871e151]:
+                  - generic [ref=f871e152]: 2026-04-01
+                  - generic [ref=f871e155]: New Model Launched
+                  - generic [ref=f871e156]: /Wan2.7 Image & Wan2.7 Image Pro
+                - paragraph [ref=f871e157]
+              - listitem [ref=f871e158] [cursor=pointer]:
+                - generic [ref=f871e159]:
+                  - generic [ref=f871e160]: 2026-03-20
+                  - generic [ref=f871e163]: New Region
+                  - generic [ref=f871e164]: /Model Studio now available in Frankfurt.
+                - paragraph [ref=f871e165]
+              - listitem [ref=f871e166] [cursor=pointer]:
+                - generic [ref=f871e167]:
+                  - generic [ref=f871e168]: 2026-03-17
+                  - generic [ref=f871e171]: New Region
+                  - generic [ref=f871e172]: /Model Studio now available in Hong Kong.
+                - paragraph [ref=f871e173]
+              - listitem [ref=f871e174] [cursor=pointer]:
+                - generic [ref=f871e175]:
+                  - generic [ref=f871e176]: 2026-03-03
+                  - generic [ref=f871e179]: New Model Launched
+                  - generic [ref=f871e180]: /Qwen-Image-2.0-Pro
+                - paragraph [ref=f871e181]
+              - listitem [ref=f871e182] [cursor=pointer]:
+                - generic [ref=f871e183]:
+                  - generic [ref=f871e184]: 2026-02-10
+                  - generic [ref=f871e187]: New Model Launched
+                  - generic [ref=f871e188]: /CosyVoice-v3-plus
+                - paragraph [ref=f871e189]
+              - listitem [ref=f871e190] [cursor=pointer]:
+                - generic [ref=f871e191]:
+                  - generic [ref=f871e192]: 2026-01-09
+                  - generic [ref=f871e195]: Compliance Report
+                  - generic [ref=f871e196]: /Model Studio Achieves SOC 2 Compliance
+                - paragraph [ref=f871e197]
+          - generic [ref=f871e198]:
+            - heading "Get Started in Minutes" [level=3] [ref=f871e199]
+            - paragraph [ref=f871e200]: Quickly integrate generative AI into your applications using our straightforward REST API or dedicated SDKs.
+            - link "Generate your API key" [ref=f871e201] [cursor=pointer]:
+              - /url: https://modelstudio.console.alibabacloud.com/?tab=api#/api
+            - generic [ref=f871e202]:
+              - list [ref=f871e203]:
+                - listitem [ref=f871e204] [cursor=pointer]:
+                  - img "Get a API Key" [ref=f871e205]
+                  - generic [ref=f871e206]: Get a API Key
+                - listitem [ref=f871e207] [cursor=pointer]:
+                  - img "Set Up Environment" [ref=f871e208]
+                  - generic [ref=f871e209]: Set Up Environment
+                - listitem [ref=f871e210] [cursor=pointer]:
+                  - img "Send Your First Request" [ref=f871e211]
+                  - generic [ref=f871e212]: Send Your First Request
+              - img "Get a API Key" [ref=f871e214]
+          - generic [ref=f871e215]:
+            - heading "Empowering Industries" [level=3] [ref=f871e216]
+            - generic [ref=f871e217]:
+              - generic [ref=f871e218]:
+                - img "quote" [ref=f871e219]
+                - generic [ref=f871e220]: Through its partnership with Alibaba Cloud, AstraZeneca has introduced a groundbreaking adverse event summary system in the pharmaceutical industry, utilizing Qwen LLM and Dedicated Model Studio to significantly enhance the accuracy and efficiency of reporting.
+                - link "Xin Zhong":
+                  - /url: https://www.alibabacloud.com/en/customers/astrazeneca
+                  - img "Xin Zhong" [ref=f871e221] [cursor=pointer]
+              - generic [ref=f871e222]:
+                - img "quote" [ref=f871e223]
+                - generic [ref=f871e224]: Drunk Elephant partnered with Alibaba Cloud because it had the cosmetics industry know-how, was familiar with the client’s IT infrastructure, and, as the largest cloud computing company in China and Asia Pacific, offered digital expertise and a huge advantage in the Eastern market.
+                - link "Tina Chen":
+                  - /url: https://www.alibabacloud.com/en/customers/shiseido_drunk_elephant
+                  - img "Tina Chen" [ref=f871e225] [cursor=pointer]
+              - generic [ref=f871e226]:
+                - img "quote" [ref=f871e227]
+                - generic [ref=f871e228]: eSignGlobal partnered with Alibaba Cloud to leverage its AI capabilities, launching eSignGlobal 2.0, a sophisticated Contract Lifecycle Management system featuring enhanced multilingual support, automated risk detection, and efficient contract processing.
+                - link "Tina Chen":
+                  - /url: https://www.alibabacloud.com/en/customers/esignglobal
+                  - img "Tina Chen" [ref=f871e229] [cursor=pointer]
+          - generic [ref=f871e230]:
+            - img "try" [ref=f871e231]
+            - heading "Start Building with Model Studio Today" [level=2] [ref=f871e232]
+            - paragraph [ref=f871e233]: Leverage our leading foundational models and secure platform to bring your ideas to life.
+            - link "Start Your Free Trial Now" [ref=f871e234] [cursor=pointer]:
+              - /url: https://modelstudio.console.alibabacloud.com
+        - contentinfo [ref=f871e235]:
+          - generic [ref=f871e236]:
+            - link "Qwen" [ref=f871e237] [cursor=pointer]:
+              - /url: https://github.com/QwenLM
+            - link "Wan" [ref=f871e238] [cursor=pointer]:
+              - /url: https://github.com/Wan-Video/
+            - link "ModelScope" [ref=f871e239] [cursor=pointer]:
+              - /url: https://modelscope.cn/home
+            - link "Alibaba Cloud" [ref=f871e240] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/en
+            - link "Community" [ref=f871e241] [cursor=pointer]:
+              - /url: https://discord.gg/NPmFyjbMUc
+          - paragraph [ref=f871e242]: Copyright © 2026 Alibaba. All rights reserved.
+      - alert [ref=f871e243]
+  - generic [ref=e79]:
+    - generic [ref=e80]:
+      - generic [ref=e81]:
+        - paragraph [ref=e82]: Why Alibaba Cloud
+        - link "About Alibaba Cloud" [ref=e84] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/about
+        - link "Asia Accelerator" [ref=e86] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/china-gateway
+        - link "Our Global Network" [ref=e88] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/global-locations
+        - link "Global Offices" [ref=e90] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/global-offices
+        - link "Trust Center" [ref=e92] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/trust-center
+        - link "Case Studies" [ref=e94] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/customers
+        - link "Analyst Reports" [ref=e96] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/about/analyst-reports
+      - generic [ref=e97]:
+        - paragraph [ref=e98]: Products & Pricings
+        - link "Pricing Calculator" [ref=e100] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/pricing-calculator
+        - link "ECS" [ref=e102] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/product/ecs
+        - link "SAS" [ref=e104] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/product/swas
+        - link "Model Studio" [ref=e106] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/product/modelstudio
+        - link "Database" [ref=e108] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/product/databases
+        - link "Security" [ref=e110] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/product/security
+        - link "SMS" [ref=e112] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/product/short-message-service
+      - generic [ref=e113]:
+        - paragraph [ref=e114]: Solutions
+        - link "Financial Services" [ref=e116] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/solutions/financial/index
+        - link "Retail Services" [ref=e118] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/solutions/retail
+        - link "Media Services" [ref=e120] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/solutions/multimedia
+        - link "Gaming Services" [ref=e122] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/solutions/gaming
+        - link "ISV Solutions" [ref=e124] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/solutions/isv
+      - generic [ref=e125]:
+        - paragraph [ref=e126]: Engage
+        - link "Developer Community" [ref=e128] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/developer
+        - link "Partner Network" [ref=e130] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/partner/partner_network
+        - link "Startups" [ref=e132] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/startup
+        - link "Marketplace" [ref=e134] [cursor=pointer]:
+          - /url: https://marketplace.alibabacloud.com
+        - link "Join Alibaba Cloud" [ref=e136] [cursor=pointer]:
+          - /url: https://careers.aliyun.com/home
+      - generic [ref=e137]:
+        - paragraph [ref=e138]: Resources & Support
+        - link "Developer Learning Hub" [ref=e140] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/developer
+        - link "Documentation Center" [ref=e142] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/help
+        - link "Training & Certification" [ref=e144] [cursor=pointer]:
+          - /url: https://edu.alibabacloud.com
+        - link "Service Notices" [ref=e146] [cursor=pointer]:
+          - /url: https://www.alibabacloud.com/notice/intl/list
+        - link "Submit a Ticket" [ref=e148] [cursor=pointer]:
+          - /url: https://smartservice.console.alibabacloud.com/service/create-ticket-intl?activeTab=1
+        - link "Security Report" [ref=e150] [cursor=pointer]:
+          - /url: https://report.alibabacloud.com/#/reportCenter/home
+        - link "Qwen Cloud" [ref=e152] [cursor=pointer]:
+          - /url: https://www.qwencloud.com/
+    - generic [ref=e153]:
+      - generic [ref=e154]:
+        - list [ref=e156]:
+          - listitem [ref=e157]:
+            - link "Facebook" [ref=e158] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/security-notice-kfxbqr?forward=https://www.facebook.com/alibabacloud/
+              - generic [ref=e159]: 
+          - listitem [ref=e160]:
+            - link "Linkedin" [ref=e161] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/security-notice-kfxbqr?forward=https://www.linkedin.com/company/alibabacloudtech
+              - generic [ref=e162]: 
+          - listitem [ref=e163]:
+            - link "Twitter" [ref=e164] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/security-notice-kfxbqr?forward=https://www.twitter.com/alibaba_cloud
+              - generic [ref=e165]: 
+          - listitem [ref=e166]:
+            - link "YouTube" [ref=e167] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/security-notice-kfxbqr?forward=https://www.youtube.com/channel/UCipPA-ZHX6UYGH_Iyti1-Jw
+              - generic [ref=e168]: 
+          - listitem [ref=e169]:
+            - link "TikTok" [ref=e170] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/security-notice-kfxbqr?forward=https://www.tiktok.com/@alibaba__cloud?lang=zh-Hant-TW
+              - generic [ref=e171]: 
+          - listitem [ref=e172]:
+            - link "contact.us@alibabacloud.com" [ref=e173] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/contact-sales
+              - generic [ref=e174]: 
+          - listitem [ref=e175]:
+            - link "Call Us Now" [ref=e176] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/contact-sales
+              - generic [ref=e177]: 
+          - listitem [ref=e178]:
+            - link "Discord" [ref=e179] [cursor=pointer]:
+              - /url: https://www.alibabacloud.com/security-notice-kfxbqr?forward=https://discord.com/invite/xEuwmj6qaA
+              - generic [ref=e180]: 
+        - generic [ref=e182]:
+          - complementary "Open Cookie Preferences Modal" [ref=e183]:
+            - button "Cookie Preferences, opens a dedicated popup modal window" [ref=e184] [cursor=pointer]:
+              - img "Cookie Preferences" [ref=e185]
+          - generic [ref=e186]:
+            - link "TRUSTe" [ref=e188] [cursor=pointer]:
+              - /url: //privacy.truste.com/privacy-seal/validation?rid=e83a96cf-eaa2-4c82-8d85-883196fcb42c
+              - img "TRUSTe" [ref=e189]
+            - link "TRUSTe" [ref=e191] [cursor=pointer]:
+              - /url: //privacy.truste.com/privacy-seal/validation?rid=51be162a-c152-402b-84d2-d0a724de679a
+              - img "TRUSTe" [ref=e192]
+      - generic [ref=e193]:
+        - generic [ref=e194]:
+          - generic [ref=e195]: © 2009-2026 Copyright by Alibaba Cloud All rights reserved
+          - generic [ref=e196]:
+            - link:
+              - /url: ""
+        - generic [ref=e197]:
+          - link "Careers" [ref=e198] [cursor=pointer]:
+            - /url: https://careers.aliyun.com/en/home
+          - link "About Us" [ref=e199] [cursor=pointer]:
+            - /url: https://www.alibabacloud.com/about
+          - link "Privacy Policy" [ref=e200] [cursor=pointer]:
+            - /url: https://www.alibabacloud.com/help/faq-detail/42425.htm
+          - link "Legal" [ref=e201] [cursor=pointer]:
+            - /url: https://www.alibabacloud.com/help/en/legal
+          - link "Integrity Compliance Reporting Channel" [ref=e202] [cursor=pointer]:
+            - /url: https://aliyun.jubao.alibaba.com
+          - link "Service Notices" [ref=e203] [cursor=pointer]:
+            - /url: https://www.alibabacloud.com/notice/intl/list
+          - link "Links" [ref=e204] [cursor=pointer]:
+            - /url: https://www.alibabacloud.com/links.html
+  - generic:
+    - link "alicare" [ref=e207] [cursor=pointer]:
+      - /url: javascript:;
+      - img "alicare" [ref=e208]
+    - link [ref=e209] [cursor=pointer]:
+      - /url: https://www.alibabacloud.com/ai-assistant?displayMode=widget
+      - img [ref=e212]
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - heading "Models" [level=3]
+            - paragraph: Empowering AI innovation for both enterprises and developers with Alibaba Cloud’s best-in-class Qwen models, AI-native apps, and AI solutions.
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - link "Alibaba Cloud Model Studio Enterprise-grade large model service and application development platform.":
+                      - /url: https://modelstudio.alibabacloud.com/
+                      - heading "Alibaba Cloud Model Studio" [level=4]:
+                        - text: Alibaba Cloud Model Studio
+                        - generic: 
+                      - paragraph: Enterprise-grade large model service and application development platform.
+                  - generic:
+                    - link "Try Visual Model Supports image understanding, image generation, and video generation.":
+                      - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1?tab=dashboard#/efm/model_experience_center/vision
+                      - heading "Try Visual Model" [level=4]:
+                        - text: Try Visual Model
+                        - generic: 
+                      - paragraph: Supports image understanding, image generation, and video generation.
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading "Qwen Top-tier performance with lower price " [level=4]:
+                        - link "Qwen Top-tier performance with lower price ":
+                          - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a3c0i.7911826.2422939000.2.b19631f7sCXRrD&tab=doc#/doc/?type=model&url=2840914
+                          - text: Qwen
+                          - generic: Top-tier performance with lower price
+                          - generic: 
+                      - generic:
+                        - generic:
+                          - link "Qwen3.6 - Plus New Towards Real World Agents — Native Multimodal, 1M Context, Agentic Coding":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?tab=doc#/doc/?type=model&url=2840914_2&modelId=qwen3.6-plus
+                            - heading "Qwen3.6 - Plus New" [level=5]:
+                              - generic "Qwen3.6 - Plus"
+                              - emphasis: New
+                            - paragraph: Towards Real World Agents — Native Multimodal, 1M Context, Agentic Coding
+                          - link "Qwen3 - Max Achieves state-of-the-art (SOTA) performance in the domain, enabling intelligent agents in more complex scenarios.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a2ty_o05.31384571.0.0.5e7d9f6b1DXG5x&tab=doc#/doc/?type=model&url=2840914_2&modelId=qwen3-max
+                            - heading "Qwen3 - Max" [level=5]:
+                              - generic "Qwen3 - Max"
+                            - paragraph: Achieves state-of-the-art (SOTA) performance in the domain, enabling intelligent agents in more complex scenarios.
+                          - link "Qwen - Plus A balanced AI model delivering robust reasoning capabilities with cost-effective performance for versatile enterprise applications.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a2ty_o05.31384571.0.0.5e7d9f6b1DXG5x&tab=doc#/doc/?type=model&url=2840914_2&modelId=qwen-plus
+                            - heading "Qwen - Plus" [level=5]:
+                              - generic "Qwen - Plus"
+                            - paragraph: A balanced AI model delivering robust reasoning capabilities with cost-effective performance for versatile enterprise applications.
+                        - generic:
+                          - link "Wan2.6 - Image-to-video Supports 15-second long-form video generation with intelligent scene segmentation and narrative structuring.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?tab=dashboard#/efm/model_experience_center/vision?currentTab=videoGenerate&modelId=wan2.6-i2v
+                            - heading "Wan2.6 - Image-to-video" [level=5]:
+                              - generic "Wan2.6 - Image-to-video"
+                            - paragraph: Supports 15-second long-form video generation with intelligent scene segmentation and narrative structuring.
+                          - link "Fun-ASR - Speech Recognition Supports seamless Chinese-English switching with enhanced noise robustness.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a2ty_o05.31384571.0.0.5e7d9f6b1DXG5x&tab=doc#/doc/?type=model&url=2840914_2&modelId=fun-asr
+                            - heading "Fun-ASR - Speech Recognition" [level=5]:
+                              - generic "Fun-ASR - Speech Recognition"
+                            - paragraph: Supports seamless Chinese-English switching with enhanced noise robustness.
+                          - link "Qwen3 - VL - Plus Comprehensively enhanced with visual coding, spatial awareness, and multimodal reasoning.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a2ty_o05.31384571.0.0.5e7d9f6b1DXG5x&tab=doc#/doc/?type=model&url=2840914_2&modelId=qwen-vl-plus
+                            - heading "Qwen3 - VL - Plus" [level=5]:
+                              - generic "Qwen3 - VL - Plus"
+                            - paragraph: Comprehensively enhanced with visual coding, spatial awareness, and multimodal reasoning.
+                        - generic:
+                          - link "Wan2.6 - Text-to-video Maintains consistency in subject, scene, and atmosphere, with higher-quality voice synthesis.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a2ty_o05.31384571.0.0.5e7d9f6b1DXG5x&tab=doc#/doc/?type=model&url=2840914_2&modelId=group-wan-text-to-video
+                            - heading "Wan2.6 - Text-to-video" [level=5]:
+                              - generic "Wan2.6 - Text-to-video"
+                            - paragraph: Maintains consistency in subject, scene, and atmosphere, with higher-quality voice synthesis.
+                          - link "Qwen3 - Omni - Flash Supports text interaction in 119 languages and voice interaction in 20 languages.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a2ty_o05.31384571.0.0.5e7d9f6b1DXG5x&tab=doc#/doc/?type=model&url=2840914_2&modelId=group-qwen3-omni-flash
+                            - heading "Qwen3 - Omni - Flash" [level=5]:
+                              - generic "Qwen3 - Omni - Flash"
+                            - paragraph: Supports text interaction in 119 languages and voice interaction in 20 languages.
+                          - link "Qwen3 - Coder - Plus Code generation model based on Qwen3, powered by advanced Coding Agent capabilities.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a2ty_o05.31384571.0.0.5e7d9f6b1DXG5x&tab=doc#/doc/?type=model&url=2840914_2&modelId=group-qwen3-coder-plus
+                            - heading "Qwen3 - Coder - Plus" [level=5]:
+                              - generic "Qwen3 - Coder - Plus"
+                            - paragraph: Code generation model based on Qwen3, powered by advanced Coding Agent capabilities.
+                        - generic:
+                          - link "Wan2.6 - Text-to-image More natural and lifelike portraits, powered by a versatile cultural IP theme library.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a2ty_o05.31384571.0.0.5e7d9f6b1DXG5x&tab=doc#/doc/?type=model&url=2840914_2&modelId=group-wan-text-to-image
+                            - heading "Wan2.6 - Text-to-image" [level=5]:
+                              - generic "Wan2.6 - Text-to-image"
+                            - paragraph: More natural and lifelike portraits, powered by a versatile cultural IP theme library.
+                          - link "Qwen3 - Image The first image generation model in the Qwen series, featuring exceptional text rendering capabilities.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a2ty_o05.31384571.0.0.5e7d9f6b1DXG5x&tab=doc#/doc/?type=model&url=2840914_2&modelId=group-qwen-image-max
+                            - heading "Qwen3 - Image" [level=5]:
+                              - generic "Qwen3 - Image"
+                            - paragraph: The first image generation model in the Qwen series, featuring exceptional text rendering capabilities.
+                          - link "Qwen - Flash Qwen3 Flash models seamlessly integrate reasoning and non-reasoning modes for optimal performance.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a2ty_o05.31384571.0.0.5e7d9f6b1DXG5x&tab=doc#/doc/?type=model&url=2840914_2&modelId=group-qwen-flash
+                            - heading "Qwen - Flash" [level=5]:
+                              - generic "Qwen - Flash"
+                            - paragraph: Qwen3 Flash models seamlessly integrate reasoning and non-reasoning modes for optimal performance.
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading "GenAI Application" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Qoder Intelligent coding assistant, available for enterprise-dedicated deployment.":
+                            - /url: https://qoder.com/
+                            - heading "Qoder" [level=5]:
+                              - generic "Qoder"
+                            - paragraph: Intelligent coding assistant, available for enterprise-dedicated deployment.
+                          - link "AI Coding Assistant Lingma AI-powered coding assistant that boosts developer productivity with intelligent code completion, AI chat, multi-file editing, and task automation.":
+                            - /url: https://www.alibabacloud.com/product/lingma
+                            - heading "AI Coding Assistant Lingma" [level=5]:
+                              - generic "AI Coding Assistant Lingma"
+                            - paragraph: AI-powered coding assistant that boosts developer productivity with intelligent code completion, AI chat, multi-file editing, and task automation.
+                    - generic:
+                      - heading "AI Service" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Model Experience Experience full-scale, multimodal model capabilities online.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a2ty_o05.31384571.0.0.5e7d9f6bRzaMcX&tab=dashboard#/efm/model_experience_center/text
+                            - heading "Model Experience" [level=5]:
+                              - generic "Model Experience"
+                            - paragraph: Experience full-scale, multimodal model capabilities online.
+                          - link "Platform for AI An AI-native algorithm engineering platform for end-to-end modeling, training, and inference service deployment.":
+                            - /url: https://www.alibabacloud.com/product/machine-learning
+                            - heading "Platform for AI" [level=5]:
+                              - generic "Platform for AI"
+                            - paragraph: An AI-native algorithm engineering platform for end-to-end modeling, training, and inference service deployment.
+                          - link "Fine-tune Video Generation Model Customize Wan’s text-to-video capabilities through model fine-tuning to meet your unique requirements.":
+                            - /url: https://modelstudio.console.alibabacloud.com/ap-southeast-1/?spm=a2ty_o05.31384571.0.0.5e7d9f6b3X0zJr&tab=doc#/doc/?type=model&url=2978830
+                            - heading "Fine-tune Video Generation Model" [level=5]:
+                              - generic "Fine-tune Video Generation Model"
+                            - paragraph: Customize Wan’s text-to-video capabilities through model fine-tuning to meet your unique requirements.
+                    - generic:
+                      - heading "AI Use Case" [level=4]
+                      - generic:
+                        - generic:
+                          - link "AI Coding Plan Hot Cost-effective intelligent coding solution with predictable pricing.":
+                            - /url: https://www.alibabacloud.com/campaign/ai-scene-coding
+                            - heading "AI Coding Plan Hot" [level=5]:
+                              - generic "AI Coding Plan"
+                              - emphasis: Hot
+                            - paragraph: Cost-effective intelligent coding solution with predictable pricing.
+                          - link "AI Image Creation All-in-one creative suite for copywriting, image generation, and poster design.":
+                            - /url: https://www.alibabacloud.com/campaign/ai-scene-image
+                            - heading "AI Image Creation" [level=5]:
+                              - generic "AI Image Creation"
+                            - paragraph: All-in-one creative suite for copywriting, image generation, and poster design.
+                        - generic:
+                          - link "AI Video Creation Elevate your professional video production with Wan 2.6.":
+                            - /url: https://www.alibabacloud.com/campaign/ai-scene-video
+                            - heading "AI Video Creation" [level=5]:
+                              - generic "AI Video Creation"
+                            - paragraph: Elevate your professional video production with Wan 2.6.
+        - generic:
+          - generic:
+            - heading "Overview" [level=3]
+            - paragraph: As a global full-stack AI leader, Alibaba Cloud aims to make computing accessible to everyone and help worldwide customers accelerate innovation.
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading "Why Alibaba Cloud" [level=4]
+                      - generic:
+                        - generic:
+                          - link "About Alibaba Cloud AI Powered Cloud Technology":
+                            - /url: https://www.alibabacloud.com/about
+                            - heading "About Alibaba Cloud" [level=5]
+                            - paragraph: AI Powered Cloud Technology
+                          - link "Our Global Network Explore our global presence and deployment regions around the world":
+                            - /url: https://www.alibabacloud.com/global-locations
+                            - heading "Our Global Network" [level=5]
+                            - paragraph: Explore our global presence and deployment regions around the world
+                          - link "Our Global Offices With offices in 4 continents, we're always close to where it matters.":
+                            - /url: https://www.alibabacloud.com/global-offices
+                            - heading "Our Global Offices" [level=5]
+                            - paragraph: With offices in 4 continents, we're always close to where it matters.
+                        - generic:
+                          - link "Asia Accelerator Accelerate Success in Asia with Alibaba Cloud":
+                            - /url: https://www.alibabacloud.com/china-gateway
+                            - heading "Asia Accelerator" [level=5]
+                            - paragraph: Accelerate Success in Asia with Alibaba Cloud
+                          - link "Go Global Benefits of our Global Alliance":
+                            - /url: https://www.alibabacloud.com/go_global/go-global-alliance-with-alibaba-cloud
+                            - heading "Go Global" [level=5]
+                            - paragraph: Benefits of our Global Alliance
+                          - link "Trust Center Empowering enterprises with a secure, compliant, and globally trusted cloud infrastructure":
+                            - /url: https://www.alibabacloud.com/trust-center
+                            - heading "Trust Center" [level=5]
+                            - paragraph: Empowering enterprises with a secure, compliant, and globally trusted cloud infrastructure
+                    - generic:
+                      - heading "Customers and Insights" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Olympic Games Alibaba Cloud Powers Olympic Games with AI-powered cloud technology":
+                            - /url: https://www.alibabacloud.com/olympics
+                            - heading "Olympic Games" [level=5]
+                            - paragraph: Alibaba Cloud Powers Olympic Games with AI-powered cloud technology
+                          - link "Case Studies Learn how customers are scaling their businesses on Alibaba Cloud":
+                            - /url: https://www.alibabacloud.com/customers
+                            - heading "Case Studies" [level=5]
+                            - paragraph: Learn how customers are scaling their businesses on Alibaba Cloud
+                          - link "Analyst Reports Learn what the top industry analyst firms are saying about Alibaba Cloud":
+                            - /url: https://www.alibabacloud.com/about/analyst-reports
+                            - heading "Analyst Reports" [level=5]
+                            - paragraph: Learn what the top industry analyst firms are saying about Alibaba Cloud
+                    - generic:
+                      - heading "What's New" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Events and Webinars Quick access to upcoming and on-demand events":
+                            - /url: https://www.alibabacloud.com/eventswebinars_overview
+                            - heading "Events and Webinars" [level=5]
+                            - paragraph: Quick access to upcoming and on-demand events
+                          - link "Product Updates Stay informed of the latest innovations":
+                            - /url: https://www.alibabacloud.com/news/product
+                            - heading "Product Updates" [level=5]
+                            - paragraph: Stay informed of the latest innovations
+                          - link "Press Room Latest news and media releases":
+                            - /url: https://www.alibabacloud.com/press-room
+                            - heading "Press Room" [level=5]
+                            - paragraph: Latest news and media releases
+        - generic:
+          - generic:
+            - heading "Products" [level=3]
+            - generic:
+              - textbox "Search"
+              - generic: 
+            - generic:
+              - generic:
+                - button "Featured Products"
+                - button "AI & Machine Learning"
+                - link "Computing":
+                  - /url: https://www.alibabacloud.com/product/computing
+                  - text: Computing
+                  - generic: 
+                - button "Container"
+                - link "Storage":
+                  - /url: https://www.alibabacloud.com/product/storage
+                  - text: Storage
+                  - generic: 
+                - button "Networking & CDN"
+                - link "Security":
+                  - /url: https://www.alibabacloud.com/product/security
+                  - text: Security
+                  - generic: 
+                - button "Middleware"
+                - link "Database":
+                  - /url: https://www.alibabacloud.com/product/databases
+                  - text: Database
+                  - generic: 
+                - button "Analytics Computing"
+                - button "Media Services"
+                - button "Enterprise Services & Cloud Communication"
+                - button "Domain Names and Websites"
+                - button "End User Computing"
+                - button "Serverless"
+                - button "Developer Tools"
+                - button "Migration & O&M Management"
+                - button "Apsara Stack"
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - heading "Featured Products" [level=4]
+                  - generic:
+                    - generic:
+                      - link "Alibaba Cloud Model Studio Supercharge your AI journey effortlessly with industry-leading GenAI models":
+                        - /url: https://modelstudio.alibabacloud.com/
+                        - heading "Alibaba Cloud Model Studio" [level=5]
+                        - paragraph: Supercharge your AI journey effortlessly with industry-leading GenAI models
+                      - link "Container Service for Kubernetes (ACK) Run and scale containerized applications on managed Kubernetes infrastructure":
+                        - /url: https://www.alibabacloud.com/product/kubernetes
+                        - heading "Container Service for Kubernetes (ACK)" [level=5]
+                        - paragraph: Run and scale containerized applications on managed Kubernetes infrastructure
+                      - link "Certificate Management Service (Original SSL Certificate) Create a safe and secure connection between your website and users":
+                        - /url: https://www.alibabacloud.com/product/certificates
+                        - heading "Certificate Management Service (Original SSL Certificate)" [level=5]
+                        - paragraph: Create a safe and secure connection between your website and users
+                      - link "Domain Names and Website Get the perfect domain name to suit your every need":
+                        - /url: https://www.alibabacloud.com/domain
+                        - heading "Domain Names and Website" [level=5]
+                        - paragraph: Get the perfect domain name to suit your every need
+                    - generic:
+                      - link "Simple Application Server (SAS) All-in-one services for fast deployment":
+                        - /url: https://www.alibabacloud.com/product/swas
+                        - heading "Simple Application Server (SAS)" [level=5]
+                        - paragraph: All-in-one services for fast deployment
+                      - link "Platform for AI (PAI) Perform end-to-end AI engineering tasks":
+                        - /url: https://www.alibabacloud.com/product/machine-learning
+                        - heading "Platform for AI (PAI)" [level=5]
+                        - paragraph: Perform end-to-end AI engineering tasks
+                      - link "Object Storage Service (OSS) Store large amounts of data in the cloud and access it anywhere, anytime":
+                        - /url: https://www.alibabacloud.com/product/object-storage-service
+                        - heading "Object Storage Service (OSS)" [level=5]
+                        - paragraph: Store large amounts of data in the cloud and access it anywhere, anytime
+                    - generic:
+                      - link "Elastic Compute Service (ECS) Host websites anywhere and scale enterprise workloads":
+                        - /url: https://www.alibabacloud.com/product/ecs
+                        - heading "Elastic Compute Service (ECS)" [level=5]
+                        - paragraph: Host websites anywhere and scale enterprise workloads
+                      - link "Elastic IP Address (EIP) Manage your public IPs independently to improve internet network quality":
+                        - /url: https://www.alibabacloud.com/product/eip
+                        - heading "Elastic IP Address (EIP)" [level=5]
+                        - paragraph: Manage your public IPs independently to improve internet network quality
+                      - link "ApsaraDB RDS Store and manage your business data, with automated monitoring and backups":
+                        - /url: https://www.alibabacloud.com/product/apsaradb-rds
+                        - heading "ApsaraDB RDS" [level=5]
+                        - paragraph: Store and manage your business data, with automated monitoring and backups
+              - generic:
+                - generic:
+                  - heading "Related Programs" [level=4]
+                  - 'link "Free Trial: 80+ Products, 1M Tokens per Model Free Trial: 80+ Products, 1M Tokens per Model"':
+                    - /url: https://www.alibabacloud.com/free
+                    - 'img "Free Trial: 80+ Products, 1M Tokens per Model"'
+                    - text: "Free Trial: 80+ Products, 1M Tokens per Model"
+                  - link "Stay Updated on Product Innovations Stay Updated on Product Innovations":
+                    - /url: https://www.alibabacloud.com/news/product
+                    - img "Stay Updated on Product Innovations"
+                    - text: Stay Updated on Product Innovations
+                  - link "Unlock the Latest Alibaba Cloud Deals Unlock the Latest Alibaba Cloud Deals":
+                    - /url: https://www.alibabacloud.com/campaign/benefits
+                    - img "Unlock the Latest Alibaba Cloud Deals"
+                    - text: Unlock the Latest Alibaba Cloud Deals
+                  - 'link "Scale Smart: Lite to Enterprise Cloud Servers Scale Smart: Lite to Enterprise Cloud Servers"':
+                    - /url: https://www.alibabacloud.com/campaign/cloud-server
+                    - 'img "Scale Smart: Lite to Enterprise Cloud Servers"'
+                    - text: "Scale Smart: Lite to Enterprise Cloud Servers"
+                  - 'link "Alibaba Cloud Academy: Tech & Biz Training Alibaba Cloud Academy: Tech & Biz Training"':
+                    - /url: https://edu.alibabacloud.com/
+                    - 'img "Alibaba Cloud Academy: Tech & Biz Training"'
+                    - text: "Alibaba Cloud Academy: Tech & Biz Training"
+        - generic:
+          - generic:
+            - heading "Solutions" [level=3]
+            - generic:
+              - textbox "Search"
+              - generic: 
+            - generic:
+              - generic:
+                - link "Solutions by Industry":
+                  - /url: https://www.alibabacloud.com/solutions?#Industry
+                  - text: Solutions by Industry
+                  - generic: 
+                - link "Technical Solutions":
+                  - /url: https://www.alibabacloud.com/solution/tech-solution/
+                  - text: Technical Solutions
+                  - generic: 
+                - button "AI"
+                - button "Websites"
+                - button "Networking"
+                - button "Security and Compliance"
+                - button "Data and Analytics"
+                - button "Enterprise Service and Application"
+                - button "Cloud Migration"
+                - button "Cloud Native"
+                - button "Hybrid Cloud"
+                - button "SMB solutions"
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - link "Financial Services Innovate faster with Alibaba Cloud":
+                        - /url: https://www.alibabacloud.com/solutions/financial/index
+                        - heading "Financial Services" [level=5]
+                        - paragraph: Innovate faster with Alibaba Cloud
+                      - link "Games Grow your game rapidly with high global availability":
+                        - /url: https://www.alibabacloud.com/solutions/gaming
+                        - heading "Games" [level=5]
+                        - paragraph: Grow your game rapidly with high global availability
+                    - generic:
+                      - link "New Retail Alibaba Cloud enables digital retail transformation to fuel growth and realize an omnichannel customer experience throughout the consumer journey.":
+                        - /url: https://www.alibabacloud.com/solutions/retail
+                        - heading "New Retail" [level=5]
+                        - paragraph: Alibaba Cloud enables digital retail transformation to fuel growth and realize an omnichannel customer experience throughout the consumer journey.
+                      - link "Media and Entertainment Ready your content for today's media market with a digitalized media journey":
+                        - /url: https://www.alibabacloud.com/solutions/multimedia
+                        - heading "Media and Entertainment" [level=5]
+                        - paragraph: Ready your content for today's media market with a digitalized media journey
+                    - generic:
+                      - link "Supply Chain Power your supply chain with intelligent, efficient, and reliable solutions":
+                        - /url: https://www.alibabacloud.com/solutions/supply-chain
+                        - heading "Supply Chain" [level=5]
+                        - paragraph: Power your supply chain with intelligent, efficient, and reliable solutions
+                      - link "Sports Digitizing the sports industry with intelligent tech":
+                        - /url: https://www.alibabacloud.com/solutions/sports
+                        - heading "Sports" [level=5]
+                        - paragraph: Digitizing the sports industry with intelligent tech
+                    - generic:
+                      - link "Sustainability Achieve a sustainable future with low-carbon and energy-efficient technologies":
+                        - /url: https://www.alibabacloud.com/solutions/sustainability
+                        - heading "Sustainability" [level=5]
+                        - paragraph: Achieve a sustainable future with low-carbon and energy-efficient technologies
+        - generic:
+          - generic:
+            - heading "Pricing" [level=3]
+            - paragraph: Flexible options like pay-as-you-go and clear billing rules to meet diverse business needs.
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading "Overview & Tools" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Pricing Calculator Get an instant pricing estimate based on your usage and needs":
+                            - /url: https://www.alibabacloud.com/pricing-calculator
+                            - heading "Pricing Calculator" [level=5]
+                            - paragraph: Get an instant pricing estimate based on your usage and needs
+                          - link "Free Trial Try our 80+ cloud products for free.":
+                            - /url: https://www.alibabacloud.com/free
+                            - heading "Free Trial" [level=5]
+                            - paragraph: Try our 80+ cloud products for free.
+                        - generic:
+                          - link "Pricing Options Get the most out of Alibaba Cloud with flexible pricing":
+                            - /url: https://www.alibabacloud.com/pricing
+                            - heading "Pricing Options" [level=5]
+                            - paragraph: Get the most out of Alibaba Cloud with flexible pricing
+                    - generic:
+                      - heading "Optimize your cost" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Migrate & Save Superior Performance At Lower Pricing. Save up to 50%.":
+                            - /url: https://www.alibabacloud.com/campaign/migration-and-save
+                            - heading "Migrate & Save" [level=5]
+                            - paragraph: Superior Performance At Lower Pricing. Save up to 50%.
+                          - link "Promotion Center Unlock the latest Alibaba Cloud offers & promos":
+                            - /url: https://www.alibabacloud.com/campaign/benefits
+                            - heading "Promotion Center" [level=5]
+                            - paragraph: Unlock the latest Alibaba Cloud offers & promos
+        - generic:
+          - generic:
+            - heading "Resources" [level=3]
+            - paragraph: Official documentation, extensive tools, training resources, and a community to grow and innovate in the cloud.
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading "Technical Resources" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Documentation Product guides and FAQs":
+                            - /url: https://www.alibabacloud.com/help
+                            - heading "Documentation" [level=5]
+                            - paragraph: Product guides and FAQs
+                          - link "Architecture Center Design reliable, secure, and efficient cloud architecture.":
+                            - /url: https://www.alibabacloud.com/architecture/index
+                            - heading "Architecture Center" [level=5]
+                            - paragraph: Design reliable, secure, and efficient cloud architecture.
+                          - link "Intelligent Solution Explorer Find the right solution for you, powered by AI":
+                            - /url: https://www.alibabacloud.com/zh/iat/Intelligent_Solution_Explorer?_p_lc=1
+                            - heading "Intelligent Solution Explorer" [level=5]
+                            - paragraph: Find the right solution for you, powered by AI
+                        - generic:
+                          - link "Blog Latest cloud insights and developer trends":
+                            - /url: https://www.alibabacloud.com/blog
+                            - heading "Blog" [level=5]
+                            - paragraph: Latest cloud insights and developer trends
+                          - link "Whitepapers Research that explores the how and why behind our technology":
+                            - /url: https://resource.alibabacloud.com/whitepaper
+                            - heading "Whitepapers" [level=5]
+                            - paragraph: Research that explores the how and why behind our technology
+                    - generic:
+                      - heading "Training&Certification" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Alibaba Cloud Academy Build cloud skills and earn certifications with expert-led training.":
+                            - /url: https://edu.alibabacloud.com
+                            - heading "Alibaba Cloud Academy" [level=5]
+                            - paragraph: Build cloud skills and earn certifications with expert-led training.
+                    - generic:
+                      - heading "Developer Hub" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Alibaba Cloud Project Hub Explore real-world projects built by developers using our platform.":
+                            - /url: https://www.alibabacloud.com/developer/projecthub?_p_lc=1
+                            - heading "Alibaba Cloud Project Hub" [level=5]
+                            - paragraph: Explore real-world projects built by developers using our platform.
+                          - link "Developer Learning Hub Discover our comprehensive training and experience our leading open-source AI, built for developers":
+                            - /url: https://www.alibabacloud.com/developer
+                            - heading "Developer Learning Hub" [level=5]
+                            - paragraph: Discover our comprehensive training and experience our leading open-source AI, built for developers
+                          - link "Our Developer MVPs Celebrating the developers who lead, build, and inspire our community":
+                            - /url: https://mvp.alibabacloud.com/
+                            - heading "Our Developer MVPs" [level=5]
+                            - paragraph: Celebrating the developers who lead, build, and inspire our community
+        - generic:
+          - generic:
+            - heading "Partners" [level=3]
+            - paragraph: Partner-first strategy offering collaborative product, sales, and service models, plus high-quality partner solutions that complement Alibaba Cloud’s capabilities.
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading "Marketplace" [level=4]
+                      - generic:
+                        - generic:
+                          - link "AI Alliance for ISVs Partner with us to build and grow AI solutions together":
+                            - /url: https://www.alibabacloud.com/partner/ai-alliance
+                            - heading "AI Alliance for ISVs" [level=5]
+                            - paragraph: Partner with us to build and grow AI solutions together
+                          - link "ISV Benefits Unlock resources, market access, and go-to-market support as an ISV partner":
+                            - /url: https://www.alibabacloud.com/marketplace/isv
+                            - heading "ISV Benefits" [level=5]
+                            - paragraph: Unlock resources, market access, and go-to-market support as an ISV partner
+                        - generic:
+                          - link "Alibaba Cloud Marketplace Explore ready-to-deploy solutions from our partners and ISVs":
+                            - /url: https://marketplace.alibabacloud.com
+                            - heading "Alibaba Cloud Marketplace" [level=5]
+                            - paragraph: Explore ready-to-deploy solutions from our partners and ISVs
+                    - generic:
+                      - heading "Find a Partner" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Partner Hub Find your ideal partner in no time":
+                            - /url: https://www.alibabacloud.com/partner/partnersearch
+                            - heading "Partner Hub" [level=5]
+                            - paragraph: Find your ideal partner in no time
+                    - generic:
+                      - heading "Become a Partner" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Partner Network A partner portal for Alibaba Cloud Channel, Technology, MSP partner and other partner programs":
+                            - /url: https://www.alibabacloud.com/partner/partner_network
+                            - heading "Partner Network" [level=5]
+                            - paragraph: A partner portal for Alibaba Cloud Channel, Technology, MSP partner and other partner programs
+        - generic:
+          - generic:
+            - heading "Support" [level=3]
+            - paragraph: Full-lifecycle support and expert services, from cloud advisory and migration to operations.
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading "Support & Professional Services" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Professional Services Expert-led services to design, migrate, and optimize your cloud journey":
+                            - /url: https://www.alibabacloud.com/services/home
+                            - heading "Professional Services" [level=5]
+                            - paragraph: Expert-led services to design, migrate, and optimize your cloud journey
+                          - link "Support Plans Flexible support for every stage — from startup to enterprise":
+                            - /url: https://www.alibabacloud.com/compareplans
+                            - heading "Support Plans" [level=5]
+                            - paragraph: Flexible support for every stage — from startup to enterprise
+                        - generic:
+                          - link "Partner Support Program Priority technical support for partners, with dedicated managers and faster issue resolution":
+                            - /url: https://www.alibabacloud.com/services/partner_support_plan
+                            - heading "Partner Support Program" [level=5]
+                            - paragraph: Priority technical support for partners, with dedicated managers and faster issue resolution
+                    - generic:
+                      - heading "Contact us" [level=4]
+                      - generic:
+                        - generic:
+                          - link "Connect With Us Share your feedback and help us improve Alibaba Cloud":
+                            - /url: https://account.alibabacloud.com/login/login.htm?oauth_callback=https://connect.console.aliyun.com
+                            - heading "Connect With Us" [level=5]
+                            - paragraph: Share your feedback and help us improve Alibaba Cloud
+                          - link "Contact Sales Talk to a sales expert and get a custom quote for your business":
+                            - /url: https://www.alibabacloud.com/contact-sales
+                            - heading "Contact Sales" [level=5]
+                            - paragraph: Talk to a sales expert and get a custom quote for your business
+      - button "":
+        - generic: 
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - heading "Language" [level=3]
+            - list:
+              - listitem:
+                - generic: English
+                - button
+              - listitem:
+                - generic: 简体中文
+              - listitem:
+                - generic: 繁體中文
+              - listitem:
+                - generic: 日本語
+              - listitem:
+                - generic: 한국어
+              - listitem:
+                - generic: Deutsch
+              - listitem:
+                - generic: Français
+              - listitem:
+                - generic: Bahasa Indonesia
+              - listitem:
+                - generic: ไทย
+              - listitem:
+                - generic: Español
+              - listitem:
+                - generic: Tiếng Việt
+          - generic:
+            - heading "Locale" [level=3]
+            - list
+        - link "Visit aliyun.com":
+          - /url: https://intl.aliyun.com/api/changeChoice2Aliyun

@@ -1,0 +1,722 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e7]:
+      - generic [ref=e8]:
+        - link "MAARS MAARS Command by MAARS Global Corporation" [ref=e10] [cursor=pointer]:
+          - /url: /dashboard
+          - img "MAARS" [ref=e11]
+          - generic [ref=e12]:
+            - heading "MAARS Command" [level=1] [ref=e13]
+            - paragraph [ref=e14]: by MAARS Global Corporation
+        - generic [ref=e17]: ONLINE
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - img [ref=e28]
+              - generic [ref=e30]: …
+            - generic [ref=e31]: Free
+          - button "Buy Credits" [ref=e32] [cursor=pointer]:
+            - img [ref=e33]
+            - text: Buy Credits
+        - button "Personal Workspace No org yet" [ref=e35] [cursor=pointer]:
+          - img [ref=e37]
+          - generic [ref=e41]:
+            - paragraph [ref=e42]: Personal Workspace
+            - paragraph [ref=e43]: No org yet
+          - img [ref=e44]
+        - button "Search… /" [ref=e47] [cursor=pointer]:
+          - img [ref=e48]
+          - generic [ref=e51]: Search…
+          - generic [ref=e52]: /
+        - navigation [ref=e53]:
+          - generic [ref=e54]:
+            - button "Dashboard" [ref=e55] [cursor=pointer]:
+              - img [ref=e56]
+              - generic [ref=e61]: Dashboard
+            - button "Results" [ref=e62] [cursor=pointer]:
+              - img [ref=e63]
+              - generic [ref=e66]: Results
+          - generic [ref=e67]:
+            - generic [ref=e70]: Workspace
+            - button "Projects" [ref=e72] [cursor=pointer]:
+              - img [ref=e73]
+              - generic [ref=e78]: Projects
+            - button "Chat" [ref=e79] [cursor=pointer]:
+              - img [ref=e80]
+              - generic [ref=e82]: Chat
+            - button "Tasks" [ref=e83] [cursor=pointer]:
+              - img [ref=e84]
+              - generic [ref=e87]: Tasks
+            - button "Approvals" [ref=e88] [cursor=pointer]:
+              - img [ref=e89]
+              - generic [ref=e93]: Approvals
+          - generic [ref=e94]:
+            - generic [ref=e97]: AI Tools
+            - button "Agents" [ref=e99] [cursor=pointer]:
+              - img [ref=e100]
+              - generic [ref=e103]: Agents
+            - button "Team Builder" [ref=e104] [cursor=pointer]:
+              - img [ref=e105]
+              - generic [ref=e108]: Team Builder
+            - button "Vibe Coding" [ref=e109] [cursor=pointer]:
+              - img [ref=e110]
+              - generic [ref=e113]: Vibe Coding
+            - button "Reference Intel" [ref=e114] [cursor=pointer]:
+              - img [ref=e115]
+              - generic [ref=e117]: Reference Intel
+            - button "Content Generator" [ref=e118] [cursor=pointer]:
+              - img [ref=e119]
+              - generic [ref=e124]: Content Generator
+          - generic [ref=e125]:
+            - generic [ref=e128]: Operations
+            - button "Kernel" [ref=e130] [cursor=pointer]:
+              - img [ref=e131]
+              - generic [ref=e135]: Kernel
+            - button "Agent Networks" [ref=e136] [cursor=pointer]:
+              - img [ref=e137]
+              - generic [ref=e142]: Agent Networks
+            - button "Execution Gateway" [ref=e143] [cursor=pointer]:
+              - img [ref=e144]
+              - generic [ref=e146]: Execution Gateway
+            - button "Workflow Builder" [ref=e147] [cursor=pointer]:
+              - img [ref=e148]
+              - generic [ref=e152]: Workflow Builder
+            - button "Campaign Builder" [ref=e153] [cursor=pointer]:
+              - img [ref=e154]
+              - generic [ref=e157]: Campaign Builder
+            - button "Integrations" [ref=e158] [cursor=pointer]:
+              - img [ref=e159]
+              - generic [ref=e161]: Integrations
+            - button "Embedded Browser" [ref=e162] [cursor=pointer]:
+              - img [ref=e163]
+              - generic [ref=e166]: Embedded Browser
+            - button "Universal Key" [ref=e167] [cursor=pointer]:
+              - img [ref=e168]
+              - generic [ref=e172]: Universal Key
+            - button "Environments" [ref=e173] [cursor=pointer]:
+              - img [ref=e174]
+              - generic [ref=e177]: Environments
+          - generic [ref=e178]:
+            - generic [ref=e181]: Monitoring
+            - button "My Insights" [ref=e183] [cursor=pointer]:
+              - img [ref=e184]
+              - generic [ref=e186]: My Insights
+            - button "Task Graphs" [ref=e187] [cursor=pointer]:
+              - img [ref=e188]
+              - generic [ref=e192]: Task Graphs
+            - button "Memory" [ref=e193] [cursor=pointer]:
+              - img [ref=e194]
+              - generic [ref=e198]: Memory
+            - button "Collaborations" [ref=e199] [cursor=pointer]:
+              - img [ref=e200]
+              - generic [ref=e202]: Collaborations
+          - generic [ref=e203]:
+            - generic [ref=e206]: MAARS Infinity
+            - button "Developer API" [ref=e208] [cursor=pointer]:
+              - img [ref=e209]
+              - generic [ref=e211]: Developer API
+            - button "Commander Orion" [ref=e212] [cursor=pointer]:
+              - img [ref=e213]
+              - generic [ref=e219]: Commander Orion
+            - button "Venture Portfolio" [ref=e220] [cursor=pointer]:
+              - img [ref=e221]
+              - generic [ref=e224]: Venture Portfolio
+          - generic [ref=e225]:
+            - generic [ref=e228]: Manage
+            - button "Products" [ref=e230] [cursor=pointer]:
+              - img [ref=e231]
+              - generic [ref=e235]: Products
+            - button "Team" [ref=e236] [cursor=pointer]:
+              - img [ref=e237]
+              - generic [ref=e242]: Team
+            - button "Organization" [ref=e243] [cursor=pointer]:
+              - img [ref=e244]
+              - generic [ref=e248]: Organization
+            - button "Settings" [ref=e249] [cursor=pointer]:
+              - img [ref=e250]
+              - generic [ref=e253]: Settings
+            - button "About" [ref=e254] [cursor=pointer]:
+              - img [ref=e255]
+              - generic [ref=e257]: About
+          - generic [ref=e260]: Admin
+          - button "Overview" [ref=e262] [cursor=pointer]:
+            - img [ref=e263]
+            - generic [ref=e265]: Overview
+          - button "Analytics" [ref=e266] [cursor=pointer]:
+            - img [ref=e267]
+            - generic [ref=e269]: Analytics
+          - button "Universal Gateway" [ref=e270] [cursor=pointer]:
+            - img [ref=e271]
+            - generic [ref=e274]: Universal Gateway
+          - button "Users" [ref=e275] [cursor=pointer]:
+            - img [ref=e276]
+            - generic [ref=e281]: Users
+          - button "Agents" [ref=e282] [cursor=pointer]:
+            - img [ref=e283]
+            - generic [ref=e286]: Agents
+          - button "Transactions" [ref=e287] [cursor=pointer]:
+            - img [ref=e288]
+            - generic [ref=e290]: Transactions
+          - button "Pricing & Splits" [ref=e291] [cursor=pointer]:
+            - img [ref=e293]
+            - generic [ref=e296]: Pricing & Splits
+          - button "API Keys" [ref=e298] [cursor=pointer]:
+            - img [ref=e299]
+            - generic [ref=e303]: API Keys
+          - button "Payment Setup" [ref=e304] [cursor=pointer]:
+            - img [ref=e305]
+            - generic [ref=e307]: Payment Setup
+          - button "Email (SMTP)" [ref=e308] [cursor=pointer]:
+            - img [ref=e309]
+            - generic [ref=e312]: Email (SMTP)
+          - button "Branding" [ref=e313] [cursor=pointer]:
+            - img [ref=e314]
+            - generic [ref=e318]: Branding
+          - button "Knowledge Base" [ref=e319] [cursor=pointer]:
+            - img [ref=e320]
+            - generic [ref=e322]: Knowledge Base
+          - button "Audit Log" [ref=e323] [cursor=pointer]:
+            - img [ref=e324]
+            - generic [ref=e327]: Audit Log
+          - button "Code Explorer" [ref=e328] [cursor=pointer]:
+            - img [ref=e329]
+            - generic [ref=e334]: Code Explorer
+          - button "Governance" [ref=e335] [cursor=pointer]:
+            - img [ref=e336]
+            - generic [ref=e338]: Governance
+          - button "Preview Client View" [ref=e339] [cursor=pointer]:
+            - img [ref=e340]
+            - generic [ref=e343]: Preview Client View
+        - button "Collapse" [ref=e345] [cursor=pointer]:
+          - img [ref=e346]
+          - generic [ref=e349]: Collapse
+        - generic [ref=e350]:
+          - generic [ref=e356]:
+            - paragraph [ref=e357]: Mirza Arafat Abbas
+            - paragraph [ref=e358]: management.maars@marsgc.net
+          - generic [ref=e359]:
+            - generic [ref=e360]: LIVE
+            - generic [ref=e361]: MAARS v2.0
+          - button "Log Out" [ref=e366] [cursor=pointer]:
+            - img [ref=e367]
+            - generic [ref=e370]: Log Out
+    - generic [ref=e373]:
+      - generic [ref=e374]:
+        - generic [ref=e375]:
+          - heading "Pricing Command Center" [level=1] [ref=e376]
+          - paragraph [ref=e377]: Plans, provider intelligence, and profitability — all in one place.
+        - generic [ref=e378]:
+          - button "Plans" [ref=e379] [cursor=pointer]:
+            - img [ref=e380]
+            - text: Plans
+          - button "Providers" [ref=e383] [cursor=pointer]:
+            - img [ref=e384]
+            - text: Providers
+          - button "Advisor" [ref=e386] [cursor=pointer]:
+            - img [ref=e387]
+            - text: Advisor
+      - generic [ref=e389]:
+        - paragraph [ref=e391]: Manage subscription plans, pricing margins, and custom packages.
+        - button "New Plan" [ref=e392] [cursor=pointer]:
+          - img [ref=e393]
+          - text: New Plan
+      - generic [ref=e394]:
+        - generic [ref=e395]:
+          - generic [ref=e397]:
+            - img [ref=e399]
+            - text: Active Pricing Configuration
+            - generic [ref=e401]: DRIVES ALL PLANS
+            - generic [ref=e402]:
+              - img [ref=e403]
+              - text: Never locked
+            - generic [ref=e406]: Unsaved changes
+            - button "Lock Configuration" [ref=e408] [cursor=pointer]:
+              - img
+              - text: Lock Configuration
+          - generic [ref=e409]:
+            - generic [ref=e410]:
+              - generic [ref=e411]:
+                - paragraph [ref=e412]: Blended (chat-dominant)
+                - paragraph [ref=e414]: $0.000103
+                - paragraph [ref=e415]: 8,349 calls · most are chat; see per-plan below
+              - generic [ref=e416]:
+                - paragraph [ref=e417]:
+                  - text: Locked Snapshot
+                  - img [ref=e418]
+                - paragraph [ref=e421]: —
+                - paragraph [ref=e422]: lock to freeze current values
+              - generic [ref=e423]:
+                - paragraph [ref=e424]: Flat Fallback $/credit
+                - paragraph [ref=e425]: $0.000103
+                - paragraph [ref=e426]: used only when a plan has no mix · real math is per-plan below
+              - generic [ref=e427]:
+                - paragraph [ref=e428]: Drift (live vs locked)
+                - paragraph [ref=e429]: —
+                - paragraph [ref=e430]: no lock yet
+            - paragraph [ref=e431]:
+              - text: The blended figure above is chat-dominant — 8,349 calls measured, almost all text.
+              - strong [ref=e432]: Pricing math sums each deliverable at its DEDICATED per-track rate
+              - text: (the 8 cards below). Image-Std / Image-HD / Video / Voiceover / TTS / STT each carry their own $/credit — no merging, no averaging. Enforcement is
+              - strong [ref=e433]: cost-cap per user
+              - text: (monthly_cap_usd on each plan), not token counts.
+            - generic [ref=e434]:
+              - generic [ref=e435]:
+                - text: Image Standard
+                - spinbutton [ref=e436]: "0"
+                - paragraph [ref=e437]: credits per 1024² image
+              - generic [ref=e438]:
+                - text: Image HD
+                - spinbutton [ref=e439]: "6"
+                - paragraph [ref=e440]: credits per HD image
+              - generic [ref=e441]:
+                - text: Video / sec
+                - spinbutton [ref=e442]: "1"
+                - paragraph [ref=e443]: credits per second
+              - generic [ref=e444]:
+                - text: TTS / min
+                - spinbutton [ref=e445]: "0"
+                - paragraph [ref=e446]: credits per TTS minute
+              - generic [ref=e447]:
+                - text: Voice-Over / min
+                - spinbutton [ref=e448]: "3"
+                - paragraph [ref=e449]: credits per VO minute
+              - generic [ref=e450]:
+                - text: STT / min
+                - spinbutton [ref=e451]: "0"
+                - paragraph [ref=e452]: credits per STT minute
+              - generic [ref=e453]:
+                - text: Price Markup %
+                - spinbutton [ref=e454]: "1900"
+                - paragraph [ref=e455]: price = cost × (1 + markup/100) · 200% = 3× cost · 1000% = 11× cost · 5000% = 51× cost
+              - generic [ref=e456]:
+                - text: BDT Rate
+                - spinbutton [ref=e457]: "122.7"
+                - paragraph [ref=e458]: 1 USD = ৳122.7
+            - generic [ref=e459]:
+              - generic [ref=e460]:
+                - img [ref=e461]
+                - generic [ref=e463]: Media Budget Calculator
+                - generic [ref=e464]: — set credits, watch capacity + cost update live
+              - generic [ref=e465]:
+                - spinbutton [ref=e466]: "1000"
+                - generic [ref=e467]: credits
+                - slider [ref=e468]: "1000"
+                - generic [ref=e469]:
+                  - button "50" [ref=e470] [cursor=pointer]
+                  - button "300" [ref=e471] [cursor=pointer]
+                  - button "600" [ref=e472] [cursor=pointer]
+                  - button "1.2k" [ref=e473] [cursor=pointer]
+                  - button "2k" [ref=e474] [cursor=pointer]
+                  - button "3k" [ref=e475] [cursor=pointer]
+                  - button "5k" [ref=e476] [cursor=pointer]
+                  - button "10k" [ref=e477] [cursor=pointer]
+              - generic [ref=e478]:
+                - generic [ref=e479]: "If client spent 100% on ONE modality:"
+                - generic [ref=e480]:
+                  - generic [ref=e481]:
+                    - generic [ref=e482]: Chat tokens
+                    - generic [ref=e483]: 100,000,000
+                  - generic [ref=e484]:
+                    - generic [ref=e485]: Code runs
+                    - generic [ref=e486]: 25,000
+                  - generic [ref=e487]:
+                    - generic [ref=e488]: Images (std)
+                    - generic [ref=e489]: ∞
+                  - generic [ref=e490]:
+                    - generic [ref=e491]: Images (HD)
+                    - generic [ref=e492]: "166"
+                  - generic [ref=e493]:
+                    - generic [ref=e494]: Video (4s clips)
+                    - generic [ref=e495]: "250"
+                  - generic [ref=e496]:
+                    - generic [ref=e497]: Video (sec)
+                    - generic [ref=e498]: 1,000
+                  - generic [ref=e499]:
+                    - generic [ref=e500]: VO (min)
+                    - generic [ref=e501]: "333"
+                  - generic [ref=e502]:
+                    - generic [ref=e503]: TTS (min)
+                    - generic [ref=e504]: ∞
+                  - generic [ref=e505]:
+                    - generic [ref=e506]: STT (min)
+                    - generic [ref=e507]: ∞
+              - generic [ref=e508]:
+                - generic [ref=e510]: "Realistic mix (100% allocated) — same 8 dedicated tracks as the top strip:"
+                - generic [ref=e511]:
+                  - generic [ref=e512]:
+                    - generic [ref=e513]:
+                      - generic [ref=e514]: Chat
+                      - generic [ref=e515]: 40%
+                    - slider [ref=e516]: "40"
+                  - generic [ref=e517]:
+                    - generic [ref=e518]:
+                      - generic [ref=e519]: Code
+                      - generic [ref=e520]: 15%
+                    - slider [ref=e521]: "15"
+                  - generic [ref=e522]:
+                    - generic [ref=e523]:
+                      - generic [ref=e524]: Image Std
+                      - generic [ref=e525]: 5%
+                    - slider [ref=e526]: "5"
+                  - generic [ref=e527]:
+                    - generic [ref=e528]:
+                      - generic [ref=e529]: Image HD
+                      - generic [ref=e530]: 10%
+                    - slider [ref=e531]: "10"
+                  - generic [ref=e532]:
+                    - generic [ref=e533]:
+                      - generic [ref=e534]: Video
+                      - generic [ref=e535]: 15%
+                    - slider [ref=e536]: "15"
+                  - generic [ref=e537]:
+                    - generic [ref=e538]:
+                      - generic [ref=e539]: Voiceover
+                      - generic [ref=e540]: 10%
+                    - slider [ref=e541]: "10"
+                  - generic [ref=e542]:
+                    - generic [ref=e543]:
+                      - generic [ref=e544]: TTS
+                      - generic [ref=e545]: 3%
+                    - slider [ref=e546]: "3"
+                  - generic [ref=e547]:
+                    - generic [ref=e548]:
+                      - generic [ref=e549]: STT
+                      - generic [ref=e550]: 2%
+                    - slider [ref=e551]: "2"
+                - generic [ref=e552]:
+                  - generic [ref=e553]:
+                    - generic [ref=e554]: Chat
+                    - generic [ref=e555]: 40,000,000 tok
+                  - generic [ref=e556]:
+                    - generic [ref=e557]: Code
+                    - generic [ref=e558]: 3,750 runs
+                  - generic [ref=e559]:
+                    - generic [ref=e560]: Image Std
+                    - generic [ref=e561]: ∞ std
+                  - generic [ref=e562]:
+                    - generic [ref=e563]: Image HD
+                    - generic [ref=e564]: 16 HD
+                  - generic [ref=e565]:
+                    - generic [ref=e566]: Video
+                    - generic [ref=e567]: 150 sec
+                  - generic [ref=e568]:
+                    - generic [ref=e569]: Voiceover
+                    - generic [ref=e570]: 33 min
+                  - generic [ref=e571]:
+                    - generic [ref=e572]: TTS
+                    - generic [ref=e573]: ∞ min
+                  - generic [ref=e574]:
+                    - generic [ref=e575]: STT
+                    - generic [ref=e576]: ∞ min
+              - generic [ref=e577]:
+                - generic [ref=e578]:
+                  - generic [ref=e579]: "LLM cost at this mix:"
+                  - generic [ref=e580]: $0.0000
+                  - generic [ref=e581]: Each track billed at its DEDICATED rate · no merging
+                - generic [ref=e582]:
+                  - generic [ref=e583]: $0.0000 chat
+                  - generic [ref=e584]: $0.0000 code
+                  - generic [ref=e585]: $0.0000 img-std
+                  - generic [ref=e586]: $0.0000 img-hd
+                  - generic [ref=e587]: $0.0000 video
+                  - generic [ref=e588]: $0.0000 voice
+                  - generic [ref=e589]: $0.0000 tts
+                  - generic [ref=e590]: $0.0000 stt
+            - generic [ref=e591]:
+              - strong [ref=e592]: "Tip:"
+              - text: "At current settings, per 1,000 credits a client could produce either:"
+              - strong [ref=e593]: "166"
+              - text: HD images ·
+              - strong [ref=e594]: 1,000
+              - text: sec video ·
+              - strong [ref=e595]: "333"
+              - text: min voiceover ·
+              - strong [ref=e596]: ∞
+              - text: min TTS. Std images / TTS / STT are free-tier (Pollinations / Edge / Whisper) unless you set a credit cost above.
+        - generic [ref=e597]:
+          - generic [ref=e599]:
+            - generic [ref=e600]:
+              - img [ref=e602]
+              - text: Plans
+              - generic [ref=e605]: reads from Active Pricing ↑
+            - generic [ref=e606]:
+              - button "Expand all" [ref=e607] [cursor=pointer]
+              - button "Load UNIFIED 5-Tier Preset" [ref=e608] [cursor=pointer]:
+                - img
+                - text: Load UNIFIED 5-Tier Preset
+              - button "Legacy 13-Tier" [ref=e609] [cursor=pointer]:
+                - img
+                - text: Legacy 13-Tier
+              - button "New Plan" [ref=e610] [cursor=pointer]:
+                - img
+                - text: New Plan
+          - generic [ref=e611]:
+            - generic [ref=e612]:
+              - text: "Every row below computes:"
+              - strong [ref=e613]: AI Cost
+              - text: = credits ×
+              - generic [ref=e614]: $0.000103
+              - text: (live, measured by Universal Gateway router) ·
+              - strong [ref=e615]: Suggested Price
+              - text: = AI Cost × (1 + markup/100) (1,900% markup target) ·
+              - strong [ref=e616]: BDT
+              - text: = USD × 122.7.
+            - generic [ref=e617]:
+              - generic [ref=e618]:
+                - text: Price Markup % (price = cost × (1 + markup/100) · any value)
+                - generic [ref=e619]:
+                  - button "100%" [ref=e620] [cursor=pointer]
+                  - button "200%" [ref=e621] [cursor=pointer]
+                  - button "500%" [ref=e622] [cursor=pointer]
+                  - button "1k%" [ref=e623] [cursor=pointer]
+                  - button "2k%" [ref=e624] [cursor=pointer]
+                  - button "5k%" [ref=e625] [cursor=pointer]
+                  - button "10k%" [ref=e626] [cursor=pointer]
+                  - spinbutton [ref=e627]: "1900"
+                  - generic [ref=e628]: "%"
+                - paragraph [ref=e629]:
+                  - text: At 1,900% markup, price = cost ×
+                  - generic [ref=e630]: 20×
+                  - text: — stamped into every Suggested column.
+              - button "Apply 1,900% Markup to All Plans" [ref=e631] [cursor=pointer]
+            - button "Model Cost Reference — click a model to apply its cost per credit" [ref=e633] [cursor=pointer]:
+              - generic [ref=e634]:
+                - img [ref=e635]
+                - generic [ref=e637]: Model Cost Reference
+                - generic [ref=e638]: — click a model to apply its cost per credit
+              - img [ref=e639]
+            - button "Free 10 cr $0.0010 $0.00 — — —" [ref=e642] [cursor=pointer]:
+              - img [ref=e643]
+              - generic [ref=e645]:
+                - generic [ref=e647]: Free
+                - generic [ref=e648]: 10 cr
+                - generic [ref=e650]: $0.0010
+                - generic [ref=e652]: $0.00
+                - generic [ref=e653]: —
+                - generic [ref=e654]: —
+                - generic [ref=e655]: —
+            - button "Creator 50 cr $0.0052 $29.00 $0.10 $28.99 100% margin Delete Creator" [ref=e657] [cursor=pointer]:
+              - img [ref=e658]
+              - generic [ref=e660]:
+                - generic [ref=e662]: Creator
+                - generic [ref=e663]: 50 cr
+                - generic [ref=e665]: $0.0052
+                - generic [ref=e667]: $29.00
+                - button "$0.10" [ref=e669]
+                - generic [ref=e671]: $28.99
+                - generic [ref=e673]: 100% margin
+              - button "Delete Creator" [ref=e674]:
+                - img [ref=e675]
+            - button "Studio Commander 200 cr $0.0206 $99.00 $0.41 $98.98 100% margin Delete Studio" [ref=e679] [cursor=pointer]:
+              - img [ref=e680]
+              - generic [ref=e682]:
+                - generic [ref=e683]:
+                  - generic [ref=e684]: Studio
+                  - generic [ref=e685]: Commander
+                - generic [ref=e686]: 200 cr
+                - generic [ref=e688]: $0.0206
+                - generic [ref=e690]: $99.00
+                - button "$0.41" [ref=e692]
+                - generic [ref=e694]: $98.98
+                - generic [ref=e696]: 100% margin
+              - button "Delete Studio" [ref=e697]:
+                - img [ref=e698]
+            - button "Scale Commander 750 cr $0.0773 $299.00 $1.55 $298.92 100% margin Delete Scale" [ref=e702] [cursor=pointer]:
+              - img [ref=e703]
+              - generic [ref=e705]:
+                - generic [ref=e706]:
+                  - generic [ref=e707]: Scale
+                  - generic [ref=e708]: Commander
+                - generic [ref=e709]: 750 cr
+                - generic [ref=e711]: $0.0773
+                - generic [ref=e713]: $299.00
+                - button "$1.55" [ref=e715]
+                - generic [ref=e717]: $298.92
+                - generic [ref=e719]: 100% margin
+              - button "Delete Scale" [ref=e720]:
+                - img [ref=e721]
+            - button "Infinity Commander 5,000 cr $0.5154 $999.00 $10.31 $998.48 99.9% margin Delete Infinity" [ref=e725] [cursor=pointer]:
+              - img [ref=e726]
+              - generic [ref=e728]:
+                - generic [ref=e729]:
+                  - generic [ref=e730]: "Infinity"
+                  - generic [ref=e731]: Commander
+                - generic [ref=e732]: 5,000 cr
+                - generic [ref=e734]: $0.5154
+                - generic [ref=e736]: $999.00
+                - button "$10.31" [ref=e738]
+                - generic [ref=e740]: $998.48
+                - generic [ref=e742]: 99.9% margin
+              - button "Delete Infinity" [ref=e743]:
+                - img [ref=e744]
+            - generic [ref=e747]:
+              - heading "Custom Agent Creation Cost" [level=4] [ref=e748]
+              - generic [ref=e749]:
+                - spinbutton [ref=e750]: "20"
+                - paragraph [ref=e751]: Credits charged per custom agent created
+            - generic [ref=e752]:
+              - button "Publish Pricing Changes" [ref=e753] [cursor=pointer]
+              - button "Reset to Current" [ref=e754] [cursor=pointer]
+        - generic [ref=e755]:
+          - generic [ref=e757]:
+            - generic [ref=e758]:
+              - generic [ref=e759]: 🔒
+              - text: Operator Breakdown
+              - generic [ref=e760]: ADMIN ONLY
+              - generic [ref=e761]: reads from Active Pricing ↑
+            - generic [ref=e762]: Not visible to clients
+          - generic [ref=e763]:
+            - generic [ref=e764]:
+              - generic [ref=e765]:
+                - paragraph [ref=e766]: Credit ↔ Token Ratio
+                - paragraph [ref=e767]: 1 credit = 100,000 tokens
+                - paragraph [ref=e768]: Hard cap per client. ~66 short chats or 1 video per credit.
+              - generic [ref=e769]:
+                - paragraph [ref=e770]: Cost per Token (blended)
+                - paragraph [ref=e771]: $1.03e-9
+                - paragraph [ref=e772]: $0.000103/credit (live) ÷ 100,000 tok/credit
+              - generic [ref=e773]:
+                - paragraph [ref=e774]: Free-Tier Routing
+                - paragraph [ref=e775]: 92%
+                - paragraph [ref=e776]: 6 free / 16 paid providers
+            - generic [ref=e777]:
+              - paragraph [ref=e778]: Smart Router Workflow
+              - list [ref=e779]:
+                - listitem [ref=e780]: 1. Request arrives → classified by task type (chat, code, reasoning, research)
+                - listitem [ref=e781]: "2. Router checks free-tier first: Groq → Cerebras → SambaNova → Gemini → NVIDIA → HuggingFace"
+                - listitem [ref=e782]: "3. If free unavailable → cheapest paid: DeepSeek → Together → Fireworks → Mistral"
+                - listitem [ref=e783]: 4. Premium fallback (Opus/GPT-4/Sonnet) only if specifically requested
+                - listitem [ref=e784]: 5. 1 request = 1 credit deducted from client's strict cap
+            - generic [ref=e785]:
+              - paragraph [ref=e786]: Client Usage Capacity per Plan
+              - table [ref=e788]:
+                - rowgroup [ref=e789]:
+                  - row "Plan Credits AI Messages* Cold Emails Social Posts Images Video (sec) VO (min) LLM Cost All-In Cost† Price Margin %" [ref=e790]:
+                    - columnheader "Plan" [ref=e791]
+                    - columnheader "Credits" [ref=e792]
+                    - columnheader "AI Messages*" [ref=e793]
+                    - columnheader "Cold Emails" [ref=e794]
+                    - columnheader "Social Posts" [ref=e795]
+                    - columnheader "Images" [ref=e796]
+                    - columnheader "Video (sec)" [ref=e797]
+                    - columnheader "VO (min)" [ref=e798]
+                    - columnheader "LLM Cost" [ref=e799]
+                    - columnheader "All-In Cost†" [ref=e800]
+                    - columnheader "Price" [ref=e801]
+                    - columnheader "Margin %" [ref=e802]
+                - rowgroup [ref=e803]:
+                  - row "Free 10 666 3 5 ∞ 10 3 $0.0010 … $0.00 —" [ref=e804]:
+                    - cell "Free" [ref=e805]
+                    - cell "10" [ref=e806]
+                    - cell "666" [ref=e807]
+                    - cell "3" [ref=e808]
+                    - cell "5" [ref=e809]
+                    - cell "∞" [ref=e810]
+                    - cell "10" [ref=e811]
+                    - cell "3" [ref=e812]
+                    - cell "$0.0010" [ref=e813]
+                    - cell "…" [ref=e814]
+                    - cell "$0.00" [ref=e815]
+                    - cell "—" [ref=e816]
+                  - row "Creator 50 3.3k 16 25 ∞ 50 16 $0.0052 … $29.00 —" [ref=e817]:
+                    - cell "Creator" [ref=e818]
+                    - cell "50" [ref=e819]
+                    - cell "3.3k" [ref=e820]
+                    - cell "16" [ref=e821]
+                    - cell "25" [ref=e822]
+                    - cell "∞" [ref=e823]
+                    - cell "50" [ref=e824]
+                    - cell "16" [ref=e825]
+                    - cell "$0.0052" [ref=e826]
+                    - cell "…" [ref=e827]
+                    - cell "$29.00" [ref=e828]
+                    - cell "—" [ref=e829]
+                  - row "Studio 200 13.3k 66 100 ∞ 200 66 $0.0206 … $99.00 —" [ref=e830]:
+                    - cell "Studio" [ref=e831]
+                    - cell "200" [ref=e832]
+                    - cell "13.3k" [ref=e833]
+                    - cell "66" [ref=e834]
+                    - cell "100" [ref=e835]
+                    - cell "∞" [ref=e836]
+                    - cell "200" [ref=e837]
+                    - cell "66" [ref=e838]
+                    - cell "$0.0206" [ref=e839]
+                    - cell "…" [ref=e840]
+                    - cell "$99.00" [ref=e841]
+                    - cell "—" [ref=e842]
+                  - row "Scale 750 50.0k 250 375 ∞ 750 250 $0.0773 … $299.00 —" [ref=e843]:
+                    - cell "Scale" [ref=e844]
+                    - cell "750" [ref=e845]
+                    - cell "50.0k" [ref=e846]
+                    - cell "250" [ref=e847]
+                    - cell "375" [ref=e848]
+                    - cell "∞" [ref=e849]
+                    - cell "750" [ref=e850]
+                    - cell "250" [ref=e851]
+                    - cell "$0.0773" [ref=e852]
+                    - cell "…" [ref=e853]
+                    - cell "$299.00" [ref=e854]
+                    - cell "—" [ref=e855]
+                  - row "Infinity 5,000 333.3k 1.7k 2.5k ∞ 5.0k 1.7k $0.5154 … $999.00 —" [ref=e856]:
+                    - cell "Infinity" [ref=e857]
+                    - cell "5,000" [ref=e858]
+                    - cell "333.3k" [ref=e859]
+                    - cell "1.7k" [ref=e860]
+                    - cell "2.5k" [ref=e861]
+                    - cell "∞" [ref=e862]
+                    - cell "5.0k" [ref=e863]
+                    - cell "1.7k" [ref=e864]
+                    - cell "$0.5154" [ref=e865]
+                    - cell "…" [ref=e866]
+                    - cell "$999.00" [ref=e867]
+                    - cell "—" [ref=e868]
+              - paragraph [ref=e869]:
+                - text: "* AI Messages = credits × tokens_per_credit ÷ 1,500 (realistic chat: 1k in + 500 out). Cold Emails ≈ 3 cr each, Social Posts ≈ 2 cr. Image / Video / VO use Active Pricing rates above."
+                - text: LLM Cost = provider inference only. All-In Cost† = LLM + media + email + voice + infra (from
+                - link "/api/admin/pricing/full-ledger" [ref=e870] [cursor=pointer]:
+                  - /url: /api/admin/pricing/full-ledger
+                - text: ). Margin % reflects All-In.
+            - generic [ref=e871]:
+              - paragraph [ref=e873]: Cost Optimization Levers
+              - paragraph [ref=e874]: ACTIVE = operator toggle on + env detected. NEEDS ENV = toggle on, prerequisite missing — no effect until infra wired. All-In Cost column recalculates when a lever becomes ACTIVE.
+      - generic [ref=e875]: Loading...
+      - generic [ref=e877]:
+        - generic [ref=e878]:
+          - heading "Operator splits, customer overrides & audit" [level=2] [ref=e879]
+          - button "Refresh" [disabled] [ref=e880] [cursor=pointer]:
+            - img [ref=e881]
+            - text: Refresh
+        - generic [ref=e886]:
+          - generic [ref=e887]:
+            - img [ref=e888]
+            - text: Per-customer pricing overrides
+          - generic [ref=e893]:
+            - paragraph [ref=e894]: "Attach negotiated pricing to a specific user_id. The Stripe webhook checks for an active override per (user, package) and applies it before falling back to the package default. Optional `expires_at` ISO timestamp lets the override auto-revert."
+            - generic [ref=e895]:
+              - textbox "user_id" [ref=e896]
+              - combobox [ref=e897]
+              - spinbutton [ref=e898]: "0.2"
+              - spinbutton [ref=e899]
+              - spinbutton [ref=e900]
+              - textbox "notes (optional)" [ref=e901]
+              - button "Save override" [ref=e902] [cursor=pointer]:
+                - img [ref=e903]
+                - text: Save override
+            - generic [ref=e907]: No customer overrides yet.
+        - generic [ref=e908]:
+          - generic [ref=e909]:
+            - img [ref=e910]
+            - text: Recent audit entries (packages & pricing)
+          - generic [ref=e915]: No audit entries yet.
+    - generic [ref=e916]:
+      - generic "Chat with Commander Orion" [ref=e917] [cursor=pointer]:
+        - img "Commander Orion" [ref=e920]
+      - button "Start a new chat" [ref=e922] [cursor=pointer]:
+        - img [ref=e923]
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

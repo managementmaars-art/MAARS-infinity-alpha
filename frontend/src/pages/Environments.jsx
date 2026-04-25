@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../App";
 import { Globe, Shield, Zap, Check, AlertTriangle, ArrowRight } from "lucide-react";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const T = {
   glass: "rgba(255,255,255,0.03)",
@@ -29,14 +29,14 @@ export default function Environments() {
   const [loading, setLoading] = useState(true);
   const [switching, setSwitching] = useState(false);
 
-  const fetchData = () => {
+  const fetchData = useCallback(() => {
     fetch(`${API}/api/kernel/environments`, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(d => { setData(d); setLoading(false); })
       .catch(() => setLoading(false));
-  };
+  }, [token]);
 
-  useEffect(() => { fetchData(); }, [token]);
+  useEffect(() => { fetchData(); }, [fetchData]);
 
   const switchEnv = async (env) => {
     setSwitching(true);

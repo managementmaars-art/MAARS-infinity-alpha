@@ -6,7 +6,7 @@ export const BrandFooter = ({ className = "" }) => {
   const footer = branding.footer_text   || "MAARS Global Corporation";
   const logoSrc = branding.logo_url
     ? (branding.logo_url.startsWith("/api")
-        ? `${process.env.REACT_APP_BACKEND_URL}${branding.logo_url}`
+        ? `${process.env.REACT_APP_BACKEND_URL?.trim() || ""}${branding.logo_url}`
         : branding.logo_url)
     : "/branding/maars-logo.jpeg";
 

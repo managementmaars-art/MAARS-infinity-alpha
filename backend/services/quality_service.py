@@ -11,7 +11,6 @@ import logging
 from datetime import datetime, timezone
 
 from db import db
-from shared.constants import EMERGENT_LLM_KEY
 
 logger = logging.getLogger(__name__)
 
@@ -30,27 +29,11 @@ FALLBACK_CHAIN = [
 
 
 async def critic_review(task_result: str, task_description: str, agent_name: str,
-                        user_id: str, project_id: str, task_id: str, api_keys: dict) -> dict:
+                        user_id: str, project_id: str, task_id: str, api_keys: dict,
+                        agent_id: str | None = None) -> dict:
     """Run an automated quality review on a task result.
     Returns a review with score (1-10), feedback, and pass/fail status."""
     try:
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
-
-        critic = LlmChat(
-            api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-            session_id=f"critic_{task_id}_{uuid.uuid4().hex[:6]}",
-            system_message="""You are a strict quality assurance reviewer. Evaluate task outputs against their requirements.
-Score on a 1-10 scale. Return ONLY valid JSON:
-{
-  "score": <1-10>,
-  "verdict": "pass" or "revision_needed" or "fail",
-  "strengths": ["strength1", "strength2"],
-  "weaknesses": ["weakness1"],
-  "suggestions": ["suggestion1"],
-  "summary": "One sentence assessment"
-}"""
-        ).with_model("openai", "gpt-4o")
-
         prompt = f"""Review this task output:
 
 TASK: {task_description[:500]}
@@ -60,7 +43,23 @@ OUTPUT:
 
 Evaluate for: completeness, accuracy, actionability, professionalism, and alignment with the task requirements."""
 
-        response = await critic.send_message(UserMessage(text=prompt))
+        from services.llm_gateway import complete_text
+        response = await complete_text(
+            user_id=user_id,
+            system_prompt="""You are a strict quality assurance reviewer. Evaluate task outputs against their requirements.
+Score on a 1-10 scale. Return ONLY valid JSON:
+{
+  "score": <1-10>,
+  "verdict": "pass" or "revision_needed" or "fail",
+  "strengths": ["strength1", "strength2"],
+  "weaknesses": ["weakness1"],
+  "suggestions": ["suggestion1"],
+  "summary": "One sentence assessment"
+}""",
+            user_prompt=prompt,
+            model="maars/auto",
+            source=f"quality.critic_review:{task_id}",
+        )
         text = response.strip()
         if text.startswith("```"):
             text = text.split("\n", 1)[1] if "\n" in text else text[3:]
@@ -88,6 +87,7 @@ Evaluate for: completeness, accuracy, actionability, professionalism, and alignm
         "project_id": project_id,
         "task_id": task_id,
         "agent_name": agent_name,
+        "agent_id": agent_id,
         "review_type": "auto_critic",
         "score": review_data.get("score", 5),
         "verdict": review_data.get("verdict", "pass"),
@@ -124,19 +124,13 @@ async def retry_with_fallback(task_id: str, user_id: str, project_id: str,
 
     for attempt, (fb_provider, fb_model) in enumerate(chain[:3], 1):
         try:
-            from emergentintegrations.llm.chat import LlmChat, UserMessage
             from services.agent_service import build_brain_context
+            from services.llm_gateway import complete_text
 
             brain_ctx = await build_brain_context(user_id, agent["agent_id"])
             system_msg = agent.get("system_prompt", "You are a helpful specialist.")
             if brain_ctx:
                 system_msg += brain_ctx
-
-            chat = LlmChat(
-                api_key=api_keys.get("emergent", EMERGENT_LLM_KEY),
-                session_id=f"retry_{task_id}_{attempt}_{uuid.uuid4().hex[:6]}",
-                system_message=system_msg
-            ).with_model(fb_provider, fb_model)
 
             goal = task.get("source_goal", "")
             prompt = f"""You are retrying a failed task. Execute it carefully.
@@ -147,7 +141,13 @@ PREVIOUS ERROR: {original_error[:300]}
 
 Provide a complete, high-quality deliverable. Be thorough and professional."""
 
-            result = await chat.send_message(UserMessage(text=prompt))
+            result = await complete_text(
+                user_id=user_id,
+                system_prompt=system_msg,
+                user_prompt=prompt,
+                model=f"{fb_provider}/{fb_model}",
+                source=f"quality.retry_fallback:{task_id}:attempt_{attempt}",
+            )
 
             # Update task with retry result
             await db.tasks.update_one(

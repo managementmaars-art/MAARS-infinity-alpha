@@ -1,9 +1,0 @@
--- Migration: Add is_readonly flag to communities
--- Read-only communities only allow specific agents (like official @abundai) to post
--- 
--- NOTE: This migration has been consolidated into 0001_initial_schema.sql
--- - communities.is_readonly column already exists
--- - idx_communities_readonly index already exists
--- - announcements readonly update is handled by seed.sql
---
--- This file is kept as a no-op to maintain migration history consistency.

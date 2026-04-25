@@ -1,0 +1,109 @@
+- generic [active] [ref=e1]:
+  - banner
+  - banner [ref=e2]:
+    - navigation "primary navigation" [ref=e3]:
+      - link "Higgsfield AI – AI Video & Image Generation Platform" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img [ref=e5]
+      - generic [ref=e8]:
+        - link "Explore" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - button "Image" [ref=e11] [cursor=pointer]
+        - button "Video" [ref=e13] [cursor=pointer]
+        - button "Audio" [ref=e15] [cursor=pointer]
+        - link "Collab" [ref=e16] [cursor=pointer]:
+          - /url: /generate
+        - button "Edit" [ref=e18] [cursor=pointer]
+        - button "Character" [ref=e20] [cursor=pointer]
+        - link "Marketing Studio New" [ref=e21] [cursor=pointer]:
+          - /url: /marketing-studio
+          - text: Marketing Studio
+          - generic [ref=e22]: New
+        - link "Cinema Studio 3.5" [ref=e23] [cursor=pointer]:
+          - /url: /cinema-studio?autoSelectFolder=true
+          - text: Cinema Studio
+          - generic [ref=e24]: "3.5"
+        - link "Originals New" [ref=e25] [cursor=pointer]:
+          - /url: /original-series
+          - text: Originals
+          - generic [ref=e26]: New
+        - link "Apps" [ref=e27] [cursor=pointer]:
+          - /url: /apps
+        - link "Assist" [ref=e28] [cursor=pointer]:
+          - /url: /chat
+        - button "Community" [ref=e30] [cursor=pointer]
+      - generic [ref=e32]:
+        - link "Pricing 55% OFF" [ref=e33] [cursor=pointer]:
+          - /url: /pricing
+          - generic [ref=e34]:
+            - img [ref=e35]
+            - text: Pricing
+            - generic [ref=e37]: 55% OFF
+        - separator [ref=e38]
+        - generic [ref=e39]:
+          - button "Notifications" [ref=e41] [cursor=pointer]:
+            - img [ref=e42]
+          - link "Folder icon Assets" [ref=e44] [cursor=pointer]:
+            - /url: /asset/all
+            - img "Folder icon" [ref=e46]
+            - generic [ref=e47]: Assets
+          - button "user profile" [ref=e49] [cursor=pointer]:
+            - generic [ref=e52]:
+              - img "user profile" [ref=e54]
+              - img [ref=e55]
+  - main [ref=e58]:
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - generic [ref=e63]:
+          - img [ref=e65]
+          - textbox [ref=e67]:
+            - /placeholder: Search
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - button "All Assets" [ref=e70] [cursor=pointer]:
+              - img [ref=e72]
+              - paragraph [ref=e76]: All Assets
+            - button "Favorites 0" [ref=e77] [cursor=pointer]:
+              - img [ref=e79]
+              - paragraph [ref=e81]: Favorites
+              - generic [ref=e83]: "0"
+          - generic [ref=e84]:
+            - heading "Tools" [level=3] [ref=e85]
+            - generic [ref=e86]:
+              - button "Image" [ref=e87] [cursor=pointer]:
+                - img [ref=e89]
+                - paragraph [ref=e92]: Image
+              - button "Video" [ref=e93] [cursor=pointer]:
+                - img [ref=e95]
+                - paragraph [ref=e97]: Video
+              - button "Audio" [ref=e98] [cursor=pointer]:
+                - img [ref=e100]
+                - paragraph [ref=e102]: Audio
+          - generic [ref=e103]:
+            - generic [ref=e104]:
+              - button "M Mirza Arafat Abbas" [expanded] [ref=e105] [cursor=pointer]:
+                - img [ref=e106]
+                - generic [ref=e109]: M
+                - paragraph [ref=e110]: Mirza Arafat Abbas
+              - button [ref=e111] [cursor=pointer]:
+                - img [ref=e112]
+            - generic [ref=e114]:
+              - listitem [ref=e115]:
+                - paragraph [ref=e116]
+                - paragraph [ref=e117]
+              - listitem [ref=e118]:
+                - paragraph [ref=e119]
+                - paragraph [ref=e120]
+              - listitem [ref=e121]:
+                - paragraph [ref=e122]
+                - paragraph [ref=e123]
+      - generic [ref=e124]:
+        - generic [ref=e125]:
+          - heading "All assets" [level=1] [ref=e126]
+          - generic [ref=e127]:
+            - button [ref=e128] [cursor=pointer]:
+              - img [ref=e129]
+            - slider [ref=e133]
+        - img [ref=e135]
+  - region "Notifications Alt+T"
+  - alert [ref=e138]

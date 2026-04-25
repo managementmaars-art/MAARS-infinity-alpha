@@ -6,7 +6,7 @@ import {
   Radio, Lock, RefreshCw, Radar
 } from "lucide-react";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 /* ─── Design tokens ─────────────────────────────────────────────────── */
 const T = {

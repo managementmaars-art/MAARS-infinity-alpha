@@ -1,9 +1,0 @@
-# 混沌 Skill 配置文件示例
-# 复制为 ~/.hdxy_config 并修改，执行 chmod 600 ~/.hdxy_config
-
-# API Key（必填，需鉴权接口使用）
-api_key=hd_sk_xxxxxxxxxxxxxxxx
-
-# 接口 base URL（可选，默认线上环境）
-# 线上: https://hddrapi.hundun.cn
-base_url=https://hddrapi.hundun.cn

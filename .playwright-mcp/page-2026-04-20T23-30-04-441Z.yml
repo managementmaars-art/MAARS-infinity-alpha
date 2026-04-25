@@ -1,0 +1,822 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - link "MAARS MAARS Command" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "MAARS" [ref=e8]
+          - generic [ref=e9]: MAARS Command
+        - generic [ref=e10]:
+          - button "Login" [ref=e11] [cursor=pointer]
+          - button "Get Started" [ref=e12] [cursor=pointer]
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - heading "Choose Your Plan" [level=1] [ref=e15]
+        - paragraph [ref=e16]: Get access to your AI team with flexible pricing. Start free, upgrade anytime.
+        - generic [ref=e17]:
+          - img [ref=e18]
+          - generic [ref=e21]:
+            - generic [ref=e22]: USD ($)
+            - generic [ref=e23] [cursor=pointer]:
+              - checkbox
+            - generic [ref=e26]: BDT (৳)
+        - generic [ref=e27]:
+          - generic [ref=e28]: ✓ Cancel anytime
+          - generic [ref=e29]: ✓ Credits never expire
+          - generic [ref=e30]: ✓ No long-term contract
+          - generic [ref=e31]: ✓ 24/7 automated agents
+          - generic [ref=e32]: ✓ Global availability
+          - generic [ref=e33]: ✓ GDPR & CAN-SPAM ready
+          - generic [ref=e34]: ✓ Stripe-secured payments
+          - generic [ref=e35]: ✓ Human support inbox
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e38]: Current Plan
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - img [ref=e42]
+              - paragraph [ref=e44]: Free
+              - generic [ref=e45]: $0/month
+              - paragraph [ref=e46]: 50 credits/month
+            - list [ref=e47]:
+              - listitem [ref=e48]:
+                - img [ref=e49]
+                - text: 3 AI agents
+              - listitem [ref=e51]:
+                - img [ref=e52]
+                - text: 50 credits/month
+              - listitem [ref=e54]:
+                - img [ref=e55]
+                - text: Basic chat & task management
+              - listitem [ref=e57]:
+                - img [ref=e58]
+                - text: 1 LLM provider
+              - listitem [ref=e60]:
+                - img [ref=e61]
+                - text: Community support
+            - button "Current Plan" [disabled] [ref=e63]
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - img [ref=e68]
+            - paragraph [ref=e70]: Starter
+            - generic [ref=e71]: $50/month
+            - paragraph [ref=e72]: 300 credits/month
+          - list [ref=e73]:
+            - listitem [ref=e74]:
+              - img [ref=e75]
+              - text: 8 AI agents
+            - listitem [ref=e77]:
+              - img [ref=e78]
+              - text: 300 credits/month
+            - listitem [ref=e80]:
+              - img [ref=e81]
+              - text: Chat, tasks & projects
+            - listitem [ref=e83]:
+              - img [ref=e84]
+              - text: 3 LLM providers
+            - listitem [ref=e86]:
+              - img [ref=e87]
+              - text: File uploads
+            - listitem [ref=e89]:
+              - img [ref=e90]
+              - text: Solo workspace
+            - listitem [ref=e92]:
+              - img [ref=e93]
+              - text: Email support
+          - button "Subscribe" [ref=e95] [cursor=pointer]
+        - generic [ref=e97]:
+          - generic [ref=e98]:
+            - img [ref=e100]
+            - paragraph [ref=e102]: Essential
+            - generic [ref=e103]: $100/month
+            - paragraph [ref=e104]: 600 credits/month
+          - list [ref=e105]:
+            - listitem [ref=e106]:
+              - img [ref=e107]
+              - text: 12 AI agents
+            - listitem [ref=e109]:
+              - img [ref=e110]
+              - text: 600 credits/month
+            - listitem [ref=e112]:
+              - img [ref=e113]
+              - text: 1 custom agent
+            - listitem [ref=e115]:
+              - img [ref=e116]
+              - text: 5 LLM providers
+            - listitem [ref=e118]:
+              - img [ref=e119]
+              - text: Workflow builder (basic)
+            - listitem [ref=e121]:
+              - img [ref=e122]
+              - text: File uploads
+            - listitem [ref=e124]:
+              - img [ref=e125]
+              - text: Team (up to 3)
+            - listitem [ref=e127]:
+              - img [ref=e128]
+              - text: Email support
+          - button "Subscribe" [ref=e130] [cursor=pointer]
+        - generic [ref=e132]:
+          - generic [ref=e133]:
+            - img [ref=e135]
+            - paragraph [ref=e137]: Basic
+            - generic [ref=e138]: $200/month
+            - paragraph [ref=e139]: 1200 credits/month
+          - list [ref=e140]:
+            - listitem [ref=e141]:
+              - img [ref=e142]
+              - text: 18 AI agents
+            - listitem [ref=e144]:
+              - img [ref=e145]
+              - text: 1,200 credits/month
+            - listitem [ref=e147]:
+              - img [ref=e148]
+              - text: 2 custom agents
+            - listitem [ref=e150]:
+              - img [ref=e151]
+              - text: 8 LLM providers
+            - listitem [ref=e153]:
+              - img [ref=e154]
+              - text: Full workflow builder
+            - listitem [ref=e156]:
+              - img [ref=e157]
+              - text: Content generator
+            - listitem [ref=e159]:
+              - img [ref=e160]
+              - text: Basic analytics
+            - listitem [ref=e162]:
+              - img [ref=e163]
+              - text: Team (up to 5)
+            - listitem [ref=e165]:
+              - img [ref=e166]
+              - text: Priority email support
+          - button "Subscribe" [ref=e168] [cursor=pointer]
+        - generic [ref=e170]:
+          - generic [ref=e171]:
+            - img [ref=e173]
+            - paragraph [ref=e175]: Standard
+            - generic [ref=e176]: $350/month
+            - paragraph [ref=e177]: 2000 credits/month
+          - list [ref=e178]:
+            - listitem [ref=e179]:
+              - img [ref=e180]
+              - text: 25 AI agents + Commander Orion
+            - listitem [ref=e182]:
+              - img [ref=e183]
+              - text: 2,000 credits/month
+            - listitem [ref=e185]:
+              - img [ref=e186]
+              - text: 3 custom agents
+            - listitem [ref=e188]:
+              - img [ref=e189]
+              - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+            - listitem [ref=e191]:
+              - img [ref=e192]
+              - text: Autonomous orchestration
+            - listitem [ref=e194]:
+              - img [ref=e195]
+              - text: Campaign builder
+            - listitem [ref=e197]:
+              - img [ref=e198]
+              - text: Knowledge graph
+            - listitem [ref=e200]:
+              - img [ref=e201]
+              - text: Trust scores
+            - listitem [ref=e203]:
+              - img [ref=e204]
+              - text: Team (up to 10)
+            - listitem [ref=e206]:
+              - img [ref=e207]
+              - text: Priority support
+          - button "Subscribe" [ref=e209] [cursor=pointer]
+        - generic [ref=e211]:
+          - generic [ref=e212]:
+            - img [ref=e214]
+            - paragraph [ref=e216]: Professional
+            - generic [ref=e217]: $500/month
+            - paragraph [ref=e218]: 3000 credits/month
+          - list [ref=e219]:
+            - listitem [ref=e220]:
+              - img [ref=e221]
+              - text: 35 AI agents + Commander Orion
+            - listitem [ref=e223]:
+              - img [ref=e224]
+              - text: 3,000 credits/month
+            - listitem [ref=e226]:
+              - img [ref=e227]
+              - text: 5 custom agents
+            - listitem [ref=e229]:
+              - img [ref=e230]
+              - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+            - listitem [ref=e232]:
+              - img [ref=e233]
+              - text: Vibe Coding & Reference Intelligence
+            - listitem [ref=e235]:
+              - img [ref=e236]
+              - text: Memory hierarchy
+            - listitem [ref=e238]:
+              - img [ref=e239]
+              - text: Analytics dashboard
+            - listitem [ref=e241]:
+              - img [ref=e242]
+              - text: Team (up to 20)
+            - listitem [ref=e244]:
+              - img [ref=e245]
+              - text: Live chat support
+          - button "Subscribe" [ref=e247] [cursor=pointer]
+        - generic [ref=e249]:
+          - generic [ref=e250]:
+            - img [ref=e252]
+            - paragraph [ref=e254]: Advanced
+            - generic [ref=e255]: $750/month
+            - paragraph [ref=e256]: 4000 credits/month
+          - list [ref=e257]:
+            - listitem [ref=e258]:
+              - img [ref=e259]
+              - text: All 41 core AI agents + Commander Orion
+            - listitem [ref=e261]:
+              - img [ref=e262]
+              - text: 4,000 credits/month
+            - listitem [ref=e264]:
+              - img [ref=e265]
+              - text: 10 custom agents
+            - listitem [ref=e267]:
+              - img [ref=e268]
+              - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+            - listitem [ref=e270]:
+              - img [ref=e271]
+              - text: Full observability dashboard
+            - listitem [ref=e273]:
+              - img [ref=e274]
+              - text: Model router
+            - listitem [ref=e276]:
+              - img [ref=e277]
+              - text: Circuit breakers
+            - listitem [ref=e279]:
+              - img [ref=e280]
+              - text: Cost governance
+            - listitem [ref=e282]:
+              - img [ref=e283]
+              - text: Team (up to 35)
+            - listitem [ref=e285]:
+              - img [ref=e286]
+              - text: Dedicated Slack support
+          - button "Subscribe" [ref=e288] [cursor=pointer]
+        - generic [ref=e290]:
+          - generic [ref=e291]:
+            - img [ref=e293]
+            - paragraph [ref=e296]: Business
+            - generic [ref=e297]: $1000/month
+            - paragraph [ref=e298]: 5000 credits/month
+          - list [ref=e299]:
+            - listitem [ref=e300]:
+              - img [ref=e301]
+              - text: 41 core + 100 MAARS Infinity agents + Commander Orion
+            - listitem [ref=e303]:
+              - img [ref=e304]
+              - text: 5,000 credits/month
+            - listitem [ref=e306]:
+              - img [ref=e307]
+              - text: 20 custom agents
+            - listitem [ref=e309]:
+              - img [ref=e310]
+              - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+            - listitem [ref=e312]:
+              - img [ref=e313]
+              - text: MAARS Infinity agent networks
+            - listitem [ref=e315]:
+              - img [ref=e316]
+              - text: Operator panel
+            - listitem [ref=e318]:
+              - img [ref=e319]
+              - text: API access & webhooks
+            - listitem [ref=e321]:
+              - img [ref=e322]
+              - text: Team (up to 50)
+            - listitem [ref=e324]:
+              - img [ref=e325]
+              - text: Dedicated Slack support
+          - button "Subscribe" [ref=e327] [cursor=pointer]
+        - generic [ref=e329]:
+          - generic [ref=e330]:
+            - img [ref=e332]
+            - paragraph [ref=e334]: Agency
+            - generic [ref=e335]: $1500/month
+            - paragraph [ref=e336]: 6500 credits/month
+          - list [ref=e337]:
+            - listitem [ref=e338]:
+              - img [ref=e339]
+              - text: 41 core + 200 MAARS Infinity agents + Commander Orion
+            - listitem [ref=e341]:
+              - img [ref=e342]
+              - text: 6,500 credits/month
+            - listitem [ref=e344]:
+              - img [ref=e345]
+              - text: Unlimited custom agents
+            - listitem [ref=e347]:
+              - img [ref=e348]
+              - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+            - listitem [ref=e350]:
+              - img [ref=e351]
+              - text: White-label ready
+            - listitem [ref=e353]:
+              - img [ref=e354]
+              - text: RBAC & access control
+            - listitem [ref=e356]:
+              - img [ref=e357]
+              - text: Client management tools
+            - listitem [ref=e359]:
+              - img [ref=e360]
+              - text: SLA guarantee
+            - listitem [ref=e362]:
+              - img [ref=e363]
+              - text: Unlimited team members
+            - listitem [ref=e365]:
+              - img [ref=e366]
+              - text: Dedicated account manager
+          - button "Subscribe" [ref=e368] [cursor=pointer]
+        - generic [ref=e370]:
+          - generic [ref=e371]:
+            - img [ref=e373]
+            - paragraph [ref=e375]: Studio
+            - generic [ref=e376]: $2500/month
+            - paragraph [ref=e377]: 7500 credits/month
+          - list [ref=e378]:
+            - listitem [ref=e379]:
+              - img [ref=e380]
+              - text: 41 core + 350 MAARS Infinity agents + Commander Orion
+            - listitem [ref=e382]:
+              - img [ref=e383]
+              - text: 7,500 credits/month
+            - listitem [ref=e385]:
+              - img [ref=e386]
+              - text: Unlimited custom agents
+            - listitem [ref=e388]:
+              - img [ref=e389]
+              - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+            - listitem [ref=e391]:
+              - img [ref=e392]
+              - text: Venture portfolio
+            - listitem [ref=e394]:
+              - img [ref=e395]
+              - text: Agent Catalog (350 networks)
+            - listitem [ref=e397]:
+              - img [ref=e398]
+              - text: Custom integrations
+            - listitem [ref=e400]:
+              - img [ref=e401]
+              - text: Multi-workspace
+            - listitem [ref=e403]:
+              - img [ref=e404]
+              - text: Unlimited team members
+            - listitem [ref=e406]:
+              - img [ref=e407]
+              - text: Priority dedicated support
+          - button "Subscribe" [ref=e409] [cursor=pointer]
+        - generic [ref=e411]:
+          - generic [ref=e412]:
+            - img [ref=e414]
+            - paragraph [ref=e416]: Enterprise
+            - generic [ref=e417]: $3500/month
+            - paragraph [ref=e418]: 8500 credits/month
+          - list [ref=e419]:
+            - listitem [ref=e420]:
+              - img [ref=e421]
+              - text: All 458 agents + Commander Orion
+            - listitem [ref=e423]:
+              - img [ref=e424]
+              - text: 8,500 credits/month
+            - listitem [ref=e426]:
+              - img [ref=e427]
+              - text: Unlimited everything
+            - listitem [ref=e429]:
+              - img [ref=e430]
+              - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+            - listitem [ref=e432]:
+              - img [ref=e433]
+              - text: Dedicated infrastructure
+            - listitem [ref=e435]:
+              - img [ref=e436]
+              - text: Advanced security & compliance
+            - listitem [ref=e438]:
+              - img [ref=e439]
+              - text: Custom AI integrations
+            - listitem [ref=e441]:
+              - img [ref=e442]
+              - text: Onboarding & training
+            - listitem [ref=e444]:
+              - img [ref=e445]
+              - text: Custom SLAs
+            - listitem [ref=e447]:
+              - img [ref=e448]
+              - text: 24/7 premium support
+          - button "Subscribe" [ref=e450] [cursor=pointer]
+        - generic [ref=e452]:
+          - generic [ref=e453]:
+            - img [ref=e455]
+            - paragraph [ref=e457]: Corporate
+            - generic [ref=e458]: $5000/month
+            - paragraph [ref=e459]: 9500 credits/month
+          - list [ref=e460]:
+            - listitem [ref=e461]:
+              - img [ref=e462]
+              - text: All 458 agents + Commander Orion
+            - listitem [ref=e464]:
+              - img [ref=e465]
+              - text: 9,500 credits/month
+            - listitem [ref=e467]:
+              - img [ref=e468]
+              - text: Unlimited everything
+            - listitem [ref=e470]:
+              - img [ref=e471]
+              - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+            - listitem [ref=e473]:
+              - img [ref=e474]
+              - text: Custom AI model fine-tuning
+            - listitem [ref=e476]:
+              - img [ref=e477]
+              - text: Dedicated engineering support
+            - listitem [ref=e479]:
+              - img [ref=e480]
+              - text: Multi-workspace management
+            - listitem [ref=e482]:
+              - img [ref=e483]
+              - text: Custom contracts & billing
+            - listitem [ref=e485]:
+              - img [ref=e486]
+              - text: Quarterly business reviews
+            - listitem [ref=e488]:
+              - img [ref=e489]
+              - text: Executive priority support
+          - button "Subscribe" [ref=e491] [cursor=pointer]
+        - generic [ref=e493]:
+          - generic [ref=e494]:
+            - img [ref=e496]
+            - paragraph [ref=e498]: Elite
+            - generic [ref=e499]: $8000/month
+            - paragraph [ref=e500]: 10000 credits/month
+          - list [ref=e501]:
+            - listitem [ref=e502]:
+              - img [ref=e503]
+              - text: All 458 agents + Commander Orion
+            - listitem [ref=e505]:
+              - img [ref=e506]
+              - text: 10,000 credits/month
+            - listitem [ref=e508]:
+              - img [ref=e509]
+              - text: Unlimited everything
+            - listitem [ref=e511]:
+              - img [ref=e512]
+              - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+            - listitem [ref=e514]:
+              - img [ref=e515]
+              - text: Custom agent development
+            - listitem [ref=e517]:
+              - img [ref=e518]
+              - text: Dedicated servers & infrastructure
+            - listitem [ref=e520]:
+              - img [ref=e521]
+              - text: Strategic AI consulting
+            - listitem [ref=e523]:
+              - img [ref=e524]
+              - text: Full platform customization
+            - listitem [ref=e526]:
+              - img [ref=e527]
+              - text: Executive support hotline
+            - listitem [ref=e529]:
+              - img [ref=e530]
+              - text: Custom contract & billing
+          - button "Subscribe" [ref=e532] [cursor=pointer]
+      - generic [ref=e533]:
+        - generic [ref=e534]:
+          - generic [ref=e535]:
+            - img [ref=e536]
+            - text: New
+          - heading "Build Your Own Package" [level=2] [ref=e540]
+          - paragraph [ref=e541]: Pick exactly the agents you need and the credits you want. Pay only for what you use.
+        - generic [ref=e543]:
+          - generic [ref=e544]:
+            - generic [ref=e545]:
+              - heading "Select Your Agents" [level=3] [ref=e546]
+              - generic [ref=e547]: 0 selected · $0/mo
+            - generic [ref=e549]:
+              - button "Adrian Stone Adrian Stone Procurement & Vendor Manager" [ref=e550] [cursor=pointer]:
+                - img "Adrian Stone" [ref=e551]
+                - generic [ref=e552]:
+                  - paragraph [ref=e553]: Adrian Stone
+                  - paragraph [ref=e554]: Procurement & Vendor Manager
+              - button "Alexandra Reid Alexandra Reid Legal Assistant" [ref=e555] [cursor=pointer]:
+                - img "Alexandra Reid" [ref=e556]
+                - generic [ref=e557]:
+                  - paragraph [ref=e558]: Alexandra Reid
+                  - paragraph [ref=e559]: Legal Assistant
+              - button "Amara Johnson Amara Johnson HR Specialist" [ref=e560] [cursor=pointer]:
+                - img "Amara Johnson" [ref=e561]
+                - generic [ref=e562]:
+                  - paragraph [ref=e563]: Amara Johnson
+                  - paragraph [ref=e564]: HR Specialist
+              - button "Axel Brennan Axel Brennan Growth Hacker" [ref=e565] [cursor=pointer]:
+                - img "Axel Brennan" [ref=e566]
+                - generic [ref=e567]:
+                  - paragraph [ref=e568]: Axel Brennan
+                  - paragraph [ref=e569]: Growth Hacker
+              - button "Benjamin Cole Benjamin Cole Financial Analyst" [ref=e570] [cursor=pointer]:
+                - img "Benjamin Cole" [ref=e571]
+                - generic [ref=e572]:
+                  - paragraph [ref=e573]: Benjamin Cole
+                  - paragraph [ref=e574]: Financial Analyst
+              - button "Budget Enforcement Agent Budget Enforcement Agent Budget Enforcement Officer" [ref=e575] [cursor=pointer]:
+                - img "Budget Enforcement Agent" [ref=e576]
+                - generic [ref=e577]:
+                  - paragraph [ref=e578]: Budget Enforcement Agent
+                  - paragraph [ref=e579]: Budget Enforcement Officer
+              - button "Cassandra Steele Cassandra Steele Chief Strategy Officer" [ref=e580] [cursor=pointer]:
+                - img "Cassandra Steele" [ref=e581]
+                - generic [ref=e582]:
+                  - paragraph [ref=e583]: Cassandra Steele
+                  - paragraph [ref=e584]: Chief Strategy Officer
+              - button "Catherine Blake Catherine Blake Reputation & PR Manager" [ref=e585] [cursor=pointer]:
+                - img "Catherine Blake" [ref=e586]
+                - generic [ref=e587]:
+                  - paragraph [ref=e588]: Catherine Blake
+                  - paragraph [ref=e589]: Reputation & PR Manager
+              - button "Damien Voss Damien Voss Cybersecurity Officer" [ref=e590] [cursor=pointer]:
+                - img "Damien Voss" [ref=e591]
+                - generic [ref=e592]:
+                  - paragraph [ref=e593]: Damien Voss
+                  - paragraph [ref=e594]: Cybersecurity Officer
+              - button "Derek Huang Derek Huang SEO Specialist" [ref=e595] [cursor=pointer]:
+                - img "Derek Huang" [ref=e596]
+                - generic [ref=e597]:
+                  - paragraph [ref=e598]: Derek Huang
+                  - paragraph [ref=e599]: SEO Specialist
+              - button "Diana Morales Diana Morales Operations Manager" [ref=e600] [cursor=pointer]:
+                - img "Diana Morales" [ref=e601]
+                - generic [ref=e602]:
+                  - paragraph [ref=e603]: Diana Morales
+                  - paragraph [ref=e604]: Operations Manager
+              - button "Dr. Clara Voss Dr. Clara Voss Research Specialist" [ref=e605] [cursor=pointer]:
+                - img "Dr. Clara Voss" [ref=e606]
+                - generic [ref=e607]:
+                  - paragraph [ref=e608]: Dr. Clara Voss
+                  - paragraph [ref=e609]: Research Specialist
+              - button "Dr. Eleanor Shaw Dr. Eleanor Shaw Knowledge Architect" [ref=e610] [cursor=pointer]:
+                - img "Dr. Eleanor Shaw" [ref=e611]
+                - generic [ref=e612]:
+                  - paragraph [ref=e613]: Dr. Eleanor Shaw
+                  - paragraph [ref=e614]: Knowledge Architect
+              - button "Dr. Luca Bernstein Dr. Luca Bernstein AI Optimization Specialist" [ref=e615] [cursor=pointer]:
+                - img "Dr. Luca Bernstein" [ref=e616]
+                - generic [ref=e617]:
+                  - paragraph [ref=e618]: Dr. Luca Bernstein
+                  - paragraph [ref=e619]: AI Optimization Specialist
+              - button "Elena Kovacs Elena Kovacs Product Manager" [ref=e620] [cursor=pointer]:
+                - img "Elena Kovacs" [ref=e621]
+                - generic [ref=e622]:
+                  - paragraph [ref=e623]: Elena Kovacs
+                  - paragraph [ref=e624]: Product Manager
+              - button "Ethan Yates Ethan Yates Data Analyst" [ref=e625] [cursor=pointer]:
+                - img "Ethan Yates" [ref=e626]
+                - generic [ref=e627]:
+                  - paragraph [ref=e628]: Ethan Yates
+                  - paragraph [ref=e629]: Data Analyst
+              - button "Execution Policy Agent Execution Policy Agent Execution Policy Enforcer" [ref=e630] [cursor=pointer]:
+                - img "Execution Policy Agent" [ref=e631]
+                - generic [ref=e632]:
+                  - paragraph [ref=e633]: Execution Policy Agent
+                  - paragraph [ref=e634]: Execution Policy Enforcer
+              - button "Felix Romano Felix Romano Graphic Designer" [ref=e635] [cursor=pointer]:
+                - img "Felix Romano" [ref=e636]
+                - generic [ref=e637]:
+                  - paragraph [ref=e638]: Felix Romano
+                  - paragraph [ref=e639]: Graphic Designer
+              - button "Isla Fernandez Isla Fernandez Social Media Manager" [ref=e640] [cursor=pointer]:
+                - img "Isla Fernandez" [ref=e641]
+                - generic [ref=e642]:
+                  - paragraph [ref=e643]: Isla Fernandez
+                  - paragraph [ref=e644]: Social Media Manager
+              - button "Jasper Wells Jasper Wells Email Marketing Specialist" [ref=e645] [cursor=pointer]:
+                - img "Jasper Wells" [ref=e646]
+                - generic [ref=e647]:
+                  - paragraph [ref=e648]: Jasper Wells
+                  - paragraph [ref=e649]: Email Marketing Specialist
+              - button "Kai Nakamoto Kai Nakamoto App Developer" [ref=e650] [cursor=pointer]:
+                - img "Kai Nakamoto" [ref=e651]
+                - generic [ref=e652]:
+                  - paragraph [ref=e653]: Kai Nakamoto
+                  - paragraph [ref=e654]: App Developer
+              - button "Kernel Operations Agent Kernel Operations Agent Kernel Operations Manager" [ref=e655] [cursor=pointer]:
+                - img "Kernel Operations Agent" [ref=e656]
+                - generic [ref=e657]:
+                  - paragraph [ref=e658]: Kernel Operations Agent
+                  - paragraph [ref=e659]: Kernel Operations Manager
+              - button "Layla Mansouri Layla Mansouri Localization & Global Expansion Specialist" [ref=e660] [cursor=pointer]:
+                - img "Layla Mansouri" [ref=e661]
+                - generic [ref=e662]:
+                  - paragraph [ref=e663]: Layla Mansouri
+                  - paragraph [ref=e664]: Localization & Global Expansion Specialist
+              - button "Luna Bergström Luna Bergström Web Designer" [ref=e665] [cursor=pointer]:
+                - img "Luna Bergström" [ref=e666]
+                - generic [ref=e667]:
+                  - paragraph [ref=e668]: Luna Bergström
+                  - paragraph [ref=e669]: Web Designer
+              - button "Marco De Luca Marco De Luca 3D Visualization Specialist" [ref=e670] [cursor=pointer]:
+                - img "Marco De Luca" [ref=e671]
+                - generic [ref=e672]:
+                  - paragraph [ref=e673]: Marco De Luca
+                  - paragraph [ref=e674]: 3D Visualization Specialist
+              - button "Marcus Drake Marcus Drake Sales Representative" [ref=e675] [cursor=pointer]:
+                - img "Marcus Drake" [ref=e676]
+                - generic [ref=e677]:
+                  - paragraph [ref=e678]: Marcus Drake
+                  - paragraph [ref=e679]: Sales Representative
+              - button "Maximilian Wolfe Maximilian Wolfe Revenue Strategist" [ref=e680] [cursor=pointer]:
+                - img "Maximilian Wolfe" [ref=e681]
+                - generic [ref=e682]:
+                  - paragraph [ref=e683]: Maximilian Wolfe
+                  - paragraph [ref=e684]: Revenue Strategist
+              - button "Maya Thompson Maya Thompson Customer Service Rep" [ref=e685] [cursor=pointer]:
+                - img "Maya Thompson" [ref=e686]
+                - generic [ref=e687]:
+                  - paragraph [ref=e688]: Maya Thompson
+                  - paragraph [ref=e689]: Customer Service Rep
+              - button "Memory Routing Agent Memory Routing Agent Memory Access Controller" [ref=e690] [cursor=pointer]:
+                - img "Memory Routing Agent" [ref=e691]
+                - generic [ref=e692]:
+                  - paragraph [ref=e693]: Memory Routing Agent
+                  - paragraph [ref=e694]: Memory Access Controller
+              - button "Nadia Kessler Nadia Kessler Personal Secretary" [ref=e695] [cursor=pointer]:
+                - img "Nadia Kessler" [ref=e696]
+                - generic [ref=e697]:
+                  - paragraph [ref=e698]: Nadia Kessler
+                  - paragraph [ref=e699]: Personal Secretary
+              - button "Nathan Cross Nathan Cross Project Manager" [ref=e700] [cursor=pointer]:
+                - img "Nathan Cross" [ref=e701]
+                - generic [ref=e702]:
+                  - paragraph [ref=e703]: Nathan Cross
+                  - paragraph [ref=e704]: Project Manager
+              - button "Nikolai Volkov Nikolai Volkov Data Engineer" [ref=e705] [cursor=pointer]:
+                - img "Nikolai Volkov" [ref=e706]
+                - generic [ref=e707]:
+                  - paragraph [ref=e708]: Nikolai Volkov
+                  - paragraph [ref=e709]: Data Engineer
+              - button "Olivia Sinclair Olivia Sinclair Content Writer" [ref=e710] [cursor=pointer]:
+                - img "Olivia Sinclair" [ref=e711]
+                - generic [ref=e712]:
+                  - paragraph [ref=e713]: Olivia Sinclair
+                  - paragraph [ref=e714]: Content Writer
+              - button "Professor James Whitfield Professor James Whitfield Ethics & Risk Governance Officer" [ref=e715] [cursor=pointer]:
+                - img "Professor James Whitfield" [ref=e716]
+                - generic [ref=e717]:
+                  - paragraph [ref=e718]: Professor James Whitfield
+                  - paragraph [ref=e719]: Ethics & Risk Governance Officer
+              - button "Recovery and Rollback Agent Recovery and Rollback Agent Recovery Operations Manager" [ref=e720] [cursor=pointer]:
+                - img "Recovery and Rollback Agent" [ref=e721]
+                - generic [ref=e722]:
+                  - paragraph [ref=e723]: Recovery and Rollback Agent
+                  - paragraph [ref=e724]: Recovery Operations Manager
+              - button "Resource Allocation Agent Resource Allocation Agent Resource Allocation Manager" [ref=e725] [cursor=pointer]:
+                - img "Resource Allocation Agent" [ref=e726]
+                - generic [ref=e727]:
+                  - paragraph [ref=e728]: Resource Allocation Agent
+                  - paragraph [ref=e729]: Resource Allocation Manager
+              - button "Richard Ashworth Richard Ashworth Investor Relations Manager" [ref=e730] [cursor=pointer]:
+                - img "Richard Ashworth" [ref=e731]
+                - generic [ref=e732]:
+                  - paragraph [ref=e733]: Richard Ashworth
+                  - paragraph [ref=e734]: Investor Relations Manager
+              - button "Riley Chen Riley Chen Video Content Specialist" [ref=e735] [cursor=pointer]:
+                - img "Riley Chen" [ref=e736]
+                - generic [ref=e737]:
+                  - paragraph [ref=e738]: Riley Chen
+                  - paragraph [ref=e739]: Video Content Specialist
+              - button "Scarlett Monroe Scarlett Monroe Copywriter" [ref=e740] [cursor=pointer]:
+                - img "Scarlett Monroe" [ref=e741]
+                - generic [ref=e742]:
+                  - paragraph [ref=e743]: Scarlett Monroe
+                  - paragraph [ref=e744]: Copywriter
+              - button "Scheduler Oversight Agent Scheduler Oversight Agent Scheduler Oversight Manager" [ref=e745] [cursor=pointer]:
+                - img "Scheduler Oversight Agent" [ref=e746]
+                - generic [ref=e747]:
+                  - paragraph [ref=e748]: Scheduler Oversight Agent
+                  - paragraph [ref=e749]: Scheduler Oversight Manager
+              - button "Serena Okafor Serena Okafor Automation Engineer" [ref=e750] [cursor=pointer]:
+                - img "Serena Okafor" [ref=e751]
+                - generic [ref=e752]:
+                  - paragraph [ref=e753]: Serena Okafor
+                  - paragraph [ref=e754]: Automation Engineer
+              - button "Sofia Reyes Sofia Reyes Customer Experience Architect" [ref=e755] [cursor=pointer]:
+                - img "Sofia Reyes" [ref=e756]
+                - generic [ref=e757]:
+                  - paragraph [ref=e758]: Sofia Reyes
+                  - paragraph [ref=e759]: Customer Experience Architect
+              - button "Task Graph Integrity Agent Task Graph Integrity Agent Task Graph Integrity Manager" [ref=e760] [cursor=pointer]:
+                - img "Task Graph Integrity Agent" [ref=e761]
+                - generic [ref=e762]:
+                  - paragraph [ref=e763]: Task Graph Integrity Agent
+                  - paragraph [ref=e764]: Task Graph Integrity Manager
+              - button "Tool Access Controller Agent Tool Access Controller Agent Tool Permission Manager" [ref=e765] [cursor=pointer]:
+                - img "Tool Access Controller Agent" [ref=e766]
+                - generic [ref=e767]:
+                  - paragraph [ref=e768]: Tool Access Controller Agent
+                  - paragraph [ref=e769]: Tool Permission Manager
+              - button "Valentina Cruz Valentina Cruz Brand Architect" [ref=e770] [cursor=pointer]:
+                - img "Valentina Cruz" [ref=e771]
+                - generic [ref=e772]:
+                  - paragraph [ref=e773]: Valentina Cruz
+                  - paragraph [ref=e774]: Brand Architect
+              - button "Victor Ashford Victor Ashford Business Strategist" [ref=e775] [cursor=pointer]:
+                - img "Victor Ashford" [ref=e776]
+                - generic [ref=e777]:
+                  - paragraph [ref=e778]: Victor Ashford
+                  - paragraph [ref=e779]: Business Strategist
+              - button "Victoria Harrington Victoria Harrington Compliance Officer" [ref=e780] [cursor=pointer]:
+                - img "Victoria Harrington" [ref=e781]
+                - generic [ref=e782]:
+                  - paragraph [ref=e783]: Victoria Harrington
+                  - paragraph [ref=e784]: Compliance Officer
+              - button "Yuki Tanaka Yuki Tanaka UX Researcher" [ref=e785] [cursor=pointer]:
+                - img "Yuki Tanaka" [ref=e786]
+                - generic [ref=e787]:
+                  - paragraph [ref=e788]: Yuki Tanaka
+                  - paragraph [ref=e789]: UX Researcher
+              - button "Zara Mitchell Zara Mitchell Marketing Specialist" [ref=e790] [cursor=pointer]:
+                - img "Zara Mitchell" [ref=e791]
+                - generic [ref=e792]:
+                  - paragraph [ref=e793]: Zara Mitchell
+                  - paragraph [ref=e794]: Marketing Specialist
+            - button "Commander Orion (Add-on) Delegates tasks across your team. Breaks down complex goals automatically. +$15 /month" [ref=e795] [cursor=pointer]:
+              - img [ref=e797]
+              - generic [ref=e799]:
+                - paragraph [ref=e800]: Commander Orion (Add-on)
+                - paragraph [ref=e801]: Delegates tasks across your team. Breaks down complex goals automatically.
+              - generic [ref=e802]:
+                - paragraph [ref=e803]: +$15
+                - paragraph [ref=e804]: /month
+          - generic [ref=e806]:
+            - heading "Your Package" [level=3] [ref=e807]
+            - generic [ref=e808]:
+              - paragraph [ref=e809]: Choose credits
+              - generic [ref=e810]:
+                - button "100 credits $16.6" [ref=e811] [cursor=pointer]:
+                  - generic [ref=e812]: 100 credits
+                  - generic [ref=e813]: $16.6
+                - button "500 credits $83" [ref=e814] [cursor=pointer]:
+                  - generic [ref=e815]: 500 credits
+                  - generic [ref=e816]: $83
+                - button "1,000 credits $165.99" [ref=e817] [cursor=pointer]:
+                  - generic [ref=e818]: 1,000 credits
+                  - generic [ref=e819]: $165.99
+                - button "2,000 credits $331.98" [ref=e820] [cursor=pointer]:
+                  - generic [ref=e821]: 2,000 credits
+                  - generic [ref=e822]: $331.98
+                - button "5,000 credits $829.96" [ref=e823] [cursor=pointer]:
+                  - generic [ref=e824]: 5,000 credits
+                  - generic [ref=e825]: $829.96
+            - generic [ref=e826]:
+              - generic [ref=e827]:
+                - generic [ref=e828]: 0 agents
+                - generic [ref=e829]: $0
+              - generic [ref=e830]:
+                - generic [ref=e831]: Total
+                - generic [ref=e832]: $0/mo
+            - button "Build Package" [disabled] [ref=e833]:
+              - img [ref=e834]
+              - text: Build Package
+            - paragraph [ref=e838]:
+              - link "Sign up" [ref=e839] [cursor=pointer]:
+                - /url: /register
+              - text: to build your package
+      - generic [ref=e840]:
+        - heading "Need More Credits?" [level=2] [ref=e841]
+        - paragraph [ref=e842]: Buy additional credits anytime. They never expire.
+        - generic [ref=e843]:
+          - generic [ref=e844]:
+            - paragraph [ref=e845]: "100"
+            - paragraph [ref=e846]: credits
+            - button "$16.6" [disabled] [ref=e847]
+          - generic [ref=e848]:
+            - paragraph [ref=e849]: "300"
+            - paragraph [ref=e850]: credits
+            - button "$49.8" [disabled] [ref=e851]
+          - generic [ref=e852]:
+            - paragraph [ref=e853]: "700"
+            - paragraph [ref=e854]: credits
+            - button "$116.19" [disabled] [ref=e855]
+          - generic [ref=e856]:
+            - paragraph [ref=e857]: "1500"
+            - paragraph [ref=e858]: credits
+            - button "$248.99" [disabled] [ref=e859]
+      - generic [ref=e860]:
+        - paragraph [ref=e861]: 458+ specialized AI agents across 28 network categories and 36 core systems. Commander Orion ∞ included in Pro and Business plans.
+        - paragraph [ref=e862]: Questions? Contact support.maars@marsgc.net
+      - contentinfo [ref=e863]:
+        - img "MARS Command" [ref=e864]
+        - generic [ref=e865]: MARS Command by MARS Global Corporation © 2026
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

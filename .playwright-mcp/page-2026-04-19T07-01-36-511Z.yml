@@ -1,0 +1,59 @@
+- generic [ref=e9]:
+  - generic:
+    - img
+  - generic [ref=e11]:
+    - generic [ref=e14]:
+      - img "Meta logo" [ref=e17]
+      - generic [ref=e24]:
+        - generic [ref=e26]: Join the waitlist for the Llama API Preview
+        - generic [ref=e28]: Share your details to get early access to the Llama API Preview, available only to US users. Non-US users will be notified when it's available in their region.
+        - generic [ref=e32]:
+          - textbox "Full name" [ref=e33]
+          - generic: Full name
+        - generic [ref=e37]:
+          - textbox "Work email" [ref=e38]
+          - generic: Work email
+        - combobox [ref=e42] [cursor=pointer]:
+          - generic [ref=e43]:
+            - generic: How do you plan to use Llama API?
+            - img [ref=e45]
+        - generic [ref=e52]:
+          - combobox "What type of AI model capabilities are you interested in?" [ref=e54]
+          - generic: What type of AI model capabilities are you interested in?
+        - generic [ref=e60]:
+          - combobox "Which of the new features would you like to be an early tester for?" [ref=e62]
+          - generic: Which of the new features would you like to be an early tester for?
+        - generic [ref=e64]:
+          - generic [ref=e68]:
+            - textbox "Company name" [ref=e69]
+            - generic: Company name
+          - combobox [ref=e73] [cursor=pointer]:
+            - generic [ref=e74]:
+              - generic: Industry
+              - img [ref=e76]
+        - generic [ref=e79]:
+          - combobox [ref=e83] [cursor=pointer]:
+            - generic [ref=e84]:
+              - generic: Team size
+              - img [ref=e86]
+          - combobox [ref=e91] [cursor=pointer]:
+            - generic [ref=e92]:
+              - generic: Your role
+              - img [ref=e94]
+        - generic [ref=e97]:
+          - generic [ref=e99]:
+            - img [ref=e101]
+            - checkbox "By checking the box, you agree to receive marketing related electronic communications from Meta, including news, events, updates, and emails." [ref=e103] [cursor=pointer]
+          - generic [ref=e105]: By checking the box, you agree to receive marketing related electronic communications from Meta, including news, events, updates, and emails.
+        - generic [ref=e107]:
+          - text: By tapping “Join the Waitlist,” you confirm that you have read and understood Meta's
+          - link "Privacy Policy" [ref=e108] [cursor=pointer]:
+            - /url: https://facebook.com/privacy/policy/
+          - text: and
+          - link "Cookies Policy" [ref=e109] [cursor=pointer]:
+            - /url: https://facebook.com/policies/cookies/
+          - text: .
+        - button "Join the Waitlist" [disabled] [ref=e112]:
+          - generic [ref=e115]: Join the Waitlist
+    - generic:
+      - img

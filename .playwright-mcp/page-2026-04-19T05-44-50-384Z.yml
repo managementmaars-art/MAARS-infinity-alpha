@@ -1,0 +1,50 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#content-area"
+    - generic [ref=e5]:
+      - generic [ref=e9]:
+        - generic [ref=e12]:
+          - link "Bytez home page light logo" [ref=e14] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e15]: Bytez home page
+            - img "light logo" [ref=e16]
+          - button "Open search" [ref=e18] [cursor=pointer]:
+            - generic [ref=e19]:
+              - img [ref=e20]
+              - generic [ref=e23]: Search...
+            - generic [ref=e24]: Ctrl K
+          - generic [ref=e25]:
+            - navigation [ref=e26]:
+              - list [ref=e27]:
+                - listitem [ref=e28]:
+                  - link "Discord" [ref=e29] [cursor=pointer]:
+                    - /url: https://discord.com/invite/Z723PfCFWf
+                - listitem [ref=e30]:
+                  - link "Get support" [ref=e31] [cursor=pointer]:
+                    - /url: https://discord.com/invite/Z723PfCFWf
+                - listitem [ref=e32] [cursor=pointer]:
+                  - link "Bytez-com/docs" [ref=e33]:
+                    - /url: https://github.com/Bytez-com/docs
+                    - generic [ref=e35]:
+                      - img [ref=e36]
+                      - generic [ref=e38]: Bytez-com/docs
+            - button "Toggle dark mode" [ref=e40] [cursor=pointer]:
+              - img [ref=e41]
+        - generic [ref=e49]:
+          - link "Docs" [ref=e50] [cursor=pointer]:
+            - /url: /model-api/docs/welcome
+            - text: Docs
+          - link "HTTP Reference" [ref=e52] [cursor=pointer]:
+            - /url: /http-reference/overview
+            - text: HTTP Reference
+          - link "Integrations" [ref=e54] [cursor=pointer]:
+            - /url: /integrations/langchain
+            - text: Integrations
+          - link "API status" [ref=e56] [cursor=pointer]:
+            - /url: /model-api/docs/status
+            - text: API status
+      - generic [ref=e64]:
+        - generic [ref=e65]: "404"
+        - heading "Page Not Found" [level=1] [ref=e66]
+  - alert [ref=e72]

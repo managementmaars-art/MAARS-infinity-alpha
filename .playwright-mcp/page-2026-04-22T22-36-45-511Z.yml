@@ -1,0 +1,25 @@
+- generic [ref=e1]:
+  - generic [ref=e7]:
+    - img [ref=e8]
+    - progressbar [ref=e10]
+    - generic [ref=e14]:
+      - generic [ref=e15]: Granting free quota
+      - generic [ref=e16]: Loading ...
+  - iframe [ref=e4]:
+    
+  - iframe [ref=e5]:
+    
+  - generic [ref=e17]:
+    - dialog:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - img "exclamation-circle" [ref=e22]:
+            - img [ref=e23]
+          - generic [ref=e25]:
+            - generic [ref=e26]: You have switched to the China (Beijing) region
+            - generic [ref=e27]: A default workspace, Default Workspace, has been initialized for your first use in the China (Beijing) region. Create an API key before calling the model service.
+        - generic [ref=e28]:
+          - button "Create API key" [ref=e29] [cursor=pointer]:
+            - generic [ref=e30]: Create API key
+          - button "OK" [ref=e31] [cursor=pointer]:
+            - generic [ref=e32]: OK

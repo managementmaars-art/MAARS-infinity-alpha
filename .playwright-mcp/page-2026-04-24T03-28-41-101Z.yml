@@ -1,0 +1,1174 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - link "MAARS MAARS Command" [ref=e7]:
+          - /url: /
+          - img "MAARS" [ref=e8]
+          - generic [ref=e9]: MAARS Command
+        - generic [ref=e10]:
+          - link "Features" [ref=e11]:
+            - /url: "#features"
+          - link "Agents" [ref=e12]:
+            - /url: "#agents"
+          - link "Models" [ref=e13]:
+            - /url: "#models"
+          - link "Pricing" [ref=e14]:
+            - /url: /pricing
+          - link "Login" [ref=e15]:
+            - /url: /login
+          - button "Get Started" [ref=e16]
+    - generic [ref=e17]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - img [ref=e23]
+          - text: The AI Workforce OS — MAARS Infinity
+        - heading "458 AI Specialists. One Command." [level=1] [ref=e25]:
+          - text: 458 AI Specialists.
+          - text: One Command.
+        - paragraph [ref=e26]: The world's first enterprise-grade AI workforce platform. Chat with 458+ specialists, command them in parallel, and govern every action with live trust scoring — across 33 providers and 175,000+ models.
+        - generic [ref=e27]:
+          - button "Deploy Your AI Team" [ref=e28]:
+            - text: Deploy Your AI Team
+            - img [ref=e29]
+          - button "Sign In" [ref=e31]
+        - generic [ref=e32]:
+          - generic [ref=e33]: Powered by
+          - generic [ref=e34]: GPT-5
+          - generic [ref=e35]: Claude
+          - generic [ref=e36]: Gemini
+          - generic [ref=e37]: Grok
+          - generic [ref=e38]: DeepSeek
+          - generic [ref=e39]: 175k+
+      - generic [ref=e40]:
+        - generic [ref=e41]: Scroll
+        - img [ref=e42]
+    - generic [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]: 458+
+        - generic [ref=e48]: AI Agents
+      - generic [ref=e49]:
+        - generic [ref=e50]: "27"
+        - generic [ref=e51]: Agent Networks
+      - generic [ref=e52]:
+        - generic [ref=e53]: "33"
+        - generic [ref=e54]: LLM Providers
+      - generic [ref=e55]:
+        - generic [ref=e56]: 609+
+        - generic [ref=e57]: Curated Models
+      - generic [ref=e58]:
+        - generic [ref=e59]: 175k+
+        - generic [ref=e60]: HF Pass-through
+      - generic [ref=e61]:
+        - generic [ref=e62]: "1"
+        - generic [ref=e63]: Universal Key
+    - generic [ref=e65]:
+      - generic [ref=e66]:
+        - generic [ref=e69]: Platform Capabilities
+        - heading "Everything You Need to Command AI" [level=2] [ref=e70]
+      - generic [ref=e71]:
+        - generic [ref=e72]:
+          - img [ref=e74]
+          - heading "458+ Specialized AI Agents" [level=3] [ref=e77]
+          - paragraph [ref=e78]: Pre-built expert agents across 28 networks — engineering, finance, legal, creative, and more.
+        - generic [ref=e80]:
+          - img [ref=e82]
+          - heading "175,000+ AI Models" [level=3] [ref=e84]
+          - paragraph [ref=e85]: 609 curated models + all of HuggingFace's open-source catalogue via universal pass-through.
+        - generic [ref=e87]:
+          - img [ref=e89]
+          - heading "Agent Collaboration" [level=3] [ref=e94]
+          - paragraph [ref=e95]: Multiple agents working in concert across 28 specialized networks to tackle complex goals.
+        - generic [ref=e97]:
+          - img [ref=e99]
+          - heading "Chat with Any Agent" [level=3] [ref=e101]
+          - paragraph [ref=e102]: Natural conversation with 458+ context-aware AI agents, each with unique expertise and tools.
+        - generic [ref=e104]:
+          - img [ref=e106]
+          - heading "Trust Scores & Governance" [level=3] [ref=e108]
+          - paragraph [ref=e109]: Every action governed, metered, and audited. Agent trust scores built from live execution history.
+        - generic [ref=e111]:
+          - img [ref=e113]
+          - heading "One Key. All Providers." [level=3] [ref=e115]
+          - paragraph [ref=e116]: Single OpenAI-compatible endpoint for all 33 providers. Drop-in replace base_url and you're done.
+    - generic [ref=e119]:
+      - generic [ref=e120]:
+        - generic [ref=e123]: Getting Started
+        - heading "From Zero to AI Command Center in Minutes" [level=2] [ref=e124]
+        - paragraph [ref=e125]: Three steps to a fully operational AI workforce — no DevOps, no infrastructure, no model juggling.
+      - generic [ref=e127]:
+        - generic [ref=e129]:
+          - generic [ref=e130]:
+            - img [ref=e132]
+            - generic [ref=e136]: "01"
+          - generic [ref=e137]: < 60 seconds
+          - heading "Get One API Key" [level=3] [ref=e138]
+          - paragraph [ref=e139]: Sign up and receive your maars-sk key. One credential, universal access — 33 providers, 175,000+ models, all 458 agents.
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - img [ref=e145]
+            - generic [ref=e148]: "02"
+          - generic [ref=e149]: No-code or API
+          - heading "Deploy Your Agents" [level=3] [ref=e150]
+          - paragraph [ref=e151]: Chat with any of the 458 pre-built specialists or build custom agents with your own persona, tools, and knowledge base.
+        - generic [ref=e154]:
+          - generic [ref=e155]:
+            - img [ref=e157]
+            - generic [ref=e159]: "03"
+          - generic [ref=e160]: Enterprise-ready
+          - heading "Scale & Govern" [level=3] [ref=e161]
+          - paragraph [ref=e162]: Trust scores, audit logs, budget controls, and live governance let you run autonomous agents at scale — safely.
+    - generic [ref=e164]:
+      - generic [ref=e166]:
+        - generic [ref=e167]:
+          - generic [ref=e170]: The Workforce
+          - heading "Meet Your AI Team" [level=2] [ref=e171]
+          - paragraph [ref=e172]: 458+ specialists, each alive and working for you — right now.
+        - generic [ref=e173]:
+          - button [ref=e174]:
+            - img [ref=e175]
+          - button [ref=e177]:
+            - img [ref=e178]
+          - button "Access All 458 Agents" [ref=e180]:
+            - text: Access All 458 Agents
+            - img [ref=e181]
+      - generic [ref=e183]:
+        - generic [ref=e184]:
+          - img "Commander Orion" [ref=e185]
+          - generic [ref=e188]: ⚡ COMMANDER
+          - generic [ref=e191]: LIVE
+          - generic [ref=e192]:
+            - generic [ref=e199]: Delegating to team…
+            - paragraph [ref=e200]: AI Commander
+            - heading "Commander Orion" [level=3] [ref=e201]
+            - generic [ref=e202]:
+              - generic [ref=e203]: Task Delegation
+              - generic [ref=e204]: Strategy
+        - generic [ref=e205]:
+          - img "Nadia Kessler" [ref=e206]
+          - generic [ref=e211]: LIVE
+          - generic [ref=e212]:
+            - generic [ref=e219]: Managing calendar…
+            - paragraph [ref=e220]: Personal Secretary
+            - heading "Nadia Kessler" [level=3] [ref=e221]
+            - generic [ref=e222]:
+              - generic [ref=e223]: Scheduling
+              - generic [ref=e224]: To-Do Lists
+        - generic [ref=e225]:
+          - img "Zara Mitchell" [ref=e226]
+          - generic [ref=e231]: LIVE
+          - generic [ref=e232]:
+            - generic [ref=e239]: Running A/B test…
+            - paragraph [ref=e240]: Marketing Specialist
+            - heading "Zara Mitchell" [level=3] [ref=e241]
+            - generic [ref=e242]:
+              - generic [ref=e243]: Social Media
+              - generic [ref=e244]: Ad Copy
+        - generic [ref=e245]:
+          - img "Victor Ashford" [ref=e246]
+          - generic [ref=e251]: LIVE
+          - generic [ref=e252]:
+            - generic [ref=e259]: Market analysis…
+            - paragraph [ref=e260]: Business Strategist
+            - heading "Victor Ashford" [level=3] [ref=e261]
+            - generic [ref=e262]:
+              - generic [ref=e263]: Strategy
+              - generic [ref=e264]: Market Research
+        - generic [ref=e265]:
+          - img "Luna Bergström" [ref=e266]
+          - generic [ref=e271]: LIVE
+          - generic [ref=e272]:
+            - generic [ref=e279]: Creating wireframes…
+            - paragraph [ref=e280]: Web Designer
+            - heading "Luna Bergström" [level=3] [ref=e281]
+            - generic [ref=e282]:
+              - generic [ref=e283]: UI/UX
+              - generic [ref=e284]: Landing Pages
+        - generic [ref=e285]:
+          - img "Kai Nakamoto" [ref=e286]
+          - generic [ref=e291]: LIVE
+          - generic [ref=e292]:
+            - generic [ref=e299]: Debugging API…
+            - paragraph [ref=e300]: App Developer
+            - heading "Kai Nakamoto" [level=3] [ref=e301]
+            - generic [ref=e302]:
+              - generic [ref=e303]: Web Apps
+              - generic [ref=e304]: Mobile Apps
+        - generic [ref=e305]:
+          - img "Scarlett Monroe" [ref=e306]
+          - generic [ref=e311]: LIVE
+          - generic [ref=e312]:
+            - generic [ref=e319]: Writing blog draft…
+            - paragraph [ref=e320]: Copywriter
+            - heading "Scarlett Monroe" [level=3] [ref=e321]
+            - generic [ref=e322]:
+              - generic [ref=e323]: Blog Posts
+              - generic [ref=e324]: Ad Copy
+        - generic [ref=e325]:
+          - img "Derek Huang" [ref=e326]
+          - generic [ref=e331]: LIVE
+          - generic [ref=e332]:
+            - generic [ref=e339]: Fixing broken links…
+            - paragraph [ref=e340]: SEO Specialist
+            - heading "Derek Huang" [level=3] [ref=e341]
+            - generic [ref=e342]:
+              - generic [ref=e343]: Keywords
+              - generic [ref=e344]: Technical SEO
+        - generic [ref=e345]:
+          - img "Marcus Drake" [ref=e346]
+          - generic [ref=e351]: LIVE
+          - generic [ref=e352]:
+            - generic [ref=e359]: Following up lead…
+            - paragraph [ref=e360]: Sales Representative
+            - heading "Marcus Drake" [level=3] [ref=e361]
+            - generic [ref=e362]:
+              - generic [ref=e363]: Outreach
+              - generic [ref=e364]: Proposals
+        - generic [ref=e365]:
+          - img "Isla Fernandez" [ref=e366]
+          - generic [ref=e371]: LIVE
+          - generic [ref=e372]:
+            - generic [ref=e379]: Scheduling posts…
+            - paragraph [ref=e380]: Social Media Manager
+            - heading "Isla Fernandez" [level=3] [ref=e381]
+            - generic [ref=e382]:
+              - generic [ref=e383]: Content Strategy
+              - generic [ref=e384]: Engagement
+        - generic [ref=e385]:
+          - img "Ethan Yates" [ref=e386]
+          - generic [ref=e391]: LIVE
+          - generic [ref=e392]:
+            - generic [ref=e399]: Running SQL query…
+            - paragraph [ref=e400]: Data Analyst
+            - heading "Ethan Yates" [level=3] [ref=e401]
+            - generic [ref=e402]:
+              - generic [ref=e403]: Data Viz
+              - generic [ref=e404]: Reports
+        - generic [ref=e405]:
+          - img "Olivia Sinclair" [ref=e406]
+          - generic [ref=e411]: LIVE
+          - generic [ref=e412]:
+            - generic [ref=e419]: Writing article…
+            - paragraph [ref=e420]: Content Writer
+            - heading "Olivia Sinclair" [level=3] [ref=e421]
+            - generic [ref=e422]:
+              - generic [ref=e423]: Articles
+              - generic [ref=e424]: Stories
+        - generic [ref=e425]:
+          - img "Maya Thompson" [ref=e426]
+          - generic [ref=e431]: LIVE
+          - generic [ref=e432]:
+            - generic [ref=e439]: Processing request…
+            - paragraph [ref=e440]: Customer Service Rep
+            - heading "Maya Thompson" [level=3] [ref=e441]
+            - generic [ref=e442]:
+              - generic [ref=e443]: Support
+              - generic [ref=e444]: FAQ
+        - generic [ref=e445]:
+          - img "Nathan Cross" [ref=e446]
+          - generic [ref=e451]: LIVE
+          - generic [ref=e452]:
+            - generic [ref=e459]: Updating roadmap…
+            - paragraph [ref=e460]: Project Manager
+            - heading "Nathan Cross" [level=3] [ref=e461]
+            - generic [ref=e462]:
+              - generic [ref=e463]: Agile
+              - generic [ref=e464]: Planning
+        - generic [ref=e465]:
+          - img "Dr. Clara Voss" [ref=e466]
+          - generic [ref=e471]: LIVE
+          - generic [ref=e472]:
+            - generic [ref=e479]: Reading papers…
+            - paragraph [ref=e480]: Research Specialist
+            - heading "Dr. Clara Voss" [level=3] [ref=e481]
+            - generic [ref=e482]:
+              - generic [ref=e483]: Papers
+              - generic [ref=e484]: Analysis
+        - generic [ref=e485]:
+          - img "Benjamin Cole" [ref=e486]
+          - generic [ref=e491]: LIVE
+          - generic [ref=e492]:
+            - generic [ref=e499]: Running SQL query…
+            - paragraph [ref=e500]: Financial Analyst
+            - heading "Benjamin Cole" [level=3] [ref=e501]
+            - generic [ref=e502]:
+              - generic [ref=e503]: Forecasting
+              - generic [ref=e504]: Budgets
+        - generic [ref=e505]:
+          - img "Amara Johnson" [ref=e506]
+          - generic [ref=e511]: LIVE
+          - generic [ref=e512]:
+            - generic [ref=e519]: Screening resume…
+            - paragraph [ref=e520]: HR Specialist
+            - heading "Amara Johnson" [level=3] [ref=e521]
+            - generic [ref=e522]:
+              - generic [ref=e523]: Recruiting
+              - generic [ref=e524]: Policies
+        - generic [ref=e525]:
+          - img "Felix Romano" [ref=e526]
+          - generic [ref=e531]: LIVE
+          - generic [ref=e532]:
+            - generic [ref=e539]: Refining UI layout…
+            - paragraph [ref=e540]: Graphic Designer
+            - heading "Felix Romano" [level=3] [ref=e541]
+            - generic [ref=e542]:
+              - generic [ref=e543]: Logos
+              - generic [ref=e544]: Illustrations
+        - generic [ref=e545]:
+          - img "Alexandra Reid" [ref=e546]
+          - generic [ref=e551]: LIVE
+          - generic [ref=e552]:
+            - generic [ref=e559]: Reviewing contract…
+            - paragraph [ref=e560]: Legal Assistant
+            - heading "Alexandra Reid" [level=3] [ref=e561]
+            - generic [ref=e562]:
+              - generic [ref=e563]: Contracts
+              - generic [ref=e564]: Compliance
+        - generic [ref=e565]:
+          - img "Jasper Wells" [ref=e566]
+          - generic [ref=e571]: LIVE
+          - generic [ref=e572]:
+            - generic [ref=e579]: Analyzing campaign data…
+            - paragraph [ref=e580]: Email Marketing
+            - heading "Jasper Wells" [level=3] [ref=e581]
+            - generic [ref=e582]:
+              - generic [ref=e583]: Campaigns
+              - generic [ref=e584]: Newsletters
+        - generic [ref=e585]:
+          - img "Riley Chen" [ref=e586]
+          - generic [ref=e591]: LIVE
+          - generic [ref=e592]:
+            - generic [ref=e599]: Writing script…
+            - paragraph [ref=e600]: Video Content
+            - heading "Riley Chen" [level=3] [ref=e601]
+            - generic [ref=e602]:
+              - generic [ref=e603]: Scripts
+              - generic [ref=e604]: Storyboards
+        - generic [ref=e605]:
+          - img "Damien Voss" [ref=e606]
+          - generic [ref=e611]: LIVE
+          - generic [ref=e612]:
+            - generic [ref=e619]: Threat scanning…
+            - paragraph [ref=e620]: Cybersecurity Officer
+            - heading "Damien Voss" [level=3] [ref=e621]
+            - generic [ref=e622]:
+              - generic [ref=e623]: Security Audits
+              - generic [ref=e624]: Threat Analysis
+        - generic [ref=e625]:
+          - img "Serena Okafor" [ref=e626]
+          - generic [ref=e631]: LIVE
+          - generic [ref=e632]:
+            - generic [ref=e639]: Building workflow…
+            - paragraph [ref=e640]: Automation Engineer
+            - heading "Serena Okafor" [level=3] [ref=e641]
+            - generic [ref=e642]:
+              - generic [ref=e643]: Workflows
+              - generic [ref=e644]: Integrations
+        - generic [ref=e645]:
+          - img "Axel Brennan" [ref=e646]
+          - generic [ref=e651]: LIVE
+          - generic [ref=e652]:
+            - generic [ref=e659]: Funnel analysis…
+            - paragraph [ref=e660]: Growth Hacker
+            - heading "Axel Brennan" [level=3] [ref=e661]
+            - generic [ref=e662]:
+              - generic [ref=e663]: Growth Experiments
+              - generic [ref=e664]: A/B Testing
+        - generic [ref=e665]:
+          - img "Victoria Harrington" [ref=e666]
+          - generic [ref=e671]: LIVE
+          - generic [ref=e672]:
+            - generic [ref=e679]: Regulatory scan…
+            - paragraph [ref=e680]: Compliance Officer
+            - heading "Victoria Harrington" [level=3] [ref=e681]
+            - generic [ref=e682]:
+              - generic [ref=e683]: Regulatory
+              - generic [ref=e684]: Audits
+        - generic [ref=e685]:
+          - img "Dr. Luca Bernstein" [ref=e686]
+          - generic [ref=e691]: LIVE
+          - generic [ref=e692]:
+            - generic [ref=e699]: Tuning prompts…
+            - paragraph [ref=e700]: AI Optimizer
+            - heading "Dr. Luca Bernstein" [level=3] [ref=e701]
+            - generic [ref=e702]:
+              - generic [ref=e703]: AI Tuning
+              - generic [ref=e704]: Cost Reduction
+        - generic [ref=e705]:
+          - img "Diana Morales" [ref=e706]
+          - generic [ref=e711]: LIVE
+          - generic [ref=e712]:
+            - generic [ref=e719]: Updating roadmap…
+            - paragraph [ref=e720]: Operations Manager
+            - heading "Diana Morales" [level=3] [ref=e721]
+            - generic [ref=e722]:
+              - generic [ref=e723]: Process
+              - generic [ref=e724]: Supply Chain
+        - generic [ref=e725]:
+          - img "Maximilian Wolfe" [ref=e726]
+          - generic [ref=e731]: LIVE
+          - generic [ref=e732]:
+            - generic [ref=e739]: Mapping competitors…
+            - paragraph [ref=e740]: Revenue Strategist
+            - heading "Maximilian Wolfe" [level=3] [ref=e741]
+            - generic [ref=e742]:
+              - generic [ref=e743]: Pricing
+              - generic [ref=e744]: Revenue Models
+        - generic [ref=e745]:
+          - img "Cassandra Steele" [ref=e746]
+          - generic [ref=e751]: LIVE
+          - generic [ref=e752]:
+            - generic [ref=e759]: OKR planning…
+            - paragraph [ref=e760]: Chief Strategy Officer
+            - heading "Cassandra Steele" [level=3] [ref=e761]
+            - generic [ref=e762]:
+              - generic [ref=e763]: Corporate Strategy
+              - generic [ref=e764]: Market Expansion
+        - generic [ref=e765]:
+          - img "Richard Ashworth" [ref=e766]
+          - generic [ref=e771]: LIVE
+          - generic [ref=e772]:
+            - generic [ref=e779]: Pitch deck…
+            - paragraph [ref=e780]: Investor Relations
+            - heading "Richard Ashworth" [level=3] [ref=e781]
+            - generic [ref=e782]:
+              - generic [ref=e783]: Pitch Decks
+              - generic [ref=e784]: Fundraising
+        - generic [ref=e785]:
+          - img "Elena Kovacs" [ref=e786]
+          - generic [ref=e791]: LIVE
+          - generic [ref=e792]:
+            - generic [ref=e799]: Updating roadmap…
+            - paragraph [ref=e800]: Product Manager
+            - heading "Elena Kovacs" [level=3] [ref=e801]
+            - generic [ref=e802]:
+              - generic [ref=e803]: Roadmaps
+              - generic [ref=e804]: User Stories
+        - generic [ref=e805]:
+          - img "Nikolai Volkov" [ref=e806]
+          - generic [ref=e811]: LIVE
+          - generic [ref=e812]:
+            - generic [ref=e819]: ETL pipeline…
+            - paragraph [ref=e820]: Data Engineer
+            - heading "Nikolai Volkov" [level=3] [ref=e821]
+            - generic [ref=e822]:
+              - generic [ref=e823]: Pipelines
+              - generic [ref=e824]: ETL
+        - generic [ref=e825]:
+          - img "Valentina Cruz" [ref=e826]
+          - generic [ref=e831]: LIVE
+          - generic [ref=e832]:
+            - generic [ref=e839]: Identity system…
+            - paragraph [ref=e840]: Brand Architect
+            - heading "Valentina Cruz" [level=3] [ref=e841]
+            - generic [ref=e842]:
+              - generic [ref=e843]: Brand Identity
+              - generic [ref=e844]: Guidelines
+        - generic [ref=e845]:
+          - img "Yuki Tanaka" [ref=e846]
+          - generic [ref=e851]: LIVE
+          - generic [ref=e852]:
+            - generic [ref=e859]: Reading papers…
+            - paragraph [ref=e860]: UX Researcher
+            - heading "Yuki Tanaka" [level=3] [ref=e861]
+            - generic [ref=e862]:
+              - generic [ref=e863]: User Research
+              - generic [ref=e864]: Usability
+        - generic [ref=e865]:
+          - img "Marco De Luca" [ref=e866]
+          - generic [ref=e871]: LIVE
+          - generic [ref=e872]:
+            - generic [ref=e879]: 3D render…
+            - paragraph [ref=e880]: 3D Specialist
+            - heading "Marco De Luca" [level=3] [ref=e881]
+            - generic [ref=e882]:
+              - generic [ref=e883]: 3D Rendering
+              - generic [ref=e884]: Motion Graphics
+        - generic [ref=e885]:
+          - img "Catherine Blake" [ref=e886]
+          - generic [ref=e891]: LIVE
+          - generic [ref=e892]:
+            - generic [ref=e899]: Updating roadmap…
+            - paragraph [ref=e900]: PR Manager
+            - heading "Catherine Blake" [level=3] [ref=e901]
+            - generic [ref=e902]:
+              - generic [ref=e903]: PR Strategy
+              - generic [ref=e904]: Crisis Mgmt
+        - generic [ref=e905]:
+          - img "Adrian Stone" [ref=e906]
+          - generic [ref=e911]: LIVE
+          - generic [ref=e912]:
+            - generic [ref=e919]: Updating roadmap…
+            - paragraph [ref=e920]: Procurement Manager
+            - heading "Adrian Stone" [level=3] [ref=e921]
+            - generic [ref=e922]:
+              - generic [ref=e923]: Vendor Mgmt
+              - generic [ref=e924]: Contracts
+        - generic [ref=e925]:
+          - img "Sofia Reyes" [ref=e926]
+          - generic [ref=e931]: LIVE
+          - generic [ref=e932]:
+            - generic [ref=e939]: Journey mapping…
+            - paragraph [ref=e940]: CX Architect
+            - heading "Sofia Reyes" [level=3] [ref=e941]
+            - generic [ref=e942]:
+              - generic [ref=e943]: Journey Maps
+              - generic [ref=e944]: Loyalty
+        - generic [ref=e945]:
+          - img "Prof. James Whitfield" [ref=e946]
+          - generic [ref=e951]: LIVE
+          - generic [ref=e952]:
+            - generic [ref=e959]: Ethics review…
+            - paragraph [ref=e960]: Ethics Officer
+            - heading "Prof. James Whitfield" [level=3] [ref=e961]
+            - generic [ref=e962]:
+              - generic [ref=e963]: Ethics
+              - generic [ref=e964]: Risk
+        - generic [ref=e965]:
+          - img "Dr. Eleanor Shaw" [ref=e966]
+          - generic [ref=e971]: LIVE
+          - generic [ref=e972]:
+            - generic [ref=e979]: Building taxonomy…
+            - paragraph [ref=e980]: Knowledge Architect
+            - heading "Dr. Eleanor Shaw" [level=3] [ref=e981]
+            - generic [ref=e982]:
+              - generic [ref=e983]: Knowledge Mgmt
+              - generic [ref=e984]: Documentation
+        - generic [ref=e985]:
+          - img "Layla Mansouri" [ref=e986]
+          - generic [ref=e991]: LIVE
+          - generic [ref=e992]:
+            - generic [ref=e999]: Translating content…
+            - paragraph [ref=e1000]: Localization Specialist
+            - heading "Layla Mansouri" [level=3] [ref=e1001]
+            - generic [ref=e1002]:
+              - generic [ref=e1003]: Localization
+              - generic [ref=e1004]: Translation
+    - generic [ref=e1006]:
+      - generic [ref=e1007]:
+        - generic [ref=e1010]: Model Infrastructure
+        - heading "33 Providers. 175,000+ Models." [level=2] [ref=e1011]
+        - paragraph [ref=e1012]: 609 curated models across every frontier provider, plus universal pass-through to all of HuggingFace's open-source catalogue.
+      - generic [ref=e1013]:
+        - generic [ref=e1014]:
+          - heading "OpenAI" [level=3] [ref=e1017]
+          - generic [ref=e1018]:
+            - generic [ref=e1019]:
+              - generic [ref=e1020]: GPT-5
+              - generic [ref=e1021]: Flagship
+            - generic [ref=e1022]:
+              - generic [ref=e1023]: GPT-4o
+              - generic [ref=e1024]: Fast
+            - generic [ref=e1025]:
+              - generic [ref=e1026]: O3
+              - generic [ref=e1027]: Reasoning
+        - generic [ref=e1028]:
+          - heading "Anthropic" [level=3] [ref=e1031]
+          - generic [ref=e1032]:
+            - generic [ref=e1033]:
+              - generic [ref=e1034]: Claude Opus 4.6
+              - generic [ref=e1035]: Premium
+            - generic [ref=e1036]:
+              - generic [ref=e1037]: Claude Sonnet 4.6
+              - generic [ref=e1038]: Flagship
+        - generic [ref=e1039]:
+          - heading "Google" [level=3] [ref=e1042]
+          - generic [ref=e1043]:
+            - generic [ref=e1044]:
+              - generic [ref=e1045]: Gemini 3 Flash
+              - generic [ref=e1046]: Fast
+            - generic [ref=e1047]:
+              - generic [ref=e1048]: Gemini 3 Pro
+              - generic [ref=e1049]: Flagship
+        - generic [ref=e1050]:
+          - heading "xAI (Grok)" [level=3] [ref=e1053]
+          - generic [ref=e1054]:
+            - generic [ref=e1055]:
+              - generic [ref=e1056]: Grok 4
+              - generic [ref=e1057]: Flagship
+            - generic [ref=e1058]:
+              - generic [ref=e1059]: Grok 3 Mini
+              - generic [ref=e1060]: Economy
+        - generic [ref=e1061]:
+          - heading "DeepSeek" [level=3] [ref=e1064]
+          - generic [ref=e1065]:
+            - generic [ref=e1066]:
+              - generic [ref=e1067]: DeepSeek Chat
+              - generic [ref=e1068]: Economy
+            - generic [ref=e1069]:
+              - generic [ref=e1070]: DeepSeek Reasoner
+              - generic [ref=e1071]: Reasoning
+        - generic [ref=e1072]:
+          - heading "Mistral AI" [level=3] [ref=e1075]
+          - generic [ref=e1076]:
+            - generic [ref=e1077]:
+              - generic [ref=e1078]: Mistral Large
+              - generic [ref=e1079]: Flagship
+            - generic [ref=e1080]:
+              - generic [ref=e1081]: Mistral Small
+              - generic [ref=e1082]: Economy
+        - generic [ref=e1083]:
+          - heading "Groq + Cerebras" [level=3] [ref=e1086]
+          - generic [ref=e1087]:
+            - generic [ref=e1088]:
+              - generic [ref=e1089]: Llama 4 Maverick
+              - generic [ref=e1090]: Ultra-Fast
+            - generic [ref=e1091]:
+              - generic [ref=e1092]: QwQ-32B
+              - generic [ref=e1093]: Reasoning
+        - generic [ref=e1094]:
+          - heading "Together AI" [level=3] [ref=e1097]
+          - generic [ref=e1098]:
+            - generic [ref=e1099]:
+              - generic [ref=e1100]: Llama 4 Maverick FP8
+              - generic [ref=e1101]: Fast
+            - generic [ref=e1102]:
+              - generic [ref=e1103]: Qwen 3 235B
+              - generic [ref=e1104]: Flagship
+        - generic [ref=e1105]:
+          - heading "NVIDIA" [level=3] [ref=e1108]
+          - generic [ref=e1109]:
+            - generic [ref=e1110]:
+              - generic [ref=e1111]: Nemotron Ultra 253B
+              - generic [ref=e1112]: Premium
+            - generic [ref=e1113]:
+              - generic [ref=e1114]: Nemotron Super 49B
+              - generic [ref=e1115]: Fast
+        - generic [ref=e1116]:
+          - heading "SambaNova" [level=3] [ref=e1119]
+          - generic [ref=e1120]:
+            - generic [ref=e1121]:
+              - generic [ref=e1122]: DeepSeek R1-0528
+              - generic [ref=e1123]: Reasoning
+            - generic [ref=e1124]:
+              - generic [ref=e1125]: Llama 4 Maverick
+              - generic [ref=e1126]: Fast
+        - generic [ref=e1127]:
+          - heading "Perplexity" [level=3] [ref=e1130]
+          - generic [ref=e1131]:
+            - generic [ref=e1132]:
+              - generic [ref=e1133]: Sonar Pro
+              - generic [ref=e1134]: Research
+            - generic [ref=e1135]:
+              - generic [ref=e1136]: Sonar
+              - generic [ref=e1137]: Search
+        - generic [ref=e1138]:
+          - heading "Cohere" [level=3] [ref=e1141]
+          - generic [ref=e1142]:
+            - generic [ref=e1143]:
+              - generic [ref=e1144]: Command R+
+              - generic [ref=e1145]: Flagship
+            - generic [ref=e1146]:
+              - generic [ref=e1147]: Command R
+              - generic [ref=e1148]: Economy
+        - generic [ref=e1149]:
+          - heading "Amazon Bedrock" [level=3] [ref=e1152]
+          - generic [ref=e1153]:
+            - generic [ref=e1154]:
+              - generic [ref=e1155]: Nova Pro
+              - generic [ref=e1156]: Flagship
+            - generic [ref=e1157]:
+              - generic [ref=e1158]: Nova Lite
+              - generic [ref=e1159]: Fast
+        - generic [ref=e1160]:
+          - heading "HuggingFace" [level=3] [ref=e1163]
+          - generic [ref=e1164]:
+            - generic [ref=e1165]:
+              - generic [ref=e1166]: "huggingface/{any}"
+              - generic [ref=e1167]: Pass-Through
+            - generic [ref=e1168]:
+              - generic [ref=e1169]: 175,000+ Models
+              - generic [ref=e1170]: Open-Source
+        - generic [ref=e1171]:
+          - heading "Meta Llama API" [level=3] [ref=e1174]
+          - generic [ref=e1175]:
+            - generic [ref=e1176]:
+              - generic [ref=e1177]: Llama 4 Scout
+              - generic [ref=e1178]: Fast
+            - generic [ref=e1179]:
+              - generic [ref=e1180]: Llama 4 Maverick
+              - generic [ref=e1181]: Flagship
+        - generic [ref=e1182]:
+          - heading "Moonshot AI" [level=3] [ref=e1185]
+          - generic [ref=e1186]:
+            - generic [ref=e1187]:
+              - generic [ref=e1188]: Kimi 1M Context
+              - generic [ref=e1189]: Long-Context
+            - generic [ref=e1190]:
+              - generic [ref=e1191]: Moonshot v1
+              - generic [ref=e1192]: Fast
+        - generic [ref=e1193]:
+          - heading "Qwen / Alibaba" [level=3] [ref=e1196]
+          - generic [ref=e1197]:
+            - generic [ref=e1198]:
+              - generic [ref=e1199]: Qwen Max
+              - generic [ref=e1200]: Flagship
+            - generic [ref=e1201]:
+              - generic [ref=e1202]: Qwen 3 235B
+              - generic [ref=e1203]: Open
+        - generic [ref=e1204]:
+          - heading "Yi / 01.AI" [level=3] [ref=e1207]
+          - generic [ref=e1208]:
+            - generic [ref=e1209]:
+              - generic [ref=e1210]: Yi Lightning
+              - generic [ref=e1211]: Fast
+            - generic [ref=e1212]:
+              - generic [ref=e1213]: Yi Large FC
+              - generic [ref=e1214]: Tool-Use
+        - generic [ref=e1215]:
+          - heading "Zhipu AI (GLM)" [level=3] [ref=e1218]
+          - generic [ref=e1219]:
+            - generic [ref=e1220]:
+              - generic [ref=e1221]: GLM-5
+              - generic [ref=e1222]: Flagship
+            - generic [ref=e1223]:
+              - generic [ref=e1224]: CodeGeeX-4
+              - generic [ref=e1225]: Code
+        - generic [ref=e1226]:
+          - heading "ByteDance Doubao" [level=3] [ref=e1229]
+          - generic [ref=e1230]:
+            - generic [ref=e1231]:
+              - generic [ref=e1232]: Seed 1.6
+              - generic [ref=e1233]: Flagship
+            - generic [ref=e1234]:
+              - generic [ref=e1235]: Doubao Pro 128K
+              - generic [ref=e1236]: Long-Context
+        - generic [ref=e1237]:
+          - heading "Upstage Solar" [level=3] [ref=e1240]
+          - generic [ref=e1241]:
+            - generic [ref=e1242]:
+              - generic [ref=e1243]: Solar Pro
+              - generic [ref=e1244]: Flagship
+            - generic [ref=e1245]:
+              - generic [ref=e1246]: Solar Mini
+              - generic [ref=e1247]: Economy
+        - generic [ref=e1248]:
+          - heading "Writer Palmyra" [level=3] [ref=e1251]
+          - generic [ref=e1252]:
+            - generic [ref=e1253]:
+              - generic [ref=e1254]: Palmyra X 004
+              - generic [ref=e1255]: Flagship
+            - generic [ref=e1256]:
+              - generic [ref=e1257]: Palmyra Med
+              - generic [ref=e1258]: Medical
+        - generic [ref=e1259]:
+          - heading "Hyperbolic" [level=3] [ref=e1262]
+          - generic [ref=e1263]:
+            - generic [ref=e1264]:
+              - generic [ref=e1265]: Llama 3.1 405B
+              - generic [ref=e1266]: Flagship
+            - generic [ref=e1267]:
+              - generic [ref=e1268]: DeepSeek-R1
+              - generic [ref=e1269]: Reasoning
+        - generic [ref=e1270]:
+          - heading "Novita AI" [level=3] [ref=e1273]
+          - generic [ref=e1274]:
+            - generic [ref=e1275]:
+              - generic [ref=e1276]: Llama 4 Maverick
+              - generic [ref=e1277]: Fast
+            - generic [ref=e1278]:
+              - generic [ref=e1279]: DeepSeek R1
+              - generic [ref=e1280]: Reasoning
+        - generic [ref=e1281]:
+          - heading "Lepton AI" [level=3] [ref=e1284]
+          - generic [ref=e1285]:
+            - generic [ref=e1286]:
+              - generic [ref=e1287]: Llama 4 Scout
+              - generic [ref=e1288]: Economy
+            - generic [ref=e1289]:
+              - generic [ref=e1290]: Mixtral 8x7B
+              - generic [ref=e1291]: Fast
+        - generic [ref=e1292]:
+          - heading "Lambda Labs" [level=3] [ref=e1295]
+          - generic [ref=e1296]:
+            - generic [ref=e1297]:
+              - generic [ref=e1298]: Hermes 3 405B
+              - generic [ref=e1299]: Flagship
+            - generic [ref=e1300]:
+              - generic [ref=e1301]: Llama 3.3 70B
+              - generic [ref=e1302]: Fast
+        - generic [ref=e1303]:
+          - heading "Minimax" [level=3] [ref=e1306]
+          - generic [ref=e1307]:
+            - generic [ref=e1308]:
+              - generic [ref=e1309]: MiniMax Text-01
+              - generic [ref=e1310]: Flagship
+            - generic [ref=e1311]:
+              - generic [ref=e1312]: MiniMax-01
+              - generic [ref=e1313]: Vision
+        - generic [ref=e1314]:
+          - heading "Inception AI" [level=3] [ref=e1317]
+          - generic [ref=e1318]:
+            - generic [ref=e1319]:
+              - generic [ref=e1320]: Mercury Coder Small
+              - generic [ref=e1321]: Code
+            - generic [ref=e1322]:
+              - generic [ref=e1323]: Mercury Coder Mini
+              - generic [ref=e1324]: Fast
+        - generic [ref=e1325]:
+          - heading "Arcee AI" [level=3] [ref=e1328]
+          - generic [ref=e1329]:
+            - generic [ref=e1330]:
+              - generic [ref=e1331]: Arcee Maestro
+              - generic [ref=e1332]: Reasoning
+            - generic [ref=e1333]:
+              - generic [ref=e1334]: Arcee Spark
+              - generic [ref=e1335]: Fast
+        - generic [ref=e1336]:
+          - heading "AI21 Labs" [level=3] [ref=e1339]
+          - generic [ref=e1340]:
+            - generic [ref=e1341]:
+              - generic [ref=e1342]: Jamba Large 1.7
+              - generic [ref=e1343]: Flagship
+            - generic [ref=e1344]:
+              - generic [ref=e1345]: Jamba Mini 1.7
+              - generic [ref=e1346]: Fast
+        - generic [ref=e1347]:
+          - heading "Fireworks AI" [level=3] [ref=e1350]
+          - generic [ref=e1351]:
+            - generic [ref=e1352]:
+              - generic [ref=e1353]: Llama 4 Maverick FP8
+              - generic [ref=e1354]: Fast
+            - generic [ref=e1355]:
+              - generic [ref=e1356]: DeepSeek R1
+              - generic [ref=e1357]: Reasoning
+        - generic [ref=e1358]:
+          - heading "Hugging Face (Hub)" [level=3] [ref=e1361]
+          - generic [ref=e1363]:
+            - generic [ref=e1364]: 175,000+ models
+            - generic [ref=e1365]: Open-Source
+        - generic [ref=e1366]:
+          - heading "ElevenLabs (TTS)" [level=3] [ref=e1369]
+          - generic [ref=e1370]:
+            - generic [ref=e1371]:
+              - generic [ref=e1372]: Multilingual v2
+              - generic [ref=e1373]: Voice
+            - generic [ref=e1374]:
+              - generic [ref=e1375]: Turbo v2.5
+              - generic [ref=e1376]: Fast-TTS
+        - generic [ref=e1377]:
+          - generic [ref=e1378]:
+            - img [ref=e1379]
+            - generic [ref=e1381]: Smart Routing
+          - paragraph [ref=e1382]: Each agent selects the optimal model for the task — coding, writing, research, or analysis.
+    - generic [ref=e1384]:
+      - generic [ref=e1385]:
+        - generic [ref=e1386]:
+          - img [ref=e1387]
+          - text: Developer API
+        - heading "One Key. 175,000+ Models. Zero Hassle." [level=2] [ref=e1389]
+        - paragraph [ref=e1390]:
+          - text: Single OpenAI-compatible endpoint. Drop-in replace your
+          - code [ref=e1391]: base_url
+          - text: and call 175,000+ models with your existing SDK.
+      - generic [ref=e1392]:
+        - generic [ref=e1393]:
+          - img [ref=e1395]
+          - heading "33 Providers + 175,000+ Models" [level=3] [ref=e1398]
+          - paragraph [ref=e1399]: 609 curated models across all major providers, plus every HuggingFace open-source model via universal pass-through.
+        - generic [ref=e1400]:
+          - img [ref=e1402]
+          - heading "10 Smart Aliases" [level=3] [ref=e1404]
+          - paragraph [ref=e1405]: Use maars/auto, maars/code, maars/fast — MAARS routes to the best model for your task and budget automatically.
+        - generic [ref=e1406]:
+          - img [ref=e1408]
+          - heading "One maars-sk Key" [level=3] [ref=e1412]
+          - paragraph [ref=e1413]: Instant access to all 175,000+ models. Manage budgets, rate limits, and webhooks from a single admin panel.
+      - generic [ref=e1414]:
+        - generic [ref=e1420]: Python — drop-in replacement
+        - generic [ref=e1421]: "from openai import OpenAI client = OpenAI( base_url=\"https://maars.ai/api\", # ← change only this api_key=\"maars-sk-...\", ) # Access 175,000+ models across 33 providers response = client.chat.completions.create( model=\"maars/auto\", # smart routing messages=[{\"role\": \"user\", \"content\": \"Hello!\"}], )"
+      - generic [ref=e1422]:
+        - button "Get Your Free API Key" [ref=e1423]:
+          - text: Get Your Free API Key
+          - img [ref=e1424]
+        - paragraph [ref=e1426]: No credit card required · Free tier included · Full docs after sign-up
+    - generic [ref=e1428]:
+      - generic [ref=e1429]:
+        - generic [ref=e1432]: Why Teams Choose MAARS
+        - heading "Built for Teams That Move Fast" [level=2] [ref=e1433]
+      - generic [ref=e1434]:
+        - generic [ref=e1435]:
+          - generic [ref=e1436]: 10×
+          - generic [ref=e1437]: Faster execution
+          - generic [ref=e1438]: vs. manual workflows
+        - generic [ref=e1439]:
+          - generic [ref=e1440]: 458+
+          - generic [ref=e1441]: Expert agents
+          - generic [ref=e1442]: ready in seconds
+        - generic [ref=e1443]:
+          - generic [ref=e1444]: 175k+
+          - generic [ref=e1445]: Models available
+          - generic [ref=e1446]: from 33 providers
+        - generic [ref=e1447]:
+          - generic [ref=e1448]: 100%
+          - generic [ref=e1449]: Governance
+          - generic [ref=e1450]: every action audited
+      - generic [ref=e1451]:
+        - generic [ref=e1452]:
+          - generic [ref=e1453]: "\""
+          - paragraph [ref=e1454]: We replaced three separate SaaS tools and a contractor with MAARS. The 458 pre-built agents cover everything from SEO audits to financial modeling.
+          - generic [ref=e1455]:
+            - img [ref=e1457]
+            - generic [ref=e1462]:
+              - generic [ref=e1463]: Head of Growth
+              - generic [ref=e1464]: Series B SaaS
+        - generic [ref=e1466]:
+          - generic [ref=e1467]: "\""
+          - paragraph [ref=e1468]: The Commander orchestration is a game-changer. One instruction fans out to 12 specialized agents in parallel. Tasks that took days now take minutes.
+          - generic [ref=e1469]:
+            - img [ref=e1471]
+            - generic [ref=e1476]:
+              - generic [ref=e1477]: CTO
+              - generic [ref=e1478]: AI-native startup
+        - generic [ref=e1480]:
+          - generic [ref=e1481]: "\""
+          - paragraph [ref=e1482]: Governance was our blocker for AI adoption. MAARS trust scores, audit logs and RBAC gave us exactly what the legal team needed to approve it.
+          - generic [ref=e1483]:
+            - img [ref=e1485]
+            - generic [ref=e1490]:
+              - generic [ref=e1491]: VP Engineering
+              - generic [ref=e1492]: FinTech scale-up
+    - generic [ref=e1496]:
+      - generic [ref=e1497]: Command Your AI Workforce
+      - heading "Ready to Build Your AI Team?" [level=2] [ref=e1498]:
+        - text: Ready to Build Your
+        - text: AI Team?
+      - paragraph [ref=e1499]: Join professionals leveraging AI to supercharge their workflow. One key. Every model. Unlimited potential.
+      - button "Get Started Free" [ref=e1500]:
+        - text: Get Started Free
+        - img [ref=e1501]
+    - generic [ref=e1504]:
+      - generic [ref=e1505]:
+        - paragraph [ref=e1506]: What customers say
+        - heading "Operators shipping more with fewer tools." [level=2] [ref=e1507]
+      - generic [ref=e1508]:
+        - generic [ref=e1509]:
+          - generic [ref=e1510]:
+            - img [ref=e1511]
+            - img [ref=e1513]
+            - img [ref=e1515]
+            - img [ref=e1517]
+            - img [ref=e1519]
+          - paragraph [ref=e1521]: "\"Replaced four separate tools with MAARS in one afternoon. The campaign orchestrator alone is worth 5× the subscription.\""
+          - generic [ref=e1522]:
+            - generic [ref=e1523]: MK
+            - generic [ref=e1524]:
+              - generic [ref=e1525]: Design agency founder
+              - generic [ref=e1526]: Creative studio, 8 employees
+        - generic [ref=e1527]:
+          - generic [ref=e1528]:
+            - img [ref=e1529]
+            - img [ref=e1531]
+            - img [ref=e1533]
+            - img [ref=e1535]
+            - img [ref=e1537]
+          - paragraph [ref=e1539]: "\"Our outbound used to take a VA 20 hours a week. MAARS finds the leads, writes the emails, and schedules the sends. We moved her to higher-leverage work.\""
+          - generic [ref=e1540]:
+            - generic [ref=e1541]: RT
+            - generic [ref=e1542]:
+              - generic [ref=e1543]: SaaS founder
+              - generic [ref=e1544]: B2B analytics product
+        - generic [ref=e1545]:
+          - generic [ref=e1546]:
+            - img [ref=e1547]
+            - img [ref=e1549]
+            - img [ref=e1551]
+            - img [ref=e1553]
+            - img [ref=e1555]
+          - paragraph [ref=e1557]: "\"The image quality is the part that surprised me. I expected competent. I got 'did you hire an agency?' on the first try.\""
+          - generic [ref=e1558]:
+            - generic [ref=e1559]: AN
+            - generic [ref=e1560]:
+              - generic [ref=e1561]: Solo marketer
+              - generic [ref=e1562]: E-commerce brand
+      - paragraph [ref=e1563]:
+        - text: Representative operator feedback. Quotes updated as customers join — see our
+        - link "changelog" [ref=e1564]:
+          - /url: /changelog
+        - text: .
+    - generic [ref=e1669]:
+      - generic [ref=e1670]:
+        - generic [ref=e1671]:
+          - img [ref=e1672]
+          - text: Simple pricing
+        - heading "Pay for what you use. Keep every credit." [level=2] [ref=e1674]
+        - paragraph [ref=e1675]: Credits never expire. Cancel anytime. Annual plans save 20% + include bonus credits.
+        - generic [ref=e1676]:
+          - button "Monthly" [ref=e1677]
+          - button "Annual –20%" [ref=e1678]:
+            - text: Annual
+            - generic [ref=e1679]: –20%
+      - generic [ref=e1680]:
+        - generic [ref=e1681]:
+          - heading "Free" [level=3] [ref=e1682]
+          - generic [ref=e1683]:
+            - generic [ref=e1684]: $0
+            - generic [ref=e1685]: forever
+          - generic [ref=e1686]:
+            - generic [ref=e1687]: Credits
+            - generic [ref=e1688]: 0 / month
+          - list [ref=e1689]:
+            - listitem [ref=e1690]:
+              - img [ref=e1691]
+              - generic [ref=e1693]: 100 chat messages/mo
+            - listitem [ref=e1694]:
+              - img [ref=e1695]
+              - generic [ref=e1697]: 10 images · 3 app builds
+            - listitem [ref=e1698]:
+              - img [ref=e1699]
+              - generic [ref=e1701]: Unlimited voiceover + transcription (always free)
+            - listitem [ref=e1702]:
+              - img [ref=e1703]
+              - generic [ref=e1705]: 3 pre-built agents
+            - listitem [ref=e1706]:
+              - img [ref=e1707]
+              - generic [ref=e1709]: 3 AI agents
+          - link "Start free" [ref=e1710]:
+            - /url: /register?plan=free&billing=monthly
+            - text: Start free
+            - img [ref=e1711]
+        - generic [ref=e1713]:
+          - heading "Creator" [level=3] [ref=e1714]
+          - generic [ref=e1715]:
+            - generic [ref=e1716]:
+              - generic [ref=e1717]: $29
+              - generic [ref=e1718]: /month
+            - generic [ref=e1719]: billed monthly
+          - generic [ref=e1720]:
+            - generic [ref=e1721]: Credits
+            - generic [ref=e1722]: 0 / month
+          - list [ref=e1723]:
+            - listitem [ref=e1724]:
+              - img [ref=e1725]
+              - generic [ref=e1727]: 5,000 chats · 500 images · 10 videos
+            - listitem [ref=e1728]:
+              - img [ref=e1729]
+              - generic [ref=e1731]: 50 full-stack app builds
+            - listitem [ref=e1732]:
+              - img [ref=e1733]
+              - generic [ref=e1735]: 100 agent-workflow runs
+            - listitem [ref=e1736]:
+              - img [ref=e1737]
+              - generic [ref=e1739]: 12 pre-built agents + 1 custom
+            - listitem [ref=e1740]:
+              - img [ref=e1741]
+              - generic [ref=e1743]: Unlimited voiceover + transcription
+            - listitem [ref=e1744]:
+              - img [ref=e1745]
+              - generic [ref=e1747]: 12 AI agents
+          - link "Choose plan" [ref=e1748]:
+            - /url: /register?plan=creator&billing=monthly
+            - text: Choose plan
+            - img [ref=e1749]
+        - generic [ref=e1751]:
+          - heading "Studio" [level=3] [ref=e1752]
+          - generic [ref=e1753]:
+            - generic [ref=e1754]:
+              - generic [ref=e1755]: $99
+              - generic [ref=e1756]: /month
+            - generic [ref=e1757]: billed monthly
+          - generic [ref=e1758]:
+            - generic [ref=e1759]: Credits
+            - generic [ref=e1760]: 0 / month
+          - list [ref=e1761]:
+            - listitem [ref=e1762]:
+              - img [ref=e1763]
+              - generic [ref=e1765]: 25,000 chats · 2,500 images · 50 videos
+            - listitem [ref=e1766]:
+              - img [ref=e1767]
+              - generic [ref=e1769]: 250 full-stack app builds
+            - listitem [ref=e1770]:
+              - img [ref=e1771]
+              - generic [ref=e1773]: 500 agent-workflow runs with Commander Orion
+            - listitem [ref=e1774]:
+              - img [ref=e1775]
+              - generic [ref=e1777]: 25 agents + 3 custom · teams of 10
+            - listitem [ref=e1778]:
+              - img [ref=e1779]
+              - generic [ref=e1781]: Premium ElevenLabs voices unlocked
+            - listitem [ref=e1782]:
+              - img [ref=e1783]
+              - generic [ref=e1785]: 25 AI agents
+          - link "Choose plan" [ref=e1786]:
+            - /url: /register?plan=studio&billing=monthly
+            - text: Choose plan
+            - img [ref=e1787]
+        - generic [ref=e1789]:
+          - heading "Scale" [level=3] [ref=e1790]
+          - generic [ref=e1791]:
+            - generic [ref=e1792]:
+              - generic [ref=e1793]: $299
+              - generic [ref=e1794]: /month
+            - generic [ref=e1795]: billed monthly
+          - generic [ref=e1796]:
+            - generic [ref=e1797]: Credits
+            - generic [ref=e1798]: 0 / month
+          - list [ref=e1799]:
+            - listitem [ref=e1800]:
+              - img [ref=e1801]
+              - generic [ref=e1803]: 100,000 chats · unlimited images · 200 videos
+            - listitem [ref=e1804]:
+              - img [ref=e1805]
+              - generic [ref=e1807]: 1,000 app builds · 2,000 agent runs
+            - listitem [ref=e1808]:
+              - img [ref=e1809]
+              - generic [ref=e1811]: All 41 core agents + 10 custom
+            - listitem [ref=e1812]:
+              - img [ref=e1813]
+              - generic [ref=e1815]: Priority routing · faster provider response
+            - listitem [ref=e1816]:
+              - img [ref=e1817]
+              - generic [ref=e1819]: Teams of 35 · dedicated Slack support
+            - listitem [ref=e1820]:
+              - img [ref=e1821]
+              - generic [ref=e1823]: 41 AI agents
+          - link "Choose plan" [ref=e1824]:
+            - /url: /register?plan=scale&billing=monthly
+            - text: Choose plan
+            - img [ref=e1825]
+      - generic [ref=e1827]:
+        - generic [ref=e1828]: ✓ Cancel anytime
+        - generic [ref=e1829]: ✓ Credits never expire
+        - generic [ref=e1830]: ✓ No long-term contract
+        - generic [ref=e1831]: ✓ Stripe-secured payments
+        - generic [ref=e1832]: ✓ GDPR & CAN-SPAM ready
+      - link "See the full pricing ladder + credit packages" [ref=e1834]:
+        - /url: /pricing
+        - text: See the full pricing ladder + credit packages
+        - img [ref=e1835]
+    - contentinfo [ref=e1565]:
+      - generic [ref=e1566]:
+        - generic [ref=e1567]:
+          - img "MAARS" [ref=e1568]
+          - generic [ref=e1569]: MAARS Command by MAARS Global Corporation © 2026
+        - generic [ref=e1570]:
+          - link "Models" [ref=e1571]:
+            - /url: "#models"
+          - link "Agents" [ref=e1572]:
+            - /url: "#agents"
+          - link "Developer API" [ref=e1573]:
+            - /url: /developer
+          - link "Pricing" [ref=e1574]:
+            - /url: /pricing
+          - link "Blog" [ref=e1575]:
+            - /url: /blog
+          - link "Changelog" [ref=e1576]:
+            - /url: /changelog
+          - link "Alternatives" [ref=e1577]:
+            - /url: /alternatives
+          - generic [ref=e1578]: ·
+          - link "Privacy" [ref=e1579]:
+            - /url: /privacy
+          - link "Terms" [ref=e1580]:
+            - /url: /terms
+          - link "Subprocessors" [ref=e1581]:
+            - /url: /subprocessors
+          - link "Status" [ref=e1582]:
+            - /url: /api/status
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

@@ -1,0 +1,31 @@
+- generic [ref=e8]:
+  - generic:
+    - img
+  - generic [ref=e10]:
+    - banner [ref=e12]:
+      - link "Meta logo" [ref=e13] [cursor=pointer]:
+        - /url: /
+        - img "Meta logo" [ref=e14]
+    - main [ref=e22]:
+      - generic [ref=e27]:
+        - heading "Welcome back to Llama API" [level=2] [ref=e30]:
+          - generic [ref=e31]: Welcome back to Llama API
+        - generic [ref=e34]:
+          - generic [ref=e36]:
+            - generic [ref=e43]:
+              - textbox "Email address" [active] [ref=e44]
+              - generic: Email address
+            - button "Submit" [ref=e45]
+          - button "Continue" [disabled] [ref=e50]:
+            - generic [ref=e53]: Continue
+        - generic [ref=e55]:
+          - text: Don't have an account?
+          - link "Request access" [ref=e56] [cursor=pointer]:
+            - /url: https://llama.developer.meta.com/join-waitlist/
+    - contentinfo [ref=e58]:
+      - separator [ref=e59]
+      - generic [ref=e60]:
+        - generic [ref=e62]: Meta © 2026
+        - link "Help Center" [ref=e66] [cursor=pointer]:
+          - /url: https://llama.developer.meta.com/help/
+          - generic [ref=e67]: Help Center

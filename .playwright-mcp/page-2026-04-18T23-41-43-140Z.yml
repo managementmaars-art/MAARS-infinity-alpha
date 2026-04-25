@@ -1,0 +1,508 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e7]:
+      - generic [ref=e761]:
+        - link "MAARS MAARS Command by MAARS Global Corporation" [ref=e763] [cursor=pointer]:
+          - /url: /dashboard
+          - img "MAARS" [ref=e764]
+          - generic [ref=e765]:
+            - heading "MAARS Command" [level=1] [ref=e766]
+            - paragraph [ref=e767]: by MAARS Global Corporation
+        - generic [ref=e768]:
+          - generic [ref=e770]: ONLINE
+          - generic [ref=e771]: 499 agents
+        - generic [ref=e779]:
+          - generic [ref=e780]:
+            - generic [ref=e781]:
+              - img [ref=e782]
+              - generic [ref=e784]: "50.00"
+            - generic [ref=e785]: Free
+          - button "Buy Credits" [ref=e786] [cursor=pointer]:
+            - img [ref=e787]
+            - text: Buy Credits
+        - button "Personal Workspace 1 members" [ref=e789] [cursor=pointer]:
+          - img [ref=e791]
+          - generic [ref=e795]:
+            - paragraph [ref=e796]: Personal Workspace
+            - paragraph [ref=e797]: 1 members
+          - img [ref=e798]
+        - button "Search… /" [ref=e801] [cursor=pointer]:
+          - img [ref=e802]
+          - generic [ref=e805]: Search…
+          - generic [ref=e806]: /
+        - navigation [ref=e807]:
+          - button "Dashboard" [ref=e809] [cursor=pointer]:
+            - img [ref=e810]
+            - generic [ref=e815]: Dashboard
+          - generic [ref=e816]:
+            - generic [ref=e819]: Workspace
+            - button "Projects" [ref=e821] [cursor=pointer]:
+              - img [ref=e822]
+              - generic [ref=e827]: Projects
+            - button "Chat" [ref=e828] [cursor=pointer]:
+              - img [ref=e829]
+              - generic [ref=e831]: Chat
+            - button "Tasks" [ref=e832] [cursor=pointer]:
+              - img [ref=e833]
+              - generic [ref=e836]: Tasks
+            - button "Approvals" [ref=e837] [cursor=pointer]:
+              - img [ref=e838]
+              - generic [ref=e842]: Approvals
+          - generic [ref=e843]:
+            - generic [ref=e846]: AI Tools
+            - button "Agents" [ref=e848] [cursor=pointer]:
+              - img [ref=e849]
+              - generic [ref=e852]: Agents
+            - button "Team Builder" [ref=e853] [cursor=pointer]:
+              - img [ref=e854]
+              - generic [ref=e857]: Team Builder
+            - button "Workspace Brain" [ref=e858] [cursor=pointer]:
+              - img [ref=e859]
+              - generic [ref=e869]: Workspace Brain
+            - button "Brain Profiles" [ref=e870] [cursor=pointer]:
+              - img [ref=e871]
+              - generic [ref=e874]: Brain Profiles
+            - button "Vibe Coding" [ref=e875] [cursor=pointer]:
+              - img [ref=e876]
+              - generic [ref=e879]: Vibe Coding
+            - button "Reference Intel" [ref=e880] [cursor=pointer]:
+              - img [ref=e881]
+              - generic [ref=e883]: Reference Intel
+            - button "Content Generator" [ref=e884] [cursor=pointer]:
+              - img [ref=e885]
+              - generic [ref=e890]: Content Generator
+          - generic [ref=e891]:
+            - generic [ref=e894]: Intelligence
+            - button "Kernel" [ref=e896] [cursor=pointer]:
+              - img [ref=e897]
+              - generic [ref=e901]: Kernel
+            - button "Agent Networks" [ref=e902] [cursor=pointer]:
+              - img [ref=e903]
+              - generic [ref=e908]: Agent Networks
+            - button "Task Graphs" [ref=e909] [cursor=pointer]:
+              - img [ref=e910]
+              - generic [ref=e914]: Task Graphs
+            - button "Knowledge Graph" [ref=e915] [cursor=pointer]:
+              - img [ref=e916]
+              - generic [ref=e922]: Knowledge Graph
+            - button "Trust Scores" [ref=e923] [cursor=pointer]:
+              - img [ref=e924]
+              - generic [ref=e926]: Trust Scores
+            - button "Execution Gateway" [ref=e927] [cursor=pointer]:
+              - img [ref=e928]
+              - generic [ref=e930]: Execution Gateway
+            - button "Workflow Builder" [ref=e931] [cursor=pointer]:
+              - img [ref=e933]
+              - generic [ref=e937]: Workflow Builder
+            - button "Campaign Builder" [ref=e939] [cursor=pointer]:
+              - img [ref=e940]
+              - generic [ref=e943]: Campaign Builder
+            - button "Integrations" [ref=e944] [cursor=pointer]:
+              - img [ref=e945]
+              - generic [ref=e947]: Integrations
+            - button "Embedded Browser" [ref=e948] [cursor=pointer]:
+              - img [ref=e949]
+              - generic [ref=e952]: Embedded Browser
+            - button "Social Media" [ref=e953] [cursor=pointer]:
+              - img [ref=e954]
+              - generic [ref=e960]: Social Media
+            - button "Universal Key" [ref=e961] [cursor=pointer]:
+              - img [ref=e962]
+              - generic [ref=e966]: Universal Key
+            - button "Analytics" [ref=e967] [cursor=pointer]:
+              - img [ref=e968]
+              - generic [ref=e971]: Analytics
+            - button "Agent Suggestions" [ref=e972] [cursor=pointer]:
+              - img [ref=e973]
+              - generic [ref=e975]: Agent Suggestions
+            - button "Environments" [ref=e976] [cursor=pointer]:
+              - img [ref=e977]
+              - generic [ref=e980]: Environments
+            - button "Memory Hierarchy" [ref=e981] [cursor=pointer]:
+              - img [ref=e982]
+              - generic [ref=e984]: Memory Hierarchy
+            - button "Memory" [ref=e985] [cursor=pointer]:
+              - img [ref=e986]
+              - generic [ref=e990]: Memory
+            - button "Collaborations" [ref=e991] [cursor=pointer]:
+              - img [ref=e992]
+              - generic [ref=e994]: Collaborations
+            - button "KPI Dashboard" [ref=e995] [cursor=pointer]:
+              - img [ref=e996]
+              - generic [ref=e999]: KPI Dashboard
+            - button "Activity Monitor" [ref=e1000] [cursor=pointer]:
+              - img [ref=e1001]
+              - generic [ref=e1007]: Activity Monitor
+            - button "My Insights" [ref=e1008] [cursor=pointer]:
+              - img [ref=e1009]
+              - generic [ref=e1011]: My Insights
+          - generic [ref=e1012]:
+            - generic [ref=e1015]: MAARS Infinity
+            - button "Developer API" [ref=e1017] [cursor=pointer]:
+              - img [ref=e1018]
+              - generic [ref=e1020]: Developer API
+            - button "Observability" [ref=e1021] [cursor=pointer]:
+              - img [ref=e1022]
+              - generic [ref=e1029]: Observability
+            - button "Model Router" [ref=e1030] [cursor=pointer]:
+              - img [ref=e1031]
+              - generic [ref=e1033]: Model Router
+            - button "Commander Orion" [ref=e1034] [cursor=pointer]:
+              - img [ref=e1035]
+              - generic [ref=e1041]: Commander Orion
+            - button "Venture Portfolio" [ref=e1042] [cursor=pointer]:
+              - img [ref=e1043]
+              - generic [ref=e1046]: Venture Portfolio
+            - button "Operator Panel" [ref=e1047] [cursor=pointer]:
+              - img [ref=e1048]
+              - generic [ref=e1050]: Operator Panel
+            - button "Agent Catalog" [ref=e1051] [cursor=pointer]:
+              - img [ref=e1052]
+              - generic [ref=e1057]: Agent Catalog
+          - generic [ref=e1058]:
+            - generic [ref=e1061]: Manage
+            - button "Products" [ref=e1063] [cursor=pointer]:
+              - img [ref=e1064]
+              - generic [ref=e1068]: Products
+            - button "Team" [ref=e1069] [cursor=pointer]:
+              - img [ref=e1070]
+              - generic [ref=e1075]: Team
+            - button "Organization" [ref=e1076] [cursor=pointer]:
+              - img [ref=e1077]
+              - generic [ref=e1081]: Organization
+            - button "Settings" [ref=e1082] [cursor=pointer]:
+              - img [ref=e1083]
+              - generic [ref=e1086]: Settings
+            - button "About" [ref=e1087] [cursor=pointer]:
+              - img [ref=e1088]
+              - generic [ref=e1090]: About
+        - button "Collapse" [ref=e1092] [cursor=pointer]:
+          - img [ref=e1093]
+          - generic [ref=e1096]: Collapse
+        - generic [ref=e1097]:
+          - generic [ref=e1099]:
+            - generic [ref=e1102]: D
+            - generic [ref=e1104]:
+              - paragraph [ref=e1105]: Demo Client
+              - paragraph [ref=e1106]: demo-client-20260418@maars.demo
+          - generic [ref=e1107]:
+            - generic [ref=e1108]: LIVE
+            - generic [ref=e1109]: MAARS v2.0
+          - button "Log Out" [ref=e1114] [cursor=pointer]:
+            - img [ref=e1115]
+            - generic [ref=e1118]: Log Out
+    - generic [ref=e363]:
+      - generic [ref=e364]:
+        - generic [ref=e365]:
+          - button "Nodes" [ref=e366] [cursor=pointer]
+          - button "Flows" [ref=e367] [cursor=pointer]
+        - generic [ref=e368]:
+          - generic [ref=e369]:
+            - paragraph [ref=e370]: Node Types
+            - generic [ref=e371]:
+              - generic [ref=e372]:
+                - img [ref=e373]
+                - generic [ref=e376]: Agent
+              - generic [ref=e377]:
+                - img [ref=e378]
+                - generic [ref=e380]: Prompt
+              - generic [ref=e381]:
+                - img [ref=e382]
+                - generic [ref=e386]: Branch
+              - generic [ref=e387]:
+                - img [ref=e388]
+                - generic [ref=e393]: Loop
+              - generic [ref=e394]:
+                - img [ref=e395]
+                - generic [ref=e399]: Merge
+              - generic [ref=e400]:
+                - img [ref=e401]
+                - generic [ref=e403]: Trigger
+              - generic [ref=e404]:
+                - img [ref=e405]
+                - generic [ref=e408]: Output
+              - generic [ref=e409]:
+                - img [ref=e410]
+                - generic [ref=e413]: API Call
+              - generic [ref=e414]:
+                - img [ref=e415]
+                - generic [ref=e419]: Code
+              - generic [ref=e420]:
+                - img [ref=e421]
+                - generic [ref=e424]: Sub-Flow
+          - generic [ref=e425]:
+            - paragraph [ref=e426]: Agents
+            - generic [ref=e427]:
+              - img
+              - textbox "Search agents…" [ref=e428]
+          - generic [ref=e429]:
+            - generic [ref=e430]:
+              - paragraph [ref=e431]: communication reporting (10)
+              - generic [ref=e433]:
+                - paragraph [ref=e434]: Alerting Agent
+                - paragraph [ref=e435]: Alert Communications Manager
+              - generic [ref=e437]:
+                - paragraph [ref=e438]: Board Memo Agent
+                - paragraph [ref=e439]: Board Memo Writer
+              - generic [ref=e441]:
+                - paragraph [ref=e442]: Briefing Agent
+                - paragraph [ref=e443]: Briefing Specialist
+              - generic [ref=e445]:
+                - paragraph [ref=e446]: Executive Dashboard Agent
+                - paragraph [ref=e447]: Executive Dashboard Manager
+              - paragraph [ref=e448]: +6 more — search to find
+            - generic [ref=e449]:
+              - paragraph [ref=e450]: conflict resolution (10)
+              - generic [ref=e452]:
+                - paragraph [ref=e453]: Arbitration Agent
+                - paragraph [ref=e454]: Arbitrator
+              - generic [ref=e456]:
+                - paragraph [ref=e457]: Budget Conflict Agent
+                - paragraph [ref=e458]: Budget Conflict Resolver
+              - generic [ref=e460]:
+                - paragraph [ref=e461]: Conflict Detection Agent
+                - paragraph [ref=e462]: Conflict Detector
+              - generic [ref=e464]:
+                - paragraph [ref=e465]: Decision Rationale Agent
+                - paragraph [ref=e466]: Rationale Documenter
+              - paragraph [ref=e467]: +6 more — search to find
+            - generic [ref=e468]:
+              - paragraph [ref=e469]: core platform (18)
+              - generic [ref=e471]:
+                - paragraph [ref=e472]: Approval Routing Agent
+                - paragraph [ref=e473]: Approval Workflow Manager
+              - generic [ref=e475]:
+                - paragraph [ref=e476]: Audit Integrity Agent
+                - paragraph [ref=e477]: Audit Trail Manager
+              - generic [ref=e479]:
+                - paragraph [ref=e480]: Budget Enforcement Agent
+                - paragraph [ref=e481]: Budget Enforcement Officer
+              - generic [ref=e483]:
+                - paragraph [ref=e484]: Capability Registry Agent
+                - paragraph [ref=e485]: Capability Registry Manager
+              - paragraph [ref=e486]: +14 more — search to find
+            - generic [ref=e487]:
+              - paragraph [ref=e488]: core team (41)
+              - generic [ref=e490]:
+                - paragraph [ref=e491]: Adrian Stone
+                - paragraph [ref=e492]: Procurement & Vendor Manager
+              - generic [ref=e494]:
+                - paragraph [ref=e495]: Alexandra Reid
+                - paragraph [ref=e496]: Legal Assistant
+              - generic [ref=e498]:
+                - paragraph [ref=e499]: Amara Johnson
+                - paragraph [ref=e500]: HR Specialist
+              - generic [ref=e502]:
+                - paragraph [ref=e503]: Axel Brennan
+                - paragraph [ref=e504]: Growth Hacker
+              - paragraph [ref=e505]: +37 more — search to find
+            - generic [ref=e506]:
+              - paragraph [ref=e507]: creative brand (17)
+              - generic [ref=e509]:
+                - paragraph [ref=e510]: Brand Naming Agent
+                - paragraph [ref=e511]: Naming Specialist
+              - generic [ref=e513]:
+                - paragraph [ref=e514]: Brand Strategy Agent
+                - paragraph [ref=e515]: Brand Strategist
+              - generic [ref=e517]:
+                - paragraph [ref=e518]: Campaign Creative Agent
+                - paragraph [ref=e519]: Campaign Creative
+              - generic [ref=e521]:
+                - paragraph [ref=e522]: Content Design Agent
+                - paragraph [ref=e523]: Content Designer
+              - paragraph [ref=e524]: +13 more — search to find
+            - generic [ref=e525]:
+              - paragraph [ref=e526]: customer experience (14)
+              - generic [ref=e528]:
+                - paragraph [ref=e529]: Community Management Agent
+                - paragraph [ref=e530]: Community Manager
+              - generic [ref=e532]:
+                - paragraph [ref=e533]: Complaint Analysis Agent
+                - paragraph [ref=e534]: Complaint Analyst
+              - generic [ref=e536]:
+                - paragraph [ref=e537]: Customer Health Agent
+                - paragraph [ref=e538]: Customer Health Monitor
+              - generic [ref=e540]:
+                - paragraph [ref=e541]: Customer Support Agent
+                - paragraph [ref=e542]: Customer Support Specialist
+              - paragraph [ref=e543]: +10 more — search to find
+            - generic [ref=e544]:
+              - paragraph [ref=e545]: engineering (22)
+              - generic [ref=e547]:
+                - paragraph [ref=e548]: AI/ML Engineering Agent
+                - paragraph [ref=e549]: AI/ML Engineer
+              - generic [ref=e551]:
+                - paragraph [ref=e552]: API Design Agent
+                - paragraph [ref=e553]: API Architect
+              - generic [ref=e555]:
+                - paragraph [ref=e556]: Backend Engineering Agent
+                - paragraph [ref=e557]: Backend Engineer
+              - generic [ref=e559]:
+                - paragraph [ref=e560]: CI/CD Agent
+                - paragraph [ref=e561]: CI/CD Engineer
+              - paragraph [ref=e562]: +18 more — search to find
+            - generic [ref=e563]:
+              - paragraph [ref=e564]: execution (11)
+              - generic [ref=e566]:
+                - paragraph [ref=e567]: Action Execution Agent
+                - paragraph [ref=e568]: Action Executor
+              - generic [ref=e570]:
+                - paragraph [ref=e571]: Approval-Aware Execution Agent
+                - paragraph [ref=e572]: Approval-Aware Executor
+              - generic [ref=e574]:
+                - paragraph [ref=e575]: Billing Execution Agent
+                - paragraph [ref=e576]: Billing Executor
+              - generic [ref=e578]:
+                - paragraph [ref=e579]: Campaign Execution Agent
+                - paragraph [ref=e580]: Campaign Executor
+              - paragraph [ref=e581]: +7 more — search to find
+            - generic [ref=e582]:
+              - paragraph [ref=e583]: experimentation (11)
+              - generic [ref=e585]:
+                - paragraph [ref=e586]: A/B Test Agent
+                - paragraph [ref=e587]: A/B Test Manager
+              - generic [ref=e589]:
+                - paragraph [ref=e590]: Channel Testing Agent
+                - paragraph [ref=e591]: Channel Tester
+              - generic [ref=e593]:
+                - paragraph [ref=e594]: Creative Experiment Agent
+                - paragraph [ref=e595]: Creative Experimenter
+              - generic [ref=e597]:
+                - paragraph [ref=e598]: Experiment Registry Agent
+                - paragraph [ref=e599]: Experiment Registry Manager
+              - paragraph [ref=e600]: +7 more — search to find
+            - generic [ref=e601]:
+              - paragraph [ref=e602]: finance capital (19)
+              - generic [ref=e604]:
+                - paragraph [ref=e605]: Accounting Agent
+                - paragraph [ref=e606]: Accounting Manager
+              - generic [ref=e608]:
+                - paragraph [ref=e609]: Billing Operations Agent
+                - paragraph [ref=e610]: Billing Operations Manager
+              - generic [ref=e612]:
+                - paragraph [ref=e613]: Budget Planning Agent
+                - paragraph [ref=e614]: Budget Planner
+              - generic [ref=e616]:
+                - paragraph [ref=e617]: Burn Rate Monitoring Agent
+                - paragraph [ref=e618]: Burn Rate Monitor
+              - paragraph [ref=e619]: +15 more — search to find
+            - generic [ref=e620]:
+              - paragraph [ref=e621]: growth distribution (20)
+              - generic [ref=e623]:
+                - paragraph [ref=e624]: Affiliate Strategy Agent
+                - paragraph [ref=e625]: Affiliate Manager
+              - generic [ref=e627]:
+                - paragraph [ref=e628]: Channel Strategy Agent
+                - paragraph [ref=e629]: Channel Strategist
+              - generic [ref=e631]:
+                - paragraph [ref=e632]: Conversion Optimization Agent
+                - paragraph [ref=e633]: CRO Specialist
+              - generic [ref=e635]:
+                - paragraph [ref=e636]: Demand Generation Agent
+                - paragraph [ref=e637]: Demand Gen Manager
+              - paragraph [ref=e638]: +16 more — search to find
+            - generic [ref=e639]:
+              - paragraph [ref=e640]: industry specific (40)
+              - generic [ref=e642]:
+                - paragraph [ref=e643]: Agri Economics Agent
+                - paragraph [ref=e644]: Agricultural Economist
+              - generic [ref=e646]:
+                - paragraph [ref=e647]: Agri Supply Chain Agent
+                - paragraph [ref=e648]: Agricultural Supply Chain Manager
+              - generic [ref=e650]:
+                - paragraph [ref=e651]: Audience Growth Agent
+                - paragraph [ref=e652]: Audience Growth Manager
+              - generic [ref=e654]:
+                - paragraph [ref=e655]: Brand Safety Agent
+                - paragraph [ref=e656]: Brand Safety Manager
+              - paragraph [ref=e657]: +36 more — search to find
+            - generic [ref=e658]:
+              - paragraph [ref=e659]: investment portfolio (14)
+              - generic [ref=e661]:
+                - paragraph [ref=e662]: Acquisition Evaluation Agent
+                - paragraph [ref=e663]: Acquisition Evaluator
+              - generic [ref=e665]:
+                - paragraph [ref=e666]: Capital Reallocation Agent
+                - paragraph [ref=e667]: Capital Reallocator
+              - generic [ref=e669]:
+                - paragraph [ref=e670]: Concentration Risk Agent
+                - paragraph [ref=e671]: Concentration Risk Analyst
+              - generic [ref=e673]:
+                - paragraph [ref=e674]: Decline Review Agent
+                - paragraph [ref=e675]: Decline Reviewer
+              - paragraph [ref=e676]: +10 more — search to find
+            - generic [ref=e677]:
+              - paragraph [ref=e678]: legal governance (16)
+              - generic [ref=e680]:
+                - paragraph [ref=e681]: Advertising Compliance Agent
+                - paragraph [ref=e682]: Ad Compliance Officer
+              - generic [ref=e684]:
+                - paragraph [ref=e685]: Approval Policy Agent
+                - paragraph [ref=e686]: Approval Policy Manager
+              - generic [ref=e688]:
+                - paragraph [ref=e689]: Audit Readiness Agent
+                - paragraph [ref=e690]: Audit Readiness Manager
+              - generic [ref=e692]:
+                - paragraph [ref=e693]: Compliance Monitoring Agent
+                - paragraph [ref=e694]: Compliance Monitor
+              - paragraph [ref=e695]: +12 more — search to find
+            - generic [ref=e696]:
+              - paragraph [ref=e697]: memory knowledge (12)
+              - generic [ref=e699]:
+                - paragraph [ref=e700]: Archive Curation Agent
+                - paragraph [ref=e701]: Archive Curator
+              - generic [ref=e703]:
+                - paragraph [ref=e704]: Context Packing Agent
+                - paragraph [ref=e705]: Context Packer
+              - generic [ref=e707]:
+                - paragraph [ref=e708]: Entity Resolution Agent
+                - paragraph [ref=e709]: Entity Resolver
+              - generic [ref=e711]:
+                - paragraph [ref=e712]: Episodic Memory Agent
+                - paragraph [ref=e713]: Episodic Memory Manager
+              - paragraph [ref=e714]: +8 more — search to find
+      - generic [ref=e715]:
+        - generic [ref=e716]:
+          - textbox [ref=e717]: Untitled Workflow
+          - generic [ref=e718]: 0n · 0e · 0t
+          - button "Templates" [ref=e719] [cursor=pointer]:
+            - img [ref=e720]
+            - text: Templates
+          - button "Team" [ref=e722] [cursor=pointer]:
+            - img [ref=e723]
+            - text: Team
+          - generic [ref=e728]:
+            - button [ref=e729] [cursor=pointer]:
+              - img [ref=e730]
+            - generic [ref=e733]: 100%
+            - button [ref=e734] [cursor=pointer]:
+              - img [ref=e735]
+            - button [ref=e738] [cursor=pointer]:
+              - img [ref=e739]
+          - button "Save" [ref=e742] [cursor=pointer]:
+            - img [ref=e743]
+            - text: Save
+        - generic [ref=e747]:
+          - img [ref=e748]
+          - generic:
+            - generic:
+              - generic:
+                - img
+              - paragraph: Build your AI Workflow
+              - paragraph: Drag nodes from the left panel · Scroll to zoom · Alt+drag to pan
+              - paragraph: Or load a template → Templates button above
+          - generic [ref=e749]:
+            - paragraph [ref=e750]: MAP
+            - img [ref=e751]
+    - generic [ref=e753]:
+      - generic "Chat with Commander Orion" [ref=e754] [cursor=pointer]:
+        - img "Commander Orion" [ref=e757]
+      - button "Start a new chat" [ref=e759] [cursor=pointer]:
+        - img [ref=e760]
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

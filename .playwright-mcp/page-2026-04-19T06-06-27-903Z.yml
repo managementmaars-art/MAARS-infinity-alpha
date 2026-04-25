@@ -1,0 +1,74 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "logo" [ref=e5] [cursor=pointer]:
+        - /url: /chat
+        - img "logo" [ref=e6]
+      - navigation [ref=e57]:
+        - link "Chat" [ref=e58] [cursor=pointer]:
+          - /url: /chat
+        - link "API" [ref=e59] [cursor=pointer]:
+          - /url: /model-api
+        - link "Contact" [ref=e60] [cursor=pointer]:
+          - /url: /contact
+    - button "G" [ref=e61] [cursor=pointer]:
+      - generic [ref=e63]: G
+  - main [ref=e15]:
+    - generic [ref=e66]:
+      - generic [ref=e67]:
+        - heading "API Management" [level=2] [ref=e68]
+        - list [ref=e69]:
+          - listitem [ref=e70]:
+            - link "API Keys" [ref=e71] [cursor=pointer]:
+              - /url: /manage-apikey/apikey-list
+              - generic [ref=e72]: API Keys
+          - listitem [ref=e73]:
+            - link "Rate Limits" [ref=e74] [cursor=pointer]:
+              - /url: /manage-apikey/rate-limits
+              - generic [ref=e75]: Rate Limits
+          - listitem [ref=e76]:
+            - link "Billing" [ref=e77] [cursor=pointer]:
+              - /url: /manage-apikey/billing
+              - generic [ref=e78]: Billing
+          - listitem [ref=e79]:
+            - link "Subscription" [ref=e80] [cursor=pointer]:
+              - /url: /manage-apikey/subscription
+              - generic [ref=e81]: Subscription
+      - generic [ref=e83]:
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - heading "Tips" [level=2] [ref=e86]
+            - button "API Recharge Support" [ref=e87] [cursor=pointer]:
+              - text: API Recharge Support
+              - img
+          - list [ref=e88]:
+            - listitem [ref=e89]: The list shows all API keys associated with your account. Please keep them secure and do not share or expose them in browsers or client-side code.
+            - listitem [ref=e90]: To protect your account, the platform may automatically rotate or revoke API keys that are detected as publicly exposed.
+            - listitem [ref=e91]:
+              - text: Each API key issued by the platform consists of an
+              - strong [ref=e92]: API Key ID
+              - text: and a
+              - strong [ref=e93]: signature secret
+              - text: ", in the following format:"
+              - strong [ref=e94]: "{API Key ID}.{secret}"
+              - text: .
+        - generic [ref=e95]:
+          - img "No Data" [ref=e96]
+          - paragraph [ref=e97]: No API Keys yet
+        - button "Create a new API key" [ref=e99] [cursor=pointer]:
+          - text: Create a new API key
+          - img
+  - region "Notifications alt+T"
+  - alert [ref=e56]
+  - generic [ref=e100]:
+    - dialog "Create a new API key":
+      - generic [ref=e101]:
+        - generic [ref=e103]: Create a new API key
+        - generic [ref=e105]:
+          - paragraph [ref=e106]: Please enter a name to identify this API key
+          - textbox "API key name" [active] [ref=e108]
+        - generic [ref=e109]:
+          - button "Cancel" [ref=e110] [cursor=pointer]:
+            - generic [ref=e111]: Cancel
+          - button "Confirm" [ref=e112] [cursor=pointer]:
+            - generic [ref=e113]: Confirm

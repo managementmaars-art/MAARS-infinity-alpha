@@ -1,0 +1,55 @@
+- generic [active]:
+  - banner [ref=e1]:
+    - generic [ref=e4]:
+      - button [ref=e5] [cursor=pointer]:
+        - img [ref=e6]
+      - link "bytez" [ref=e8] [cursor=pointer]:
+        - /url: /
+  - generic [ref=e10]:
+    - generic [ref=e11]:
+      - generic "Search" [ref=e12]:
+        - link "Search" [ref=e13] [cursor=pointer]:
+          - /url: /search
+          - img [ref=e15]
+          - generic [ref=e17]:
+            - generic: Search
+      - separator [ref=e18]
+      - generic "Keep up with AI" [ref=e19]:
+        - link "Feed" [ref=e20] [cursor=pointer]:
+          - /url: /feed
+          - img [ref=e22]
+          - generic [ref=e25]:
+            - generic: Feed
+      - generic "Search models" [ref=e26]:
+        - link "Models" [ref=e27] [cursor=pointer]:
+          - /url: /models
+          - img [ref=e29]
+          - generic [ref=e31]:
+            - generic: Models
+      - generic "Research AI" [ref=e33]:
+        - link "Agent" [ref=e34] [cursor=pointer]:
+          - /url: /agent
+          - img [ref=e36]
+          - generic [ref=e38]:
+            - generic: Agent
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - paragraph [ref=e41]: Devs
+        - generic "Plan" [ref=e42]:
+          - link "Plan" [ref=e43] [cursor=pointer]:
+            - /url: /api
+            - img [ref=e45]
+            - generic [ref=e47]:
+              - generic: Plan
+        - generic "Docs" [ref=e48]:
+          - link "docs" [ref=e49] [cursor=pointer]:
+            - /url: https://docs.bytez.com
+            - img [ref=e51]
+            - generic [ref=e53]:
+              - generic: docs
+        - separator [ref=e54]
+      - link [ref=e56] [cursor=pointer]:
+        - /url: https://discord.gg/ZydhEJTd3R
+        - img [ref=e57]:
+          - img [ref=e58]
+  - alert [ref=e62]

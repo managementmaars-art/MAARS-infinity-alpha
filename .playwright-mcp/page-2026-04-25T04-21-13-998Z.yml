@@ -1,0 +1,215 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - link "MAARS MAARS Command" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "MAARS" [ref=e8]
+          - generic [ref=e9]: MAARS Command
+        - generic [ref=e10]:
+          - button "Login" [ref=e11] [cursor=pointer]
+          - button "Get Started" [ref=e12] [cursor=pointer]
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - heading "Choose Your Plan" [level=1] [ref=e15]
+        - paragraph [ref=e16]: Get access to your AI team with flexible pricing. Start free, upgrade anytime.
+        - generic [ref=e17]:
+          - img [ref=e18]
+          - generic [ref=e21]:
+            - generic [ref=e22]: USD ($)
+            - generic [ref=e23] [cursor=pointer]:
+              - checkbox
+            - generic [ref=e26]: BDT (৳)
+        - generic [ref=e27]:
+          - generic [ref=e28]: ✓ Cancel anytime
+          - generic [ref=e29]: ✓ Credits never expire
+          - generic [ref=e30]: ✓ No long-term contract
+          - generic [ref=e31]: ✓ 24/7 automated agents
+          - generic [ref=e32]: ✓ Global availability
+          - generic [ref=e33]: ✓ GDPR & CAN-SPAM ready
+          - generic [ref=e34]: ✓ Stripe-secured payments
+          - generic [ref=e35]: ✓ Human support inbox
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e38]: Current Plan
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - img [ref=e42]
+              - paragraph [ref=e44]: Free
+              - generic [ref=e45]: $0/month
+            - list [ref=e46]:
+              - listitem [ref=e47]:
+                - img [ref=e48]
+                - text: 3 AI agents
+              - listitem [ref=e50]:
+                - img [ref=e51]
+                - text: 50 credits/month
+              - listitem [ref=e53]:
+                - img [ref=e54]
+                - text: Basic chat & tasks
+              - listitem [ref=e56]:
+                - img [ref=e57]
+                - text: 1 LLM provider
+              - listitem [ref=e59]:
+                - img [ref=e60]
+                - text: Community support
+            - button "Current Plan" [disabled] [ref=e62]
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - img [ref=e67]
+            - paragraph [ref=e69]: Starter
+            - generic [ref=e70]: $29/month
+          - list [ref=e71]:
+            - listitem [ref=e72]:
+              - img [ref=e73]
+              - text: 10 AI agents
+            - listitem [ref=e75]:
+              - img [ref=e76]
+              - text: 500 credits/month
+            - listitem [ref=e78]:
+              - img [ref=e79]
+              - text: 2 custom agents
+            - listitem [ref=e81]:
+              - img [ref=e82]
+              - text: 5 LLM providers
+            - listitem [ref=e84]:
+              - img [ref=e85]
+              - text: Vibe Coding & Content Generator
+            - listitem [ref=e87]:
+              - img [ref=e88]
+              - text: Voice commands
+            - listitem [ref=e90]:
+              - img [ref=e91]
+              - text: Team (up to 3)
+            - listitem [ref=e93]:
+              - img [ref=e94]
+              - text: Priority support
+            - listitem [ref=e96]:
+              - img [ref=e97]
+              - text: File uploads
+          - button "Subscribe" [ref=e99] [cursor=pointer]
+        - generic [ref=e100]:
+          - generic [ref=e101]: Most Popular
+          - generic [ref=e102]:
+            - generic [ref=e103]:
+              - img [ref=e105]
+              - paragraph [ref=e107]: Pro
+              - generic [ref=e108]: $79/month
+            - list [ref=e109]:
+              - listitem [ref=e110]:
+                - img [ref=e111]
+                - text: 25 AI agents + Commander Orion
+              - listitem [ref=e113]:
+                - img [ref=e114]
+                - text: 2,000 credits/month
+              - listitem [ref=e116]:
+                - img [ref=e117]
+                - text: 5 custom agents
+              - listitem [ref=e119]:
+                - img [ref=e120]
+                - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+              - listitem [ref=e122]:
+                - img [ref=e123]
+                - text: Autonomous orchestration
+              - listitem [ref=e125]:
+                - img [ref=e126]
+                - text: Quality control & auto-learning
+              - listitem [ref=e128]:
+                - img [ref=e129]
+                - text: Memory governance
+              - listitem [ref=e131]:
+                - img [ref=e132]
+                - text: Real-time activity monitor
+              - listitem [ref=e134]:
+                - img [ref=e135]
+                - text: Reference intelligence
+              - listitem [ref=e137]:
+                - img [ref=e138]
+                - text: Team (up to 10)
+              - listitem [ref=e140]:
+                - img [ref=e141]
+                - text: Unlimited uploads
+            - button "Subscribe" [ref=e143] [cursor=pointer]
+        - generic [ref=e145]:
+          - generic [ref=e146]:
+            - img [ref=e148]
+            - paragraph [ref=e151]: Business
+            - generic [ref=e152]: $199/month
+          - list [ref=e153]:
+            - listitem [ref=e154]:
+              - img [ref=e155]
+              - text: All 458+ AI agents + Commander Orion ∞
+            - listitem [ref=e157]:
+              - img [ref=e158]
+              - text: 6,000 credits/month
+            - listitem [ref=e160]:
+              - img [ref=e161]
+              - text: Unlimited custom agents
+            - listitem [ref=e163]:
+              - img [ref=e164]
+              - text: MAARS Universal AI Gateway — 33 providers, 175,000+ models
+            - listitem [ref=e166]:
+              - img [ref=e167]
+              - text: Full autonomous orchestration
+            - listitem [ref=e169]:
+              - img [ref=e170]
+              - text: All 27 agent networks
+            - listitem [ref=e172]:
+              - img [ref=e173]
+              - text: MAARS Kernel & Task Graphs
+            - listitem [ref=e175]:
+              - img [ref=e176]
+              - text: KPI dashboard & collaboration engine
+            - listitem [ref=e178]:
+              - img [ref=e179]
+              - text: Admin code explorer
+            - listitem [ref=e181]:
+              - img [ref=e182]
+              - text: Unlimited team members
+            - listitem [ref=e184]:
+              - img [ref=e185]
+              - text: Dedicated support
+            - listitem [ref=e187]:
+              - img [ref=e188]
+              - text: API access
+          - button "Subscribe" [ref=e190] [cursor=pointer]
+      - generic [ref=e191]:
+        - heading "Need More Credits?" [level=2] [ref=e192]
+        - paragraph [ref=e193]: Buy additional credits anytime. They never expire. Category-tagged packs boost that track's routing to premium models automatically.
+        - generic [ref=e194]:
+          - button "All · 4" [ref=e195] [cursor=pointer]:
+            - text: All
+            - generic [ref=e196]: · 4
+          - button "General · 4" [ref=e197] [cursor=pointer]:
+            - text: General
+            - generic [ref=e198]: · 4
+        - generic [ref=e199]:
+          - generic [ref=e200]:
+            - paragraph [ref=e201]: "100"
+            - paragraph [ref=e202]: credits
+            - button "$6" [disabled] [ref=e203]
+          - generic [ref=e204]:
+            - paragraph [ref=e205]: "300"
+            - paragraph [ref=e206]: credits
+            - button "$18" [disabled] [ref=e207]
+          - generic [ref=e208]:
+            - paragraph [ref=e209]: "700"
+            - paragraph [ref=e210]: credits
+            - button "$42" [disabled] [ref=e211]
+          - generic [ref=e212]:
+            - paragraph [ref=e213]: "1500"
+            - paragraph [ref=e214]: credits
+            - button "$90" [disabled] [ref=e215]
+      - generic [ref=e216]:
+        - paragraph [ref=e217]: 458+ specialized AI agents across 28 network categories and 36 core systems. Commander Orion ∞ included in Pro and Business plans.
+        - paragraph [ref=e218]: Questions? Contact support.maars@marsgc.net
+      - contentinfo [ref=e219]:
+        - img "MAARS Command" [ref=e220]
+        - generic [ref=e221]: MAARS Command by MAARS Global Corporation © 2026
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

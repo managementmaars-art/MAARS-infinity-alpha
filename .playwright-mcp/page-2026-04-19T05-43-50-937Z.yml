@@ -1,0 +1,69 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e5]:
+      - button [ref=e6] [cursor=pointer]:
+        - img [ref=e7]
+      - link "bytez" [ref=e9] [cursor=pointer]:
+        - /url: /
+  - generic [ref=e10]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - generic "Search" [ref=e15]:
+          - link "Search" [ref=e16] [cursor=pointer]:
+            - /url: /search
+            - img [ref=e18]
+            - generic [ref=e20]:
+              - generic: Search
+        - separator [ref=e21]
+        - generic "Keep up with AI" [ref=e22]:
+          - link "Feed" [ref=e23] [cursor=pointer]:
+            - /url: /feed
+            - img [ref=e25]
+            - generic [ref=e28]:
+              - generic: Feed
+        - generic "Search models" [ref=e29]:
+          - link "Models" [ref=e30] [cursor=pointer]:
+            - /url: /models
+            - img [ref=e32]
+            - generic [ref=e34]:
+              - generic: Models
+        - generic "Research AI" [ref=e36]:
+          - link "Agent" [ref=e37] [cursor=pointer]:
+            - /url: /agent
+            - img [ref=e39]
+            - generic [ref=e41]:
+              - generic: Agent
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - paragraph [ref=e44]: Devs
+          - generic "Plan" [ref=e45]:
+            - link "Plan" [ref=e46] [cursor=pointer]:
+              - /url: /api
+              - img [ref=e48]
+              - generic [ref=e50]:
+                - generic: Plan
+          - generic "Docs" [ref=e51]:
+            - link "docs" [ref=e52] [cursor=pointer]:
+              - /url: https://docs.bytez.com
+              - img [ref=e54]
+              - generic [ref=e56]:
+                - generic: docs
+          - separator [ref=e57]
+        - link [ref=e59] [cursor=pointer]:
+          - /url: https://discord.gg/ZydhEJTd3R
+          - img [ref=e60]:
+            - img [ref=e61]
+        - button "Mirza Arafat Abbas management.maars@marsgc.net" [ref=e63] [cursor=pointer]:
+          - img [ref=e66]
+          - generic [ref=e67]:
+            - generic [ref=e68]: Mirza Arafat Abbas
+            - generic [ref=e69]: management.maars@marsgc.net
+    - generic [ref=e70]:
+      - heading "404" [level=1] [ref=e71]
+      - paragraph [ref=e72]:
+        - text: Sorry, the page
+        - strong [ref=e73]: /api/keys
+        - text: could not be found
+      - link "Back to homepage" [ref=e74] [cursor=pointer]:
+        - /url: /
+  - alert [ref=e75]

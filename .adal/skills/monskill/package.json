@@ -1,7 +1,0 @@
-{
-  "name": "monskills",
-  "private": true,
-  "dependencies": {
-    "@neondatabase/serverless": "^1.0.2"
-  }
-}

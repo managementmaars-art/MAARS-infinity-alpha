@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Users, Search, CheckCircle, AlertTriangle, Play, ChevronRight, X
 } from "lucide-react";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const T = {
   glass: "rgba(255,255,255,0.03)",
@@ -45,14 +45,14 @@ export default function AgentCatalog() {
   const [execResult, setExecResult] = useState(null);
   const [taskInput, setTaskInput] = useState("");
   const token = localStorage.getItem("token");
-  const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const headers = useMemo(() => ({ Authorization: `Bearer ${token}`, "Content-Type": "application/json" }), [token]);
 
   const fetchData = useCallback(async () => {
     const f = (url) => fetch(`${API}${url}`, { headers }).then(r => r.ok ? r.json() : null).catch(() => null);
     const [s, n] = await Promise.all([f("/api/infinity/catalog/stats"), f("/api/infinity/catalog/networks")]);
     if (s) setStats(s);
     if (n) setNetworks(n);
-  }, [token]);
+  }, [headers]);
 
   const fetchAgents = useCallback(async () => {
     const params = new URLSearchParams({ limit: "50" });
@@ -62,7 +62,7 @@ export default function AgentCatalog() {
     if (filterTier) params.set("tier", filterTier);
     const res = await fetch(`${API}/api/infinity/catalog/agents?${params}`, { headers }).catch(() => null);
     if (res?.ok) { const d = await res.json(); setAgents(d.agents || []); setTotal(d.total || 0); }
-  }, [token, search, filterNetwork, filterMaturity, filterTier]);
+  }, [headers, search, filterNetwork, filterMaturity, filterTier]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
   useEffect(() => { fetchAgents(); }, [fetchAgents]);

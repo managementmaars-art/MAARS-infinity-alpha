@@ -1,0 +1,603 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - link "MAARS MAARS Command" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "MAARS" [ref=e8]
+          - generic [ref=e9]: MAARS Command
+        - button "Dashboard" [ref=e10] [cursor=pointer]
+    - generic [ref=e11]:
+      - link "Back to Settings" [ref=e12] [cursor=pointer]:
+        - /url: /settings
+        - img [ref=e13]
+        - text: Back to Settings
+      - generic [ref=e15]:
+        - heading "Choose Your Plan" [level=1] [ref=e16]
+        - paragraph [ref=e17]: Get access to your AI team with flexible pricing. Start free, upgrade anytime.
+        - generic [ref=e18]:
+          - img [ref=e19]
+          - generic [ref=e22]:
+            - generic [ref=e23]: USD ($)
+            - generic [ref=e24] [cursor=pointer]:
+              - checkbox
+            - generic [ref=e27]: BDT (৳)
+        - generic [ref=e28]:
+          - img [ref=e29]
+          - generic [ref=e31]:
+            - text: "Current:"
+            - strong [ref=e32]: Owner
+            - text: • 999999 credits remaining
+        - generic [ref=e33]:
+          - generic [ref=e34]: ✓ Cancel anytime
+          - generic [ref=e35]: ✓ Credits never expire
+          - generic [ref=e36]: ✓ No long-term contract
+          - generic [ref=e37]: ✓ 24/7 automated agents
+          - generic [ref=e38]: ✓ Global availability
+          - generic [ref=e39]: ✓ GDPR & CAN-SPAM ready
+          - generic [ref=e40]: ✓ Stripe-secured payments
+          - generic [ref=e41]: ✓ Human support inbox
+        - button "Admin Edit" [ref=e43] [cursor=pointer]:
+          - img [ref=e44]
+          - text: Admin Edit
+      - generic [ref=e46]:
+        - generic [ref=e48]:
+          - generic [ref=e49]:
+            - img [ref=e51]
+            - paragraph [ref=e53]: Free
+            - generic [ref=e54]: $0/month
+            - paragraph [ref=e55]: Try MAARS — 100% of the gateway, generous starter quota.
+          - generic [ref=e56]:
+            - generic [ref=e57]: What's included / month
+            - generic [ref=e58]:
+              - generic "Any text conversation with any agent (answers, drafts, research)" [ref=e59]:
+                - generic [ref=e60]: Chat messages
+                - generic [ref=e61]: "100"
+              - generic "Full-stack app generation or iterative code edits via Vibe Coding" [ref=e62]:
+                - generic [ref=e63]: App / website builds
+                - generic [ref=e64]: "3"
+              - generic "Commander Orion or any specialist agent running their full SOP" [ref=e65]:
+                - generic [ref=e66]: Agent full-workflow runs
+                - generic [ref=e67]: "10"
+              - generic "Any image generation — Pollinations, FLUX, DALL-E, Gemini" [ref=e68]:
+                - generic [ref=e69]: Images
+                - generic [ref=e70]: "10"
+              - generic "Text-to-speech in 29 languages — Edge (free) + ElevenLabs premium" [ref=e71]:
+                - generic [ref=e72]: Voice-overs
+                - generic [ref=e73]: Unlimited
+              - generic "Audio → text — Groq Whisper (free) · Deepgram · OpenAI Whisper" [ref=e74]:
+                - generic [ref=e75]: Transcription minutes
+                - generic [ref=e76]: Unlimited
+          - list [ref=e77]:
+            - listitem [ref=e78]:
+              - img [ref=e79]
+              - text: 100 chat messages/mo
+            - listitem [ref=e81]:
+              - img [ref=e82]
+              - text: 10 images · 3 app builds
+            - listitem [ref=e84]:
+              - img [ref=e85]
+              - text: Unlimited voiceover + transcription (always free)
+            - listitem [ref=e87]:
+              - img [ref=e88]
+              - text: 3 pre-built agents
+          - button "Get Started" [ref=e90] [cursor=pointer]
+        - generic [ref=e91]:
+          - generic [ref=e92]: Most Popular
+          - generic [ref=e93]:
+            - generic [ref=e94]:
+              - img [ref=e96]
+              - paragraph [ref=e98]: Creator
+              - generic [ref=e99]: $29/month
+              - paragraph [ref=e100]: The SaaS baseline. Videos, images, chat, apps, all included.
+            - generic [ref=e101]:
+              - generic [ref=e102]: What's included / month
+              - generic [ref=e103]:
+                - generic "Any text conversation with any agent (answers, drafts, research)" [ref=e104]:
+                  - generic [ref=e105]: Chat messages
+                  - generic [ref=e106]: 5,000
+                - generic "Full-stack app generation or iterative code edits via Vibe Coding" [ref=e107]:
+                  - generic [ref=e108]: App / website builds
+                  - generic [ref=e109]: "50"
+                - generic "Commander Orion or any specialist agent running their full SOP" [ref=e110]:
+                  - generic [ref=e111]: Agent full-workflow runs
+                  - generic [ref=e112]: "100"
+                - generic "Any image generation — Pollinations, FLUX, DALL-E, Gemini" [ref=e113]:
+                  - generic [ref=e114]: Images
+                  - generic [ref=e115]: "500"
+                - generic "Any video clip — Fal LTX, CogVideoX, Hailuo, Kling, Sora fallback" [ref=e116]:
+                  - generic [ref=e117]: Videos (4-second clips)
+                  - generic [ref=e118]: "10"
+                - generic "Text-to-speech in 29 languages — Edge (free) + ElevenLabs premium" [ref=e119]:
+                  - generic [ref=e120]: Voice-overs
+                  - generic [ref=e121]: Unlimited
+                - generic "Audio → text — Groq Whisper (free) · Deepgram · OpenAI Whisper" [ref=e122]:
+                  - generic [ref=e123]: Transcription minutes
+                  - generic [ref=e124]: Unlimited
+            - list [ref=e125]:
+              - listitem [ref=e126]:
+                - img [ref=e127]
+                - text: 5,000 chats · 500 images · 10 videos
+              - listitem [ref=e129]:
+                - img [ref=e130]
+                - text: 50 full-stack app builds
+              - listitem [ref=e132]:
+                - img [ref=e133]
+                - text: 100 agent-workflow runs
+              - listitem [ref=e135]:
+                - img [ref=e136]
+                - text: 12 pre-built agents + 1 custom
+              - listitem [ref=e138]:
+                - img [ref=e139]
+                - text: Unlimited voiceover + transcription
+            - button "Subscribe" [ref=e141] [cursor=pointer]
+        - generic [ref=e143]:
+          - generic [ref=e144]:
+            - img [ref=e146]
+            - paragraph [ref=e148]: Studio
+            - generic [ref=e149]: $99/month
+            - paragraph [ref=e150]: For teams shipping content daily. Premium voices, premium video.
+          - generic [ref=e151]:
+            - generic [ref=e152]: What's included / month
+            - generic [ref=e153]:
+              - generic "Any text conversation with any agent (answers, drafts, research)" [ref=e154]:
+                - generic [ref=e155]: Chat messages
+                - generic [ref=e156]: 25,000
+              - generic "Full-stack app generation or iterative code edits via Vibe Coding" [ref=e157]:
+                - generic [ref=e158]: App / website builds
+                - generic [ref=e159]: "250"
+              - generic "Commander Orion or any specialist agent running their full SOP" [ref=e160]:
+                - generic [ref=e161]: Agent full-workflow runs
+                - generic [ref=e162]: "500"
+              - generic "Any image generation — Pollinations, FLUX, DALL-E, Gemini" [ref=e163]:
+                - generic [ref=e164]: Images
+                - generic [ref=e165]: 2,500
+              - generic "Any video clip — Fal LTX, CogVideoX, Hailuo, Kling, Sora fallback" [ref=e166]:
+                - generic [ref=e167]: Videos (4-second clips)
+                - generic [ref=e168]: "50"
+              - generic "Text-to-speech in 29 languages — Edge (free) + ElevenLabs premium" [ref=e169]:
+                - generic [ref=e170]: Voice-overs
+                - generic [ref=e171]: Unlimited
+              - generic "Audio → text — Groq Whisper (free) · Deepgram · OpenAI Whisper" [ref=e172]:
+                - generic [ref=e173]: Transcription minutes
+                - generic [ref=e174]: Unlimited
+          - list [ref=e175]:
+            - listitem [ref=e176]:
+              - img [ref=e177]
+              - text: 25,000 chats · 2,500 images · 50 videos
+            - listitem [ref=e179]:
+              - img [ref=e180]
+              - text: 250 full-stack app builds
+            - listitem [ref=e182]:
+              - img [ref=e183]
+              - text: 500 agent-workflow runs with Commander Orion
+            - listitem [ref=e185]:
+              - img [ref=e186]
+              - text: 25 agents + 3 custom · teams of 10
+            - listitem [ref=e188]:
+              - img [ref=e189]
+              - text: Premium ElevenLabs voices unlocked
+          - button "Subscribe" [ref=e191] [cursor=pointer]
+        - generic [ref=e193]:
+          - generic [ref=e194]:
+            - img [ref=e196]
+            - paragraph [ref=e198]: Scale
+            - generic [ref=e199]: $299/month
+            - paragraph [ref=e200]: Heavy production. Unlimited images, 200 videos, 1k app builds.
+          - generic [ref=e201]:
+            - generic [ref=e202]: What's included / month
+            - generic [ref=e203]:
+              - generic "Any text conversation with any agent (answers, drafts, research)" [ref=e204]:
+                - generic [ref=e205]: Chat messages
+                - generic [ref=e206]: 100,000
+              - generic "Full-stack app generation or iterative code edits via Vibe Coding" [ref=e207]:
+                - generic [ref=e208]: App / website builds
+                - generic [ref=e209]: 1,000
+              - generic "Commander Orion or any specialist agent running their full SOP" [ref=e210]:
+                - generic [ref=e211]: Agent full-workflow runs
+                - generic [ref=e212]: 2,000
+              - generic "Any image generation — Pollinations, FLUX, DALL-E, Gemini" [ref=e213]:
+                - generic [ref=e214]: Images
+                - generic [ref=e215]: Unlimited
+              - generic "Any video clip — Fal LTX, CogVideoX, Hailuo, Kling, Sora fallback" [ref=e216]:
+                - generic [ref=e217]: Videos (4-second clips)
+                - generic [ref=e218]: "200"
+              - generic "Text-to-speech in 29 languages — Edge (free) + ElevenLabs premium" [ref=e219]:
+                - generic [ref=e220]: Voice-overs
+                - generic [ref=e221]: Unlimited
+              - generic "Audio → text — Groq Whisper (free) · Deepgram · OpenAI Whisper" [ref=e222]:
+                - generic [ref=e223]: Transcription minutes
+                - generic [ref=e224]: Unlimited
+          - list [ref=e225]:
+            - listitem [ref=e226]:
+              - img [ref=e227]
+              - text: 100,000 chats · unlimited images · 200 videos
+            - listitem [ref=e229]:
+              - img [ref=e230]
+              - text: 1,000 app builds · 2,000 agent runs
+            - listitem [ref=e232]:
+              - img [ref=e233]
+              - text: All 41 core agents + 10 custom
+            - listitem [ref=e235]:
+              - img [ref=e236]
+              - text: Priority routing · faster provider response
+            - listitem [ref=e238]:
+              - img [ref=e239]
+              - text: Teams of 35 · dedicated Slack support
+          - button "Subscribe" [ref=e241] [cursor=pointer]
+        - generic [ref=e243]:
+          - generic [ref=e244]:
+            - img [ref=e246]
+            - paragraph [ref=e248]: "Infinity"
+            - generic [ref=e249]: $999/month
+            - paragraph [ref=e250]: Everything, fair-use. White-glove onboarding.
+          - generic [ref=e251]:
+            - generic [ref=e252]: What's included / month
+            - generic [ref=e253]:
+              - generic "Any text conversation with any agent (answers, drafts, research)" [ref=e254]:
+                - generic [ref=e255]: Chat messages
+                - generic [ref=e256]: Unlimited
+              - generic "Full-stack app generation or iterative code edits via Vibe Coding" [ref=e257]:
+                - generic [ref=e258]: App / website builds
+                - generic [ref=e259]: Unlimited
+              - generic "Commander Orion or any specialist agent running their full SOP" [ref=e260]:
+                - generic [ref=e261]: Agent full-workflow runs
+                - generic [ref=e262]: Unlimited
+              - generic "Any image generation — Pollinations, FLUX, DALL-E, Gemini" [ref=e263]:
+                - generic [ref=e264]: Images
+                - generic [ref=e265]: Unlimited
+              - generic "Any video clip — Fal LTX, CogVideoX, Hailuo, Kling, Sora fallback" [ref=e266]:
+                - generic [ref=e267]: Videos (4-second clips)
+                - generic [ref=e268]: 1,000
+              - generic "Text-to-speech in 29 languages — Edge (free) + ElevenLabs premium" [ref=e269]:
+                - generic [ref=e270]: Voice-overs
+                - generic [ref=e271]: Unlimited
+              - generic "Audio → text — Groq Whisper (free) · Deepgram · OpenAI Whisper" [ref=e272]:
+                - generic [ref=e273]: Transcription minutes
+                - generic [ref=e274]: Unlimited
+          - list [ref=e275]:
+            - listitem [ref=e276]:
+              - img [ref=e277]
+              - text: Fair-use unlimited everything
+            - listitem [ref=e279]:
+              - img [ref=e280]
+              - text: Unlimited agents · unlimited customization
+            - listitem [ref=e282]:
+              - img [ref=e283]
+              - text: All 499 trained specialist agents
+            - listitem [ref=e285]:
+              - img [ref=e286]
+              - text: Custom onboarding · named account manager
+            - listitem [ref=e288]:
+              - img [ref=e289]
+              - text: SLAs · SSO · audit logs
+          - button "Subscribe" [ref=e291] [cursor=pointer]
+      - generic [ref=e292]:
+        - generic [ref=e293]:
+          - generic [ref=e294]:
+            - img [ref=e295]
+            - text: New
+          - heading "Build Your Own Package" [level=2] [ref=e299]
+          - paragraph [ref=e300]: Pick exactly the agents you need and the credits you want. Pay only for what you use.
+        - generic [ref=e302]:
+          - generic [ref=e303]:
+            - generic [ref=e304]:
+              - heading "Select Your Agents" [level=3] [ref=e305]
+              - generic [ref=e306]: 0 selected · $0/mo
+            - generic [ref=e308]:
+              - button "Adrian Stone Adrian Stone Procurement & Vendor Manager" [ref=e309] [cursor=pointer]:
+                - img "Adrian Stone" [ref=e310]
+                - generic [ref=e311]:
+                  - paragraph [ref=e312]: Adrian Stone
+                  - paragraph [ref=e313]: Procurement & Vendor Manager
+              - button "Alexandra Reid Alexandra Reid Legal Assistant" [ref=e314] [cursor=pointer]:
+                - img "Alexandra Reid" [ref=e315]
+                - generic [ref=e316]:
+                  - paragraph [ref=e317]: Alexandra Reid
+                  - paragraph [ref=e318]: Legal Assistant
+              - button "Amara Johnson Amara Johnson HR Specialist" [ref=e319] [cursor=pointer]:
+                - img "Amara Johnson" [ref=e320]
+                - generic [ref=e321]:
+                  - paragraph [ref=e322]: Amara Johnson
+                  - paragraph [ref=e323]: HR Specialist
+              - button "Axel Brennan Axel Brennan Growth Hacker" [ref=e324] [cursor=pointer]:
+                - img "Axel Brennan" [ref=e325]
+                - generic [ref=e326]:
+                  - paragraph [ref=e327]: Axel Brennan
+                  - paragraph [ref=e328]: Growth Hacker
+              - button "Benjamin Cole Benjamin Cole Financial Analyst" [ref=e329] [cursor=pointer]:
+                - img "Benjamin Cole" [ref=e330]
+                - generic [ref=e331]:
+                  - paragraph [ref=e332]: Benjamin Cole
+                  - paragraph [ref=e333]: Financial Analyst
+              - button "Budget Enforcement Agent Budget Enforcement Agent Budget Enforcement Officer" [ref=e334] [cursor=pointer]:
+                - img "Budget Enforcement Agent" [ref=e335]
+                - generic [ref=e336]:
+                  - paragraph [ref=e337]: Budget Enforcement Agent
+                  - paragraph [ref=e338]: Budget Enforcement Officer
+              - button "Cassandra Steele Cassandra Steele Chief Strategy Officer" [ref=e339] [cursor=pointer]:
+                - img "Cassandra Steele" [ref=e340]
+                - generic [ref=e341]:
+                  - paragraph [ref=e342]: Cassandra Steele
+                  - paragraph [ref=e343]: Chief Strategy Officer
+              - button "Catherine Blake Catherine Blake Reputation & PR Manager" [ref=e344] [cursor=pointer]:
+                - img "Catherine Blake" [ref=e345]
+                - generic [ref=e346]:
+                  - paragraph [ref=e347]: Catherine Blake
+                  - paragraph [ref=e348]: Reputation & PR Manager
+              - button "Damien Voss Damien Voss Cybersecurity Officer" [ref=e349] [cursor=pointer]:
+                - img "Damien Voss" [ref=e350]
+                - generic [ref=e351]:
+                  - paragraph [ref=e352]: Damien Voss
+                  - paragraph [ref=e353]: Cybersecurity Officer
+              - button "Derek Huang Derek Huang SEO Specialist" [ref=e354] [cursor=pointer]:
+                - img "Derek Huang" [ref=e355]
+                - generic [ref=e356]:
+                  - paragraph [ref=e357]: Derek Huang
+                  - paragraph [ref=e358]: SEO Specialist
+              - button "Diana Morales Diana Morales Operations Manager" [ref=e359] [cursor=pointer]:
+                - img "Diana Morales" [ref=e360]
+                - generic [ref=e361]:
+                  - paragraph [ref=e362]: Diana Morales
+                  - paragraph [ref=e363]: Operations Manager
+              - button "Dr. Clara Voss Dr. Clara Voss Research Specialist" [ref=e364] [cursor=pointer]:
+                - img "Dr. Clara Voss" [ref=e365]
+                - generic [ref=e366]:
+                  - paragraph [ref=e367]: Dr. Clara Voss
+                  - paragraph [ref=e368]: Research Specialist
+              - button "Dr. Eleanor Shaw Dr. Eleanor Shaw Knowledge Architect" [ref=e369] [cursor=pointer]:
+                - img "Dr. Eleanor Shaw" [ref=e370]
+                - generic [ref=e371]:
+                  - paragraph [ref=e372]: Dr. Eleanor Shaw
+                  - paragraph [ref=e373]: Knowledge Architect
+              - button "Dr. Luca Bernstein Dr. Luca Bernstein AI Optimization Specialist" [ref=e374] [cursor=pointer]:
+                - img "Dr. Luca Bernstein" [ref=e375]
+                - generic [ref=e376]:
+                  - paragraph [ref=e377]: Dr. Luca Bernstein
+                  - paragraph [ref=e378]: AI Optimization Specialist
+              - button "Elena Kovacs Elena Kovacs Product Manager" [ref=e379] [cursor=pointer]:
+                - img "Elena Kovacs" [ref=e380]
+                - generic [ref=e381]:
+                  - paragraph [ref=e382]: Elena Kovacs
+                  - paragraph [ref=e383]: Product Manager
+              - button "Ethan Yates Ethan Yates Data Analyst" [ref=e384] [cursor=pointer]:
+                - img "Ethan Yates" [ref=e385]
+                - generic [ref=e386]:
+                  - paragraph [ref=e387]: Ethan Yates
+                  - paragraph [ref=e388]: Data Analyst
+              - button "Execution Policy Agent Execution Policy Agent Execution Policy Enforcer" [ref=e389] [cursor=pointer]:
+                - img "Execution Policy Agent" [ref=e390]
+                - generic [ref=e391]:
+                  - paragraph [ref=e392]: Execution Policy Agent
+                  - paragraph [ref=e393]: Execution Policy Enforcer
+              - button "Felix Romano Felix Romano Graphic Designer" [ref=e394] [cursor=pointer]:
+                - img "Felix Romano" [ref=e395]
+                - generic [ref=e396]:
+                  - paragraph [ref=e397]: Felix Romano
+                  - paragraph [ref=e398]: Graphic Designer
+              - button "Isla Fernandez Isla Fernandez Social Media Manager" [ref=e399] [cursor=pointer]:
+                - img "Isla Fernandez" [ref=e400]
+                - generic [ref=e401]:
+                  - paragraph [ref=e402]: Isla Fernandez
+                  - paragraph [ref=e403]: Social Media Manager
+              - button "Jasper Wells Jasper Wells Email Marketing Specialist" [ref=e404] [cursor=pointer]:
+                - img "Jasper Wells" [ref=e405]
+                - generic [ref=e406]:
+                  - paragraph [ref=e407]: Jasper Wells
+                  - paragraph [ref=e408]: Email Marketing Specialist
+              - button "Kai Nakamoto Kai Nakamoto App Developer" [ref=e409] [cursor=pointer]:
+                - img "Kai Nakamoto" [ref=e410]
+                - generic [ref=e411]:
+                  - paragraph [ref=e412]: Kai Nakamoto
+                  - paragraph [ref=e413]: App Developer
+              - button "Kernel Operations Agent Kernel Operations Agent Kernel Operations Manager" [ref=e414] [cursor=pointer]:
+                - img "Kernel Operations Agent" [ref=e415]
+                - generic [ref=e416]:
+                  - paragraph [ref=e417]: Kernel Operations Agent
+                  - paragraph [ref=e418]: Kernel Operations Manager
+              - button "Layla Mansouri Layla Mansouri Localization & Global Expansion Specialist" [ref=e419] [cursor=pointer]:
+                - img "Layla Mansouri" [ref=e420]
+                - generic [ref=e421]:
+                  - paragraph [ref=e422]: Layla Mansouri
+                  - paragraph [ref=e423]: Localization & Global Expansion Specialist
+              - button "Luna Bergström Luna Bergström Web Designer" [ref=e424] [cursor=pointer]:
+                - img "Luna Bergström" [ref=e425]
+                - generic [ref=e426]:
+                  - paragraph [ref=e427]: Luna Bergström
+                  - paragraph [ref=e428]: Web Designer
+              - button "Marco De Luca Marco De Luca 3D Visualization Specialist" [ref=e429] [cursor=pointer]:
+                - img "Marco De Luca" [ref=e430]
+                - generic [ref=e431]:
+                  - paragraph [ref=e432]: Marco De Luca
+                  - paragraph [ref=e433]: 3D Visualization Specialist
+              - button "Marcus Drake Marcus Drake Sales Representative" [ref=e434] [cursor=pointer]:
+                - img "Marcus Drake" [ref=e435]
+                - generic [ref=e436]:
+                  - paragraph [ref=e437]: Marcus Drake
+                  - paragraph [ref=e438]: Sales Representative
+              - button "Maximilian Wolfe Maximilian Wolfe Revenue Strategist" [ref=e439] [cursor=pointer]:
+                - img "Maximilian Wolfe" [ref=e440]
+                - generic [ref=e441]:
+                  - paragraph [ref=e442]: Maximilian Wolfe
+                  - paragraph [ref=e443]: Revenue Strategist
+              - button "Maya Thompson Maya Thompson Customer Service Rep" [ref=e444] [cursor=pointer]:
+                - img "Maya Thompson" [ref=e445]
+                - generic [ref=e446]:
+                  - paragraph [ref=e447]: Maya Thompson
+                  - paragraph [ref=e448]: Customer Service Rep
+              - button "Memory Routing Agent Memory Routing Agent Memory Access Controller" [ref=e449] [cursor=pointer]:
+                - img "Memory Routing Agent" [ref=e450]
+                - generic [ref=e451]:
+                  - paragraph [ref=e452]: Memory Routing Agent
+                  - paragraph [ref=e453]: Memory Access Controller
+              - button "Nadia Kessler Nadia Kessler Personal Secretary" [ref=e454] [cursor=pointer]:
+                - img "Nadia Kessler" [ref=e455]
+                - generic [ref=e456]:
+                  - paragraph [ref=e457]: Nadia Kessler
+                  - paragraph [ref=e458]: Personal Secretary
+              - button "Nathan Cross Nathan Cross Project Manager" [ref=e459] [cursor=pointer]:
+                - img "Nathan Cross" [ref=e460]
+                - generic [ref=e461]:
+                  - paragraph [ref=e462]: Nathan Cross
+                  - paragraph [ref=e463]: Project Manager
+              - button "Nikolai Volkov Nikolai Volkov Data Engineer" [ref=e464] [cursor=pointer]:
+                - img "Nikolai Volkov" [ref=e465]
+                - generic [ref=e466]:
+                  - paragraph [ref=e467]: Nikolai Volkov
+                  - paragraph [ref=e468]: Data Engineer
+              - button "Olivia Sinclair Olivia Sinclair Content Writer" [ref=e469] [cursor=pointer]:
+                - img "Olivia Sinclair" [ref=e470]
+                - generic [ref=e471]:
+                  - paragraph [ref=e472]: Olivia Sinclair
+                  - paragraph [ref=e473]: Content Writer
+              - button "Professor James Whitfield Professor James Whitfield Ethics & Risk Governance Officer" [ref=e474] [cursor=pointer]:
+                - img "Professor James Whitfield" [ref=e475]
+                - generic [ref=e476]:
+                  - paragraph [ref=e477]: Professor James Whitfield
+                  - paragraph [ref=e478]: Ethics & Risk Governance Officer
+              - button "Recovery and Rollback Agent Recovery and Rollback Agent Recovery Operations Manager" [ref=e479] [cursor=pointer]:
+                - img "Recovery and Rollback Agent" [ref=e480]
+                - generic [ref=e481]:
+                  - paragraph [ref=e482]: Recovery and Rollback Agent
+                  - paragraph [ref=e483]: Recovery Operations Manager
+              - button "Resource Allocation Agent Resource Allocation Agent Resource Allocation Manager" [ref=e484] [cursor=pointer]:
+                - img "Resource Allocation Agent" [ref=e485]
+                - generic [ref=e486]:
+                  - paragraph [ref=e487]: Resource Allocation Agent
+                  - paragraph [ref=e488]: Resource Allocation Manager
+              - button "Richard Ashworth Richard Ashworth Investor Relations Manager" [ref=e489] [cursor=pointer]:
+                - img "Richard Ashworth" [ref=e490]
+                - generic [ref=e491]:
+                  - paragraph [ref=e492]: Richard Ashworth
+                  - paragraph [ref=e493]: Investor Relations Manager
+              - button "Riley Chen Riley Chen Video Content Specialist" [ref=e494] [cursor=pointer]:
+                - img "Riley Chen" [ref=e495]
+                - generic [ref=e496]:
+                  - paragraph [ref=e497]: Riley Chen
+                  - paragraph [ref=e498]: Video Content Specialist
+              - button "Scarlett Monroe Scarlett Monroe Copywriter" [ref=e499] [cursor=pointer]:
+                - img "Scarlett Monroe" [ref=e500]
+                - generic [ref=e501]:
+                  - paragraph [ref=e502]: Scarlett Monroe
+                  - paragraph [ref=e503]: Copywriter
+              - button "Scheduler Oversight Agent Scheduler Oversight Agent Scheduler Oversight Manager" [ref=e504] [cursor=pointer]:
+                - img "Scheduler Oversight Agent" [ref=e505]
+                - generic [ref=e506]:
+                  - paragraph [ref=e507]: Scheduler Oversight Agent
+                  - paragraph [ref=e508]: Scheduler Oversight Manager
+              - button "Serena Okafor Serena Okafor Automation Engineer" [ref=e509] [cursor=pointer]:
+                - img "Serena Okafor" [ref=e510]
+                - generic [ref=e511]:
+                  - paragraph [ref=e512]: Serena Okafor
+                  - paragraph [ref=e513]: Automation Engineer
+              - button "Sofia Reyes Sofia Reyes Customer Experience Architect" [ref=e514] [cursor=pointer]:
+                - img "Sofia Reyes" [ref=e515]
+                - generic [ref=e516]:
+                  - paragraph [ref=e517]: Sofia Reyes
+                  - paragraph [ref=e518]: Customer Experience Architect
+              - button "Task Graph Integrity Agent Task Graph Integrity Agent Task Graph Integrity Manager" [ref=e519] [cursor=pointer]:
+                - img "Task Graph Integrity Agent" [ref=e520]
+                - generic [ref=e521]:
+                  - paragraph [ref=e522]: Task Graph Integrity Agent
+                  - paragraph [ref=e523]: Task Graph Integrity Manager
+              - button "Tool Access Controller Agent Tool Access Controller Agent Tool Permission Manager" [ref=e524] [cursor=pointer]:
+                - img "Tool Access Controller Agent" [ref=e525]
+                - generic [ref=e526]:
+                  - paragraph [ref=e527]: Tool Access Controller Agent
+                  - paragraph [ref=e528]: Tool Permission Manager
+              - button "Valentina Cruz Valentina Cruz Brand Architect" [ref=e529] [cursor=pointer]:
+                - img "Valentina Cruz" [ref=e530]
+                - generic [ref=e531]:
+                  - paragraph [ref=e532]: Valentina Cruz
+                  - paragraph [ref=e533]: Brand Architect
+              - button "Victor Ashford Victor Ashford Business Strategist" [ref=e534] [cursor=pointer]:
+                - img "Victor Ashford" [ref=e535]
+                - generic [ref=e536]:
+                  - paragraph [ref=e537]: Victor Ashford
+                  - paragraph [ref=e538]: Business Strategist
+              - button "Victoria Harrington Victoria Harrington Compliance Officer" [ref=e539] [cursor=pointer]:
+                - img "Victoria Harrington" [ref=e540]
+                - generic [ref=e541]:
+                  - paragraph [ref=e542]: Victoria Harrington
+                  - paragraph [ref=e543]: Compliance Officer
+              - button "Yuki Tanaka Yuki Tanaka UX Researcher" [ref=e544] [cursor=pointer]:
+                - img "Yuki Tanaka" [ref=e545]
+                - generic [ref=e546]:
+                  - paragraph [ref=e547]: Yuki Tanaka
+                  - paragraph [ref=e548]: UX Researcher
+              - button "Zara Mitchell Zara Mitchell Marketing Specialist" [ref=e549] [cursor=pointer]:
+                - img "Zara Mitchell" [ref=e550]
+                - generic [ref=e551]:
+                  - paragraph [ref=e552]: Zara Mitchell
+                  - paragraph [ref=e553]: Marketing Specialist
+            - button "Commander Orion (Add-on) Delegates tasks across your team. Breaks down complex goals automatically. +$15 /month" [ref=e554] [cursor=pointer]:
+              - img [ref=e556]
+              - generic [ref=e558]:
+                - paragraph [ref=e559]: Commander Orion (Add-on)
+                - paragraph [ref=e560]: Delegates tasks across your team. Breaks down complex goals automatically.
+              - generic [ref=e561]:
+                - paragraph [ref=e562]: +$15
+                - paragraph [ref=e563]: /month
+          - generic [ref=e565]:
+            - heading "Your Package" [level=3] [ref=e566]
+            - generic [ref=e567]:
+              - paragraph [ref=e568]: Choose credits
+              - generic [ref=e569]:
+                - button "100 credits $16.6" [ref=e570] [cursor=pointer]:
+                  - generic [ref=e571]: 100 credits
+                  - generic [ref=e572]: $16.6
+                - button "500 credits $83" [ref=e573] [cursor=pointer]:
+                  - generic [ref=e574]: 500 credits
+                  - generic [ref=e575]: $83
+                - button "1,000 credits $165.99" [ref=e576] [cursor=pointer]:
+                  - generic [ref=e577]: 1,000 credits
+                  - generic [ref=e578]: $165.99
+                - button "2,000 credits $331.98" [ref=e579] [cursor=pointer]:
+                  - generic [ref=e580]: 2,000 credits
+                  - generic [ref=e581]: $331.98
+                - button "5,000 credits $829.96" [ref=e582] [cursor=pointer]:
+                  - generic [ref=e583]: 5,000 credits
+                  - generic [ref=e584]: $829.96
+            - generic [ref=e585]:
+              - generic [ref=e586]:
+                - generic [ref=e587]: 0 agents
+                - generic [ref=e588]: $0
+              - generic [ref=e589]:
+                - generic [ref=e590]: Total
+                - generic [ref=e591]: $0/mo
+            - button "Build Package" [disabled] [ref=e592]:
+              - img [ref=e593]
+              - text: Build Package
+      - generic [ref=e597]:
+        - heading "Need More Credits?" [level=2] [ref=e598]
+        - paragraph [ref=e599]: Buy additional credits anytime. They never expire.
+        - generic [ref=e600]:
+          - generic [ref=e601]:
+            - paragraph [ref=e602]: "100"
+            - paragraph [ref=e603]: credits
+            - button "$16.6" [ref=e604] [cursor=pointer]
+          - generic [ref=e605]:
+            - paragraph [ref=e606]: "300"
+            - paragraph [ref=e607]: credits
+            - button "$49.8" [ref=e608] [cursor=pointer]
+          - generic [ref=e609]:
+            - paragraph [ref=e610]: "700"
+            - paragraph [ref=e611]: credits
+            - button "$116.19" [ref=e612] [cursor=pointer]
+          - generic [ref=e613]:
+            - paragraph [ref=e614]: "1500"
+            - paragraph [ref=e615]: credits
+            - button "$248.99" [ref=e616] [cursor=pointer]
+      - generic [ref=e617]:
+        - paragraph [ref=e618]: 458+ specialized AI agents across 28 network categories and 36 core systems. Commander Orion ∞ included in Pro and Business plans.
+        - paragraph [ref=e619]: Questions? Contact support.maars@marsgc.net
+      - contentinfo [ref=e620]:
+        - img "MARS Command" [ref=e621]
+        - generic [ref=e622]: MARS Command by MARS Global Corporation © 2026
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

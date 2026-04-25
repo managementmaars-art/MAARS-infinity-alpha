@@ -5,7 +5,7 @@ import { useAuth, API } from "../App";
 import { toast } from "sonner";
 import { BrandFooter } from "../components/BrandFooter";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL?.trim() || "http://localhost:8000";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const OAUTH_ERROR_MESSAGES = {
   oauth_cancelled:       "Google sign-in was cancelled.",

@@ -1,0 +1,25 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - img "No Found" [ref=e5]
+      - generic [ref=e59]: "404"
+      - generic [ref=e60]: 对不起，您访问的页面不存在。
+      - link "返回首页" [ref=e62] [cursor=pointer]:
+        - /url: /
+        - button "返回首页" [ref=e63]:
+          - generic [ref=e64]: 返回首页
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - heading "Cookie Consent" [level=3] [ref=e69]
+        - paragraph [ref=e70]:
+          - text: We use cookies to analyze website usage to improve your experience.
+          - text: By clicking "Accept All Cookies", you agree to the storing of cookies on your device to enhance site navigation, analyze site usage, and assist in our marketing efforts. You may click
+          - strong [ref=e71]: Customize
+          - text: to reject non-essential cookies or personalize the types of cookies you would like to allow.
+          - link "Read our Cookies Policy" [ref=e72] [cursor=pointer]:
+            - /url: /protocol/cookie-policy
+      - generic [ref=e73]:
+        - button "Reject All" [ref=e74] [cursor=pointer]
+        - button "Customize" [ref=e75] [cursor=pointer]
+        - button "Accept All Cookies" [ref=e76] [cursor=pointer]
+  - alert [ref=e77]

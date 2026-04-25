@@ -1,0 +1,354 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#content-area"
+    - generic [ref=e5]:
+      - generic [ref=e9]:
+        - generic [ref=e12]:
+          - link "Bytez home page light logo" [ref=e14] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e15]: Bytez home page
+            - img "light logo" [ref=e16]
+          - button "Open search" [ref=e18] [cursor=pointer]:
+            - generic [ref=e19]:
+              - img [ref=e20]
+              - generic [ref=e23]: Search...
+            - generic [ref=e24]: Ctrl K
+          - generic [ref=e25]:
+            - navigation [ref=e26]:
+              - list [ref=e27]:
+                - listitem [ref=e28]:
+                  - link "Discord" [ref=e29] [cursor=pointer]:
+                    - /url: https://discord.com/invite/Z723PfCFWf
+                - listitem [ref=e30]:
+                  - link "Get support" [ref=e31] [cursor=pointer]:
+                    - /url: https://discord.com/invite/Z723PfCFWf
+                - listitem [ref=e32] [cursor=pointer]:
+                  - link "Bytez-com/docs 1,782" [ref=e33]:
+                    - /url: https://github.com/Bytez-com/docs
+                    - generic [ref=e34]:
+                      - generic [ref=e35]:
+                        - img [ref=e36]
+                        - generic [ref=e38]: Bytez-com/docs
+                      - generic [ref=e39]:
+                        - img [ref=e40]
+                        - generic [ref=e41]: 1,782
+            - button "Toggle dark mode" [ref=e43] [cursor=pointer]:
+              - img [ref=e44]
+        - generic [ref=e52]:
+          - link "Docs" [ref=e53] [cursor=pointer]:
+            - /url: /model-api/docs/welcome
+            - text: Docs
+          - link "HTTP Reference" [ref=e55] [cursor=pointer]:
+            - /url: /http-reference/overview
+            - text: HTTP Reference
+          - link "Integrations" [ref=e57] [cursor=pointer]:
+            - /url: /integrations/langchain
+            - text: Integrations
+          - link "API status" [ref=e59] [cursor=pointer]:
+            - /url: /model-api/docs/status
+            - text: API status
+      - generic [ref=e61]:
+        - generic [ref=e66]:
+          - heading "Model API" [level=5] [ref=e68]
+          - list [ref=e69]:
+            - listitem [ref=e70]:
+              - link "Welcome" [ref=e71] [cursor=pointer]:
+                - /url: /model-api/docs/welcome
+                - img [ref=e73]
+                - generic [ref=e76]: Welcome
+            - listitem [ref=e77]:
+              - link "Get started" [ref=e78] [cursor=pointer]:
+                - /url: /model-api/docs/get-started
+                - img [ref=e80]
+                - generic [ref=e83]: Get started
+            - listitem [ref=e84]:
+              - button "Toggle Understand the API section" [expanded] [ref=e85] [cursor=pointer]:
+                - img [ref=e87]
+                - generic [ref=e88]: Understand the API
+                - img [ref=e90]
+              - list [ref=e92]:
+                - listitem [ref=e93]:
+                  - link "Open vs Closed models" [ref=e94] [cursor=pointer]:
+                    - /url: /model-api/docs/understand-the-api
+                    - img [ref=e96]
+                    - generic [ref=e99]: Open vs Closed models
+                - listitem [ref=e100]:
+                  - link "Billing & Credits" [ref=e101] [cursor=pointer]:
+                    - /url: /model-api/docs/billing
+                    - img [ref=e103]
+                    - generic [ref=e106]: Billing & Credits
+            - listitem [ref=e107]:
+              - button "Toggle Open AI Completions section" [ref=e108] [cursor=pointer]:
+                - img [ref=e110]
+                - generic [ref=e111]: Open AI Completions
+                - img [ref=e113]
+            - listitem [ref=e115]:
+              - button "Toggle Closed Source Params section" [ref=e116] [cursor=pointer]:
+                - img [ref=e118]
+                - generic [ref=e119]: Closed Source Params
+                - img [ref=e121]
+            - listitem [ref=e123]:
+              - button "Toggle Chat Models section" [ref=e124] [cursor=pointer]:
+                - img [ref=e126]
+                - generic [ref=e127]: Chat Models
+                - img [ref=e129]
+            - listitem [ref=e131]:
+              - button "Toggle Language Models section" [ref=e132] [cursor=pointer]:
+                - img [ref=e134]
+                - generic [ref=e135]: Language Models
+                - img [ref=e137]
+            - listitem [ref=e139]:
+              - button "Toggle Image Models section" [ref=e140] [cursor=pointer]:
+                - img [ref=e142]
+                - generic [ref=e143]: Image Models
+                - img [ref=e145]
+            - listitem [ref=e147]:
+              - button "Toggle Video Models section" [ref=e148] [cursor=pointer]:
+                - img [ref=e150]
+                - generic [ref=e151]: Video Models
+                - img [ref=e153]
+            - listitem [ref=e155]:
+              - button "Toggle Audio Models section" [ref=e156] [cursor=pointer]:
+                - img [ref=e158]
+                - generic [ref=e159]: Audio Models
+                - img [ref=e161]
+            - listitem [ref=e163]:
+              - button "Toggle Multimodal Models section" [ref=e164] [cursor=pointer]:
+                - img [ref=e166]
+                - generic [ref=e167]: Multimodal Models
+                - img [ref=e169]
+            - listitem [ref=e171]:
+              - link "Containers" [ref=e172] [cursor=pointer]:
+                - /url: /model-api/docs/containers
+                - img [ref=e174]
+                - generic [ref=e177]: Containers
+            - listitem [ref=e178]:
+              - link "Request a model" [ref=e179] [cursor=pointer]:
+                - /url: /model-api/docs/requestAModel
+                - img [ref=e181]
+                - generic [ref=e184]: Request a model
+        - generic [ref=e187]:
+          - banner [ref=e188]:
+            - generic [ref=e189]:
+              - generic [ref=e190]: Model API
+              - heading "Welcome" [level=1] [ref=e192]
+            - paragraph [ref=e194]: The unified API for 100,000+ AI models
+          - generic [ref=e195]:
+            - generic [ref=e196]:
+              - heading "Ask AI about Bytez" [level=3] [ref=e197]
+              - text: Get instant answers from our docs
+              - textbox "How do I run a model?" [ref=e198]
+              - generic [ref=e199]:
+                - link "ChatGPT" [ref=e200]:
+                  - /url: "#"
+                - link "Claude" [ref=e201]:
+                  - /url: "#"
+                - link "Perplexity" [ref=e202]:
+                  - /url: "#"
+            - heading "Navigate to header What kind of AI are you looking for?" [level=1] [ref=e203]:
+              - link "Navigate to header" [ref=e204] [cursor=pointer]:
+                - /url: "#what-kind-of-ai-are-you-looking-for"
+                - img [ref=e206]
+              - generic [ref=e208] [cursor=pointer]: What kind of AI are you looking for?
+            - heading "Navigate to header Popular" [level=3] [ref=e209]:
+              - link "Navigate to header" [ref=e210] [cursor=pointer]:
+                - /url: "#popular"
+                - img [ref=e212]
+              - generic [ref=e214] [cursor=pointer]: Popular
+            - generic [ref=e215]:
+              - link [ref=e216] [cursor=pointer]:
+                - link [ref=e218]:
+                  - /url: task/chat
+                  - img [ref=e220]
+                  - generic [ref=e221]:
+                    - heading [level=2] [ref=e222]: Chat
+                    - generic [ref=e224]: Multi-modal models
+              - link [ref=e225] [cursor=pointer]:
+                - link [ref=e227]:
+                  - /url: task/text-to-image
+                  - img [ref=e229]
+                  - generic [ref=e230]:
+                    - heading [level=2] [ref=e231]: Image Generation
+                    - generic [ref=e233]: Text-to-image models
+              - link [ref=e234] [cursor=pointer]:
+                - link [ref=e236]:
+                  - /url: task/feature-extraction
+                  - img [ref=e238]
+                  - generic [ref=e239]:
+                    - heading [level=2] [ref=e240]: Embeddings
+                    - generic [ref=e242]: Turn your data to vectors
+            - heading "Navigate to header Everything" [level=3] [ref=e243]:
+              - link "Navigate to header" [ref=e244] [cursor=pointer]:
+                - /url: "#everything"
+                - img [ref=e246]
+              - generic [ref=e248] [cursor=pointer]: Everything
+            - generic [ref=e249]:
+              - link [ref=e250] [cursor=pointer]:
+                - link [ref=e252]:
+                  - /url: /model-api/docs/task/audio-classification
+                  - img [ref=e254]
+                  - heading [level=2] [ref=e256]: Audio Classification
+              - link [ref=e257] [cursor=pointer]:
+                - link [ref=e259]:
+                  - /url: /model-api/docs/task/automatic-speech-recognition
+                  - img [ref=e261]
+                  - heading [level=2] [ref=e263]: Automatic Speech Recognition
+              - link [ref=e264] [cursor=pointer]:
+                - link [ref=e266]:
+                  - /url: /model-api/docs/task/depth-estimation
+                  - img [ref=e268]
+                  - heading [level=2] [ref=e270]: Depth Estimation
+              - link [ref=e271] [cursor=pointer]:
+                - link [ref=e273]:
+                  - /url: /model-api/docs/task/document-question-answering
+                  - img [ref=e275]
+                  - heading [level=2] [ref=e277]: Document Question Answering
+              - link [ref=e278] [cursor=pointer]:
+                - link [ref=e280]:
+                  - /url: /model-api/docs/task/feature-extraction
+                  - img [ref=e282]
+                  - heading [level=2] [ref=e284]: Feature Extraction
+              - link [ref=e285] [cursor=pointer]:
+                - link [ref=e287]:
+                  - /url: /model-api/docs/task/fill-mask
+                  - img [ref=e289]
+                  - heading [level=2] [ref=e291]: Fill‑Mask
+              - link [ref=e292] [cursor=pointer]:
+                - link [ref=e294]:
+                  - /url: /model-api/docs/task/image-classification
+                  - img [ref=e296]
+                  - heading [level=2] [ref=e298]: Image Classification
+              - link [ref=e299] [cursor=pointer]:
+                - link [ref=e301]:
+                  - /url: /model-api/docs/task/image-feature-extraction
+                  - img [ref=e303]
+                  - heading [level=2] [ref=e305]: Image Feature Extraction
+              - link [ref=e306] [cursor=pointer]:
+                - link [ref=e308]:
+                  - /url: /model-api/docs/task/image-segmentation
+                  - img [ref=e310]
+                  - heading [level=2] [ref=e312]: Image Segmentation
+              - link [ref=e313] [cursor=pointer]:
+                - link [ref=e315]:
+                  - /url: /model-api/docs/task/image-to-text
+                  - img [ref=e317]
+                  - heading [level=2] [ref=e319]: Image to Text
+              - link [ref=e320] [cursor=pointer]:
+                - link [ref=e322]:
+                  - /url: /model-api/docs/task/mask-generation
+                  - img [ref=e324]
+                  - heading [level=2] [ref=e326]: Mask Generation
+              - link [ref=e327] [cursor=pointer]:
+                - link [ref=e329]:
+                  - /url: /model-api/docs/task/object-detection
+                  - img [ref=e331]
+                  - heading [level=2] [ref=e333]: Object Detection
+              - link [ref=e334] [cursor=pointer]:
+                - link [ref=e336]:
+                  - /url: /model-api/docs/task/question-answering
+                  - img [ref=e338]
+                  - heading [level=2] [ref=e340]: Question Answering
+              - link [ref=e341] [cursor=pointer]:
+                - link [ref=e343]:
+                  - /url: /model-api/docs/task/sentence-similarity
+                  - img [ref=e345]
+                  - heading [level=2] [ref=e347]: Sentence Similarity
+              - link [ref=e348] [cursor=pointer]:
+                - link [ref=e350]:
+                  - /url: /model-api/docs/task/summarization
+                  - img [ref=e352]
+                  - heading [level=2] [ref=e354]: Summarization
+              - link [ref=e355] [cursor=pointer]:
+                - link [ref=e357]:
+                  - /url: /model-api/docs/task/text-classification
+                  - img [ref=e359]
+                  - heading [level=2] [ref=e361]: Text Classification
+              - link [ref=e362] [cursor=pointer]:
+                - link [ref=e364]:
+                  - /url: /model-api/docs/task/text-generation
+                  - img [ref=e366]
+                  - heading [level=2] [ref=e368]: Text Generation
+              - link [ref=e369] [cursor=pointer]:
+                - link [ref=e371]:
+                  - /url: /model-api/docs/task/text-to-speech
+                  - img [ref=e373]
+                  - heading [level=2] [ref=e375]: Text to Speech
+              - link [ref=e376] [cursor=pointer]:
+                - link [ref=e378]:
+                  - /url: /model-api/docs/task/text2text-generation
+                  - img [ref=e380]
+                  - heading [level=2] [ref=e382]: Text‑to‑Text Generation
+              - link [ref=e383] [cursor=pointer]:
+                - link [ref=e385]:
+                  - /url: /model-api/docs/task/text-to-video
+                  - img [ref=e387]
+                  - heading [level=2] [ref=e389]: Text to Video
+              - link [ref=e390] [cursor=pointer]:
+                - link [ref=e392]:
+                  - /url: /model-api/docs/task/token-classification
+                  - img [ref=e394]
+                  - heading [level=2] [ref=e396]: Token Classification
+              - link [ref=e397] [cursor=pointer]:
+                - link [ref=e399]:
+                  - /url: /model-api/docs/task/translation
+                  - img [ref=e401]
+                  - heading [level=2] [ref=e403]: Translation
+              - link [ref=e404] [cursor=pointer]:
+                - link [ref=e406]:
+                  - /url: /model-api/docs/task/unconditional-image-generation
+                  - img [ref=e408]
+                  - heading [level=2] [ref=e410]: Unconditional Image Generation
+              - link [ref=e411] [cursor=pointer]:
+                - link [ref=e413]:
+                  - /url: /model-api/docs/task/video-classification
+                  - img [ref=e415]
+                  - heading [level=2] [ref=e417]: Video Classification
+              - link [ref=e418] [cursor=pointer]:
+                - link [ref=e420]:
+                  - /url: /model-api/docs/task/visual-question-answering
+                  - img [ref=e422]
+                  - heading [level=2] [ref=e424]: Visual Question Answering
+              - link [ref=e425] [cursor=pointer]:
+                - link [ref=e427]:
+                  - /url: /model-api/docs/task/zero-shot-classification
+                  - img [ref=e429]
+                  - heading [level=2] [ref=e431]: Zero‑Shot Classification
+              - link [ref=e432] [cursor=pointer]:
+                - link [ref=e434]:
+                  - /url: /model-api/docs/task/zero-shot-image-classification
+                  - img [ref=e436]
+                  - heading [level=2] [ref=e438]: Zero‑Shot Image Classification
+              - link [ref=e439] [cursor=pointer]:
+                - link [ref=e441]:
+                  - /url: /model-api/docs/task/zero-shot-object-detection
+                  - img [ref=e443]
+                  - heading [level=2] [ref=e445]: Zero‑Shot Object Detection
+          - link "Get started" [ref=e447] [cursor=pointer]:
+            - /url: /model-api/docs/get-started
+            - generic [ref=e448]: Get started
+            - img [ref=e449]
+          - contentinfo [ref=e451]:
+            - generic [ref=e452]:
+              - link "x" [ref=e453] [cursor=pointer]:
+                - /url: https://x.com/bytez
+                - generic [ref=e454]: x
+                - img [ref=e455]
+              - link "github" [ref=e456] [cursor=pointer]:
+                - /url: https://github.com/bytez-com
+                - generic [ref=e457]: github
+                - img [ref=e458]
+              - link "linkedin" [ref=e459] [cursor=pointer]:
+                - /url: https://linkedin.com/company/bytez
+                - generic [ref=e460]: linkedin
+                - img [ref=e461]
+              - link "discord" [ref=e462] [cursor=pointer]:
+                - /url: https://discord.com/invite/Z723PfCFWf
+                - generic [ref=e463]: discord
+                - img [ref=e464]
+            - link "Powered by This documentation is built and hosted on Mintlify, a developer documentation platform" [ref=e467] [cursor=pointer]:
+              - /url: https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=bytez
+              - generic [ref=e468]: Powered by
+              - img [ref=e469]
+              - generic [ref=e478]: This documentation is built and hosted on Mintlify, a developer documentation platform
+  - alert [ref=e479]

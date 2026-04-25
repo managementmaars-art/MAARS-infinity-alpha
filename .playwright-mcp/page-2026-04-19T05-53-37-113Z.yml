@@ -1,0 +1,19 @@
+- generic [ref=e2]:
+  - generic [ref=e9]:
+    - img [ref=e13]
+    - generic [ref=e18]:
+      - heading "Apply for a new organization" [level=1] [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - text: Organization Name
+          - textbox "Enter Organization Name" [ref=e23]
+        - generic [ref=e24]:
+          - text: NCA Account
+          - combobox [ref=e25] [cursor=pointer]:
+            - generic: Select NCA Account
+            - img [ref=e26]
+          - combobox [ref=e28]
+          - generic [ref=e29]: NCA Account will be used to create and manage the organization. Only NCA admins can create a new organization.
+        - button "Submit" [ref=e30] [cursor=pointer]
+        - button "Create New NVIDIA Cloud Account" [ref=e31] [cursor=pointer]
+  - region "Notifications alt+T"

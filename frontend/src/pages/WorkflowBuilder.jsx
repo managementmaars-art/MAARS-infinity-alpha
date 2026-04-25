@@ -18,6 +18,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "../App";
 import AgentAvatar from "../components/AgentAvatar";
 import { toast } from "sonner";
+import workflowClient from "../services/workflow_client";
 import {
   Plus, Save, Trash2, Play, Search, X, Settings, FileText, Clock,
   CheckCircle, AlertCircle, Zap, Code2, GitBranch, Repeat, Globe,
@@ -27,8 +28,11 @@ import {
 } from "lucide-react";
 
 /* ── Constants ─────────────────────────────────────────────────────────────── */
-const _BASE = process.env.REACT_APP_BACKEND_URL?.trim() || "http://localhost:8000";
-const API   = `${_BASE}/api`;
+// Empty fallback so the CRA dev-server proxy (setupProxy.js) forwards /api/* to
+// the live backend port. Hardcoded ports drift out of sync when the backend
+// moves (8000 → 8001 in this repo) and break every fetch in this file.
+const _BASE = process.env.REACT_APP_BACKEND_URL?.trim() || "";
+const API   = _BASE ? `${_BASE}/api` : "/api";
 
 const NODE_TYPES = {
   agent:        { label: "Agent",      Icon: Bot,          color: "#4fd1c5", desc: "AI agent from your roster" },
@@ -719,15 +723,116 @@ function NodeConfigPanel({ node, workflows, onUpdate, onClose }) {
               <label style={lbl}>Trigger Type</label>
               <select value={d.trigger_type || "manual"} onChange={e => set("trigger_type", e.target.value)} style={inp}>
                 <option value="manual">Manual</option>
-                <option value="schedule">Schedule (Cron)</option>
+                <option value="schedule">Schedule (interval or cron)</option>
                 <option value="webhook">Webhook</option>
+                <option value="email_reply">Email reply</option>
+                <option value="http_poll">HTTP polling</option>
+                <option value="rss">RSS feed</option>
+                <option value="imap">IMAP mailbox</option>
+                <option value="file_watch">File watcher</option>
                 <option value="event">System Event</option>
               </select>
             </div>
             {d.trigger_type === "schedule" && (
+              <>
+                <div>
+                  <label style={lbl}>Schedule Mode</label>
+                  <select
+                    value={d.schedule_mode || (d.cron ? "cron" : "interval")}
+                    onChange={e => set("schedule_mode", e.target.value)}
+                    style={inp}
+                  >
+                    <option value="interval">Every N minutes / hours</option>
+                    <option value="cron">Cron expression</option>
+                  </select>
+                </div>
+                {(d.schedule_mode || (d.cron ? "cron" : "interval")) === "interval" ? (
+                  <div style={{ display: "flex", gap: 6 }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={lbl}>Every</label>
+                      <input type="number" min="1" value={d.interval_value || 15}
+                        onChange={e => set("interval_value", parseInt(e.target.value || "1", 10))}
+                        style={inp} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <label style={lbl}>Unit</label>
+                      <select value={d.interval_unit || "minutes"}
+                        onChange={e => set("interval_unit", e.target.value)} style={inp}>
+                        <option value="minutes">minutes</option>
+                        <option value="hours">hours</option>
+                      </select>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <label style={lbl}>Cron expression</label>
+                      <input value={d.cron || ""} onChange={e => set("cron", e.target.value)} style={inp} placeholder="0 9 * * 1-5" />
+                    </div>
+                    <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 4 }}>
+                      Quick picks:&nbsp;
+                      {[
+                        ["Every hour", "0 * * * *"],
+                        ["Daily 9am", "0 9 * * *"],
+                        ["Weekdays 9am", "0 9 * * 1-5"],
+                        ["Mon 8am", "0 8 * * 1"],
+                        ["1st of month", "0 0 1 * *"],
+                      ].map(([label, cron]) => (
+                        <button key={cron} onClick={() => set("cron", cron)}
+                          style={{ margin: 2, padding: "2px 6px", fontSize: 10,
+                                   background: "#1e293b", color: "#cbd5e1",
+                                   border: "1px solid #334155", borderRadius: 4 }}>
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+            {d.trigger_type === "webhook" && (
+              <>
+                <div style={{ fontSize: 11, color: "#94a3b8" }}>
+                  POST payloads to:
+                </div>
+                <code style={{ fontSize: 10, color: "#34d399", background: "#0f172a",
+                               padding: "4px 6px", borderRadius: 4, display: "block",
+                               wordBreak: "break-all" }}>
+                  /api/webhooks/workflow/{"<workflow_id>"}
+                </code>
+                <div>
+                  <label style={lbl}>HMAC signing secret (optional)</label>
+                  <input value={d.signing_secret || ""} onChange={e => set("signing_secret", e.target.value)}
+                    style={inp} placeholder="requests must carry X-MAARS-Signature" />
+                </div>
+              </>
+            )}
+            {d.trigger_type === "email_reply" && (
+              <>
+                <div>
+                  <label style={lbl}>From contains</label>
+                  <input value={d.from_contains || ""} onChange={e => set("from_contains", e.target.value)}
+                    style={inp} placeholder="@acme.com" />
+                </div>
+                <div>
+                  <label style={lbl}>Subject contains</label>
+                  <input value={d.subject_contains || ""} onChange={e => set("subject_contains", e.target.value)}
+                    style={inp} placeholder="Re: demo" />
+                </div>
+              </>
+            )}
+            {(d.trigger_type === "http_poll" || d.trigger_type === "rss") && (
               <div>
-                <label style={lbl}>Cron Expression</label>
-                <input value={d.cron || ""} onChange={e => set("cron", e.target.value)} style={inp} placeholder="0 9 * * 1-5 (weekdays 9am)" />
+                <label style={lbl}>URL to poll</label>
+                <input value={d.url || ""} onChange={e => set("url", e.target.value)} style={inp}
+                  placeholder="https://example.com/feed.xml" />
+              </div>
+            )}
+            {d.trigger_type === "file_watch" && (
+              <div>
+                <label style={lbl}>Watch directory</label>
+                <input value={d.path || ""} onChange={e => set("path", e.target.value)} style={inp}
+                  placeholder="/var/data/inbox" />
               </div>
             )}
             <div>
@@ -887,6 +992,12 @@ export default function WorkflowBuilder() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [runState, setRunState]           = useState(null);
   const [runHistory, setRunHistory]       = useState([]);
+  const [toolsCatalog, setToolsCatalog]   = useState([]);           // from new executor — 75+ tools
+  const [liveEvents, setLiveEvents]       = useState([]);           // SSE from current run
+  const sseStopRef                        = useRef(null);
+  const [showAiPrompt, setShowAiPrompt]   = useState(false);        // NL→workflow modal
+  const [aiPrompt, setAiPrompt]           = useState("");
+  const [aiGenerating, setAiGenerating]   = useState(false);
 
   // Canvas pan/zoom
   const [vp, setVp] = useState({ x: 0, y: 0, zoom: 1 });
@@ -899,12 +1010,68 @@ export default function WorkflowBuilder() {
     Promise.all([
       fetch(`${API}/agents`, { headers: h }).then(r => r.ok ? r.json() : []),
       fetch(`${API}/kernel/workflows`, { headers: h }).then(r => r.ok ? r.json() : []),
-    ]).then(([ag, wf]) => {
+      workflowClient.tools().catch(() => ({ tools: [] })),   // new executor catalog
+    ]).then(([ag, wf, tc]) => {
       setAgents(Array.isArray(ag) ? ag : []);
       setWorkflows(Array.isArray(wf) ? wf : []);
+      setToolsCatalog((tc && tc.tools) || []);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, [token]);
+
+  // Cleanup SSE stream on unmount.
+  useEffect(() => {
+    return () => {
+      if (sseStopRef.current) {
+        try { sseStopRef.current(); } catch { /* ignore */ }
+        sseStopRef.current = null;
+      }
+    };
+  }, []);
+
+  /* Helpers exposed for the canvas to call — expose minimal surface
+     so the existing canvas code doesn't need a rewrite. */
+  const _subscribeToRun = useCallback((runId) => {
+    if (sseStopRef.current) { try { sseStopRef.current(); } catch {} }
+    setLiveEvents([]);
+    sseStopRef.current = workflowClient.streamRunEvents(runId, (ev) => {
+      setLiveEvents(prev => [...prev.slice(-99), ev]);
+      if (ev && ev.event === "run_end") {
+        if (sseStopRef.current) { try { sseStopRef.current(); } catch {} sseStopRef.current = null; }
+      }
+    });
+  }, []);
+
+  const _testNode = useCallback(async (nodeId, sampleInput = {}) => {
+    if (!current) return toast.error("Save workflow before testing nodes");
+    try {
+      const r = await workflowClient.testNode(current, nodeId, sampleInput);
+      toast.success(`Node '${nodeId}' → ${r.ok ? "ok" : "failed"}`);
+      return r;
+    } catch (e) {
+      toast.error(`Test failed: ${String(e).slice(0, 180)}`);
+    }
+  }, [current]);
+
+  const _pinOutput = useCallback(async (nodeId, output) => {
+    if (!current) return;
+    try {
+      await workflowClient.pinNode(current, nodeId, output);
+      toast.success(`Pinned output for '${nodeId}'`);
+    } catch (e) {
+      toast.error(`Pin failed: ${String(e).slice(0, 180)}`);
+    }
+  }, [current]);
+
+  // Expose for canvas buttons + for devtools use while the UI catches up.
+  if (typeof window !== "undefined") {
+    window.MaarsWF = {
+      subscribeToRun: _subscribeToRun,
+      testNode: _testNode,
+      pinOutput: _pinOutput,
+      client: workflowClient,
+    };
+  }
 
   // Network groups
   const networkGroups = {};
@@ -1024,6 +1191,105 @@ export default function WorkflowBuilder() {
       if (agent) addAgentNode(agent, pos.x - 110, pos.y - 40);
     } else if (payload.nodeType) {
       addNode(payload.nodeType, pos.x - 110, pos.y - 40);
+    }
+  };
+
+  /* ── AI Build: natural-language → workflow DAG ── */
+  const aiGenerateWorkflow = async () => {
+    if (!aiPrompt.trim()) return toast.error("Describe the workflow you want");
+    setAiGenerating(true);
+    try {
+      // Fallback to localStorage token — the useAuth() token may be stale
+      // on first render, and this endpoint is strictly auth-gated.
+      const tk = token || localStorage.getItem("token") || "";
+      if (!tk) throw new Error("not signed in");
+      const res = await fetch(`${API}/workflows/generate`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${tk}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: aiPrompt, save: false }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.detail || `${res.status}`);
+      }
+      const draft = await res.json();
+      // Map the generated DAG onto canvas nodes (auto-layout: columns)
+      const aiNodes = (draft.nodes || []).map((n, i) => ({
+        id:   n.id,
+        type: n.type === "trigger" ? "trigger"
+              : (n.tool === "if_condition" || n.tool === "switch" || n.tool === "ai_branch") ? "branch"
+              : (n.tool === "loop") ? "loop"
+              : (n.tool === "merge") ? "merge"
+              : "api",
+        name: n.tool || n.type || "node",
+        x: 80 + (i % 4) * 260,
+        y: 120 + Math.floor(i / 4) * 180,
+        data: {
+          tool: n.tool, params: n.params || {},
+          trigger_type: (n.type === "trigger") ? (draft.trigger?.type || "manual") : undefined,
+          branches: n.branches,
+          branch_yes: n.branch_yes, branch_no: n.branch_no,
+        },
+      }));
+      const aiEdges = [];
+      (draft.nodes || []).forEach(n => {
+        (n.next || []).forEach(t => aiEdges.push({ id: `${n.id}-${t}`, source: n.id, target: t }));
+        (n.branch_yes || []).forEach(t => aiEdges.push({ id: `${n.id}-yes-${t}`, source: n.id, target: t, label: "yes" }));
+        (n.branch_no || []).forEach(t => aiEdges.push({ id: `${n.id}-no-${t}`,  source: n.id, target: t, label: "no" }));
+        Object.entries(n.branches || {}).forEach(([label, targets]) =>
+          (targets || []).forEach(t => aiEdges.push({ id: `${n.id}-${label}-${t}`, source: n.id, target: t, label }))
+        );
+      });
+      setNodes(aiNodes); setEdges(aiEdges); setTeams([]);
+      setWfName(draft.name || "Generated workflow");
+      setWfDesc(draft.description || "");
+      setCurrent(null);   // force save-as-new
+      setShowAiPrompt(false); setAiPrompt("");
+      if ((draft.validation_warnings || []).length) {
+        toast.warning(`${draft.validation_warnings.length} warning(s) — review before saving`);
+      } else {
+        toast.success(`Commander Orion built ${aiNodes.length} nodes`);
+      }
+    } catch (e) {
+      toast.error("Generate failed: " + (e.message || e));
+    } finally {
+      setAiGenerating(false);
+    }
+  };
+
+  /* ── Commander Orchestrate: plan + save + activate + run end-to-end ── */
+  const commanderOrchestrate = async () => {
+    if (!aiPrompt.trim()) return toast.error("Describe the goal for Commander Orion");
+    setAiGenerating(true);
+    try {
+      const tk = token || localStorage.getItem("token") || "";
+      if (!tk) throw new Error("not signed in");
+      const res = await fetch(`${API}/commander/orchestrate`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${tk}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ goal: aiPrompt, auto_run: true }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.detail || `${res.status}`);
+      }
+      const r = await res.json();
+      toast.success(
+        `Commander Orion orchestrated ${r.nodes} node(s) — run ${r.run_id} started`
+      );
+      if ((r.validation_warnings || []).length) {
+        toast.warning(`${r.validation_warnings.length} warning(s) on the new workflow`);
+      }
+      setShowAiPrompt(false); setAiPrompt("");
+      // Jump to the saved workflow so the user can watch it execute
+      try {
+        const wfs = await fetch(`${API}/kernel/workflows`, { headers: { Authorization: `Bearer ${tk}` } }).then(r => r.json());
+        setWorkflows(wfs);
+      } catch {}
+    } catch (e) {
+      toast.error("Orchestrate failed: " + (e.message || e));
+    } finally {
+      setAiGenerating(false);
     }
   };
 
@@ -1323,6 +1589,12 @@ export default function WorkflowBuilder() {
             <button onClick={() => setVp({ x: 60, y: 60, zoom: 1 })} style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b", padding: 2, display: "flex" }}><RotateCcw style={{ width: 11, height: 11 }} /></button>
           </div>
 
+          <button onClick={() => setShowAiPrompt(true)}
+            title="Commander Orion drafts the workflow for review on canvas"
+            style={{ display: "flex", alignItems: "center", gap: 5, padding: "6px 12px", borderRadius: 8, background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.3)", color: "#c4b5fd", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+            <Sparkles style={{ width: 12, height: 12 }} /> Commander Orion
+          </button>
+
           <button onClick={saveWorkflow}
             style={{ display: "flex", alignItems: "center", gap: 5, padding: "6px 12px", borderRadius: 8, background: "rgba(79,209,197,0.1)", border: "1px solid rgba(79,209,197,0.25)", color: "#4fd1c5", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
             <Save style={{ width: 12, height: 12 }} /> Save
@@ -1337,6 +1609,85 @@ export default function WorkflowBuilder() {
             </button>
           )}
         </div>
+
+        {/* AI Build modal — NL → workflow draft */}
+        {showAiPrompt && (
+          <div style={{ position: "absolute", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.55)",
+                        display: "flex", alignItems: "center", justifyContent: "center" }}
+               onClick={() => !aiGenerating && setShowAiPrompt(false)}>
+            <div onClick={e => e.stopPropagation()}
+                 style={{ width: 620, background: "rgba(8,12,24,0.98)", border: "1px solid rgba(168,85,247,0.3)",
+                          borderRadius: 12, padding: 22, boxShadow: "0 20px 60px rgba(168,85,247,0.15)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                <Sparkles style={{ width: 18, height: 18, color: "#c4b5fd" }} />
+                <div>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: "#e2e8f0", fontFamily: "Outfit, sans-serif" }}>
+                    Ask Commander Orion ∞
+                  </p>
+                  <p style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
+                    Describe the goal. Commander Orion plans the task graph, assigns your agents, and maps to real MAARS tools.
+                  </p>
+                </div>
+                <button onClick={() => setShowAiPrompt(false)}
+                        style={{ marginLeft: "auto", background: "none", border: "none", cursor: "pointer", color: "#64748b" }}>
+                  <X style={{ width: 16, height: 16 }} />
+                </button>
+              </div>
+              <textarea
+                value={aiPrompt}
+                onChange={e => setAiPrompt(e.target.value)}
+                placeholder={"e.g. When a Shopify order over $500 comes in, enrich the customer with Clearbit and post to #vip-orders in Slack."}
+                rows={6}
+                disabled={aiGenerating}
+                style={{ width: "100%", padding: 10, borderRadius: 8, fontSize: 12, color: "#e2e8f0",
+                         background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
+                         fontFamily: "inherit", resize: "vertical", outline: "none", boxSizing: "border-box" }}
+              />
+              <div style={{ display: "flex", gap: 8, marginTop: 10, fontSize: 10, color: "#475569", flexWrap: "wrap" }}>
+                <span>Try:</span>
+                {[
+                  "Nightly: find 50 SaaS founders in fintech, enrich, draft cold emails, queue for approval",
+                  "Every Monday 8am, pull last week's Stripe charges, summarize with an agent, post to Slack",
+                  "When an email reply lands with 'demo' in subject, use an AI agent to classify, then create a HubSpot deal if qualified",
+                ].map(ex => (
+                  <button key={ex} onClick={() => setAiPrompt(ex)}
+                          style={{ padding: "3px 7px", fontSize: 10, background: "rgba(168,85,247,0.08)",
+                                   color: "#a78bfa", border: "1px solid rgba(168,85,247,0.2)", borderRadius: 6, cursor: "pointer" }}>
+                    {ex.slice(0, 46)}…
+                  </button>
+                ))}
+              </div>
+              <div style={{ display: "flex", gap: 8, marginTop: 14, justifyContent: "flex-end", alignItems: "center" }}>
+                <button onClick={() => setShowAiPrompt(false)} disabled={aiGenerating}
+                        style={{ padding: "7px 14px", fontSize: 12, background: "transparent", color: "#94a3b8",
+                                 border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, cursor: "pointer" }}>
+                  Cancel
+                </button>
+                <button onClick={aiGenerateWorkflow} disabled={aiGenerating || !aiPrompt.trim()}
+                        title="Draft on canvas for review. Nothing saves or runs until you hit Save / Run."
+                        style={{ padding: "7px 14px", fontSize: 12, fontWeight: 700,
+                                 background: "rgba(168,85,247,0.15)", color: "#c4b5fd",
+                                 border: "1px solid rgba(168,85,247,0.4)", borderRadius: 8,
+                                 cursor: aiGenerating ? "default" : "pointer" }}>
+                  {aiGenerating ? "Orion is planning…" : "Draft to Canvas"}
+                </button>
+                <button onClick={commanderOrchestrate} disabled={aiGenerating || !aiPrompt.trim()}
+                        title="Commander Orion plans, saves, activates, and runs the workflow end-to-end."
+                        style={{ padding: "7px 14px", fontSize: 12, fontWeight: 700,
+                                 background: "linear-gradient(90deg, rgba(168,85,247,0.4), rgba(79,209,197,0.4))",
+                                 color: "#fff",
+                                 border: "1px solid rgba(168,85,247,0.6)", borderRadius: 8,
+                                 cursor: aiGenerating ? "default" : "pointer" }}>
+                  {aiGenerating ? "Orchestrating…" : "⚡ Orchestrate & Run"}
+                </button>
+              </div>
+              <p style={{ fontSize: 10, color: "#475569", marginTop: 10 }}>
+                <b style={{ color: "#94a3b8" }}>Draft to Canvas</b> = preview & edit first.&nbsp;
+                <b style={{ color: "#c4b5fd" }}>Orchestrate & Run</b> = Commander has full authority: plans, saves, activates, and triggers a run immediately.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Templates panel */}
         {showTemplates && (

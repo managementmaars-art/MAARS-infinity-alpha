@@ -1,0 +1,154 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - link "MAARS Command" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7]: MAARS Command
+        - generic [ref=e8]:
+          - link "Pricing" [ref=e9] [cursor=pointer]:
+            - /url: /pricing
+          - link "Alternatives" [ref=e10] [cursor=pointer]:
+            - /url: /alternatives
+          - link "Login" [ref=e11] [cursor=pointer]:
+            - /url: /login
+          - link "Get Started" [ref=e12] [cursor=pointer]:
+            - /url: /register
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - img [ref=e15]
+        - text: MAARS vs Jasper AI
+      - heading "The Jasper alternative that actually does the outreach, not just the copy." [level=1] [ref=e17]
+      - paragraph [ref=e18]: "Jasper writes marketing content. MAARS writes it AND sends it: finds leads, drafts personalized emails, schedules sends, posts to LinkedIn, generates images — in one place, under one subscription."
+      - generic [ref=e19]:
+        - link "Try MAARS free →" [ref=e20] [cursor=pointer]:
+          - /url: /register
+          - text: Try MAARS free →
+          - img [ref=e21]
+        - link "See pricing" [ref=e23] [cursor=pointer]:
+          - /url: /pricing
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]: Jasper AI
+        - heading "Jasper = AI copy generator" [level=3] [ref=e28]
+        - paragraph [ref=e29]: Jasper is strong at writing blog posts, ads, and social captions. You still need separate tools for lead research, email sending, social scheduling, image generation, and CRM — each with its own subscription and learning curve.
+      - generic [ref=e30]:
+        - generic [ref=e31]: MAARS
+        - heading "MAARS = AI workforce + execution" [level=3] [ref=e32]
+        - paragraph [ref=e33]: MAARS is a complete AI workforce. 458+ specialist agents write the copy, generate the images, find the leads, send the emails, post to social, and track the outcomes — all through one platform, one bill, one dashboard.
+    - generic [ref=e34]:
+      - heading "Feature-by-feature" [level=2] [ref=e35]
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e38]: Feature
+          - generic [ref=e39]: Jasper AI
+          - generic [ref=e40]: MAARS
+        - generic [ref=e41]:
+          - generic [ref=e42]: AI copy generation
+          - img [ref=e44]
+          - img [ref=e47]
+        - generic [ref=e49]:
+          - generic [ref=e50]: 458+ specialized agents
+          - img [ref=e52]
+          - img [ref=e56]
+        - generic [ref=e58]:
+          - generic [ref=e59]: Built-in lead research
+          - img [ref=e61]
+          - img [ref=e65]
+        - generic [ref=e67]:
+          - generic [ref=e68]: Outbound email campaigns
+          - img [ref=e70]
+          - img [ref=e74]
+        - generic [ref=e76]:
+          - generic [ref=e77]: LinkedIn posting + scheduling
+          - img [ref=e79]
+          - img [ref=e83]
+        - generic [ref=e85]:
+          - generic [ref=e86]: Image generation included
+          - generic [ref=e87]: Add-on
+          - img [ref=e89]
+        - generic [ref=e91]:
+          - generic [ref=e92]: Video generation
+          - img [ref=e94]
+          - img [ref=e98]
+        - generic [ref=e100]:
+          - generic [ref=e101]: Cold-call automation
+          - img [ref=e103]
+          - img [ref=e107]
+        - generic [ref=e109]:
+          - generic [ref=e110]: Workflow / automation builder
+          - img [ref=e112]
+          - img [ref=e116]
+        - generic [ref=e118]:
+          - generic [ref=e119]: Universal LLM gateway (33+ providers)
+          - img [ref=e121]
+          - img [ref=e125]
+        - generic [ref=e127]:
+          - generic [ref=e128]: Starts at
+          - generic [ref=e129]: $49/mo
+          - generic [ref=e130]: $19/mo
+        - generic [ref=e131]:
+          - generic [ref=e132]: Annual discount
+          - generic [ref=e133]: 18%
+          - generic [ref=e134]: 20% + bonus credits
+    - generic [ref=e135]:
+      - heading "Why switch to MAARS" [level=2] [ref=e136]
+      - generic [ref=e137]:
+        - generic [ref=e138]:
+          - img [ref=e140]
+          - heading "One tool, not six" [level=3] [ref=e142]
+          - paragraph [ref=e143]: Stop paying for Jasper + Copy.ai + Apollo + SendGrid + Buffer + Midjourney. MAARS bundles the whole stack.
+        - generic [ref=e144]:
+          - img [ref=e146]
+          - heading "Writes AND sends" [level=3] [ref=e148]
+          - paragraph [ref=e149]: Jasper writes the email draft. MAARS writes the draft, personalizes per lead, schedules across days, and handles the unsubscribe headers.
+        - generic [ref=e150]:
+          - img [ref=e152]
+          - heading "Under 1/2 the price" [level=3] [ref=e154]
+          - paragraph [ref=e155]: Starter at $19/mo vs Jasper's $49/mo Creator — and MAARS includes capabilities Jasper charges extra for.
+        - generic [ref=e156]:
+          - img [ref=e158]
+          - heading "Zero vendor lock-in" [level=3] [ref=e162]
+          - paragraph [ref=e163]: Export your data as JSON anytime (GDPR Art. 15). We don't hold your content hostage.
+        - generic [ref=e164]:
+          - img [ref=e166]
+          - heading "Free-tier friendly" [level=3] [ref=e168]
+          - paragraph [ref=e169]: Actually a free plan — no credit card, no trial countdown. See if the agents deliver before you commit.
+    - generic [ref=e170]:
+      - heading "Questions people ask" [level=2] [ref=e171]
+      - generic [ref=e172]:
+        - heading "Is MAARS really cheaper than Jasper?" [level=3] [ref=e173]
+        - paragraph [ref=e174]: Yes at every tier. Starter ($19) vs Jasper Creator ($49); Pro ($79) vs Jasper Pro ($69) but MAARS Pro includes features Jasper reserves for $125+ Teams.
+      - generic [ref=e175]:
+        - heading "Can I import my Jasper content?" [level=3] [ref=e176]
+        - paragraph [ref=e177]: Yes — use the prompt library to save your Jasper templates, or upload completed docs directly. We don't delete anything you bring in.
+      - generic [ref=e178]:
+        - heading "Does MAARS have brand voice like Jasper?" [level=3] [ref=e179]
+        - paragraph [ref=e180]: Agents use per-workspace style blueprints — upload samples, MAARS learns the voice. Same capability as Jasper's brand voice feature.
+      - generic [ref=e181]:
+        - heading "What about SEO mode?" [level=3] [ref=e182]
+        - paragraph [ref=e183]: MAARS ships a dedicated SEO agent + content briefing. For multi-page SEO campaigns the campaign orchestrator schedules over weeks, not one-at-a-time.
+    - generic [ref=e185]:
+      - heading "Leave Jasper AI. Keep what works." [level=2] [ref=e186]
+      - paragraph [ref=e187]: Sign up in 60 seconds. Cancel anytime. Free tier included.
+      - link "Try MAARS free →" [ref=e188] [cursor=pointer]:
+        - /url: /register
+        - text: Try MAARS free →
+        - img [ref=e189]
+    - contentinfo [ref=e191]:
+      - text: MAARS Command © 2026 ·
+      - link "Privacy" [ref=e192] [cursor=pointer]:
+        - /url: /privacy
+      - text: ·
+      - link "Terms" [ref=e193] [cursor=pointer]:
+        - /url: /terms
+      - text: ·
+      - link "Changelog" [ref=e194] [cursor=pointer]:
+        - /url: /changelog
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

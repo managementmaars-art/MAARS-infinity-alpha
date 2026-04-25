@@ -1,0 +1,61 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - progressbar [ref=e6]
+    - main [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e18]:
+          - img [ref=e20]
+          - generic [ref=e25]: Sign in with Google
+        - generic [ref=e26]:
+          - heading "Sign in to z.ai" [level=1] [ref=e27]
+          - link "management.maars@marsgc.net selected. Switch account" [ref=e29] [cursor=pointer]:
+            - generic [ref=e32]: management.maars@marsgc.net
+            - img [ref=e34]
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - heading "Google will allow z.ai to access this info about you" [level=2] [ref=e46]:
+            - generic [ref=e47]: Google will allow z.ai to access this info about you
+          - list [ref=e51]:
+            - listitem [ref=e52]:
+              - generic [ref=e53]:
+                - img [ref=e55]
+                - generic [ref=e58]:
+                  - generic [ref=e59]: Mirza Arafat Abbas
+                  - generic [ref=e60]: Name and profile picture
+            - listitem [ref=e61]:
+              - generic [ref=e62]:
+                - img [ref=e64]
+                - generic [ref=e66]:
+                  - generic [ref=e67]: management.maars@marsgc.net
+                  - generic [ref=e68]: Email address
+        - generic [ref=e71]:
+          - generic [ref=e72]: Review z.ai’s Privacy Policy and Terms of Service to understand how z.ai will process and protect your data.
+          - generic [ref=e73]:
+            - text: To make changes at any time, go to your
+            - link "Google Account" [ref=e74] [cursor=pointer]:
+              - /url: https://myaccount.google.com/connections#filter=4
+            - text: .
+          - generic [ref=e75]:
+            - text: Learn more about
+            - link "Sign in with Google" [ref=e76] [cursor=pointer]:
+              - /url: https://support.google.com/accounts/answer/12921417?sjid=1919169284593837430-NC
+            - text: .
+      - generic [ref=e79]:
+        - button "Cancel" [ref=e83]: Cancel
+        - button "Continue" [ref=e89]: Continue
+  - contentinfo [ref=e95]:
+    - combobox "Change language English (United States)" [ref=e99] [cursor=pointer]:
+      - generic:
+        - generic: English (United States)
+      - generic:
+        - img
+    - list [ref=e101]:
+      - listitem [ref=e102]:
+        - link "Help" [ref=e103] [cursor=pointer]:
+          - /url: https://support.google.com/accounts?hl=en&p=account_iph
+      - listitem [ref=e104]:
+        - link "Privacy" [ref=e105] [cursor=pointer]:
+          - /url: https://accounts.google.com/TOS?loc=TH&hl=en&privacy=true
+      - listitem [ref=e106]:
+        - link "Terms" [ref=e107] [cursor=pointer]:
+          - /url: https://accounts.google.com/TOS?loc=TH&hl=en

@@ -416,6 +416,100 @@ def _tier_order(task_type: str, complexity: str, budget: str, quality_override: 
     return ["standard", "economy", "premium"]
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# FREE-FIRST ROUTING — aggressive free-tier preference for the cost-conscious
+# gateway. "Route clients to free models silently whenever the task can be
+# handled by them; escalate to paid only when free genuinely can't deliver.
+# Client sees same output, same credit cost, margin goes to MAARS."
+#
+# Two variables decide whether to go free-first:
+#   1. Task complexity (light / medium / heavy) — inferred from the prompt
+#   2. Quality override (client-set) — if client explicitly asks "premium" or
+#      "flagship", we honor it and skip the free-first stage.
+#
+# The free-first candidate list is hand-curated from PROVIDER_ALLIES.md — the
+# production-quality free-tier models that handle 90%+ of real prompts
+# (Cerebras = 1800 tok/s, Groq = LPU, SambaNova = RDU DeepSeek, Gemini Flash,
+# OpenRouter :free tier, HF router).
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Ordered from "most-likely-to-succeed-fast" to "broadest-catalog-fallback".
+# Model IDs are the EXACT strings each provider's /v1/models returns — this
+# is critical because _call_with_fallback validates the requested model
+# against the provider's live list and skips to the FALLBACK_CHAIN (which
+# defaults to OpenAI) on mismatch. The hyphenation style varies per provider:
+#   Cerebras:   llama3.1-8b       (no hyphen after "llama")
+#   Groq:       llama-3.1-8b-instant
+#   SambaNova:  Meta-Llama-3.3-70B-Instruct (CapCase)
+#   NVIDIA:     meta/llama-3.1-8b-instruct
+_FREE_FIRST_CHAIN_LIGHT = [
+    # Fastest + cheapest: free inference hardware (LPU, RDU, WSE)
+    # (Cerebras has only llama3.1-8b in their current Llama lineup — no 3.3-70b)
+    ("cerebras",    "llama3.1-8b"),
+    ("groq",        "llama-3.1-8b-instant"),
+    ("groq",        "llama-3.3-70b-versatile"),
+    ("sambanova",   "Meta-Llama-3.3-70B-Instruct"),
+    # Free-tier commercial-quality models
+    ("gemini",      "gemini-2.5-flash"),
+    ("gemini",      "gemini-2.0-flash-lite"),
+    # NVIDIA free tier
+    ("nvidia",      "meta/llama-3.1-8b-instruct"),
+    ("nvidia",      "meta/llama-3.3-70b-instruct"),
+    # Free pass-throughs on OpenRouter
+    ("openrouter",  "openai/gpt-oss-120b:free"),
+    # HF router free tier (OpenAI-compatible model slugs)
+    ("huggingface", "meta-llama/Llama-3.1-8B-Instruct"),
+    # Zhipu free tier
+    ("zhipu",       "glm-4.5-flash"),
+]
+
+# For medium tasks, free-first list plus stronger open models still on free tiers.
+_FREE_FIRST_CHAIN_MEDIUM = _FREE_FIRST_CHAIN_LIGHT + [
+    # Free RDU inference on frontier reasoning models
+    ("sambanova",   "DeepSeek-V3.1"),
+    # Cheapest paid fallback — DeepSeek V3 at $0.27/M tokens is near-free
+    ("deepseek",    "deepseek-chat"),
+]
+
+# Keywords that force a "heavy" classification — skip free-first, use smart
+# ranking directly so premium providers can win the score.
+_HEAVY_KEYWORDS = {
+    "legal", "medical", "compliance", "contract", "regulation", "fiduciary",
+    "audit", "diagnose", "diagnosis", "prescription",
+    "prove", "theorem", "proof", "lemma",
+    "architect", "design the system", "production-ready", "enterprise-grade",
+    "complex reasoning", "deep analysis", "thorough analysis", "multi-step reasoning",
+    "research paper", "academic", "peer-reviewed",
+    "refactor the entire", "rewrite this codebase",
+}
+
+# Long prompts (> N words) are heavy by default.
+_HEAVY_WORD_THRESHOLD = 400
+
+
+def _classify_complexity(prompt: str) -> str:
+    """Return 'light', 'medium', or 'heavy' — drives free-first decision."""
+    words = len((prompt or "").split())
+    lower = (prompt or "").lower()
+
+    # Heavy signals override everything
+    if any(kw in lower for kw in _HEAVY_KEYWORDS):
+        return "heavy"
+    if words >= _HEAVY_WORD_THRESHOLD:
+        return "heavy"
+
+    # Light = quick Q&A, greetings, reformat, translate
+    if words < 30:
+        return "light"
+
+    # Medium = most real-world prompts (code assist, summaries, multi-step tool use)
+    if words < 200:
+        return "medium"
+
+    # Everything else defaults to medium — free tier handles it well
+    return "medium"
+
+
 def _smart_candidates(
     prompt: str,
     available_credits: int,
@@ -423,15 +517,84 @@ def _smart_candidates(
 ) -> tuple:
     """Build an ordered (provider, model) candidate list.
 
-    Strategy:
-      1. Classify task type + complexity from prompt keywords
-      2. Determine credit budget tier
-      3. Derive quality tier order (premium / standard / economy)
-      4. Prepend task-specific preferred models (intersected with allowed tiers)
-      5. Append the full tier fallback chain
+    Strategy (in order):
+      0. FREE-FIRST bias — if task is light/medium AND client hasn't asked
+         for premium/flagship quality, prepend free-tier providers so they
+         get tried first. The fallback chain in _call_with_fallback takes
+         care of auto-escalation if a free provider errors out.
+      A. Smart Router (ML-scored) — scores ALL 169+ models using composite
+         scoring (task_fit + cost + quality + health + latency).
+      B. Legacy Router (keyword + tier) — deep fallback.
+
+    Client transparency: regardless of which provider ends up serving, the
+    response shape (`/v1/chat/completions` format) is identical, and credit
+    cost is set by the MAARS plan, not the underlying provider cost —
+    so the client experience and billing are invariant.
 
     Returns: (candidates: list[tuple], task_info: dict)
     """
+    complexity = _classify_complexity(prompt)
+    force_paid = quality_override in ("premium", "flagship")
+
+    free_first: list[tuple[str, str]] = []
+    if not force_paid and complexity in ("light", "medium"):
+        free_first = list(
+            _FREE_FIRST_CHAIN_LIGHT if complexity == "light" else _FREE_FIRST_CHAIN_MEDIUM
+        )
+
+    # ── Path A: Smart Router (scores every model in the catalog) ────────
+    try:
+        from services.routing import smart_router
+        ranked = smart_router.rank(
+            prompt,
+            quality_override=quality_override,
+        )
+        if ranked:
+            ml_candidates = [(r["provider"], r["model_id"]) for r in ranked]
+            task_info = {
+                "type": smart_router.classify_prompt(prompt),
+                "complexity": complexity,
+                "router": "smart",
+                "free_first": bool(free_first),
+                "top_score": ranked[0]["score"] if ranked else 0,
+            }
+            # Compose: free_first → smart ranked → legacy deep-fallback.
+            combined: list[tuple[str, str]] = []
+            seen: set = set()
+            for pair in free_first:
+                if pair not in seen:
+                    combined.append(pair); seen.add(pair)
+            for pair in ml_candidates:
+                if pair not in seen:
+                    combined.append(pair); seen.add(pair)
+            legacy, _ = _legacy_smart_candidates(prompt, available_credits, quality_override)
+            for pair in legacy:
+                if pair not in seen:
+                    combined.append(pair); seen.add(pair)
+            return combined, task_info
+    except Exception as exc:
+        import logging
+        logging.getLogger(__name__).warning("smart_router failed, falling back to legacy: %s", exc)
+
+    # ── Path B: Legacy Router (keyword + tier intersection) ─────────────
+    legacy_candidates, task_info = _legacy_smart_candidates(prompt, available_credits, quality_override)
+    if free_first:
+        seen: set = set()
+        combined: list[tuple[str, str]] = []
+        for pair in free_first + legacy_candidates:
+            if pair not in seen:
+                combined.append(pair); seen.add(pair)
+        task_info["free_first"] = True
+        return combined, task_info
+    return legacy_candidates, task_info
+
+
+def _legacy_smart_candidates(
+    prompt: str,
+    available_credits: int,
+    quality_override: str = None,
+) -> tuple:
+    """Original keyword-based routing — preserved as fallback."""
     task = _classify_task(prompt)
     budget = _credit_budget(available_credits)
     tiers = _tier_order(task["type"], task["complexity"], budget, quality_override or "")
@@ -444,17 +607,20 @@ def _smart_candidates(
             candidates.append(pair)
             seen.add(pair)
 
-    # Step 1: preferred models for this task (quality-gated by allowed tiers)
     for pair in TASK_PREFERRED_MODELS.get(task["type"], []):
         model_tier = _MODEL_TO_TIER.get(pair[1], "standard")
         if model_tier in tiers:
             _add(pair)
 
-    # Step 2: complete tier traversal as fallback
     for tier in tiers:
-        for pair in ALL_TIERS[tier]:
+        # ALL_TIERS only has economy/standard/premium. "flagship" maps to
+        # premium here for candidate expansion — smart router handles the
+        # genuine flagship weighting upstream.
+        effective_tier = "premium" if tier == "flagship" else tier
+        for pair in ALL_TIERS.get(effective_tier, []):
             _add(pair)
 
+    task["router"] = "legacy"
     return candidates, task
 
 

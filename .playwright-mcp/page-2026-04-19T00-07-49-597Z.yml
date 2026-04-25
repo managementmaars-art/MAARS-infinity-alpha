@@ -1,0 +1,1422 @@
+- generic [active] [ref=e1]:
+  - banner
+  - banner [ref=e2]:
+    - navigation "primary navigation" [ref=e3]:
+      - link "Higgsfield AI – AI Video & Image Generation Platform" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img [ref=e5]
+      - generic [ref=e8]:
+        - link "Explore" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - button "Image" [ref=e11] [cursor=pointer]
+        - button "Video" [ref=e13] [cursor=pointer]
+        - button "Audio" [ref=e15] [cursor=pointer]
+        - link "Collab" [ref=e16] [cursor=pointer]:
+          - /url: /generate
+        - button "Edit" [ref=e18] [cursor=pointer]
+        - button "Character" [ref=e20] [cursor=pointer]
+        - link "Marketing Studio New" [ref=e21] [cursor=pointer]:
+          - /url: /marketing-studio
+          - text: Marketing Studio
+          - generic [ref=e22]: New
+        - link "Cinema Studio 3.5" [ref=e23] [cursor=pointer]:
+          - /url: /cinema-studio?autoSelectFolder=true
+          - text: Cinema Studio
+          - generic [ref=e24]: "3.5"
+        - link "Originals New" [ref=e25] [cursor=pointer]:
+          - /url: /original-series
+          - text: Originals
+          - generic [ref=e26]: New
+        - link "Apps" [ref=e27] [cursor=pointer]:
+          - /url: /apps
+        - link "Assist" [ref=e28] [cursor=pointer]:
+          - /url: /chat
+        - button "Community" [ref=e30] [cursor=pointer]
+      - generic [ref=e32]:
+        - img [ref=e36] [cursor=pointer]
+        - img [ref=e39]
+  - main [ref=e42]:
+    - generic [ref=e43]:
+      - list [ref=e45]:
+        - listitem [ref=e46]:
+          - generic [ref=e47]:
+            - link [ref=e48] [cursor=pointer]:
+              - /url: /marketing-studio
+            - 'figure "Marketing Studio: Different Formats. One Product. Powered by Seedance 2.0." [ref=e49]':
+              - img "Loading the media file..."
+              - generic "Marketing Studio - Different Formats. One Product. Powered by Seedance 2.0." [ref=e50]: Your browser does not support the video.
+            - generic [ref=e51]:
+              - heading "Marketing Studio" [level=3] [ref=e52]
+              - paragraph [ref=e53]: Different Formats. One Product. Powered by Seedance 2.0.
+        - listitem [ref=e54]:
+          - generic [ref=e55]:
+            - link [ref=e56] [cursor=pointer]:
+              - /url: https://higgsfield.ai/create/video?model=seedance_2_0
+            - 'figure "Seedance 2.0 in 1080p: Now generating in 1080p - sharper detail, smoother motion output" [ref=e57]':
+              - img "Loading the media file..."
+              - generic "Seedance 2.0 in 1080p - Now generating in 1080p - sharper detail, smoother motion output" [ref=e58]: Your browser does not support the video.
+            - generic [ref=e59]:
+              - heading "Seedance 2.0 in 1080p" [level=3] [ref=e60]
+              - paragraph [ref=e61]: Now generating in 1080p - sharper detail, smoother motion output
+        - listitem [ref=e62]:
+          - generic [ref=e63]:
+            - link [ref=e64] [cursor=pointer]:
+              - /url: https://higgsfield.ai/cinema-studio?mode=video&autoSelectFolder=true
+            - 'figure "Cinema Studio 3.5: AI Director, collaborative elements, and per-shot camera and style control" [ref=e65]':
+              - img "Loading the media file..."
+              - generic "Cinema Studio 3.5 - AI Director, collaborative elements, and per-shot camera and style control" [ref=e66]: Your browser does not support the video.
+            - generic [ref=e67]:
+              - heading "Cinema Studio 3.5" [level=3] [ref=e68]
+              - paragraph [ref=e69]: AI Director, collaborative elements, and per-shot camera and style control
+        - listitem [ref=e70]:
+          - generic [ref=e71]:
+            - link [ref=e72] [cursor=pointer]:
+              - /url: /marketing-studio?tool=url-to-ad
+            - 'figure "Url to Video: One URL. Professional Ads. Powered by Seedance 2.0." [ref=e73]':
+              - img "Loading the media file..."
+              - generic "Url to Video - One URL. Professional Ads. Powered by Seedance 2.0." [ref=e74]: Your browser does not support the video.
+            - generic [ref=e75]:
+              - heading "Url to Video" [level=3] [ref=e76]
+              - paragraph [ref=e77]: One URL. Professional Ads. Powered by Seedance 2.0.
+        - listitem [ref=e78]:
+          - generic [ref=e79]:
+            - link [ref=e80] [cursor=pointer]:
+              - /url: https://higgsfield.ai/create/video?model=seedance_2_0
+            - 'figure "Seedance 2.0: The world''s most advanced video model. Now on Higgsfield" [ref=e81]':
+              - img "Loading the media file..."
+              - generic "Seedance 2.0 - The world's most advanced video model. Now on Higgsfield" [ref=e82]: Your browser does not support the video.
+            - generic [ref=e83]:
+              - heading "Seedance 2.0" [level=3] [ref=e84]
+              - paragraph [ref=e85]: The world's most advanced video model. Now on Higgsfield
+        - generic [ref=e86]:
+          - listitem [ref=e87]:
+            - heading [level=3] [ref=e89]
+          - listitem [ref=e90]:
+            - heading [level=3] [ref=e92]
+          - listitem [ref=e93]:
+            - heading [level=3] [ref=e95]
+          - listitem [ref=e96]:
+            - heading [level=3] [ref=e98]
+          - listitem [ref=e99]:
+            - heading [level=3] [ref=e101]
+      - button [ref=e102] [cursor=pointer]:
+        - img [ref=e103]
+    - generic [ref=e105]:
+      - generic [ref=e106]:
+        - generic:
+          - img
+          - img
+        - generic [ref=e108]:
+          - paragraph [ref=e109]: Available for everyone
+          - img [ref=e110]
+          - img [ref=e111]
+          - paragraph [ref=e124]: World's best video model available with up to 30% OFF with special offer
+          - generic [ref=e125]:
+            - generic [ref=e126]:
+              - link "Get Seedance 2.0" [ref=e128] [cursor=pointer]:
+                - /url: /seedance-2-community
+                - button "Get Seedance 2.0" [ref=e129]:
+                  - generic [ref=e130]: Get Seedance 2.0
+              - link "Get Seedance 2.0" [ref=e133] [cursor=pointer]:
+                - /url: /seedance-2-community
+                - button "Get Seedance 2.0" [ref=e134]:
+                  - generic [ref=e135]: Get Seedance 2.0
+            - link "Learn more" [ref=e136] [cursor=pointer]:
+              - /url: /seedance/2.0
+        - generic [ref=e137]:
+          - generic [ref=e139]:
+            - generic [ref=e140]:
+              - complementary [ref=e141]:
+                - figure "A young skateboarder in a black t-shirt and baggy jeans performs tricks at a brutalist concrete skatepark on a sunny afternoon. The camera alternates between a fisheye lens ground-level POV following his board and wider angles capturing kickflips and grinds. Harsh midday shadows, raw street-skating documentary style, warm golden tones." [ref=e142]:
+                  - img "Loading the media file..."
+                  - generic "A young skateboarder in a black t-shirt and baggy jeans performs tricks at a brutalist concrete skatepark on a sunny afternoon. The camera alternates between a fisheye lens ground-level POV following his board and wider angles capturing kickflips and grinds. Harsh midday shadows, raw street-skating documentary style, warm golden tones." [ref=e144]: Your browser does not support the video.
+                - button [ref=e145] [cursor=pointer]
+              - complementary [ref=e146]:
+                - figure "A sinister porcelain doll with pink hair moves through a dark apartment as an eerie orange glow intensifies from an adjacent doorway. The camera follows from a low angle as the doll walks toward the blazing light source. Scattered furniture and peeling walls surround the scene. Slow-burn horror aesthetic, warm fire glow against cold blue shadows, dreamlike unease." [ref=e147]:
+                  - img "Loading the media file..."
+                  - generic "A sinister porcelain doll with pink hair moves through a dark apartment as an eerie orange glow intensifies from an adjacent doorway. The camera follows from a low angle as the doll walks toward the blazing light source. Scattered furniture and peeling walls surround the scene. Slow-burn horror aesthetic, warm fire glow against cold blue shadows, dreamlike unease." [ref=e149]: Your browser does not support the video.
+                - button [ref=e150] [cursor=pointer]
+              - complementary [ref=e151]:
+                - figure "An anthropomorphic orange tabby cat warrior in green leather armor dashes across a stone bridge in a medieval fantasy alleyway bathed in purple fog. A snarling dark wolf-like creature lunges at her from the shadows. She parries and counterattacks with fluid martial arts. Gothic stone architecture, glowing purple lanterns, stylized CG animation with cinematic lighting and dark fantasy atmosphere." [ref=e152]:
+                  - img "Loading the media file..."
+                  - generic "An anthropomorphic orange tabby cat warrior in green leather armor dashes across a stone bridge in a medieval fantasy alleyway bathed in purple fog. A snarling dark wolf-like creature lunges at her from the shadows. She parries and counterattacks with fluid martial arts. Gothic stone architecture, glowing purple lanterns, stylized CG animation with cinematic lighting and dark fantasy atmosphere." [ref=e154]: Your browser does not support the video.
+                - button [ref=e155] [cursor=pointer]
+            - generic [ref=e156]:
+              - complementary [ref=e157]:
+                - figure "A young woman with long rainbow-colored hair (blue, green, pink gradient) stands in the middle of a massive outdoor music festival crowd. She drinks from a can as colored laser beams sweep through haze and stage lights pulse behind her. Confetti rains down around the dancing crowd. Energetic nighttime atmosphere, wide-angle concert photography style, vibrant neon lighting." [ref=e158]:
+                  - img "Loading the media file..."
+                  - generic "A young woman with long rainbow-colored hair (blue, green, pink gradient) stands in the middle of a massive outdoor music festival crowd. She drinks from a can as colored laser beams sweep through haze and stage lights pulse behind her. Confetti rains down around the dancing crowd. Energetic nighttime atmosphere, wide-angle concert photography style, vibrant neon lighting." [ref=e160]: Your browser does not support the video.
+                - button [ref=e161] [cursor=pointer]
+              - complementary [ref=e162]:
+                - figure "A static wide shot of a weathered New York City tenement building facade. Graffiti-covered shuttered storefronts line the ground level, rusted fire escapes zigzag up the brick face. The camera holds steady as subtle changes in light suggest passing time. Gritty urban realism, muted earth tones, overcast daylight, documentary street-photography composition." [ref=e163]:
+                  - img "Loading the media file..."
+                  - generic "A static wide shot of a weathered New York City tenement building facade. Graffiti-covered shuttered storefronts line the ground level, rusted fire escapes zigzag up the brick face. The camera holds steady as subtle changes in light suggest passing time. Gritty urban realism, muted earth tones, overcast daylight, documentary street-photography composition." [ref=e165]: Your browser does not support the video.
+                - button [ref=e166] [cursor=pointer]
+              - complementary [ref=e167]:
+                - figure "A woman in flowing dark crimson and gold fantasy robes stands in an ancient stone courtyard surrounded by gnarled trees. She summons swirling tendrils of orange fire from her hands, the flames spiraling around her body as her cloak billows. Close-up reveals her intense expression as magical energy crackles. Dark fantasy atmosphere, warm firelight against moody overcast tones, VFX-heavy mystical scene." [ref=e168]:
+                  - img "Loading the media file..."
+                  - generic "A woman in flowing dark crimson and gold fantasy robes stands in an ancient stone courtyard surrounded by gnarled trees. She summons swirling tendrils of orange fire from her hands, the flames spiraling around her body as her cloak billows. Close-up reveals her intense expression as magical energy crackles. Dark fantasy atmosphere, warm firelight against moody overcast tones, VFX-heavy mystical scene." [ref=e170]: Your browser does not support the video.
+                - button [ref=e171] [cursor=pointer]
+            - generic [ref=e172]:
+              - complementary [ref=e173]:
+                - figure "A man in a tailored navy blue suit washes his hands in a sleek modern bathroom, staring at his reflection in a large mirror. Another man in a matching suit appears behind him and they engage in a brutal hand-to-hand fight. The camera captures the struggle through reflections and tight close-ups. Cool fluorescent overhead lighting, polished tile surfaces, tense cinematic atmosphere." [ref=e174]:
+                  - img "Loading the media file..."
+                  - generic "A man in a tailored navy blue suit washes his hands in a sleek modern bathroom, staring at his reflection in a large mirror. Another man in a matching suit appears behind him and they engage in a brutal hand-to-hand fight. The camera captures the struggle through reflections and tight close-ups. Cool fluorescent overhead lighting, polished tile surfaces, tense cinematic atmosphere." [ref=e176]: Your browser does not support the video.
+                - button [ref=e177] [cursor=pointer]
+              - complementary [ref=e178]:
+                - figure "A creepy antique porcelain doll with pink pigtails and a dark dress stands motionless on a table in the center of a dark abandoned apartment. Flames flicker from a small fire nearby, casting dancing orange light across the cluttered room. The camera slowly dollies forward. Horror atmosphere, dim blue ambient light contrasting with warm firelight, unsettling stillness." [ref=e179]:
+                  - img "Loading the media file..."
+                  - generic "A creepy antique porcelain doll with pink pigtails and a dark dress stands motionless on a table in the center of a dark abandoned apartment. Flames flicker from a small fire nearby, casting dancing orange light across the cluttered room. The camera slowly dollies forward. Horror atmosphere, dim blue ambient light contrasting with warm firelight, unsettling stillness." [ref=e181]: Your browser does not support the video.
+                - button [ref=e182] [cursor=pointer]
+              - complementary [ref=e183]:
+                - figure "A woman in business attire strides through a deserted modern open-plan office with glass partitions. She trips and falls to the floor, scattering papers and her phone. A man in a grey suit rushes over and pins her down. Cold desaturated lighting from floor-to-ceiling windows, overcast sky visible outside. Thriller tension, surveillance-style camera angles." [ref=e184]:
+                  - img "Loading the media file..."
+                  - generic "A woman in business attire strides through a deserted modern open-plan office with glass partitions. She trips and falls to the floor, scattering papers and her phone. A man in a grey suit rushes over and pins her down. Cold desaturated lighting from floor-to-ceiling windows, overcast sky visible outside. Thriller tension, surveillance-style camera angles." [ref=e186]: Your browser does not support the video.
+                - button [ref=e187] [cursor=pointer]
+            - generic [ref=e188]:
+              - complementary [ref=e189]:
+                - figure "A white semi-truck hauling a large cargo container barrels down a sunlit highway, kicking up dust. The camera tracks it from a low front angle as it veers and collides violently with another vehicle, sending debris flying. Bright daylight, action-movie car chase energy, dramatic crash physics, wide telephoto lens compression." [ref=e190]:
+                  - img "Loading the media file..."
+                  - generic "A white semi-truck hauling a large cargo container barrels down a sunlit highway, kicking up dust. The camera tracks it from a low front angle as it veers and collides violently with another vehicle, sending debris flying. Bright daylight, action-movie car chase energy, dramatic crash physics, wide telephoto lens compression." [ref=e192]: Your browser does not support the video.
+                - button [ref=e193] [cursor=pointer]
+              - complementary [ref=e194]:
+                - 'figure "Continuation of a dramatic slow-motion crash sequence: a red-haired woman in a green jacket tumbles through the interior of a wrecked jewelry shop as a car plows through the storefront behind her. She rolls across a display counter, chains and necklaces whipping through the air. Glass and debris scatter everywhere. Warm red and amber lighting, cinematic slow-motion chaos, intricate destruction choreography." [ref=e195]':
+                  - img "Loading the media file..."
+                  - 'generic "Continuation of a dramatic slow-motion crash sequence: a red-haired woman in a green jacket tumbles through the interior of a wrecked jewelry shop as a car plows through the storefront behind her. She rolls across a display counter, chains and necklaces whipping through the air. Glass and debris scatter everywhere. Warm red and amber lighting, cinematic slow-motion chaos, intricate destruction choreography." [ref=e197]': Your browser does not support the video.
+                - button [ref=e198] [cursor=pointer]
+              - complementary [ref=e199]:
+                - figure "Close-up selfie-style POV of a red-haired young woman with medieval metal shoulder armor and massive feathered wings flying high above a mountainous green landscape. She looks into the camera with an excited expression, the wind tousling her hair. Clouds drift past at eye level. Bright natural daylight, fantasy flight sequence, dynamic foreground-background parallax, joyful energy." [ref=e200]:
+                  - img "Loading the media file..."
+                  - generic "Close-up selfie-style POV of a red-haired young woman with medieval metal shoulder armor and massive feathered wings flying high above a mountainous green landscape. She looks into the camera with an excited expression, the wind tousling her hair. Clouds drift past at eye level. Bright natural daylight, fantasy flight sequence, dynamic foreground-background parallax, joyful energy." [ref=e202]: Your browser does not support the video.
+                - button [ref=e203] [cursor=pointer]
+          - link "View all of SEEDANCE 2.0" [ref=e205] [cursor=pointer]:
+            - /url: /seedance-2-community
+            - text: View all of SEEDANCE 2.0
+            - img [ref=e206]
+      - generic [ref=e208]:
+        - generic [ref=e210]:
+          - img "Seedance 2.0 presets" [ref=e212]
+          - generic [ref=e213]:
+            - generic [ref=e214]:
+              - img [ref=e215]
+              - paragraph [ref=e221]: Seedance 2.0
+            - heading "Cinematic VFX Ready to Use" [level=2] [ref=e222]:
+              - text: Cinematic VFX
+              - text: Ready to Use
+            - paragraph [ref=e223]: Turn any shot cinematic
+        - generic [ref=e224]:
+          - generic [ref=e226]:
+            - generic [ref=e227]:
+              - button "Casual Monster Slayer" [ref=e228] [cursor=pointer]:
+                - paragraph [ref=e233]: Casual Monster Slayer
+              - button "Earth zoom out" [ref=e235] [cursor=pointer]:
+                - paragraph [ref=e240]: Earth zoom out
+              - button "Disintegration" [ref=e242] [cursor=pointer]:
+                - paragraph [ref=e247]: Disintegration
+            - generic [ref=e249]:
+              - button "Wrestle" [ref=e250] [cursor=pointer]:
+                - paragraph [ref=e255]: Wrestle
+              - button "Earth zoom in" [ref=e257] [cursor=pointer]:
+                - paragraph [ref=e262]: Earth zoom in
+              - button "Sword and Sorcery" [ref=e264] [cursor=pointer]:
+                - paragraph [ref=e269]: Sword and Sorcery
+            - generic [ref=e271]:
+              - button "Magic Spell" [ref=e272] [cursor=pointer]:
+                - paragraph [ref=e277]: Magic Spell
+              - button "Arena Zero" [ref=e279] [cursor=pointer]:
+                - paragraph [ref=e284]: Arena Zero
+              - button "Still world" [ref=e286] [cursor=pointer]:
+                - paragraph [ref=e291]: Still world
+            - generic [ref=e293]:
+              - button "Animal chase" [ref=e294] [cursor=pointer]:
+                - paragraph [ref=e299]: Animal chase
+              - button "Superfast flight" [ref=e301] [cursor=pointer]:
+                - paragraph [ref=e306]: Superfast flight
+              - button "Face Punch" [ref=e308] [cursor=pointer]:
+                - paragraph [ref=e313]: Face Punch
+          - button "Explore All Presets" [ref=e315] [cursor=pointer]:
+            - text: Explore All Presets
+            - img [ref=e316]
+      - generic [ref=e319]:
+        - link "Watch Zephyr" [ref=e320] [cursor=pointer]:
+          - /url: /original-series
+          - generic [ref=e321]: Watch Zephyr
+        - generic [ref=e326]:
+          - img "Arena Zero" [ref=e327]
+          - link "Watch now":
+            - /url: /original-series
+            - img
+            - text: Watch now
+        - generic [ref=e328]:
+          - paragraph [ref=e329]: Available on Higgsfield Original Series
+          - paragraph [ref=e330]: First ever AI series streaming platform
+      - generic [ref=e331]:
+        - generic [ref=e332]:
+          - img "Loading the media file..."
+          - generic [ref=e333]: Your browser does not support the video.
+        - generic [ref=e334]:
+          - generic [ref=e335]:
+            - heading "What will you create today?" [level=2] [ref=e336]:
+              - text: What will you
+              - text: create today?
+            - paragraph [ref=e337]: Create authentic images and videos with natural texture and easy style
+          - button "Explore all tools" [ref=e338] [cursor=pointer]:
+            - text: Explore all tools
+            - img [ref=e339]
+        - generic [ref=e342]:
+          - list [ref=e344]:
+            - listitem [ref=e345]:
+              - link "Create Image" [ref=e346] [cursor=pointer]:
+                - /url: /image/soul
+                - generic [ref=e347]:
+                  - figure [ref=e348]:
+                    - img "Loading the media file..."
+                    - 'generic "Create Image: Generate AI images" [ref=e349]': Your browser does not support the video.
+                  - generic [ref=e351]:
+                    - paragraph [ref=e352]: Create Image
+                    - img [ref=e353]
+            - listitem [ref=e355]:
+              - link "Create Video" [ref=e356] [cursor=pointer]:
+                - /url: /ai/video
+                - generic [ref=e357]:
+                  - figure [ref=e358]:
+                    - img "Loading the media file..."
+                    - 'generic "Create Video: Generate AI videos" [ref=e359]': Your browser does not support the video.
+                  - generic [ref=e361]:
+                    - paragraph [ref=e362]: Create Video
+                    - img [ref=e363]
+            - listitem [ref=e365]:
+              - link "Motion Control" [ref=e366] [cursor=pointer]:
+                - /url: /kling-3-motion-control
+                - generic [ref=e367]:
+                  - figure [ref=e368]:
+                    - img "Loading the media file..."
+                    - 'generic "Motion Control: Precise control of character actions and expressions up to 30 seconds" [ref=e370]': Your browser does not support the video.
+                  - generic [ref=e372]:
+                    - paragraph [ref=e373]: Motion Control
+                    - img [ref=e374]
+            - listitem [ref=e376]:
+              - link "new Soul 2.0" [ref=e377] [cursor=pointer]:
+                - /url: /image/soul-v2
+                - generic [ref=e378]:
+                  - figure [ref=e379]:
+                    - img "Loading the media file..."
+                    - 'generic "Soul 2.0: Next generation ultra-realistic fashion visuals" [ref=e381]': Your browser does not support the video.
+                  - paragraph [ref=e382]: new
+                  - generic [ref=e384]:
+                    - paragraph [ref=e385]: Soul 2.0
+                    - img [ref=e386]
+            - listitem [ref=e388]:
+              - link "Soul ID" [ref=e389] [cursor=pointer]:
+                - /url: /character
+                - generic [ref=e390]:
+                  - figure [ref=e391]:
+                    - img "Loading the media file..."
+                    - 'generic "Soul ID: Create unique character" [ref=e393]': Your browser does not support the video.
+                  - generic [ref=e395]:
+                    - paragraph [ref=e396]: Soul ID
+                    - img [ref=e397]
+            - listitem [ref=e399]:
+              - link "Upscale" [ref=e400] [cursor=pointer]:
+                - /url: /upscale
+                - generic [ref=e401]:
+                  - figure [ref=e402]:
+                    - img "Loading the media file..."
+                    - 'generic "Upscale: Enhance media quality" [ref=e403]': Your browser does not support the video.
+                  - generic [ref=e405]:
+                    - paragraph [ref=e406]: Upscale
+                    - img [ref=e407]
+            - listitem [ref=e409]:
+              - link "Edit Image" [ref=e410] [cursor=pointer]:
+                - /url: /edit?model=soul_inpaint
+                - generic [ref=e411]:
+                  - figure [ref=e412]:
+                    - img "Loading the media file..."
+                    - 'generic "Edit Image: Brush areas to edit images" [ref=e413]': Your browser does not support the video.
+                  - generic [ref=e415]:
+                    - paragraph [ref=e416]: Edit Image
+                    - img [ref=e417]
+            - listitem [ref=e419]:
+              - link "Edit Video" [ref=e420] [cursor=pointer]:
+                - /url: /ai/video/edit
+                - generic [ref=e421]:
+                  - figure [ref=e422]:
+                    - img "Loading the media file..."
+                    - 'generic "Edit Video: Advanced video editing" [ref=e423]': Your browser does not support the video.
+                  - generic [ref=e425]:
+                    - paragraph [ref=e426]: Edit Video
+                    - img [ref=e427]
+            - listitem [ref=e429]:
+              - button "Explore all tools" [ref=e430] [cursor=pointer]:
+                - generic [ref=e431]:
+                  - figure [ref=e432]:
+                    - img "Loading the media file..."
+                    - generic "explore all tools" [ref=e434]: Your browser does not support the video.
+                  - generic [ref=e436]:
+                    - paragraph [ref=e437]: Explore all tools
+                    - img [ref=e438]
+            - listitem [ref=e440]
+          - button [ref=e441] [cursor=pointer]:
+            - img [ref=e442]
+    - generic [ref=e444]:
+      - generic [ref=e445]:
+        - generic [ref=e446]:
+          - heading "Top Choice" [level=2] [ref=e447]
+          - paragraph [ref=e448]: Creator-recommended tools tailored for you
+        - link "See all" [ref=e449] [cursor=pointer]:
+          - /url: /apps
+          - text: See all
+          - img [ref=e450]
+      - generic [ref=e452]:
+        - list [ref=e454]:
+          - listitem [ref=e455]:
+            - link "Nano Banana Pro Best 4K image model ever" [ref=e456] [cursor=pointer]:
+              - /url: /nano-banana-pro
+              - figure [ref=e457]:
+                - img "Loading the media file..."
+                - generic "Nano Banana Pro" [ref=e458]: Your browser does not support the video.
+              - generic [ref=e459]:
+                - generic [ref=e460]:
+                  - paragraph [ref=e461]: Nano Banana Pro
+                  - img [ref=e462]
+                - paragraph [ref=e464]: Best 4K image model ever
+          - listitem [ref=e465]:
+            - link "Motion Control Precise control of character actions and expressions up to 30 seconds" [ref=e466] [cursor=pointer]:
+              - /url: /kling-3-motion-control
+              - figure [ref=e467]:
+                - img "Loading the media file..."
+                - generic "Motion Control" [ref=e468]: Your browser does not support the video.
+              - generic [ref=e469]:
+                - generic [ref=e470]:
+                  - paragraph [ref=e471]: Motion Control
+                  - img [ref=e472]
+                - paragraph [ref=e474]: Precise control of character actions and expressions up to 30 seconds
+          - listitem [ref=e475]:
+            - link "Pro Skin Enhancer Natural, realistic skin textures" [ref=e476] [cursor=pointer]:
+              - /url: /app/skin-enhancer
+              - figure [ref=e477]:
+                - img "Loading the media file..."
+                - generic "Skin Enhancer" [ref=e479]: Your browser does not support the video.
+              - paragraph [ref=e480]: Pro
+              - generic [ref=e481]:
+                - generic [ref=e482]:
+                  - paragraph [ref=e483]: Skin Enhancer
+                  - img [ref=e484]
+                - paragraph [ref=e486]: Natural, realistic skin textures
+          - listitem [ref=e487]:
+            - link "Shots 9 unique shots from one image" [ref=e488] [cursor=pointer]:
+              - /url: /app/shots
+              - figure [ref=e489]:
+                - img "Loading the media file..."
+                - generic "Shots" [ref=e491]: Your browser does not support the video.
+              - generic [ref=e492]:
+                - generic [ref=e493]:
+                  - paragraph [ref=e494]: Shots
+                  - img [ref=e495]
+                - paragraph [ref=e497]: 9 unique shots from one image
+          - listitem [ref=e498]:
+            - link "Pro Angles 2.0 Generate any angle view for any image in seconds" [ref=e499] [cursor=pointer]:
+              - /url: /app/angles
+              - figure [ref=e500]:
+                - img "Loading the media file..."
+                - generic "Angles 2.0" [ref=e502]: Your browser does not support the video.
+              - paragraph [ref=e503]: Pro
+              - generic [ref=e504]:
+                - generic [ref=e505]:
+                  - paragraph [ref=e506]: Angles 2.0
+                  - img [ref=e507]
+                - paragraph [ref=e509]: Generate any angle view for any image in seconds
+          - listitem [ref=e510]:
+            - link "Kling 3.0 15-second videos with character consistency" [ref=e511] [cursor=pointer]:
+              - /url: /kling-3
+              - figure [ref=e512]:
+                - img "Loading the media file..."
+                - generic "Kling 3.0" [ref=e514]: Your browser does not support the video.
+              - generic [ref=e515]:
+                - generic [ref=e516]:
+                  - paragraph [ref=e517]: Kling 3.0
+                  - img [ref=e518]
+                - paragraph [ref=e520]: 15-second videos with character consistency
+          - listitem [ref=e521]:
+            - link "new Seedream 5.0 Lite Intelligent visual reasoning" [ref=e522] [cursor=pointer]:
+              - /url: /seedream-5
+              - figure [ref=e523]:
+                - img "Loading the media file..."
+                - generic "Seedream 5.0 Lite" [ref=e525]: Your browser does not support the video.
+              - paragraph [ref=e526]: new
+              - generic [ref=e527]:
+                - generic [ref=e528]:
+                  - paragraph [ref=e529]: Seedream 5.0 Lite
+                  - img [ref=e530]
+                - paragraph [ref=e532]: Intelligent visual reasoning
+          - listitem [ref=e533]:
+            - link "Soul Moodboard Define your style with reference images" [ref=e534] [cursor=pointer]:
+              - /url: /moodboard
+              - figure [ref=e535]:
+                - img "Loading the media file..."
+                - generic "Soul Moodboard" [ref=e537]: Your browser does not support the video.
+              - generic [ref=e538]:
+                - generic [ref=e539]:
+                  - paragraph [ref=e540]: Soul Moodboard
+                  - img [ref=e541]
+                - paragraph [ref=e543]: Define your style with reference images
+        - button [ref=e544] [cursor=pointer]:
+          - img [ref=e545]
+    - generic [ref=e548]:
+      - link "Try Photodump" [ref=e549] [cursor=pointer]:
+        - /url: /image/soul-v2/photodump?skip-preview=true
+        - generic [ref=e550]: Try Photodump
+      - generic [ref=e553]:
+        - generic [ref=e554]:
+          - generic [ref=e556]: photodump
+          - generic [ref=e557]:
+            - heading "Different Scenes Same Star" [level=2] [ref=e558]:
+              - text: Different Scenes
+              - text: Same Star
+            - paragraph [ref=e559]: Build your character. One click does the rest
+        - generic: Try Photodump
+    - generic [ref=e560]:
+      - generic [ref=e561]:
+        - link "Higgsfield Soul Cinema" [ref=e562] [cursor=pointer]:
+          - /url: /soul-cinema-community
+        - paragraph [ref=e563]: Explore Higgsfield Community gallery for stunning Higgsfield Soul Cinema creations
+      - link "View all of Higgsfield Soul Cinema" [ref=e593] [cursor=pointer]:
+        - /url: /soul-cinema-community
+        - text: View all of Higgsfield Soul Cinema
+        - img [ref=e594]
+    - generic [ref=e596]:
+      - img [ref=e597]
+      - generic [ref=e598]:
+        - generic [ref=e599]:
+          - generic [ref=e600]:
+            - generic [ref=e601]:
+              - generic [ref=e602]: exclusively on Higgsfield
+              - heading "KLING 3.0 EXCLUSIVE ACCESS" [level=2] [ref=e603]:
+                - text: KLING 3.0
+                - text: EXCLUSIVE ACCESS
+            - paragraph [ref=e604]: Explore Higgsfield Community gallery for stunning Kling 3.0 creations
+          - link "Get Exclusive Offer" [ref=e605] [cursor=pointer]:
+            - /url: /pricing
+          - link "Explore Kling 3.0" [ref=e606] [cursor=pointer]:
+            - /url: /kling-30-community
+        - link "View all of Kling 3.0" [ref=e636] [cursor=pointer]:
+          - /url: /kling-30-community
+          - text: View all of Kling 3.0
+          - img [ref=e637]
+    - generic [ref=e639]:
+      - generic [ref=e640]:
+        - link "Higgsfield Soul 2.0" [ref=e641] [cursor=pointer]:
+          - /url: /soul-community
+        - paragraph [ref=e642]: A culture-native photo model built for fashion, aesthetics, and creative expression.
+      - link "View all of Higgsfield Soul 2.0" [ref=e672] [cursor=pointer]:
+        - /url: /soul-community
+        - text: View all of Higgsfield Soul 2.0
+        - img [ref=e673]
+    - generic [ref=e675]:
+      - generic [ref=e676]:
+        - link "Mixed Media" [ref=e677] [cursor=pointer]:
+          - /url: /mixed-media-community
+        - paragraph [ref=e678]: Explore Higgsfield Community gallery for stunning Mixed Media creations
+      - group [ref=e682]:
+        - link "Layer mixed media" [ref=e683] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/6ff15c8c-de78-459e-af32-e7a1266dc075
+        - link "Sketch" [ref=e684] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/6377b231-5cea-4259-8a6b-0314728c1982
+        - link "Canvas" [ref=e685] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/1a722581-6ba0-48b2-b990-a177a3f26cc8
+        - link "Flash comic" [ref=e686] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/3fbd5057-50e1-4d1d-9a6f-8655836711b8
+        - link "Overexposed" [ref=e687] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/1c79bffd-0839-42c3-90ab-2cd7e6ff4619
+        - link "Paper" [ref=e688] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/f63bf420-f98a-44e6-ba54-3f7eaa599d40
+        - link "Noir" [ref=e689] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/c92d1f34-8bc3-410a-99c4-4b8f387140ec
+        - link "Particles" [ref=e690] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/386ebb9d-643f-4108-a12f-3f867f18fb36
+        - link "Hand paint" [ref=e691] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/ad8401a0-39a2-4c95-b65e-1634d41378ab
+        - link "Toxic" [ref=e692] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/fd3ca94d-6c3d-443f-970b-a4e8dd7338da
+        - link "Tracking" [ref=e693] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/9fa35d36-e5f4-4488-9068-8813bd232a22
+        - link "Ultraviolet" [ref=e694] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/c9682e42-9891-4118-86bb-f8cf79c84055
+        - link "Windows" [ref=e695] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/4f7a1589-c604-44e5-b0ec-bc87d3929906
+        - link "Acid" [ref=e696] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/b501a54d-7c2a-42f8-a47d-484cbdace0a6
+        - link "Palette" [ref=e697] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/15b97a49-9912-4a58-8424-b4ef1c302a05
+        - link "Comic" [ref=e698] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/94cd1315-c820-4314-806d-f1b0936e8a46
+        - link "Akrill" [ref=e699] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/73f9e01d-eb92-41d6-9119-53cc2686ecfa
+        - link "Two color" [ref=e700] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/ac3612ce-b1c9-4034-a04b-b46732c2d7a3
+        - link "Multiverse" [ref=e701] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/c38c2630-3986-4e28-858f-596fd254e5e9
+        - link "Fragments" [ref=e702] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/525fc0d7-abf1-49e5-a3e6-2f97eb50973c
+        - link "Origami" [ref=e703] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/8c88dac7-0314-40b4-b611-5dcd3fda004d
+        - link "Random Glow" [ref=e704] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/f1706661-007e-424b-8734-b755d602d580
+        - link "Vintage" [ref=e705] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/ee12f76c-ed17-4471-bf2e-52bda1bcae64
+        - link "Cannabis" [ref=e706] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/c90cd302-d409-48fd-8643-36c34d7798e4
+        - link "Bubbles" [ref=e707] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/dacdca94-27b2-417a-bc8c-6d4168e6109a
+        - link "Magazine" [ref=e708] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/963c3300-8967-4880-b078-c956de4c1e12
+        - link "Cold vision" [ref=e709] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/d6ebc1b1-55b0-4379-8276-b46d47d8b056
+        - link "Modern" [ref=e710] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/9196d356-1406-43ef-bc68-cb26e7eaf507
+        - link "LSD" [ref=e711] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/c2b241c5-5239-4465-869f-fef60a06822e
+        - link "Broken mirror" [ref=e712] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/5d89951e-ac83-4c7f-ac47-4d8db50c835e
+        - link "Lava" [ref=e713] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/bb33da96-918c-4754-ba55-6d0dcbaf5173
+        - link "Marble" [ref=e714] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/ff617894-b1bc-4931-85b3-1e5b159d2106
+        - link "Ocean" [ref=e715] [cursor=pointer]:
+          - /url: /mixed-media-presets/preset/19115d24-276e-4222-a23f-39cc23d9a326
+      - link "View all of Mixed Media" [ref=e745] [cursor=pointer]:
+        - /url: /mixed-media-community
+        - text: View all of Mixed Media
+        - img [ref=e746]
+    - generic [ref=e748]:
+      - generic [ref=e749]:
+        - link "Visual Effects" [ref=e750] [cursor=pointer]:
+          - /url: /effects
+        - paragraph [ref=e751]: Big-budget visual effects, from explosions to surreal transformations.
+      - group [ref=e755]:
+        - link "Raven Transition" [ref=e756] [cursor=pointer]:
+          - /url: /motion/bbab2a35-ccba-45df-8c37-8ea2bd9e395a
+        - link "Air Bending" [ref=e757] [cursor=pointer]:
+          - /url: /motion/c4dd8cc3-79a6-4366-b9a1-071ad848ddd2
+        - link "Animalization" [ref=e758] [cursor=pointer]:
+          - /url: /motion/4678bff4-63e0-4272-a961-9b0b0c0746b1
+        - link "Water Bending" [ref=e759] [cursor=pointer]:
+          - /url: /motion/b3c9d6c2-e1c9-4d92-8853-9d2d46e4b294
+        - link "Earth Zoom Out" [ref=e760] [cursor=pointer]:
+          - /url: /motion/70e490b9-26b7-4572-8d9c-2ac8dcc9adc0
+        - link "Earth Wave" [ref=e761] [cursor=pointer]:
+          - /url: /motion/fb52e9a0-c6e2-498e-8adb-6611b80808e3
+        - link "Giant Grab" [ref=e762] [cursor=pointer]:
+          - /url: /motion/3f30deaa-dd4a-45c0-be8c-f350fc1008dc
+        - link "Shadow Smoke" [ref=e763] [cursor=pointer]:
+          - /url: /motion/881b5e78-e585-43fb-ac73-a4207d824c88
+        - link "Splash Transition" [ref=e764] [cursor=pointer]:
+          - /url: /motion/105c744b-05bf-44ae-ba34-5a7144f4ec46
+        - link "Firelava" [ref=e765] [cursor=pointer]:
+          - /url: /motion/eeaa42bc-d607-464e-b21f-b7fb8b1cb3fc
+        - link "Explosion" [ref=e766] [cursor=pointer]:
+          - /url: /motion/bc2725cf-4195-4139-881f-f01a71940bea
+        - link "Flame On" [ref=e767] [cursor=pointer]:
+          - /url: /motion/66fad309-0d8a-447c-b95e-1e29b6dd864b
+        - link "Flame Transition" [ref=e768] [cursor=pointer]:
+          - /url: /motion/6641ebf5-1e07-4a8a-a435-b0ea374861e8
+        - link "Train Rush" [ref=e769] [cursor=pointer]:
+          - /url: /motion/de601c08-c4cf-4eac-b1c5-a1d4040b57a6
+        - link "Melt Transition" [ref=e770] [cursor=pointer]:
+          - /url: /motion/f064aa72-eb21-4691-a827-5f0fa9f4246c
+        - link "Ahegao" [ref=e771] [cursor=pointer]:
+          - /url: /motion/3322a2db-a59b-4e77-85fd-562d417b79d6
+        - link "Point Cloud" [ref=e772] [cursor=pointer]:
+          - /url: /motion/569ea796-2a19-4ccc-9281-29179e96ebf3
+        - link "Flying Cam Transition" [ref=e773] [cursor=pointer]:
+          - /url: /motion/e43378b9-b20b-4158-a626-745bbbcacdbd
+        - link "Mouth In" [ref=e774] [cursor=pointer]:
+          - /url: /motion/7351a8ad-9754-4844-94f1-00baf293d588
+        - link "Group Photo" [ref=e775] [cursor=pointer]:
+          - /url: /motion/7da01fad-94c9-4b53-be58-06f5d300c90d
+        - link "Wireframe" [ref=e776] [cursor=pointer]:
+          - /url: /motion/ea67acab-a7bf-4fff-b098-a0f1f1a6796c
+        - link "I Can Fly" [ref=e777] [cursor=pointer]:
+          - /url: /motion/929856d2-448b-40ad-8781-297e02af0ae7
+        - link "Fire Element" [ref=e778] [cursor=pointer]:
+          - /url: /motion/840c84e3-dc46-4ee6-8ad4-48c82bb6e427
+        - link "Hand Transition" [ref=e779] [cursor=pointer]:
+          - /url: /motion/7e9ac07e-703b-4b48-a466-d561d3d9c536
+        - link "Polygon" [ref=e780] [cursor=pointer]:
+          - /url: /motion/fad73347-8c2d-4d96-a70a-155447406281
+        - link "Trucksition" [ref=e781] [cursor=pointer]:
+          - /url: /motion/81c90748-7852-4bb1-a0ec-1649beb72024
+        - link "Pizza Fall" [ref=e782] [cursor=pointer]:
+          - /url: /motion/3c3a1331-3524-47da-b956-688595c295b7
+        - link "Cyborg" [ref=e783] [cursor=pointer]:
+          - /url: /motion/1f96bfce-ebca-4eb5-a521-0ccd4f1d73d9
+        - link "Fast Sprint" [ref=e784] [cursor=pointer]:
+          - /url: /motion/5023b9bb-d528-48cd-add8-622e2999d7c6
+        - link "Earth Element" [ref=e785] [cursor=pointer]:
+          - /url: /motion/804cfc3a-e251-4ddf-86d4-46066d0ff7be
+        - link "Freezing" [ref=e786] [cursor=pointer]:
+          - /url: /motion/777f1604-afee-406d-a711-bf1e0ea23c86
+        - link "Smoke Transition" [ref=e787] [cursor=pointer]:
+          - /url: /motion/efb77740-741f-419d-ae8d-cf487e01a6e9
+        - link "Cotton Cloud" [ref=e788] [cursor=pointer]:
+          - /url: /motion/588486b6-f303-4e2a-b8b0-2b74b01a5f50
+        - link "Werewolf" [ref=e789] [cursor=pointer]:
+          - /url: /motion/5f3f83b8-6a17-47ba-bcfd-f7f41d9997e3
+        - link "X-Ray" [ref=e790] [cursor=pointer]:
+          - /url: /motion/5819f36e-5b0a-44ca-800e-98e380266b2d
+        - link "Visor X" [ref=e791] [cursor=pointer]:
+          - /url: /motion/94ed54b9-7db0-4778-a8ec-0729ef092b46
+        - link "Jump Transition" [ref=e792] [cursor=pointer]:
+          - /url: /motion/38f4643a-581b-40d8-bcd6-983aecf12430
+        - link "Firework" [ref=e793] [cursor=pointer]:
+          - /url: /motion/75b85450-71d1-43f2-bbc0-e51157660ac4
+        - link "Roll Transition" [ref=e794] [cursor=pointer]:
+          - /url: /motion/a8e2bc3a-e78e-42aa-a0e6-79bc01141ed3
+        - link "Censorship" [ref=e795] [cursor=pointer]:
+          - /url: /motion/d3c3692f-1aec-4274-9aaf-5f461ad71b6a
+        - link "Face Punch" [ref=e796] [cursor=pointer]:
+          - /url: /motion/cd5bfd11-5a1a-46e0-9294-b22b0b733b1e
+        - link "Glitch" [ref=e797] [cursor=pointer]:
+          - /url: /motion/abcf4cae-51d6-413c-95bf-a586cd48391b
+        - link "Multiverse" [ref=e798] [cursor=pointer]:
+          - /url: /motion/5949fec9-f70e-45d5-8ab9-5544bb18dd72
+        - link "Money Rain" [ref=e799] [cursor=pointer]:
+          - /url: /motion/40a465df-3484-4130-bfd2-54f5cdcaf3bf
+        - link "Building Explosion" [ref=e800] [cursor=pointer]:
+          - /url: /motion/e974bca9-c9eb-4cc8-9318-5676cc110f17
+        - link "Gorilla Transfer" [ref=e801] [cursor=pointer]:
+          - /url: /motion/2f000456-93b5-482d-acb4-831f43095efa
+        - link "Atomic" [ref=e802] [cursor=pointer]:
+          - /url: /motion/cb8b5135-a91c-410c-af4c-e90d28f8ac1e
+        - link "Disintegration" [ref=e803] [cursor=pointer]:
+          - /url: /motion/4e981984-1cdc-4b96-a2b1-1a7c1ecb822d
+        - link "Display Transition" [ref=e804] [cursor=pointer]:
+          - /url: /motion/cf852c5b-8e2a-45b7-807e-2a35b2636a3f
+        - link "Hero Flight" [ref=e805] [cursor=pointer]:
+          - /url: /motion/1df8be61-ddf7-4563-b12f-887d4c641698
+        - link "Luminous Gaze" [ref=e806] [cursor=pointer]:
+          - /url: /motion/2ee4c224-356e-40d8-a0a7-55a03fd907d9
+        - link "Gas Transformation" [ref=e807] [cursor=pointer]:
+          - /url: /motion/1422c31c-7648-4b23-94ca-de200ad1bbc6
+        - link "Turning Metal" [ref=e808] [cursor=pointer]:
+          - /url: /motion/017ae2b7-bcff-42ef-863e-6e198f96c3ec
+        - link "Clone Explosion" [ref=e809] [cursor=pointer]:
+          - /url: /motion/9680aaf0-c5db-4204-833f-56f825bb350b
+        - link "Intermission" [ref=e810] [cursor=pointer]:
+          - /url: /motion/a15c924e-281b-4d58-a103-b5eb3276799a
+        - link "Thunder God" [ref=e811] [cursor=pointer]:
+          - /url: /motion/ca0568ee-6a0f-4134-a4ee-97dfe44753ba
+        - link "Sakura Petals" [ref=e812] [cursor=pointer]:
+          - /url: /motion/cbc75d4d-2e42-4688-a384-0d6e03e375da
+        - link "Seamless Transition" [ref=e813] [cursor=pointer]:
+          - /url: /motion/77ff4447-ab4c-4816-bb79-bff2f4a4f34f
+        - link "Monstrosity" [ref=e814] [cursor=pointer]:
+          - /url: /motion/c918c004-b1fa-482f-8a4b-a23018036b77
+        - link "Mystification" [ref=e815] [cursor=pointer]:
+          - /url: /motion/a3179faa-bd6e-4c2f-be7f-b74425c740bd
+        - link "Northern Lights" [ref=e816] [cursor=pointer]:
+          - /url: /motion/e64ba623-e3dc-4149-95f5-2747c5faba6a
+        - link "Plasma Explosion" [ref=e817] [cursor=pointer]:
+          - /url: /motion/fda25365-9d4e-4f0f-9bd4-ed2cc5ae6981
+        - link "Glow Trace" [ref=e818] [cursor=pointer]:
+          - /url: /motion/519e724e-760f-4703-b6cd-d38223f27e53
+        - link "Starship Troopers" [ref=e819] [cursor=pointer]:
+          - /url: /motion/e99ef547-5a85-4c5a-a7ce-a87eaa9981a4
+        - link "Acid" [ref=e820] [cursor=pointer]:
+          - /url: /motion/a99e16db-8264-43e2-9279-fe66098db36f
+        - link "Aquarium" [ref=e821] [cursor=pointer]:
+          - /url: /motion/a5aad83f-c66b-44eb-a781-85132636253f
+        - link "Eyes In" [ref=e822] [cursor=pointer]:
+          - /url: /motion/0ab33462-481e-4c78-8ffc-086bebd84187
+        - link "Balloon" [ref=e823] [cursor=pointer]:
+          - /url: /motion/41932502-40a0-4637-b392-1d9df097d089
+        - link "Ice rose" [ref=e824] [cursor=pointer]:
+          - /url: /motion/9988713b-2215-4105-bc83-c92518dd2062
+        - link "Saint Glow" [ref=e825] [cursor=pointer]:
+          - /url: /motion/5772cc26-730f-4fb2-945b-fa4c5313feca
+        - link "Color Rain" [ref=e826] [cursor=pointer]:
+          - /url: /motion/3a95cd41-baeb-4e31-9347-3aa69eed3f51
+        - link "Collage" [ref=e827] [cursor=pointer]:
+          - /url: /motion/0d9830d2-4510-4472-9c70-98e1e314a86d
+        - link "Nature Bloom" [ref=e828] [cursor=pointer]:
+          - /url: /motion/fb65290f-a8ff-4cb5-8089-01347d23838a
+        - link "Hole Transition" [ref=e829] [cursor=pointer]:
+          - /url: /motion/b03d3554-d088-49a4-8050-bda4bd2e456e
+        - link "Turning Metal" [ref=e830] [cursor=pointer]:
+          - /url: /motion/46e23a6b-1047-40f1-9cf5-33f5f55ddf2e
+        - link "Illustration Scene" [ref=e831] [cursor=pointer]:
+          - /url: /motion/3891c001-6191-4c33-bcd2-e518736ea923
+        - link "Set on Fire" [ref=e832] [cursor=pointer]:
+          - /url: /motion/06b50d3a-65a9-432b-bf0b-493fc3dcc006
+        - link "Buddy" [ref=e833] [cursor=pointer]:
+          - /url: /motion/12efd233-c7fa-445f-8eb9-f271c902cdbc
+        - link "Shadow" [ref=e834] [cursor=pointer]:
+          - /url: /motion/d5015556-ef13-4901-9079-c470ca3184f7
+        - link "Objects Around" [ref=e835] [cursor=pointer]:
+          - /url: /motion/0275bb9f-7e50-4d45-84e4-3cb9dcbdd126
+        - link "Spiders from Mouth" [ref=e836] [cursor=pointer]:
+          - /url: /motion/c5576bd6-2662-4b03-a20e-82dfc5e07da2
+        - link "Horror Face" [ref=e837] [cursor=pointer]:
+          - /url: /motion/41ed27a0-8d93-482a-b743-17bb68af9e94
+        - link "Garden Bloom" [ref=e838] [cursor=pointer]:
+          - /url: /motion/b25600ef-238e-448a-bb07-1ff74fd0207f
+        - link "Head Explosion" [ref=e839] [cursor=pointer]:
+          - /url: /motion/dbf3fbc1-f69c-4904-a063-104cf2998a40
+        - link "Duplicate" [ref=e840] [cursor=pointer]:
+          - /url: /motion/20b46995-5991-48e0-8fcc-6b1f5dfb4c52
+        - link "Hair Style" [ref=e841] [cursor=pointer]:
+          - /url: /motion/71d6e8f4-b01f-46a3-b27c-7ace92ec626e
+        - link "Black Tears" [ref=e842] [cursor=pointer]:
+          - /url: /motion/6b49273d-2164-4af4-8e38-971ad7ab6516
+        - link "Glowing Fish" [ref=e843] [cursor=pointer]:
+          - /url: /motion/cc0d5c9a-4047-459f-acce-75811f0ba729
+        - link "Live Concert" [ref=e844] [cursor=pointer]:
+          - /url: /motion/bf8444a7-c778-451f-b633-74f62aa23e98
+        - link "Turning Metal" [ref=e845] [cursor=pointer]:
+          - /url: /motion/7e7d313e-1fb1-44a4-bd89-ec66e1f17ec9
+        - link "Wonderland" [ref=e846] [cursor=pointer]:
+          - /url: /motion/4ef29c6b-44de-4309-8101-19b021db4abd
+        - link "Innerlight" [ref=e847] [cursor=pointer]:
+          - /url: /motion/30d58d76-3149-4dee-9ffa-920a7ca6eb9e
+        - link "Head Off" [ref=e848] [cursor=pointer]:
+          - /url: /motion/645b3b79-f6f5-4e9b-83d7-f9dd526ac624
+        - link "Water Element" [ref=e849] [cursor=pointer]:
+          - /url: /motion/ef6175ef-51dc-4cbe-926a-b82dbce66ec8
+        - link "3D Rotation" [ref=e850] [cursor=pointer]:
+          - /url: /motion/6f06f47e-922e-4660-9fe9-754e4be69696
+        - link "Portal" [ref=e851] [cursor=pointer]:
+          - /url: /motion/2391dbfb-edc3-4982-b5b0-bf3746a25359
+        - link "Tattoo Animation" [ref=e852] [cursor=pointer]:
+          - /url: /motion/d5ff2bb8-d82d-4ade-b807-e075af15aae6
+        - link "Diamond" [ref=e853] [cursor=pointer]:
+          - /url: /motion/8126eea1-263d-4e2a-9e27-da7296638522
+        - link "Look, BOOM!" [ref=e854] [cursor=pointer]:
+          - /url: /motion/2cee1f43-c939-4d8c-9581-b5ac6b842405
+        - link "Levitation" [ref=e855] [cursor=pointer]:
+          - /url: /motion/52aa7be6-854f-45cb-930c-b98d64eb593c
+      - link "View all of Visual Effects" [ref=e885] [cursor=pointer]:
+        - /url: /effects
+        - text: View all of Visual Effects
+        - img [ref=e886]
+    - generic [ref=e888]:
+      - generic [ref=e889]:
+        - link "Higgsfield Apps" [ref=e890] [cursor=pointer]:
+          - /url: /apps
+        - paragraph [ref=e891]: Create ready-to-share content in one click — from viral effects to polished commercials, no editing needed.
+      - group [ref=e895]:
+        - link "Angles 2.0" [ref=e896] [cursor=pointer]:
+          - /url: /app/angles
+        - link "What's Next?" [ref=e897] [cursor=pointer]:
+          - /url: /app/whats-next
+        - link "AI Stylist" [ref=e898] [cursor=pointer]:
+          - /url: /app/ai-stylist
+        - link "Relight" [ref=e899] [cursor=pointer]:
+          - /url: /app/relight
+        - link "Shots" [ref=e900] [cursor=pointer]:
+          - /url: /app/shots
+        - link "Zooms" [ref=e901] [cursor=pointer]:
+          - /url: /apps
+        - link "Skin Enhancer" [ref=e902] [cursor=pointer]:
+          - /url: /app/skin-enhancer
+        - link "ClipCut" [ref=e903] [cursor=pointer]:
+          - /url: /apps
+        - link "Behind the Scenes" [ref=e904] [cursor=pointer]:
+          - /url: /apps
+        - link "Urban Cuts" [ref=e905] [cursor=pointer]:
+          - /url: /apps
+        - link "Sticker Match Cut" [ref=e906] [cursor=pointer]:
+          - /url: /app/sticker-matchcut
+        - link "Outfit Swap" [ref=e907] [cursor=pointer]:
+          - /url: /apps
+        - link "Game Dump" [ref=e908] [cursor=pointer]:
+          - /url: /app/game-dump
+        - link "Style Snap" [ref=e909] [cursor=pointer]:
+          - /url: /app/style-snap
+        - link "Paint App" [ref=e910] [cursor=pointer]:
+          - /url: /apps
+        - link "Nano Strike" [ref=e911] [cursor=pointer]:
+          - /url: /apps
+        - link "Nano Theft" [ref=e912] [cursor=pointer]:
+          - /url: /apps
+        - link "Breakdown" [ref=e913] [cursor=pointer]:
+          - /url: /apps
+        - link "Simlife" [ref=e914] [cursor=pointer]:
+          - /url: /apps
+        - link "Japanese Show" [ref=e915] [cursor=pointer]:
+          - /url: /apps
+        - link "Outfit Vending" [ref=e916] [cursor=pointer]:
+          - /url: /apps
+        - link "Signboard" [ref=e917] [cursor=pointer]:
+          - /url: /app/signboard
+        - link "Glitter Sticker" [ref=e918] [cursor=pointer]:
+          - /url: /apps
+        - link "Plushies" [ref=e919] [cursor=pointer]:
+          - /url: /app/plushies
+        - link "Click to Ad" [ref=e920] [cursor=pointer]:
+          - /url: /apps
+        - link "Micro-Beasts" [ref=e921] [cursor=pointer]:
+          - /url: /app/surrounded-by-animals
+        - link "Transitions" [ref=e922] [cursor=pointer]:
+          - /url: /app/transitions
+        - link "Recast" [ref=e923] [cursor=pointer]:
+          - /url: /app/recast
+        - link "Character Swap 2.0" [ref=e924] [cursor=pointer]:
+          - /url: /app/character-swap
+        - link "Face Swap" [ref=e925] [cursor=pointer]:
+          - /url: /app/face-swap
+        - link "Commercial Faces" [ref=e926] [cursor=pointer]:
+          - /url: /app/commercial-faces
+        - link "ASMR Add-On" [ref=e927] [cursor=pointer]:
+          - /url: /apps
+        - link "ASMR Classic" [ref=e928] [cursor=pointer]:
+          - /url: /apps
+        - link "Poster" [ref=e929] [cursor=pointer]:
+          - /url: /apps
+        - link "Video Face Swap" [ref=e930] [cursor=pointer]:
+          - /url: /app/video-face-swap
+        - link "3D Render" [ref=e931] [cursor=pointer]:
+          - /url: /apps
+        - link "Bullet Time Scene" [ref=e932] [cursor=pointer]:
+          - /url: /apps
+        - link "Chameleon" [ref=e933] [cursor=pointer]:
+          - /url: /apps
+        - link "ASMR Host" [ref=e934] [cursor=pointer]:
+          - /url: /apps
+        - link "3D Figure" [ref=e935] [cursor=pointer]:
+          - /url: /apps
+        - link "ASMR Promo" [ref=e936] [cursor=pointer]:
+          - /url: /apps
+        - link "Packshot" [ref=e937] [cursor=pointer]:
+          - /url: /apps
+        - link "Macro Scene" [ref=e938] [cursor=pointer]:
+          - /url: /apps
+        - link "Magic button" [ref=e939] [cursor=pointer]:
+          - /url: /apps
+        - link "Truck Ad" [ref=e940] [cursor=pointer]:
+          - /url: /apps
+        - link "Giant Product" [ref=e941] [cursor=pointer]:
+          - /url: /apps
+        - link "Outfit Shot" [ref=e942] [cursor=pointer]:
+          - /url: /apps
+        - link "Yes Kiss" [ref=e943] [cursor=pointer]:
+          - /url: /apps
+        - link "Bullet Time White" [ref=e944] [cursor=pointer]:
+          - /url: /apps
+        - link "Kick Ad" [ref=e945] [cursor=pointer]:
+          - /url: /apps
+        - link "Billboard Ad" [ref=e946] [cursor=pointer]:
+          - /url: /apps
+        - link "Graffiti Ad" [ref=e947] [cursor=pointer]:
+          - /url: /apps
+        - link "Bullet Time Splash" [ref=e948] [cursor=pointer]:
+          - /url: /apps
+        - link "Fridge Ad" [ref=e949] [cursor=pointer]:
+          - /url: /apps
+        - link "Volcano Ad" [ref=e950] [cursor=pointer]:
+          - /url: /apps
+        - link "Macroshot product" [ref=e951] [cursor=pointer]:
+          - /url: /apps
+        - link "Latex" [ref=e952] [cursor=pointer]:
+          - /url: /apps
+        - link "Pixel Game" [ref=e953] [cursor=pointer]:
+          - /url: /apps
+        - link "GTAI" [ref=e954] [cursor=pointer]:
+          - /url: /apps
+        - link "J-Magazine" [ref=e955] [cursor=pointer]:
+          - /url: /apps
+        - link "Roller Coaster" [ref=e956] [cursor=pointer]:
+          - /url: /apps
+        - link "Brick Cube" [ref=e957] [cursor=pointer]:
+          - /url: /apps
+        - link "60s Cafe" [ref=e958] [cursor=pointer]:
+          - /url: /apps
+        - link "Victory Card" [ref=e959] [cursor=pointer]:
+          - /url: /apps
+        - link "Sand Worm" [ref=e960] [cursor=pointer]:
+          - /url: /apps
+        - link "Skibidi" [ref=e961] [cursor=pointer]:
+          - /url: /apps
+        - link "J-Poster" [ref=e962] [cursor=pointer]:
+          - /url: /apps
+        - link "Mascot" [ref=e963] [cursor=pointer]:
+          - /url: /apps
+        - link "Storm Creature" [ref=e964] [cursor=pointer]:
+          - /url: /apps
+        - link "3D Rotation" [ref=e965] [cursor=pointer]:
+          - /url: /apps
+        - link "Burning Sunset" [ref=e966] [cursor=pointer]:
+          - /url: /apps
+        - link "Sketch-to-Real" [ref=e967] [cursor=pointer]:
+          - /url: /apps
+        - link "On Fire" [ref=e968] [cursor=pointer]:
+          - /url: /apps
+        - link "Comic Book" [ref=e969] [cursor=pointer]:
+          - /url: /apps
+        - link "Cloud Surf" [ref=e970] [cursor=pointer]:
+          - /url: /apps
+        - link "Mukbang" [ref=e971] [cursor=pointer]:
+          - /url: /apps
+        - link "Melting Doodle" [ref=e972] [cursor=pointer]:
+          - /url: /apps
+        - link "Giallo Horror" [ref=e973] [cursor=pointer]:
+          - /url: /apps
+        - link "Renaissance" [ref=e974] [cursor=pointer]:
+          - /url: /apps
+        - link "Rap God" [ref=e975] [cursor=pointer]:
+          - /url: /apps
+        - link "Mugshot" [ref=e976] [cursor=pointer]:
+          - /url: /apps
+        - link "Ghoulgao" [ref=e977] [cursor=pointer]:
+          - /url: /apps
+        - link "Social Media Icon" [ref=e978] [cursor=pointer]:
+          - /url: /apps
+        - link "Cosplay Ahegao" [ref=e979] [cursor=pointer]:
+          - /url: /apps
+        - link "Idol" [ref=e980] [cursor=pointer]:
+          - /url: /apps
+        - link "Banana Eating" [ref=e981] [cursor=pointer]:
+          - /url: /apps
+        - link "AI Meme Generator" [ref=e982] [cursor=pointer]:
+          - /url: /app/meme-generator
+        - link "Headshot Generator" [ref=e983] [cursor=pointer]:
+          - /url: /app/ai-headshot-generator
+        - link "Expand image" [ref=e984] [cursor=pointer]:
+          - /url: /app/expand-image
+        - link "Video Background Remover" [ref=e985] [cursor=pointer]:
+          - /url: /app/video-background-remover
+        - link "Background Remover" [ref=e986] [cursor=pointer]:
+          - /url: /app/image-background-remover
+        - link "Color grading" [ref=e987] [cursor=pointer]:
+          - /url: /app/color-grading
+      - link "View all of Higgsfield Apps" [ref=e1017] [cursor=pointer]:
+        - /url: /apps
+        - text: View all of Higgsfield Apps
+        - img [ref=e1018]
+    - generic [ref=e1020]:
+      - generic [ref=e1021]:
+        - link "Higgsfield Soul" [ref=e1022] [cursor=pointer]:
+          - /url: /soul
+        - paragraph [ref=e1023]: Higgsfield's first high-aesthetic photo model
+      - link "View all of Higgsfield Soul" [ref=e1053] [cursor=pointer]:
+        - /url: /soul
+        - text: View all of Higgsfield Soul
+        - img [ref=e1054]
+    - generic [ref=e1056]:
+      - generic [ref=e1057]:
+        - link "Kling 2.5 Turbo" [ref=e1058] [cursor=pointer]:
+          - /url: /kling
+        - paragraph [ref=e1059]: Next-gen video creation powered by exclusive presets, seamless transitions, and pro-grade VFX.
+      - group [ref=e1063]:
+        - link "Raven Transition" [ref=e1064] [cursor=pointer]:
+          - /url: /motion/bbab2a35-ccba-45df-8c37-8ea2bd9e395a
+        - link "Air Bending" [ref=e1065] [cursor=pointer]:
+          - /url: /motion/c4dd8cc3-79a6-4366-b9a1-071ad848ddd2
+        - link "Animalization" [ref=e1066] [cursor=pointer]:
+          - /url: /motion/4678bff4-63e0-4272-a961-9b0b0c0746b1
+        - link "Water Bending" [ref=e1067] [cursor=pointer]:
+          - /url: /motion/b3c9d6c2-e1c9-4d92-8853-9d2d46e4b294
+        - link "Earth Wave" [ref=e1068] [cursor=pointer]:
+          - /url: /motion/fb52e9a0-c6e2-498e-8adb-6611b80808e3
+        - link "Giant Grab" [ref=e1069] [cursor=pointer]:
+          - /url: /motion/3f30deaa-dd4a-45c0-be8c-f350fc1008dc
+        - link "Shadow Smoke" [ref=e1070] [cursor=pointer]:
+          - /url: /motion/881b5e78-e585-43fb-ac73-a4207d824c88
+        - link "Splash Transition" [ref=e1071] [cursor=pointer]:
+          - /url: /motion/105c744b-05bf-44ae-ba34-5a7144f4ec46
+        - link "Firelava" [ref=e1072] [cursor=pointer]:
+          - /url: /motion/eeaa42bc-d607-464e-b21f-b7fb8b1cb3fc
+        - link "Flame Transition" [ref=e1073] [cursor=pointer]:
+          - /url: /motion/6641ebf5-1e07-4a8a-a435-b0ea374861e8
+        - link "Melt Transition" [ref=e1074] [cursor=pointer]:
+          - /url: /motion/f064aa72-eb21-4691-a827-5f0fa9f4246c
+        - link "Flying Cam Transition" [ref=e1075] [cursor=pointer]:
+          - /url: /motion/e43378b9-b20b-4158-a626-745bbbcacdbd
+        - link "Beast Appearance" [ref=e1076] [cursor=pointer]:
+          - /url: /motion/53f9cea8-9195-45a0-accd-36d6c6454a01
+        - link "Ballet" [ref=e1077] [cursor=pointer]:
+          - /url: /motion/1b355f18-38f9-4d9e-bd25-d68f2af9c9db
+        - link "Aerial Pullback" [ref=e1078] [cursor=pointer]:
+          - /url: /motion/a0bfa1b6-2dc7-4bbe-889f-fc04c27288ba
+        - link "I Can Fly" [ref=e1079] [cursor=pointer]:
+          - /url: /motion/929856d2-448b-40ad-8781-297e02af0ae7
+        - link "Fire Element" [ref=e1080] [cursor=pointer]:
+          - /url: /motion/840c84e3-dc46-4ee6-8ad4-48c82bb6e427
+        - link "Hand Transition" [ref=e1081] [cursor=pointer]:
+          - /url: /motion/7e9ac07e-703b-4b48-a466-d561d3d9c536
+        - link "Trucksition" [ref=e1082] [cursor=pointer]:
+          - /url: /motion/81c90748-7852-4bb1-a0ec-1649beb72024
+        - link "Pizza Fall" [ref=e1083] [cursor=pointer]:
+          - /url: /motion/3c3a1331-3524-47da-b956-688595c295b7
+        - link "Cyborg" [ref=e1084] [cursor=pointer]:
+          - /url: /motion/1f96bfce-ebca-4eb5-a521-0ccd4f1d73d9
+        - link "Earth Element" [ref=e1085] [cursor=pointer]:
+          - /url: /motion/804cfc3a-e251-4ddf-86d4-46066d0ff7be
+        - link "Smoke Transition" [ref=e1086] [cursor=pointer]:
+          - /url: /motion/efb77740-741f-419d-ae8d-cf487e01a6e9
+        - link "Cotton Cloud" [ref=e1087] [cursor=pointer]:
+          - /url: /motion/588486b6-f303-4e2a-b8b0-2b74b01a5f50
+        - link "Werewolf" [ref=e1088] [cursor=pointer]:
+          - /url: /motion/5f3f83b8-6a17-47ba-bcfd-f7f41d9997e3
+        - link "Visor X" [ref=e1089] [cursor=pointer]:
+          - /url: /motion/94ed54b9-7db0-4778-a8ec-0729ef092b46
+        - link "Jump Transition" [ref=e1090] [cursor=pointer]:
+          - /url: /motion/38f4643a-581b-40d8-bcd6-983aecf12430
+        - link "Firework" [ref=e1091] [cursor=pointer]:
+          - /url: /motion/75b85450-71d1-43f2-bbc0-e51157660ac4
+        - link "Multiverse" [ref=e1092] [cursor=pointer]:
+          - /url: /motion/5949fec9-f70e-45d5-8ab9-5544bb18dd72
+        - link "Gorilla Transfer" [ref=e1093] [cursor=pointer]:
+          - /url: /motion/2f000456-93b5-482d-acb4-831f43095efa
+        - link "Display Transition" [ref=e1094] [cursor=pointer]:
+          - /url: /motion/cf852c5b-8e2a-45b7-807e-2a35b2636a3f
+        - link "Luminous Gaze" [ref=e1095] [cursor=pointer]:
+          - /url: /motion/2ee4c224-356e-40d8-a0a7-55a03fd907d9
+        - link "Intermission" [ref=e1096] [cursor=pointer]:
+          - /url: /motion/a15c924e-281b-4d58-a103-b5eb3276799a
+        - link "Logo Transform" [ref=e1097] [cursor=pointer]:
+          - /url: /motion/0bdae83d-f241-4f8c-a925-619de6feaacd
+        - link "Sakura Petals" [ref=e1098] [cursor=pointer]:
+          - /url: /motion/cbc75d4d-2e42-4688-a384-0d6e03e375da
+        - link "Seamless Transition" [ref=e1099] [cursor=pointer]:
+          - /url: /motion/77ff4447-ab4c-4816-bb79-bff2f4a4f34f
+        - link "Mystification" [ref=e1100] [cursor=pointer]:
+          - /url: /motion/a3179faa-bd6e-4c2f-be7f-b74425c740bd
+        - link "Monstrosity" [ref=e1101] [cursor=pointer]:
+          - /url: /motion/c918c004-b1fa-482f-8a4b-a23018036b77
+        - link "Northern Lights" [ref=e1102] [cursor=pointer]:
+          - /url: /motion/e64ba623-e3dc-4149-95f5-2747c5faba6a
+        - link "Plasma Explosion" [ref=e1103] [cursor=pointer]:
+          - /url: /motion/fda25365-9d4e-4f0f-9bd4-ed2cc5ae6981
+        - link "Starship Troopers" [ref=e1104] [cursor=pointer]:
+          - /url: /motion/e99ef547-5a85-4c5a-a7ce-a87eaa9981a4
+        - link "Aquarium" [ref=e1105] [cursor=pointer]:
+          - /url: /motion/a5aad83f-c66b-44eb-a781-85132636253f
+        - link "Color Rain" [ref=e1106] [cursor=pointer]:
+          - /url: /motion/3a95cd41-baeb-4e31-9347-3aa69eed3f51
+        - link "Ice rose" [ref=e1107] [cursor=pointer]:
+          - /url: /motion/9988713b-2215-4105-bc83-c92518dd2062
+        - link "Saint Glow" [ref=e1108] [cursor=pointer]:
+          - /url: /motion/5772cc26-730f-4fb2-945b-fa4c5313feca
+        - link "Nature Bloom" [ref=e1109] [cursor=pointer]:
+          - /url: /motion/fb65290f-a8ff-4cb5-8089-01347d23838a
+        - link "Hole Transition" [ref=e1110] [cursor=pointer]:
+          - /url: /motion/b03d3554-d088-49a4-8050-bda4bd2e456e
+        - link "Stranger Transition" [ref=e1111] [cursor=pointer]:
+          - /url: /motion/2d1f292c-d0d8-4481-8eb9-fb113f64f193
+        - link "Objects Around" [ref=e1112] [cursor=pointer]:
+          - /url: /motion/0275bb9f-7e50-4d45-84e4-3cb9dcbdd126
+        - link "Horror Face" [ref=e1113] [cursor=pointer]:
+          - /url: /motion/41ed27a0-8d93-482a-b743-17bb68af9e94
+        - link "Water Element" [ref=e1114] [cursor=pointer]:
+          - /url: /motion/ef6175ef-51dc-4cbe-926a-b82dbce66ec8
+        - link "Wonderland" [ref=e1115] [cursor=pointer]:
+          - /url: /motion/4ef29c6b-44de-4309-8101-19b021db4abd
+        - link "Tattoo Animation" [ref=e1116] [cursor=pointer]:
+          - /url: /motion/d5ff2bb8-d82d-4ade-b807-e075af15aae6
+        - link "Column Wipe" [ref=e1117] [cursor=pointer]:
+          - /url: /motion/0b316480-075a-4999-bfde-c9710c0c6804
+        - link "Air Element" [ref=e1118] [cursor=pointer]:
+          - /url: /motion/fb95a6f4-00c2-4011-876f-0979b4d57d52
+        - link "Fairies Around" [ref=e1119] [cursor=pointer]:
+          - /url: /motion/94dc9474-0a60-4f19-986d-6d7cac26aa14
+      - link "View all of Kling 2.5 Turbo" [ref=e1149] [cursor=pointer]:
+        - /url: /kling
+        - text: View all of Kling 2.5 Turbo
+        - img [ref=e1150]
+    - generic [ref=e1152]:
+      - heading "Explore more ai features" [level=2] [ref=e1153]
+      - generic [ref=e1154]:
+        - link "Cinema Studio" [ref=e1155] [cursor=pointer]:
+          - /url: /cinematic-video-generator
+        - link "Visual Effects" [ref=e1156] [cursor=pointer]:
+          - /url: /ai/video
+        - link "Higgsfield Soul" [ref=e1157] [cursor=pointer]:
+          - /url: /image/soul
+        - link "Higgsfield Apps" [ref=e1158] [cursor=pointer]:
+          - /url: /apps
+        - link "Kling 2.1 Master" [ref=e1159] [cursor=pointer]:
+          - /url: /ai/video?model=kling-v2-1-master
+        - link "Camera Controls" [ref=e1160] [cursor=pointer]:
+          - /url: /ai/video
+        - link "Viral" [ref=e1161] [cursor=pointer]:
+          - /url: /ai/video
+        - link "Action movements" [ref=e1162] [cursor=pointer]:
+          - /url: /ai/video
+        - link "Commercial" [ref=e1163] [cursor=pointer]:
+          - /url: /ai/video
+        - link "MiniMax Hailuo 02" [ref=e1164] [cursor=pointer]:
+          - /url: /ai/video?model=minimax
+        - link "Seedance Pro" [ref=e1165] [cursor=pointer]:
+          - /url: /ai/video?model=seedance_pro
+        - link "Community" [ref=e1166] [cursor=pointer]:
+          - /url: /community
+        - link "Wan 2.2 Image" [ref=e1167] [cursor=pointer]:
+          - /url: /image/wan2
+        - link "Seedream 4.0" [ref=e1168] [cursor=pointer]:
+          - /url: /image/seedream
+        - link "Nano Banana" [ref=e1169] [cursor=pointer]:
+          - /url: /image/nano_banana
+        - link "Flux Kontext" [ref=e1170] [cursor=pointer]:
+          - /url: /image/kontext
+        - link "GPT Image" [ref=e1171] [cursor=pointer]:
+          - /url: /image/gpt
+        - link "Topaz" [ref=e1172] [cursor=pointer]:
+          - /url: /upscale
+        - link "Google Veo3" [ref=e1173] [cursor=pointer]:
+          - /url: /ai/video?model=veo-3-preview
+        - link "Kling 2.5 Turbo" [ref=e1174] [cursor=pointer]:
+          - /url: /ai/video?model=kling-v2-5-turbo
+        - link "Kling Avatars 2.0" [ref=e1175] [cursor=pointer]:
+          - /url: /lipsync-studio
+        - link "Wan 2.5" [ref=e1176] [cursor=pointer]:
+          - /url: /wan-ai-video
+        - link "Sora 2" [ref=e1177] [cursor=pointer]:
+          - /url: /sora2-ai-video
+        - link "Sora 2 Presets" [ref=e1178] [cursor=pointer]:
+          - /url: /sora-2-ai-video-presets
+        - link "Banana Placement" [ref=e1179] [cursor=pointer]:
+          - /url: /image/nano_banana
+        - link "Product Placement" [ref=e1180] [cursor=pointer]:
+          - /url: /animate
+        - link "Edit Image" [ref=e1181] [cursor=pointer]:
+          - /url: /edit?model=nano_banana_pro_inpaint
+        - link "Multi Reference" [ref=e1182] [cursor=pointer]:
+          - /url: /character
+        - link "Upscale" [ref=e1183] [cursor=pointer]:
+          - /url: /upscale
+        - link "Assists" [ref=e1184] [cursor=pointer]:
+          - /url: /chat
+        - link "YouTube" [ref=e1185] [cursor=pointer]:
+          - /url: /sora-2-youtube
+        - link "TikTok" [ref=e1186] [cursor=pointer]:
+          - /url: /sora-2-tiktok
+        - link "Instagram Reels" [ref=e1187] [cursor=pointer]:
+          - /url: /sora-2-reels
+        - link "YouTube Shorts" [ref=e1188] [cursor=pointer]:
+          - /url: /sora-2-shorts
+        - link "Nano Banana Pro" [ref=e1189] [cursor=pointer]:
+          - /url: /image/nano-banana-pro
+        - link "Kling o1" [ref=e1190] [cursor=pointer]:
+          - /url: /kling-o1-video
+    - generic [ref=e1192]:
+      - generic [ref=e1193]:
+        - heading "THE ULTIMATE AI-POWERED CAMERA CONTROL FOR FILMMAKERS & CREATORS" [level=2] [ref=e1194]
+        - generic [ref=e1195]:
+          - generic [ref=e1196]:
+            - heading "Higgsfield AI" [level=3] [ref=e1197]
+            - list [ref=e1198]:
+              - listitem [ref=e1199]:
+                - link "About" [ref=e1200] [cursor=pointer]:
+                  - /url: /about
+              - listitem [ref=e1201]:
+                - link "Trust" [ref=e1202] [cursor=pointer]:
+                  - /url: /trust
+              - listitem [ref=e1203]:
+                - link "Careers" [ref=e1204] [cursor=pointer]:
+                  - /url: https://jobs.ashbyhq.com/higgsfieldai
+              - listitem [ref=e1205]:
+                - link "Contact" [ref=e1206] [cursor=pointer]:
+                  - /url: /contact
+              - listitem [ref=e1207]:
+                - link "Pricing" [ref=e1208] [cursor=pointer]:
+                  - /url: /pricing
+              - listitem [ref=e1209]:
+                - link "Apps" [ref=e1210] [cursor=pointer]:
+                  - /url: /apps
+              - listitem [ref=e1211]:
+                - link "Cinema Studio" [ref=e1212] [cursor=pointer]:
+                  - /url: /cinematic-video-generator
+              - listitem [ref=e1213]:
+                - link "Marketing Studio" [ref=e1214] [cursor=pointer]:
+                  - /url: /marketing-studio-intro
+              - listitem [ref=e1215]:
+                - link "Higgsfield Chat" [ref=e1216] [cursor=pointer]:
+                  - /url: /chat-intro
+              - listitem [ref=e1217]:
+                - link "AI Influencer" [ref=e1218] [cursor=pointer]:
+                  - /url: /ai-influencer
+              - listitem [ref=e1219]:
+                - link "Community" [ref=e1220] [cursor=pointer]:
+                  - /url: /community
+              - listitem [ref=e1221]:
+                - link "Enterprise" [ref=e1222] [cursor=pointer]:
+                  - /url: /enterprise
+              - listitem [ref=e1223]:
+                - link "Team" [ref=e1224] [cursor=pointer]:
+                  - /url: /team-plan
+              - listitem [ref=e1225]:
+                - link "Copilot" [ref=e1226] [cursor=pointer]:
+                  - /url: /chat
+              - listitem [ref=e1227]:
+                - link "Reference Extension" [ref=e1228] [cursor=pointer]:
+                  - /url: https://chromewebstore.google.com/detail/higgsfield-reference/oohmjaflbknghbidmaoonmchcodhmkgj
+              - listitem [ref=e1229]:
+                - link "Blog" [ref=e1230] [cursor=pointer]:
+                  - /url: /blog
+              - listitem [ref=e1231]:
+                - link "Contests" [ref=e1232] [cursor=pointer]:
+                  - /url: /contests
+              - listitem [ref=e1233]:
+                - link "Discord" [ref=e1234] [cursor=pointer]:
+                  - /url: https://discord.gg/higgsfield
+          - generic [ref=e1235]:
+            - heading "Image" [level=3] [ref=e1236]
+            - list [ref=e1237]:
+              - listitem [ref=e1238]:
+                - link "Create Image" [ref=e1239] [cursor=pointer]:
+                  - /url: /create-image
+              - listitem [ref=e1240]:
+                - link "AI Image" [ref=e1241] [cursor=pointer]:
+                  - /url: /ai-image
+              - listitem [ref=e1242]:
+                - link "Soul ID Character" [ref=e1243] [cursor=pointer]:
+                  - /url: /character
+              - listitem [ref=e1244]:
+                - link "Draw to Edit" [ref=e1245] [cursor=pointer]:
+                  - /url: /ai/video?image-inpaint=true
+              - listitem [ref=e1246]:
+                - link "Fashion Factory" [ref=e1247] [cursor=pointer]:
+                  - /url: /fashion-factory
+              - listitem [ref=e1248]:
+                - link "Edit Image" [ref=e1249] [cursor=pointer]:
+                  - /url: /edit?model=nano_banana_pro_inpaint
+              - listitem [ref=e1250]:
+                - link "Image Upscale" [ref=e1251] [cursor=pointer]:
+                  - /url: /upscale
+              - listitem [ref=e1252]:
+                - link "Photodump Studio" [ref=e1253] [cursor=pointer]:
+                  - /url: /photodump-studio
+              - listitem [ref=e1254]:
+                - link "Higgsfield Popcorn" [ref=e1255] [cursor=pointer]:
+                  - /url: /storyboard-generator
+              - listitem [ref=e1256]:
+                - link "Nano Banana Pro" [ref=e1257] [cursor=pointer]:
+                  - /url: /nano-banana-pro-intro
+              - listitem [ref=e1258]:
+                - link "Nano Banana 2" [ref=e1259] [cursor=pointer]:
+                  - /url: /nano-banana-2
+              - listitem [ref=e1260]:
+                - link "Prompt Guide" [ref=e1261] [cursor=pointer]:
+                  - /url: /nano-banana-pro-prompt-guide
+              - listitem [ref=e1262]:
+                - link "Flux 2" [ref=e1263] [cursor=pointer]:
+                  - /url: /flux-2-intro
+              - listitem [ref=e1264]:
+                - link "GPT Image 1.5" [ref=e1265] [cursor=pointer]:
+                  - /url: /gpt-1.5
+              - listitem [ref=e1266]:
+                - link "Inpaint" [ref=e1267] [cursor=pointer]:
+                  - /url: /image-editing
+              - listitem [ref=e1268]:
+                - link "Soul 2.0" [ref=e1269] [cursor=pointer]:
+                  - /url: /soul-intro
+              - listitem [ref=e1270]:
+                - link "Soul Cinema" [ref=e1271] [cursor=pointer]:
+                  - /url: /soul-cinema
+              - listitem [ref=e1272]:
+                - link "Soul Cast" [ref=e1273] [cursor=pointer]:
+                  - /url: /soul-cast-intro
+          - generic [ref=e1274]:
+            - heading "Video" [level=3] [ref=e1275]
+            - list [ref=e1276]:
+              - listitem [ref=e1277]:
+                - link "AI video" [ref=e1278] [cursor=pointer]:
+                  - /url: /ai-video
+              - listitem [ref=e1279]:
+                - link "Mixed media" [ref=e1280] [cursor=pointer]:
+                  - /url: /mixed-media-intro
+              - listitem [ref=e1281]:
+                - link "Sora 2 Introduction" [ref=e1282] [cursor=pointer]:
+                  - /url: /sora2-ai-video
+              - listitem [ref=e1283]:
+                - link "Veo 3.1 Introduction" [ref=e1284] [cursor=pointer]:
+                  - /url: /veo3.1
+              - listitem [ref=e1285]:
+                - link "Create Video" [ref=e1286] [cursor=pointer]:
+                  - /url: /create-video
+              - listitem [ref=e1287]:
+                - link "Lipsync Studio" [ref=e1288] [cursor=pointer]:
+                  - /url: /lipsync-studio
+              - listitem [ref=e1289]:
+                - link "Talking Avatar" [ref=e1290] [cursor=pointer]:
+                  - /url: /lipsync-studio
+              - listitem [ref=e1291]:
+                - link "Draw to Video" [ref=e1292] [cursor=pointer]:
+                  - /url: /ai/video?video-inpaint=true&generationType=video
+              - listitem [ref=e1293]:
+                - link "UGC Factory" [ref=e1294] [cursor=pointer]:
+                  - /url: /ugc-factory
+              - listitem [ref=e1295]:
+                - link "Video Upscale" [ref=e1296] [cursor=pointer]:
+                  - /url: /upscale
+              - listitem [ref=e1297]:
+                - link "Kling 3.0" [ref=e1298] [cursor=pointer]:
+                  - /url: /kling-3.0
+              - listitem [ref=e1299]:
+                - link "WAN 2.6" [ref=e1300] [cursor=pointer]:
+                  - /url: /wan-2.6
+              - listitem [ref=e1301]:
+                - link "Seedance 2.0" [ref=e1302] [cursor=pointer]:
+                  - /url: /seedance/2.0
+          - generic [ref=e1303]:
+            - heading "Edit" [level=3] [ref=e1304]
+            - list [ref=e1305]:
+              - listitem [ref=e1306]:
+                - link "Banana Placement" [ref=e1307] [cursor=pointer]:
+                  - /url: /edit?model=banana_placement
+              - listitem [ref=e1308]:
+                - link "Product Placement" [ref=e1309] [cursor=pointer]:
+                  - /url: /edit?model=canvas
+              - listitem [ref=e1310]:
+                - link "Edit Image" [ref=e1311] [cursor=pointer]:
+                  - /url: /edit?model=nano_banana_pro_inpaint
+              - listitem [ref=e1312]:
+                - link "Multi Reference" [ref=e1313] [cursor=pointer]:
+                  - /url: /edit?model=multi
+              - listitem [ref=e1314]:
+                - link "Upscale" [ref=e1315] [cursor=pointer]:
+                  - /url: /upscale
+              - listitem [ref=e1316]:
+                - link "Sora 2 Upscale" [ref=e1317] [cursor=pointer]:
+                  - /url: /sora-2-upscale
+      - generic [ref=e1318]:
+        - paragraph [ref=e1320]: 535 Mission St, 14th floor, San Francisco, CA, 94105
+        - list [ref=e1321]:
+          - listitem [ref=e1322]:
+            - link "X / Twitter" [ref=e1323] [cursor=pointer]:
+              - /url: https://x.com/higgsfield
+          - listitem [ref=e1324]:
+            - link "Youtube" [ref=e1325] [cursor=pointer]:
+              - /url: https://www.youtube.com/@HiggsfieldAI
+          - listitem [ref=e1326]:
+            - link "Instagram" [ref=e1327] [cursor=pointer]:
+              - /url: https://www.instagram.com/higgsfield.ai
+          - listitem [ref=e1328]:
+            - link "LinkedIn" [ref=e1329] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/higgsfield
+          - listitem [ref=e1330]:
+            - link "Tiktok" [ref=e1331] [cursor=pointer]:
+              - /url: https://www.tiktok.com/@higgsfield.ai90
+  - contentinfo [ref=e1332]:
+    - navigation [ref=e1333]:
+      - paragraph [ref=e1334]:
+        - generic [ref=e1335]: © 2026 Higgsfield AI™.
+        - text: All rights reserved.
+      - list [ref=e1336]:
+        - listitem [ref=e1337]:
+          - link "Press" [ref=e1338] [cursor=pointer]:
+            - /url: mailto:press@higgsfield.ai
+        - listitem [ref=e1339]:
+          - link "Creative Challenge" [ref=e1340] [cursor=pointer]:
+            - /url: /creative-challenge
+        - listitem [ref=e1341]:
+          - link "Privacy" [ref=e1342] [cursor=pointer]:
+            - /url: /privacy-policy
+        - listitem [ref=e1343]:
+          - link "Terms" [ref=e1344] [cursor=pointer]:
+            - /url: /terms-of-use-agreement
+        - listitem [ref=e1345]:
+          - link "Cookie Notice" [ref=e1346] [cursor=pointer]:
+            - /url: /cookie-notice
+  - region "Notifications Alt+T"
+  - alert [ref=e1347]

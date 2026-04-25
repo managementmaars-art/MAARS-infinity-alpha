@@ -7,7 +7,6 @@ ROOT_DIR = Path(__file__).parent.parent
 load_dotenv(ROOT_DIR / '.env')
 
 # LLM Settings
-EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
 
 # Email Settings
 SMTP_EMAIL = os.environ.get('SMTP_EMAIL', '')
@@ -18,7 +17,12 @@ STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY', '')
 
 # Direct API Keys (can be overridden from admin panel via DB)
 # All 33 providers: 32 text/LLM + ElevenLabs voice/TTS
+_BYTEZ_KEY = os.environ.get('BYTEZ_API_KEY', '')
+_WRITER_KEY = os.environ.get('WRITER_API_KEY', '')
+
 DIRECT_API_KEYS = {
+    "bytez":        _BYTEZ_KEY,
+    "writer":       _WRITER_KEY,
     # ── Flagship ─────────────────────────────────────────────────────────────
     "openai":     os.environ.get('OPENAI_API_KEY', ''),
     "anthropic":  os.environ.get('ANTHROPIC_API_KEY', ''),
@@ -44,10 +48,11 @@ DIRECT_API_KEYS = {
     "novita":    os.environ.get('NOVITA_API_KEY', ''),
     "lepton":    os.environ.get('LEPTON_API_KEY', ''),
     "lambda":    os.environ.get('LAMBDA_API_KEY', '') or os.environ.get('LAMBDA_LABS_API_KEY', ''),
-    "amazon":    os.environ.get('AMAZON_API_KEY', '') or os.environ.get('AWS_BEDROCK_API_KEY', ''),
+    "amazon":    os.environ.get('AMAZON_API_KEY', '') or os.environ.get('AWS_BEDROCK_API_KEY', '') or os.environ.get('AWS_ACCESS_KEY_ID', ''),
     "minimax":   os.environ.get('MINIMAX_API_KEY', ''),
     "inception": os.environ.get('INCEPTION_API_KEY', ''),
     "arcee":     os.environ.get('ARCEE_API_KEY', ''),
+    "reka":      os.environ.get('REKA_API_KEY', ''),
     # ── Regional & Enterprise ─────────────────────────────────────────────────
     "yi":          os.environ.get('YI_API_KEY', '') or os.environ.get('ZERO_ONE_API_KEY', ''),
     "zhipu":       os.environ.get('ZHIPU_API_KEY', '') or os.environ.get('GLM_API_KEY', ''),
@@ -57,8 +62,28 @@ DIRECT_API_KEYS = {
     "writer":      os.environ.get('WRITER_API_KEY', '') or os.environ.get('PALMYRA_API_KEY', ''),
     "huggingface": os.environ.get('HUGGINGFACE_API_KEY', '') or os.environ.get('HF_TOKEN', ''),
     "llama":       os.environ.get('LLAMA_API_KEY', '') or os.environ.get('META_API_KEY', ''),
+    # ── Meta-routers ─────────────────────────────────────────────────────────
+    "openrouter": os.environ.get('OPENROUTER_API_KEY', ''),
+    "bytez":      os.environ.get('BYTEZ_API_KEY', ''),
     # ── Voice / TTS ───────────────────────────────────────────────────────────
     "elevenlabs": os.environ.get('ELEVENLABS_API_KEY', ''),
+    # ── Media / image / video / STT providers ─────────────────────────────────
+    # Fal hosts 8+ video models (LTX, Kling, Veo, Hailuo, Pika, Luma, Mochi,
+    # CogVideoX) + FLUX image + MusicGen. Setting this one key unlocks the
+    # entire premium media catalog for $0.02-0.05 per generation.
+    "fal":        os.environ.get('FAL_KEY', '') or os.environ.get('FAL_API_KEY', ''),
+    # Deepgram Nova-2 gives 45,000 STT minutes/month FREE + ~300ms latency.
+    # Primary STT path when configured; OpenAI Whisper remains fallback.
+    "deepgram":   os.environ.get('DEEPGRAM_API_KEY', ''),
+    # Replicate hosts everything — Runway, Pika, Kling, Suno, Musicgen,
+    # SDXL, FLUX, etc. Optional, but fills gaps Fal doesn't cover.
+    "replicate":  os.environ.get('REPLICATE_API_KEY', '') or os.environ.get('REPLICATE_API_TOKEN', ''),
+    # Stability AI direct for SD3/SDXL image + SVD video.
+    "stability":  os.environ.get('STABILITY_API_KEY', ''),
+    # Optional: Ideogram (text-in-image king), Runway (Gen-3), Pika direct.
+    "ideogram":   os.environ.get('IDEOGRAM_API_KEY', ''),
+    "runway":     os.environ.get('RUNWAY_API_KEY', ''),
+    "pika":       os.environ.get('PIKA_API_KEY', ''),
 }
 
 # Upload directory - configurable via environment variable
@@ -317,7 +342,77 @@ SUBSCRIPTION_PLANS = {
             "Executive support hotline", "Custom contract & billing",
         ],
     },
+    "white_label": {
+        "name": "White Label",
+        "price_usd": 19999.0,
+        "price_bdt": 2139893.0,
+        "credits": 20000,
+        "max_agents": 458,
+        "max_custom_agents": -1,
+        "includes_commander": True,
+        "max_team_members": -1,
+        "monthly_cap_usd": 60.0,
+        "features": [
+            "Every feature in Elite — unlimited agents, seats, credits",
+            "Full white-label: your brand, your domain, your UI",
+            "Dedicated deployment on infrastructure you own",
+            "Co-pilot onboarding for your first 5 seats (live)",
+            "Custom integrations + private tool nodes",
+            "Reseller terms available — you bill your clients directly",
+            "Quarterly strategic review + named engineering contact",
+            "SLA with financial remedy; 24/7 critical-path escalation",
+        ],
+    },
 }
+
+# ---------------------------------------------------------------------------
+# Subscription split — operator profit-share % per plan.
+# Injected post-definition so the existing SUBSCRIPTION_PLANS structure stays
+# readable. Free tier has 0 share (no revenue to split). Higher tiers retain
+# more profit because their absolute provider cost-vs-margin ratio is better.
+# Owner can override per-plan via /admin/pricing or the in-app pricing manager.
+# ---------------------------------------------------------------------------
+_DEFAULT_OPERATOR_SPLITS = {
+    "free":         0.0,
+    "starter":      0.30,
+    "essential":    0.30,
+    "basic":        0.32,
+    "standard":     0.32,
+    "professional": 0.32,
+    "advanced":     0.35,
+    "business":     0.35,
+    "agency":       0.35,
+    "studio":       0.40,
+    "enterprise":   0.40,
+    "corporate":    0.40,
+    "elite":        0.40,
+    "white_label":  0.45,
+}
+for _pid, _split in _DEFAULT_OPERATOR_SPLITS.items():
+    if _pid in SUBSCRIPTION_PLANS:
+        SUBSCRIPTION_PLANS[_pid].setdefault("operator_share_pct", _split)
+
+
+# ---------------------------------------------------------------------------
+# Credits ↔ USD conversion rate.
+#
+# 1 credit = $0.001  →  CREDITS_PER_USD = 1000
+#
+# This is the SINGLE source of truth that ties three things together:
+#   1. Subscription split — when a user pays for a plan, the user-backing
+#      portion of the cash (price × (1 - operator_share_pct)) is converted into
+#      a spendable credit balance via this rate.
+#   2. Per-call pricing — actual provider cost in USD is converted into
+#      credits via this rate so user balance drains in real terms, not in a
+#      flat per-model count.
+#   3. Operator profit math — operator dashboards convert credit revenue back
+#      to USD using this rate when computing margin.
+#
+# Owner-tunable in `platform_config.config_type="pricing"` under key
+# `credits_per_usd`. Loaded into this constant at startup.
+# ---------------------------------------------------------------------------
+CREDITS_PER_USD = 1000
+
 
 # Custom agent creation cost (mutable - updated from DB on startup)
 CUSTOM_AGENT_CREDIT_COST = 20
@@ -476,15 +571,6 @@ INTEGRATION_SERVICES = {
         "capabilities": ["leads", "opportunities", "accounts", "cases", "reports", "workflows"],
         "oauth_url": "https://developer.salesforce.com/",
         "docs_url": "https://developer.salesforce.com/docs",
-    },
-    "zapier": {
-        "name": "Zapier",
-        "key_fields": ["webhook_url"],
-        "description": "Trigger downstream automations and cross-system workflows with Zapier webhooks",
-        "category": "automation",
-        "capabilities": ["webhook", "trigger", "workflow", "fan_out", "notifications"],
-        "oauth_url": "https://zapier.com/app/developer",
-        "docs_url": "https://platform.zapier.com/docs",
     },
     "webhooks": {
         "name": "Custom Webhooks",

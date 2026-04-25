@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../App";
 import { Network, ChevronRight, Users, Layers, Search, Bot, MessageSquare } from "lucide-react";
 
-const API = process.env.REACT_APP_BACKEND_URL?.trim() || "http://localhost:8000";
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const LAYER_COLORS = {
   infrastructure: "emerald",

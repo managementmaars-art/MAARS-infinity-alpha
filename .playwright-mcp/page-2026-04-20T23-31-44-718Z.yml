@@ -1,0 +1,28 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - link "MAARS Command" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7]: MAARS Command
+        - generic [ref=e8]:
+          - link "Pricing" [ref=e9] [cursor=pointer]:
+            - /url: /pricing
+          - link "Blog" [ref=e10] [cursor=pointer]:
+            - /url: /blog
+          - link "Changelog" [ref=e11] [cursor=pointer]:
+            - /url: /changelog
+          - link "Login" [ref=e12] [cursor=pointer]:
+            - /url: /login
+    - generic [ref=e13]:
+      - paragraph [ref=e14]: Blog
+      - heading "Practical AI-workforce playbooks" [level=1] [ref=e15]
+      - paragraph [ref=e16]: How operators use MAARS agents to ship outbound, content, and automation that would take a full team.
+      - paragraph [ref=e17]: Loading…
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

@@ -1,0 +1,48 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic:
+      - iframe [ref=e3]:
+        
+      - generic:
+        - document
+    - generic [ref=e7]:
+      - link "BytePlus Logo" [ref=e8] [cursor=pointer]:
+        - /url: https://www.byteplus.com/
+        - img "BytePlus Logo" [ref=e9]
+      - generic [ref=e18]:
+        - heading "Sign up for BytePlus" [level=1] [ref=e19]
+        - generic [ref=e20]: Create an account on BytePlus with this Google account
+        - generic [ref=e21]:
+          - img [ref=e23]
+          - generic [ref=e24]:
+            - generic [ref=e25]: Mirza Arafat Abbas
+            - generic [ref=e26]: ma****ment.maars@marsgc.net
+          - img [ref=e28]
+        - generic [ref=e29] [cursor=pointer]:
+          - checkbox "I have read and agree with the BytePlus Customer Agreement, Terms of service and have read the Privacy Policy."
+          - generic [ref=e30]:
+            - generic [ref=e32]:
+              - checkbox
+            - generic [ref=e36]:
+              - text: I have read and agree with the BytePlus
+              - link "Customer Agreement" [ref=e37]:
+                - /url: https://docs.byteplus.com/legal/docs/customer-agreement
+              - text: ","
+              - link "Terms of service" [ref=e38]:
+                - /url: https://docs.byteplus.com/legal/docs/terms-of-service
+              - text: and have read the
+              - link "Privacy Policy" [ref=e39]:
+                - /url: https://docs.byteplus.com/legal/docs/privacy-policy
+              - text: .
+        - generic [ref=e40] [cursor=pointer]:
+          - checkbox "Sign me up to receive updates, event information, and marketing promotions from BytePlus by email, phone or SMS. I understand that I can opt-out at any time."
+          - generic [ref=e41]:
+            - generic [ref=e43]:
+              - checkbox
+            - generic [ref=e47]: Sign me up to receive updates, event information, and marketing promotions from BytePlus by email, phone or SMS. I understand that I can opt-out at any time.
+        - button "Sign up" [disabled] [ref=e49]
+  - generic:
+    - iframe [ref=e50]:
+      
+    - generic:
+      - document

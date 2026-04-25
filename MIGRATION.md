@@ -91,17 +91,16 @@ npm start
 
 ## 6. Skills Seeding (optional, if DB is fresh)
 
-```bash
-cd ..   # project root
-python create_skills_batch.py
-# Run additional batches as needed: create_skills_batch2.py ... create_skills_batch119.py
-```
-
-Or use the ingest script:
+The skill catalog (~58k cleaned SKILL.md files) lives at `.claude/skills/` and is
+loaded by the backend at agent creation time. To (re)ingest into MongoDB:
 
 ```bash
 python backend/scripts/ingest_skills.py
 ```
+
+Historical batch-creation scripts from earlier migrations (create_skills_batch*.py,
+harvest_all_skills.py, fetch_skillsmp*.py, etc.) are archived in `scripts/legacy/`
+for reference only — they are no longer part of the normal setup flow.
 
 ## 7. Docker (alternative to manual setup)
 

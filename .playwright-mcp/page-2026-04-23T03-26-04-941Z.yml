@@ -1,0 +1,49 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - navigation [ref=e5]:
+        - link "Home" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - link "Docs" [ref=e7] [cursor=pointer]:
+          - /url: https://docs.fal.ai
+        - link "Blog" [ref=e8] [cursor=pointer]:
+          - /url: https://blog.fal.ai
+        - link "Pricing" [ref=e9] [cursor=pointer]:
+          - /url: /pricing
+        - link "Enterprise" [ref=e10] [cursor=pointer]:
+          - /url: /enterprise
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - img [ref=e14]
+          - generic [ref=e19]:
+            - heading "Welcome to fal 👋" [level=1] [ref=e20]
+            - paragraph [ref=e21]: Login or sign up
+        - generic [ref=e23]:
+          - link "Continue with GitHub" [ref=e25] [cursor=pointer]:
+            - /url: /api/auth/v2/connect/github?returnTo=%2Fdashboard%2Fkeys
+            - img [ref=e26]
+            - text: Continue with GitHub
+          - link "Continue with Google" [ref=e29] [cursor=pointer]:
+            - /url: /api/auth/v2/connect/google?returnTo=%2Fdashboard%2Fkeys
+            - img [ref=e30]
+            - text: Continue with Google
+          - generic [ref=e33] [cursor=pointer]: Continue with SSO
+          - generic [ref=e34]:
+            - text: By clicking continue, you agree to our
+            - link "Terms of Service" [ref=e35] [cursor=pointer]:
+              - /url: /legal/terms-of-service
+            - text: and
+            - link "Privacy Policy" [ref=e36] [cursor=pointer]:
+              - /url: /legal/privacy-policy
+        - generic [ref=e37]:
+          - text: Don't have an account yet?
+          - link "Sign up" [ref=e38] [cursor=pointer]:
+            - /url: /api/auth/v2/connect/github?returnTo=%2Fdashboard%2Fkeys
+    - generic [ref=e43]:
+      - paragraph [ref=e44]: Need help with your account?
+      - paragraph [ref=e45]:
+        - text: No worries —
+        - link "get in touch" [ref=e46] [cursor=pointer]:
+          - /url: mailto:support@fal.ai
+        - text: and our support team will sort it out for you.
+  - region "Notifications alt+T"

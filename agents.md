@@ -56,3 +56,14 @@ MAARS Infinity Alpha is a full-stack AI operations platform with a React fronten
 2. Start backend from `backend/` with uvicorn entry for `server:app`.
 3. Install frontend deps and run `yarn start` from `frontend/`.
 4. Validate `/api/health` and authentication flow before feature testing.
+
+## Memory Auto-Update Protocol (Mandatory)
+- After every completed task or meaningful code/config change, append one new entry to `MEMORY.md`.
+- Use one entry per task batch to avoid duplicates; if continuing the same batch, update that batch section instead of creating a new duplicate section.
+- Include:
+  - date/time
+  - objective
+  - files changed
+  - verification done (tests/build/API checks)
+  - remaining work / next step
+- If no files changed, still log a brief status entry with reason (for traceability).

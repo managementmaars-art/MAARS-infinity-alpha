@@ -1,0 +1,266 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e5]:
+      - button [ref=e6] [cursor=pointer]:
+        - img [ref=e7]
+      - link "bytez" [ref=e9] [cursor=pointer]:
+        - /url: /
+  - generic [ref=e10]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - generic "Search" [ref=e15]:
+          - link "Search" [ref=e16] [cursor=pointer]:
+            - /url: /search
+            - img [ref=e18]
+            - generic [ref=e20]:
+              - generic: Search
+        - separator [ref=e21]
+        - generic "Keep up with AI" [ref=e22]:
+          - link "Feed" [ref=e23] [cursor=pointer]:
+            - /url: /feed
+            - img [ref=e25]
+            - generic [ref=e28]:
+              - generic: Feed
+        - generic "Search models" [ref=e29]:
+          - link "Models" [ref=e30] [cursor=pointer]:
+            - /url: /models
+            - img [ref=e32]
+            - generic [ref=e34]:
+              - generic: Models
+        - generic "Research AI" [ref=e36]:
+          - link "Agent" [ref=e37] [cursor=pointer]:
+            - /url: /agent
+            - img [ref=e39]
+            - generic [ref=e41]:
+              - generic: Agent
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - paragraph [ref=e44]: Devs
+          - generic "Plan" [ref=e45]:
+            - link "Plan" [ref=e46] [cursor=pointer]:
+              - /url: /api
+              - img [ref=e48]
+              - generic [ref=e50]:
+                - generic: Plan
+          - generic "Docs" [ref=e51]:
+            - link "docs" [ref=e52] [cursor=pointer]:
+              - /url: https://docs.bytez.com
+              - img [ref=e54]
+              - generic [ref=e56]:
+                - generic: docs
+          - separator [ref=e57]
+        - link [ref=e59] [cursor=pointer]:
+          - /url: https://discord.gg/ZydhEJTd3R
+          - img [ref=e60]:
+            - img [ref=e61]
+        - button "Mirza Arafat Abbas management.maars@marsgc.net" [ref=e63] [cursor=pointer]:
+          - img [ref=e66]
+          - generic [ref=e67]:
+            - generic [ref=e68]: Mirza Arafat Abbas
+            - generic [ref=e69]: management.maars@marsgc.net
+    - generic [ref=e70]:
+      - generic [ref=e71]:
+        - img [ref=e72]
+        - paragraph [ref=e74]: Model API
+      - generic [ref=e76]:
+        - generic [ref=e78]:
+          - tablist [ref=e79]:
+            - tab "Plan" [selected] [ref=e80] [cursor=pointer]
+            - tab "API Key" [ref=e81] [cursor=pointer]
+            - tab "Billing / Credits" [ref=e82] [cursor=pointer]
+          - generic [ref=e84]: Plan
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - paragraph [ref=e87]: 1 API Key — 222k open + closed models
+            - paragraph [ref=e88]: Grab some credits and run any model
+          - table [ref=e94]:
+            - rowgroup [ref=e95]:
+              - row "Free Start Free Pay-as-you-go Add $3 and get $5" [ref=e96]:
+                - columnheader "Free Start Free" [ref=e97]:
+                  - paragraph [ref=e98]: Free
+                  - button "Start Free" [ref=e100] [cursor=pointer]: Start Free
+                - columnheader "Pay-as-you-go Add $3 and get $5" [ref=e101]:
+                  - paragraph [ref=e102]: Pay-as-you-go
+                  - button "Add $3 and get $5" [ref=e104] [cursor=pointer]: Add $3 and get $5
+            - rowgroup [ref=e105]:
+              - row "Smaller models · Lower rate limits Pay $0 / month Credits you get $1 free credits Bigger models · Better rate limits Pay $3 / month Credits you get $5 in credits" [ref=e106]:
+                - cell "Smaller models · Lower rate limits Pay $0 / month Credits you get $1 free credits" [ref=e107]:
+                  - paragraph [ref=e108]: Smaller models · Lower rate limits
+                  - generic [ref=e109]:
+                    - generic [ref=e110]: Pay
+                    - generic [ref=e111]: $0 / month
+                  - generic [ref=e112]:
+                    - generic [ref=e113]: Credits you get
+                    - generic [ref=e114]: $1 free credits
+                - cell "Bigger models · Better rate limits Pay $3 / month Credits you get $5 in credits" [ref=e115]:
+                  - paragraph [ref=e116]: Bigger models · Better rate limits
+                  - generic [ref=e117]:
+                    - generic [ref=e118]: Pay
+                    - generic [ref=e119]: $3 / month
+                  - generic [ref=e120]:
+                    - generic [ref=e121]: Credits you get
+                    - generic [ref=e122]: $5 in credits
+              - row "Access Open models Run models up to 7 billion params Closed models Anthropic Cohere Google Mistral OpenAI Access Open models Up to 120 billion ( scales with credits ↓) Closed models Equal access" [ref=e123]:
+                - cell "Access Open models Run models up to 7 billion params Closed models Anthropic Cohere Google Mistral OpenAI" [ref=e124]:
+                  - paragraph [ref=e125]: Access
+                  - generic [ref=e126]:
+                    - generic [ref=e127]: Open models
+                    - generic [ref=e128]: Run models up to 7 billion params
+                  - generic [ref=e129]:
+                    - generic [ref=e130]: Closed models
+                    - generic [ref=e132]:
+                      - generic [ref=e133]:
+                        - img [ref=e134]
+                        - generic [ref=e136]: Anthropic
+                      - generic [ref=e137]:
+                        - img [ref=e138]
+                        - generic [ref=e142]: Cohere
+                      - generic [ref=e143]:
+                        - img [ref=e144]
+                        - generic [ref=e146]: Google
+                      - generic [ref=e147]:
+                        - img [ref=e148]
+                        - generic [ref=e150]: Mistral
+                      - generic [ref=e151]:
+                        - img [ref=e152]
+                        - generic [ref=e154]: OpenAI
+                - cell "Access Open models Up to 120 billion ( scales with credits ↓) Closed models Equal access" [ref=e155]:
+                  - paragraph [ref=e156]: Access
+                  - generic [ref=e157]:
+                    - generic [ref=e158]: Open models
+                    - generic [ref=e159]:
+                      - text: Up to 120 billion (
+                      - generic "See budget calculator below" [ref=e160]:
+                        - link "scales with credits ↓" [ref=e161] [cursor=pointer]:
+                          - /url: "#budget"
+                        - text: )
+                  - generic [ref=e162]:
+                    - generic [ref=e163]: Closed models
+                    - generic [ref=e164]: Equal access
+              - row "Pricing Open models Usage-based · per second Closed models Provider price + 2% Pricing Open models Equal price Closed models Equal price" [ref=e165]:
+                - cell "Pricing Open models Usage-based · per second Closed models Provider price + 2%" [ref=e166]:
+                  - paragraph [ref=e167]: Pricing
+                  - generic [ref=e168]:
+                    - generic [ref=e169]: Open models
+                    - generic [ref=e171]: Usage-based · per second
+                  - generic [ref=e172]:
+                    - generic [ref=e173]: Closed models
+                    - generic [ref=e174]: Provider price + 2%
+                - cell "Pricing Open models Equal price Closed models Equal price" [ref=e175]:
+                  - paragraph [ref=e176]: Pricing
+                  - generic [ref=e177]:
+                    - generic [ref=e178]: Open models
+                    - generic [ref=e179]: Equal price
+                  - generic [ref=e180]:
+                    - generic [ref=e181]: Closed models
+                    - generic [ref=e182]: Equal price
+              - row "Rate Limits Open models 1 request at a time Closed models 10 requests / second Rate Limits Open models Scales with credits ↓ Closed models Unlimited requests" [ref=e183]:
+                - cell "Rate Limits Open models 1 request at a time Closed models 10 requests / second" [ref=e184]:
+                  - paragraph [ref=e185]: Rate Limits
+                  - generic [ref=e186]:
+                    - generic [ref=e187]: Open models
+                    - generic [ref=e188]: 1 request at a time
+                  - generic [ref=e189]:
+                    - generic [ref=e190]: Closed models
+                    - generic [ref=e191]: 10 requests / second
+                - cell "Rate Limits Open models Scales with credits ↓ Closed models Unlimited requests" [ref=e192]:
+                  - paragraph [ref=e193]: Rate Limits
+                  - generic [ref=e194]:
+                    - generic [ref=e195]: Open models
+                    - generic "See budget calculator below" [ref=e197]:
+                      - link "Scales with credits ↓" [ref=e198] [cursor=pointer]:
+                        - /url: "#budget"
+                  - generic [ref=e199]:
+                    - generic [ref=e200]: Closed models
+                    - generic [ref=e201]: Unlimited requests
+          - generic [ref=e202]:
+            - generic [ref=e203]:
+              - generic [ref=e204]:
+                - paragraph [ref=e205]: What's your budget?
+                - generic [ref=e206]:
+                  - text: $3
+                  - generic [ref=e207]: / month
+              - generic [ref=e208]:
+                - slider [ref=e221]: "15"
+                - generic:
+                  - generic [ref=e222]:
+                    - generic [ref=e223]: $0
+                    - generic [ref=e226]: Free
+                  - generic [ref=e227]:
+                    - generic [ref=e228]: $3
+                    - generic "Purchasing $3 unlocks most 15B open models" [ref=e229]:
+                      - generic [ref=e231]: Pay-as-you-go
+                  - generic [ref=e232]:
+                    - generic [ref=e233]: $10
+                    - generic "Purchasing $10 unlocks most 35B open models" [ref=e234]:
+                      - generic [ref=e236]: Unlock 35B
+                  - generic [ref=e237]:
+                    - generic [ref=e238]: $25
+                    - generic "Purchasing $25 unlocks most 70B open models" [ref=e239]:
+                      - generic [ref=e241]: Unlock 70B
+                  - generic [ref=e242]:
+                    - generic [ref=e243]: $50
+                    - generic "Purchasing $50 unlocks most 120B open models" [ref=e244]:
+                      - generic [ref=e246]:
+                        - text: Unlock 120B
+                        - generic [ref=e247]: (coming soon)
+                  - generic [ref=e249]: $100
+                  - generic [ref=e251]: $500
+                  - generic [ref=e253]: $1,000
+              - paragraph [ref=e254]: Adding credits unlocks bigger models and better request limits
+            - generic [ref=e255]:
+              - generic [ref=e256]:
+                - generic [ref=e257]:
+                  - generic [ref=e258]: $3
+                  - text: goes a long way
+                - generic [ref=e259]:
+                  - generic [ref=e261]:
+                    - img [ref=e263]
+                    - generic [ref=e265]:
+                      - generic [ref=e266]: 21.8M tokens
+                      - generic [ref=e267]: OpenAI GPT-5 nano
+                  - generic [ref=e269]:
+                    - img [ref=e271]
+                    - generic [ref=e273]:
+                      - generic [ref=e274]: 17.1M tokens
+                      - generic [ref=e275]: Gemini 2.5 Flash-Lite
+                  - generic [ref=e277]:
+                    - img [ref=e279]
+                    - generic [ref=e283]:
+                      - generic [ref=e284]: 11.4M tokens
+                      - generic [ref=e285]: Cohere Command R
+                  - generic "$3 gets you 12 GPU hours. Presuming 1M tokens per hour" [ref=e286]:
+                    - generic [ref=e287]:
+                      - img [ref=e289]
+                      - generic [ref=e291]:
+                        - generic [ref=e292]: 11.6M tokens
+                        - generic [ref=e293]: 7B open models
+              - generic [ref=e294]:
+                - paragraph [ref=e295]:
+                  - text: Run
+                  - generic [ref=e296]: 1+ requests
+                  - text: at the same time
+                - generic [ref=e297]:
+                  - generic [ref=e298]: Unlimited closed model requests
+                  - paragraph [ref=e299]: +
+                  - generic [ref=e300]: 1 request at a time for open models
+              - generic [ref=e301]:
+                - generic [ref=e302]:
+                  - generic [ref=e303]: 1 req
+                  - paragraph [ref=e304]: on 7B models
+                - generic [ref=e305]:
+                  - generic [ref=e306]: 1 req
+                  - paragraph [ref=e307]: on 15B models
+                - generic [ref=e308]:
+                  - generic [ref=e309]: Unlocks at $10
+                  - generic [ref=e310]: —
+                  - paragraph [ref=e311]: on 35B models
+                - generic [ref=e312]:
+                  - generic [ref=e313]: Unlocks at $25
+                  - generic [ref=e314]: —
+                  - paragraph [ref=e315]: on 70B models
+                - generic [ref=e316]:
+                  - generic [ref=e317]: Unlocks at $50
+                  - generic [ref=e318]: —
+                  - paragraph [ref=e319]: on 120B models
+  - alert [ref=e320]

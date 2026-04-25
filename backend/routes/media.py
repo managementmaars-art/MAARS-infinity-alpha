@@ -7,8 +7,7 @@ from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form, R
 from typing import Optional
 from db import db
 from auth import get_current_user, User
-from shared.constants import UPLOAD_DIR, EMERGENT_LLM_KEY
-from shared.utils import get_api_keys
+from shared.constants import UPLOAD_DIR
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -50,29 +49,26 @@ async def upload_file(file: UploadFile = File(...), current_user: User = Depends
 
 @router.post("/audio/speech-to-text")
 async def speech_to_text(audio_file: UploadFile = File(...), language: Optional[str] = Form(None), current_user: User = Depends(get_current_user)):
-    """Transcribe audio to text using OpenAI Whisper"""
+    """Transcribe audio to text through the MAARS media router (Whisper today)."""
     try:
         contents = await audio_file.read()
         if len(contents) > 25 * 1024 * 1024:
             raise HTTPException(status_code=400, detail="Audio file too large. Max 25MB.")
-        
-        from emergentintegrations.llm.openai import OpenAISpeechToText
-        
-        api_keys = await get_api_keys()
-        stt_key = api_keys.get("emergent", EMERGENT_LLM_KEY)
-        
-        stt = OpenAISpeechToText(api_key=stt_key)
-        
-        audio_io = io.BytesIO(contents)
-        audio_io.name = audio_file.filename or "audio.webm"
-        
-        kwargs = {"file": audio_io, "model": "whisper-1", "response_format": "json"}
-        if language:
-            kwargs["language"] = language
-        
-        response = await stt.transcribe(**kwargs)
-        
-        return {"text": response.text, "language": language}
+
+        # Rough duration estimate: ~16 KB/sec for compressed audio at typical voice bitrates.
+        duration_guess = max(1.0, len(contents) / 16_000)
+
+        from services.media_router import route_stt
+        from services.billing.media_billing import bill_and_run
+        text, meta, billing = await bill_and_run(
+            current_user.user_id, "stt", "whisper-1", duration_guess,
+            route_stt,
+            audio_bytes=contents,
+            filename=audio_file.filename or "audio.webm",
+            language=language,
+        )
+        from shared.response_scrubber import scrub_meta, scrub
+        return {"text": text, "language": language, "router": scrub_meta(meta), "billing": scrub(billing)}
     except Exception as e:
         logger.error(f"STT error: {e}")
         raise HTTPException(status_code=500, detail=f"Speech-to-text failed: {str(e)}")
@@ -117,6 +113,16 @@ async def get_available_models(current_user: User = Depends(get_current_user)):
         {"provider": "cohere", "model": "command-r-plus", "name": "Cohere Command R+", "category": "flagship", "cost_per_credit": 0.005, "credits": 3, "best_for": "RAG, enterprise tasks"},
         {"provider": "cohere", "model": "command-r", "name": "Cohere Command R", "category": "fast", "cost_per_credit": 0.001, "credits": 1, "best_for": "Cost-efficient RAG, summaries"},
     ]
+    # Strip USD cost basis (`cost_per_credit`) so clients never see what
+    # each credit actually costs the operator. Keep provider + model
+    # names — these are industry-standard (GPT-5, Claude, Gemini) and
+    # clients expect them in the picker. Only the hidden free-tier
+    # backends (Pollinations, Edge, Hunter) are shielded — and those
+    # aren't in this list, they're only in the routing chains.
+    models = [
+        {k: v for k, v in m.items() if k not in ("cost_per_credit", "cost_usd")}
+        for m in models
+    ]
     return {
         "models": models,
         "credit_tiers": {
@@ -133,42 +139,34 @@ async def get_available_models(current_user: User = Depends(get_current_user)):
 
 @router.post("/tts/generate")
 async def generate_tts(request: Request, current_user: User = Depends(get_current_user)):
-    """Generate text-to-speech audio using OpenAI TTS (works with Emergent key)"""
+    """Generate TTS through the MAARS media router (OpenAI tts-1 → ElevenLabs fallback)."""
     body = await request.json()
     text = body.get("text", "")
     voice = body.get("voice", "nova")
-    
+    tier = body.get("tier", "standard")  # "standard" | "premium" (ElevenLabs voice-over)
+
     if not text:
         raise HTTPException(status_code=400, detail="Text is required")
-    
-    # Truncate to 4096 chars (OpenAI TTS limit)
     text = text[:4096]
-    
+
     try:
-        from emergentintegrations.llm.openai import OpenAITextToSpeech
-        
-        # Use Emergent key or admin-configured OpenAI key
-        api_key = EMERGENT_LLM_KEY
-        if not api_key:
-            admin_keys = await db.platform_config.find_one({"config_type": "api_keys"}, {"_id": 0})
-            if admin_keys:
-                api_key = admin_keys.get("openai", "")
-        
-        if not api_key:
-            raise HTTPException(400, "No API key available for TTS")
-        
-        tts = OpenAITextToSpeech(api_key=api_key)
-        audio_bytes = await tts.generate_speech(
-            text=text,
-            model="tts-1",
-            voice=voice,
-            response_format="mp3",
-            speed=1.0
+        from services.media_router import route_tts
+        from services.billing.media_billing import bill_and_run
+        est_model = "eleven_turbo_v2_5" if tier == "premium" else "tts-1"
+        audio_bytes, meta, billing = await bill_and_run(
+            current_user.user_id, "tts", est_model, len(text),
+            route_tts, text=text, voice=voice, tier=tier,
         )
-        
         import base64
         audio_b64 = base64.b64encode(audio_bytes).decode()
-        return {"audio_url": f"data:audio/mpeg;base64,{audio_b64}", "text": text, "voice": voice}
+        from shared.response_scrubber import scrub_meta, scrub
+        return {
+            "audio_url": f"data:audio/mpeg;base64,{audio_b64}",
+            "text": text,
+            "voice": voice,
+            "router": scrub_meta(meta),
+            "billing": scrub(billing),
+        }
     except Exception as e:
         logger.error(f"TTS error: {e}")
         raise HTTPException(status_code=500, detail=f"TTS failed: {str(e)}")

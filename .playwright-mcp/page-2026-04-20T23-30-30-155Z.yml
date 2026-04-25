@@ -1,0 +1,112 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - link "MAARS Command" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7]: MAARS Command
+        - generic [ref=e8]:
+          - link "Pricing" [ref=e9] [cursor=pointer]:
+            - /url: /pricing
+          - link "Changelog" [ref=e10] [cursor=pointer]:
+            - /url: /changelog
+          - link "Login" [ref=e11] [cursor=pointer]:
+            - /url: /login
+    - generic [ref=e12]:
+      - paragraph [ref=e13]: Changelog
+      - heading "What we ship" [level=1] [ref=e14]
+      - paragraph [ref=e15]:
+        - text: We publish every meaningful change. Subscribe to the
+        - link "JSON feed" [ref=e16] [cursor=pointer]:
+          - /url: /api/changelog
+        - text: for your own tracking.
+    - generic [ref=e17]:
+      - article [ref=e18]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: Feature
+          - generic [ref=e22]: April 22, 2026
+        - heading "New Operations admin tab + public status page" [level=2] [ref=e23]
+        - paragraph [ref=e24]: One glance at scheduler health, queue depth, deliverability, and readiness — plus a public /api/status trust signal.
+        - generic [ref=e25]:
+          - paragraph [ref=e26]: The Operations tab in the admin panel now shows a live view of the background scheduler, active outbound campaigns with inline pause/resume, 30-day email deliverability (delivered / opened / clicked / bounced / complained), and product readiness (what's live vs. what's waiting on credentials).
+          - paragraph [ref=e27]: "A public `/api/status` endpoint returns component-level health (database, automation engine, AI inference, email delivery) so you can link customers to proof that things are running."
+      - article [ref=e28]:
+        - generic [ref=e30]:
+          - generic [ref=e31]: Feature
+          - generic [ref=e32]: April 22, 2026
+        - heading "Customer usage dashboard with savings estimate" [level=2] [ref=e33]
+        - paragraph [ref=e34]: /me/usage shows credits, campaigns, emails, media, and a conservative 'what this would cost DIY' delta.
+        - paragraph [ref=e36]: "Users now see their own activity in one endpoint: credits remaining, campaigns active, emails sent/opened/clicked, images + videos generated. A savings estimator compares what they paid MAARS vs industry per-unit pricing (conservative — we understate rather than inflate) so retention shows its receipts."
+      - article [ref=e37]:
+        - generic [ref=e39]:
+          - generic [ref=e40]: Feature
+          - generic [ref=e41]: April 22, 2026
+        - heading "Annual plans with 20% discount + 2 bonus credit-months" [level=2] [ref=e42]
+        - paragraph [ref=e43]: Every plan now has an annual option; /api/plans returns both monthly and annual with savings math baked in.
+        - paragraph [ref=e45]: "Subscribing annually saves 20% on price and adds 2 extra months of credits beyond the 12× monthly total — so an annual commit is ~+37% more value at ~-20% spend. Stripe interval set to `year` when the annual path is chosen. Monthly remains the default."
+      - article [ref=e46]:
+        - generic [ref=e48]:
+          - generic [ref=e49]: Compliance
+          - generic [ref=e50]: April 22, 2026
+        - heading "GDPR data export + deletion endpoints" [level=2] [ref=e51]
+        - paragraph [ref=e52]: Art. 15 (access) and Art. 17 (erasure) are live. Privacy Policy, Terms of Service, and cookie consent banner all shipped.
+        - paragraph [ref=e54]: "Users can download a complete JSON export of every record tied to their account and request deletion (30-day soft grace, with confirm-immediate option). New pages: `/privacy`, `/terms`. A GDPR-aware cookie consent banner appears for EU/UK visitors (detected via timezone) and persists choice. Transactional email flows (welcome, low-credit, payment success/failure, trial-ending, referral-reward, weekly digest) all live."
+      - article [ref=e55]:
+        - generic [ref=e57]:
+          - generic [ref=e58]: Feature
+          - generic [ref=e59]: April 22, 2026
+        - heading "Prompt library + CSV lead import" [level=2] [ref=e60]
+        - paragraph [ref=e61]: Save, tag, and share prompts across a workspace. Upload any CSV of leads — we normalize Apollo / Hunter / Sales Nav / Seamless / Lusha headers.
+        - paragraph [ref=e63]: "Prompts persist across sessions with use-count ranking so the most-effective ones bubble up. CSV import auto-detects common export headers (email, first/last name, title, company, LinkedIn, phone) and normalizes them into the same shape the campaign orchestrator consumes — so an imported list plugs directly into `run_campaign`."
+      - article [ref=e64]:
+        - generic [ref=e66]:
+          - generic [ref=e67]: Feature
+          - generic [ref=e68]: April 22, 2026
+        - heading "Workflow builder data model + execution queue" [level=2] [ref=e69]
+        - paragraph [ref=e70]: Define multi-step automations (find leads → enrich → draft → wait → follow-up) as DAGs that the scheduler executes.
+        - paragraph [ref=e72]: "Workflows are stored as typed-node graphs. Each node is an action (`search_leads`, `draft_email`, `send_email`, `wait`, etc.) with next-pointers that form a DAG. CRUD + run endpoints are live; execution engine walks the DAG through the same services agents already use. Full drag-drop UI lands next release."
+      - article [ref=e73]:
+        - generic [ref=e75]:
+          - generic [ref=e76]: Improvement
+          - generic [ref=e77]: April 21, 2026
+        - 'heading "More free-first routing: Edge voice, Pollinations images, Deepgram STT, Brave search" [level=2] [ref=e78]'
+        - paragraph [ref=e79]: Premium quality on zero budget. 400+ neural voices, unlimited Flux images, 45K transcription minutes/mo, 2K search queries/mo.
+        - paragraph [ref=e81]: "The router now defaults to the highest-quality free tier for each modality before paying anyone: Microsoft Edge neural voices (400+ premium options, $0), Pollinations Flux for images (unlimited, $0), Deepgram Nova-2 for transcription (45K minutes/mo free), Brave Search for web results (2K queries/mo free). Paid providers remain in the chain as quality-verified fallbacks."
+      - article [ref=e82]:
+        - generic [ref=e84]:
+          - generic [ref=e85]: Improvement
+          - generic [ref=e86]: April 21, 2026
+        - heading "Agent quality upgrade + client-opacity rules" [level=2] [ref=e87]
+        - paragraph [ref=e88]: Every agent now carries MAARS operating standards, tool-usage hints, and a strict rule against naming backend providers.
+        - paragraph [ref=e90]: "A runtime prompt enhancer wraps each agent's base `system_prompt` with 6 mandatory sections: QUALITY FLOOR, BRAND VOICE, PLATFORM INTEGRITY, COMPLIANCE BASELINE, ESCALATE TO HUMAN, TOOL AWARENESS. Infrastructure provider names are stripped from every client-facing response (image, video, voice, leads, email). 29/29 quality tests passing; CI-ready."
+      - article [ref=e91]:
+        - generic [ref=e93]:
+          - generic [ref=e94]: Feature
+          - generic [ref=e95]: April 21, 2026
+        - heading "Outbound campaigns — leads to inbox, fully automated" [level=2] [ref=e96]
+        - paragraph [ref=e97]: Define a persona, MAARS finds prospects, drafts personalized emails, schedules across days, handles compliance.
+        - paragraph [ref=e99]: "`POST /api/campaigns/run` takes a persona + subject/body template, pulls matching leads, personalizes via free-tier LLM, spreads sends across your `send_window_days` at your `daily_send_cap`, and the background scheduler fires them with compliance headers and suppression checks. Pause / resume any time. Customer-facing webhooks fire at `campaign.started`, `email.sent`, `email.bounced`, etc."
+      - article [ref=e100]:
+        - generic [ref=e102]:
+          - generic [ref=e103]: Feature
+          - generic [ref=e104]: April 21, 2026
+        - heading "Referral program + customer webhooks" [level=2] [ref=e105]
+        - paragraph [ref=e106]: 20% lifetime credit rewards for referrers + HMAC-signed event webhooks customers can subscribe their own backends to.
+        - paragraph [ref=e108]: "Public referral links at `/r/<code>` with 30-day attribution cookies. Referrer gets 20% of the referred user's first payment as credits (operator-configurable). Customer webhooks: subscribe to any of 10 event types (`campaign.started`, `email.opened`, `credit.topped_up`, etc.) with HMAC-SHA256 signatures and 3-retry delivery — the standard SaaS integration surface."
+    - contentinfo [ref=e109]:
+      - text: MAARS Command © 2026 ·
+      - link "Privacy" [ref=e110] [cursor=pointer]:
+        - /url: /privacy
+      - text: ·
+      - link "Terms" [ref=e111] [cursor=pointer]:
+        - /url: /terms
+      - text: ·
+      - link "Status" [ref=e112] [cursor=pointer]:
+        - /url: /api/status
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

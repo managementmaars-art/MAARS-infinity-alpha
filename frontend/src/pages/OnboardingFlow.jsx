@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth, API } from "../App";
 import {
   Bot, ArrowRight, ArrowLeft, MessageSquare, CreditCard, Sparkles,
-  Zap, Users, X, CheckCircle, Brain, Volume2, Image, FileText, Trophy
+  Zap, Users, X, CheckCircle, Brain, Volume2, Image, FileText, Trophy,
+  Target, Rocket, Mail, Linkedin
 } from "lucide-react";
 
 /* ─── Design tokens ───────────────────────────────────────────────────────── */
@@ -20,6 +21,7 @@ const STEPS = [
   { id: "agents",       title: "Meet Your AI Team",      subtitle: "Specialists for every task" },
   { id: "how-it-works", title: "How It Works",           subtitle: "Three steps to results" },
   { id: "features",     title: "Powerful Capabilities",  subtitle: "What your team can do" },
+  { id: "activate",     title: "Launch Your First Win",  subtitle: "Pick a starter goal — one click" },
   { id: "ready",        title: "You're All Set!",        subtitle: "+50 XP for getting started" },
 ];
 
@@ -199,6 +201,92 @@ const OnboardingFlow = ({ onComplete }) => {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* ── Activate: first real action ─────────────
+                  The biggest retention lever in any SaaS: get the user
+                  to experience a single win during onboarding. Each
+                  card here launches a real task in the dashboard and
+                  hands the user something they can show a peer. */}
+              {current.id === "activate" && (
+                <div data-testid="onboarding-step-activate">
+                  <h2 style={{ fontSize: 24, fontWeight: 800, color: "#f1f5f9", fontFamily: "Outfit, sans-serif", marginBottom: 6 }}>
+                    Launch Your First Win
+                  </h2>
+                  <p style={{ fontSize: 13, color: "#64748b", marginBottom: 18 }}>
+                    Pick any of these — we'll pre-load it so you can publish in under 60 seconds.
+                  </p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    {[
+                      {
+                        icon: Mail,
+                        color: T.teal,
+                        title: "Run a cold-email campaign",
+                        desc: "Find prospects, draft personalized messages, schedule over 5 days",
+                        route: "/dashboard?launch=campaign",
+                      },
+                      {
+                        icon: Image,
+                        color: "#c084fc",
+                        title: "Generate a premium image",
+                        desc: "We'll enhance your prompt into a production-grade creative brief",
+                        route: "/dashboard?launch=image",
+                      },
+                      {
+                        icon: Linkedin,
+                        color: "#60a5fa",
+                        title: "Schedule your first LinkedIn post",
+                        desc: "Queue a post for the next 9am-11am window (highest engagement)",
+                        route: "/dashboard?launch=linkedin",
+                      },
+                      {
+                        icon: Target,
+                        color: "#fbbf24",
+                        title: "Give Commander a goal",
+                        desc: "One sentence, Commander delegates to the right specialists",
+                        route: "/dashboard?launch=commander",
+                      },
+                    ].map((item, i) => (
+                      <button
+                        key={i}
+                        onClick={async () => {
+                          await complete();  // mark onboarding done
+                          setTimeout(() => navigate(item.route), 350);
+                        }}
+                        style={{
+                          display: "flex", alignItems: "center", gap: 14,
+                          padding: "14px 16px", borderRadius: 14,
+                          background: "rgba(255,255,255,0.03)",
+                          border: `1px solid ${T.border}`,
+                          cursor: "pointer", textAlign: "left",
+                          transition: "all 0.15s",
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.background = "rgba(79,209,197,0.05)";
+                          e.currentTarget.style.borderColor = "rgba(79,209,197,0.3)";
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+                          e.currentTarget.style.borderColor = T.border;
+                        }}
+                      >
+                        <div style={{ width: 40, height: 40, borderRadius: 10, background: `${item.color}18`, border: `1px solid ${item.color}28`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <item.icon style={{ width: 18, height: 18, color: item.color }} />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ fontSize: 14, fontWeight: 700, color: "#e2e8f0", marginBottom: 3, fontFamily: "Outfit, sans-serif" }}>
+                            {item.title}
+                          </p>
+                          <p style={{ fontSize: 12, color: "#64748b", lineHeight: 1.45 }}>{item.desc}</p>
+                        </div>
+                        <ArrowRight style={{ width: 16, height: 16, color: "#475569", flexShrink: 0 }} />
+                      </button>
+                    ))}
+                  </div>
+                  <p style={{ fontSize: 11, color: "#475569", marginTop: 14, textAlign: "center" }}>
+                    Or skip — you can launch anything from the dashboard anytime.
+                  </p>
                 </div>
               )}
 

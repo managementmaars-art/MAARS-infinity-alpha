@@ -1,6 +1,0 @@
-tushare
-pandas
-python-dotenv
-requests
-pdfplumber
-google-generativeai

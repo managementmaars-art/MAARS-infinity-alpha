@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Shield, AlertTriangle, CheckCircle, Clock, Play,
   Activity, Users, Zap, Lock, Eye, FileCheck, Beaker, ChevronRight,
   XCircle, AlertCircle
 } from "lucide-react";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const T = {
   glass: "rgba(255,255,255,0.03)",
@@ -40,7 +40,7 @@ export default function OperatorControlPanel() {
   const [testHistory, setTestHistory] = useState([]);
   const [activeTab, setActiveTab] = useState("overview");
   const token = localStorage.getItem("token");
-  const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const headers = useMemo(() => ({ Authorization: `Bearer ${token}`, "Content-Type": "application/json" }), [token]);
 
   const fetchDashboard = useCallback(async () => {
     const f = (url) => fetch(`${API}${url}`, { headers }).then(r => r.ok ? r.json() : null).catch(() => null);
@@ -52,7 +52,7 @@ export default function OperatorControlPanel() {
     if (d) setDashboard(d);
     if (s) setScenarios(s);
     if (Array.isArray(h)) setTestHistory(h);
-  }, [token]);
+  }, [headers]);
 
   useEffect(() => { fetchDashboard(); }, [fetchDashboard]);
 

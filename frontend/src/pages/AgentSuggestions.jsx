@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../App";
 import { Brain, Sparkles, Plus, CheckCircle, Activity, Workflow, FileText, Bot } from "lucide-react";
 import { toast } from "sonner";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const T = {
   glass: "rgba(255,255,255,0.03)",
@@ -27,7 +27,7 @@ export default function AgentSuggestions() {
   const [creating, setCreating] = useState(null);
   const [created, setCreated] = useState(new Set());
 
-  const h = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const h = useMemo(() => ({ Authorization: `Bearer ${token}`, "Content-Type": "application/json" }), [token]);
 
   useEffect(() => {
     (async () => {
@@ -36,7 +36,7 @@ export default function AgentSuggestions() {
         if (res.ok) setData(await res.json());
       } catch {} finally { setLoading(false); }
     })();
-  }, [token]);
+  }, [h]);
 
   const createAgent = async (suggestion) => {
     setCreating(suggestion.name);

@@ -1,3 +1,0 @@
-# Index
-
-No pages yet.

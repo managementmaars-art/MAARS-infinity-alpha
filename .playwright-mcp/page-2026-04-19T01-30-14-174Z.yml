@@ -1,0 +1,591 @@
+- generic [ref=e1]:
+  - banner
+  - banner [ref=e2]:
+    - navigation "primary navigation" [ref=e3]:
+      - link "Higgsfield AI – AI Video & Image Generation Platform" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img [ref=e5]
+      - generic [ref=e8]:
+        - link "Explore" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - button "Image" [ref=e11] [cursor=pointer]
+        - button "Video" [ref=e13] [cursor=pointer]
+        - button "Audio" [ref=e15] [cursor=pointer]
+        - link "Collab" [ref=e16] [cursor=pointer]:
+          - /url: /generate
+        - button "Edit" [ref=e18] [cursor=pointer]
+        - button "Character" [ref=e20] [cursor=pointer]
+        - link "Marketing Studio New" [ref=e21] [cursor=pointer]:
+          - /url: /marketing-studio
+          - text: Marketing Studio
+          - generic [ref=e22]: New
+        - link "Cinema Studio 3.5" [ref=e23] [cursor=pointer]:
+          - /url: /cinema-studio?autoSelectFolder=true
+          - text: Cinema Studio
+          - generic [ref=e24]: "3.5"
+        - link "Originals New" [ref=e25] [cursor=pointer]:
+          - /url: /original-series
+          - text: Originals
+          - generic [ref=e26]: New
+        - link "Apps" [ref=e27] [cursor=pointer]:
+          - /url: /apps
+        - link "Assist" [ref=e28] [cursor=pointer]:
+          - /url: /chat
+        - button "Community" [ref=e30] [cursor=pointer]
+      - generic [ref=e172]:
+        - link "Upgrade 55% OFF" [ref=e173] [cursor=pointer]:
+          - /url: /pricing
+          - generic [ref=e174]:
+            - img [ref=e175]
+            - text: Upgrade
+            - generic [ref=e178]: 55% OFF
+        - separator [ref=e179]
+        - generic [ref=e180]:
+          - button "Notifications" [ref=e182] [cursor=pointer]:
+            - img [ref=e183]
+          - link "Folder icon Assets" [ref=e185] [cursor=pointer]:
+            - /url: /asset/all
+            - img "Folder icon" [ref=e187]
+            - generic [ref=e188]: Assets
+          - button "user profile" [ref=e190] [cursor=pointer]:
+            - generic [ref=e193]:
+              - img "user profile" [ref=e195]
+              - img [ref=e196]
+  - main [ref=e42]:
+    - generic [ref=e43]:
+      - generic [ref=e44]:
+        - navigation [ref=e45]:
+          - generic [ref=e46] [cursor=pointer]: Create Video
+          - generic [ref=e47] [cursor=pointer]: Edit Video
+          - generic [ref=e48] [cursor=pointer]: Motion Control
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - group [ref=e52]:
+              - button "General Kling 3.0" [ref=e53]:
+                - generic [ref=e54]: Your browser does not support the video.
+                - generic [ref=e56]:
+                  - paragraph [ref=e57]: General
+                  - paragraph [ref=e58]: Kling 3.0
+                - button "Change" [ref=e60] [cursor=pointer]:
+                  - img [ref=e61]
+                  - text: Change
+            - generic [ref=e63]:
+              - generic [ref=e66]:
+                - generic [ref=e70] [cursor=pointer]:
+                  - button "Uploaded image" [ref=e1559]
+                  - generic [ref=e1561]:
+                    - button "Uploaded image" [ref=e1565]
+                    - button [ref=e1569]:
+                      - img [ref=e1570]
+                - generic [ref=e79]:
+                  - generic:
+                    - paragraph: Optional
+                  - generic [ref=e81] [cursor=pointer]:
+                    - button "End frame" [ref=e82]
+                    - img [ref=e84]
+                    - paragraph [ref=e88]: End frame
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]: Multi-shot
+                  - button [ref=e93] [cursor=pointer]:
+                    - img [ref=e94]
+                - switch [ref=e96] [cursor=pointer]
+              - generic [ref=e98]:
+                - textbox [active] [ref=e100]:
+                  - paragraph [ref=e340]: The MAARS Command landing page rendered cinematically — soft glowing particles drift across the dark background, the headline "458 AI Specialists. One Command." pulses gently with a subtle teal-to-purple gradient. The camera slowly pushes in toward the center of the page. Keep all text exactly as shown. Photorealistic UI, smooth motion, subtle bloom, cinematic depth.
+                - generic [ref=e101]:
+                  - generic [ref=e102] [cursor=pointer]:
+                    - img [ref=e104]
+                    - generic [ref=e106]: Enhance on
+                    - checkbox "Enhance on" [checked] [ref=e107]
+                  - generic [ref=e108] [cursor=pointer]:
+                    - img [ref=e110]
+                    - generic [ref=e112]: "On"
+                    - checkbox "On" [checked] [ref=e113]
+                  - button "Elements" [ref=e114] [cursor=pointer]:
+                    - img [ref=e115]
+                    - text: Elements
+              - button "Model" [ref=e119] [cursor=pointer]:
+                - generic [ref=e120]:
+                  - generic [ref=e121]: Model
+                  - generic [ref=e123]:
+                    - paragraph [ref=e124]: Kling 3.0
+                    - img [ref=e200]
+                - img [ref=e125]
+              - generic [ref=e127]:
+                - button "Duration" [ref=e129] [cursor=pointer]:
+                  - img [ref=e130]
+                  - generic [ref=e132]: 5s
+                - generic [ref=e145]:
+                  - button "720p Resolution" [ref=e147] [cursor=pointer]:
+                    - img [ref=e149]
+                    - generic [ref=e151]: 720p
+                  - combobox [ref=e154]
+          - button "Generate 10" [ref=e1588] [cursor=pointer]:
+            - text: Generate
+            - generic [ref=e1589]:
+              - img [ref=e1590]
+              - text: "10"
+      - generic [ref=e158]:
+        - tablist [ref=e160]:
+          - tab "History" [selected] [ref=e161] [cursor=pointer]:
+            - img [ref=e162]
+            - text: History
+          - tab "How it works" [ref=e165] [cursor=pointer]:
+            - img [ref=e166]
+            - text: How it works
+        - generic [ref=e168]:
+          - generic [ref=e209]:
+            - button [ref=e210] [cursor=pointer]:
+              - img [ref=e211]
+            - slider [ref=e215]
+            - tablist [ref=e217]:
+              - tab "List" [selected] [ref=e219] [cursor=pointer]:
+                - img [ref=e220]
+                - text: List
+              - tab "Grid" [ref=e225] [cursor=pointer]:
+                - img [ref=e226]
+                - text: Grid
+          - generic [ref=e230]:
+            - img [ref=e232]
+            - generic [ref=e235]:
+              - listitem [ref=e1594]:
+                - generic [ref=e1595]:
+                  - generic [ref=e1601]:
+                    - generic [ref=e1602]:
+                      - img [ref=e1603]
+                      - generic [ref=e1606]: Generating
+                    - button "Rerun" [ref=e1608] [cursor=pointer]:
+                      - img [ref=e1609]
+                      - generic [ref=e1611]: Rerun
+                  - generic [ref=e1613]:
+                    - button "Kling 3.0" [ref=e1615] [cursor=pointer]:
+                      - img [ref=e1616]
+                      - text: Kling 3.0
+                    - textbox [ref=e1620]:
+                      - paragraph [ref=e1621]: The MAARS Command landing page rendered cinematically — soft glowing particles drift across the dark background, the headline "458 AI Specialists. One Command." pulses gently with a subtle teal-to-purple gradient. The camera slowly pushes in toward the center of the page. Keep all text exactly as shown. Photorealistic UI, smooth motion, subtle bloom, cinematic depth.
+                    - button "media of input-image" [ref=e1623] [cursor=pointer]:
+                      - img "media of input-image" [ref=e1624]
+                      - img [ref=e1626]
+                    - generic [ref=e1628]:
+                      - button "720p" [ref=e1629]:
+                        - img [ref=e1631]
+                        - text: 720p
+                      - button "5.0s" [ref=e1633]:
+                        - img [ref=e1635]
+                        - text: 5.0s
+                      - button "16:9" [ref=e1637]:
+                        - img [ref=e1639]
+                        - text: 16:9
+                      - button "Audio" [ref=e1641]:
+                        - img [ref=e1643]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e1645]:
+                      - button "Rerun" [ref=e1646] [cursor=pointer]:
+                        - img [ref=e1647]
+                        - generic [ref=e1649]: Rerun
+                      - generic [ref=e1650]:
+                        - button [ref=e1651] [cursor=pointer]:
+                          - img [ref=e1652]
+                        - button [ref=e1655] [cursor=pointer]:
+                          - img [ref=e1656]
+              - listitem [ref=e1488]:
+                - generic [ref=e1489]:
+                  - figure [ref=e1572]:
+                    - img "media asset by id of 611be014-befb-4cf4-8cbd-53099145544b" [ref=e1573]
+                    - img [ref=e1575]
+                    - button [ref=e1577] [cursor=pointer]
+                  - generic [ref=e1507]:
+                    - button "Kling 3.0" [ref=e1509] [cursor=pointer]:
+                      - img [ref=e1510]
+                      - text: Kling 3.0
+                    - textbox [ref=e1514]:
+                      - paragraph [ref=e1515]: "Centered on a deep navy background, a glowing rounded-pill button reading \"Start Free at maars.ai\" pulses with a teal-to-purple gradient. Below in small clean white text: \"499 agents · no credit card · live today.\" Subtle particle drift in the background. The button gently breathes with a soft glow. 16:9, cinematic, minimal, modern SaaS aesthetic, 4K photorealistic."
+                    - generic [ref=e1516]:
+                      - button "720p" [ref=e1517]:
+                        - img [ref=e1519]
+                        - text: 720p
+                      - button "5.0s" [ref=e1521]:
+                        - img [ref=e1523]
+                        - text: 5.0s
+                      - button "16:9" [ref=e1525]:
+                        - img [ref=e1527]
+                        - text: 16:9
+                      - button "Audio" [ref=e1529]:
+                        - img [ref=e1531]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e1533]:
+                      - button "Rerun" [ref=e1534] [cursor=pointer]:
+                        - img [ref=e1535]
+                        - generic [ref=e1537]: Rerun
+                      - generic [ref=e1538]:
+                        - button [ref=e1539] [cursor=pointer]:
+                          - img [ref=e1540]
+                        - button [ref=e1543] [cursor=pointer]:
+                          - img [ref=e1544]
+              - listitem [ref=e1399]:
+                - generic [ref=e1400]:
+                  - figure [ref=e1578]:
+                    - img "media asset by id of cbe51b71-c6ee-47a8-918d-9f901c2c7571" [ref=e1579]
+                    - img [ref=e1581]
+                    - button [ref=e1583] [cursor=pointer]
+                  - generic [ref=e1418]:
+                    - button "Kling 3.0" [ref=e1420] [cursor=pointer]:
+                      - img [ref=e1421]
+                      - text: Kling 3.0
+                    - textbox [ref=e1425]:
+                      - paragraph [ref=e1426]: Glowing teal and purple particles swirl through dark cosmic space, then rapidly converge to form the words "MAARS COMMAND" in bold sans-serif typography, with a subtle teal-to-purple gradient sweep across the letters. The tagline "Your AI Workforce, Live." materializes below in clean white type. Cinematic logo reveal, 4K photorealistic, premium SaaS branding aesthetic.
+                    - generic [ref=e1427]:
+                      - button "720p" [ref=e1428]:
+                        - img [ref=e1430]
+                        - text: 720p
+                      - button "5.0s" [ref=e1432]:
+                        - img [ref=e1434]
+                        - text: 5.0s
+                      - button "16:9" [ref=e1436]:
+                        - img [ref=e1438]
+                        - text: 16:9
+                      - button "Audio" [ref=e1440]:
+                        - img [ref=e1442]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e1444]:
+                      - button "Rerun" [ref=e1474] [cursor=pointer]:
+                        - img [ref=e1475]
+                        - generic [ref=e1477]: Rerun
+                      - generic [ref=e1445]:
+                        - button [ref=e1446] [cursor=pointer]:
+                          - img [ref=e1447]
+                        - button [ref=e1478] [cursor=pointer]:
+                          - img [ref=e1479]
+              - listitem [ref=e1343]:
+                - generic [ref=e1344]:
+                  - figure [ref=e1547]:
+                    - img "media asset by id of ef640046-058f-4d57-89d4-68f9d9d78cc7" [ref=e1548]
+                    - img [ref=e1550]
+                    - button [ref=e1552] [cursor=pointer]
+                  - generic [ref=e1362]:
+                    - button "Kling 3.0" [ref=e1364] [cursor=pointer]:
+                      - img [ref=e1365]
+                      - text: Kling 3.0
+                    - textbox [ref=e1369]:
+                      - paragraph [ref=e1370]: "Three vertical-split composition (triptych). Left third: Jamal in his CodeFuel kitchen, packaging meal-prep orders in branded containers, confident, wearing his CodeFuel-logo black t-shirt. Middle third: Aisha in front of the Sephora storefront, her FORMA display now on the shelf, smiling proudly in her cream linen blazer. Right third: David at the peaceful outdoor family lunch with his wife and two kids, laughing, phone face-down. All three at the same moment look up directly at the camera — calm, fulfilled, victorious. The split lines dissolve into glowing teal and purple particles that swirl together into the MAARS Command logo at center frame. Cinematic, three-protagonist, soft cross-light, photorealistic 35mm."
+                    - generic [ref=e1371]:
+                      - button "720p" [ref=e1372]:
+                        - img [ref=e1374]
+                        - text: 720p
+                      - button "5.0s" [ref=e1376]:
+                        - img [ref=e1378]
+                        - text: 5.0s
+                      - button "16:9" [ref=e1380]:
+                        - img [ref=e1382]
+                        - text: 16:9
+                      - button "Audio" [ref=e1384]:
+                        - img [ref=e1386]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e1388]:
+                      - button "Rerun" [ref=e1453] [cursor=pointer]:
+                        - img [ref=e1454]
+                        - generic [ref=e1456]: Rerun
+                      - generic [ref=e1389]:
+                        - button [ref=e1390] [cursor=pointer]:
+                          - img [ref=e1391]
+                        - button [ref=e1457] [cursor=pointer]:
+                          - img [ref=e1458]
+              - listitem [ref=e1265]:
+                - generic [ref=e1266]:
+                  - figure [ref=e1553]:
+                    - img "media asset by id of 2e164ed5-cafe-4343-9ee8-d24304e03629" [ref=e1554]
+                    - img [ref=e1556]
+                    - button [ref=e1558] [cursor=pointer]
+                  - generic [ref=e1284]:
+                    - button "Kling 3.0" [ref=e1286] [cursor=pointer]:
+                      - img [ref=e1287]
+                      - text: Kling 3.0
+                    - textbox [ref=e1291]:
+                      - paragraph [ref=e1292]: "Aisha — same character: 32, Black, natural curly hair, athletic build — but now wearing a polished cream linen blazer over a white tee, hair styled neatly — stands in front of a Sephora storefront's beauty wall holding a \"FORMA\" branded supplement subscription display unit being placed on the shelf alongside major brands. Through the storefront window beside her, a parallel scene: an athleisure boutique with FORMA leggings and hoodies on display. She steps back with a quiet, proud smile. A tablet in her hand shows her MAARS dashboard prominently to camera: \"FORMA · MRR $84,200 · 1,248 orders · 11 countries · 2 retail accounts signed · Subscribers: 4,847 · Projected M12 ARR: $1.8M · Projected M24 valuation: $14M\". Camera slowly pushes in on her face — quiet pride, achievement, transformation. Photorealistic cinematic 35mm, bright commercial light, retail success energy."
+                    - generic [ref=e1293]:
+                      - button "720p" [ref=e1294]:
+                        - img [ref=e1296]
+                        - text: 720p
+                      - button "5.0s" [ref=e1298]:
+                        - img [ref=e1300]
+                        - text: 5.0s
+                      - button "16:9" [ref=e1302]:
+                        - img [ref=e1304]
+                        - text: 16:9
+                      - button "Audio" [ref=e1306]:
+                        - img [ref=e1308]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e1310]:
+                      - button "Rerun" [ref=e1329] [cursor=pointer]:
+                        - img [ref=e1330]
+                        - generic [ref=e1332]: Rerun
+                      - generic [ref=e1311]:
+                        - button [ref=e1312] [cursor=pointer]:
+                          - img [ref=e1313]
+                        - button [ref=e1333] [cursor=pointer]:
+                          - img [ref=e1334]
+              - listitem [ref=e1176]:
+                - generic [ref=e1177]:
+                  - figure [ref=e1461]:
+                    - img "media asset by id of e3289a52-28df-40ff-a4ed-396094c940a8" [ref=e1462]
+                    - img [ref=e1464]
+                    - button [ref=e1466] [cursor=pointer]
+                  - generic [ref=e1195]:
+                    - button "Kling 3.0" [ref=e1197] [cursor=pointer]:
+                      - img [ref=e1198]
+                      - text: Kling 3.0
+                    - textbox [ref=e1202]:
+                      - paragraph [ref=e1203]: "Same David from earlier clips: 42-year-old South Asian man, salt-and-pepper beard, glasses. He's at a sunny outdoor lunch with his family — wife, two kids — laughing over a meal. Phone face-down on the table. Through the restaurant window in the background, his small office is visible across the street: empty but lights on, monitors glowing softly. A subtle screen overlay shows his MAARS dashboard prominently to camera: \"David's Plumbing Supply · Today: $22,400 revenue · 47 cold calls · 213 emails sent · 18 invoices auto-processed · Costs cut: $13,500/mo · Hours back: 60+/wk · Projected Y1 net gain: +$487,000\". Camera slowly pulls back from David laughing with his family to reveal the peaceful scene. Photorealistic cinematic, golden afternoon light, peaceful warm mood, soft depth of field."
+                    - generic [ref=e1204]:
+                      - button "720p" [ref=e1205]:
+                        - img [ref=e1207]
+                        - text: 720p
+                      - button "5.0s" [ref=e1209]:
+                        - img [ref=e1211]
+                        - text: 5.0s
+                      - button "16:9" [ref=e1213]:
+                        - img [ref=e1215]
+                        - text: 16:9
+                      - button "Audio" [ref=e1217]:
+                        - img [ref=e1219]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e1221]:
+                      - button "Rerun" [ref=e1245] [cursor=pointer]:
+                        - img [ref=e1246]
+                        - generic [ref=e1248]: Rerun
+                      - generic [ref=e1222]:
+                        - button [ref=e1223] [cursor=pointer]:
+                          - img [ref=e1224]
+                        - button [ref=e1249] [cursor=pointer]:
+                          - img [ref=e1250]
+              - listitem [ref=e1120]:
+                - generic [ref=e1121]:
+                  - figure [ref=e1316]:
+                    - img "media asset by id of f285fe1b-c4b2-4698-9e60-9076a8286fa6" [ref=e1317]
+                    - img [ref=e1319]
+                    - button [ref=e1321] [cursor=pointer]
+                  - generic [ref=e1139]:
+                    - button "Kling 3.0" [ref=e1141] [cursor=pointer]:
+                      - img [ref=e1142]
+                      - text: Kling 3.0
+                    - textbox [ref=e1146]:
+                      - paragraph [ref=e1147]: "Same Jamal from earlier clips: 25-year-old Black man, short cropped curly hair clean fade — now in a small commercial kitchen / fulfillment space, wearing a clean black t-shirt with a small \"CodeFuel\" logo embroidered on the chest. Behind him: shelves with printed CodeFuel meal-prep packaging stacked, a wall sign reading \"CODEFUEL · MEAL PREP FOR TECH WORKERS\". He's holding a freshly printed shipping label, smiling, scanning a stack of orders ready to ship. A large mounted screen on the wall behind him glows with a live MAARS dashboard prominently visible to the camera: \"CODEFUEL · MRR $48,200 · Subscribers: 4,847 · Cities: 23 · Profit margin: 42% · Net new this month: +$31,000\". His phone vibrates: notification \"Order #5,127 — São Paulo.\" He closes his eyes for a moment, smiling — quiet pride. Camera slowly pushes in. Photorealistic cinematic 35mm, warm morning light, success energy."
+                    - generic [ref=e1148]:
+                      - button "720p" [ref=e1149]:
+                        - img [ref=e1151]
+                        - text: 720p
+                      - button "5.0s" [ref=e1153]:
+                        - img [ref=e1155]
+                        - text: 5.0s
+                      - button "16:9" [ref=e1157]:
+                        - img [ref=e1159]
+                        - text: 16:9
+                      - button "Audio" [ref=e1161]:
+                        - img [ref=e1163]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e1165]:
+                      - button "Rerun" [ref=e1230] [cursor=pointer]:
+                        - img [ref=e1231]
+                        - generic [ref=e1233]: Rerun
+                      - generic [ref=e1166]:
+                        - button [ref=e1167] [cursor=pointer]:
+                          - img [ref=e1168]
+                        - button [ref=e1234] [cursor=pointer]:
+                          - img [ref=e1235]
+              - listitem [ref=e1036]:
+                - generic [ref=e1037]:
+                  - figure [ref=e1253]:
+                    - img "media asset by id of aa9dd072-7a5c-49fd-a5c1-a7c852c9408f" [ref=e1254]
+                    - img [ref=e1256]
+                    - button [ref=e1258] [cursor=pointer]
+                  - generic [ref=e1055]:
+                    - button "Kling 3.0" [ref=e1057] [cursor=pointer]:
+                      - img [ref=e1058]
+                      - text: Kling 3.0
+                    - textbox [ref=e1062]:
+                      - paragraph [ref=e1063]: "Close-up: Aisha's hand holding her phone. Email subject line slides into view: \"From: Sephora Buying Team — Re: FORMA wholesale partnership — APPROVED\". Her eyes widen. She covers her mouth. Then she lets out a single overwhelmed laugh-cry, looking around her studio in stunned disbelief that she just landed a major retail account. Same Aisha: 32-year-old Black woman, natural curly hair, athletic build, cream linen jumpsuit. Branded FORMA athleisure on shelves behind her. Photorealistic cinematic, soft window light, profound joyful disbelief."
+                    - generic [ref=e1064]:
+                      - button "720p" [ref=e1065]:
+                        - img [ref=e1067]
+                        - text: 720p
+                      - button "5.0s" [ref=e1069]:
+                        - img [ref=e1071]
+                        - text: 5.0s
+                      - button "16:9" [ref=e1073]:
+                        - img [ref=e1075]
+                        - text: 16:9
+                      - button "Audio" [ref=e1077]:
+                        - img [ref=e1079]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e1081]:
+                      - button "Rerun" [ref=e1100] [cursor=pointer]:
+                        - img [ref=e1101]
+                        - generic [ref=e1103]: Rerun
+                      - generic [ref=e1082]:
+                        - button [ref=e1083] [cursor=pointer]:
+                          - img [ref=e1084]
+                        - button [ref=e1104] [cursor=pointer]:
+                          - img [ref=e1105]
+              - listitem [ref=e957]:
+                - generic [ref=e958]:
+                  - figure [ref=e1108]:
+                    - img "media asset by id of 200de92e-e364-468e-9b3e-27eb1e6fe453" [ref=e1109]
+                    - img [ref=e1111]
+                    - button [ref=e1113] [cursor=pointer]
+                  - generic [ref=e976]:
+                    - button "Kling 3.0" [ref=e978] [cursor=pointer]:
+                      - img [ref=e979]
+                      - text: Kling 3.0
+                    - textbox [ref=e983]:
+                      - paragraph [ref=e984]: "Aisha in her converted-garage skincare studio — but now in motion. The piles from her pain shot are gone. She's tracking across the studio packing branded amber-glass jars into kraft-paper boxes with a focused, joyful intensity. Stacks of pre-printed shipping labels marked with international destinations (DE, FR, AU, JP, BR) cascade out of a printer beside her. On a wall monitor: a live MAARS dashboard pulsing \"Orders today: 247 · International: 78 · Avg cart: $94\". Same Aisha: 32, Black, natural curly hair, cream linen jumpsuit and olive apron, now energized. Sunlight streaming through the open garage door. Photorealistic cinematic, golden afternoon, momentum energy."
+                    - generic [ref=e985]:
+                      - button "720p" [ref=e986]:
+                        - img [ref=e988]
+                        - text: 720p
+                      - button "5.0s" [ref=e990]:
+                        - img [ref=e992]
+                        - text: 5.0s
+                      - button "16:9" [ref=e994]:
+                        - img [ref=e996]
+                        - text: 16:9
+                      - button "Audio" [ref=e998]:
+                        - img [ref=e1000]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e1002]:
+                      - button "Rerun" [ref=e1017] [cursor=pointer]:
+                        - img [ref=e1018]
+                        - generic [ref=e1020]: Rerun
+                      - generic [ref=e1003]:
+                        - button [ref=e1004] [cursor=pointer]:
+                          - img [ref=e1005]
+                        - button [ref=e1021] [cursor=pointer]:
+                          - img [ref=e1022]
+              - listitem [ref=e882]:
+                - generic [ref=e883]:
+                  - figure [ref=e1087]:
+                    - img "media asset by id of aece97a2-d211-4282-890e-becf1e91b487" [ref=e1088]
+                    - img [ref=e1090]
+                    - button [ref=e1092] [cursor=pointer]
+                  - generic [ref=e901]:
+                    - button "Kling 3.0" [ref=e903] [cursor=pointer]:
+                      - img [ref=e904]
+                      - text: Kling 3.0
+                    - textbox [ref=e908]:
+                      - paragraph [ref=e909]: "Jamal in his studio apartment — but transformed. The single desk is now a real workstation with a second monitor. The barista apron is gone from the wall, replaced by a printed CodeFuel brand poster. He's confidently reviewing his MAARS analytics dashboard: \"CodeFuel · Revenue this month: $14,820 · Subscribers: 187 · Cities: 12\". He nods, satisfied, leans back. Same Jamal: 25-year-old Black man, short curly hair clean fade, but now wearing a clean black t-shirt with the CodeFuel logo (small) instead of the hoodie. Morning light streaming through the studio window. Cinematic photorealistic, calm confident energy."
+                    - generic [ref=e910]:
+                      - button "720p" [ref=e911]:
+                        - img [ref=e913]
+                        - text: 720p
+                      - button "5.0s" [ref=e915]:
+                        - img [ref=e917]
+                        - text: 5.0s
+                      - button "16:9" [ref=e919]:
+                        - img [ref=e921]
+                        - text: 16:9
+                      - button "Audio" [ref=e923]:
+                        - img [ref=e925]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e927]:
+                      - button "Rerun" [ref=e928] [cursor=pointer]:
+                        - img [ref=e929]
+                        - generic [ref=e931]: Rerun
+                      - generic [ref=e932]:
+                        - button [ref=e933] [cursor=pointer]:
+                          - img [ref=e934]
+                        - button [ref=e937] [cursor=pointer]:
+                          - img [ref=e938]
+              - listitem [ref=e793]:
+                - generic [ref=e794]:
+                  - figure [ref=e1025]:
+                    - img "media asset by id of 013de04b-f420-4b0e-9494-e691d0ba9c1c" [ref=e1026]
+                    - img [ref=e1028]
+                    - button [ref=e1030] [cursor=pointer]
+                  - generic [ref=e812]:
+                    - button "Kling 3.0" [ref=e814] [cursor=pointer]:
+                      - img [ref=e815]
+                      - text: Kling 3.0
+                    - textbox [ref=e819]:
+                      - paragraph [ref=e820]: "Wide static shot of David's wood-paneled office at dusk. The desk is empty. Only the monitor glows, showing a workflow dashboard with green checkmarks ticking through completed tasks: \"Lead qualified · Email sent · Meeting scheduled · Invoice processed · Customer onboarded\". Through the window, evening sky. The space feels calm, productive, alive — even with no human present. Camera slowly pushes in toward the screen. Photorealistic cinematic, deep blue and amber tones, peaceful mood."
+                    - generic [ref=e821]:
+                      - button "720p" [ref=e822]:
+                        - img [ref=e824]
+                        - text: 720p
+                      - button "5.0s" [ref=e826]:
+                        - img [ref=e828]
+                        - text: 5.0s
+                      - button "16:9" [ref=e830]:
+                        - img [ref=e832]
+                        - text: 16:9
+                      - button "Audio" [ref=e834]:
+                        - img [ref=e836]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e838]:
+                      - button "Rerun" [ref=e868] [cursor=pointer]:
+                        - img [ref=e869]
+                        - generic [ref=e871]: Rerun
+                      - generic [ref=e839]:
+                        - button [ref=e840] [cursor=pointer]:
+                          - img [ref=e841]
+                        - button [ref=e872] [cursor=pointer]:
+                          - img [ref=e873]
+              - listitem [ref=e737]:
+                - generic [ref=e738]:
+                  - figure [ref=e1008]:
+                    - img "media asset by id of 3567a0e9-c0a0-4df0-b048-8ac3c44f333e" [ref=e1009]
+                    - img [ref=e1011]
+                    - button [ref=e1013] [cursor=pointer]
+                  - generic [ref=e756]:
+                    - button "Kling 3.0" [ref=e758] [cursor=pointer]:
+                      - img [ref=e759]
+                      - text: Kling 3.0
+                    - textbox [ref=e763]:
+                      - paragraph [ref=e764]: "Over-shoulder shot: David at his desk watching his email inbox flood with REPLY notifications cascading down: \"Re: Yes, interested\", \"Re: Send a deck\", \"Re: Let's book a call\". The unread counter ticks rapidly: 47 → 89 → 132 replies. He leans back slowly, eyes wide, a small disbelieving smile. Same David: 42-year-old South Asian man, salt-and-pepper beard, charcoal henley, glasses. Wood-paneled office, warm afternoon light. Cinematic photorealistic."
+                    - generic [ref=e765]:
+                      - button "720p" [ref=e766]:
+                        - img [ref=e768]
+                        - text: 720p
+                      - button "5.0s" [ref=e770]:
+                        - img [ref=e772]
+                        - text: 5.0s
+                      - button "16:9" [ref=e774]:
+                        - img [ref=e776]
+                        - text: 16:9
+                      - button "Audio" [ref=e778]:
+                        - img [ref=e780]
+                        - text: Audio
+                    - generic: April 19, 2026
+                    - generic [ref=e782]:
+                      - button "Rerun" [ref=e847] [cursor=pointer]:
+                        - img [ref=e848]
+                        - generic [ref=e850]: Rerun
+                      - generic [ref=e783]:
+                        - button [ref=e784] [cursor=pointer]:
+                          - img [ref=e785]
+                        - button [ref=e851] [cursor=pointer]:
+                          - img [ref=e852]
+  - region "Notifications Alt+T"
+  - alert [ref=e171]
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"

@@ -1,2 +1,0 @@
-- https://help.aliyun.com/zh/model-studio/z-image-api-reference
-- https://www.alibabacloud.com/help/zh/model-studio/z-image-api-reference

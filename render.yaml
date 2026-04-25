@@ -83,6 +83,88 @@ services:
       - key: MAARS_IP_RPM
         value: "300"
 
+      # ── observability ───────────────────────────────────────────────────
+      - key: SENTRY_DSN
+        sync: false               # sentry.io → project → client keys
+      - key: MAARS_VAULT_KEY
+        generateValue: true       # Fernet key for credential_vault encryption
+
+      # ── email deliverability (set one or both) ──────────────────────────
+      - key: SENDGRID_API_KEY
+        sync: false
+      - key: SENDGRID_VERIFICATION_KEY
+        sync: false               # Ed25519 pub key from SendGrid Event Webhook settings
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_WEBHOOK_SECRET
+        sync: false               # HMAC-SHA256 secret from Resend webhooks
+
+      # ── voice (optional: sub-200ms duplex voice agents) ────────────────
+      - key: LIVEKIT_URL
+        sync: false               # wss://<your>.livekit.cloud
+      - key: LIVEKIT_API_KEY
+        sync: false
+      - key: LIVEKIT_API_SECRET
+        sync: false
+      - key: CARTESIA_API_KEY
+        sync: false
+      - key: ASSEMBLYAI_API_KEY
+        sync: false
+
+      # ── vision-RAG (optional) ──────────────────────────────────────────
+      - key: COLIVARA_API_KEY
+        sync: false
+
+      # ── regulated-flow sidecar (optional) ───────────────────────────────
+      - key: PARLANT_URL
+        sync: false               # e.g. http://parlant.internal:8800
+      - key: PARLANT_API_KEY
+        sync: false
+
+      # ── additional LLM providers (optional, set the ones you use) ──────
+      - key: XAI_API_KEY
+        sync: false
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: PERPLEXITY_API_KEY
+        sync: false
+      - key: COHERE_API_KEY
+        sync: false
+      - key: CEREBRAS_API_KEY
+        sync: false
+      - key: TOGETHER_API_KEY
+        sync: false
+      - key: FIREWORKS_API_KEY
+        sync: false
+      - key: SAMBANOVA_API_KEY
+        sync: false
+      - key: DASHSCOPE_API_KEY
+        sync: false
+      - key: MOONSHOT_API_KEY
+        sync: false
+      - key: NOVITA_API_KEY
+        sync: false
+      - key: HYPERBOLIC_API_KEY
+        sync: false
+      - key: MINIMAX_API_KEY
+        sync: false
+      - key: REKA_API_KEY
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+
+      # ── cost-optimization levers (flip in /admin/pricing-manager at 50+ clients) ──
+      - key: TELNYX_API_KEY
+        sync: false
+      - key: MAARS_SMTP_HOST
+        sync: false
+      - key: MAARS_LOCAL_IMAGE_URL
+        sync: false
+      - key: MAARS_PROXY_POOL
+        sync: false
+
   # ───────────────────────────────────────────────── Frontend
   - type: web
     name: maars-frontend

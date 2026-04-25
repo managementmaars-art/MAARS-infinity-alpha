@@ -1,0 +1,1 @@
+npx skills add https://github.com/vercel-labs/skills --skill find-skills

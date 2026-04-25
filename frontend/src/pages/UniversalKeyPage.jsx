@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "../App";
 import {
   Key, Zap, DollarSign, TrendingUp, CreditCard, ArrowRight, Check,
@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-const API = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL?.trim() || "";
 
 const MODEL_ALLOCATION = 65;   // % to AI costs
 const PROFIT_ALLOCATION = 35;  // % platform profit
@@ -25,9 +25,9 @@ export default function UniversalKeyPage() {
   const [showKey, setShowKey] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
 
-  const h = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const h = useMemo(() => ({ Authorization: `Bearer ${token}`, "Content-Type": "application/json" }), [token]);
 
-  const fetchAll = async () => {
+  const fetchAll = useCallback(async () => {
     try {
       const [keyRes, pricingRes, txRes, statsRes] = await Promise.all([
         fetch(`${API}/api/universal/key/status`, { headers: h }),
@@ -41,9 +41,9 @@ export default function UniversalKeyPage() {
       if (statsRes.ok) setStats(await statsRes.json());
     } catch {}
     setLoading(false);
-  };
+  }, [h]);
 
-  useEffect(() => { fetchAll(); }, [token]);
+  useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const handleTopup = async () => {
     if (topupAmount < 5) { toast.error("Minimum top-up is $5"); return; }

@@ -1,0 +1,214 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e7]:
+      - generic [ref=e8]:
+        - link "MAARS MAARS Command by MAARS Global Corporation" [ref=e10] [cursor=pointer]:
+          - /url: /dashboard
+          - img "MAARS" [ref=e11]
+          - generic [ref=e12]:
+            - heading "MAARS Command" [level=1] [ref=e13]
+            - paragraph [ref=e14]: by MAARS Global Corporation
+        - generic [ref=e17]: ONLINE
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - generic [ref=e26]: …
+            - generic [ref=e27]: Free
+          - button "Buy Credits" [ref=e28] [cursor=pointer]:
+            - img [ref=e29]
+            - text: Buy Credits
+        - button "Personal Workspace No org yet" [ref=e31] [cursor=pointer]:
+          - img [ref=e33]
+          - generic [ref=e37]:
+            - paragraph [ref=e38]: Personal Workspace
+            - paragraph [ref=e39]: No org yet
+          - img [ref=e40]
+        - button "Search… /" [ref=e43] [cursor=pointer]:
+          - img [ref=e44]
+          - generic [ref=e47]: Search…
+          - generic [ref=e48]: /
+        - navigation [ref=e49]:
+          - generic [ref=e50]:
+            - button "Dashboard" [ref=e51] [cursor=pointer]:
+              - img [ref=e52]
+              - generic [ref=e57]: Dashboard
+            - button "Results" [ref=e58] [cursor=pointer]:
+              - img [ref=e59]
+              - generic [ref=e62]: Results
+          - generic [ref=e63]:
+            - generic [ref=e66]: Workspace
+            - button "Projects" [ref=e68] [cursor=pointer]:
+              - img [ref=e69]
+              - generic [ref=e74]: Projects
+            - button "Chat" [ref=e75] [cursor=pointer]:
+              - img [ref=e76]
+              - generic [ref=e78]: Chat
+            - button "Tasks" [ref=e79] [cursor=pointer]:
+              - img [ref=e80]
+              - generic [ref=e83]: Tasks
+            - button "Approvals" [ref=e84] [cursor=pointer]:
+              - img [ref=e85]
+              - generic [ref=e89]: Approvals
+          - generic [ref=e90]:
+            - generic [ref=e93]: AI Tools
+            - button "Agents" [ref=e95] [cursor=pointer]:
+              - img [ref=e96]
+              - generic [ref=e99]: Agents
+            - button "Team Builder" [ref=e100] [cursor=pointer]:
+              - img [ref=e101]
+              - generic [ref=e104]: Team Builder
+            - button "Vibe Coding" [ref=e105] [cursor=pointer]:
+              - img [ref=e106]
+              - generic [ref=e109]: Vibe Coding
+            - button "Reference Intel" [ref=e110] [cursor=pointer]:
+              - img [ref=e111]
+              - generic [ref=e113]: Reference Intel
+            - button "Content Generator" [ref=e114] [cursor=pointer]:
+              - img [ref=e115]
+              - generic [ref=e120]: Content Generator
+          - generic [ref=e121]:
+            - generic [ref=e124]: Operations
+            - button "Kernel" [ref=e126] [cursor=pointer]:
+              - img [ref=e127]
+              - generic [ref=e131]: Kernel
+            - button "Agent Networks" [ref=e132] [cursor=pointer]:
+              - img [ref=e133]
+              - generic [ref=e138]: Agent Networks
+            - button "Execution Gateway" [ref=e139] [cursor=pointer]:
+              - img [ref=e140]
+              - generic [ref=e142]: Execution Gateway
+            - button "Workflow Builder" [ref=e143] [cursor=pointer]:
+              - img [ref=e144]
+              - generic [ref=e148]: Workflow Builder
+            - button "Campaign Builder" [ref=e149] [cursor=pointer]:
+              - img [ref=e150]
+              - generic [ref=e153]: Campaign Builder
+            - button "Integrations" [ref=e154] [cursor=pointer]:
+              - img [ref=e155]
+              - generic [ref=e157]: Integrations
+            - button "Embedded Browser" [ref=e158] [cursor=pointer]:
+              - img [ref=e159]
+              - generic [ref=e162]: Embedded Browser
+            - button "Universal Key" [ref=e163] [cursor=pointer]:
+              - img [ref=e164]
+              - generic [ref=e168]: Universal Key
+            - button "Environments" [ref=e169] [cursor=pointer]:
+              - img [ref=e170]
+              - generic [ref=e173]: Environments
+          - generic [ref=e174]:
+            - generic [ref=e177]: Monitoring
+            - button "My Insights" [ref=e179] [cursor=pointer]:
+              - img [ref=e180]
+              - generic [ref=e182]: My Insights
+            - button "Task Graphs" [ref=e183] [cursor=pointer]:
+              - img [ref=e184]
+              - generic [ref=e188]: Task Graphs
+            - button "Memory" [ref=e189] [cursor=pointer]:
+              - img [ref=e190]
+              - generic [ref=e194]: Memory
+            - button "Collaborations" [ref=e195] [cursor=pointer]:
+              - img [ref=e196]
+              - generic [ref=e198]: Collaborations
+          - generic [ref=e199]:
+            - generic [ref=e202]: MAARS Infinity
+            - button "Developer API" [ref=e204] [cursor=pointer]:
+              - img [ref=e205]
+              - generic [ref=e207]: Developer API
+            - button "Commander Orion" [ref=e208] [cursor=pointer]:
+              - img [ref=e209]
+              - generic [ref=e215]: Commander Orion
+            - button "Venture Portfolio" [ref=e216] [cursor=pointer]:
+              - img [ref=e217]
+              - generic [ref=e220]: Venture Portfolio
+          - generic [ref=e221]:
+            - generic [ref=e224]: Manage
+            - button "Products" [ref=e226] [cursor=pointer]:
+              - img [ref=e227]
+              - generic [ref=e231]: Products
+            - button "Team" [ref=e232] [cursor=pointer]:
+              - img [ref=e233]
+              - generic [ref=e238]: Team
+            - button "Organization" [ref=e239] [cursor=pointer]:
+              - img [ref=e240]
+              - generic [ref=e244]: Organization
+            - button "Settings" [ref=e245] [cursor=pointer]:
+              - img [ref=e246]
+              - generic [ref=e249]: Settings
+            - button "About" [ref=e250] [cursor=pointer]:
+              - img [ref=e251]
+              - generic [ref=e253]: About
+          - generic [ref=e256]: Admin
+          - button "Overview" [ref=e258] [cursor=pointer]:
+            - img [ref=e259]
+            - generic [ref=e261]: Overview
+          - button "Analytics" [ref=e262] [cursor=pointer]:
+            - img [ref=e263]
+            - generic [ref=e265]: Analytics
+          - button "Universal Gateway" [ref=e266] [cursor=pointer]:
+            - img [ref=e267]
+            - generic [ref=e270]: Universal Gateway
+          - button "Users" [ref=e271] [cursor=pointer]:
+            - img [ref=e272]
+            - generic [ref=e277]: Users
+          - button "Agents" [ref=e278] [cursor=pointer]:
+            - img [ref=e279]
+            - generic [ref=e282]: Agents
+          - button "Transactions" [ref=e283] [cursor=pointer]:
+            - img [ref=e284]
+            - generic [ref=e286]: Transactions
+          - button "Pricing & Splits" [ref=e287] [cursor=pointer]:
+            - img [ref=e289]
+            - generic [ref=e292]: Pricing & Splits
+          - button "API Keys" [ref=e294] [cursor=pointer]:
+            - img [ref=e295]
+            - generic [ref=e299]: API Keys
+          - button "Payment Setup" [ref=e300] [cursor=pointer]:
+            - img [ref=e301]
+            - generic [ref=e303]: Payment Setup
+          - button "Email (SMTP)" [ref=e304] [cursor=pointer]:
+            - img [ref=e305]
+            - generic [ref=e308]: Email (SMTP)
+          - button "Branding" [ref=e309] [cursor=pointer]:
+            - img [ref=e310]
+            - generic [ref=e314]: Branding
+          - button "Knowledge Base" [ref=e315] [cursor=pointer]:
+            - img [ref=e316]
+            - generic [ref=e318]: Knowledge Base
+          - button "Audit Log" [ref=e319] [cursor=pointer]:
+            - img [ref=e320]
+            - generic [ref=e323]: Audit Log
+          - button "Code Explorer" [ref=e324] [cursor=pointer]:
+            - img [ref=e325]
+            - generic [ref=e330]: Code Explorer
+          - button "Governance" [ref=e331] [cursor=pointer]:
+            - img [ref=e332]
+            - generic [ref=e334]: Governance
+          - button "Preview Client View" [ref=e335] [cursor=pointer]:
+            - img [ref=e336]
+            - generic [ref=e339]: Preview Client View
+        - button "Collapse" [ref=e341] [cursor=pointer]:
+          - img [ref=e342]
+          - generic [ref=e345]: Collapse
+        - generic [ref=e346]:
+          - generic [ref=e352]:
+            - paragraph [ref=e353]: Mirza Arafat Abbas
+            - paragraph [ref=e354]: management.maars@marsgc.net
+          - generic [ref=e355]:
+            - generic [ref=e356]: LIVE
+            - generic [ref=e357]: MAARS v2.0
+          - button "Log Out" [ref=e362] [cursor=pointer]:
+            - img [ref=e363]
+            - generic [ref=e366]: Log Out
+    - generic [ref=e371]:
+      - generic "Chat with Commander Orion" [ref=e372] [cursor=pointer]:
+        - img "Commander Orion" [ref=e375]
+      - button "Start a new chat" [ref=e377] [cursor=pointer]:
+        - img [ref=e378]
+  - generic:
+    - generic:
+      - img "MAARS GC"
+      - generic:
+        - generic: MAARS COMMAND
+        - generic: by MAARS Global Corporation
+  - region "Notifications alt+T"

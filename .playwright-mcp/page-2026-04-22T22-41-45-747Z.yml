@@ -1,0 +1,1689 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - iframe [ref=e13]:
+        
+      - generic:
+        - document:
+          - generic:
+            - generic:
+              - generic:
+                - generic [ref=e15]:
+                  - generic [ref=e16]:
+                    - img [ref=e18] [cursor=pointer]
+                    - link "BytePlus Console" [ref=e20] [cursor=pointer]:
+                      - /url: https://www.byteplus.com
+                      - img [ref=e21]
+                    - link "Homepage" [ref=e30] [cursor=pointer]:
+                      - /url: /home
+                      - img [ref=e32]
+                      - generic [ref=e35]: Homepage
+                    - combobox [ref=e39] [cursor=pointer]:
+                      - generic "账号全部资源" [ref=e40]:
+                        - img [ref=e42]
+                        - textbox: 账号全部资源
+                        - generic [ref=e44]: 账号全部资源
+                        - img [ref=e47]
+                    - generic [ref=e50]:
+                      - img [ref=e51]
+                      - combobox [ref=e53] [cursor=pointer]:
+                        - generic "Asia Pacific (Johor)" [ref=e54]:
+                          - textbox: Asia Pacific (Johor)
+                          - generic [ref=e55]: Asia Pacific (Johor)
+                          - img [ref=e58]
+                  - generic [ref=e61]:
+                    - img [ref=e63]
+                    - img [ref=e66]
+                    - link [ref=e69] [cursor=pointer]:
+                      - /url: https://docs.byteplus.com/
+                      - img [ref=e70]
+                    - img [ref=e76] [cursor=pointer]
+                    - link [ref=e79] [cursor=pointer]:
+                      - /url: /workorder/list/
+                      - img [ref=e81]
+                    - generic [ref=e84] [cursor=pointer]: m
+                - generic [ref=e85]:
+                  - generic [ref=e86] [cursor=pointer]:
+                    - generic [ref=e87]:
+                      - img [ref=e88]
+                      - text: All services
+                      - img [ref=e90]
+                    - generic [ref=e92]:
+                      - img [ref=e93]
+                      - generic [ref=e95]:
+                        - generic [ref=e98]:
+                          - img [ref=e100]
+                          - textbox "Search" [ref=e102]
+                        - generic [ref=e104]:
+                          - img [ref=e105]
+                          - text: Recently visited
+                      - generic [ref=e108]:
+                        - generic [ref=e111]:
+                          - generic [ref=e112]:
+                            - generic [ref=e115]:
+                              - generic [ref=e117]: AI & Personalization
+                              - generic [ref=e120]:
+                                - link "Vision AI" [ref=e122]:
+                                  - /url: /ai
+                                  - text: V
+                                  - text: i
+                                  - text: s
+                                  - text: i
+                                  - text: o
+                                  - text: "n"
+                                  - text: A
+                                  - text: I
+                                - link "BytePlus Creative Store" [ref=e124]:
+                                  - /url: https://creativestore.byteplus.com
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: P
+                                  - text: l
+                                  - text: u
+                                  - text: s
+                                  - text: C
+                                  - text: r
+                                  - text: e
+                                  - text: a
+                                  - text: t
+                                  - text: i
+                                  - text: v
+                                  - text: e
+                                  - text: S
+                                  - text: t
+                                  - text: o
+                                  - text: r
+                                  - text: e
+                                - link "ModelArk" [ref=e126]:
+                                  - /url: /ark
+                                  - text: M
+                                  - text: o
+                                  - text: d
+                                  - text: e
+                                  - text: l
+                                  - text: A
+                                  - text: r
+                                  - text: k
+                                - link "MLP" [ref=e128]:
+                                  - /url: /ml-platform
+                                  - text: M
+                                  - text: L
+                                  - text: P
+                                - link "VikingDB Vector Database" [ref=e130]:
+                                  - /url: /vikingdb
+                                  - text: V
+                                  - text: i
+                                  - text: k
+                                  - text: i
+                                  - text: "n"
+                                  - text: g
+                                  - text: D
+                                  - text: B
+                                  - text: V
+                                  - text: e
+                                  - text: c
+                                  - text: t
+                                  - text: o
+                                  - text: r
+                                  - text: D
+                                  - text: a
+                                  - text: t
+                                  - text: a
+                                  - text: b
+                                  - text: a
+                                  - text: s
+                                  - text: e
+                                - link "Seed Speech" [ref=e132]:
+                                  - /url: /voice
+                                  - text: S
+                                  - text: e
+                                  - text: e
+                                  - text: d
+                                  - text: S
+                                  - text: p
+                                  - text: e
+                                  - text: e
+                                  - text: c
+                                  - text: h
+                            - generic [ref=e135]:
+                              - generic [ref=e137]: Compute
+                              - generic [ref=e140]:
+                                - link "Elastic Compute Service" [ref=e142]:
+                                  - /url: /ecs
+                                  - text: E
+                                  - text: l
+                                  - text: a
+                                  - text: s
+                                  - text: t
+                                  - text: i
+                                  - text: c
+                                  - text: C
+                                  - text: o
+                                  - text: m
+                                  - text: p
+                                  - text: u
+                                  - text: t
+                                  - text: e
+                                  - text: S
+                                  - text: e
+                                  - text: r
+                                  - text: v
+                                  - text: i
+                                  - text: c
+                                  - text: e
+                                - link "Auto Scaling" [ref=e144]:
+                                  - /url: /as
+                                  - text: A
+                                  - text: u
+                                  - text: t
+                                  - text: o
+                                  - text: S
+                                  - text: c
+                                  - text: a
+                                  - text: l
+                                  - text: i
+                                  - text: "n"
+                                  - text: g
+                                - link "ArkClaw" [ref=e146]:
+                                  - /url: /arkclaw
+                                  - text: A
+                                  - text: r
+                                  - text: k
+                                  - text: C
+                                  - text: l
+                                  - text: a
+                                  - text: w
+                            - generic [ref=e149]:
+                              - generic [ref=e151]: Containers & Middleware
+                              - generic [ref=e152]:
+                                - generic [ref=e153]:
+                                  - generic [ref=e155]: Containers Services
+                                  - generic [ref=e156]:
+                                    - link "Vital Kubernetes Engine" [ref=e158]:
+                                      - /url: /vke
+                                      - text: V
+                                      - text: i
+                                      - text: t
+                                      - text: a
+                                      - text: l
+                                      - text: K
+                                      - text: u
+                                      - text: b
+                                      - text: e
+                                      - text: r
+                                      - text: "n"
+                                      - text: e
+                                      - text: t
+                                      - text: e
+                                      - text: s
+                                      - text: E
+                                      - text: "n"
+                                      - text: g
+                                      - text: i
+                                      - text: "n"
+                                      - text: e
+                                    - link "Container Registry" [ref=e160]:
+                                      - /url: /cr
+                                      - text: C
+                                      - text: o
+                                      - text: "n"
+                                      - text: t
+                                      - text: a
+                                      - text: i
+                                      - text: "n"
+                                      - text: e
+                                      - text: r
+                                      - text: R
+                                      - text: e
+                                      - text: g
+                                      - text: i
+                                      - text: s
+                                      - text: t
+                                      - text: r
+                                      - text: "y"
+                                - generic [ref=e161]:
+                                  - generic [ref=e163]: Middleware
+                                  - generic [ref=e164]:
+                                    - link "Message Queue for Kafka" [ref=e166]:
+                                      - /url: /kafka
+                                      - text: M
+                                      - text: e
+                                      - text: s
+                                      - text: s
+                                      - text: a
+                                      - text: g
+                                      - text: e
+                                      - text: Q
+                                      - text: u
+                                      - text: e
+                                      - text: u
+                                      - text: e
+                                      - text: f
+                                      - text: o
+                                      - text: r
+                                      - text: K
+                                      - text: a
+                                      - text: f
+                                      - text: k
+                                      - text: a
+                                    - link "Microservices Engine" [ref=e168]:
+                                      - /url: /mse
+                                      - text: M
+                                      - text: i
+                                      - text: c
+                                      - text: r
+                                      - text: o
+                                      - text: s
+                                      - text: e
+                                      - text: r
+                                      - text: v
+                                      - text: i
+                                      - text: c
+                                      - text: e
+                                      - text: s
+                                      - text: E
+                                      - text: "n"
+                                      - text: g
+                                      - text: i
+                                      - text: "n"
+                                      - text: e
+                                    - link "API Gateway" [ref=e170]:
+                                      - /url: /veapig
+                                      - text: A
+                                      - text: P
+                                      - text: I
+                                      - text: G
+                                      - text: a
+                                      - text: t
+                                      - text: e
+                                      - text: w
+                                      - text: a
+                                      - text: "y"
+                                    - link "Message Queue for RabbitMQ" [ref=e172]:
+                                      - /url: /rabbitmq
+                                      - text: M
+                                      - text: e
+                                      - text: s
+                                      - text: s
+                                      - text: a
+                                      - text: g
+                                      - text: e
+                                      - text: Q
+                                      - text: u
+                                      - text: e
+                                      - text: u
+                                      - text: e
+                                      - text: f
+                                      - text: o
+                                      - text: r
+                                      - text: R
+                                      - text: a
+                                      - text: b
+                                      - text: b
+                                      - text: i
+                                      - text: t
+                                      - text: M
+                                      - text: Q
+                                - generic [ref=e173]:
+                                  - generic [ref=e175]: Serverless
+                                  - link "Function Service" [ref=e178]:
+                                    - /url: /vefaas
+                                    - text: F
+                                    - text: u
+                                    - text: "n"
+                                    - text: c
+                                    - text: t
+                                    - text: i
+                                    - text: o
+                                    - text: "n"
+                                    - text: S
+                                    - text: e
+                                    - text: r
+                                    - text: v
+                                    - text: i
+                                    - text: c
+                                    - text: e
+                                - generic [ref=e179]:
+                                  - generic [ref=e181]: Observability
+                                  - generic [ref=e182]:
+                                    - link "Cloud Monitor" [ref=e184]:
+                                      - /url: /observe/cloud-monitor
+                                      - text: C
+                                      - text: l
+                                      - text: o
+                                      - text: u
+                                      - text: d
+                                      - text: M
+                                      - text: o
+                                      - text: "n"
+                                      - text: i
+                                      - text: t
+                                      - text: o
+                                      - text: r
+                                    - link "Vital Managed Service for Prometheus" [ref=e186]:
+                                      - /url: /observe/prometheus
+                                      - text: V
+                                      - text: i
+                                      - text: t
+                                      - text: a
+                                      - text: l
+                                      - text: M
+                                      - text: a
+                                      - text: "n"
+                                      - text: a
+                                      - text: g
+                                      - text: e
+                                      - text: d
+                                      - text: S
+                                      - text: e
+                                      - text: r
+                                      - text: v
+                                      - text: i
+                                      - text: c
+                                      - text: e
+                                      - text: f
+                                      - text: o
+                                      - text: r
+                                      - text: P
+                                      - text: r
+                                      - text: o
+                                      - text: m
+                                      - text: e
+                                      - text: t
+                                      - text: h
+                                      - text: e
+                                      - text: u
+                                      - text: s
+                                    - link "Application Performance Management Plus" [ref=e188]:
+                                      - /url: /observe/apmplus-client/
+                                      - text: A
+                                      - text: p
+                                      - text: p
+                                      - text: l
+                                      - text: i
+                                      - text: c
+                                      - text: a
+                                      - text: t
+                                      - text: i
+                                      - text: o
+                                      - text: "n"
+                                      - text: P
+                                      - text: e
+                                      - text: r
+                                      - text: f
+                                      - text: o
+                                      - text: r
+                                      - text: m
+                                      - text: a
+                                      - text: "n"
+                                      - text: c
+                                      - text: e
+                                      - text: M
+                                      - text: a
+                                      - text: "n"
+                                      - text: a
+                                      - text: g
+                                      - text: e
+                                      - text: m
+                                      - text: e
+                                      - text: "n"
+                                      - text: t
+                                      - text: P
+                                      - text: l
+                                      - text: u
+                                      - text: s
+                                    - link "Observability Platform" [ref=e190]:
+                                      - /url: /observe
+                                      - text: O
+                                      - text: b
+                                      - text: s
+                                      - text: e
+                                      - text: r
+                                      - text: v
+                                      - text: a
+                                      - text: b
+                                      - text: i
+                                      - text: l
+                                      - text: i
+                                      - text: t
+                                      - text: "y"
+                                      - text: P
+                                      - text: l
+                                      - text: a
+                                      - text: t
+                                      - text: f
+                                      - text: o
+                                      - text: r
+                                      - text: m
+                                - generic [ref=e191]:
+                                  - generic [ref=e193]: Development & Operations
+                                  - link "Code Pipeline" [ref=e196]:
+                                    - /url: /cp
+                                    - text: C
+                                    - text: o
+                                    - text: d
+                                    - text: e
+                                    - text: P
+                                    - text: i
+                                    - text: p
+                                    - text: e
+                                    - text: l
+                                    - text: i
+                                    - text: "n"
+                                    - text: e
+                            - generic [ref=e199]:
+                              - generic [ref=e201]: Content Delivery
+                              - generic [ref=e204]:
+                                - link "BytePlus CDN" [ref=e206]:
+                                  - /url: /cdn
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: P
+                                  - text: l
+                                  - text: u
+                                  - text: s
+                                  - text: C
+                                  - text: D
+                                  - text: "N"
+                                - link "Global Accelerator" [ref=e208]:
+                                  - /url: /ga
+                                  - text: G
+                                  - text: l
+                                  - text: o
+                                  - text: b
+                                  - text: a
+                                  - text: l
+                                  - text: A
+                                  - text: c
+                                  - text: c
+                                  - text: e
+                                  - text: l
+                                  - text: e
+                                  - text: r
+                                  - text: a
+                                  - text: t
+                                  - text: o
+                                  - text: r
+                          - generic [ref=e209]:
+                            - generic [ref=e212]:
+                              - generic [ref=e214]: Data Analytics
+                              - generic [ref=e217]:
+                                - link "BytePlus Data Intelligence" [ref=e219]:
+                                  - /url: /datarangers
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: P
+                                  - text: l
+                                  - text: u
+                                  - text: s
+                                  - text: D
+                                  - text: a
+                                  - text: t
+                                  - text: a
+                                  - text: I
+                                  - text: "n"
+                                  - text: t
+                                  - text: e
+                                  - text: l
+                                  - text: l
+                                  - text: i
+                                  - text: g
+                                  - text: e
+                                  - text: "n"
+                                  - text: c
+                                  - text: e
+                                - link "ByteHouse Enterprise" [ref=e221]:
+                                  - /url: /bytehouse-ce
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: H
+                                  - text: o
+                                  - text: u
+                                  - text: s
+                                  - text: e
+                                  - text: E
+                                  - text: "n"
+                                  - text: t
+                                  - text: e
+                                  - text: r
+                                  - text: p
+                                  - text: r
+                                  - text: i
+                                  - text: s
+                                  - text: e
+                                - link "BytePlus Flink" [ref=e223]:
+                                  - /url: /flink
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: P
+                                  - text: l
+                                  - text: u
+                                  - text: s
+                                  - text: F
+                                  - text: l
+                                  - text: i
+                                  - text: "n"
+                                  - text: k
+                                - link "ByteHouse Cloud Data Warehouse" [ref=e225]:
+                                  - /url: /bytehouse
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: H
+                                  - text: o
+                                  - text: u
+                                  - text: s
+                                  - text: e
+                                  - text: C
+                                  - text: l
+                                  - text: o
+                                  - text: u
+                                  - text: d
+                                  - text: D
+                                  - text: a
+                                  - text: t
+                                  - text: a
+                                  - text: W
+                                  - text: a
+                                  - text: r
+                                  - text: e
+                                  - text: h
+                                  - text: o
+                                  - text: u
+                                  - text: s
+                                  - text: e
+                            - generic [ref=e228]:
+                              - generic [ref=e230]: Database
+                              - generic [ref=e231]:
+                                - generic [ref=e232]:
+                                  - generic [ref=e234]: Relational Database
+                                  - generic [ref=e235]:
+                                    - link "NDB for mysql" [ref=e237]:
+                                      - /url: /db/vedb-mysql
+                                      - text: "N"
+                                      - text: D
+                                      - text: B
+                                      - text: f
+                                      - text: o
+                                      - text: r
+                                      - text: m
+                                      - text: "y"
+                                      - text: s
+                                      - text: q
+                                      - text: l
+                                    - link "RDS for MySQL" [ref=e239]:
+                                      - /url: /db
+                                      - text: R
+                                      - text: D
+                                      - text: S
+                                      - text: f
+                                      - text: o
+                                      - text: r
+                                      - text: M
+                                      - text: "y"
+                                      - text: S
+                                      - text: Q
+                                      - text: L
+                                    - link "RDS for PostgreSQL" [ref=e241]:
+                                      - /url: /db/rds-pg
+                                      - text: R
+                                      - text: D
+                                      - text: S
+                                      - text: f
+                                      - text: o
+                                      - text: r
+                                      - text: P
+                                      - text: o
+                                      - text: s
+                                      - text: t
+                                      - text: g
+                                      - text: r
+                                      - text: e
+                                      - text: S
+                                      - text: Q
+                                      - text: L
+                                    - link "RDS for SQL Server" [ref=e243]:
+                                      - /url: /db/sql-server
+                                      - text: R
+                                      - text: D
+                                      - text: S
+                                      - text: f
+                                      - text: o
+                                      - text: r
+                                      - text: S
+                                      - text: Q
+                                      - text: L
+                                      - text: S
+                                      - text: e
+                                      - text: r
+                                      - text: v
+                                      - text: e
+                                      - text: r
+                                - generic [ref=e244]:
+                                  - generic [ref=e246]: NoSQL Database
+                                  - generic [ref=e247]:
+                                    - link "Cache for Redis" [ref=e249]:
+                                      - /url: /redis
+                                      - text: C
+                                      - text: a
+                                      - text: c
+                                      - text: h
+                                      - text: e
+                                      - text: f
+                                      - text: o
+                                      - text: r
+                                      - text: R
+                                      - text: e
+                                      - text: d
+                                      - text: i
+                                      - text: s
+                                    - link "Document Database for MongoDB" [ref=e251]:
+                                      - /url: /mongodb
+                                      - text: D
+                                      - text: o
+                                      - text: c
+                                      - text: u
+                                      - text: m
+                                      - text: e
+                                      - text: "n"
+                                      - text: t
+                                      - text: D
+                                      - text: a
+                                      - text: t
+                                      - text: a
+                                      - text: b
+                                      - text: a
+                                      - text: s
+                                      - text: e
+                                      - text: f
+                                      - text: o
+                                      - text: r
+                                      - text: M
+                                      - text: o
+                                      - text: "n"
+                                      - text: g
+                                      - text: o
+                                      - text: D
+                                      - text: B
+                                - generic [ref=e252]:
+                                  - generic [ref=e254]: Database Management Tools
+                                  - generic [ref=e255]:
+                                    - link "Database Transmission Service" [ref=e257]:
+                                      - /url: /dts
+                                      - text: D
+                                      - text: a
+                                      - text: t
+                                      - text: a
+                                      - text: b
+                                      - text: a
+                                      - text: s
+                                      - text: e
+                                      - text: T
+                                      - text: r
+                                      - text: a
+                                      - text: "n"
+                                      - text: s
+                                      - text: m
+                                      - text: i
+                                      - text: s
+                                      - text: s
+                                      - text: i
+                                      - text: o
+                                      - text: "n"
+                                      - text: S
+                                      - text: e
+                                      - text: r
+                                      - text: v
+                                      - text: i
+                                      - text: c
+                                      - text: e
+                                    - link "Database workshop" [ref=e259]:
+                                      - /url: /dbw
+                                      - text: D
+                                      - text: a
+                                      - text: t
+                                      - text: a
+                                      - text: b
+                                      - text: a
+                                      - text: s
+                                      - text: e
+                                      - text: w
+                                      - text: o
+                                      - text: r
+                                      - text: k
+                                      - text: s
+                                      - text: h
+                                      - text: o
+                                      - text: p
+                                - generic [ref=e260]:
+                                  - generic [ref=e262]: Al Search Service
+                                  - generic [ref=e263]:
+                                    - link "Cloud Search" [ref=e265]:
+                                      - /url: /es
+                                      - text: C
+                                      - text: l
+                                      - text: o
+                                      - text: u
+                                      - text: d
+                                      - text: S
+                                      - text: e
+                                      - text: a
+                                      - text: r
+                                      - text: c
+                                      - text: h
+                                    - link "Milvus for VectorDB" [ref=e267]:
+                                      - /url: /milvus
+                                      - text: M
+                                      - text: i
+                                      - text: l
+                                      - text: v
+                                      - text: u
+                                      - text: s
+                                      - text: f
+                                      - text: o
+                                      - text: r
+                                      - text: V
+                                      - text: e
+                                      - text: c
+                                      - text: t
+                                      - text: o
+                                      - text: r
+                                      - text: D
+                                      - text: B
+                            - generic [ref=e270]:
+                              - generic [ref=e272]: Enterprise Services
+                              - generic [ref=e275]:
+                                - link "BytePlus Messaging" [ref=e277]:
+                                  - /url: /sms
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: P
+                                  - text: l
+                                  - text: u
+                                  - text: s
+                                  - text: M
+                                  - text: e
+                                  - text: s
+                                  - text: s
+                                  - text: a
+                                  - text: g
+                                  - text: i
+                                  - text: "n"
+                                  - text: g
+                                - link "BytePlus Certificate Center" [ref=e279]:
+                                  - /url: /certificate-center
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: P
+                                  - text: l
+                                  - text: u
+                                  - text: s
+                                  - text: C
+                                  - text: e
+                                  - text: r
+                                  - text: t
+                                  - text: i
+                                  - text: f
+                                  - text: i
+                                  - text: c
+                                  - text: a
+                                  - text: t
+                                  - text: e
+                                  - text: C
+                                  - text: e
+                                  - text: "n"
+                                  - text: t
+                                  - text: e
+                                  - text: r
+                                - link "BytePlus DNS Suite" [ref=e281]:
+                                  - /url: /dns-suite
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: P
+                                  - text: l
+                                  - text: u
+                                  - text: s
+                                  - text: D
+                                  - text: "N"
+                                  - text: S
+                                  - text: S
+                                  - text: u
+                                  - text: i
+                                  - text: t
+                                  - text: e
+                                - link "BytePlus Domains" [ref=e283]:
+                                  - /url: /domain-service/domain
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: P
+                                  - text: l
+                                  - text: u
+                                  - text: s
+                                  - text: D
+                                  - text: o
+                                  - text: m
+                                  - text: a
+                                  - text: i
+                                  - text: "n"
+                                  - text: s
+                            - generic [ref=e286]:
+                              - generic [ref=e288]: Media Services
+                              - generic [ref=e291]:
+                                - link "BytePlus MediaLive" [ref=e293]:
+                                  - /url: /live
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: P
+                                  - text: l
+                                  - text: u
+                                  - text: s
+                                  - text: M
+                                  - text: e
+                                  - text: d
+                                  - text: i
+                                  - text: a
+                                  - text: L
+                                  - text: i
+                                  - text: v
+                                  - text: e
+                                - link "BytePlus RTC" [ref=e295]:
+                                  - /url: /rtc
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: P
+                                  - text: l
+                                  - text: u
+                                  - text: s
+                                  - text: R
+                                  - text: T
+                                  - text: C
+                                - link "BytePlus VOD" [ref=e297]:
+                                  - /url: /vodpaas
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: P
+                                  - text: l
+                                  - text: u
+                                  - text: s
+                                  - text: V
+                                  - text: O
+                                  - text: D
+                                - link "BytePlus Live" [ref=e299]:
+                                  - /url: /livesaas
+                                  - text: B
+                                  - text: "y"
+                                  - text: t
+                                  - text: e
+                                  - text: P
+                                  - text: l
+                                  - text: u
+                                  - text: s
+                                  - text: L
+                                  - text: i
+                                  - text: v
+                                  - text: e
+                          - generic [ref=e300]:
+                            - generic [ref=e303]:
+                              - generic [ref=e305]: Networking
+                              - generic [ref=e306]:
+                                - generic [ref=e307]:
+                                  - generic [ref=e309]: Cloud Network
+                                  - generic [ref=e310]:
+                                    - link "Application Load Balancer" [ref=e312]:
+                                      - /url: /alb
+                                      - text: A
+                                      - text: p
+                                      - text: p
+                                      - text: l
+                                      - text: i
+                                      - text: c
+                                      - text: a
+                                      - text: t
+                                      - text: i
+                                      - text: o
+                                      - text: "n"
+                                      - text: L
+                                      - text: o
+                                      - text: a
+                                      - text: d
+                                      - text: B
+                                      - text: a
+                                      - text: l
+                                      - text: a
+                                      - text: "n"
+                                      - text: c
+                                      - text: e
+                                      - text: r
+                                    - link "Cloud Load Balancer" [ref=e314]:
+                                      - /url: /clb
+                                      - text: C
+                                      - text: l
+                                      - text: o
+                                      - text: u
+                                      - text: d
+                                      - text: L
+                                      - text: o
+                                      - text: a
+                                      - text: d
+                                      - text: B
+                                      - text: a
+                                      - text: l
+                                      - text: a
+                                      - text: "n"
+                                      - text: c
+                                      - text: e
+                                      - text: r
+                                    - link "Elastic IP" [ref=e316]:
+                                      - /url: /eip
+                                      - text: E
+                                      - text: l
+                                      - text: a
+                                      - text: s
+                                      - text: t
+                                      - text: i
+                                      - text: c
+                                      - text: I
+                                      - text: P
+                                    - link "NAT Gateway" [ref=e318]:
+                                      - /url: /nat
+                                      - text: "N"
+                                      - text: A
+                                      - text: T
+                                      - text: G
+                                      - text: a
+                                      - text: t
+                                      - text: e
+                                      - text: w
+                                      - text: a
+                                      - text: "y"
+                                    - link "Virtual Private Cloud" [ref=e320]:
+                                      - /url: /vpc
+                                      - text: V
+                                      - text: i
+                                      - text: r
+                                      - text: t
+                                      - text: u
+                                      - text: a
+                                      - text: l
+                                      - text: P
+                                      - text: r
+                                      - text: i
+                                      - text: v
+                                      - text: a
+                                      - text: t
+                                      - text: e
+                                      - text: C
+                                      - text: l
+                                      - text: o
+                                      - text: u
+                                      - text: d
+                                    - link "Bandwidth Package" [ref=e322]:
+                                      - /url: /eip/cbwps
+                                      - text: B
+                                      - text: a
+                                      - text: "n"
+                                      - text: d
+                                      - text: w
+                                      - text: i
+                                      - text: d
+                                      - text: t
+                                      - text: h
+                                      - text: P
+                                      - text: a
+                                      - text: c
+                                      - text: k
+                                      - text: a
+                                      - text: g
+                                      - text: e
+                                    - link "Transit Router" [ref=e324]:
+                                      - /url: /tr
+                                      - text: T
+                                      - text: r
+                                      - text: a
+                                      - text: "n"
+                                      - text: s
+                                      - text: i
+                                      - text: t
+                                      - text: R
+                                      - text: o
+                                      - text: u
+                                      - text: t
+                                      - text: e
+                                      - text: r
+                                    - link "PrivateLink" [ref=e326]:
+                                      - /url: /pl
+                                      - text: P
+                                      - text: r
+                                      - text: i
+                                      - text: v
+                                      - text: a
+                                      - text: t
+                                      - text: e
+                                      - text: L
+                                      - text: i
+                                      - text: "n"
+                                      - text: k
+                                    - link "Network Load Balancer" [ref=e328]:
+                                      - /url: /nlb
+                                      - text: "N"
+                                      - text: e
+                                      - text: t
+                                      - text: w
+                                      - text: o
+                                      - text: r
+                                      - text: k
+                                      - text: L
+                                      - text: o
+                                      - text: a
+                                      - text: d
+                                      - text: B
+                                      - text: a
+                                      - text: l
+                                      - text: a
+                                      - text: "n"
+                                      - text: c
+                                      - text: e
+                                      - text: r
+                                - generic [ref=e329]:
+                                  - generic [ref=e331]: Hybrid Cloud Network
+                                  - generic [ref=e332]:
+                                    - link "Direct Connect" [ref=e334]:
+                                      - /url: /dc
+                                      - text: D
+                                      - text: i
+                                      - text: r
+                                      - text: e
+                                      - text: c
+                                      - text: t
+                                      - text: C
+                                      - text: o
+                                      - text: "n"
+                                      - text: "n"
+                                      - text: e
+                                      - text: c
+                                      - text: t
+                                    - link "Virtual Private Network" [ref=e336]:
+                                      - /url: /vpn
+                                      - text: V
+                                      - text: i
+                                      - text: r
+                                      - text: t
+                                      - text: u
+                                      - text: a
+                                      - text: l
+                                      - text: P
+                                      - text: r
+                                      - text: i
+                                      - text: v
+                                      - text: a
+                                      - text: t
+                                      - text: e
+                                      - text: "N"
+                                      - text: e
+                                      - text: t
+                                      - text: w
+                                      - text: o
+                                      - text: r
+                                      - text: k
+                                - generic [ref=e337]:
+                                  - generic [ref=e339]: Cross Region Network
+                                  - link "Cloud Enterprise Network (CEN)" [ref=e342]:
+                                    - /url: /cen
+                                    - text: C
+                                    - text: l
+                                    - text: o
+                                    - text: u
+                                    - text: d
+                                    - text: E
+                                    - text: "n"
+                                    - text: t
+                                    - text: e
+                                    - text: r
+                                    - text: p
+                                    - text: r
+                                    - text: i
+                                    - text: s
+                                    - text: e
+                                    - text: "N"
+                                    - text: e
+                                    - text: t
+                                    - text: w
+                                    - text: o
+                                    - text: r
+                                    - text: k
+                                    - text: (
+                                    - text: C
+                                    - text: E
+                                    - text: "N"
+                                    - text: )
+                            - generic [ref=e345]:
+                              - generic [ref=e347]: Security
+                              - generic [ref=e348]:
+                                - generic [ref=e349]:
+                                  - generic [ref=e351]: Data Security
+                                  - link "Key Management Service" [ref=e354]:
+                                    - /url: /kms
+                                    - text: K
+                                    - text: e
+                                    - text: "y"
+                                    - text: M
+                                    - text: a
+                                    - text: "n"
+                                    - text: a
+                                    - text: g
+                                    - text: e
+                                    - text: m
+                                    - text: e
+                                    - text: "n"
+                                    - text: t
+                                    - text: S
+                                    - text: e
+                                    - text: r
+                                    - text: v
+                                    - text: i
+                                    - text: c
+                                    - text: e
+                                - generic [ref=e355]:
+                                  - generic [ref=e357]: Cloud Security
+                                  - generic [ref=e358]:
+                                    - link "Web Application Firewall" [ref=e360]:
+                                      - /url: /waf/overview
+                                      - text: W
+                                      - text: e
+                                      - text: b
+                                      - text: A
+                                      - text: p
+                                      - text: p
+                                      - text: l
+                                      - text: i
+                                      - text: c
+                                      - text: a
+                                      - text: t
+                                      - text: i
+                                      - text: o
+                                      - text: "n"
+                                      - text: F
+                                      - text: i
+                                      - text: r
+                                      - text: e
+                                      - text: w
+                                      - text: a
+                                      - text: l
+                                      - text: l
+                                    - link "BytePlus Advanced DDoS Protection" [ref=e362]:
+                                      - /url: /ddos-protection/advance
+                                      - text: B
+                                      - text: "y"
+                                      - text: t
+                                      - text: e
+                                      - text: P
+                                      - text: l
+                                      - text: u
+                                      - text: s
+                                      - text: A
+                                      - text: d
+                                      - text: v
+                                      - text: a
+                                      - text: "n"
+                                      - text: c
+                                      - text: e
+                                      - text: d
+                                      - text: D
+                                      - text: D
+                                      - text: o
+                                      - text: S
+                                      - text: P
+                                      - text: r
+                                      - text: o
+                                      - text: t
+                                      - text: e
+                                      - text: c
+                                      - text: t
+                                      - text: i
+                                      - text: o
+                                      - text: "n"
+                                    - link "Cloud Firewall" [ref=e364]:
+                                      - /url: /firewall
+                                      - text: C
+                                      - text: l
+                                      - text: o
+                                      - text: u
+                                      - text: d
+                                      - text: F
+                                      - text: i
+                                      - text: r
+                                      - text: e
+                                      - text: w
+                                      - text: a
+                                      - text: l
+                                      - text: l
+                                    - link "Network Detection and Response" [ref=e366]:
+                                      - /url: /ndr
+                                      - text: "N"
+                                      - text: e
+                                      - text: t
+                                      - text: w
+                                      - text: o
+                                      - text: r
+                                      - text: k
+                                      - text: D
+                                      - text: e
+                                      - text: t
+                                      - text: e
+                                      - text: c
+                                      - text: t
+                                      - text: i
+                                      - text: o
+                                      - text: "n"
+                                      - text: a
+                                      - text: "n"
+                                      - text: d
+                                      - text: R
+                                      - text: e
+                                      - text: s
+                                      - text: p
+                                      - text: o
+                                      - text: "n"
+                                      - text: s
+                                      - text: e
+                                    - link "Cloud DDoS protection_Basic" [ref=e368]:
+                                      - /url: /ddos-protection
+                                      - text: C
+                                      - text: l
+                                      - text: o
+                                      - text: u
+                                      - text: d
+                                      - text: D
+                                      - text: D
+                                      - text: o
+                                      - text: S
+                                      - text: p
+                                      - text: r
+                                      - text: o
+                                      - text: t
+                                      - text: e
+                                      - text: c
+                                      - text: t
+                                      - text: i
+                                      - text: o
+                                      - text: "n"
+                                      - text: _
+                                      - text: B
+                                      - text: a
+                                      - text: s
+                                      - text: i
+                                      - text: c
+                                    - link "SealSuite" [ref=e370]:
+                                      - /url: /sealsuite
+                                      - text: S
+                                      - text: e
+                                      - text: a
+                                      - text: l
+                                      - text: S
+                                      - text: u
+                                      - text: i
+                                      - text: t
+                                      - text: e
+                                    - link "Cloud DDoS protection" [ref=e372]:
+                                      - /url: /ddos-protection/origin
+                                      - text: C
+                                      - text: l
+                                      - text: o
+                                      - text: u
+                                      - text: d
+                                      - text: D
+                                      - text: D
+                                      - text: o
+                                      - text: S
+                                      - text: p
+                                      - text: r
+                                      - text: o
+                                      - text: t
+                                      - text: e
+                                      - text: c
+                                      - text: t
+                                      - text: i
+                                      - text: o
+                                      - text: "n"
+                            - generic [ref=e375]:
+                              - generic [ref=e377]: Storage
+                              - generic [ref=e380]:
+                                - link "Elastic Block Storage" [ref=e382]:
+                                  - /url: /ebs
+                                  - text: E
+                                  - text: l
+                                  - text: a
+                                  - text: s
+                                  - text: t
+                                  - text: i
+                                  - text: c
+                                  - text: B
+                                  - text: l
+                                  - text: o
+                                  - text: c
+                                  - text: k
+                                  - text: S
+                                  - text: t
+                                  - text: o
+                                  - text: r
+                                  - text: a
+                                  - text: g
+                                  - text: e
+                                - link "FileNAS" [ref=e384]:
+                                  - /url: /filenas
+                                  - text: F
+                                  - text: i
+                                  - text: l
+                                  - text: e
+                                  - text: "N"
+                                  - text: A
+                                  - text: S
+                                - link "Torch Log Service" [ref=e386]:
+                                  - /url: /tls
+                                  - text: T
+                                  - text: o
+                                  - text: r
+                                  - text: c
+                                  - text: h
+                                  - text: L
+                                  - text: o
+                                  - text: g
+                                  - text: S
+                                  - text: e
+                                  - text: r
+                                  - text: v
+                                  - text: i
+                                  - text: c
+                                  - text: e
+                                - link "Parallel File Storage" [ref=e388]:
+                                  - /url: /pfs
+                                  - text: P
+                                  - text: a
+                                  - text: r
+                                  - text: a
+                                  - text: l
+                                  - text: l
+                                  - text: e
+                                  - text: l
+                                  - text: F
+                                  - text: i
+                                  - text: l
+                                  - text: e
+                                  - text: S
+                                  - text: t
+                                  - text: o
+                                  - text: r
+                                  - text: a
+                                  - text: g
+                                  - text: e
+                                - link "Torch Object Storage" [ref=e390]:
+                                  - /url: /tos
+                                  - text: T
+                                  - text: o
+                                  - text: r
+                                  - text: c
+                                  - text: h
+                                  - text: O
+                                  - text: b
+                                  - text: j
+                                  - text: e
+                                  - text: c
+                                  - text: t
+                                  - text: S
+                                  - text: t
+                                  - text: o
+                                  - text: r
+                                  - text: a
+                                  - text: g
+                                  - text: e
+                                - link "Data Migration Service" [ref=e392]:
+                                  - /url: /dms
+                                  - text: D
+                                  - text: a
+                                  - text: t
+                                  - text: a
+                                  - text: M
+                                  - text: i
+                                  - text: g
+                                  - text: r
+                                  - text: a
+                                  - text: t
+                                  - text: i
+                                  - text: o
+                                  - text: "n"
+                                  - text: S
+                                  - text: e
+                                  - text: r
+                                  - text: v
+                                  - text: i
+                                  - text: c
+                                  - text: e
+                        - generic [ref=e393]:
+                          - generic [ref=e396]: AI & Personalization
+                          - generic [ref=e398]: Compute
+                          - generic [ref=e400]: Containers & Middleware
+                          - generic [ref=e402]: Content Delivery
+                          - generic [ref=e404]: Data Analytics
+                          - generic [ref=e406]: Database
+                          - generic [ref=e408]: Enterprise Services
+                          - generic [ref=e410]: Media Services
+                          - generic [ref=e412]: Networking
+                          - generic [ref=e414]: Security
+                          - generic [ref=e416]: Storage
+                  - generic [ref=e418]: Popular products
+    - generic [ref=e421]:
+      - generic [ref=e423]:
+        - menu [ref=e424]:
+          - generic [ref=e425]:
+            - generic [ref=e430] [cursor=pointer]:
+              - img [ref=e431]
+              - generic [ref=e438]: ModelArk
+            - generic [ref=e440]:
+              - generic [ref=e443] [cursor=pointer]:
+                - img [ref=e445]
+                - generic [ref=e450]: Overview
+              - generic [ref=e452]:
+                - generic [ref=e453] [cursor=pointer]:
+                  - generic [ref=e457]: GenAI studio
+                  - img [ref=e459]
+                - generic [ref=e461]:
+                  - generic [ref=e465] [cursor=pointer]:
+                    - img [ref=e467]
+                    - generic [ref=e471]:
+                      - generic:
+                        - generic: Foundation models
+                  - generic [ref=e475] [cursor=pointer]:
+                    - img [ref=e477]
+                    - generic [ref=e482]:
+                      - generic:
+                        - generic: Starter apps
+                  - generic [ref=e486] [cursor=pointer]:
+                    - img [ref=e488]
+                    - generic [ref=e491]: Playground
+                    - img [ref=e492]
+              - generic [ref=e496] [cursor=pointer]:
+                - generic [ref=e500]: Agent builder
+                - img [ref=e502]
+              - generic [ref=e506] [cursor=pointer]:
+                - generic [ref=e510]: PromptPilot
+                - img [ref=e512]
+              - generic [ref=e515]:
+                - generic [ref=e516] [cursor=pointer]:
+                  - generic [ref=e520]: Deploy and use
+                  - img [ref=e522]
+                - generic [ref=e524]:
+                  - generic [ref=e528] [cursor=pointer]:
+                    - img [ref=e529]
+                    - generic [ref=e531]: Online inference
+                  - generic [ref=e535] [cursor=pointer]:
+                    - img [ref=e536]
+                    - generic [ref=e541]:
+                      - generic:
+                        - generic: Batch inference
+              - generic [ref=e544] [cursor=pointer]:
+                - generic [ref=e548]: Data management
+                - img [ref=e550]
+              - generic [ref=e553]:
+                - generic [ref=e554] [cursor=pointer]:
+                  - generic [ref=e558]: Configure
+                  - img [ref=e560]
+                - generic [ref=e562]:
+                  - generic [ref=e567] [cursor=pointer]:
+                    - img [ref=e569]
+                    - generic [ref=e573]:
+                      - generic:
+                        - generic: Model activation
+                  - generic [ref=e580] [cursor=pointer]:
+                    - img [ref=e582]
+                    - generic [ref=e585]:
+                      - generic:
+                        - generic: API keys
+                  - generic [ref=e589] [cursor=pointer]:
+                    - img [ref=e591]
+                    - generic [ref=e595]: Usage statistics
+                  - generic [ref=e599] [cursor=pointer]:
+                    - img [ref=e601]
+                    - generic [ref=e607]:
+                      - generic:
+                        - generic: Project configuration
+                  - generic [ref=e611] [cursor=pointer]:
+                    - img [ref=e613]
+                    - generic [ref=e615]: Network configuration
+                  - generic [ref=e619] [cursor=pointer]:
+                    - img [ref=e621]
+                    - generic [ref=e623]: Tokenizer tool
+        - img [ref=e627] [cursor=pointer]
+      - generic [ref=e630]:
+        - banner [ref=e631]:
+          - generic [ref=e632]: API keys
+        - generic [ref=e635]:
+          - alert [ref=e636]:
+            - img [ref=e638]
+            - generic [ref=e646]:
+              - generic [ref=e647]: An API Key is an important credential for requesting ModelArk's large language model services. It is long-term valid. Please do not share the key, keep it secure, and change it regularly to avoid security risks or financial losses due to unauthorized use.
+              - generic [ref=e648]: You are currently in the all resources view. For your data security, only API Keys under the default project are displayed. You can switch projects in the top-left corner of the page to view API Keys under other projects.
+          - generic [ref=e777]:
+            - generic [ref=e780]:
+              - button "Create API Key" [ref=e782] [cursor=pointer]:
+                - img [ref=e783]
+                - text: Create API Key
+              - radiogroup [ref=e785]:
+                - generic [ref=e786] [cursor=pointer]:
+                  - radio "All" [checked]
+                  - generic [ref=e787]: All
+                - generic [ref=e788] [cursor=pointer]:
+                  - radio "Created by me"
+                  - generic [ref=e789]: Created by me
+            - generic [ref=e792]:
+              - generic [ref=e795]:
+                - table [ref=e797]:
+                  - rowgroup [ref=e808]:
+                    - row "Name API Key Status Permissions Project Last Usage Time Creation time Created by Actions" [ref=e809]:
+                      - columnheader "Name" [ref=e810]:
+                        - generic [ref=e811]: Name
+                      - columnheader "API Key" [ref=e812]:
+                        - generic [ref=e813]: API Key
+                      - columnheader "Status" [ref=e814]:
+                        - generic [ref=e815]:
+                          - generic [ref=e816]: Status
+                          - img [ref=e818] [cursor=pointer]
+                      - columnheader "Permissions" [ref=e820]:
+                        - generic [ref=e821]:
+                          - generic [ref=e822]: Permissions
+                          - img [ref=e824] [cursor=pointer]
+                      - columnheader "Project" [ref=e826]:
+                        - generic [ref=e827]: Project
+                      - columnheader "Last Usage Time" [ref=e828]:
+                        - generic [ref=e830] [cursor=pointer]:
+                          - generic [ref=e832]:
+                            - text: Last Usage Time
+                            - img [ref=e833]
+                          - generic [ref=e835]:
+                            - img [ref=e837]
+                            - img [ref=e840]
+                      - columnheader "Creation time" [ref=e842]:
+                        - generic [ref=e844] [cursor=pointer]:
+                          - text: Creation time
+                          - generic [ref=e845]:
+                            - img [ref=e847]
+                            - img [ref=e850]
+                      - columnheader "Created by" [ref=e852]:
+                        - generic [ref=e853]: Created by
+                      - columnheader "Actions" [ref=e854]:
+                        - generic [ref=e855]: Actions
+                - table [ref=e857]:
+                  - rowgroup [ref=e868]:
+                    - row "api-key-20260423054110 ********************************************** Active All default - Apr 23, 2026 5:41:33 AM 3 3002454721 Disable edit permission Delete" [ref=e869]:
+                      - cell "api-key-20260423054110" [ref=e870]:
+                        - generic [ref=e874]: api-key-20260423054110
+                      - cell "**********************************************" [ref=e875]:
+                        - generic [ref=e878]:
+                          - generic [ref=e879]: "**********************************************"
+                          - img [ref=e881] [cursor=pointer]
+                      - cell "Active" [ref=e883]:
+                        - generic [ref=e888]:
+                          - img [ref=e890]
+                          - generic [ref=e898]: Active
+                      - cell "All" [ref=e899]:
+                        - generic [ref=e900]: All
+                      - cell "default" [ref=e901]:
+                        - generic [ref=e902]: default
+                      - cell "-" [ref=e903]:
+                        - generic [ref=e905]: "-"
+                      - cell "Apr 23, 2026 5:41:33 AM" [ref=e906]:
+                        - generic [ref=e908]: Apr 23, 2026 5:41:33 AM
+                      - cell "3 3002454721" [ref=e909]:
+                        - generic [ref=e912]:
+                          - generic [ref=e914]: "3"
+                          - generic [ref=e916]: "3002454721"
+                      - cell "Disable edit permission Delete" [ref=e917]:
+                        - generic [ref=e920]:
+                          - button "Disable" [ref=e921] [cursor=pointer]
+                          - button "edit permission" [ref=e922] [cursor=pointer]
+                          - button "Delete" [ref=e923] [cursor=pointer]
+              - generic [ref=e926]:
+                - list [ref=e927]:
+                  - listitem "Go to previous page" [ref=e928]:
+                    - img [ref=e929]
+                    - text: .
+                  - listitem "page 1" [ref=e931] [cursor=pointer]: "1"
+                  - listitem "Go to next page" [ref=e932]:
+                    - img [ref=e933]
+                    - text: .
+                - generic "page size" [ref=e935]:
+                  - combobox [ref=e936] [cursor=pointer]:
+                    - generic "10 / Page" [ref=e937]:
+                      - generic [ref=e938]:
+                        - textbox
+                        - generic [ref=e939]: 10 / Page
+                      - img [ref=e942]
+  - generic:
+    - iframe [ref=e696]:
+      
+    - generic:
+      - document

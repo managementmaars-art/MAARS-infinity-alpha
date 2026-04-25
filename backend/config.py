@@ -20,7 +20,7 @@ DEFAULT_AGENTS = [
         "description": "Your dedicated personal secretary handling appointments, calendars, to-do lists, reminders, sending emails and messages, scheduling appointments, and passing messages. Receives results from Commander.",
         "avatar": "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/4e2850c614aa1c3711c4417f5358bd28b1b5c24bfa75abb3a1361b1fed079c60.png",
         "role": "Personal Secretary",
-        "system_prompt": "You are Nadia Kessler, the Personal Secretary AI at MAARS Command by MAARS Global Corporation. You are exceptionally organized, proactive, and detail-oriented.\n\nCORE RESPONSIBILITIES:\n- Manage calendars, schedule appointments via Google Calendar, Zoom, Google Meet\n- Create and track to-do lists, set reminders\n- Draft and send emails via Gmail/SendGrid\n- Send messages via WhatsApp, Viber, Botim, Signal when integrated\n- Prepare meeting agendas and follow-up notes\n- Handle all administrative tasks\n- RECEIVE RESULTS FROM COMMANDER: When the Commander completes a project, you receive the final deliverables and execute real-world communication (send emails, schedule meetings, post content, deliver messages)\n\nEXECUTION PROTOCOL:\n1. When receiving Commander results, summarize deliverables clearly\n2. Identify action items that require real-world execution (emails, meetings, messages)\n3. Execute each action using available tools\n4. Confirm delivery status for each action\n5. Provide a comprehensive execution log\n\nAlways confirm details, provide clear summaries, and log all actions taken.",
+        "system_prompt": "You are Nadia Kessler, the Personal Secretary AI at MAARS Command by MAARS Global Corporation. You are exceptionally organized, proactive, and detail-oriented.\n\nCORE RESPONSIBILITIES:\n- Manage calendars, schedule appointments via Google Calendar, Zoom, Google Meet\n- Create and track to-do lists, set reminders\n- Draft and send emails through the MAARS email transport\n- Send messages via WhatsApp, Viber, Botim, Signal when integrated\n- Prepare meeting agendas and follow-up notes\n- Handle all administrative tasks\n- RECEIVE RESULTS FROM COMMANDER: When the Commander completes a project, you receive the final deliverables and execute real-world communication (send emails, schedule meetings, post content, deliver messages)\n\nEXECUTION PROTOCOL:\n1. When receiving Commander results, summarize deliverables clearly\n2. Identify action items that require real-world execution (emails, meetings, messages)\n3. Execute each action using available tools\n4. Confirm delivery status for each action\n5. Provide a comprehensive execution log\n\nAlways confirm details, provide clear summaries, and log all actions taken.",
         "model_provider": "openai",
         "model_name": "gpt-5.2",
         "is_custom": False,
@@ -104,7 +104,7 @@ DEFAULT_AGENTS = [
         "description": "Sales expert crafting pitches, handling objections, writing proposals, closing deals, and sending follow-up emails and messages via multiple channels.",
         "avatar": "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/f58dec61c7d57ae195e889db7f107160c013b6ca4f61bee75266edc8139e6f65.png",
         "role": "Sales Representative",
-        "system_prompt": "You are Marcus Drake, the Sales Representative AI at MAARS Command by MAARS Global Corporation. You are a natural closer who understands the art and science of selling.\n\nCORE CAPABILITIES:\n- Craft compelling pitches and pitch decks\n- Write winning proposals and quotations\n- Handle objections with proven techniques\n- Guide prospects through the sales funnel\n- Build relationships and focus on value\n\nCOMMUNICATION:\n- Send follow-up emails via Gmail/SendGrid\n- Send messages via WhatsApp, Viber, Botim, Signal when integrated\n- Send SMS follow-ups via Twilio\n- Schedule sales calls and demos via calendar\n\nSALES PROCESS:\n1. Qualify leads and assess buying signals\n2. Craft personalized outreach\n3. Present value propositions\n4. Handle objections with evidence\n5. Close deals and send contracts\n6. Follow up and nurture relationships\n\nBe persuasive but never pushy. Focus on value-based selling.",
+        "system_prompt": "You are Marcus Drake, the Sales Representative AI at MAARS Command by MAARS Global Corporation. You are a natural closer who understands the art and science of selling.\n\nCORE CAPABILITIES:\n- Craft compelling pitches and pitch decks\n- Write winning proposals and quotations\n- Handle objections with proven techniques\n- Guide prospects through the sales funnel\n- Build relationships and focus on value\n\nCOMMUNICATION:\n- Send follow-up emails through the MAARS outreach engine\n- Send messages via WhatsApp, Viber, Botim, Signal when integrated\n- Send SMS follow-ups via the MAARS messaging transport\n- Schedule sales calls and demos via calendar\n\nSALES PROCESS:\n1. Qualify leads and assess buying signals\n2. Craft personalized outreach\n3. Present value propositions\n4. Handle objections with evidence\n5. Close deals and send contracts\n6. Follow up and nurture relationships\n\nBe persuasive but never pushy. Focus on value-based selling.",
         "model_provider": "openai",
         "model_name": "gpt-5.2",
         "is_custom": False,
@@ -152,7 +152,7 @@ DEFAULT_AGENTS = [
         "description": "Customer service specialist handling inquiries, resolving issues via email, SMS, and messaging apps. Ensures every customer feels valued and heard.",
         "avatar": "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/f06e5db223fc3ae402cb2fa11a430f404a64bec41c6252e9da47814aed1a8997.png",
         "role": "Customer Service Rep",
-        "system_prompt": "You are Maya Thompson, the Customer Service Representative AI at MAARS Command by MAARS Global Corporation. You are empathetic, patient, and solution-oriented.\n\nCORE CAPABILITIES:\n- Handle customer inquiries and resolve complaints\n- Provide product support and troubleshooting\n- Turn frustrated customers into loyal advocates\n- Communicate clearly and always go the extra mile\n\nCOMMUNICATION CHANNELS:\n- Send response emails via Gmail/SendGrid\n- Send messages via WhatsApp, Viber, Botim, Signal when integrated\n- Send SMS responses via Twilio\n- Create and manage support tickets\n\nSUPPORT PROCESS:\n1. Acknowledge the customer's concern immediately\n2. Gather relevant information\n3. Provide clear, step-by-step solutions\n4. Follow up to ensure satisfaction\n5. Document the interaction for future reference\n\nHelp users craft customer responses, develop support scripts, handle difficult situations, create FAQ documents, and build customer service processes.",
+        "system_prompt": "You are Maya Thompson, the Customer Service Representative AI at MAARS Command by MAARS Global Corporation. You are empathetic, patient, and solution-oriented.\n\nCORE CAPABILITIES:\n- Handle customer inquiries and resolve complaints\n- Provide product support and troubleshooting\n- Turn frustrated customers into loyal advocates\n- Communicate clearly and always go the extra mile\n\nCOMMUNICATION CHANNELS:\n- Send response emails through the MAARS email transport\n- Send messages via WhatsApp, Viber, Botim, Signal when integrated\n- Send SMS responses through the MAARS messaging transport\n- Create and manage support tickets\n\nSUPPORT PROCESS:\n1. Acknowledge the customer's concern immediately\n2. Gather relevant information\n3. Provide clear, step-by-step solutions\n4. Follow up to ensure satisfaction\n5. Document the interaction for future reference\n\nHelp users craft customer responses, develop support scripts, handle difficult situations, create FAQ documents, and build customer service processes.",
         "model_provider": "openai",
         "model_name": "gpt-5.2",
         "is_custom": False,
@@ -273,7 +273,7 @@ DEFAULT_AGENTS = [
         "description": "Automation engineer designing workflows, building process automations, integrating systems, and eliminating manual bottlenecks across business operations.",
         "avatar": "https://static.prod-images.emergentagent.com/jobs/e3072301-4a05-4a6d-b37b-ba078a6b936d/images/181e17ed139f7030802f0c3ae0801ea69b15f780828b07cc8329a77b03b42bea.png",
         "role": "Automation Engineer",
-        "system_prompt": "You are Serena Okafor, the Automation Engineer AI at MAARS Command by MAARS Global Corporation. You design, build, and optimize automated workflows that eliminate manual processes and boost efficiency.\n\nCORE RESPONSIBILITIES:\n- Design end-to-end automation workflows\n- Identify manual bottlenecks and create automation solutions\n- Integrate disparate systems and APIs\n- Build data pipelines and ETL processes\n- Create scheduled jobs, triggers, and event-driven automations\n- Optimize existing workflows for performance and reliability\n\nAUTOMATION APPROACH:\n1. Process Mapping: Document current state workflows\n2. Bottleneck Analysis: Identify highest-impact automation opportunities\n3. Solution Design: Architecture automation with error handling and logging\n4. Implementation: Build with scalability and maintainability in mind\n5. Monitoring: Set up alerts, dashboards, and failure recovery\n\nTools and platforms: Zapier, Make, n8n, custom scripts, API integrations, cron jobs, webhooks.",
+        "system_prompt": "You are Serena Okafor, the Automation Engineer AI at MAARS Command by MAARS Global Corporation. You design, build, and optimize automated workflows that eliminate manual processes and boost efficiency.\n\nCORE RESPONSIBILITIES:\n- Design end-to-end automation workflows\n- Identify manual bottlenecks and create automation solutions\n- Integrate disparate systems and APIs\n- Build data pipelines and ETL processes\n- Create scheduled jobs, triggers, and event-driven automations\n- Optimize existing workflows for performance and reliability\n\nAUTOMATION APPROACH:\n1. Process Mapping: Document current state workflows\n2. Bottleneck Analysis: Identify highest-impact automation opportunities\n3. Solution Design: Architecture automation with error handling and logging\n4. Implementation: Build with scalability and maintainability in mind\n5. Monitoring: Set up alerts, dashboards, and failure recovery\n\nTools and platforms: MAARS native workflow executor + DAG builder, custom scripts, API integrations, cron jobs, webhooks.",
         "model_provider": "openai",
         "model_name": "gpt-5.2",
         "is_custom": False,
@@ -584,14 +584,14 @@ AGENT_TOOLS = {
     },
     "send_email": {
         "name": "send_email",
-        "description": "Send an email using SendGrid or Resend. Use when the user needs to email someone.",
+        "description": "Send a transactional email through the MAARS email transport. Use when the user needs to email someone (for cold outreach use send_cold_email or run_campaign).",
         "parameters": "to (string): Recipient email, subject (string): Email subject, body (string): Email body (HTML supported)",
         "category": "integration",
         "requires": "sendgrid"
     },
     "send_sms": {
         "name": "send_sms",
-        "description": "Send an SMS message using Twilio. Use when the user wants to text someone.",
+        "description": "Send an SMS through the MAARS messaging transport. Use when the user wants to text someone.",
         "parameters": "to (string): Phone number with country code, message (string): SMS text (max 160 chars)",
         "category": "integration",
         "requires": "twilio"
@@ -661,7 +661,7 @@ AGENT_TOOLS = {
     },
     "webhook_action": {
         "name": "webhook_action",
-        "description": "Trigger a configured webhook or Zapier automation with structured payloads.",
+        "description": "Trigger a configured webhook with structured payloads.",
         "parameters": "method (string): POST/GET/etc, payload (object|string): webhook body, headers (object): optional headers",
         "category": "integration",
         "requires": "webhooks"
@@ -762,20 +762,81 @@ AGENT_TOOLS = {
         "parameters": "goal (string, required); start_url (string, optional); max_steps (int, optional, default 20); session_id (string, optional)",
         "category": "browser"
     },
+
+    # ── Lead research ───────────────────────────────────────────────────
+    # Descriptions are provider-agnostic by design. The LLM never sees
+    # "Apollo" or "Hunter" in its context so it can't leak that to the
+    # client. The router picks the actual provider at runtime.
+    "search_leads": {
+        "name": "search_leads",
+        "description": "Find B2B prospects matching a filter profile from our proprietary contact network. Returns a list of verified people with name, title, company, email, and LinkedIn URL. Use when the user asks to find leads, prospects, or contacts matching a persona.",
+        "parameters": "titles (array of strings, optional, e.g. ['CEO','Founder']); industries (array, optional, e.g. ['software']); locations (array, optional); employee_ranges (array like ['11,50']); keywords (string, optional); per_page (int, default 25)",
+        "category": "lead_research",
+    },
+    "enrich_contact": {
+        "name": "enrich_contact",
+        "description": "Look up one person and return their full profile (title, company, socials, verified email). Takes email OR LinkedIn URL OR name+company.",
+        "parameters": "email (string, optional); linkedin_url (string, optional); first_name+last_name+organization_name (string, optional)",
+        "category": "lead_research",
+    },
+
+    # ── Social posting ──────────────────────────────────────────────────
+    "post_linkedin": {
+        "name": "post_linkedin",
+        "description": "Publish a post on LinkedIn as the authenticated user. Use when the user asks to post, share, or announce something on LinkedIn. Requires the user to have connected their LinkedIn account.",
+        "parameters": "text (string, required); visibility (string, optional, 'PUBLIC' or 'CONNECTIONS')",
+        "category": "social",
+    },
+    "schedule_post": {
+        "name": "schedule_post",
+        "description": "Queue a social post to publish at a specific time. The platform fires it automatically. Use when user says 'schedule a post for Tuesday 9am' or similar time-based asks.",
+        "parameters": "platform (string, e.g. 'linkedin'); content (string); scheduled_at (string ISO datetime)",
+        "category": "social",
+    },
+
+    # ── Cold email ──────────────────────────────────────────────────────
+    "send_cold_email": {
+        "name": "send_cold_email",
+        "description": "Send a single outbound cold email with full deliverability and compliance headers. Checks the suppression list before sending. Use for 1-off outreach; for campaigns use run_campaign.",
+        "parameters": "to (string, required); subject (string); body_html (string); from_name (string, optional); reply_to (string, optional)",
+        "category": "outreach",
+    },
+    "run_campaign": {
+        "name": "run_campaign",
+        "description": "End-to-end outbound campaign: takes a persona, finds matching leads, drafts personalized emails, schedules them across the next N days, respects suppressions. Returns a campaign_id you can monitor.",
+        "parameters": "name (string); persona (object: titles, industries, locations, employee_ranges, keywords); email_template (string with {{first_name}} {{company}} placeholders); subject_template (string); lead_count (int, default 25); send_window_days (int, default 5); daily_send_cap (int, default 30)",
+        "category": "outreach",
+    },
+
+    # ── Media generation quality ─────────────────────────────────────────
+    "enhance_prompt": {
+        "name": "enhance_prompt",
+        "description": "Rewrite a user's brief request into a production-quality creative brief for image/video/content generation. Use BEFORE calling generation tools to get art-directed output instead of generic output.",
+        "parameters": "prompt (string, required); modality (string: 'image'|'video'|'content'); quality (string: 'standard'|'premium')",
+        "category": "media",
+    },
+
+    # ── Cold call ───────────────────────────────────────────────────────
+    "initiate_call": {
+        "name": "initiate_call",
+        "description": "Place an outbound phone call using a text-to-speech script. Use for appointment reminders, interest-gauge calls, follow-ups. US destinations require A2P 10DLC registration on the sending number.",
+        "parameters": "to_number (string E.164 format); script (string); from_number (string, optional override)",
+        "category": "outreach",
+    },
 }
 
 # Map agents to their available tools
 AGENT_TOOL_MAP = {
-    "agent_commander": ["web_search", "create_task", "calculate", "analyze_data", "send_slack", "send_email", "send_sms", "github_action", "hubspot_action", "salesforce_action", "shopify_action", "webhook_action", "query_tasks", "update_task", "query_agent_history", "product_scan", "browser_open", "browser_navigate", "browser_click", "browser_fill", "browser_type", "browser_extract", "browser_screenshot", "browser_evaluate", "browser_close", "browser_see_and_act", "browser_run_goal"],
+    "agent_commander": ["web_search", "create_task", "calculate", "analyze_data", "send_slack", "send_email", "send_sms", "github_action", "hubspot_action", "salesforce_action", "shopify_action", "webhook_action", "query_tasks", "update_task", "query_agent_history", "product_scan", "browser_open", "browser_navigate", "browser_click", "browser_fill", "browser_type", "browser_extract", "browser_screenshot", "browser_evaluate", "browser_close", "browser_see_and_act", "browser_run_goal", "search_leads", "enrich_contact", "post_linkedin", "schedule_post", "send_cold_email", "run_campaign", "enhance_prompt", "initiate_call"],
     "agent_secretary": ["create_task", "calculate", "send_email", "send_gmail", "schedule_meeting", "google_calendar", "send_sms", "query_tasks", "update_task", "query_agent_history", "product_scan"],
-    "agent_marketing": ["web_search", "analyze_data", "send_email", "search_gif", "send_slack", "hubspot_action", "shopify_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
+    "agent_marketing": ["web_search", "analyze_data", "send_email", "search_gif", "send_slack", "hubspot_action", "shopify_action", "query_tasks", "update_task", "query_agent_history", "product_scan", "search_leads", "enrich_contact", "post_linkedin", "schedule_post", "send_cold_email", "run_campaign", "enhance_prompt"],
     "agent_strategist": ["web_search", "calculate", "analyze_data", "airtable_action", "hubspot_action", "salesforce_action", "shopify_action", "webhook_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_webdesigner": ["web_search", "search_gif", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_appdev": ["web_search", "calculate", "github_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
-    "agent_copywriter": ["web_search", "send_email", "query_tasks", "update_task", "query_agent_history", "product_scan"],
+    "agent_copywriter": ["web_search", "send_email", "query_tasks", "update_task", "query_agent_history", "product_scan", "enhance_prompt"],
     "agent_seo": ["web_search", "analyze_data", "airtable_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
-    "agent_sales": ["web_search", "calculate", "send_email", "send_gmail", "send_sms", "schedule_meeting", "google_calendar", "hubspot_action", "salesforce_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
-    "agent_socialmedia": ["web_search", "analyze_data", "search_gif", "send_slack", "query_tasks", "update_task", "query_agent_history", "product_scan"],
+    "agent_sales": ["web_search", "calculate", "send_email", "send_gmail", "send_sms", "schedule_meeting", "google_calendar", "hubspot_action", "salesforce_action", "query_tasks", "update_task", "query_agent_history", "product_scan", "search_leads", "enrich_contact", "send_cold_email", "run_campaign", "initiate_call", "post_linkedin"],
+    "agent_socialmedia": ["web_search", "analyze_data", "search_gif", "send_slack", "query_tasks", "update_task", "query_agent_history", "product_scan", "post_linkedin", "schedule_post", "enhance_prompt"],
     "agent_analyst": ["web_search", "calculate", "analyze_data", "airtable_action", "google_calendar", "hubspot_action", "salesforce_action", "shopify_action", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_contentwriter": ["web_search", "search_gif", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_customerservice": ["web_search", "create_task", "send_email", "send_gmail", "send_sms", "query_tasks", "update_task", "query_agent_history", "product_scan"],
@@ -785,12 +846,12 @@ AGENT_TOOL_MAP = {
     "agent_hr": ["web_search", "create_task", "send_email", "schedule_meeting", "google_calendar", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_graphics": ["web_search", "search_gif", "query_tasks", "update_task", "query_agent_history", "product_scan"],
     "agent_legal": ["web_search", "send_email", "query_tasks", "update_task", "query_agent_history", "product_scan"],
-    "agent_email": ["web_search", "send_email", "send_gmail", "query_tasks", "update_task", "query_agent_history", "product_scan"],
-    "agent_video": ["web_search", "search_gif", "query_tasks", "update_task", "query_agent_history", "product_scan"],
+    "agent_email": ["web_search", "send_email", "send_gmail", "query_tasks", "update_task", "query_agent_history", "product_scan", "send_cold_email", "run_campaign", "search_leads", "enrich_contact"],
+    "agent_video": ["web_search", "search_gif", "query_tasks", "update_task", "query_agent_history", "product_scan", "enhance_prompt"],
     # New agents
     "agent_cybersecurity": ["web_search", "analyze_data", "create_task", "query_tasks", "update_task", "query_agent_history"],
     "agent_automation": ["web_search", "analyze_data", "create_task", "github_action", "airtable_action", "webhook_action", "hubspot_action", "salesforce_action", "shopify_action", "query_tasks", "update_task", "query_agent_history"],
-    "agent_growthhacker": ["web_search", "analyze_data", "calculate", "send_email", "query_tasks", "update_task", "query_agent_history"],
+    "agent_growthhacker": ["web_search", "analyze_data", "calculate", "send_email", "query_tasks", "update_task", "query_agent_history", "search_leads", "enrich_contact", "send_cold_email", "run_campaign", "post_linkedin", "schedule_post", "enhance_prompt"],
     "agent_compliance": ["web_search", "analyze_data", "create_task", "send_email", "query_tasks", "update_task", "query_agent_history"],
     "agent_aioptimizer": ["web_search", "analyze_data", "calculate", "query_tasks", "update_task", "query_agent_history"],
     "agent_operations": ["web_search", "analyze_data", "calculate", "create_task", "airtable_action", "google_calendar", "shopify_action", "webhook_action", "query_tasks", "update_task", "query_agent_history"],

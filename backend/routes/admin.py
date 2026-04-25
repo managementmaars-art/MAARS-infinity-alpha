@@ -17,7 +17,7 @@ from models.schemas import Agent, AgentCreate
 from shared import constants as shared_constants
 from shared.constants import (
     SUBSCRIPTION_PLANS, CUSTOM_AGENT_CREDIT_COST,
-    EMERGENT_LLM_KEY, UPLOAD_DIR, STRIPE_API_KEY,
+    UPLOAD_DIR, STRIPE_API_KEY,
     DEFAULT_CUSTOM_PACKAGE_CONFIG, DEFAULT_CREDIT_PACKAGES,
     INTEGRATION_SERVICES, ROOT_DIR
 )
@@ -71,15 +71,8 @@ async def trigger_avatar_generation(admin: User = Depends(require_admin)):
     async def _run_generation():
         global _portrait_gen_state
         try:
-            from emergentintegrations.llm.openai.image_generation import OpenAIImageGeneration
+            from services.media_router import route_image
             import hashlib
-            llm_key = EMERGENT_LLM_KEY
-            if not llm_key:
-                _portrait_gen_state["running"] = False
-                _portrait_gen_state["error"] = "EMERGENT_LLM_KEY not configured"
-                return
-
-            image_gen = OpenAIImageGeneration(api_key=llm_key)
             SKIN_TONES = ["light", "medium", "olive", "tan", "brown", "dark"]
             HAIR_STYLES = ["short straight", "medium length", "curly", "slicked back", "shoulder length"]
             HAIR_COLORS = ["black", "dark brown", "brown", "auburn", "blonde", "gray"]
@@ -111,9 +104,9 @@ async def trigger_avatar_generation(admin: User = Depends(require_admin)):
                                   f"{skin} skin tone, {hair_c} {hair_s} hair, wearing a {attire}, "
                                   f"confident and approachable expression, studio lighting, {bg} background, "
                                   f"4K photorealistic, sharp focus, business portrait style")
-                        images = await image_gen.generate_images(prompt=prompt, model="gpt-image-1", number_of_images=1)
-                        if images:
-                            file_path.write_bytes(images[0])
+                        image_bytes, _meta = await route_image(prompt=prompt, quality="standard")
+                        if image_bytes:
+                            file_path.write_bytes(image_bytes)
                             await db.agents.update_one({"agent_id": agent_id}, {"$set": {"avatar": f"/api/static/avatars/{agent_id}.png"}})
                             _portrait_gen_state["done"] += 1
                         else:
@@ -517,8 +510,7 @@ async def admin_get_api_keys(admin: User = Depends(require_admin)):
         "novita", "lepton", "lambda", "amazon", "minimax", "inception", "arcee",
     ]
     result = {
-        "active_provider": config.get("active_provider", "emergent"),
-        "emergent_key_set": bool(EMERGENT_LLM_KEY),
+        "active_provider": config.get("active_provider", "direct"),
         "cost_reference": cost_reference,
     }
     for p in all_providers:
@@ -732,6 +724,12 @@ async def admin_test_api_key(request: Request, admin: User = Depends(require_adm
             "success_msg": lambda r: "Key verified! Qwen / Alibaba DashScope access confirmed.",
             "help": "Get your key at https://dashscope.aliyuncs.com/"
         },
+        "reka": {
+            "url": "https://api.reka.ai/v1/models",
+            "headers": {"Authorization": f"Bearer {api_key}"},
+            "success_msg": lambda r: "Key verified! Reka access confirmed.",
+            "help": "Get your key at https://platform.reka.ai/"
+        },
     }
     
     config = test_configs.get(provider)
@@ -798,23 +796,71 @@ async def admin_update_pricing(request: Request, admin: User = Depends(require_a
     if "custom_agent_credit_cost" in pricing_data:
         shared_constants.CUSTOM_AGENT_CREDIT_COST = pricing_data["custom_agent_credit_cost"]
 
+    # Persist Pricing Engine Config (tokens/credit + per-unit media costs) —
+    # previously dropped silently. Only updates fields the client actually
+    # sent so a partial PUT can't wipe stored values (e.g. lock timestamp,
+    # ai_cost_per_credit). Read the existing doc first so unsent fields
+    # carry forward. If `engine_config_lock: true`, stamp a lock timestamp.
+    existing = await db.platform_config.find_one({"config_type": "pricing"}) or {}
     config_doc = {
         "config_type": "pricing",
         "plans": SUBSCRIPTION_PLANS,
         "custom_agent_credit_cost": shared_constants.CUSTOM_AGENT_CREDIT_COST,
-        "ai_cost_per_credit": pricing_data.get("ai_cost_per_credit", 0.003),
-        "target_profit_margin": pricing_data.get("target_profit_margin", 200),
-        "bdt_exchange_rate": pricing_data.get("bdt_exchange_rate", 107),
-        "credit_packages": pricing_data.get("credit_packages"),
         "updated_at": datetime.now(timezone.utc).isoformat(),
-        "updated_by": admin.email
+        "updated_by": admin.email,
     }
+    # Carry forward existing cost fields unless the client explicitly sent
+    # new ones. This ensures ai_cost_per_credit (live blended cost) stays in
+    # sync with what the lock snapshot captured.
+    for field, default in (
+        ("ai_cost_per_credit", 0.003),
+        ("target_profit_margin", 200),
+        ("bdt_exchange_rate", 107),
+        ("credit_packages", None),
+    ):
+        if field in pricing_data and pricing_data[field] is not None:
+            config_doc[field] = pricing_data[field]
+        elif field in existing:
+            config_doc[field] = existing[field]
+        else:
+            config_doc[field] = default
+    if pricing_data.get("engine_config") is not None:
+        config_doc["engine_config"] = pricing_data["engine_config"]
+    elif "engine_config" in existing:
+        config_doc["engine_config"] = existing["engine_config"]
+    if pricing_data.get("engine_config_lock"):
+        config_doc["engine_config_locked_at"] = datetime.now(timezone.utc).isoformat()
+        config_doc["engine_config_locked_by"] = admin.email
+        # Snapshot the AI-cost fields at lock time so the UI can show what
+        # the config was locked against even if the live cost drifts later.
+        config_doc["ai_cost_locked_snapshot"] = {
+            "ai_cost_per_credit": config_doc["ai_cost_per_credit"],
+            "target_profit_margin": config_doc["target_profit_margin"],
+            "bdt_exchange_rate": config_doc["bdt_exchange_rate"],
+            "locked_at": config_doc["engine_config_locked_at"],
+        }
+    elif "engine_config_locked_at" in existing:
+        # Preserve prior lock metadata when the operator publishes without
+        # locking (regular publish shouldn't clear the lock stamp).
+        config_doc["engine_config_locked_at"] = existing["engine_config_locked_at"]
+        config_doc["engine_config_locked_by"] = existing.get("engine_config_locked_by")
+        if "ai_cost_locked_snapshot" in existing:
+            config_doc["ai_cost_locked_snapshot"] = existing["ai_cost_locked_snapshot"]
 
     await db.platform_config.update_one(
         {"config_type": "pricing"},
         {"$set": config_doc},
         upsert=True
     )
+
+    # Re-derive stripe_service.PACKAGES from the new SUBSCRIPTION_PLANS so the
+    # Stripe checkout flow + admin packages endpoints see the new operator
+    # splits without a backend restart.
+    try:
+        from services.billing import stripe_service
+        await stripe_service.load_overrides_from_db()
+    except Exception as exc:
+        logger.warning("PACKAGES rebuild after pricing update failed: %s", exc)
 
     await log_admin_action(admin.email, "pricing_update", {"plans_updated": list(plans.keys()) if plans else []})
     return {"message": "Pricing updated successfully", "pricing": config_doc}
@@ -866,31 +912,256 @@ async def admin_delete_plan(plan_id: str, admin: User = Depends(require_admin)):
     await log_admin_action(admin.email, "plan_deleted", {"plan_id": plan_id})
     return {"message": f"Plan '{plan_id}' deleted"}
 
+@router.get("/admin/rate-limits")
+async def admin_rate_limits(admin: User = Depends(require_admin)):
+    """Per-provider rate-limit utilization (rolling 60s window).
+    Exists so the operator can see WHY a provider would be skipped by the
+    rate-limit-aware selector — and catch cases where every free provider
+    is saturated simultaneously."""
+    from services.rate_limiter import snapshot
+    return {"object": "rate_limit_snapshot", "data": snapshot()}
+
+
+@router.get("/admin/scheduler/status")
+async def admin_scheduler_status(admin: User = Depends(require_admin)):
+    """Background scheduler diagnostics. Shows whether the 30s poller is
+    running + how many items are queued / waiting / failed across the
+    tracked collections. This is how the operator confirms 'scheduled'
+    items are actually firing."""
+    from services.scheduler import scheduler_status, DISPATCH_REGISTRY
+    status = scheduler_status()
+    queue_stats = {}
+    for coll_name, _ in DISPATCH_REGISTRY:
+        coll = db[coll_name]
+        queue_stats[coll_name] = {
+            "scheduled":  await coll.count_documents({"status": "scheduled"}),
+            "processing": await coll.count_documents({"status": "processing"}),
+            "sent":       await coll.count_documents({"status": {"$in": ["sent", "published", "initiated"]}}),
+            "failed":     await coll.count_documents({"status": "failed"}),
+        }
+    return {**status, "queues": queue_stats}
+
+
 @router.get("/admin/avg-cost")
 async def admin_avg_cost(admin: User = Depends(require_admin)):
-    """Get the real average cost per API call from usage_logs"""
+    """
+    Real blended cost per credit across ALL providers the router used.
+
+    Credits ≠ tokens. 1 credit = 1 API call routed through the smart router.
+    The router picks the cheapest provider (often free-tier), so the real
+    cost per credit is much lower than any single provider's token price.
+
+    Also breaks down free vs paid provider routing for operator visibility.
+    """
+    # Overall totals — unified across legacy (usage_logs) + current
+    # (gateway_usage_logs) collections. Field names differ between them:
+    #   usage_logs:          estimated_cost_usd
+    #   gateway_usage_logs:  cost_usd
+    # Use $ifNull to coalesce. This is why "Providers Active" used to show
+    # only 2 — all recent traffic went to gateway_usage_logs but this
+    # endpoint read usage_logs exclusively.
     cost_pipeline = [
         {"$group": {
             "_id": None,
-            "total_cost": {"$sum": "$estimated_cost_usd"},
+            "total_cost": {"$sum": {"$ifNull": ["$cost_usd", "$estimated_cost_usd"]}},
             "total_calls": {"$sum": 1},
-            "total_input_tokens": {"$sum": "$input_tokens"},
-            "total_output_tokens": {"$sum": "$output_tokens"}
+            "total_input_tokens": {"$sum": {"$ifNull": ["$input_tokens", 0]}},
+            "total_output_tokens": {"$sum": {"$ifNull": ["$output_tokens", 0]}},
         }}
     ]
-    cost_result = await db.usage_logs.aggregate(cost_pipeline).to_list(1)
-    if cost_result and cost_result[0]["total_calls"] > 0:
-        r = cost_result[0]
-        avg = r["total_cost"] / r["total_calls"]
+    # Run both collections; merge provider stats so every provider the router
+    # actually used shows up in "Providers Active".
+    legacy_cost = await db.usage_logs.aggregate(cost_pipeline).to_list(1)
+    gw_cost     = await db.gateway_usage_logs.aggregate(cost_pipeline).to_list(1)
+
+    def _merge_cost(*results):
+        merged = {"total_cost": 0.0, "total_calls": 0, "total_input_tokens": 0, "total_output_tokens": 0}
+        for rs in results:
+            if rs:
+                merged["total_cost"] += rs[0].get("total_cost", 0) or 0
+                merged["total_calls"] += rs[0].get("total_calls", 0) or 0
+                merged["total_input_tokens"] += rs[0].get("total_input_tokens", 0) or 0
+                merged["total_output_tokens"] += rs[0].get("total_output_tokens", 0) or 0
+        return [merged] if merged["total_calls"] else []
+    cost_result = _merge_cost(legacy_cost, gw_cost)
+
+    # Per-provider breakdown — merged across both collections.
+    provider_pipeline = [
+        {"$group": {
+            "_id": "$provider",
+            "calls": {"$sum": 1},
+            "cost": {"$sum": {"$ifNull": ["$cost_usd", "$estimated_cost_usd"]}},
+            "input_tokens": {"$sum": {"$ifNull": ["$input_tokens", 0]}},
+            "output_tokens": {"$sum": {"$ifNull": ["$output_tokens", 0]}},
+        }},
+        {"$sort": {"calls": -1}},
+    ]
+    legacy_provs = await db.usage_logs.aggregate(provider_pipeline).to_list(50)
+    gw_provs     = await db.gateway_usage_logs.aggregate(provider_pipeline).to_list(50)
+    # Union provider stats by _id so one provider appearing in both collections
+    # doesn't get double-counted twice as two entries; sums merge.
+    _prov_agg: dict = {}
+    for r in (legacy_provs or []) + (gw_provs or []):
+        pid = r["_id"]
+        if pid not in _prov_agg:
+            _prov_agg[pid] = {"_id": pid, "calls": 0, "cost": 0.0,
+                              "input_tokens": 0, "output_tokens": 0}
+        _prov_agg[pid]["calls"] += r.get("calls", 0) or 0
+        _prov_agg[pid]["cost"]  += r.get("cost", 0) or 0
+        _prov_agg[pid]["input_tokens"]  += r.get("input_tokens", 0) or 0
+        _prov_agg[pid]["output_tokens"] += r.get("output_tokens", 0) or 0
+    provider_stats = sorted(_prov_agg.values(), key=lambda x: -x["calls"])
+
+    # Classify free vs paid — unified across the codebase.
+    from shared.free_providers import FREE_PROVIDERS
+    free_calls = sum(p["calls"] for p in provider_stats if p["_id"] in FREE_PROVIDERS)
+    paid_calls = sum(p["calls"] for p in provider_stats if p["_id"] not in FREE_PROVIDERS)
+    free_cost = sum(p["cost"] for p in provider_stats if p["_id"] in FREE_PROVIDERS)
+    paid_cost = sum(p["cost"] for p in provider_stats if p["_id"] not in FREE_PROVIDERS)
+
+    # Need 50+ real calls before trusting usage-based average.
+    # Below that, test calls skew the data. Use model pricing instead.
+    MIN_CALLS_FOR_REAL_DATA = 50
+
+    # Pull the single source of truth so this endpoint, Package Advisor, and
+    # Universal Gateway stats all return the same $/credit figure. Threshold
+    # + free-provider set are centralised in services.blended_cost.
+    from services.costing.blended_cost import get_blended_cost_per_credit
+    _bc = await get_blended_cost_per_credit()
+
+    if _bc["source"] == "real_usage":
+        r = cost_result[0] if cost_result else {}
         return {
-            "avg_cost_per_credit": round(avg, 6),
-            "total_cost_usd": round(r["total_cost"], 6),
-            "total_calls": r["total_calls"],
+            "avg_cost_per_credit": _bc["value"],
+            "total_cost_usd": _bc["total_cost_usd"],
+            "total_calls": _bc["total_calls"],
             "total_input_tokens": r.get("total_input_tokens", 0),
             "total_output_tokens": r.get("total_output_tokens", 0),
-            "source": "real_usage"
+            "source": "real_usage",
+            "free_routing_pct": _bc["free_routing_pct"],
+            "free_calls": _bc["free_calls"],
+            "paid_calls": _bc["paid_calls"],
+            "free_cost_usd": round(free_cost, 6),
+            "paid_cost_usd": round(paid_cost, 6),
+            "avg_paid_cost_per_call": round(paid_cost / max(paid_calls, 1), 8),
+            "providers_used": len(provider_stats),
+            "top_providers": [
+                {"provider": p["_id"], "calls": p["calls"], "cost_usd": round(p["cost"], 6)}
+                for p in provider_stats[:10]
+            ],
         }
-    return {"avg_cost_per_credit": 0.003, "total_cost_usd": 0, "total_calls": 0, "total_input_tokens": 0, "total_output_tokens": 0, "source": "default"}
+
+    # No real usage yet — calculate from actual MODEL_COSTS_MAP pricing data
+    # This gives the TRUE cost per credit based on what your providers charge.
+    #
+    # Smart router picks cheapest model for each task.
+    # 1 credit = 1 request ≈ 500 tokens (250 input + 250 output average)
+    # Cost per credit = (input_price × 250 + output_price × 250) / 1,000,000
+    from services.llm_service import MODEL_COSTS_MAP
+
+    TOKENS_PER_CREDIT = 500  # average tokens per request
+    INPUT_RATIO = 0.5  # 50% input, 50% output
+
+    # Get all model costs grouped by provider
+    provider_cheapest = {}  # provider -> cheapest cost per credit
+    all_costs = []
+    for model_id, info in MODEL_COSTS_MAP.items():
+        if info.get("per_unit"):  # skip image/video models
+            continue
+        input_cost = info.get("input", 0)
+        output_cost = info.get("output", 0)
+        # Cost for 1 credit (500 tokens, 50/50 split) — prices are per 1M tokens
+        cost_per_credit = ((input_cost * INPUT_RATIO) + (output_cost * (1 - INPUT_RATIO))) * TOKENS_PER_CREDIT / 1_000_000
+        provider = info.get("provider", "unknown")
+        all_costs.append({"model": model_id, "provider": provider, "cost_per_credit": cost_per_credit})
+        if provider not in provider_cheapest or cost_per_credit < provider_cheapest[provider]:
+            provider_cheapest[provider] = cost_per_credit
+
+    # The smart router picks the cheapest available provider per request
+    # Sort providers by their cheapest model cost
+    sorted_providers = sorted(provider_cheapest.items(), key=lambda x: x[1])
+
+    # Free-tier providers cost $0 for the operator — unified source of truth.
+    from shared.free_providers import FREE_PROVIDERS as FREE_PROVIDERS_SET
+    configured_providers = set()
+    from shared.constants import DIRECT_API_KEYS
+    for slug, key in DIRECT_API_KEYS.items():
+        if key:
+            configured_providers.add(slug)
+
+    # Calculate weighted blended cost:
+    # Router tries cheapest first. With 6 free providers, most traffic = $0.
+    # Remaining traffic goes to cheapest paid provider available.
+    free_configured = configured_providers & FREE_PROVIDERS_SET
+    paid_configured = configured_providers - FREE_PROVIDERS_SET
+
+    # Weighted average: free providers handle ~70%, paid handle ~30%
+    # But even paid providers are cheap (deepseek, fireworks, together)
+    free_pct = len(free_configured) / max(len(configured_providers), 1)
+    free_pct = max(free_pct, 0.5)  # at least 50% free routing
+
+    # Average cost of cheapest paid providers
+    paid_costs = [provider_cheapest.get(p, 0.001) for p in paid_configured if p in provider_cheapest]
+    avg_paid_cost = sum(sorted(paid_costs)[:5]) / max(len(paid_costs[:5]), 1) if paid_costs else 0.0005
+
+    blended_cost = (1 - free_pct) * avg_paid_cost
+
+    # ── Per-modality real costs (from MAARS media router, validated live in
+    # ── Audit 011/012/013 benchmarks). These are the OPERATOR's real $ per unit,
+    # ── NOT the client-facing credit cost. Client cost = credits × $0.001.
+    media_costs = {
+        "chat_credits_per_call":    1,       # avg via smart router (Gemini-flash/Groq)
+        "image_credits_standard":   20,      # gemini-3-pro-image-preview / gpt-image-1 @ $0.02
+        "image_credits_premium":    40,      # dall-e-3 @ $0.04
+        "video_credits_per_second": 100,     # sora-2 @ $0.10/sec (400 per 4-sec clip)
+        "tts_credits_per_1k_char":  15,      # openai tts-1 @ $0.015/1K ch
+        "tts_premium_per_1k_char":  180,     # elevenlabs eleven_turbo_v2_5 @ $0.18
+        "voiceover_hd_per_1k_char": 30,      # openai tts-1-hd fallback @ $0.030
+        "stt_credits_per_minute":   6,       # openai whisper-1 @ $0.006/min
+    }
+
+    # ── Realistic blended cost — a SMB client workflow (validated in Audit 013):
+    # ── 5 agent chats + 1 content gen + 1 vibe-code app + 3 images + 1 4-sec video
+    # ── + 2 TTS (short + premium ad) = 469 credits, ~$0.47 real cost.
+    # ── This is the "mixed use" number operators should pitch on; chat-only is
+    # ── the floor, media-heavy is the ceiling.
+    realistic_scenario = {
+        "chat_turns":       5,
+        "content_gen":      1,
+        "vibe_coding":      1,
+        "images_standard":  3,
+        "video_seconds":    4,
+        "tts_1k_chars":     2,  # one short + one ~1K-char premium
+        "total_credits":    469,
+        "total_usd":        0.469,
+        "blended_cost_per_credit": round(0.469 / 469, 6),  # ≈ $0.001/credit for media-mixed
+        "source": "Audit 013 live client scenario — 13/13 OK",
+    }
+
+    return {
+        "avg_cost_per_credit": round(blended_cost, 8),
+        "realistic_blended_cost_per_credit": realistic_scenario["blended_cost_per_credit"],
+        "realistic_scenario": realistic_scenario,
+        "media_costs": media_costs,
+        "total_cost_usd": 0,
+        "total_calls": 0,
+        "total_input_tokens": 0,
+        "total_output_tokens": 0,
+        "source": "calculated_from_model_pricing",
+        "free_routing_pct": round(free_pct * 100, 1),
+        "free_calls": 0,
+        "paid_calls": 0,
+        "free_cost_usd": 0,
+        "paid_cost_usd": 0,
+        "avg_paid_cost_per_call": round(avg_paid_cost, 8),
+        "providers_used": len(configured_providers),
+        "providers_free": len(free_configured),
+        "providers_paid": len(paid_configured),
+        "cheapest_models": [{"model": c["model"], "provider": c["provider"], "cost_per_credit": round(c["cost_per_credit"], 8)} for c in sorted(all_costs, key=lambda x: x["cost_per_credit"])[:10]],
+        "top_providers": [{"provider": p, "cheapest_cost_per_credit": round(c, 8)} for p, c in sorted_providers[:15]],
+        "tokens_per_credit": TOKENS_PER_CREDIT,
+        "note": f"Calculated from {len(MODEL_COSTS_MAP)} model prices. {len(free_configured)} free + {len(paid_configured)} paid providers configured. Smart router picks cheapest available.",
+    }
 
 @router.get("/exchange-rate")
 async def get_exchange_rate():
@@ -900,40 +1171,43 @@ async def get_exchange_rate():
 
 @router.post("/admin/pricing/calculate")
 async def admin_calculate_pricing(calc_data: dict, admin: User = Depends(require_admin)):
-    """Calculate recommended prices based on AI costs and target profit margin"""
-    ai_cost_per_credit = calc_data.get("ai_cost_per_credit", 0.003)
-    target_margin_pct = calc_data.get("target_profit_margin", 200)
-    bdt_rate = calc_data.get("bdt_exchange_rate", 107)
-    
-    # Calculate recommended prices for each plan
-    plans = {}
+    """Calculate recommended prices based on AI costs and target profit margin.
+    All math flows through services.pricing_math so the formulas match every
+    other surface (Package Advisor, Pricing Command Center, Profit Engine)."""
+    from services.pricing_math import (
+        ai_cost_usd, suggested_price, profit_usd, usd_to_bdt,
+        DEFAULT_AI_COST_PER_CREDIT, DEFAULT_MARGIN_PCT, DEFAULT_BDT_RATE,
+    )
+    ai_cost_per_credit = calc_data.get("ai_cost_per_credit", DEFAULT_AI_COST_PER_CREDIT)
+    target_margin_pct  = calc_data.get("target_profit_margin", DEFAULT_MARGIN_PCT)
+    bdt_rate           = calc_data.get("bdt_exchange_rate", DEFAULT_BDT_RATE)
+
     plan_configs = {
-        "free": {"credits": 50, "max_agents": 1, "max_custom_agents": 0},
-        "starter": {"credits": 500, "max_agents": 5, "max_custom_agents": 2},
-        "pro": {"credits": 2000, "max_agents": 10, "max_custom_agents": 5},
+        "free":     {"credits": 50,   "max_agents": 1,  "max_custom_agents": 0},
+        "starter":  {"credits": 500,  "max_agents": 5,  "max_custom_agents": 2},
+        "pro":      {"credits": 2000, "max_agents": 10, "max_custom_agents": 5},
         "business": {"credits": 6000, "max_agents": 20, "max_custom_agents": -1},
     }
-    
+
+    plans = {}
     for plan_id, config in plan_configs.items():
-        base_cost_usd = config["credits"] * ai_cost_per_credit
-        margin_multiplier = 1 + (target_margin_pct / 100)
-        recommended_usd = round(base_cost_usd * margin_multiplier, 2)
-        recommended_bdt = round(recommended_usd * bdt_rate)
-        
+        credits = config["credits"]
+        base_cost = ai_cost_usd(credits, ai_cost_per_credit)
+        recommended_usd = suggested_price(base_cost, target_margin_pct) if plan_id != "free" else 0
         plans[plan_id] = {
-            "credits": config["credits"],
-            "base_ai_cost_usd": round(base_cost_usd, 2),
-            "recommended_price_usd": recommended_usd if plan_id != "free" else 0,
-            "recommended_price_bdt": recommended_bdt if plan_id != "free" else 0,
-            "profit_per_user_usd": round(recommended_usd - base_cost_usd, 2) if plan_id != "free" else 0,
-            "actual_margin_pct": target_margin_pct if plan_id != "free" else 0
+            "credits": credits,
+            "base_ai_cost_usd": round(base_cost, 2),
+            "recommended_price_usd": recommended_usd,
+            "recommended_price_bdt": usd_to_bdt(recommended_usd, bdt_rate),
+            "profit_per_user_usd": profit_usd(recommended_usd, base_cost),
+            "actual_margin_pct": target_margin_pct if plan_id != "free" else 0,
         }
-    
+
     return {
-        "ai_cost_per_credit": ai_cost_per_credit,
+        "ai_cost_per_credit":  ai_cost_per_credit,
         "target_profit_margin": target_margin_pct,
-        "bdt_exchange_rate": bdt_rate,
-        "plan_calculations": plans
+        "bdt_exchange_rate":   bdt_rate,
+        "plan_calculations":   plans,
     }
 
 
@@ -2265,13 +2539,40 @@ async def admin_analytics_export(format: str = "csv", admin: User = Depends(requ
 @router.put("/admin/agents/{agent_id}/settings")
 async def admin_update_agent_settings(agent_id: str, body: dict = Body(...), admin: User = Depends(require_admin)):
     """Update agent settings including generation permissions"""
-    allowed_fields = {"can_generate_image", "can_generate_video", "can_generate_pdf", "can_generate_files", "system_prompt", "capabilities", "is_active"}
+    allowed_fields = {
+        "can_generate_image", "can_generate_video", "can_generate_pdf", "can_generate_files",
+        "system_prompt", "capabilities", "is_active",
+        "monthly_budget_credits", "throttle_at_pct",
+    }
     update = {k: v for k, v in body.items() if k in allowed_fields}
+    if "monthly_budget_credits" in update and update["monthly_budget_credits"] is not None:
+        try:
+            update["monthly_budget_credits"] = max(0, int(update["monthly_budget_credits"]))
+        except (TypeError, ValueError):
+            raise HTTPException(400, "monthly_budget_credits must be an integer or null")
+    if "throttle_at_pct" in update and update["throttle_at_pct"] is not None:
+        try:
+            v = float(update["throttle_at_pct"])
+            if not (0 < v <= 1):
+                raise ValueError
+            update["throttle_at_pct"] = v
+        except (TypeError, ValueError):
+            raise HTTPException(400, "throttle_at_pct must be a number in (0, 1]")
     if not update:
         raise HTTPException(status_code=400, detail="No valid fields to update")
+    prompt_changed = "system_prompt" in update
     result = await db.agents.update_one({"agent_id": agent_id}, {"$set": update})
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Agent not found")
+    # System-prompt edit invalidates the skill-cache for this agent (the
+    # fingerprint includes system messages, so stale entries age out on
+    # their own — but drop them eagerly so operators see the change).
+    if prompt_changed:
+        try:
+            from services import skill_cache
+            await skill_cache.invalidate_agent(agent_id)
+        except Exception:
+            pass
     return {"success": True, "updated": list(update.keys())}
 
 @router.put("/admin/agents/{agent_id}/brain")
@@ -2722,15 +3023,20 @@ async def get_nav_visibility_public():
 
 @router.get("/admin/gateway/stats")
 async def admin_gateway_stats(current_user: User = Depends(require_admin)):
-    """Admin-only: aggregated Universal Gateway usage stats across ALL users."""
-    logs = await db.llm_usage_logs.find(
-        {"source": "universal_gateway"},
-        {"_id": 0}
+    """Admin-only: aggregated Universal Gateway usage stats across ALL users.
+
+    Reads db.gateway_usage_logs — the single collection every LLM call writes to
+    now that /api/v1/chat/completions AND services/llm_gateway.complete() share
+    the same record path. The old `llm_usage_logs` + `source:universal_gateway`
+    filter was stale (Audit 015).
+    """
+    logs = await db.gateway_usage_logs.find(
+        {}, {"_id": 0}
     ).sort("timestamp", -1).limit(5000).to_list(5000)
 
     total_calls   = len(logs)
     total_cost    = round(sum(l.get("cost_usd", 0) for l in logs), 6)
-    total_credits = sum(l.get("credits_used", 0) for l in logs)
+    total_credits = sum(l.get("credits_charged", 0) or l.get("credits_used", 0) for l in logs)
     fallback_cnt  = sum(1 for l in logs if l.get("fallback_used"))
     avg_latency   = round(sum(l.get("latency_ms", 0) for l in logs) / max(total_calls, 1), 1)
 
@@ -2778,9 +3084,8 @@ async def admin_gateway_logs(
 ):
     """Admin-only: last N routing decisions across all users."""
     limit = min(max(limit, 1), 200)
-    logs = await db.llm_usage_logs.find(
-        {"source": "universal_gateway"},
-        {"_id": 0}
+    logs = await db.gateway_usage_logs.find(
+        {}, {"_id": 0}
     ).sort("timestamp", -1).limit(limit).to_list(limit)
 
     # Enrich with user email where possible
@@ -2848,12 +3153,124 @@ async def admin_gateway_health(current_user: User = Depends(require_admin)):
         {"id": "moonshot",   "name": "Moonshot (Kimi)",  "models": ["Kimi Auto", "Kimi 128K"]},
         {"id": "qwen",       "name": "Qwen / Alibaba",   "models": ["Qwen Max", "QwQ-32B"]},
         {"id": "elevenlabs", "name": "ElevenLabs (TTS)", "models": ["Multilingual v2", "Turbo v2.5"]},
+        # Extended providers — any key here shows up on Provider Health so
+        # smoke status can flip Inactive → Live once the smoke runs.
+        {"id": "bytez",       "name": "Bytez",            "models": ["DialoGPT-small", "Qwen2.5 sm"]},
+        {"id": "openrouter",  "name": "OpenRouter",       "models": ["Claude Sonnet 4.6", "GPT-5"]},
+        {"id": "writer",      "name": "Writer / Palmyra", "models": ["Palmyra X5", "Palmyra X4"]},
+        {"id": "zhipu",       "name": "Zhipu / GLM",      "models": ["GLM-4.5-Flash", "GLM-4.5V"]},
+        {"id": "huggingface", "name": "HuggingFace",      "models": ["Llama 3.1 8B", "Mixtral 8x7B"]},
+        {"id": "upstage",     "name": "Upstage / Solar",  "models": ["Solar Pro", "Solar Mini"]},
+        {"id": "hyperbolic",  "name": "Hyperbolic",       "models": ["Llama 3.3 70B", "DeepSeek V3"]},
+        {"id": "doubao",      "name": "Doubao / ByteDance","models": ["Doubao Pro 128K", "Doubao Lite"]},
+        {"id": "yi",          "name": "Yi / 01.AI",        "models": ["Yi Lightning", "Yi Large"]},
+        {"id": "llama",       "name": "Meta Llama API",    "models": ["Llama 3.3 70B", "Llama 4"]},
+        {"id": "reka",        "name": "Reka",              "models": ["Reka Core", "Reka Flash", "Reka Edge"]},
     ]
 
     has_emergent = bool(api_keys.get("emergent", ""))
 
+    # Action hints for providers that have a key but can't route. These map
+    # common provider errors to the concrete operator fix — surfaced on the
+    # Provider Health card so the operator knows exactly what to do.
+    # kind: "deposit" = pay to unlock; "console" = click-through in provider UI (free);
+    #       "waitlist" = requires approval from provider.
+    FIX_HINTS = {
+        "xai": {
+            "action": "Add credits to your xAI team",
+            "detail": "Newly-created teams start with $0 spend limit. Adding a card unlocks $25/mo free dev credit on data-sharing opt-in.",
+            "link": "https://console.x.ai/team/default/billing",
+            "kind": "deposit", "min_deposit_usd": 5,
+        },
+        "together": {
+            "action": "Top up Together AI balance",
+            "detail": "Account is in read-only mode (0 RPM) until initial deposit. $5 unlocks 600 RPM + 77 free-priced models.",
+            "link": "https://api.together.xyz/settings/billing",
+            "kind": "deposit", "min_deposit_usd": 5,
+        },
+        "hyperbolic": {
+            "action": "Top up Hyperbolic credits",
+            "detail": "Confirmed $0 balance. No phone-verify bonus or coupon code currently active. Deposit required.",
+            "link": "https://app.hyperbolic.ai/settings/billing",
+            "kind": "deposit", "min_deposit_usd": 5,
+        },
+        "novita": {
+            "action": "Add balance to Novita AI",
+            "detail": "Every model returns NOT_ENOUGH_BALANCE. $1 minimum deposit; $5 lasts months on cheap models.",
+            "link": "https://novita.ai/settings/billing",
+            "kind": "deposit", "min_deposit_usd": 1,
+        },
+        "fireworks": {
+            "action": "Deploy a model on Fireworks",
+            "detail": "Account has no public models deployed. Visit the dashboard and deploy at least one.",
+            "link": "https://fireworks.ai/models",
+            "kind": "console", "min_deposit_usd": 0,
+        },
+        "amazon": {
+            "action": "Open AWS Support case — Bedrock service enablement",
+            "detail": "Account 615296308298 returns 'Operation not allowed' across all regions (us, apac, global) and even from Bedrock Playground UI. Not IAM, not model-access, not payment method (Visa 1047 on file). Geographic/service-level block on Thailand-billed accounts. Only fix: AWS Support case requesting Bedrock enablement. Free, ~24-48hr turnaround.",
+            "link": "https://support.console.aws.amazon.com/support/home#/case/create",
+            "kind": "support_case", "min_deposit_usd": 0,
+        },
+        "bedrock": {
+            "action": "Open AWS Support case — Bedrock service enablement",
+            "detail": "Account-level block across all regions and from Playground UI. Payment method is on file. Open a free AWS Support case requesting Bedrock enablement for the account.",
+            "link": "https://support.console.aws.amazon.com/support/home#/case/create",
+            "kind": "support_case", "min_deposit_usd": 0,
+        },
+        "arcee": {
+            "action": "Add payment method to Arcee wallet",
+            "detail": "Wallet shows 'No card on file'. Add card to start making calls ($5 covers ~millions of trinity-mini tokens).",
+            "link": "https://chat.arcee.ai/api/wallet",
+            "kind": "deposit", "min_deposit_usd": 5,
+        },
+        "moonshot": {
+            "action": "Recharge Moonshot — $10 minimum (hard floor)",
+            "detail": "Intl Kimi Open Platform suspends all API calls until first recharge. $10 is the platform-enforced minimum.",
+            "link": "https://platform.moonshot.ai/console/pay",
+            "kind": "deposit", "min_deposit_usd": 10,
+        },
+        "lambda": {
+            "action": "Add payment method to Lambda Cloud",
+            "detail": "Lambda refuses to mint API keys until a card is on file. Once added, 'Generate API key' unlocks.",
+            "link": "https://cloud.lambda.ai/settings/billing",
+            "kind": "deposit", "min_deposit_usd": 0,
+        },
+        "openrouter": {
+            "action": "Top up OpenRouter credits",
+            "detail": "Free models already route fine (openai/gpt-oss-120b:free is live). Deposit $5 to unlock paid models + accumulate higher rate limits.",
+            "link": "https://openrouter.ai/credits",
+            "kind": "deposit", "min_deposit_usd": 5,
+        },
+        "minimax": {
+            "action": "Top up MiniMax voucher balance",
+            "detail": "Key valid; API returns 1008 insufficient_balance. Google-SSO signup doesn't auto-issue free vouchers.",
+            "link": "https://platform.minimax.io/user-center/payment/voucher",
+            "kind": "deposit", "min_deposit_usd": 5,
+        },
+    }
+
+    # Load latest smoke-test results. Written by backend/scripts/provider_smoke.py
+    # (one-shot). Lets us report actual reachability per provider — "has_key=True
+    # but provider 402'd" is very different from "has_key=True and routes OK".
+    smoke_by_provider: dict[str, dict] = {}
+    smoke_generated_at = None
+    try:
+        import json as _json
+        from pathlib import Path as _Path
+        smoke_path = _Path(__file__).parent.parent / "scripts" / "provider_smoke_report.json"
+        if smoke_path.exists():
+            with open(smoke_path, "r") as _f:
+                _smoke = _json.load(_f)
+            smoke_generated_at = _smoke.get("generated_at")
+            for r in _smoke.get("results", []):
+                smoke_by_provider[r["provider"]] = r
+    except Exception:
+        pass
+
     providers = []
     configured_count = 0
+    reachable_count = 0
     for p in ALL_PROVIDERS:
         has_key = bool(api_keys.get(p["id"], ""))
         # openai/anthropic/gemini can also use emergent key
@@ -2861,21 +3278,73 @@ async def admin_gateway_health(current_user: User = Depends(require_admin)):
         is_active = has_key or can_use_emergent
         if is_active:
             configured_count += 1
+
+        # Merge in live smoke result if we have one.
+        sm = smoke_by_provider.get(p["id"])
+        smoke_status = None
+        smoke_error = None
+        if sm is not None:
+            if sm.get("ok") is True:
+                smoke_status = "ok"
+                reachable_count += 1
+            elif sm.get("ok") is False:
+                smoke_status = "fail"
+                smoke_error = sm.get("error", "unknown")
+            elif sm.get("note") == "media-only":
+                smoke_status = "media_only"
+            elif sm.get("note") == "no_key":
+                smoke_status = "no_key"
+
+        # Attach fix-hint for rejected providers so the UI can show operator
+        # exactly what to do ("Add credits to Novita AI", link to billing page).
+        fix_hint = FIX_HINTS.get(p["id"]) if smoke_status == "fail" else None
+
         providers.append({
             **p,
             "has_direct_key":   has_key,
             "can_use_emergent": can_use_emergent,
             "is_active":        is_active,
             "key_source":       "direct" if has_key else ("emergent" if can_use_emergent else "none"),
+            "smoke_status":     smoke_status,     # "ok" | "fail" | "media_only" | "no_key" | None
+            "smoke_error":      smoke_error,
+            "smoke_wall_ms":    sm.get("wall_ms") if sm else None,
+            "smoke_tested_model": sm.get("model") if sm else None,
+            "fix_hint":         fix_hint,
         })
 
     return {
         "providers": providers,
         "configured_count": configured_count,
-        "total_providers":  19,
+        "reachable_count":  reachable_count,       # actually-works count (smoke OK)
+        "total_providers":  len(ALL_PROVIDERS),
         "has_emergent_key": has_emergent,
         "gateway_ready":    configured_count >= 1,
+        "smoke_generated_at": smoke_generated_at,
     }
+
+
+@router.post("/admin/gateway/smoke-test")
+async def admin_gateway_smoke(current_user: User = Depends(require_admin)):
+    """Run provider_smoke.py on demand, overwriting provider_smoke_report.json.
+    Returns the fresh report so the dashboard can display new statuses."""
+    import asyncio as _aio, json as _json, sys as _sys
+    from pathlib import Path as _Path
+    script_path = _Path(__file__).parent.parent / "scripts" / "provider_smoke.py"
+    proc = await _aio.create_subprocess_exec(
+        _sys.executable, str(script_path),
+        stdout=_aio.subprocess.PIPE, stderr=_aio.subprocess.STDOUT,
+    )
+    try:
+        stdout, _ = await _aio.wait_for(proc.communicate(), timeout=300)
+    except _aio.TimeoutError:
+        proc.kill()
+        raise HTTPException(status_code=504, detail="smoke test timed out after 5 minutes")
+    report_path = _Path(__file__).parent.parent / "scripts" / "provider_smoke_report.json"
+    if not report_path.exists():
+        raise HTTPException(status_code=500, detail={"error": "smoke script did not produce report",
+                                                      "output": (stdout or b"").decode("utf-8", "replace")[-2000:]})
+    with open(report_path) as f:
+        return _json.load(f)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

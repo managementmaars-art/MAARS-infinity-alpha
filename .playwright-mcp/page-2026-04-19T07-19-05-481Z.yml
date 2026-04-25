@@ -1,0 +1,183 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - navigation "Main" [ref=e4]:
+        - list [ref=e6]:
+          - listitem [ref=e7]:
+            - link "Home" [ref=e8] [cursor=pointer]:
+              - /url: /
+              - img "Home"
+          - listitem [ref=e9]:
+            - button "Personal" [ref=e10] [cursor=pointer]:
+              - generic [ref=e11]: Personal
+              - img
+        - list [ref=e13]:
+          - listitem [ref=e14]:
+            - link "Docs" [ref=e15] [cursor=pointer]:
+              - /url: https://docs.hyperbolic.ai/overview/overview
+              - generic [ref=e16]:
+                - img
+                - img
+                - text: Docs
+          - listitem [ref=e17]:
+            - link "Pricing" [ref=e18] [cursor=pointer]:
+              - /url: https://docs.hyperbolic.ai/general/billing-payments
+              - generic [ref=e19]:
+                - img
+                - img
+                - text: Pricing
+          - listitem [ref=e20]:
+            - generic [ref=e21]:
+              - generic [ref=e22]:
+                - img [ref=e23]
+                - generic [ref=e26]: "0.00"
+              - button "Deposit" [ref=e27] [cursor=pointer]
+          - listitem [ref=e28]:
+            - button "User avatar" [ref=e29] [cursor=pointer]:
+              - img "User avatar" [ref=e31]
+              - img
+      - navigation "Main" [ref=e33]:
+        - list [ref=e35]:
+          - listitem [ref=e36]:
+            - link [ref=e37] [cursor=pointer]:
+              - /url: /
+              - img
+          - listitem [ref=e38]:
+            - link "Home" [ref=e39] [cursor=pointer]:
+              - /url: /
+              - generic [ref=e40]: Home
+          - listitem [ref=e41]:
+            - link "GPUs" [ref=e42] [cursor=pointer]:
+              - /url: /gpus
+              - generic [ref=e43]: GPUs
+          - listitem [ref=e44]:
+            - link "Models" [ref=e45] [cursor=pointer]:
+              - /url: /models
+              - generic [ref=e46]: Models
+          - listitem [ref=e47]:
+            - link "Usage" [ref=e48] [cursor=pointer]:
+              - /url: /usage
+              - generic [ref=e49]: Usage
+          - listitem [ref=e50]:
+            - link "Settings" [ref=e51] [cursor=pointer]:
+              - /url: /settings
+              - generic [ref=e52]: Settings
+          - listitem [ref=e53]:
+            - link "Support" [ref=e54] [cursor=pointer]:
+              - /url: /support
+              - generic [ref=e55]: Support
+    - generic [ref=e56]:
+      - heading "Account Settings" [level=1] [ref=e59]
+      - main [ref=e60]:
+        - generic [ref=e61]:
+          - complementary [ref=e62]:
+            - list [ref=e64]:
+              - listitem [ref=e66]:
+                - list [ref=e68]:
+                  - listitem [ref=e69]:
+                    - link "Profile" [ref=e70] [cursor=pointer]:
+                      - /url: /settings
+                      - generic [ref=e71]: Profile
+                  - listitem [ref=e72]:
+                    - link "Plan" [ref=e73] [cursor=pointer]:
+                      - /url: /settings/plan
+                      - generic [ref=e74]: Plan
+                  - listitem [ref=e75]:
+                    - link "Billing" [ref=e76] [cursor=pointer]:
+                      - /url: /settings/billing
+                      - generic [ref=e77]: Billing
+                  - listitem [ref=e78]:
+                    - link "API Keys" [ref=e79] [cursor=pointer]:
+                      - /url: /settings/api-keys
+                      - generic [ref=e80]: API Keys
+                  - listitem [ref=e81]:
+                    - link "SSH Keys" [ref=e82] [cursor=pointer]:
+                      - /url: /settings/ssh-keys
+                      - generic [ref=e83]: SSH Keys
+                  - listitem [ref=e84]:
+                    - link "Coupon Code" [ref=e85] [cursor=pointer]:
+                      - /url: /settings/coupon-code
+                      - generic [ref=e86]: Coupon Code
+          - article [ref=e87]:
+            - generic [ref=e88]:
+              - generic [ref=e89]:
+                - generic [ref=e90]:
+                  - heading "Billing Overview" [level=2] [ref=e91]
+                  - button "Add Funds" [ref=e92] [cursor=pointer]:
+                    - img
+                    - text: Add Funds
+                - generic [ref=e93]:
+                  - generic [ref=e94]:
+                    - generic [ref=e95]:
+                      - img [ref=e97]
+                      - heading "My Balance" [level=3] [ref=e99]:
+                        - generic [ref=e100]: My Balance
+                    - generic [ref=e101]:
+                      - paragraph [ref=e102]: $0.00
+                      - paragraph [ref=e103]: "Estimated run time: 0m 0s"
+                  - generic [ref=e104]:
+                    - generic [ref=e105]:
+                      - img [ref=e107]
+                      - heading "Next Auto Top-Up" [level=3] [ref=e112]:
+                        - generic [ref=e113]: Next Auto Top-Up
+                    - button "Enable Auto Top-Up" [ref=e115] [cursor=pointer]
+                  - generic [ref=e116]:
+                    - generic [ref=e117]:
+                      - img [ref=e119]
+                      - heading "Hourly Cost" [level=3] [ref=e122]:
+                        - generic [ref=e123]: Hourly Cost
+                    - generic [ref=e124]:
+                      - paragraph [ref=e125]: N/A
+                      - paragraph [ref=e126]: 0 Active GPU Rentals
+              - generic [ref=e127]:
+                - generic [ref=e128]:
+                  - generic [ref=e129]:
+                    - heading "Auto Top-Up" [level=2] [ref=e130]
+                    - generic [ref=e131]:
+                      - checkbox "Enable Auto Top-Up" [ref=e132] [cursor=pointer]
+                      - generic [ref=e133]: Enable Auto Top-Up
+                  - paragraph [ref=e134]: Refuel your account automatically when your balance is low.
+                - generic [ref=e138]:
+                  - heading "No auto top-up enabled" [level=2] [ref=e139]
+                  - paragraph [ref=e140]: You can enable auto top ups to automatically add credits to your account when your balance is low.
+    - navigation "Main" [ref=e142]:
+      - list [ref=e144]:
+        - listitem [ref=e145]:
+          - link "Home © 2025" [ref=e146] [cursor=pointer]:
+            - /url: /
+            - img "Home"
+            - generic [ref=e147]: © 2025
+      - list [ref=e149]:
+        - generic [ref=e150]:
+          - listitem [ref=e151]:
+            - link "FAQ" [ref=e152] [cursor=pointer]:
+              - /url: /support
+          - listitem [ref=e153]:
+            - link "Terms of Use" [ref=e154] [cursor=pointer]:
+              - /url: https://hyperbolic.ai/terms
+          - listitem [ref=e155]:
+            - link "Privacy Policy" [ref=e156] [cursor=pointer]:
+              - /url: https://hyperbolic.ai/privacy
+          - listitem [ref=e157]:
+            - link "Docs" [ref=e158] [cursor=pointer]:
+              - /url: https://docs.hyperbolic.ai/overview/overview
+          - listitem [ref=e159]:
+            - link "Credits" [ref=e160] [cursor=pointer]:
+              - /url: /credits
+          - listitem [ref=e161]:
+            - link "Hyperbolic" [ref=e162] [cursor=pointer]:
+              - /url: https://hyperbolic.ai
+              - text: Hyperbolic
+              - img
+        - generic [ref=e163]:
+          - listitem [ref=e164]:
+            - link [ref=e165] [cursor=pointer]:
+              - /url: https://x.com/hyperbolic_labs
+              - img
+          - listitem [ref=e166]:
+            - link [ref=e167] [cursor=pointer]:
+              - /url: https://github.com/HyperbolicLabs
+              - img
+  - alert [ref=e168]
+  - iframe [ref=e169]:
+    

@@ -169,11 +169,7 @@ async def generate_content(product_id: str, req: GenerateRequest, current_user: 
     api_keys = user_keys or {}
     universal_key = api_keys.get("universal_key", "")
 
-    from emergentintegrations.llm.chat import LlmChat, UserMessage
-    import os
-    key = universal_key or api_keys.get(f"{req.model_provider}_key", "") or os.environ.get("LLM_KEY", "")
-    if not key:
-        raise HTTPException(status_code=400, detail="No API key available. Configure in Settings.")
+    from services.llm_gateway import complete_text
 
     product_context = f"""
 Product: {product['name']}
@@ -199,13 +195,13 @@ Price Info: {product.get('price_info', 'N/A')}
         prompt += f"\n\nAdditional instructions: {req.custom_instructions}"
 
     try:
-        chat = LlmChat(
-            api_key=key,
-            session_id=f"gen_{uuid.uuid4().hex[:8]}",
-            system_message="You are an elite marketing creative director. Generate premium, commercial-quality content."
-        ).with_model(req.model_provider, req.model_name)
-
-        response = await chat.send_message(UserMessage(text=prompt))
+        response = await complete_text(
+            user_id=current_user.user_id,
+            system_prompt="You are an elite marketing creative director. Generate premium, commercial-quality content.",
+            user_prompt=prompt,
+            model=f"{req.model_provider}/{req.model_name}" if req.model_provider and req.model_name else "maars/auto",
+            source="products.generate",
+        )
         now = datetime.now(timezone.utc).isoformat()
 
         content_entry = {

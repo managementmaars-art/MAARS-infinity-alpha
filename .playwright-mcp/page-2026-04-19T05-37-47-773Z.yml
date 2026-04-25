@@ -1,0 +1,487 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "Skip to content" [ref=e6] [cursor=pointer]:
+          - /url: "#skip"
+        - generic [ref=e7]:
+          - link "Logo OpenRouter" [ref=e8] [cursor=pointer]:
+            - /url: /
+            - button "Logo OpenRouter" [ref=e9]:
+              - generic [ref=e10]:
+                - img "Logo" [ref=e11]
+                - text: OpenRouter
+          - combobox [ref=e19]:
+            - generic [ref=e20]:
+              - img [ref=e21]
+              - combobox [expanded] [ref=e23]
+            - generic: /
+          - generic [ref=e24]:
+            - link "Home" [ref=e25] [cursor=pointer]:
+              - /url: /workspaces
+              - button "Home" [ref=e26]
+            - link "Fusion" [ref=e27] [cursor=pointer]:
+              - /url: /labs/fusion
+              - button "Fusion" [ref=e28]
+            - link "Models" [ref=e29] [cursor=pointer]:
+              - /url: /models
+              - button "Models" [ref=e30]
+            - link "Chat" [ref=e31] [cursor=pointer]:
+              - /url: /chat
+              - button "Chat" [ref=e32]
+            - link "Rankings" [ref=e33] [cursor=pointer]:
+              - /url: /rankings
+              - button "Rankings" [ref=e34]
+            - link "Apps" [ref=e35] [cursor=pointer]:
+              - /url: /apps
+              - button "Apps" [ref=e36]
+            - link "Docs" [ref=e37] [cursor=pointer]:
+              - /url: /docs/quickstart
+              - button "Docs" [ref=e38]
+            - navigation "Main" [ref=e40]:
+              - list [ref=e42]:
+                - listitem [ref=e43]:
+                  - button "Personal Personal" [ref=e44] [cursor=pointer]:
+                    - img "Personal" [ref=e46]
+                    - generic [ref=e47]: Personal
+                    - img [ref=e48]
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - heading "The Unified Interface For LLMs" [level=1] [ref=e55]
+            - paragraph [ref=e56]:
+              - text: Better
+              - link "prices" [ref=e57] [cursor=pointer]:
+                - /url: /models?order=pricing-low-to-high
+              - text: ", better"
+              - link "uptime" [ref=e58] [cursor=pointer]:
+                - /url: /docs/features/uptime-optimization
+              - text: ", no subscriptions."
+          - generic [ref=e59]:
+            - link "Get API Key" [ref=e60] [cursor=pointer]:
+              - /url: /settings/keys
+              - button "Get API Key" [ref=e61]
+            - link "Explore Models Favicon for anthropic Favicon for openai" [ref=e62] [cursor=pointer]:
+              - /url: /models
+              - button "Explore Models Favicon for anthropic Favicon for openai" [ref=e63]:
+                - text: Explore Models
+                - generic [ref=e65]:
+                  - img "Favicon for anthropic" [ref=e70]
+                  - img "Favicon for openai" [ref=e75]
+        - generic [ref=e77]:
+          - generic [ref=e80]:
+            - paragraph [ref=e81]: 70T
+            - paragraph [ref=e82]: Monthly Tokens
+          - generic [ref=e85]:
+            - paragraph [ref=e86]: 5M+
+            - paragraph [ref=e87]: Global Users
+          - generic [ref=e90]:
+            - paragraph [ref=e91]: 60+
+            - paragraph [ref=e92]: Active Providers
+          - generic [ref=e95]:
+            - paragraph [ref=e96]: 300+
+            - paragraph [ref=e97]: Models
+      - generic [ref=e99]:
+        - link "Favicon for microsoft Favicon for nvidia Favicon for meta-llama Favicon for google Favicon for amazon Favicon for deepseek Favicon for qwen Favicon for moonshotai Favicon for minimax Favicon for z-ai Favicon for mistralai Favicon for anthropic Favicon for openai Favicon for google ai studio Favicon for x-ai Favicon for cohere Favicon for huggingface Favicon for perplexity Favicon for nousresearch Favicon for together Favicon for morph Favicon for inflection Favicon for liquid Favicon for inception Favicon for arcee-ai One API for Any Model Access all major models through a single, unified interface. OpenAI SDK works out of the box. Browse all" [ref=e100] [cursor=pointer]:
+          - /url: /models
+          - generic [ref=e101]:
+            - generic [ref=e104]:
+              - generic "microsoft" [ref=e105]:
+                - img "Favicon for microsoft" [ref=e109]
+              - generic "nvidia" [ref=e110]:
+                - img "Favicon for nvidia" [ref=e114]
+              - generic "meta-llama" [ref=e115]:
+                - img "Favicon for meta-llama" [ref=e119]
+              - generic "google" [ref=e120]:
+                - img "Favicon for google" [ref=e124]
+              - generic "amazon" [ref=e125]:
+                - img "Favicon for amazon" [ref=e129]
+              - generic "deepseek" [ref=e130]:
+                - img "Favicon for deepseek" [ref=e134]
+              - generic "qwen" [ref=e135]:
+                - img "Favicon for qwen" [ref=e139]
+              - generic "moonshotai" [ref=e140]:
+                - img "Favicon for moonshotai" [ref=e144]
+              - generic "minimax" [ref=e145]:
+                - img "Favicon for minimax" [ref=e149]
+              - generic "z-ai" [ref=e150]:
+                - img "Favicon for z-ai" [ref=e154]
+              - generic "mistralai" [ref=e155]:
+                - img "Favicon for mistralai" [ref=e159]
+              - generic "anthropic" [ref=e160]:
+                - img "Favicon for anthropic" [ref=e164]
+              - generic "openai" [ref=e165]:
+                - img "Favicon for openai" [ref=e169]
+              - generic "google ai studio" [ref=e170]:
+                - img "Favicon for google ai studio" [ref=e174]
+              - generic "x-ai" [ref=e175]:
+                - img "Favicon for x-ai" [ref=e179]
+              - generic "cohere" [ref=e180]:
+                - img "Favicon for cohere" [ref=e184]
+              - generic "huggingface" [ref=e185]:
+                - img "Favicon for huggingface" [ref=e189]
+              - generic "perplexity" [ref=e190]:
+                - img "Favicon for perplexity" [ref=e194]
+              - generic "nousresearch" [ref=e195]:
+                - img "Favicon for nousresearch" [ref=e199]
+              - generic "together" [ref=e200]:
+                - img "Favicon for together" [ref=e204]
+              - generic "morph" [ref=e205]:
+                - img "Favicon for morph" [ref=e209]
+              - generic "inflection" [ref=e210]:
+                - img "Favicon for inflection" [ref=e214]
+              - generic "liquid" [ref=e215]:
+                - img "Favicon for liquid" [ref=e219]
+              - generic "inception" [ref=e220]:
+                - img "Favicon for inception" [ref=e224]
+              - generic "arcee-ai" [ref=e225]:
+                - img "Favicon for arcee-ai" [ref=e229]
+            - generic [ref=e230]:
+              - generic [ref=e231]:
+                - heading "One API for Any Model" [level=3] [ref=e232]
+                - paragraph [ref=e233]: Access all major models through a single, unified interface. OpenAI SDK works out of the box.
+              - generic [ref=e234]: Browse all
+        - link "anthropic/claude-opus-4.7 Model routing visualization Favicon for Google Favicon for Anthropic Favicon for Amazon Bedrock Higher Availability Reliable AI models via our distributed infrastructure. Fall back to other providers when one goes down. Learn more" [ref=e235] [cursor=pointer]:
+          - /url: /docs/guides/best-practices/uptime-optimization
+          - generic [ref=e236]:
+            - generic [ref=e239]:
+              - generic [ref=e240]: anthropic/claude-opus-4.7
+              - img "Model routing visualization" [ref=e241]
+              - generic [ref=e244]:
+                - img "Favicon for Google" [ref=e248]
+                - img "Favicon for Anthropic" [ref=e252]
+                - img "Favicon for Amazon Bedrock" [ref=e256]
+            - generic [ref=e257]:
+              - generic [ref=e258]:
+                - heading "Higher Availability" [level=3] [ref=e259]
+                - paragraph [ref=e260]: Reliable AI models via our distributed infrastructure. Fall back to other providers when one goes down.
+              - generic [ref=e261]:
+                - text: Learn more
+                - img [ref=e262]
+        - link "Performance graph Price and Performance Keep costs in check without sacrificing speed. OpenRouter runs at the edge for minimal latency between your users and their inference. Learn more" [ref=e264] [cursor=pointer]:
+          - /url: /docs/guides/routing/provider-selection#provider-sorting
+          - generic [ref=e265]:
+            - img "Performance graph" [ref=e271]
+            - generic [ref=e272]:
+              - generic [ref=e273]:
+                - heading "Price and Performance" [level=3] [ref=e274]
+                - paragraph [ref=e275]: Keep costs in check without sacrificing speed. OpenRouter runs at the edge for minimal latency between your users and their inference.
+              - generic [ref=e276]:
+                - text: Learn more
+                - img [ref=e277]
+        - link "Data policy visualization Custom Data Policies Protect your organization with fine grained data policies. Ensure prompts only go to the models and providers you trust. View docs" [ref=e279] [cursor=pointer]:
+          - /url: /docs/guides/privacy/provider-logging
+          - generic [ref=e280]:
+            - generic [ref=e283]:
+              - generic [ref=e284]:
+                - img [ref=e285]
+                - img [ref=e288]
+                - img [ref=e290]
+              - img "Data policy visualization" [ref=e292]
+            - generic [ref=e295]:
+              - generic [ref=e296]:
+                - heading "Custom Data Policies" [level=3] [ref=e297]
+                - paragraph [ref=e298]: Protect your organization with fine grained data policies. Ensure prompts only go to the models and providers you trust.
+              - generic [ref=e299]:
+                - text: View docs
+                - img [ref=e300]
+      - generic [ref=e302]:
+        - generic [ref=e303]:
+          - generic [ref=e304]:
+            - link "Featured Models" [ref=e305] [cursor=pointer]:
+              - /url: /models?order=top-weekly
+              - heading "Featured Models" [level=2] [ref=e307]:
+                - text: Featured Models
+                - img [ref=e308]
+            - paragraph [ref=e310]: 300+ active models on 60+ providers
+          - link "View all" [ref=e311] [cursor=pointer]:
+            - /url: /models?order=top-weekly
+            - generic [ref=e312]:
+              - generic [ref=e313]: View all
+              - img [ref=e314]
+        - generic [ref=e316]:
+          - link "anthropic Claude Opus 4.7 New by anthropic Tokens 235.8B Weekly Trend --" [ref=e317] [cursor=pointer]:
+            - /url: /models/anthropic/claude-opus-4.7
+            - generic [ref=e319]:
+              - generic [ref=e321]:
+                - img "anthropic" [ref=e323]
+                - generic [ref=e324]:
+                  - generic [ref=e325]:
+                    - heading "Claude Opus 4.7" [level=3] [ref=e326]
+                    - generic [ref=e327]: New
+                  - paragraph [ref=e328]: by anthropic
+              - generic [ref=e330]:
+                - generic [ref=e331]:
+                  - generic [ref=e332]: Tokens
+                  - generic [ref=e333]: 235.8B
+                - generic [ref=e334]:
+                  - generic [ref=e335]: Weekly Trend
+                  - generic [ref=e336]: "--"
+          - link "openai GPT-5.4 by openai Tokens 568.8B Weekly Trend +3.99%" [ref=e337] [cursor=pointer]:
+            - /url: /models/openai/gpt-5.4
+            - generic [ref=e339]:
+              - generic [ref=e341]:
+                - img "openai" [ref=e343]
+                - generic [ref=e344]:
+                  - heading "GPT-5.4" [level=3] [ref=e346]
+                  - paragraph [ref=e347]: by openai
+              - generic [ref=e349]:
+                - generic [ref=e350]:
+                  - generic [ref=e351]: Tokens
+                  - generic [ref=e352]: 568.8B
+                - generic [ref=e353]:
+                  - generic [ref=e354]: Weekly Trend
+                  - generic [ref=e355]: +3.99%
+          - link "google Gemini 3.1 Pro Preview by google Tokens 503.0B Weekly Trend -0.64%" [ref=e356] [cursor=pointer]:
+            - /url: /models/google/gemini-3.1-pro-preview
+            - generic [ref=e358]:
+              - generic [ref=e360]:
+                - img "google" [ref=e362]
+                - generic [ref=e363]:
+                  - heading "Gemini 3.1 Pro Preview" [level=3] [ref=e365]
+                  - paragraph [ref=e366]: by google
+              - generic [ref=e368]:
+                - generic [ref=e369]:
+                  - generic [ref=e370]: Tokens
+                  - generic [ref=e371]: 503.0B
+                - generic [ref=e372]:
+                  - generic [ref=e373]: Weekly Trend
+                  - generic [ref=e374]: "-0.64%"
+      - generic [ref=e375]:
+        - generic [ref=e376]:
+          - generic [ref=e377]:
+            - link "Featured Agents" [ref=e378] [cursor=pointer]:
+              - /url: /apps
+              - heading "Featured Agents" [level=2] [ref=e380]:
+                - text: Featured Agents
+                - img [ref=e381]
+            - paragraph [ref=e383]: 250k+ apps using OpenRouter with 4.2M+ users globally
+          - link "View all" [ref=e384] [cursor=pointer]:
+            - /url: /apps
+            - generic [ref=e385]:
+              - generic [ref=e386]: View all
+              - img [ref=e387]
+        - generic [ref=e389]:
+          - link "Replit preview Replit Replit The easiest way to go from idea to app" [ref=e390] [cursor=pointer]:
+            - /url: https://replit.com
+            - generic [ref=e391]:
+              - img "Replit preview" [ref=e393]
+              - generic [ref=e395]:
+                - img "Replit" [ref=e397]
+                - generic [ref=e398]:
+                  - heading "Replit" [level=3] [ref=e399]
+                  - paragraph [ref=e400]: The easiest way to go from idea to app
+          - link "Hermes Agent preview Hermes Agent Hermes Agent An autonomous agent that grows with you" [ref=e401] [cursor=pointer]:
+            - /url: https://openrouter.ai/apps?url=https%3A%2F%2Fhermes-agent.nousresearch.com%2F
+            - generic [ref=e402]:
+              - img "Hermes Agent preview" [ref=e404]
+              - generic [ref=e406]:
+                - img "Hermes Agent" [ref=e408]
+                - generic [ref=e409]:
+                  - heading "Hermes Agent" [level=3] [ref=e410]
+                  - paragraph [ref=e411]: An autonomous agent that grows with you
+          - link "Kilo Code preview Kilo Code Kilo Code Everything you need for agentic development" [ref=e412] [cursor=pointer]:
+            - /url: https://kilo.ai/
+            - generic [ref=e413]:
+              - img "Kilo Code preview" [ref=e415]
+              - generic [ref=e417]:
+                - img "Kilo Code" [ref=e419]
+                - generic [ref=e420]:
+                  - heading "Kilo Code" [level=3] [ref=e421]
+                  - paragraph [ref=e422]: Everything you need for agentic development
+      - generic [ref=e424]:
+        - generic [ref=e425]:
+          - generic [ref=e426]:
+            - generic [ref=e427]: "1"
+            - heading "Signup" [level=3] [ref=e428]
+          - paragraph [ref=e430]: Create an account to get started. You can set up an org for your team later.
+          - generic [ref=e431]:
+            - img [ref=e433]
+            - generic [ref=e441]:
+              - img "Google" [ref=e443]
+              - img "GitHub" [ref=e449]
+              - img "MetaMask" [ref=e452]
+              - img [ref=e466]
+        - generic [ref=e468]:
+          - generic [ref=e469]:
+            - generic [ref=e470]: "2"
+            - heading "Buy credits" [level=3] [ref=e471]
+          - paragraph [ref=e473]: Credits can be used with any model or provider.
+          - generic [ref=e474]:
+            - img [ref=e476]
+            - generic [ref=e490]:
+              - generic [ref=e491]:
+                - generic [ref=e492]: Apr 1
+                - generic [ref=e496]: $99
+              - generic [ref=e497]:
+                - generic [ref=e498]: Mar 30
+                - generic [ref=e502]: $10
+        - generic [ref=e503]:
+          - generic [ref=e504]:
+            - generic [ref=e505]: "3"
+            - heading "Get your API key" [level=3] [ref=e506]
+          - paragraph [ref=e508]:
+            - text: Create an API key and start making requests.
+            - link "Fully OpenAI compatible" [ref=e509] [cursor=pointer]:
+              - /url: /docs/quickstart
+            - text: .
+          - generic [ref=e510]:
+            - generic [ref=e511]:
+              - img [ref=e512]
+              - generic [ref=e515]: OPENROUTER_API_KEY
+            - generic [ref=e517]: ••••••••••••••••
+      - generic [ref=e518]:
+        - generic [ref=e519]:
+          - link "Explore Models Discover AI models across our collection, from all major labs and providers. View models" [ref=e520] [cursor=pointer]:
+            - /url: /models
+            - generic [ref=e521]:
+              - generic [ref=e522]:
+                - heading "Explore Models" [level=3] [ref=e523]:
+                  - img [ref=e524]
+                  - text: Explore Models
+                - paragraph [ref=e526]: Discover AI models across our collection, from all major labs and providers.
+              - generic [ref=e527]:
+                - text: View models
+                - img [ref=e528]
+          - link "Model & App Rankings Explore token usage across models, labs, and public applications. View rankings" [ref=e530] [cursor=pointer]:
+            - /url: /rankings
+            - generic [ref=e531]:
+              - generic [ref=e532]:
+                - heading "Model & App Rankings" [level=3] [ref=e533]:
+                  - img [ref=e534]
+                  - text: Model & App Rankings
+                - paragraph [ref=e536]: Explore token usage across models, labs, and public applications.
+              - generic [ref=e537]:
+                - text: View rankings
+                - img [ref=e538]
+        - generic [ref=e541]:
+          - generic [ref=e542]:
+            - heading "Recent Announcements" [level=3] [ref=e543]
+            - link "View all" [ref=e544] [cursor=pointer]:
+              - /url: /announcements
+              - generic [ref=e545]:
+                - generic [ref=e546]: View all
+                - img [ref=e547]
+          - generic [ref=e549]:
+            - link "Announcing Video Generation Video generation is now live on OpenRouter. One API gives you access to the top video models, right alongside your text, images, audio, embeddings, and reranker generations. 4/15/2026 New" [ref=e550] [cursor=pointer]:
+              - /url: /announcements/video-generation
+              - generic [ref=e551]:
+                - heading "Announcing Video Generation" [level=3] [ref=e552]
+                - paragraph [ref=e553]: Video generation is now live on OpenRouter. One API gives you access to the top video models, right alongside your text, images, audio, embeddings, and reranker generations.
+                - generic [ref=e554]:
+                  - time [ref=e555]: 4/15/2026
+                  - generic [ref=e556]: New
+            - 'link "Auto Exacto: Adaptive Quality Routing, On by Default OpenRouter now helps you use the tool-calling providers for new models automatically 3/12/2026" [ref=e557] [cursor=pointer]':
+              - /url: /announcements/auto-exacto
+              - generic [ref=e558]:
+                - 'heading "Auto Exacto: Adaptive Quality Routing, On by Default" [level=3] [ref=e559]'
+                - paragraph [ref=e560]: OpenRouter now helps you use the tool-calling providers for new models automatically
+                - time [ref=e562]: 3/12/2026
+            - link "February Release Spotlight Benchmarks on model pages, a new free model router, and improved cost transparency between providers. 2/23/2026" [ref=e563] [cursor=pointer]:
+              - /url: /announcements/february-release-spotlight
+              - generic [ref=e564]:
+                - heading "February Release Spotlight" [level=3] [ref=e565]
+                - paragraph [ref=e566]: Benchmarks on model pages, a new free model router, and improved cost transparency between providers.
+                - time [ref=e568]: 2/23/2026
+    - generic [ref=e571]:
+      - generic [ref=e572]:
+        - link "OpenRouter Logo OpenRouter" [ref=e574] [cursor=pointer]:
+          - /url: /
+          - img "OpenRouter Logo" [ref=e575]
+          - generic [ref=e580]: OpenRouter
+        - generic [ref=e581]: © 2026 OpenRouter, Inc
+      - generic [ref=e582]:
+        - heading "Product" [level=3] [ref=e583]
+        - list [ref=e584]:
+          - listitem [ref=e585]:
+            - link "Chat" [ref=e586] [cursor=pointer]:
+              - /url: /chat
+          - listitem [ref=e587]:
+            - link "Rankings" [ref=e588] [cursor=pointer]:
+              - /url: /rankings
+          - listitem [ref=e589]:
+            - link "Apps" [ref=e590] [cursor=pointer]:
+              - /url: /apps
+          - listitem [ref=e591]:
+            - link "Models" [ref=e592] [cursor=pointer]:
+              - /url: /models
+          - listitem [ref=e593]:
+            - link "Providers" [ref=e594] [cursor=pointer]:
+              - /url: /providers
+          - listitem [ref=e595]:
+            - link "Pricing" [ref=e596] [cursor=pointer]:
+              - /url: /pricing
+          - listitem [ref=e597]:
+            - link "Enterprise" [ref=e598] [cursor=pointer]:
+              - /url: /enterprise
+          - listitem [ref=e599]:
+            - link "Labs" [ref=e600] [cursor=pointer]:
+              - /url: /labs
+      - generic [ref=e601]:
+        - heading "Company" [level=3] [ref=e602]
+        - list [ref=e603]:
+          - listitem [ref=e604]:
+            - link "About" [ref=e605] [cursor=pointer]:
+              - /url: /about
+          - listitem [ref=e606]:
+            - link "Announcements" [ref=e607] [cursor=pointer]:
+              - /url: /announcements
+          - listitem [ref=e608]:
+            - link "Careers Hiring" [ref=e609] [cursor=pointer]:
+              - /url: /careers
+              - text: Careers
+              - generic [ref=e610]: Hiring
+          - listitem [ref=e611]:
+            - link "Privacy" [ref=e612] [cursor=pointer]:
+              - /url: /privacy
+          - listitem [ref=e613]:
+            - link "Terms of Service" [ref=e614] [cursor=pointer]:
+              - /url: /terms
+          - listitem [ref=e615]:
+            - link "Support" [ref=e616] [cursor=pointer]:
+              - /url: /support
+          - listitem [ref=e617]:
+            - link "State of AI" [ref=e618] [cursor=pointer]:
+              - /url: /state-of-ai
+          - listitem [ref=e619]:
+            - link "Works With OR" [ref=e620] [cursor=pointer]:
+              - /url: /works-with-openrouter
+          - listitem [ref=e621]:
+            - link "Data" [ref=e622] [cursor=pointer]:
+              - /url: /data
+      - generic [ref=e623]:
+        - heading "Developer" [level=3] [ref=e624]
+        - list [ref=e625]:
+          - listitem [ref=e626]:
+            - link "Documentation" [ref=e627] [cursor=pointer]:
+              - /url: /docs
+          - listitem [ref=e628]:
+            - link "API Reference" [ref=e629] [cursor=pointer]:
+              - /url: /docs/api-reference
+          - listitem [ref=e630]:
+            - link "SDK" [ref=e631] [cursor=pointer]:
+              - /url: /sdk
+          - listitem [ref=e632]:
+            - link "Status" [ref=e633] [cursor=pointer]:
+              - /url: https://status.openrouter.ai
+      - generic [ref=e634]:
+        - heading "Connect" [level=3] [ref=e635]
+        - list [ref=e636]:
+          - listitem [ref=e637]:
+            - link "Discord" [ref=e638] [cursor=pointer]:
+              - /url: https://discord.gg/fVyRaUDgxW
+          - listitem [ref=e639]:
+            - link "GitHub" [ref=e640] [cursor=pointer]:
+              - /url: https://github.com/OpenRouterTeam
+          - listitem [ref=e641]:
+            - link "LinkedIn" [ref=e642] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/104068329
+          - listitem [ref=e643]:
+            - link "X" [ref=e644] [cursor=pointer]:
+              - /url: https://twitter.com/openrouter
+          - listitem [ref=e645]:
+            - link "YouTube" [ref=e646] [cursor=pointer]:
+              - /url: https://www.youtube.com/@OpenRouterAI
+  - region "Notifications alt+T"
+  - alert [ref=e647]

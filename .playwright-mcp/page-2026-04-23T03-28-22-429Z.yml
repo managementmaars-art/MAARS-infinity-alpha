@@ -1,0 +1,388 @@
+- generic [active] [ref=e1]:
+  - link "GPT Image 2 is now on fal! 🚀" [ref=e3] [cursor=pointer]:
+    - /url: https://fal.ai/models/openai/gpt-image-2/edit
+  - generic [ref=e242]:
+    - generic:
+      - generic [ref=e244]:
+        - generic [ref=e245]:
+          - link [ref=e248] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e250]
+            - img [ref=e253]
+          - navigation "breadcrumb" [ref=e258]:
+            - list [ref=e259]:
+              - listitem [ref=e261]:
+                - img [ref=e262]
+              - listitem [ref=e266]:
+                - link "Home" [ref=e267] [cursor=pointer]:
+                  - /url: /dashboard
+              - listitem [ref=e269]:
+                - img [ref=e270]
+              - listitem [ref=e274]:
+                - link "Settings" [ref=e275] [cursor=pointer]:
+                  - /url: /dashboard/account/details
+              - listitem [ref=e277]:
+                - img [ref=e278]
+              - listitem [ref=e282]:
+                - generic [ref=e283]: API Keys
+        - generic [ref=e285]:
+          - generic [ref=e286]:
+            - button "Search anything" [ref=e287] [cursor=pointer]:
+              - img [ref=e288]
+              - generic [ref=e290]: Search anything
+              - generic [ref=e291]:
+                - generic [ref=e292]: CTRL
+                - generic [ref=e293]: K
+            - 'link "Credits: $--.--" [ref=e294] [cursor=pointer]':
+              - /url: /dashboard/usage-billing/credits
+              - img [ref=e297]
+              - generic [ref=e306]:
+                - generic [ref=e307]: "Credits:"
+                - generic [ref=e308]: $--.--
+            - generic [ref=e309]:
+              - link "Docs" [ref=e310] [cursor=pointer]:
+                - /url: https://docs.fal.ai
+              - button [ref=e311] [cursor=pointer]:
+                - img [ref=e312]
+            - button "Notifications" [ref=e314] [cursor=pointer]:
+              - img [ref=e315]
+            - button "Avatar for managementmaars" [ref=e317] [cursor=pointer]:
+              - img "Avatar for managementmaars" [ref=e318]: M
+          - generic:
+            - button:
+              - img
+            - link "$--.--":
+              - /url: /dashboard/usage-billing/credits
+              - generic:
+                - img
+              - generic:
+                - generic: $--.--
+            - generic:
+              - button "Resources":
+                - text: Resources
+                - img
+            - button "Notifications":
+              - img
+            - button "Avatar for managementmaars":
+              - img "Avatar for managementmaars": M
+      - generic:
+        - navigation "Main" [ref=e322]:
+          - list [ref=e324]:
+            - listitem [ref=e326]:
+              - link "Home" [ref=e327] [cursor=pointer]:
+                - /url: /dashboard
+                - generic [ref=e328]:
+                  - img [ref=e329]
+                  - generic [ref=e331]: Home
+            - listitem [ref=e333]:
+              - link "Explore" [ref=e334] [cursor=pointer]:
+                - /url: /explore
+                - generic [ref=e335]:
+                  - img [ref=e336]
+                  - generic [ref=e338]: Explore
+            - listitem [ref=e340]:
+              - button "Generate" [ref=e341] [cursor=pointer]:
+                - generic [ref=e342]:
+                  - img [ref=e343]
+                  - generic [ref=e346]: Generate
+                - img [ref=e347]
+            - listitem [ref=e350]:
+              - link "Serverless" [ref=e351] [cursor=pointer]:
+                - /url: /dashboard/serverless-get-started
+                - generic [ref=e352]:
+                  - img [ref=e353]
+                  - generic [ref=e355]: Serverless
+            - listitem [ref=e357]:
+              - button "Workflows" [ref=e358] [cursor=pointer]:
+                - generic [ref=e359]:
+                  - img [ref=e360]
+                  - generic [ref=e362]: Workflows
+                - img [ref=e363]
+            - listitem [ref=e366]:
+              - button "Settings" [ref=e367] [cursor=pointer]:
+                - generic [ref=e368]:
+                  - img [ref=e369]
+                  - generic [ref=e372]: Settings
+                - img [ref=e373]
+        - generic:
+          - generic:
+            - generic:
+              - navigation:
+                - generic:
+                  - list:
+                    - generic:
+                      - listitem:
+                        - link:
+                          - /url: /dashboard
+                          - generic:
+                            - img
+                            - generic: Home
+                    - generic:
+                      - listitem:
+                        - link:
+                          - /url: /explore
+                          - generic:
+                            - img
+                            - generic: Explore
+                    - generic:
+                      - listitem:
+                        - button:
+                          - generic:
+                            - img
+                            - generic: Generate
+                          - img
+                    - generic:
+                      - listitem:
+                        - link:
+                          - /url: /dashboard/serverless-get-started
+                          - generic:
+                            - img
+                            - generic: Serverless
+                    - generic:
+                      - listitem:
+                        - button:
+                          - generic:
+                            - img
+                            - generic: Workflows
+                          - img
+                    - generic:
+                      - listitem:
+                        - button:
+                          - generic:
+                            - img
+                            - generic: Settings
+                          - img
+    - main [ref=e376]:
+      - main [ref=e378]:
+        - generic [ref=e381]:
+          - heading "Settings" [level=2] [ref=e383]
+          - generic [ref=e384]: Everything for account, billing, and developer configuration.
+        - generic [ref=e386]:
+          - generic [ref=e390]:
+            - generic [ref=e392]:
+              - generic:
+                - img
+              - textbox "Search" [ref=e393]
+            - generic [ref=e395]:
+              - generic [ref=e396]:
+                - generic [ref=e398]: General
+                - list [ref=e400]:
+                  - listitem [ref=e401]:
+                    - link "Account" [ref=e402] [cursor=pointer]:
+                      - /url: /dashboard/account/details
+                      - img [ref=e403]
+                      - generic [ref=e406]: Account
+                  - listitem [ref=e407]:
+                    - link "Notification Settings" [ref=e408] [cursor=pointer]:
+                      - /url: /dashboard/notifications/settings
+                      - img [ref=e409]
+                      - generic [ref=e411]: Notification Settings
+              - generic [ref=e412]:
+                - generic [ref=e414]: Usage & Billing
+                - list [ref=e416]:
+                  - listitem [ref=e417]:
+                    - link "Overview" [ref=e418] [cursor=pointer]:
+                      - /url: /dashboard/usage-billing
+                      - img [ref=e419]
+                      - generic [ref=e421]: Overview
+                  - listitem [ref=e422]:
+                    - link "Address" [ref=e423] [cursor=pointer]:
+                      - /url: /dashboard/account/billing/address
+                      - img [ref=e424]
+                      - generic [ref=e426]: Address
+                  - listitem [ref=e427]:
+                    - link "Credits" [ref=e428] [cursor=pointer]:
+                      - /url: /dashboard/usage-billing/credits
+                      - img [ref=e429]
+                      - generic [ref=e431]: Credits
+                  - listitem [ref=e432]:
+                    - link "Concurrency Limits" [ref=e433] [cursor=pointer]:
+                      - /url: /dashboard/usage-billing/concurrency
+                      - img [ref=e434]
+                      - generic [ref=e435]: Concurrency Limits
+                  - listitem [ref=e436]:
+                    - link "Billing" [ref=e437] [cursor=pointer]:
+                      - /url: /dashboard/usage-billing/billing
+                      - img [ref=e438]
+                      - generic [ref=e440]: Billing
+                  - listitem [ref=e441]:
+                    - link "Invoices" [ref=e442] [cursor=pointer]:
+                      - /url: /dashboard/usage-billing/invoices
+                      - img [ref=e443]
+                      - generic [ref=e445]: Invoices
+              - generic [ref=e446]:
+                - generic [ref=e448]: Developer
+                - list [ref=e450]:
+                  - listitem [ref=e451]:
+                    - link "API Keys" [ref=e452] [cursor=pointer]:
+                      - /url: /dashboard/keys
+                      - img [ref=e453]
+                      - generic [ref=e455]: API Keys
+                  - listitem [ref=e456]:
+                    - link "Webhooks" [ref=e457] [cursor=pointer]:
+                      - /url: /dashboard/webhooks
+                      - img [ref=e458]
+                      - generic [ref=e462]: Webhooks
+                  - listitem [ref=e463]:
+                    - link "Log Drains" [ref=e464] [cursor=pointer]:
+                      - /url: /dashboard/drains
+                      - img [ref=e465]
+                      - generic [ref=e469]: Log Drains
+              - generic [ref=e470]:
+                - generic [ref=e472]: Analytics & Monitoring
+                - list [ref=e474]:
+                  - listitem [ref=e475]:
+                    - link "Errors" [ref=e476] [cursor=pointer]:
+                      - /url: /dashboard/manage/errors
+                      - img [ref=e477]
+                      - generic [ref=e479]: Errors
+                  - listitem [ref=e480]:
+                    - link "Request History" [ref=e481] [cursor=pointer]:
+                      - /url: /dashboard/recent-history
+                      - img [ref=e482]
+                      - generic [ref=e485]: Request History
+                  - listitem [ref=e486]:
+                    - link "Training History" [ref=e487] [cursor=pointer]:
+                      - /url: /dashboard/account/recent-trainings
+                      - img [ref=e488]
+                      - generic [ref=e491]: Training History
+          - generic [ref=e493]:
+            - generic [ref=e494]:
+              - generic [ref=e495]:
+                - heading "API Keys" [level=2] [ref=e496]
+                - paragraph [ref=e497]: Manage your API keys and their settings.
+              - button "Add key" [ref=e499] [cursor=pointer]:
+                - img [ref=e500]
+                - text: Add key
+            - table [ref=e505]:
+              - rowgroup [ref=e506]:
+                - row "Description Key Created At Tags Scope" [ref=e507]:
+                  - columnheader "Description" [ref=e508]
+                  - columnheader "Key" [ref=e509]
+                  - columnheader "Created At" [ref=e510]
+                  - columnheader "Tags" [ref=e511]
+                  - columnheader "Scope" [ref=e512]
+                  - columnheader [ref=e513]
+              - rowgroup [ref=e514]:
+                - row [ref=e515]:
+                  - cell [ref=e516]
+                  - cell [ref=e518]
+                  - cell [ref=e520]
+                  - cell [ref=e522]
+                  - cell [ref=e524]
+                  - cell [ref=e526]
+                - row [ref=e527]:
+                  - cell [ref=e528]
+                  - cell [ref=e530]
+                  - cell [ref=e532]
+                  - cell [ref=e534]
+                  - cell [ref=e536]
+                  - cell [ref=e538]
+                - row [ref=e539]:
+                  - cell [ref=e540]
+                  - cell [ref=e542]
+                  - cell [ref=e544]
+                  - cell [ref=e546]
+                  - cell [ref=e548]
+                  - cell [ref=e550]
+                - row [ref=e551]:
+                  - cell [ref=e552]
+                  - cell [ref=e554]
+                  - cell [ref=e556]
+                  - cell [ref=e558]
+                  - cell [ref=e560]
+                  - cell [ref=e562]
+    - contentinfo [ref=e564]:
+      - generic [ref=e565]:
+        - heading "Ready to transform your enterprise with AI?" [level=2] [ref=e566]
+        - link "Contact Sales" [ref=e567] [cursor=pointer]:
+          - /url: /enterprise#contact-sales
+      - generic [ref=e568]:
+        - generic [ref=e569]:
+          - generic [ref=e570]:
+            - generic [ref=e571]:
+              - heading "Learn More" [level=4] [ref=e572]
+              - generic [ref=e573]:
+                - link "Status" [ref=e574] [cursor=pointer]:
+                  - /url: https://status.fal.ai
+                - link "About Us" [ref=e575] [cursor=pointer]:
+                  - /url: /about
+                - link "Documentation" [ref=e576] [cursor=pointer]:
+                  - /url: https://docs.fal.ai
+                - link "Careers" [ref=e577] [cursor=pointer]:
+                  - /url: https://job-boards.greenhouse.io/fal
+                - link "Pricing" [ref=e578] [cursor=pointer]:
+                  - /url: /pricing
+                - link "Blog" [ref=e579] [cursor=pointer]:
+                  - /url: https://blog.fal.ai
+                - link "Enterprise" [ref=e580] [cursor=pointer]:
+                  - /url: /enterprise
+                - link "Get in touch" [ref=e581] [cursor=pointer]:
+                  - /url: mailto:support@fal.ai
+                - link "Gen Media Report 2026" [ref=e582] [cursor=pointer]:
+                  - /url: /gen-media-report-volume-1
+                - link "Grants" [ref=e583] [cursor=pointer]:
+                  - /url: /grants
+                - link "Events" [ref=e584] [cursor=pointer]:
+                  - /url: /events
+                - link "Learn" [ref=e585] [cursor=pointer]:
+                  - /url: /learn
+                - link "Legal" [ref=e586] [cursor=pointer]:
+                  - /url: /legal
+                - link "Report Content" [ref=e587] [cursor=pointer]:
+                  - /url: /report-content
+            - generic [ref=e588]:
+              - generic [ref=e589]: Models
+              - link "ChatGPT Images 2.0" [ref=e590] [cursor=pointer]:
+                - /url: /gpt-image-2
+              - link "Seedance 2.0" [ref=e591] [cursor=pointer]:
+                - /url: /seedance-2.0
+              - link "Flux 2" [ref=e592] [cursor=pointer]:
+                - /url: /models/fal-ai/flux-2-flex
+              - link "Kling 3.0" [ref=e593] [cursor=pointer]:
+                - /url: /models/fal-ai/kling-video/o3/standard/image-to-video
+              - link "Veo 3.1" [ref=e594] [cursor=pointer]:
+                - /url: /models/fal-ai/veo3.1/first-last-frame-to-video
+              - link "Nano Banana Pro" [ref=e595] [cursor=pointer]:
+                - /url: /models/fal-ai/nano-banana-pro/edit
+              - link "Explore More" [ref=e596] [cursor=pointer]:
+                - /url: /models
+            - generic [ref=e597]:
+              - heading "Playgrounds" [level=4] [ref=e598]
+              - link "Sandbox" [ref=e599] [cursor=pointer]:
+                - /url: /sandbox
+              - link "Workflows" [ref=e600] [cursor=pointer]:
+                - /url: /workflows
+              - link "Training" [ref=e601] [cursor=pointer]:
+                - /url: /models/fal-ai/flux-lora-fast-training
+              - link "Demos" [ref=e602] [cursor=pointer]:
+                - /url: /demos
+            - generic [ref=e603]:
+              - heading "Socials" [level=4] [ref=e604]
+              - link "Discord" [ref=e605] [cursor=pointer]:
+                - /url: https://discord.gg/fal-ai
+              - link "GitHub" [ref=e606] [cursor=pointer]:
+                - /url: https://github.com/fal-ai
+              - link "Reddit" [ref=e607] [cursor=pointer]:
+                - /url: https://www.reddit.com/r/fal/
+              - link "Twitter" [ref=e608] [cursor=pointer]:
+                - /url: https://twitter.com/fal
+              - link "LinkedIn" [ref=e609] [cursor=pointer]:
+                - /url: https://www.linkedin.com/company/features-and-labels/
+              - link "YouTube" [ref=e610] [cursor=pointer]:
+                - /url: https://www.youtube.com/@Fal.AI.Official
+              - link "Instagram" [ref=e611] [cursor=pointer]:
+                - /url: https://www.instagram.com/madeonfal
+              - link "TikTok" [ref=e612] [cursor=pointer]:
+                - /url: https://www.tiktok.com/@madeonfal
+          - generic [ref=e613]:
+            - text: features and labels, 2025. All Rights Reserved.
+            - link "Terms of Service" [ref=e614] [cursor=pointer]:
+              - /url: /legal/terms-of-service
+            - text: and
+            - link "Privacy Policy" [ref=e615] [cursor=pointer]:
+              - /url: /legal/privacy-policy
+        - img [ref=e616]
+  - region "Notifications alt+T"
+  - alert [ref=e50]
+  - iframe

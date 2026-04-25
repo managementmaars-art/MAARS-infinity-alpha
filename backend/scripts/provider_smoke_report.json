@@ -1,0 +1,245 @@
+{
+  "results": [
+    {
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "ok": true,
+      "wall_ms": 2254,
+      "preview": "OK"
+    },
+    {
+      "provider": "anthropic",
+      "model": "claude-haiku-4-5-20251001",
+      "ok": true,
+      "wall_ms": 6091,
+      "preview": "OK"
+    },
+    {
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "ok": true,
+      "wall_ms": 1656,
+      "preview": "OK"
+    },
+    {
+      "provider": "xai",
+      "model": "grok-3-mini",
+      "ok": true,
+      "wall_ms": 2936,
+      "preview": "OK."
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-chat",
+      "ok": true,
+      "wall_ms": 784,
+      "preview": "OK"
+    },
+    {
+      "provider": "mistral",
+      "model": "mistral-small-latest",
+      "ok": true,
+      "wall_ms": 1339,
+      "preview": "OK"
+    },
+    {
+      "provider": "perplexity",
+      "model": "sonar",
+      "ok": true,
+      "wall_ms": 3286,
+      "preview": "Hi! How can I help you today?[1][2][3]"
+    },
+    {
+      "provider": "cohere",
+      "model": "command-r-plus-08-2024",
+      "ok": true,
+      "wall_ms": 766,
+      "preview": "OK"
+    },
+    {
+      "provider": "groq",
+      "model": "llama-3.1-8b-instant",
+      "ok": true,
+      "wall_ms": 715,
+      "preview": "Hello, how are you?"
+    },
+    {
+      "provider": "cerebras",
+      "model": "llama3.1-8b",
+      "ok": true,
+      "wall_ms": 1498,
+      "preview": "Hello"
+    },
+    {
+      "provider": "together",
+      "model": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+      "ok": false,
+      "wall_ms": 902,
+      "error": "HTTPStatusError: Client error '402 Payment Required' for url 'https://api.together.xyz/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/402"
+    },
+    {
+      "provider": "fireworks",
+      "model": "accounts/fireworks/models/deepseek-v3p1",
+      "ok": true,
+      "wall_ms": 1995,
+      "preview": "OK."
+    },
+    {
+      "provider": "ai21",
+      "model": "jamba-mini",
+      "ok": true,
+      "wall_ms": 1525,
+      "preview": "hi! how can i assist you today?"
+    },
+    {
+      "provider": "sambanova",
+      "model": "Meta-Llama-3.3-70B-Instruct",
+      "ok": false,
+      "wall_ms": 1455,
+      "error": "HTTPStatusError: Client error '429 TOO MANY REQUESTS' for url 'https://api.sambanova.ai/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429"
+    },
+    {
+      "provider": "nvidia",
+      "model": "meta/llama-3.1-8b-instruct",
+      "ok": true,
+      "wall_ms": 795,
+      "preview": "Hello."
+    },
+    {
+      "provider": "novita",
+      "model": "meta-llama/llama-3.1-8b-instruct",
+      "ok": false,
+      "wall_ms": 902,
+      "error": "HTTPStatusError: Client error '403 Forbidden' for url 'https://api.novita.ai/v3/openai/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+    },
+    {
+      "provider": "hyperbolic",
+      "model": "meta-llama/Llama-3.3-70B-Instruct",
+      "ok": true,
+      "wall_ms": 1318,
+      "preview": "OK"
+    },
+    {
+      "provider": "upstage",
+      "model": "solar-pro",
+      "ok": true,
+      "wall_ms": 2238,
+      "preview": "OK. How can I assist you today?  \n\n(If you're just saying \"hi\" to test, no probl"
+    },
+    {
+      "provider": "amazon",
+      "model": "us.amazon.nova-micro-v1:0",
+      "ok": false,
+      "wall_ms": 1622,
+      "error": "ValidationException: An error occurred (ValidationException) when calling the Converse operation: Operation not allowed"
+    },
+    {
+      "provider": "huggingface",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "ok": true,
+      "wall_ms": 803,
+      "preview": "Hi."
+    },
+    {
+      "provider": "openrouter",
+      "model": "openai/gpt-oss-120b:free",
+      "ok": true,
+      "wall_ms": 3958,
+      "preview": "OK"
+    },
+    {
+      "provider": "moonshot",
+      "model": "kimi-k2-turbo-preview",
+      "ok": true,
+      "wall_ms": 1159,
+      "preview": "OK"
+    },
+    {
+      "provider": "qwen",
+      "ok": null,
+      "note": "no_key"
+    },
+    {
+      "provider": "zhipu",
+      "model": "glm-4.5-flash",
+      "ok": true,
+      "wall_ms": 9494,
+      "preview": "OK"
+    },
+    {
+      "provider": "doubao",
+      "model": "doubao-pro-128k",
+      "ok": false,
+      "wall_ms": 2033,
+      "error": "HTTPStatusError: Client error '401 Unauthorized' for url 'https://ark.cn-beijing.volces.com/api/v3/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401"
+    },
+    {
+      "provider": "minimax",
+      "model": "MiniMax-Text-01",
+      "ok": true,
+      "wall_ms": 2094,
+      "preview": "OK"
+    },
+    {
+      "provider": "yi",
+      "ok": null,
+      "note": "no_key"
+    },
+    {
+      "provider": "writer",
+      "model": "palmyra-x5",
+      "ok": true,
+      "wall_ms": 2005,
+      "preview": "OK."
+    },
+    {
+      "provider": "arcee",
+      "model": "trinity-mini",
+      "ok": true,
+      "wall_ms": 2211,
+      "preview": "OK"
+    },
+    {
+      "provider": "inception",
+      "model": "mercury-2",
+      "ok": true,
+      "wall_ms": 1597,
+      "preview": "OK"
+    },
+    {
+      "provider": "llama",
+      "ok": null,
+      "note": "no_key"
+    },
+    {
+      "provider": "lambda",
+      "ok": null,
+      "note": "no_key"
+    },
+    {
+      "provider": "bytez",
+      "model": "microsoft/DialoGPT-small",
+      "ok": false,
+      "wall_ms": 684,
+      "error": "HTTPStatusError: Client error '404 Not Found' for url 'https://api.bytez.com/models/v2/microsoft/DialoGPT-small'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
+    },
+    {
+      "provider": "lepton",
+      "ok": null,
+      "note": "no_key"
+    },
+    {
+      "provider": "elevenlabs",
+      "ok": null,
+      "note": "media-only"
+    }
+  ],
+  "summary": {
+    "total": 35,
+    "ok": 23,
+    "fail": 6,
+    "no_key": 5,
+    "media": 1
+  },
+  "generated_at": "2026-04-25 04:51:50 UTC"
+}

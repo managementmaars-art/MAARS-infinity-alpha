@@ -1,2 +1,0 @@
-# Email sending dependencies
-markdown>=3.4.0

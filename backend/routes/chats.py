@@ -10,7 +10,7 @@ from fastapi import APIRouter, HTTPException, Depends, Request
 from db import db
 from auth import get_current_user, User, ADMIN_EMAIL
 from models.schemas import Chat, ChatCreate, MessageCreate
-from shared.constants import SUBSCRIPTION_PLANS, EMERGENT_LLM_KEY, UPLOAD_DIR
+from shared.constants import SUBSCRIPTION_PLANS, UPLOAD_DIR
 from shared.utils import get_api_keys, create_notification
 from services.llm_service import (
     auto_select_model, call_llm_with_fallback, detect_video_generation_request,
@@ -309,8 +309,25 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
             )
             full_user_content += image_instruction
         
-        # Build enhanced system prompt with clarification instruction
-        enhanced_agent_prompt = agent["system_prompt"] + CLARIFICATION_INSTRUCTION
+        # Build enhanced system prompt with MAARS operating standards +
+        # tool awareness + clarification instruction. The enhancer
+        # (services.agent_prompt_enhancer) injects quality floor, brand
+        # voice, client-opacity, and tool-usage hints so every agent
+        # behaves premium without rewriting 50+ base prompts.
+        from services.agents.agent_prompt_enhancer import enhance_agent_prompt
+        from config import AGENT_TOOL_MAP
+        _agent_tools = AGENT_TOOL_MAP.get(agent.get("agent_id", ""), [])
+        # Pull golden examples for this agent (empty list if none curated yet)
+        _golden = []
+        try:
+            from services.golden_examples import resolve_for_agent
+            _golden = await resolve_for_agent(agent, top_n=3)
+        except Exception:
+            _golden = []
+        enhanced_agent_prompt = (
+            enhance_agent_prompt(agent, tools=_agent_tools, golden_examples=_golden)
+            + CLARIFICATION_INSTRUCTION
+        )
         
         # Web Search: Auto-browse the internet when the question needs current data
         web_search_context = None
@@ -461,12 +478,27 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
                         agent_temp = user_override["temperature"]
                     if user_override.get("max_tokens") is not None:
                         agent_max_tokens = user_override["max_tokens"]
-                response_text, model_provider, model_name = await call_llm_with_fallback(
-                    api_keys, model_provider, model_name,
-                    enhanced_agent_prompt, full_user_content,
-                    message_data.attachments, chat_id,
-                    temperature=agent_temp, max_tokens=agent_max_tokens
+                # Route the agent chat through the Universal Gateway — single
+                # router for every LLM call (wallet + usage log + fallback).
+                from services.llm_gateway import complete
+                gw_model = "maars/auto" if auto_selected else f"{model_provider}/{model_name}"
+                gw_resp = await complete(
+                    user_id=current_user.user_id,
+                    messages=[
+                        {"role": "system", "content": enhanced_agent_prompt},
+                        {"role": "user",   "content": full_user_content},
+                    ],
+                    model=gw_model,
+                    max_tokens=agent_max_tokens,
+                    temperature=agent_temp,
+                    source=f"chats.send_message:{chat['agent_id']}",
                 )
+                response_text = gw_resp["choices"][0]["message"]["content"]
+                # Pick up the actually-routed provider/model from the gateway's meta.
+                model_provider = gw_resp.get("maars", {}).get("provider", model_provider)
+                actual_model   = gw_resp.get("maars", {}).get("model", gw_model)
+                if "/" in actual_model:
+                    _, model_name = actual_model.split("/", 1)
         
     except Exception as e:
         logger.error(f"LLM error for chat {chat_id}: {type(e).__name__}: {e}", exc_info=True)
@@ -515,72 +547,62 @@ async def send_message(chat_id: str, message_data: MessageCreate, current_user: 
     if agent.get("can_generate_image", False) and detect_image_generation_request(message_data.content, agent.get("role", "")):
         try:
             api_keys_img = await get_api_keys()
-            img_api_key = api_keys_img.get("emergent") or EMERGENT_LLM_KEY
-            
+
             # Refine prompt for professional-grade image output
             img_prompt = message_data.content
             try:
-                from emergentintegrations.llm.chat import LlmChat, UserMessage as UM
-                prompt_chat = LlmChat(
-                    api_key=img_api_key,
-                    session_id=f"imgprompt_{uuid.uuid4().hex[:8]}",
-                    system_message="""You are an expert prompt engineer for Gemini image generation. Write prompts that produce stunning, professional images.
+                from services.llm_gateway import complete_text
+                img_prompt = await complete_text(
+                    user_id=current_user.user_id,
+                    system_prompt="""You are an expert prompt engineer for image generation. Write prompts that produce stunning, professional images.
 Rules:
 - Output ONLY the image prompt. No explanations.
 - Be detailed about every visual element: style, composition, color palette, lighting, mood.
 - For LOGOS: vector-style clean design, typography, exact colors, white background.
 - For ILLUSTRATIONS: art style, medium, palette, mood, lighting.
-- For MARKETING: layout, hierarchy, brand colors, call-to-action placement."""
-                ).with_model("openai", "gpt-4o-mini")
-                img_prompt = await prompt_chat.send_message(UM(text=f"User request: {message_data.content}\n\nCreative brief:\n{response_text[:2000]}"))
+- For MARKETING: layout, hierarchy, brand colors, call-to-action placement.""",
+                    user_prompt=f"User request: {message_data.content}\n\nCreative brief:\n{response_text[:2000]}",
+                    model="maars/economy",  # cheapest model — it's just a prompt refinement
+                    source="chats.image_prompt_refine",
+                )
             except Exception as prompt_err:
                 logger.warning(f"Prompt refinement failed, using original: {prompt_err}")
-            
-            # Use Gemini Nano Banana 2 for image generation
-            import base64 as b64
-            from emergentintegrations.llm.chat import LlmChat as ImgChat, UserMessage as ImgMsg
-            img_chat = ImgChat(
-                api_key=img_api_key,
-                session_id=f"imggen_{uuid.uuid4().hex[:8]}",
-                system_message="You are an image generation assistant. Generate the requested image."
-            )
-            img_chat.with_model("gemini", "gemini-3-pro-image-preview").with_params(modalities=["image", "text"])
-            _, gen_images = await img_chat.send_message_multimodal_response(ImgMsg(text=img_prompt[:2000]))
-            
-            if gen_images and len(gen_images) > 0:
-                file_id = uuid.uuid4().hex[:10]
-                filename = f"{file_id}_generated.png"
-                filepath = UPLOAD_DIR / filename
-                image_bytes = b64.b64decode(gen_images[0]["data"])
-                with open(filepath, "wb") as f:
-                    f.write(image_bytes)
-                generated_image = {
-                    "filename": filename,
-                    "url": f"/files/{filename}",
-                    "model": "gemini-nano-banana-2",
-                    "prompt": img_prompt[:500]
+
+            # Generate through the MAARS media router (cheapest chain: Gemini → gpt-image-1 → DALL-E)
+            from services.media_router import route_image
+            image_bytes, router_meta = await route_image(prompt=img_prompt[:2000], quality="standard")
+            file_id = uuid.uuid4().hex[:10]
+            filename = f"{file_id}_generated.png"
+            filepath = UPLOAD_DIR / filename
+            with open(filepath, "wb") as f:
+                f.write(image_bytes)
+            generated_image = {
+                "filename": filename,
+                "url": f"/files/{filename}",
+                "model": router_meta.get("model", "unknown"),
+                "prompt": img_prompt[:500],
+                "router": router_meta,
+            }
+            logger.info(f"Generated image via {router_meta.get('provider')}/{router_meta.get('model')}: {message_data.content[:80]}")
+            try:
+                img_usage = {
+                    "log_id": f"usage_{uuid.uuid4().hex[:10]}",
+                    "user_id": current_user.user_id,
+                    "chat_id": chat_id,
+                    "agent_id": chat["agent_id"],
+                    "model": f"{router_meta.get('provider','')}/{router_meta.get('model','')}",
+                    "provider": router_meta.get("provider", ""),
+                    "input_tokens": 0,
+                    "output_tokens": 0,
+                    "images_generated": 1,
+                    "estimated_cost_usd": router_meta.get("cost_usd", 0.02),
+                    "type": "image_generation",
+                    "key_source": "direct",
+                    "created_at": datetime.now(timezone.utc).isoformat()
                 }
-                logger.info(f"Generated image via Nano Banana 2: {message_data.content[:80]}")
-                # Log image generation usage separately
-                try:
-                    img_usage = {
-                        "log_id": f"usage_{uuid.uuid4().hex[:10]}",
-                        "user_id": current_user.user_id,
-                        "chat_id": chat_id,
-                        "agent_id": chat["agent_id"],
-                        "model": "gemini/gemini-3-pro-image-preview",
-                        "provider": "gemini",
-                        "input_tokens": 0,
-                        "output_tokens": 0,
-                        "images_generated": 1,
-                        "estimated_cost_usd": 0.02,
-                        "type": "image_generation",
-                        "key_source": "emergent",
-                        "created_at": datetime.now(timezone.utc).isoformat()
-                    }
-                    await db.usage_logs.insert_one(img_usage)
-                except Exception:
-                    pass
+                await db.usage_logs.insert_one(img_usage)
+            except Exception:
+                pass
         except Exception as img_err:
             logger.error(f"Image generation failed: {img_err}")
             # Don't fail the entire message, just skip image generation
@@ -731,32 +753,31 @@ Rules:
         async def _bg_video_gen():
             try:
                 api_keys_vid = await get_api_keys()
-                vid_api_key = api_keys_vid.get("emergent") or EMERGENT_LLM_KEY
-                
+
                 vid_prompt = message_data.content
                 if len(response_text) > 50:
                     try:
-                        from emergentintegrations.llm.chat import LlmChat, UserMessage as UM
-                        # Include product scan data if agent found any via tools
+                        from services.llm_gateway import complete_text
                         extra_context = ""
                         if execution_steps:
                             for step in execution_steps:
                                 if step.get("tool") == "product_scan" and step.get("result"):
                                     extra_context = f"\n\nProduct Research Data:\n{step['result'][:1500]}"
                                     break
-                        pc = LlmChat(api_key=vid_api_key, session_id=f"vidp_{uuid.uuid4().hex[:6]}", system_message="You are a professional video prompt engineer for Sora 2 AI. Convert the description into a detailed cinematic video prompt (max 200 words). Include: scene composition, camera movement (dolly, crane, tracking shot), lighting (golden hour, studio, neon), subject action/motion, mood/atmosphere, color grading style, depth of field. If product research data is provided, use the EXACT product name and key features in the prompt for accuracy. Be specific and visual. Output ONLY the prompt.").with_model("openai", "gpt-4o-mini")
-                        vid_prompt = await pc.send_message(UM(text=f"User: {message_data.content}\n\nDirector's brief:\n{response_text[:2000]}{extra_context}"))
+                        vid_prompt = await complete_text(
+                            user_id=current_user.user_id,
+                            system_prompt="You are a professional video prompt engineer for Sora 2 AI. Convert the description into a detailed cinematic video prompt (max 200 words). Include: scene composition, camera movement (dolly, crane, tracking shot), lighting (golden hour, studio, neon), subject action/motion, mood/atmosphere, color grading style, depth of field. If product research data is provided, use the EXACT product name and key features in the prompt for accuracy. Be specific and visual. Output ONLY the prompt.",
+                            user_prompt=f"User: {message_data.content}\n\nDirector's brief:\n{response_text[:2000]}{extra_context}",
+                            model="maars/economy",
+                            source="chats.video_prompt_refine",
+                        )
                     except Exception:
                         pass
-                
-                from emergentintegrations.llm.openai.video_generation import OpenAIVideoGeneration
-                vg = OpenAIVideoGeneration(api_key=vid_api_key)
-                
+
                 # Check if user attached an image for image-to-video
                 source_image_path = None
                 source_mime = "image/jpeg"
-                
-                # Check attachment_files first (saved files with paths)
+
                 for af in user_attachment_files:
                     if af.get("type", "").startswith("image/"):
                         file_url = af.get("file_url", "")
@@ -767,12 +788,10 @@ Rules:
                             source_mime = af.get("type", "image/jpeg")
                             logger.info(f"Using uploaded image for video: {fname}")
                             break
-                
-                # Fallback: check base64 attachments
+
                 if not source_image_path:
                     for att in user_attachments:
                         if isinstance(att, str) and att.startswith("data:image/"):
-                            # Save base64 image to disk
                             try:
                                 header, b64data = att.split(",", 1)
                                 mime = header.split(":")[1].split(";")[0]
@@ -788,19 +807,16 @@ Rules:
                                 break
                             except Exception as b64_err:
                                 logger.warning(f"Failed to decode base64 image: {b64_err}")
-                
-                # Also check if we just generated an image - use it as source for video
+
                 if not source_image_path and generated_image and generated_image.get("filename"):
                     img_path = UPLOAD_DIR / generated_image["filename"]
                     if img_path.exists():
                         source_image_path = str(img_path)
                         source_mime = "image/png"
-                
-                # Check if product_scan downloaded a high-quality reference image
+
                 if not source_image_path and execution_steps:
                     for step in execution_steps:
                         if step.get("tool") == "product_scan" and step.get("result"):
-                            # Extract downloaded reference image path from product scan result
                             import re as _re_vid
                             ref_match = _re_vid.search(r'Downloaded high-res reference image: (.+?)\]', step["result"])
                             if ref_match:
@@ -811,42 +827,49 @@ Rules:
                                     source_mime = "image/jpeg"
                                     logger.info(f"Using product scan reference image for video: {ref_path}")
                                     break
-                
+
                 if source_image_path:
-                    logger.info(f"Starting Sora 2 image-to-video: image={source_image_path}, prompt={vid_prompt[:80]}...")
+                    logger.info(f"Starting Sora 2 image-to-video via router: image={source_image_path}, prompt={vid_prompt[:80]}...")
                 else:
-                    logger.info(f"Starting Sora 2 text-to-video: prompt={vid_prompt[:100]}...")
-                
-                def _sync_gen():
-                    kwargs = dict(prompt=vid_prompt[:2000], model="sora-2", size="1280x720", duration=8, max_wait_time=600)
-                    if source_image_path:
-                        kwargs["image_path"] = source_image_path
-                        kwargs["mime_type"] = source_mime
-                    return vg.text_to_video(**kwargs)
-                
-                vb = await asyncio.to_thread(_sync_gen)
-                logger.info(f"Video gen result: type={type(vb)}, has_data={bool(vb)}, size={len(vb) if vb else 0}")
-                
-                # Retry once if empty
-                if not vb:
-                    logger.warning("Sora 2 returned empty on first attempt, retrying in 30s...")
+                    logger.info(f"Starting Sora 2 text-to-video via router: prompt={vid_prompt[:100]}...")
+
+                from services.media_router import route_video
+                try:
+                    vb, router_meta = await route_video(
+                        prompt=vid_prompt[:2000],
+                        duration=8,
+                        size="1280x720",
+                        image_path=source_image_path,
+                        mime_type=source_mime if source_image_path else "image/jpeg",
+                    )
+                except Exception as first_err:
+                    logger.warning(f"Sora first attempt failed: {first_err}; retrying in 30s...")
                     await asyncio.sleep(30)
-                    vb = await asyncio.to_thread(_sync_gen)
-                    logger.info(f"Video gen retry result: type={type(vb)}, has_data={bool(vb)}, size={len(vb) if vb else 0}")
-                
+                    vb, router_meta = await route_video(
+                        prompt=vid_prompt[:2000],
+                        duration=8,
+                        size="1280x720",
+                        image_path=source_image_path,
+                        mime_type=source_mime if source_image_path else "image/jpeg",
+                    )
+
                 if vb:
                     fid = uuid.uuid4().hex[:10]
                     fn = f"{fid}_video.mp4"
                     fp = UPLOAD_DIR / fn
-                    vg.save_video(vb, str(fp))
-                    vid_data = {"filename": fn, "url": f"/files/{fn}", "model": "sora-2", "prompt": vid_prompt[:500]}
+                    with open(fp, "wb") as f:
+                        f.write(vb)
+                    vid_data = {"filename": fn, "url": f"/files/{fn}",
+                                "model": router_meta.get("model", "sora-2"),
+                                "prompt": vid_prompt[:500],
+                                "router": router_meta}
                     await db.chats.update_one(
                         {"chat_id": chat_id, "messages.message_id": assistant_msg["message_id"]},
                         {"$set": {"messages.$.generated_video": vid_data, "messages.$.video_generating": False}}
                     )
                     logger.info(f"Background video generated: {fn}")
                 else:
-                    error_msg = "Sora 2 returned no video data after retry. The generation may have timed out or been rejected."
+                    error_msg = "Sora 2 returned no video data after retry."
                     logger.error(error_msg)
                     await db.chats.update_one(
                         {"chat_id": chat_id, "messages.message_id": assistant_msg["message_id"]},

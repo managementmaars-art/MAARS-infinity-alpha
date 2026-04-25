@@ -1,0 +1,472 @@
+{
+  "summary": {
+    "webAnimations": 423,
+    "cssDeclarations": 526,
+    "scrollTargets": 0,
+    "cdpAnimations": 978,
+    "canvases": 1
+  },
+  "namedAnimations": [
+    "lp-grid-scroll",
+    "tunnel-pulse",
+    "bounce",
+    "lp_card_in, lp_float_card",
+    "lp_img_alive",
+    "lp_shimmer",
+    "lp_scan",
+    "lp_glow_beat",
+    "lp_border_run",
+    "lp_dot_live",
+    "ac_wave_1",
+    "ac_wave_2",
+    "ac_wave_3",
+    "ac_wave_4",
+    "ac_wave_5",
+    "lp_card_in"
+  ],
+  "scrollTriggeredElements": 0,
+  "representativeAnimations": [
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "span",
+      "targetRect": {
+        "x": -97,
+        "y": 3239.625,
+        "width": 100.125,
+        "height": 15,
+        "top": 3239.625,
+        "right": 3.125,
+        "bottom": 3254.625,
+        "left": -97
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "opacity": "1",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "opacity": "0",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 300,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "ease",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "span",
+      "targetRect": {
+        "x": -97,
+        "y": 3239.625,
+        "width": 100.125,
+        "height": 15,
+        "top": 3239.625,
+        "right": 3.125,
+        "bottom": 3254.625,
+        "left": -97
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "transform": "translateY(0px)",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "transform": "translateY(4px)",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 300,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "ease",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "span",
+      "targetRect": {
+        "x": 5883,
+        "y": 3239.625,
+        "width": 99.09375,
+        "height": 15,
+        "top": 3239.625,
+        "right": 5982.09375,
+        "bottom": 3254.625,
+        "left": 5883
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "opacity": "1",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "opacity": "0",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 300,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "ease",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "span",
+      "targetRect": {
+        "x": 5883,
+        "y": 3239.625,
+        "width": 99.09375,
+        "height": 15,
+        "top": 3239.625,
+        "right": 5982.09375,
+        "bottom": 3254.625,
+        "left": 5883
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "transform": "translateY(0px)",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "transform": "translateY(4px)",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 300,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "ease",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "lp-grid-scroll",
+      "targetSelector": "div.grid-plane",
+      "targetRect": {
+        "x": -960,
+        "y": 697.4005737304688,
+        "width": 3840,
+        "height": 382.59942626953125,
+        "top": 697.4005737304688,
+        "right": 2880,
+        "bottom": 1080,
+        "left": -960
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "backgroundPositionX": "50%, 50%",
+          "backgroundPositionY": "0px, 42.364px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "backgroundPositionX": "50%, 50%",
+          "backgroundPositionY": "70px, 42.364px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 3000,
+        "delay": 0,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "tunnel-pulse",
+      "targetSelector": "div.depth-orb",
+      "targetRect": {
+        "x": 745.203369140625,
+        "y": 325.203369140625,
+        "width": 429.57763671875,
+        "height": 429.57763671875,
+        "top": 325.203369140625,
+        "right": 1174.781005859375,
+        "bottom": 754.781005859375,
+        "left": 745.203369140625
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1)",
+          "opacity": "0.7",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1.04)",
+          "opacity": "0.3",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1)",
+          "opacity": "0.7",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 3500,
+        "delay": 0,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "tunnel-pulse",
+      "targetSelector": "div.depth-orb",
+      "targetRect": {
+        "x": 529.8231201171875,
+        "y": 109.82308959960938,
+        "width": 860.3382568359375,
+        "height": 860.338134765625,
+        "top": 109.82308959960938,
+        "right": 1390.161376953125,
+        "bottom": 970.1612243652344,
+        "left": 529.8231201171875
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1)",
+          "opacity": "0.7",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1.04)",
+          "opacity": "0.3",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1)",
+          "opacity": "0.7",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 4200,
+        "delay": 400,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "tunnel-pulse",
+      "targetSelector": "div.depth-orb",
+      "targetRect": {
+        "x": 310.6343994140625,
+        "y": -109.3656005859375,
+        "width": 1298.731201171875,
+        "height": 1298.731201171875,
+        "top": -109.3656005859375,
+        "right": 1609.3656005859375,
+        "bottom": 1189.3656005859375,
+        "left": 310.6343994140625
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1)",
+          "opacity": "0.7",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1.04)",
+          "opacity": "0.3",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1)",
+          "opacity": "0.7",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 4900,
+        "delay": 800,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "tunnel-pulse",
+      "targetSelector": "div.depth-orb",
+      "targetRect": {
+        "x": 113.81304931640625,
+        "y": -306.18695068359375,
+        "width": 1692.3740234375,
+        "height": 1692.3740234375,
+        "top": -306.18695068359375,
+        "right": 1806.1870727539062,
+        "bottom": 1386.1870727539062,
+        "left": 113.81304931640625
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1)",
+          "opacity": "0.7",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1.04)",
+          "opacity": "0.3",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1)",
+          "opacity": "0.7",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 5600,
+        "delay": 1200.0000000000002,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "tunnel-pulse",
+      "targetSelector": "div.depth-orb",
+      "targetRect": {
+        "x": -126.4859619140625,
+        "y": -546.4859619140625,
+        "width": 2172.971923828125,
+        "height": 2172.971923828125,
+        "top": -546.4859619140625,
+        "right": 2046.4859619140625,
+        "bottom": 1626.4859619140625,
+        "left": -126.4859619140625
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1)",
+          "opacity": "0.7",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1.04)",
+          "opacity": "0.3",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "transform": "scale(1)",
+          "opacity": "0.7",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 6300,
+        "delay": 1600,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    }
+  ]
+}
